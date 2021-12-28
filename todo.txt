@@ -1,10 +1,6 @@
 ================================================================
 PUNCHDOWN LIST
 
-* numeric-inference perf
-  o README-profiling.md -- update ...
-  o README-go-port.md re various scripts
-
 * blockers:
   - fractional-strptime
   - improved regex doc w/ lots of examples

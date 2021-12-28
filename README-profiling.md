@@ -1,60 +1,55 @@
-# How to run the profiler
+# See also
 
-Running Miller:
+See also [https://github.com/johnkerl/miller/blob/readme-profiling/README-go-port.md#performance-optimizations](https://github.com/johnkerl/miller/blob/readme-profiling/README-go-port.md#performance-optimizations) and [https://miller.readthedocs.io/en/latest/new-in-miller-6/#performance-benchmarks](https://miller.readthedocs.io/en/latest/new-in-miller-6/#performance-benchmarks).
+
+# How to view profile data
+
+Run the profiler:
 
 ```
-mlr --cpuprofile cpu.pprof put -f u/example.mlr then nothing ~/tmp/huge > /dev/null
+mlr --cpuprofile cpu.pprof --csv put -f scripts/chain-1.mlr ~/tmp/big.csv > /dev/null
 ```
 
-(or whatever command-line flags).
+(or whatever command-line flags for Miller).
 
-# How to view the profiling results
-
-
-## Text mode
+Text mode:
 
 ```
 go tool pprof mlr cpu.pprof
 top10
 ```
 
-## PDF mode
+Graphical mode:
 
 ```
-go tool pprof --pdf mlr cpu.pprof > mlr-call-graph.pdf
-mv mlr-call-graph.pdf ~/Desktop
+go tool pprof -http=:8080 cpu.pprof
 ```
 
-## Flame-graph mode
+and let it pop open a browser window.
 
-One-time setup:
+# Benchmark scripts
 
+Scripts:
 
-```
-export GOPATH=$HOME/go
-mkdir -p $HOME/go
-```
+* [./scripts/make-big-files](./scripts/make-big-files) -- Create million-record data files in various formats.
+* [./scripts/chain-cmps.sh](./scripts/chain-cmps.sh) -- Run a few processing scenarios on the million-record CSV file.
+  * [./scripts/chain-1.mlr](./scripts/chain-1.mlr) -- An example `mlr put` used by the previous script
+* [./scripts/time-big-files](./scripts/time-big-files) -- Runs `mlr cat` for million-record files of various file formats. Catting files isn't intrinsically interesting but it shows how input and output processing vary over file formats.
+  * [./scripts/time-big-file](./scripts/time-big-file) -- Helper script for the former.
+* [./scripts/chain-lengths.sh](./scripts/chain-lengths.sh) -- Run longer and longer chains of `scripts/chain1.mlr`, showing how Miller handles multicore and concurrency.
+* [./scripts/make-data-stream](./scripts/make-data-stream) -- Create an endless stream of data to be piped into Miller for steady-state load-testing: e.g. `scripts/make-data-stream | mlr ...` then look at `htop` in another window.
 
-```
-go get -u github.com/google/pprof
-ll ~/go/bin/pprof
-go get -u github.com/uber/go-torch
-```
+Notes:
 
-```
-mkdir -p ~/git/brendangregg
-cd ~/git/brendangregg
-git clone https://github.com/brendangregg/FlameGraph
-```
+* Any of the above can be run using the profiler. I find Flame Graph mode particuarly informative for drill-down.
+* The above refer to `mlr5` and `~/tmp/miller/mlr` as well as `./mlr`. The idea is I have a copy of Miller 5.10.3 (the C implementation) saved off in my path as `mlr5`. Then I keep `~/tmp/miller` on recent HEAD. Then I have `.` on a dev branch. Comparing `mlr5` to `./mlr` shows relative performance of the C and Go implementations. Comparing `~/tmp/miller/mlr` to `./mlr` shows relative performance of whatever optimization I'm currently working on.
+* Several of the above scripts use [justtime](https://github.com/johnkerl/scripts/blob/main/fundam/justtime) to get one-line timing information.
 
-Per run:
+# How to vary compiler versions
 
-```
-cd /path/to/mlr/go
-export PATH=${PATH}:~/git/brendangregg/FlameGraph/
-go-torch cpu.pprof
-mv torch.svg ~/Desktop/
-```
+* [./scripts/compiler-versions-install](./scripts/compiler-versions-install)
+* [./scripts/compiler-versions-build](./scripts/compiler-versions-build)
+* [./scripts/compiler-versions-time](./scripts/compiler-versions-time)
 
 # How to control garbage collection
 
@@ -69,79 +64,3 @@ GOGC=1000 GODEBUG=gctrace=1 mlr -n put -q -f u/mand.mlr 1> /dev/null
 # Turn off GC entirely and see where time is spent:
 GOGC=off  GODEBUG=gctrace=1 mlr -n put -q -f u/mand.mlr 1> /dev/null
 ```
-
-# Findings from the profiler as of 2021-02
-
-* GC on: lots of GC
-* GC off: lots of `duffcopy` and `madvise`
-* From benchmark `u/mand.mlr`: issue is allocation created by expressions
-  * Things like `type BinaryFunc func(input1 *Mlrval, input2 *Mlrval) (output Mlrval)`
-  * `z = 2 + x + 4 + y * 3` results in AST, mapped to a CST, with a malloc on the output of every unary/binary/ternary function
-  * Idea: replace with `type BinaryFunc func(output* Mlrval, input1 *Mlrval, input2 *Mlrval)`: no allocation at all.
-    * Breaks the Fibonacci test since the binary-operator node is no longer re-entrant
-  * Idea: replace with `type BinaryFunc func(input1 *Mlrval, input2 *Mlrval) (output *Mlrval)`: better.
-    * Makes possible zero-copy eval of literal nodes, etc.
-
-```
-for i in 100 200 300 400 500 600 700 800 900 1000 ; do
-  for j in 1 2 3 4 5 ; do
-    echo $i;
-    justtime GOGC=$i mlr -n put -q -f u/mand.mlr > /dev/null
-  done
-done
-```
-
-```
- 100 23.754
- 100 23.883
- 100 24.021
- 100 24.022
- 100 24.305
- 200 20.864
- 200 20.211
- 200 19.980
- 200 20.251
- 200 20.691
- 300 19.140
- 300 18.610
- 300 18.793
- 300 19.111
- 300 19.027
- 400 18.067
- 400 18.274
- 400 18.344
- 400 18.378
- 400 18.250
- 500 17.791
- 500 17.644
- 500 17.814
- 500 18.064
- 500 18.403
- 600 17.878
- 600 17.892
- 600 18.034
- 600 18.125
- 600 18.008
- 700 18.153
- 700 18.286
- 700 17.342
- 700 21.136
- 700 20.729
- 800 19.585
- 800 19.116
- 800 17.170
- 800 18.549
- 800 18.236
- 900 16.950
- 900 17.883
- 900 17.532
- 900 17.551
- 900 17.804
-1000 20.076
-1000 20.745
-1000 19.657
-1000 18.733
-1000 18.560
-```
-
-Sweet spot around 500. Note https://golang.org/pkg/runtime/debug/#SetGCPercent.
