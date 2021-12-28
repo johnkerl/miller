@@ -1,6 +1,6 @@
 [**Take the 2021 Miller User Survey!**](https://docs.google.com/forms/d/e/1FAIpQLSfNgLS9WVRq9mu8dZlMbS7LbTyRH1diRDnT_dGiavSOh_A8xA/viewform?usp=sf_link)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 # What is Miller?
@@ -201,6 +201,7 @@ Thanks to all the fine people who help make Miller better ([emoji key](https://a
     <td align="center"><a href="https://github.com/lgbaldoni"><img src="https://avatars.githubusercontent.com/u/1450716?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Luigi Baldoni</b></sub></a><br /><a href="#platform-lgbaldoni" title="Packaging/porting to new platform">📦</a></td>
     <td align="center"><a href="https://yutani.rbind.io/"><img src="https://avatars.githubusercontent.com/u/1978793?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Hiroaki Yutani</b></sub></a><br /><a href="#ideas-yutannihilation" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://3e.org/"><img src="https://avatars.githubusercontent.com/u/41439?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Daniel M. Drucker</b></sub></a><br /><a href="#ideas-dmd" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/NikosAlexandris"><img src="https://avatars.githubusercontent.com/u/7046639?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Nikos Alexandris</b></sub></a><br /><a href="#ideas-NikosAlexandris" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
