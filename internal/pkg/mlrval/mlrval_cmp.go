@@ -20,19 +20,19 @@ func Equals(input1, input2 *Mlrval) bool {
 	return eq_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 func NotEquals(input1, input2 *Mlrval) bool {
-	return ne_dispositions[input1.Type()][input2.Type()](input1, input2)
-}
-func GreaterThan(input1, input2 *Mlrval) bool {
-	return gt_dispositions[input1.Type()][input2.Type()](input1, input2)
-}
-func GreaterThanOrEquals(input1, input2 *Mlrval) bool {
-	return ge_dispositions[input1.Type()][input2.Type()](input1, input2)
+	return !eq_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 func LessThan(input1, input2 *Mlrval) bool {
 	return lt_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 func LessThanOrEquals(input1, input2 *Mlrval) bool {
 	return le_dispositions[input1.Type()][input2.Type()](input1, input2)
+}
+func GreaterThan(input1, input2 *Mlrval) bool {
+	return gt_dispositions[input1.Type()][input2.Type()](input1, input2)
+}
+func GreaterThanOrEquals(input1, input2 *Mlrval) bool {
+	return ge_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 func Cmp(input1, input2 *Mlrval) int {
 	return cmp_dispositions[input1.Type()][input2.Type()](input1, input2)
@@ -105,9 +105,6 @@ func _n1__(input1, input2 *Mlrval) int {
 func eq_b_ss(input1, input2 *Mlrval) bool {
 	return input1.printrep == input2.printrep
 }
-func ne_b_ss(input1, input2 *Mlrval) bool {
-	return input1.printrep != input2.printrep
-}
 func gt_b_ss(input1, input2 *Mlrval) bool {
 	return input1.printrep > input2.printrep
 }
@@ -128,9 +125,6 @@ func cmp_b_ss(input1, input2 *Mlrval) int {
 
 func eq_b_xs(input1, input2 *Mlrval) bool {
 	return input1.String() == input2.printrep
-}
-func ne_b_xs(input1, input2 *Mlrval) bool {
-	return input1.String() != input2.printrep
 }
 func gt_b_xs(input1, input2 *Mlrval) bool {
 	return input1.String() > input2.printrep
@@ -153,9 +147,6 @@ func cmp_b_xs(input1, input2 *Mlrval) int {
 func eq_b_sx(input1, input2 *Mlrval) bool {
 	return input1.printrep == input2.String()
 }
-func ne_b_sx(input1, input2 *Mlrval) bool {
-	return input1.printrep != input2.String()
-}
 func gt_b_sx(input1, input2 *Mlrval) bool {
 	return input1.printrep > input2.String()
 }
@@ -176,9 +167,6 @@ func cmp_b_sx(input1, input2 *Mlrval) int {
 
 func eq_b_ii(input1, input2 *Mlrval) bool {
 	return input1.intval == input2.intval
-}
-func ne_b_ii(input1, input2 *Mlrval) bool {
-	return input1.intval != input2.intval
 }
 func gt_b_ii(input1, input2 *Mlrval) bool {
 	return input1.intval > input2.intval
@@ -201,9 +189,6 @@ func cmp_b_ii(input1, input2 *Mlrval) int {
 func eq_b_if(input1, input2 *Mlrval) bool {
 	return float64(input1.intval) == input2.floatval
 }
-func ne_b_if(input1, input2 *Mlrval) bool {
-	return float64(input1.intval) != input2.floatval
-}
 func gt_b_if(input1, input2 *Mlrval) bool {
 	return float64(input1.intval) > input2.floatval
 }
@@ -224,9 +209,6 @@ func cmp_b_if(input1, input2 *Mlrval) int {
 
 func eq_b_fi(input1, input2 *Mlrval) bool {
 	return input1.floatval == float64(input2.intval)
-}
-func ne_b_fi(input1, input2 *Mlrval) bool {
-	return input1.floatval != float64(input2.intval)
 }
 func gt_b_fi(input1, input2 *Mlrval) bool {
 	return input1.floatval > float64(input2.intval)
@@ -249,9 +231,6 @@ func cmp_b_fi(input1, input2 *Mlrval) int {
 func eq_b_ff(input1, input2 *Mlrval) bool {
 	return input1.floatval == input2.floatval
 }
-func ne_b_ff(input1, input2 *Mlrval) bool {
-	return input1.floatval != input2.floatval
-}
 func gt_b_ff(input1, input2 *Mlrval) bool {
 	return input1.floatval > input2.floatval
 }
@@ -272,9 +251,6 @@ func cmp_b_ff(input1, input2 *Mlrval) int {
 
 func eq_b_bb(input1, input2 *Mlrval) bool {
 	return input1.boolval == input2.boolval
-}
-func ne_b_bb(input1, input2 *Mlrval) bool {
-	return input1.boolval != input2.boolval
 }
 
 func gt_b_bb(input1, input2 *Mlrval) bool {
@@ -313,17 +289,11 @@ func eq_b_aa(input1, input2 *Mlrval) bool {
 
 	return true
 }
-func ne_b_aa(input1, input2 *Mlrval) bool {
-	return !eq_b_aa(input1, input2)
-}
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 func eq_b_mm(input1, input2 *Mlrval) bool {
 	return input1.mapval.Equals(input2.mapval)
-}
-func ne_b_mm(input1, input2 *Mlrval) bool {
-	return !input1.mapval.Equals(input2.mapval)
 }
 
 // We get a Golang "initialization loop" due to recursive depth computation
@@ -345,21 +315,6 @@ func init() {
 		/*MAP    */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, eq_b_mm, _fals},
 		/*FUNC   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true},
 	}
-}
-
-var ne_dispositions = [MT_DIM][MT_DIM]CmpFuncBool{
-	//       .  ERROR   ABSENT NULL   VOID     STRING   INT      FLOAT    BOOL     ARRAY    MAP      FUNC
-	/*ERROR  */ {_true, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*ABSENT */ {_fals, _true, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*NULL   */ {_fals, _fals, _fals, _true, _true, _true, _true, _true, _true, _true, _fals},
-	/*VOID   */ {_fals, _fals, _true, ne_b_ss, ne_b_ss, ne_b_sx, ne_b_sx, _true, _true, _true, _fals},
-	/*STRING */ {_fals, _fals, _true, ne_b_ss, ne_b_ss, ne_b_sx, ne_b_sx, _true, _true, _true, _fals},
-	/*INT    */ {_fals, _fals, _true, ne_b_xs, ne_b_xs, ne_b_ii, ne_b_if, _true, _true, _true, _fals},
-	/*FLOAT  */ {_fals, _fals, _true, ne_b_xs, ne_b_xs, ne_b_fi, ne_b_ff, _true, _true, _true, _fals},
-	/*BOOL   */ {_fals, _fals, _true, _true, _true, _true, _true, ne_b_bb, _true, _true, _fals},
-	/*ARRAY  */ {_fals, _fals, _true, _true, _true, _true, _true, _true, ne_b_aa, _true, _fals},
-	/*MAP    */ {_fals, _fals, _true, _true, _true, _true, _true, _true, _true, ne_b_mm, _fals},
-	/*FUNC   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true},
 }
 
 var gt_dispositions = [MT_DIM][MT_DIM]CmpFuncBool{
@@ -393,18 +348,18 @@ var ge_dispositions = [MT_DIM][MT_DIM]CmpFuncBool{
 }
 
 var lt_dispositions = [MT_DIM][MT_DIM]CmpFuncBool{
-	//       .  ERROR   ABSENT NULL   VOID     STRING   INT      FLOAT    BOOL     ARRAY  MAP    FUNC
-	/*ERROR  */ {_true, _fals, _true, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*ABSENT */ {_fals, _true, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*NULL   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*VOID   */ {_fals, _fals, _true, lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _fals, _fals, _fals, _fals},
-	/*STRING */ {_fals, _fals, _true, lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _fals, _fals, _fals, _fals},
-	/*INT    */ {_fals, _fals, _true, lt_b_xs, lt_b_xs, lt_b_ii, lt_b_if, _fals, _fals, _fals, _fals},
-	/*FLOAT  */ {_fals, _fals, _true, lt_b_xs, lt_b_xs, lt_b_fi, lt_b_ff, _fals, _fals, _fals, _fals},
-	/*BOOL   */ {_fals, _fals, _true, _fals, _fals, _fals, _fals, lt_b_bb, _fals, _fals, _fals},
-	/*ARRAY  */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*MAP    */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*FUNC   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true},
+//       .  ERROR   ABSENT NULL   VOID     STRING   INT      FLOAT    BOOL     ARRAY  MAP    FUNC
+/*ERROR  */ {_fals, _true, _true, _true,   _true,   _true,   _true,   _true,   _true, _true, _true},
+/*ABSENT */ {_fals, _fals, _true, _true,   _true,   _true,   _true,   _true,   _true, _true, _true},
+/*NULL   */ {_fals, _fals, _fals, _true,   _true,   _true,   _true,   _true,   _true, _true, _true},
+/*VOID   */ {_fals, _fals, _fals, lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _fals,   _true, _true, _true},
+/*STRING */ {_fals, _fals, _fals, lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _fals,   _true, _true, _true},
+/*INT    */ {_fals, _fals, _fals, lt_b_xs, lt_b_xs, lt_b_ii, lt_b_if, _fals,   _true, _true, _true},
+/*FLOAT  */ {_fals, _fals, _fals, lt_b_xs, lt_b_xs, lt_b_fi, lt_b_ff, _fals,   _true, _true, _true},
+/*BOOL   */ {_fals, _fals, _fals, _fals,   _fals,   _fals,   _fals,   lt_b_bb, _true, _true, _true},
+/*ARRAY  */ {_fals, _fals, _fals, _fals,   _fals,   _fals,   _fals,   _fals,   _fals, _true, _true},
+/*MAP    */ {_fals, _fals, _fals, _fals,   _fals,   _fals,   _fals,   _fals,   _fals, _fals, _true},
+/*FUNC   */ {_fals, _fals, _fals, _fals,   _fals,   _fals,   _fals,   _fals,   _fals, _fals, _fals},
 }
 
 var le_dispositions = [MT_DIM][MT_DIM]CmpFuncBool{
