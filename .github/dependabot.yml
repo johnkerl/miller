@@ -13,6 +13,6 @@ updates:
 
   # Maintain dependencies for Go 
   - package-ecosystem: "gomod"
-    directory: /go
+    directory: /
     schedule:
       interval: "daily"
