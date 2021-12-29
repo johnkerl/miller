@@ -12,14 +12,9 @@ import (
 )
 
 // Documented contract:
-// NUMERICS < BOOL < VOID < STRING
+// NUMERICS < BOOL < VOID < STRING < ERROR < NULL < ABSENT
 
 var orderedMlrvals = []*Mlrval{
-
-	// TODO:
-	// ERROR,
-	// ABSENT,
-	// NULL,
 
 	FromInt(1),
 	FromFloat(1.1),
@@ -37,6 +32,11 @@ var orderedMlrvals = []*Mlrval{
 	// FromArray([]Mlrval{FromInt(1), FromInt(2)}),
 	// FromArray([]Mlrval{FromInt(1), FromInt(3)}),
 	// FromMap(NewMlrmap()),
+
+	// TODO:
+	// ERROR,
+	// ABSENT,
+	// NULL,
 }
 
 func TestEqual(t *testing.T) {
@@ -67,19 +67,19 @@ func TestNotEquals(t *testing.T) {
 	}
 }
 
-//func TestLessThan(t *testing.T) {
-//	for i := range orderedMlrvals {
-//		mvi := orderedMlrvals[i]
-//		for j := range orderedMlrvals {
-//			mvj := orderedMlrvals[j]
-//			assert.Equal(t, i < j, LessThan(mvi, mvj), fmt.Sprintf(
-//				"slots i=%d type=%s value=%s, j=%d type=%s value=%s",
-//				i, mvi.GetTypeName(), mvi.String(),
-//				j, mvj.GetTypeName(), mvj.String(),
-//			))
-//		}
-//	}
-//}
+func TestLessThan(t *testing.T) {
+	for i := range orderedMlrvals {
+		mvi := orderedMlrvals[i]
+		for j := range orderedMlrvals {
+			mvj := orderedMlrvals[j]
+			assert.Equal(t, i < j, LessThan(mvi, mvj), fmt.Sprintf(
+				"slots i=%d type=%s value=%s, j=%d type=%s value=%s",
+				i, mvi.GetTypeName(), mvi.String(),
+				j, mvj.GetTypeName(), mvj.String(),
+			))
+		}
+	}
+}
 
 //func TestLessThanOrEquals(t *testing.T) {
 //	for i := range orderedMlrvals {

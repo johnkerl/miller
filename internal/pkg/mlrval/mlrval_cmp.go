@@ -132,9 +132,6 @@ func gt_b_xs(input1, input2 *Mlrval) bool {
 func ge_b_xs(input1, input2 *Mlrval) bool {
 	return input1.String() >= input2.printrep
 }
-func lt_b_xs(input1, input2 *Mlrval) bool {
-	return input1.String() < input2.printrep
-}
 func le_b_xs(input1, input2 *Mlrval) bool {
 	return input1.String() <= input2.printrep
 }
@@ -348,33 +345,33 @@ var ge_dispositions = [MT_DIM][MT_DIM]CmpFuncBool{
 }
 
 var lt_dispositions = [MT_DIM][MT_DIM]CmpFuncBool{
-	//       .  INT      FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
-	/*INT    */ {lt_b_ii, lt_b_if, _fals, lt_b_xs, lt_b_xs, _fals, _fals, _fals, _fals, _true, _fals},
-	/*FLOAT  */ {lt_b_fi, lt_b_ff, _fals, lt_b_xs, lt_b_xs, _fals, _fals, _fals, _fals, _true, _fals},
-	/*BOOL   */ {_fals, _fals, lt_b_bb, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals},
-	/*VOID   */ {lt_b_sx, lt_b_sx, _fals, lt_b_ss, lt_b_ss, _fals, _fals, _fals, _fals, _true, _fals},
-	/*STRING */ {lt_b_sx, lt_b_sx, _fals, lt_b_ss, lt_b_ss, _fals, _fals, _fals, _fals, _true, _fals},
-	/*ARRAY  */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*MAP    */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*FUNC   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals, _fals, _fals},
-	/*ERROR  */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _true, _fals},
-	/*NULL   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*ABSENT */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true},
+//       .  INT       FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC   ERROR  NULL   ABSENT
+/*INT    */ {lt_b_ii, lt_b_if, _true,   _true,   _true,   _true, _true, _true, _true, _true, _true},
+/*FLOAT  */ {lt_b_fi, lt_b_ff, _true,   _true,   _true,   _true, _true, _true, _true, _true, _true},
+/*BOOL   */ {_fals,   _fals,   lt_b_bb, _true,   _true,   _true, _true, _true, _true, _true, _true},
+/*VOID   */ {_fals,   _fals,   _fals,   lt_b_ss, lt_b_ss, _true, _true, _true, _true, _true, _true},
+/*STRING */ {_fals,   _fals,   _fals,   lt_b_ss, lt_b_ss, _true, _true, _true, _true, _true, _true},
+/*ARRAY  */ {_fals,   _fals,   _fals,   _fals,   _fals,   _fals, _true, _true, _true, _true, _true},
+/*MAP    */ {_fals,   _fals,   _fals,   _fals,   _fals,   _fals, _fals, _true, _true, _true, _true},
+/*FUNC   */ {_fals,   _fals,   _fals,   _fals,   _fals,   _fals, _fals, _fals, _true, _true, _true},
+/*ERROR  */ {_fals,   _fals,   _fals,   _fals,   _fals,   _fals, _fals, _fals, _fals, _true, _true},
+/*NULL   */ {_fals,   _fals,   _fals,   _fals,   _fals,   _fals, _fals, _fals, _fals, _fals, _true},
+/*ABSENT */ {_fals,   _fals,   _fals,   _fals,   _fals,   _fals, _fals, _fals, _fals, _fals, _fals},
 }
 
 var le_dispositions = [MT_DIM][MT_DIM]CmpFuncBool{
-	//       .  INT      FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
-	/*INT    */ {le_b_ii, le_b_if, _fals, le_b_xs, le_b_xs, _fals, _fals, _fals, _fals, _true, _fals},
-	/*FLOAT  */ {le_b_fi, le_b_ff, _fals, le_b_xs, le_b_xs, _fals, _fals, _fals, _fals, _true, _fals},
-	/*BOOL   */ {_fals, _fals, le_b_bb, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals},
-	/*VOID   */ {le_b_sx, le_b_sx, _fals, le_b_ss, le_b_ss, _fals, _fals, _fals, _fals, _true, _fals},
-	/*STRING */ {le_b_sx, le_b_sx, _fals, le_b_ss, le_b_ss, _fals, _fals, _fals, _fals, _true, _fals},
-	/*ARRAY  */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*MAP    */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*FUNC   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals, _fals, _fals},
-	/*ERROR  */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _true, _fals},
-	/*NULL   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals},
-	/*ABSENT */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true},
+//       .  INT       FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC   ERROR  NULL   ABSENT
+/*INT    */ {le_b_ii, le_b_if, _true,   le_b_xs, le_b_xs, _true, _true, _true, _true, _true, _true},
+/*FLOAT  */ {le_b_fi, le_b_ff, _true,   le_b_xs, le_b_xs, _true, _true, _true, _true, _true, _true},
+/*BOOL   */ {_fals,   _fals,   le_b_bb, _true,   _true,   _true, _true, _true, _true, _true, _true},
+/*VOID   */ {le_b_sx, le_b_sx, _fals,   le_b_ss, le_b_ss, _true, _true, _true, _true, _true, _true},
+/*STRING */ {le_b_sx, le_b_sx, _fals,   le_b_ss, le_b_ss, _true, _true, _true, _true, _true, _true},
+/*ARRAY  */ {_fals,   _fals,   _fals,   _fals,   _fals,   _true, _true, _true, _true, _true, _true},
+/*MAP    */ {_fals,   _fals,   _fals,   _fals,   _fals,   _fals, _true, _true, _true, _true, _true},
+/*FUNC   */ {_fals,   _fals,   _fals,   _fals,   _fals,   _fals, _fals, _true, _true, _true, _true},
+/*ERROR  */ {_fals,   _fals,   _fals,   _fals,   _fals,   _fals, _fals, _fals, _true, _true, _true},
+/*NULL   */ {_fals,   _fals,   _fals,   _fals,   _fals,   _fals, _fals, _fals, _fals, _true, _true},
+/*ABSENT */ {_fals,   _fals,   _fals,   _fals,   _fals,   _fals, _fals, _fals, _fals, _fals, _true},
 }
 
 // TODO: flesh these out for array and map

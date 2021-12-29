@@ -3,6 +3,7 @@ PUNCHDOWN LIST
 
 * blockers:
   - cmp-matrices
+  - array/map recurse-cmp & UT
   - docs re mods contact
   - cmt mlrval-cmp is subsetting for mlr sort etc -- no absn/erro returns possible
 
