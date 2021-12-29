@@ -46,8 +46,8 @@ var to_int_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*MAP    */ _erro1,
 	/*FUNC   */ _erro1,
 	/*ERROR  */ _erro1,
-	/*ABSENT */ _absn1,
 	/*NULL   */ _null1,
+	/*ABSENT */ _absn1,
 }
 
 func BIF_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -86,8 +86,8 @@ var to_float_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*MAP    */ _erro1,
 	/*FUNC   */ _erro1,
 	/*ERROR  */ _erro1,
-	/*ABSENT */ _absn1,
 	/*NULL   */ _null1,
+	/*ABSENT */ _absn1,
 }
 
 func BIF_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -122,8 +122,8 @@ var to_boolean_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*MAP    */ _erro1,
 	/*FUNC   */ _erro1,
 	/*ERROR  */ _erro1,
-	/*ABSENT */ _absn1,
 	/*NULL   */ _null1,
+	/*ABSENT */ _absn1,
 }
 
 func BIF_boolean(input1 *mlrval.Mlrval) *mlrval.Mlrval {

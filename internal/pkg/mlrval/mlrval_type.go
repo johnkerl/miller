@@ -127,13 +127,13 @@ const (
 	// Inf and NaN through computation chains.
 	MT_ERROR = 8
 
-	// Key not present in input record, e.g. 'foo = $nosuchkey'
-	MT_ABSENT = 9
-
 	// Used only for JSON null, and for 'empty' slots when an array is
 	// auto-extended by assigning to an index having a gap from the last index.
 	// E.g. x=[1,2,3] then x[5]=5; now x[4] is null
-	MT_NULL = 10
+	MT_NULL = 9
+
+	// Key not present in input record, e.g. 'foo = $nosuchkey'
+	MT_ABSENT = 10
 
 	// Not a type -- this is a dimension for disposition vectors and
 	// disposition matrices. For example, when we want to add two mlrvals,
@@ -153,8 +153,8 @@ var TYPE_NAMES = [MT_DIM]string{
 	"map",
 	"funct",
 	"error",
-	"absent",
 	"null",
+	"absent",
 }
 
 // For typed assignments in the DSL
@@ -167,8 +167,7 @@ const MT_TYPE_MASK_BOOL = 1 << MT_BOOL
 const MT_TYPE_MASK_STRING = (1 << MT_STRING) | (1 << MT_VOID)
 const MT_TYPE_MASK_ARRAY = 1 << MT_ARRAY
 const MT_TYPE_MASK_MAP = 1 << MT_MAP
-const MT_TYPE_MASK_VAR =
-	(1 << MT_INT) |
+const MT_TYPE_MASK_VAR = (1 << MT_INT) |
 	(1 << MT_FLOAT) |
 	(1 << MT_BOOL) |
 	(1 << MT_VOID) |

@@ -168,18 +168,18 @@ func _xcmp(input1, input2 *mlrval.Mlrval) int {
 
 // typed_cmp_dispositions is the disposition matrix for numerical sorting of Mlrvals.
 var typed_cmp_typedpositions = [mlrval.MT_DIM][mlrval.MT_DIM]ComparatorFunc{
-	//       .  INT    FLOAT  BOOL   NULL   STRING ARRAY  MAP    FUNC    ERROR   ABSENT NULL
+	//       .  INT    FLOAT  BOOL   VOID   STRING ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
 	/*INT    */ {iicmp, ifcmp, _neg1, _neg1, _neg1, _zero, _zero, _xcmp, _neg1, _neg1, _neg1},
 	/*FLOAT  */ {ficmp, ffcmp, _neg1, _neg1, _neg1, _zero, _zero, _xcmp, _neg1, _neg1, _neg1},
 	/*BOOL   */ {_pos1, _pos1, bbcmp, _neg1, _neg1, _zero, _zero, _xcmp, _neg1, _neg1, _neg1},
-	/*VOID   */ {_pos1, _pos1, _pos1, _neg1, _scmp, _zero, _zero, _xcmp, _neg1, _neg1, _neg1},
-	/*STRING */ {_pos1, _pos1, _pos1, _neg1, _scmp, _zero, _zero, _xcmp, _neg1, _neg1, _neg1},
-	/*ARRAY  */ {_zero, _zero, _zero, _neg1, _zero, _zero, _zero, _xcmp, _zero, _zero, _neg1},
-	/*MAP    */ {_zero, _zero, _zero, _neg1, _zero, _zero, _zero, _xcmp, _zero, _zero, _neg1},
+	/*VOID   */ {_pos1, _pos1, _pos1, _scmp, _scmp, _zero, _zero, _xcmp, _neg1, _neg1, _neg1},
+	/*STRING */ {_pos1, _pos1, _pos1, _scmp, _scmp, _zero, _zero, _xcmp, _neg1, _neg1, _neg1},
+	/*ARRAY  */ {_zero, _zero, _zero, _zero, _zero, _zero, _zero, _xcmp, _zero, _neg1, _zero},
+	/*MAP    */ {_zero, _zero, _zero, _zero, _zero, _zero, _zero, _xcmp, _zero, _neg1, _zero},
 	/*FUNC   */ {_xcmp, _xcmp, _xcmp, _xcmp, _xcmp, _xcmp, _xcmp, _xcmp, _xcmp, _xcmp, _xcmp},
-	/*ERROR  */ {_pos1, _pos1, _pos1, _neg1, _pos1, _zero, _zero, _xcmp, _zero, _neg1, _neg1},
-	/*ABSENT */ {_pos1, _pos1, _pos1, _pos1, _pos1, _zero, _zero, _xcmp, _pos1, _zero, _pos1},
-	/*NULL   */ {_pos1, _pos1, _pos1, _zero, _pos1, _pos1, _pos1, _xcmp, _pos1, _neg1, _zero},
+	/*ERROR  */ {_pos1, _pos1, _pos1, _pos1, _pos1, _zero, _zero, _xcmp, _zero, _neg1, _neg1},
+	/*NULL   */ {_pos1, _pos1, _pos1, _pos1, _pos1, _pos1, _pos1, _xcmp, _pos1, _zero, _neg1},
+	/*ABSENT */ {_pos1, _pos1, _pos1, _pos1, _pos1, _zero, _zero, _xcmp, _pos1, _pos1, _zero},
 }
 
 // NumericAscendingComparator is for "numerical" sort: it uses Mlrval sorting
