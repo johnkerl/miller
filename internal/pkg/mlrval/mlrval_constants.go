@@ -21,6 +21,25 @@ func MlrvalFromPending() Mlrval {
 // just using `const` isn't enough) but the gentelpersons' agreement is that
 // the caller should never modify these.
 
+var TRUE = &Mlrval{
+	mvtype:        MT_BOOL,
+	printrep:      "true",
+	printrepValid: true,
+	boolval:       true,
+}
+
+var FALSE = &Mlrval{
+	mvtype:        MT_BOOL,
+	printrep:      "false",
+	printrepValid: true,
+}
+
+var VOID = &Mlrval{
+	mvtype:        MT_VOID,
+	printrep:      "",
+	printrepValid: true,
+}
+
 var ERROR = &Mlrval{
 	mvtype:        MT_ERROR,
 	printrep:      ERROR_PRINTREP,
@@ -36,24 +55,5 @@ var ABSENT = &Mlrval{
 var NULL = &Mlrval{
 	mvtype:        MT_NULL,
 	printrep:      "null",
-	printrepValid: true,
-}
-
-var VOID = &Mlrval{
-	mvtype:        MT_VOID,
-	printrep:      "",
-	printrepValid: true,
-}
-
-var TRUE = &Mlrval{
-	mvtype:        MT_BOOL,
-	printrep:      "true",
-	printrepValid: true,
-	boolval:       true,
-}
-
-var FALSE = &Mlrval{
-	mvtype:        MT_BOOL,
-	printrep:      "false",
 	printrepValid: true,
 }

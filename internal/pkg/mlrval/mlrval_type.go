@@ -89,9 +89,35 @@ type MVType int
 // Important: the values of these enums are used to index into disposition
 // matrices. If they are changed, it will break the disposition matrices, or
 // they will all need manual re-indexing.
+//
+// Also note the ordering of types reflects the sort order for mixed types,
+// with the exception that ints and floats sort numerically. So 1 < "abc" and 1
+// < "1", and 7 < true; but 1 < 1.1 < 2 < 2.2.
 const (
-	// Type not yet determined: during JSON decode or TODO comment.
+	// Type not yet determined: during JSON decode, or for JIT-data from file
+	// data whose type doesn't need to be determined yet. For example, when we
+	// operate only on columns 15 & 17 of a 20-column CSV file, those two
+	// columns get type-inferred during processing but the rest keep their
+	// printrep and type MT_PENDING. This is a significant performance
+	// optimization.
 	MT_PENDING MVType = -1
+
+	MT_INT = 0
+
+	MT_FLOAT = 1
+
+	MT_BOOL = 2
+
+	// Key present in input record with empty value, e.g. input data '$x=,$y=2'
+	MT_VOID = 3
+
+	MT_STRING = 4
+
+	MT_ARRAY = 5
+
+	MT_MAP = 6
+
+	MT_FUNC = 7
 
 	// E.g. error encountered in one eval & it propagates up the AST at
 	// evaluation time.  Various runtime errors, such as file-not-found, result
@@ -99,32 +125,15 @@ const (
 	// are intended to result in "(error)"-valued output rather than a crash.
 	// This is analogous to the way that IEEE-754 arithmetic carries around
 	// Inf and NaN through computation chains.
-	MT_ERROR = 0
+	MT_ERROR = 8
 
 	// Key not present in input record, e.g. 'foo = $nosuchkey'
-	MT_ABSENT = 1
+	MT_ABSENT = 9
 
 	// Used only for JSON null, and for 'empty' slots when an array is
 	// auto-extended by assigning to an index having a gap from the last index.
 	// E.g. x=[1,2,3] then x[5]=5; now x[4] is null
-	MT_NULL = 2
-
-	// Key present in input record with empty value, e.g. input data '$x=,$y=2'
-	MT_VOID = 3
-
-	MT_STRING = 4
-
-	MT_INT = 5
-
-	MT_FLOAT = 6
-
-	MT_BOOL = 7
-
-	MT_ARRAY = 8
-
-	MT_MAP = 9
-
-	MT_FUNC = 10
+	MT_NULL = 10
 
 	// Not a type -- this is a dimension for disposition vectors and
 	// disposition matrices. For example, when we want to add two mlrvals,
@@ -135,34 +144,35 @@ const (
 )
 
 var TYPE_NAMES = [MT_DIM]string{
-	"error",
-	"absent",
-	"null",
-	"empty", // For backward compatiblity with the C impl: this is user-visible
-	"string",
 	"int",
 	"float",
 	"bool",
+	"empty", // For backward compatiblity with the C impl: this is user-visible
+	"string",
 	"array",
 	"map",
 	"funct",
+	"error",
+	"absent",
+	"null",
 }
 
 // For typed assignments in the DSL
 
 // TODO: comment more re typedecls
-const MT_TYPE_MASK_STRING = (1 << MT_STRING) | (1 << MT_VOID)
 const MT_TYPE_MASK_INT = 1 << MT_INT
 const MT_TYPE_MASK_FLOAT = 1 << MT_FLOAT
 const MT_TYPE_MASK_NUM = (1 << MT_INT) | (1 << MT_FLOAT)
 const MT_TYPE_MASK_BOOL = 1 << MT_BOOL
+const MT_TYPE_MASK_STRING = (1 << MT_STRING) | (1 << MT_VOID)
 const MT_TYPE_MASK_ARRAY = 1 << MT_ARRAY
 const MT_TYPE_MASK_MAP = 1 << MT_MAP
-const MT_TYPE_MASK_VAR = (1 << MT_VOID) |
-	(1 << MT_STRING) |
+const MT_TYPE_MASK_VAR =
 	(1 << MT_INT) |
 	(1 << MT_FLOAT) |
 	(1 << MT_BOOL) |
+	(1 << MT_VOID) |
+	(1 << MT_STRING) |
 	(1 << MT_ARRAY) |
 	(1 << MT_MAP)
 const MT_TYPE_MASK_FUNC = 1 << MT_FUNC
@@ -172,16 +182,16 @@ const MT_TYPE_MASK_ANY = (1 << MT_ERROR) | (1 << MT_ABSENT) | MT_TYPE_MASK_VAR |
 
 // TODO: const these throughout
 var typeNameToMaskMap = map[string]int{
-	"var":   MT_TYPE_MASK_VAR,
-	"str":   MT_TYPE_MASK_STRING,
 	"int":   MT_TYPE_MASK_INT,
 	"float": MT_TYPE_MASK_FLOAT,
 	"num":   MT_TYPE_MASK_NUM,
 	"bool":  MT_TYPE_MASK_BOOL,
+	"str":   MT_TYPE_MASK_STRING,
 	"arr":   MT_TYPE_MASK_ARRAY,
 	"map":   MT_TYPE_MASK_MAP,
-	"any":   MT_TYPE_MASK_ANY,
 	"funct": MT_TYPE_MASK_FUNC,
+	"var":   MT_TYPE_MASK_VAR,
+	"any":   MT_TYPE_MASK_ANY,
 }
 
 func TypeNameToMask(typeName string) (mask int, present bool) {

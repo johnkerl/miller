@@ -37,17 +37,17 @@ func bool_to_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 var to_int_dispositions = [mlrval.MT_DIM]UnaryFunc{
-	/*ERROR  */ _erro1,
-	/*ABSENT */ _absn1,
-	/*NULL   */ _null1,
-	/*VOID   */ _void1,
-	/*STRING */ string_to_int,
 	/*INT    */ _1u___,
 	/*FLOAT  */ float_to_int,
 	/*BOOL   */ bool_to_int,
+	/*VOID   */ _void1,
+	/*STRING */ string_to_int,
 	/*ARRAY  */ _erro1,
 	/*MAP    */ _erro1,
 	/*FUNC   */ _erro1,
+	/*ERROR  */ _erro1,
+	/*ABSENT */ _absn1,
+	/*NULL   */ _null1,
 }
 
 func BIF_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -77,17 +77,17 @@ func bool_to_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 var to_float_dispositions = [mlrval.MT_DIM]UnaryFunc{
-	/*ERROR  */ _erro1,
-	/*ABSENT */ _absn1,
-	/*NULL   */ _null1,
-	/*VOID   */ _void1,
-	/*STRING */ string_to_float,
 	/*INT    */ int_to_float,
 	/*FLOAT  */ _1u___,
 	/*BOOL   */ bool_to_float,
+	/*VOID   */ _void1,
+	/*STRING */ string_to_float,
 	/*ARRAY  */ _erro1,
 	/*MAP    */ _erro1,
 	/*FUNC   */ _erro1,
+	/*ERROR  */ _erro1,
+	/*ABSENT */ _absn1,
+	/*NULL   */ _null1,
 }
 
 func BIF_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -113,17 +113,17 @@ func float_to_bool(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 var to_boolean_dispositions = [mlrval.MT_DIM]UnaryFunc{
-	/*ERROR  */ _erro1,
-	/*ABSENT */ _absn1,
-	/*NULL   */ _null1,
-	/*VOID   */ _void1,
-	/*STRING */ string_to_boolean,
 	/*INT    */ int_to_bool,
 	/*FLOAT  */ float_to_bool,
 	/*BOOL   */ _1u___,
+	/*VOID   */ _void1,
+	/*STRING */ string_to_boolean,
 	/*ARRAY  */ _erro1,
 	/*MAP    */ _erro1,
 	/*FUNC   */ _erro1,
+	/*ERROR  */ _erro1,
+	/*ABSENT */ _absn1,
+	/*NULL   */ _null1,
 }
 
 func BIF_boolean(input1 *mlrval.Mlrval) *mlrval.Mlrval {

@@ -71,20 +71,19 @@ var depth_dispositions = [mlrval.MT_DIM]UnaryFunc{}
 
 func init() {
 	depth_dispositions = [mlrval.MT_DIM]UnaryFunc{
-		/*ERROR  */ _erro1,
-		/*ABSENT */ _absn1,
-		/*NULL   */ _zero1,
-		/*VOID   */ depth_from_scalar,
-		/*STRING */ depth_from_scalar,
 		/*INT    */ depth_from_scalar,
 		/*FLOAT  */ depth_from_scalar,
 		/*BOOL   */ depth_from_scalar,
+		/*VOID   */ depth_from_scalar,
+		/*STRING */ depth_from_scalar,
 		/*ARRAY  */ depth_from_array,
 		/*MAP    */ depth_from_map,
 		/*FUNC   */ _erro1,
+		/*ERROR  */ _erro1,
+		/*ABSENT */ _absn1,
+		/*NULL   */ _zero1,
 	}
 }
-
 func BIF_depth(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return depth_dispositions[input1.Type()](input1)
 }
@@ -139,17 +138,17 @@ func leafcount_from_scalar(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 var leafcount_dispositions = [mlrval.MT_DIM]UnaryFunc{
-	/*ERROR  */ _erro1,
-	/*ABSENT */ _absn1,
-	/*NULL   */ _zero1,
-	/*VOID   */ leafcount_from_scalar,
-	/*STRING */ leafcount_from_scalar,
 	/*INT    */ leafcount_from_scalar,
 	/*FLOAT  */ leafcount_from_scalar,
 	/*BOOL   */ leafcount_from_scalar,
+	/*VOID   */ leafcount_from_scalar,
+	/*STRING */ leafcount_from_scalar,
 	/*ARRAY  */ leafcount_from_array,
 	/*MAP    */ leafcount_from_map,
 	/*FUNC   */ _erro1,
+	/*ERROR  */ _erro1,
+	/*ABSENT */ _absn1,
+	/*NULL   */ _zero1,
 }
 
 func BIF_leafcount(input1 *mlrval.Mlrval) *mlrval.Mlrval {
