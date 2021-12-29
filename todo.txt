@@ -3,6 +3,7 @@ PUNCHDOWN LIST
 
 * blockers:
   - cmp-matrices
+  - docs re mods contact
 
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
