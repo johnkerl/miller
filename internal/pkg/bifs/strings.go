@@ -43,18 +43,18 @@ func dot_s_xx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 var dot_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
-	//       .  ERROR   ABSENT NULL   VOID   STRING    INT       FLOAT     BOOL      ARRAY  MAP     FUNC
-	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
-	/*ABSENT */ {_erro, _absn, _null, _void, _2___, _s2__, _s2__, _s2__, _absn, _absn, _erro},
-	/*NULL   */ {_erro, _null, _null, _void, _2___, _s2__, _s2__, _s2__, _absn, _absn, _erro},
-	/*VOID   */ {_erro, _void, _void, _void, _2___, _s2__, _s2__, _s2__, _absn, _absn, _erro},
-	/*STRING */ {_erro, _1___, _1___, _1___, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, _erro, _erro, _erro},
-	/*INT    */ {_erro, _s1__, _1___, _s1__, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, _erro, _erro, _erro},
-	/*FLOAT  */ {_erro, _s1__, _1___, _s1__, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, _erro, _erro, _erro},
-	/*BOOL   */ {_erro, _s1__, _1___, _s1__, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, _erro, _erro, _erro},
-	/*ARRAY  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*MAP    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+//       .  INT       FLOAT     BOOL      VOID   STRING    ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
+/*INT    */ {dot_s_xx, dot_s_xx, dot_s_xx, _s1__, dot_s_xx, _erro, _erro, _erro, _erro, _1___, _s1__},
+/*FLOAT  */ {dot_s_xx, dot_s_xx, dot_s_xx, _s1__, dot_s_xx, _erro, _erro, _erro, _erro, _1___, _s1__},
+/*BOOL   */ {dot_s_xx, dot_s_xx, dot_s_xx, _s1__, dot_s_xx, _erro, _erro, _erro, _erro, _1___, _s1__},
+/*VOID   */ {_s2__,    _s2__,    _s2__,    _void, _2___,    _absn, _absn, _erro, _erro, _void, _void},
+/*STRING */ {dot_s_xx, dot_s_xx, dot_s_xx, _1___, dot_s_xx, _erro, _erro, _erro, _erro, _1___, _1___},
+/*ARRAY  */ {_erro,    _erro,    _erro,    _erro, _erro,    _erro, _erro, _erro, _erro, _erro, _erro},
+/*MAP    */ {_erro,    _erro,    _erro,    _erro, _erro,    _erro, _erro, _erro, _erro, _erro, _erro},
+/*FUNC   */ {_erro,    _erro,    _erro,    _erro, _erro,    _erro, _erro, _erro, _erro, _erro, _erro},
+/*ERROR  */ {_erro,    _erro,    _erro,    _erro, _erro,    _absn, _absn, _erro, _erro, _erro, _erro},
+/*NULL   */ {_s2__,    _s2__,    _s2__,    _void, _2___,    _absn, _absn, _erro, _erro, _null, _null},
+/*ABSENT */ {_s2__,    _s2__,    _s2__,    _void, _2___,    _absn, _absn, _erro, _erro, _null, _absn},
 }
 
 func BIF_dot(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -331,18 +331,18 @@ func fmtnum_bs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 var fmtnum_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
-	//       .  ERROR   ABSENT NULL   VOID   STRING     INT    FLOAT  BOOL   ARRAY  MAP    FUNC
-	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*ABSENT */ {_erro, _absn, _absn, _absn, _absn, _absn, _absn, _erro, _erro, _erro, _erro},
-	/*NULL   */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*VOID   */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*STRING */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*INT    */ {_erro, _absn, _erro, _erro, fmtnum_is, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*FLOAT  */ {_erro, _absn, _erro, _erro, fmtnum_fs, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*BOOL   */ {_erro, _absn, _erro, _erro, fmtnum_bs, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*ARRAY  */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*MAP    */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*FUNC   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+//       .  INT    FLOAT  BOOL   VOID   STRING     ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
+/*INT    */ {_erro, _erro, _erro, _erro, fmtnum_is, _erro, _erro, _erro, _erro, _erro, _absn},
+/*FLOAT  */ {_erro, _erro, _erro, _erro, fmtnum_fs, _erro, _erro, _erro, _erro, _erro, _absn},
+/*BOOL   */ {_erro, _erro, _erro, _erro, fmtnum_bs, _erro, _erro, _erro, _erro, _erro, _absn},
+/*VOID   */ {_erro, _erro, _erro, _erro, _erro,     _erro, _erro, _erro, _erro, _erro, _absn},
+/*STRING */ {_erro, _erro, _erro, _erro, _erro,     _erro, _erro, _erro, _erro, _erro, _absn},
+/*ARRAY  */ {_erro, _erro, _erro, _erro, _erro,     _erro, _erro, _erro, _erro, _erro, _absn},
+/*MAP    */ {_erro, _erro, _erro, _erro, _erro,     _erro, _erro, _erro, _erro, _erro, _absn},
+/*FUNC   */ {_erro, _erro, _erro, _erro, _erro,     _erro, _erro, _erro, _erro, _erro, _erro},
+/*ERROR  */ {_erro, _erro, _erro, _erro, _erro,     _erro, _erro, _erro, _erro, _erro, _erro},
+/*NULL   */ {_erro, _erro, _erro, _erro, _erro,     _erro, _erro, _erro, _erro, _erro, _absn},
+/*ABSENT */ {_absn, _absn, _erro, _absn, _absn,     _erro, _erro, _erro, _erro, _absn, _absn},
 }
 
 func BIF_fmtnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {

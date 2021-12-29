@@ -1,8 +1,3 @@
-[**Take the 2021 Miller User Survey!**](https://docs.google.com/forms/d/e/1FAIpQLSfNgLS9WVRq9mu8dZlMbS7LbTyRH1diRDnT_dGiavSOh_A8xA/viewform?usp=sf_link)
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-38-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
-
 # What is Miller?
 
 **Miller is like awk, sed, cut, join, and sort for data formats such as CSV, TSV, tabular JSON and positionally-indexed.**
@@ -100,6 +95,10 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 * Discussion forum: https://github.com/johnkerl/miller/discussions
 * Feature requests / bug reports: https://github.com/johnkerl/miller/issues
 
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-38-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
 # Features
 
 * Miller is **multi-purpose**: it's useful for **data cleaning**,
@@ -177,10 +176,10 @@ Thanks to all the fine people who help make Miller better ([emoji key](https://a
 <table>
   <tr>
     <td align="center"><a href="https://github.com/aborruso"><img src="https://avatars.githubusercontent.com/u/30607?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Andrea Borruso</b></sub></a><br /><a href="#ideas-aborruso" title="Ideas, Planning, & Feedback">🤔</a> <a href="#design-aborruso" title="Design">🎨</a></td>
+    <td align="center"><a href="https://github.com/gromgit"><img src="https://avatars.githubusercontent.com/u/215702?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Adrian Ho</b></sub></a><br /><a href="#design-gromgit" title="Design">🎨</a></td>
     <td align="center"><a href="https://sjackman.ca/"><img src="https://avatars.githubusercontent.com/u/291551?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Shaun Jackman</b></sub></a><br /><a href="#ideas-sjackman" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://www.fredtrotter.com/"><img src="https://avatars.githubusercontent.com/u/83133?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Fred Trotter</b></sub></a><br /><a href="#ideas-ftrotter" title="Ideas, Planning, & Feedback">🤔</a> <a href="#design-ftrotter" title="Design">🎨</a></td>
     <td align="center"><a href="https://github.com/Komosa"><img src="https://avatars.githubusercontent.com/u/10688154?v=4?s=50" width="50px;" alt=""/><br /><sub><b>komosa</b></sub></a><br /><a href="#ideas-Komosa" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="https://github.com/jungle-boogie"><img src="https://avatars.githubusercontent.com/u/1111743?v=4?s=50" width="50px;" alt=""/><br /><sub><b>jungle-boogie</b></sub></a><br /><a href="#ideas-jungle-boogie" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/0-wiz-0"><img src="https://avatars.githubusercontent.com/u/2221844?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Thomas Klausner</b></sub></a><br /><a href="#infra-0-wiz-0" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     <td align="center"><a href="https://github.com/skitt"><img src="https://avatars.githubusercontent.com/u/2128935?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Stephen Kitt</b></sub></a><br /><a href="#platform-skitt" title="Packaging/porting to new platform">📦</a></td>
   </tr>
@@ -194,13 +193,13 @@ Thanks to all the fine people who help make Miller better ([emoji key](https://a
     <td align="center"><a href="http://victorsergienko.com/"><img src="https://avatars.githubusercontent.com/u/151199?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Victor Sergienko</b></sub></a><br /><a href="#platform-singalen" title="Packaging/porting to new platform">📦</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/gromgit"><img src="https://avatars.githubusercontent.com/u/215702?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Adrian Ho</b></sub></a><br /><a href="#design-gromgit" title="Design">🎨</a></td>
     <td align="center"><a href="https://github.com/Zachp"><img src="https://avatars.githubusercontent.com/u/1316442?v=4?s=50" width="50px;" alt=""/><br /><sub><b>zachp</b></sub></a><br /><a href="#platform-Zachp" title="Packaging/porting to new platform">📦</a></td>
     <td align="center"><a href="https://dsel.net/"><img src="https://avatars.githubusercontent.com/u/921669?v=4?s=50" width="50px;" alt=""/><br /><sub><b>David Selassie</b></sub></a><br /><a href="#ideas-davidselassie" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://www.joelparkerhenderson.com/"><img src="https://avatars.githubusercontent.com/u/27145?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Joel Parker Henderson</b></sub></a><br /><a href="#ideas-joelparkerhenderson" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/divtiply"><img src="https://avatars.githubusercontent.com/u/5359679?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Michel Ace</b></sub></a><br /><a href="#ideas-divtiply" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://fuco1.github.io/sitemap.html"><img src="https://avatars.githubusercontent.com/u/2664959?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Matus Goljer</b></sub></a><br /><a href="#ideas-Fuco1" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/terorie"><img src="https://avatars.githubusercontent.com/u/21371810?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Richard Patel</b></sub></a><br /><a href="#platform-terorie" title="Packaging/porting to new platform">📦</a></td>
+    <td align="center"><a href="https://github.com/jungle-boogie"><img src="https://avatars.githubusercontent.com/u/1111743?v=4?s=50" width="50px;" alt=""/><br /><sub><b>jungle-boogie</b></sub></a><br /><a href="#ideas-jungle-boogie" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
   <tr>
     <td align="center"><a href="https://blog.kub1x.org/"><img src="https://avatars.githubusercontent.com/u/1833840?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Jakub Podlaha</b></sub></a><br /><a href="#design-kub1x" title="Design">🎨</a></td>
