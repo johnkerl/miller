@@ -46,14 +46,14 @@ var ERROR = &Mlrval{
 	printrepValid: true,
 }
 
-var ABSENT = &Mlrval{
-	mvtype:        MT_ABSENT,
-	printrep:      ABSENT_PRINTREP,
-	printrepValid: true,
-}
-
 var NULL = &Mlrval{
 	mvtype:        MT_NULL,
 	printrep:      "null",
+	printrepValid: true,
+}
+
+var ABSENT = &Mlrval{
+	mvtype:        MT_ABSENT,
+	printrep:      ABSENT_PRINTREP,
 	printrepValid: true,
 }
