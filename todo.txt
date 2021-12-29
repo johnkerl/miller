@@ -2,19 +2,11 @@
 PUNCHDOWN LIST
 
 * blockers:
-  - improved regex doc w/ lots of examples
   - cmp-matrices
-  - `mlr put` -> coverart
+  - mlr put at coverart
 
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
-
-* regex
-  o authoritative regex docs accompanied by thorough UT
-    - expand existing regex webdoc
-  o r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
-  o reference-main-regular-expressions:
-    separate escaping for "\t" etc in arg-2/regex position -- "\t"."\t" example as well ...
 
 * doc
   o new-in-miller-6: missings:
@@ -50,6 +42,8 @@ PUNCHDOWN LIST
 
 ================================================================
 NON-BLOCKERS
+
+* r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
 
 * sysdate, sysdate_local; datediff ...
 
