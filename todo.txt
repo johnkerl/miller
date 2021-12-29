@@ -2,16 +2,9 @@
 PUNCHDOWN LIST
 
 * blockers:
-  - fractional-strptime
   - improved regex doc w/ lots of examples
   - cmp-matrices
-  - all-contribs: twi dm
-    https://github.com/all-contributors/all-contributors
-    yarn all-contributors add namegoeshere ideas
-  - license triple-checks
   - `mlr put` -> coverart
-
-* nikos materials -> fold in
 
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
@@ -22,18 +15,6 @@ PUNCHDOWN LIST
   o r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
   o reference-main-regular-expressions:
     separate escaping for "\t" etc in arg-2/regex position -- "\t"."\t" example as well ...
-
-* datetime
-  o sysdate, sysdate_local; datediff ...
-  o .6S bugfix -- separate PR -- ?
-  o strptime w/ ...00.Z -> error
-  o strptime/strftime experiments ...
-    - verb sec2gmtdate
-      > leaves non-numbers as-is -- ?
-      > check sec2gmt as well -- ?
-    ! strptime:
-      strptime("1970-01-01T00:00:00.Z", "%Y-%m-%dT%H:%M:%SZ")
-      (error)
 
 * doc
   o new-in-miller-6: missings:
@@ -70,7 +51,11 @@ PUNCHDOWN LIST
 ================================================================
 NON-BLOCKERS
 
+* sysdate, sysdate_local; datediff ...
+
 * JSON perf -- try alternate packages to encoding/json
+
+* strptime w/ ...00.Z -> error
 
 * pos/neg 0x/0b/0o UTs
 
@@ -361,6 +346,9 @@ no need to bootstrap a parser for the parser-generator language
 
 ----------------------------------------------------------------
 INFO
+
+i https://github.com/all-contributors/all-contributors
+  yarn all-contributors add namegoeshere ideas
 
 i go tool nm -size mlr | sort -nrk 2
 
