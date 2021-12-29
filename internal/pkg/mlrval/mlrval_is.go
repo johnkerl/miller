@@ -9,7 +9,8 @@ import (
 // information.
 
 func (mv *Mlrval) IsLegit() bool {
-	return mv.Type() >= MT_VOID
+	t := mv.Type()
+	return MT_INT <= t && t < MT_ERROR
 }
 
 // TODO: comment no JIT-infer here -- absent is non-inferrable and we needn't take the expense of JIT.
