@@ -170,8 +170,6 @@ func NewTransformerTop(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerTop) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
@@ -186,7 +184,6 @@ func (tr *TransformerTop) Transform(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerTop) ingest(
 	inrecAndContext *types.RecordAndContext,
 ) {

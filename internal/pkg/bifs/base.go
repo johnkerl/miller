@@ -190,3 +190,18 @@ func _true(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 func _fals(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FALSE
 }
+
+// For the disposition-matrix entries behind the spaceship operator
+func _less(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(-1)
+}
+
+// For the disposition-matrix entries behind the spaceship operator
+func _same(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(0)
+}
+
+// For the disposition-matrix entries behind the spaceship operator
+func _more(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(1)
+}
