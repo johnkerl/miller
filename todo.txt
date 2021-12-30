@@ -1,30 +1,7 @@
 ================================================================
 PUNCHDOWN LIST
 
-* blockers:
-  - cmp-matrices
-    > X_as_bool del
-    > mvcmp mix
-
-      internal/pkg/bifs/arithmetic.go
-      internal/pkg/bifs/bits.go
-      internal/pkg/bifs/booleans.go
-      internal/pkg/bifs/collections.go
-      internal/pkg/bifs/mathlib.go
-      internal/pkg/bifs/sort.go
-      internal/pkg/bifs/strings.go
-      internal/pkg/bifs/types.go
-
-      internal/pkg/mlrval/mlrval_cmp.go
-      internal/pkg/mlrval/mlrval_cmp_test.go
-      internal/pkg/mlrval/mlrval_constants.go
-      internal/pkg/mlrval/mlrval_is.go
-      internal/pkg/mlrval/mlrval_type.go
-
-  - docs re mods contact
-
-* cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
-  NUMERICS < BOOL < VOID < STRING
+* compat emph
 
 * doc
   o new-in-miller-6: missings:
@@ -60,6 +37,8 @@ PUNCHDOWN LIST
 
 ================================================================
 NON-BLOCKERS
+
+* cmp for array & map
 
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
 
