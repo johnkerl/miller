@@ -4,6 +4,7 @@ PUNCHDOWN LIST
 * blockers:
   * cmp-matrices need to be fixed to follow the advertised rule for mixed types
     i NUMERICS < BOOL < VOID < STRING
+    - x t.Fatal @ *test.go
     - bifs/sort.go coalesce -- ?
     - array/map recurse-cmp & UT
     - docs re mods contract

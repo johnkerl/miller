@@ -3,6 +3,8 @@ package bifs
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
@@ -37,95 +39,45 @@ func TestComparators(t *testing.T) {
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Within-type lexical comparisons
-	if LexicalAscendingComparator(i10, i2) != -1 {
-		t.Fatal()
-	}
-	if LexicalAscendingComparator(bfalse, bfalse) != 0 {
-		t.Fatal()
-	}
-	if LexicalAscendingComparator(bfalse, btrue) != -1 {
-		t.Fatal()
-	}
-	if LexicalAscendingComparator(sabc, sdef) != -1 {
-		t.Fatal()
-	}
-	if LexicalAscendingComparator(&e, &e) != 0 {
-		t.Fatal()
-	}
-	if LexicalAscendingComparator(&a, &a) != 0 {
-		t.Fatal()
-	}
+	assert.Equal(t, -1, LexicalAscendingComparator(i10, i2))
+	assert.Equal(t, 0, LexicalAscendingComparator(bfalse, bfalse))
+	assert.Equal(t, -1, LexicalAscendingComparator(bfalse, btrue))
+	assert.Equal(t, -1, LexicalAscendingComparator(sabc, sdef))
+	assert.Equal(t, 0, LexicalAscendingComparator(&e, &e))
+	assert.Equal(t, 0, LexicalAscendingComparator(&a, &a))
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Within-type numeric comparisons
-	if NumericAscendingComparator(i10, i2) != 1 {
-		t.Fatal()
-	}
-	if NumericAscendingComparator(sabc, sabc) != 0 {
-		t.Fatal()
-	}
-	if NumericAscendingComparator(sabc, sdef) != -1 {
-		t.Fatal()
-	}
+	assert.Equal(t, 1, NumericAscendingComparator(i10, i2))
+	assert.Equal(t, 0, NumericAscendingComparator(sabc, sabc))
+	assert.Equal(t, -1, NumericAscendingComparator(sabc, sdef))
 
-	if NumericAscendingComparator(btrue, bfalse) != 1 {
-		t.Fatal()
-	}
+	assert.Equal(t, 1, NumericAscendingComparator(btrue, bfalse))
 
-	if NumericAscendingComparator(&e, &e) != 0 {
-		t.Fatal()
-	}
-	if NumericAscendingComparator(&a, &a) != 0 {
-		t.Fatal()
-	}
+	assert.Equal(t, 0, NumericAscendingComparator(&e, &e))
+	assert.Equal(t, 0, NumericAscendingComparator(&a, &a))
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Across-type lexical comparisons
 
-	if LexicalAscendingComparator(i10, btrue) != -1 { // "10" < "true"
-		t.Fatal()
-	}
-	if LexicalAscendingComparator(i10, sabc) != -1 { // "10" < "abc"
-		t.Fatal()
-	}
-	if LexicalAscendingComparator(i10, &e) != 1 { // "10" > "(error)"
-		t.Fatal()
-	}
+	assert.Equal(t, -1, LexicalAscendingComparator(i10, btrue)) // "10" < "true"
+	assert.Equal(t, -1, LexicalAscendingComparator(i10, sabc))   // "10" < "abc"
+	assert.Equal(t, 1, LexicalAscendingComparator(i10, &e))     // "10" > "(error)"
 
-	if LexicalAscendingComparator(bfalse, sabc) != 1 { // "false" > "abc"
-		t.Fatal()
-	}
-	if LexicalAscendingComparator(bfalse, &e) != 1 { // "false" > "(error)"
-		t.Fatal()
-	}
+	assert.Equal(t, 1, LexicalAscendingComparator(bfalse, sabc)) // "false" > "abc"
+	assert.Equal(t, 1, LexicalAscendingComparator(bfalse, &e))   // "false" > "(error)"
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Across-type numeric comparisons
 
-	if NumericAscendingComparator(i10, btrue) != -1 {
-		t.Fatal()
-	}
-	if NumericAscendingComparator(i10, sabc) != -1 {
-		t.Fatal()
-	}
-	if NumericAscendingComparator(i10, &e) != -1 {
-		t.Fatal()
-	}
-	if NumericAscendingComparator(i10, &a) != -1 {
-		t.Fatal()
-	}
+	assert.Equal(t, -1, NumericAscendingComparator(i10, btrue))
+	assert.Equal(t, -1, NumericAscendingComparator(i10, sabc))
+	assert.Equal(t, -1, NumericAscendingComparator(i10, &e))
+	assert.Equal(t, -1, NumericAscendingComparator(i10, &a))
 
-	if NumericAscendingComparator(bfalse, sabc) != -1 {
-		t.Fatal()
-	}
-	if NumericAscendingComparator(bfalse, &e) != -1 {
-		t.Fatal()
-	}
-	if NumericAscendingComparator(bfalse, &a) != -1 {
-		t.Fatal()
-	}
+	assert.Equal(t, -1, NumericAscendingComparator(bfalse, sabc))
+	assert.Equal(t, -1, NumericAscendingComparator(bfalse, &e))
+	assert.Equal(t, -1, NumericAscendingComparator(bfalse, &a))
 
-	if NumericAscendingComparator(&e, &a) != -1 {
-		t.Fatal()
-	}
+	assert.Equal(t, -1, NumericAscendingComparator(&e, &a))
 }
