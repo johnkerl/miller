@@ -271,7 +271,7 @@ var eq_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{}
 
 func init() {
 	eq_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
-		//       .  INT      FLOAT    BOOL     VOID     STRING   ARRAY    MAP      FUNC    ERROR   NULL   ABSENT
+		//       .  INT       FLOAT    BOOL     VOID     STRING   ARRAY    MAP      FUNC   ERROR  NULL   ABSENT
 		/*INT    */ {eq_b_ii, eq_b_if, _fals, eq_b_xs, eq_b_xs, _fals, _fals, _erro, _erro, _fals, _absn},
 		/*FLOAT  */ {eq_b_fi, eq_b_ff, _fals, eq_b_xs, eq_b_xs, _fals, _fals, _erro, _erro, _fals, _absn},
 		/*BOOL   */ {_fals, _fals, eq_b_bb, _fals, _fals, _fals, _fals, _erro, _erro, _fals, _absn},
@@ -287,7 +287,7 @@ func init() {
 }
 
 var ne_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
-	//       .  INT      FLOAT    BOOL     VOID     STRING   ARRAY    MAP      FUNC    ERROR   NULL   ABSENT
+	//       .  INT       FLOAT    BOOL     VOID     STRING   ARRAY    MAP      FUNC   ERROR  NULL   ABSENT
 	/*INT    */ {ne_b_ii, ne_b_if, _true, ne_b_xs, ne_b_xs, _true, _true, _erro, _erro, _true, _absn},
 	/*FLOAT  */ {ne_b_fi, ne_b_ff, _true, ne_b_xs, ne_b_xs, _true, _true, _erro, _erro, _true, _absn},
 	/*BOOL   */ {_true, _true, ne_b_bb, _true, _true, _true, _true, _erro, _erro, _true, _absn},
@@ -302,7 +302,7 @@ var ne_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 }
 
 var gt_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
-	//       .  INT      FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
+	//       .  INT       FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC   ERROR  NULL   ABSENT
 	/*INT    */ {gt_b_ii, gt_b_if, _fals, gt_b_xs, gt_b_xs, _fals, _fals, _erro, _erro, _fals, _absn},
 	/*FLOAT  */ {gt_b_fi, gt_b_ff, _fals, gt_b_xs, gt_b_xs, _fals, _fals, _erro, _erro, _fals, _absn},
 	/*BOOL   */ {_fals, _fals, gt_b_bb, _fals, _fals, _fals, _fals, _erro, _erro, _fals, _absn},
@@ -317,7 +317,7 @@ var gt_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 }
 
 var ge_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
-	//       .  INT      FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
+	//       .  INT       FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC   ERROR  NULL   ABSENT
 	/*INT    */ {ge_b_ii, ge_b_if, _fals, ge_b_xs, ge_b_xs, _fals, _fals, _erro, _erro, _fals, _absn},
 	/*FLOAT  */ {ge_b_fi, ge_b_ff, _fals, ge_b_xs, ge_b_xs, _fals, _fals, _erro, _erro, _fals, _absn},
 	/*BOOL   */ {_fals, _fals, ge_b_bb, _fals, _fals, _fals, _fals, _erro, _erro, _fals, _absn},
@@ -332,7 +332,7 @@ var ge_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 }
 
 var lt_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
-	//       .  INT      FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
+	//       .  INT       FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC   ERROR  NULL   ABSENT
 	/*INT    */ {lt_b_ii, lt_b_if, _fals, lt_b_xs, lt_b_xs, _fals, _fals, _erro, _erro, _true, _absn},
 	/*FLOAT  */ {lt_b_fi, lt_b_ff, _fals, lt_b_xs, lt_b_xs, _fals, _fals, _erro, _erro, _true, _absn},
 	/*BOOL   */ {_fals, _fals, lt_b_bb, _fals, _fals, _fals, _fals, _erro, _erro, _true, _absn},
@@ -347,7 +347,7 @@ var lt_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 }
 
 var le_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
-	//       .  INT      FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
+	//       .  INT       FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC   ERROR  NULL   ABSENT
 	/*INT    */ {le_b_ii, le_b_if, _fals, le_b_xs, le_b_xs, _fals, _fals, _erro, _erro, _true, _absn},
 	/*FLOAT  */ {le_b_fi, le_b_ff, _fals, le_b_xs, le_b_xs, _fals, _fals, _erro, _erro, _true, _absn},
 	/*BOOL   */ {_fals, _fals, le_b_bb, _fals, _fals, _fals, _fals, _erro, _erro, _true, _absn},
@@ -362,7 +362,7 @@ var le_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 }
 
 var cmp_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
-	//       .  INT       FLOAT     BOOL      VOID      STRING    ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
+	//       .  INT        FLOAT     BOOL      VOID      STRING    ARRAY  MAP    FUNC   ERROR  NULL   ABSENT
 	/*INT    */ {cmp_b_ii, cmp_b_if, _fals, cmp_b_xs, cmp_b_xs, _fals, _fals, _erro, _erro, _true, _absn},
 	/*FLOAT  */ {cmp_b_fi, cmp_b_ff, _fals, cmp_b_xs, cmp_b_xs, _fals, _fals, _erro, _erro, _true, _absn},
 	/*BOOL   */ {_fals, _fals, cmp_b_bb, _fals, _fals, _fals, _fals, _erro, _erro, _true, _absn},
@@ -399,6 +399,7 @@ func BIF_cmp(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // ----------------------------------------------------------------
+
 func BIF_logical_NOT(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsBool() {
 		return mlrval.FromBool(!input1.AcquireBoolValue())

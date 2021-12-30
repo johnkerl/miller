@@ -2,13 +2,12 @@
 PUNCHDOWN LIST
 
 * blockers:
-  - cmp-matrices
-  - array/map recurse-cmp & UT
-  - docs re mods contact
-  - cmt mlrval-cmp is subsetting for mlr sort etc -- no absn/erro returns possible
-
-* cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
-  NUMERICS < BOOL < VOID < STRING
+  * cmp-matrices need to be fixed to follow the advertised rule for mixed types
+    i NUMERICS < BOOL < VOID < STRING
+    - bifs/sort.go coalesce -- ?
+    - array/map recurse-cmp & UT
+    - docs re mods contract
+    - cmt mlrval-cmp is subsetting for mlr sort etc -- no absn/erro returns possible
 
 * doc
   o new-in-miller-6: missings:
