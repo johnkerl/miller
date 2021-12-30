@@ -1,14 +1,7 @@
 ================================================================
 PUNCHDOWN LIST
 
-* blockers:
-  * cmp-matrices need to be fixed to follow the advertised rule for mixed types
-    i NUMERICS < BOOL < VOID < STRING
-    - x t.Fatal @ *test.go
-    - bifs/sort.go coalesce -- ?
-    - array/map recurse-cmp & UT
-    - docs re mods contract
-    - cmt mlrval-cmp is subsetting for mlr sort etc -- no absn/erro returns possible
+* compat emph
 
 * doc
   o new-in-miller-6: missings:
@@ -44,6 +37,8 @@ PUNCHDOWN LIST
 
 ================================================================
 NON-BLOCKERS
+
+* cmp for array & map
 
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
 

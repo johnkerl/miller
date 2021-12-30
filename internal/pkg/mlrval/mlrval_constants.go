@@ -57,3 +57,25 @@ var ABSENT = &Mlrval{
 	printrep:      ABSENT_PRINTREP,
 	printrepValid: true,
 }
+
+// For malloc-avoidance in the spaceship operator
+var MINUS_ONE = &Mlrval{
+	mvtype:        MT_INT,
+	printrep:      "-1",
+	printrepValid: true,
+	intval:        -1,
+}
+
+var ZERO = &Mlrval{
+	mvtype:        MT_INT,
+	printrep:      "0",
+	printrepValid: true,
+	intval:        0,
+}
+
+var ONE = &Mlrval{
+	mvtype:        MT_INT,
+	printrep:      "1",
+	printrepValid: true,
+	intval:        1,
+}
