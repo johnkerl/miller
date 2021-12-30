@@ -236,7 +236,6 @@ t* ranspose ...
 * UDF nexts:
   o more functions (see below)
   o strmatch https://github.com/johnkerl/miller/issues/77#issuecomment-538790927
-  o DSL sort function https://github.com/johnkerl/miller/issues/77#issuecomment-321916921
 
 * bash completion script https://github.com/johnkerl/miller/issues/77#issuecomment-308247402
   https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial#:~:text=Bash%20completion%20is%20a%20functionality,key%20while%20typing%20a%20command.
@@ -246,9 +245,6 @@ t* ranspose ...
 
 * double-check rand-seeding
   o all rand invocations should go through the seeder for UT/other determinism
-
-* comment-handling
-  - delegator for CSV ...
 
 ! quoted NIDX
   - how with whitespace regex -- ?
@@ -271,8 +267,6 @@ t* ranspose ...
   done by ChannelWriter, which is very small. opportunity to refactor.
 * address all manner of xxx and TODO comments
 * empty csv ... reminder ...
-
-* functions as first-class objects; then sortaf/sortmf take f not "f"
 
 * godoc notes:
   o go get golang.org/x/tools/cmd/godoc
@@ -423,7 +417,6 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * short 'asserting' functions (absent/error); and/or put --strict or somesuch
 * function metadata: auto-sort on mlr -f?
 * --x2b @ help-doc .go; etc
-? remove flagSet x all -- ? for consistency?
 * os.Args[0] etc -> "mlr" throughout the codebase
 * emitx later: 'emit([a,b,c],d,e,f)' for SR-conflict issues
 
@@ -529,10 +522,6 @@ DOC6:
 * window.mlr, window2.mlr -> doc somewhere
 * doc: substr in inferred-numeric fields: https://github.com/johnkerl/miller/issues/290.
   o xref to 1-up note.
-* document --jvstack is now the default; --no-jvstack
-* doc about put -S/-F cannot make sense anymore
-* why not flagSet. can't be supported everywhere, so don't confuse the user by
-  supporting it some places and not others.
 * back-incompat:
   mlr -n put $vflag '@x=1; dump > stdout, @x'
   mlr -n put $vflag '@x=1; dump > stdout @x'
@@ -540,6 +529,9 @@ DOC6:
 * document tee -p
 
 * why no flagSet:
+
+  can't be supported everywhere, so don't confuse the user by supporting it
+  some places and not others.
 
 	Unlike other transformers, we can't use flagSet here. The syntax of 'mlr
 	sort' is it needs to take things like 'mlr sort -f a -n b -n c', i.e.
@@ -551,12 +543,11 @@ DOC6:
 	and 'mlr filter' is they need to be able to take -f and/or -e more than
 	once, and Go flags can't handle that.
 
-* doc re multi-load: can't '$x >' and '3' in separate -f anymore. no worries.
 * sec2gmt --millis/--micros/--nanos doc
 * sort-within-records --recursive doc
 
 * docs nest simplers now that we have getoptish
-* mongo examples to doc :D
+* mongo examples to doc
 * doclink re https://readthedocs.org/projects/miller/ & https://github.com/johnkerl/miller/settings/hooks
 * dotted-map doc ...
   o $*.foo["bar"] = NR b04k b/c precedence :(
@@ -564,22 +555,3 @@ DOC6:
 
 ? * would LOVE to have small prev-page/next-page links at the *top* not bottom ...
   https://squidfunk.github.io/mkdocs-material/customization/#extending-the-theme
-
-* go test single files:
-  $ go test src/types/mlrval_functions_test.go $(ls src/types/*.go | grep -v test)
-  ok   command-line-arguments 0.100s
-  $ lsr \*test\*.go
-  ./regression_test.go
-  ./src/types/mlrval_functions_test.go
-  ./src/types/mlrval_format_test.go
-  ./src/auxents/regtest/regtester.go
-  ./src/lib/regex_test.go
-  ./src/lib/unbackslash_test.go
-  $ go test src/types/mlrval_functions_test.go $(ls src/types/*.go|grep -v test)
-  ok   command-line-arguments 0.097s
-  $ go test src/types/mlrval_format_test.go $(ls src/types/*.go|grep -v test)
-  ok   command-line-arguments 0.093s
-  $ go test src/lib/regex_test.go src/lib/regex.go
-  ok   command-line-arguments 0.083s
-  $ go test src/lib/unbackslash_test.go src/lib/unbackslash.go
-  ok   command-line-arguments 0.081s
