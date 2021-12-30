@@ -66,12 +66,16 @@ func BIF_dot(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // Negative indices -len .. -1 alias to 0 .. len-1.
 
 func BIF_substr_1_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
-	if !input1.IsStringOrVoid() {
+	if input1.IsAbsent() {
+		return mlrval.ABSENT
+	}
+	if input1.IsError() {
 		return mlrval.ERROR
 	}
+	sinput := input1.String()
 
 	// Handle UTF-8 correctly: len(input1.AcquireStringValue()) will count bytes, not runes.
-	runes := []rune(input1.AcquireStringValue())
+	runes := []rune(sinput)
 	strlen := int(len(runes))
 
 	// For array slices like s[1:2], s[:2], s[1:], when the lower index is
@@ -112,12 +116,16 @@ func BIF_substr_1_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 // Negative indices -len .. -1 alias to 0 .. len-1.
 
 func BIF_substr_0_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
-	if !input1.IsStringOrVoid() {
+	if input1.IsAbsent() {
+		return mlrval.ABSENT
+	}
+	if input1.IsError() {
 		return mlrval.ERROR
 	}
+	sinput := input1.String()
 
 	// Handle UTF-8 correctly: len(input1.AcquireStringValue()) will count bytes, not runes.
-	runes := []rune(input1.AcquireStringValue())
+	runes := []rune(sinput)
 	strlen := int(len(runes))
 
 	// For array slices like s[1:2], s[:2], s[1:], when the lower index is
