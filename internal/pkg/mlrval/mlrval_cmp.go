@@ -1,5 +1,12 @@
 // ================================================================
-// Boolean expressions for ==, !=, >, >=, <, <=, <=> on Mlrvals
+// Boolean expressions for ==, !=, >, >=, <, <=, <=> on Mlrvals.
+//
+// Note that in bifs/boolean.go we have similar functions which take pairs of
+// Mlrvals as input and return Mlrval as output. Those are for use in the
+// Miller DSL. The functions here are primarily for 'mlr sort'. Their benefit
+// is they don't allocate memory, and so are more efficient for sort we don't
+// want to trigger lots of allocations, nor garbage collection, if we can avoid
+// it.
 // ================================================================
 
 // TODO: comment about mvtype; deferral; copying of deferrence.
@@ -17,22 +24,22 @@ type CmpFuncInt func(input1, input2 *Mlrval) int // -1, 0, 1 for <=>
 // Exported methods
 
 func Equals(input1, input2 *Mlrval) bool {
-	return eq_dispositions[input1.Type()][input2.Type()](input1, input2)
+	return cmp_dispositions[input1.Type()][input2.Type()](input1, input2) == 0
 }
 func NotEquals(input1, input2 *Mlrval) bool {
-	return ne_dispositions[input1.Type()][input2.Type()](input1, input2)
+	return cmp_dispositions[input1.Type()][input2.Type()](input1, input2) != 0
 }
 func GreaterThan(input1, input2 *Mlrval) bool {
-	return gt_dispositions[input1.Type()][input2.Type()](input1, input2)
+	return cmp_dispositions[input1.Type()][input2.Type()](input1, input2) > 0
 }
 func GreaterThanOrEquals(input1, input2 *Mlrval) bool {
-	return ge_dispositions[input1.Type()][input2.Type()](input1, input2)
+	return cmp_dispositions[input1.Type()][input2.Type()](input1, input2) >= 0
 }
 func LessThan(input1, input2 *Mlrval) bool {
-	return lt_dispositions[input1.Type()][input2.Type()](input1, input2)
+	return cmp_dispositions[input1.Type()][input2.Type()](input1, input2) < 0
 }
 func LessThanOrEquals(input1, input2 *Mlrval) bool {
-	return le_dispositions[input1.Type()][input2.Type()](input1, input2)
+	return cmp_dispositions[input1.Type()][input2.Type()](input1, input2) <= 0
 }
 func Cmp(input1, input2 *Mlrval) int {
 	return cmp_dispositions[input1.Type()][input2.Type()](input1, input2)
@@ -41,15 +48,19 @@ func Cmp(input1, input2 *Mlrval) int {
 // ----------------------------------------------------------------
 // Support routines for disposition-matrix entries
 
-// string_cmp implements the spaceship operator for strings.
-func string_cmp(a, b string) int {
-	if a < b {
-		return -1
-	}
-	if a > b {
-		return 1
-	}
+// _same returns int 0 as a binary-input function
+func _same(input1, input2 *Mlrval) int {
 	return 0
+}
+
+// _less returns int -1 as a binary-input function
+func _less(input1, input2 *Mlrval) int {
+	return -1
+}
+
+// _more returns int 1 as a binary-input function
+func _more(input1, input2 *Mlrval) int {
+	return 1
 }
 
 // int_cmp implements the spaceship operator for ints.
@@ -74,366 +85,80 @@ func float_cmp(a, b float64) int {
 	return 0
 }
 
-// _true return boolean true as a binary-input function
-func _true(input1, input2 *Mlrval) bool {
-	return true
-}
-
-// _fals return boolean false as a binary-input function
-func _fals(input1, input2 *Mlrval) bool {
-	return false
-}
-
-// _i0__ return int 0 as a binary-input function
-func _i0__(input1, input2 *Mlrval) int {
+// string_cmp implements the spaceship operator for strings.
+func string_cmp(a, b string) int {
+	if a < b {
+		return -1
+	}
+	if a > b {
+		return 1
+	}
 	return 0
-}
-
-// _i1__ return int 1 as a binary-input function
-func _i1__(input1, input2 *Mlrval) int {
-	return 1
-}
-
-// _n1__ return int -1 as a binary-input function
-func _n1__(input1, input2 *Mlrval) int {
-	return -1
 }
 
 // ----------------------------------------------------------------
 // Disposition-matrix entries
 
-func eq_b_ss(input1, input2 *Mlrval) bool {
-	return input1.printrep == input2.printrep
-}
-func ne_b_ss(input1, input2 *Mlrval) bool {
-	return input1.printrep != input2.printrep
-}
-func gt_b_ss(input1, input2 *Mlrval) bool {
-	return input1.printrep > input2.printrep
-}
-func ge_b_ss(input1, input2 *Mlrval) bool {
-	return input1.printrep >= input2.printrep
-}
-func lt_b_ss(input1, input2 *Mlrval) bool {
-	return input1.printrep < input2.printrep
-}
-func le_b_ss(input1, input2 *Mlrval) bool {
-	return input1.printrep <= input2.printrep
-}
 func cmp_b_ss(input1, input2 *Mlrval) int {
 	return string_cmp(input1.printrep, input2.printrep)
-}
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-func eq_b_xs(input1, input2 *Mlrval) bool {
-	return input1.String() == input2.printrep
-}
-func ne_b_xs(input1, input2 *Mlrval) bool {
-	return input1.String() != input2.printrep
-}
-func gt_b_xs(input1, input2 *Mlrval) bool {
-	return input1.String() > input2.printrep
-}
-func ge_b_xs(input1, input2 *Mlrval) bool {
-	return input1.String() >= input2.printrep
-}
-func lt_b_xs(input1, input2 *Mlrval) bool {
-	return input1.String() < input2.printrep
-}
-func le_b_xs(input1, input2 *Mlrval) bool {
-	return input1.String() <= input2.printrep
 }
 func cmp_b_xs(input1, input2 *Mlrval) int {
 	return string_cmp(input1.String(), input2.printrep)
 }
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-func eq_b_sx(input1, input2 *Mlrval) bool {
-	return input1.printrep == input2.String()
-}
-func ne_b_sx(input1, input2 *Mlrval) bool {
-	return input1.printrep != input2.String()
-}
-func gt_b_sx(input1, input2 *Mlrval) bool {
-	return input1.printrep > input2.String()
-}
-func ge_b_sx(input1, input2 *Mlrval) bool {
-	return input1.printrep >= input2.String()
-}
-func lt_b_sx(input1, input2 *Mlrval) bool {
-	return input1.printrep < input2.String()
-}
-func le_b_sx(input1, input2 *Mlrval) bool {
-	return input1.printrep <= input2.String()
-}
 func cmp_b_sx(input1, input2 *Mlrval) int {
 	return string_cmp(input1.printrep, input2.String())
-}
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-func eq_b_ii(input1, input2 *Mlrval) bool {
-	return input1.intval == input2.intval
-}
-func ne_b_ii(input1, input2 *Mlrval) bool {
-	return input1.intval != input2.intval
-}
-func gt_b_ii(input1, input2 *Mlrval) bool {
-	return input1.intval > input2.intval
-}
-func ge_b_ii(input1, input2 *Mlrval) bool {
-	return input1.intval >= input2.intval
-}
-func lt_b_ii(input1, input2 *Mlrval) bool {
-	return input1.intval < input2.intval
-}
-func le_b_ii(input1, input2 *Mlrval) bool {
-	return input1.intval <= input2.intval
 }
 func cmp_b_ii(input1, input2 *Mlrval) int {
 	return int_cmp(input1.intval, input2.intval)
 }
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-func eq_b_if(input1, input2 *Mlrval) bool {
-	return float64(input1.intval) == input2.floatval
-}
-func ne_b_if(input1, input2 *Mlrval) bool {
-	return float64(input1.intval) != input2.floatval
-}
-func gt_b_if(input1, input2 *Mlrval) bool {
-	return float64(input1.intval) > input2.floatval
-}
-func ge_b_if(input1, input2 *Mlrval) bool {
-	return float64(input1.intval) >= input2.floatval
-}
-func lt_b_if(input1, input2 *Mlrval) bool {
-	return float64(input1.intval) < input2.floatval
-}
-func le_b_if(input1, input2 *Mlrval) bool {
-	return float64(input1.intval) <= input2.floatval
-}
 func cmp_b_if(input1, input2 *Mlrval) int {
 	return float_cmp(float64(input1.intval), input2.floatval)
-}
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-func eq_b_fi(input1, input2 *Mlrval) bool {
-	return input1.floatval == float64(input2.intval)
-}
-func ne_b_fi(input1, input2 *Mlrval) bool {
-	return input1.floatval != float64(input2.intval)
-}
-func gt_b_fi(input1, input2 *Mlrval) bool {
-	return input1.floatval > float64(input2.intval)
-}
-func ge_b_fi(input1, input2 *Mlrval) bool {
-	return input1.floatval >= float64(input2.intval)
-}
-func lt_b_fi(input1, input2 *Mlrval) bool {
-	return input1.floatval < float64(input2.intval)
-}
-func le_b_fi(input1, input2 *Mlrval) bool {
-	return input1.floatval <= float64(input2.intval)
 }
 func cmp_b_fi(input1, input2 *Mlrval) int {
 	return float_cmp(input1.floatval, float64(input2.intval))
 }
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-func eq_b_ff(input1, input2 *Mlrval) bool {
-	return input1.floatval == input2.floatval
-}
-func ne_b_ff(input1, input2 *Mlrval) bool {
-	return input1.floatval != input2.floatval
-}
-func gt_b_ff(input1, input2 *Mlrval) bool {
-	return input1.floatval > input2.floatval
-}
-func ge_b_ff(input1, input2 *Mlrval) bool {
-	return input1.floatval >= input2.floatval
-}
-func lt_b_ff(input1, input2 *Mlrval) bool {
-	return input1.floatval < input2.floatval
-}
-func le_b_ff(input1, input2 *Mlrval) bool {
-	return input1.floatval <= input2.floatval
-}
 func cmp_b_ff(input1, input2 *Mlrval) int {
 	return float_cmp(input1.floatval, input2.floatval)
-}
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-func eq_b_bb(input1, input2 *Mlrval) bool {
-	return input1.boolval == input2.boolval
-}
-func ne_b_bb(input1, input2 *Mlrval) bool {
-	return input1.boolval != input2.boolval
-}
-
-func gt_b_bb(input1, input2 *Mlrval) bool {
-	return lib.BoolToInt(input1.boolval) > lib.BoolToInt(input2.boolval)
-}
-func ge_b_bb(input1, input2 *Mlrval) bool {
-	return lib.BoolToInt(input1.boolval) >= lib.BoolToInt(input2.boolval)
-}
-func lt_b_bb(input1, input2 *Mlrval) bool {
-	return lib.BoolToInt(input1.boolval) < lib.BoolToInt(input2.boolval)
-}
-func le_b_bb(input1, input2 *Mlrval) bool {
-	return lib.BoolToInt(input1.boolval) <= lib.BoolToInt(input2.boolval)
 }
 func cmp_b_bb(input1, input2 *Mlrval) int {
 	return int_cmp(lib.BoolToInt(input1.boolval), lib.BoolToInt(input2.boolval))
 }
 
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// TODO: cmp on array & map
+//func eq_b_aa(input1, input2 *Mlrval) bool {
+//	a := input1.arrayval
+//	b := input2.arrayval
+//
+//	// Different-length arrays are not equal
+//	if len(a) != len(b) {
+//		return false
+//	}
+//
+//	// Same-length arrays: return false if any slot is not equal, else true.
+//	for i := range a {
+//		if !Equals(&a[i], &b[i]) {
+//			return false
+//		}
+//	}
+//
+//	return true
+//}
 
-func eq_b_aa(input1, input2 *Mlrval) bool {
-	a := input1.arrayval
-	b := input2.arrayval
+//func eq_b_mm(input1, input2 *Mlrval) bool {
+//	return input1.mapval.Equals(input2.mapval)
+//}
 
-	// Different-length arrays are not equal
-	if len(a) != len(b) {
-		return false
-	}
-
-	// Same-length arrays: return false if any slot is not equal, else true.
-	for i := range a {
-		if !Equals(&a[i], &b[i]) {
-			return false
-		}
-	}
-
-	return true
-}
-func ne_b_aa(input1, input2 *Mlrval) bool {
-	return !eq_b_aa(input1, input2)
-}
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-func eq_b_mm(input1, input2 *Mlrval) bool {
-	return input1.mapval.Equals(input2.mapval)
-}
-func ne_b_mm(input1, input2 *Mlrval) bool {
-	return !input1.mapval.Equals(input2.mapval)
-}
-
-// We get a Golang "initialization loop" due to recursive depth computation
-// if this is defined statically. So, we use a "package init" function.
-var eq_dispositions = [MT_DIM][MT_DIM]CmpFuncBool{}
-
-func init() {
-	eq_dispositions = [MT_DIM][MT_DIM]CmpFuncBool{
-		//       .  INT      FLOAT    BOOL     VOID     STRING   ARRAY    MAP      FUNC    ERROR   NULL   ABSENT
-		/*INT    */ {eq_b_ii, eq_b_if, _fals, eq_b_xs, eq_b_xs, _fals, _fals, _fals, _fals, _fals, _fals},
-		/*FLOAT  */ {eq_b_fi, eq_b_ff, _fals, eq_b_xs, eq_b_xs, _fals, _fals, _fals, _fals, _fals, _fals},
-		/*BOOL   */ {_fals, _fals, eq_b_bb, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-		/*VOID   */ {eq_b_sx, eq_b_sx, _fals, eq_b_ss, eq_b_ss, _fals, _fals, _fals, _fals, _fals, _fals},
-		/*STRING */ {eq_b_sx, eq_b_sx, _fals, eq_b_ss, eq_b_ss, _fals, _fals, _fals, _fals, _fals, _fals},
-		/*ARRAY  */ {_fals, _fals, _fals, _fals, _fals, eq_b_aa, _fals, _fals, _fals, _fals, _fals},
-		/*MAP    */ {_fals, _fals, _fals, _fals, _fals, _fals, eq_b_mm, _fals, _fals, _fals, _fals},
-		/*FUNC   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals, _fals, _fals},
-		/*ERROR  */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals, _fals},
-		/*NULL   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals},
-		/*ABSENT */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true},
-	}
-}
-
-var ne_dispositions = [MT_DIM][MT_DIM]CmpFuncBool{
-	//       .  INT      FLOAT    BOOL     VOID     STRING   ARRAY    MAP      FUNC    ERROR   NULL   ABSENT
-	/*INT    */ {ne_b_ii, ne_b_if, _true, ne_b_xs, ne_b_xs, _true, _true, _fals, _fals, _true, _fals},
-	/*FLOAT  */ {ne_b_fi, ne_b_ff, _true, ne_b_xs, ne_b_xs, _true, _true, _fals, _fals, _true, _fals},
-	/*BOOL   */ {_true, _true, ne_b_bb, _true, _true, _true, _true, _fals, _fals, _true, _fals},
-	/*VOID   */ {ne_b_sx, ne_b_sx, _true, ne_b_ss, ne_b_ss, _true, _true, _fals, _fals, _true, _fals},
-	/*STRING */ {ne_b_sx, ne_b_sx, _true, ne_b_ss, ne_b_ss, _true, _true, _fals, _fals, _true, _fals},
-	/*ARRAY  */ {_true, _true, _true, _true, _true, ne_b_aa, _true, _fals, _fals, _true, _fals},
-	/*MAP    */ {_true, _true, _true, _true, _true, _true, ne_b_mm, _fals, _fals, _true, _fals},
-	/*FUNC   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals, _fals, _fals},
-	/*ERROR  */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals, _fals},
-	/*NULL   */ {_true, _true, _true, _true, _true, _true, _true, _fals, _fals, _fals, _fals},
-	/*ABSENT */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true},
-}
-
-var gt_dispositions = [MT_DIM][MT_DIM]CmpFuncBool{
-	//       .  INT      FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
-	/*INT    */ {gt_b_ii, gt_b_if, _fals, gt_b_xs, gt_b_xs, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*FLOAT  */ {gt_b_fi, gt_b_ff, _fals, gt_b_xs, gt_b_xs, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*BOOL   */ {_fals, _fals, gt_b_bb, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*VOID   */ {gt_b_sx, gt_b_sx, _fals, gt_b_ss, gt_b_ss, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*STRING */ {gt_b_sx, gt_b_sx, _fals, gt_b_ss, gt_b_ss, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*ARRAY  */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*MAP    */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*FUNC   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals, _fals, _fals},
-	/*ERROR  */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals, _fals},
-	/*NULL   */ {_true, _true, _true, _true, _true, _fals, _fals, _fals, _true, _fals, _fals},
-	/*ABSENT */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _true},
-}
-
-var ge_dispositions = [MT_DIM][MT_DIM]CmpFuncBool{
-	//       .  INT      FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
-	/*INT    */ {ge_b_ii, ge_b_if, _fals, ge_b_xs, ge_b_xs, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*FLOAT  */ {ge_b_fi, ge_b_ff, _fals, ge_b_xs, ge_b_xs, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*BOOL   */ {_fals, _fals, ge_b_bb, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*VOID   */ {ge_b_sx, ge_b_sx, _fals, ge_b_ss, ge_b_ss, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*STRING */ {ge_b_sx, ge_b_sx, _fals, ge_b_ss, ge_b_ss, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*ARRAY  */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*MAP    */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*FUNC   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals, _fals, _fals},
-	/*ERROR  */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals, _fals},
-	/*NULL   */ {_true, _true, _true, _true, _true, _fals, _fals, _fals, _true, _true, _fals},
-	/*ABSENT */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _true},
-}
-
-var lt_dispositions = [MT_DIM][MT_DIM]CmpFuncBool{
-	//       .  INT      FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
-	/*INT    */ {lt_b_ii, lt_b_if, _fals, lt_b_xs, lt_b_xs, _fals, _fals, _fals, _fals, _true, _fals},
-	/*FLOAT  */ {lt_b_fi, lt_b_ff, _fals, lt_b_xs, lt_b_xs, _fals, _fals, _fals, _fals, _true, _fals},
-	/*BOOL   */ {_fals, _fals, lt_b_bb, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals},
-	/*VOID   */ {lt_b_sx, lt_b_sx, _fals, lt_b_ss, lt_b_ss, _fals, _fals, _fals, _fals, _true, _fals},
-	/*STRING */ {lt_b_sx, lt_b_sx, _fals, lt_b_ss, lt_b_ss, _fals, _fals, _fals, _fals, _true, _fals},
-	/*ARRAY  */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*MAP    */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*FUNC   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals, _fals, _fals},
-	/*ERROR  */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _true, _fals},
-	/*NULL   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*ABSENT */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true},
-}
-
-var le_dispositions = [MT_DIM][MT_DIM]CmpFuncBool{
-	//       .  INT      FLOAT    BOOL     VOID     STRING   ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
-	/*INT    */ {le_b_ii, le_b_if, _fals, le_b_xs, le_b_xs, _fals, _fals, _fals, _fals, _true, _fals},
-	/*FLOAT  */ {le_b_fi, le_b_ff, _fals, le_b_xs, le_b_xs, _fals, _fals, _fals, _fals, _true, _fals},
-	/*BOOL   */ {_fals, _fals, le_b_bb, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals},
-	/*VOID   */ {le_b_sx, le_b_sx, _fals, le_b_ss, le_b_ss, _fals, _fals, _fals, _fals, _true, _fals},
-	/*STRING */ {le_b_sx, le_b_sx, _fals, le_b_ss, le_b_ss, _fals, _fals, _fals, _fals, _true, _fals},
-	/*ARRAY  */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*MAP    */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals},
-	/*FUNC   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals, _fals, _fals},
-	/*ERROR  */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _true, _fals},
-	/*NULL   */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true, _fals},
-	/*ABSENT */ {_fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _fals, _true},
-}
-
-// TODO: flesh these out for array and map
 var cmp_dispositions = [MT_DIM][MT_DIM]CmpFuncInt{
-	//       .  INT       FLOAT     BOOL      VOID      STRING    ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
-	/*INT    */ {cmp_b_ii, cmp_b_if, _i0__, cmp_b_xs, cmp_b_xs, _i0__, _i0__, _i0__, _i0__, _n1__, _i0__},
-	/*FLOAT  */ {cmp_b_fi, cmp_b_ff, _i0__, cmp_b_xs, cmp_b_xs, _i0__, _i0__, _i0__, _i0__, _n1__, _i0__},
-	/*BOOL   */ {_i0__, _i0__, cmp_b_bb, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _n1__, _i0__},
-	/*VOID   */ {cmp_b_sx, cmp_b_sx, _i0__, cmp_b_ss, cmp_b_ss, _i0__, _i0__, _i0__, _i0__, _n1__, _i0__},
-	/*STRING */ {cmp_b_sx, cmp_b_sx, _i0__, cmp_b_ss, cmp_b_ss, _i0__, _i0__, _i0__, _i0__, _n1__, _i0__},
-	/*ARRAY  */ {_i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__},
-	/*MAP    */ {_i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__},
-	/*FUNC   */ {_i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__},
-	/*ERROR  */ {_i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _n1__, _i0__},
-	/*NULL   */ {_i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__},
-	/*ABSENT */ {_i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__, _i0__},
+	//       .  INT        FLOAT     BOOL      VOID      STRING    ARRAY  MAP    FUNC   ERROR  NULL   ABSENT
+	/*INT    */ {cmp_b_ii, cmp_b_if, _less, _less, _less, _less, _less, _less, _less, _less, _less},
+	/*FLOAT  */ {cmp_b_fi, cmp_b_ff, _less, _less, _less, _less, _less, _less, _less, _less, _less},
+	/*BOOL   */ {_more, _more, cmp_b_bb, _less, _less, _less, _less, _less, _less, _less, _less},
+	/*VOID   */ {_more, _more, _more, cmp_b_ss, cmp_b_ss, _less, _less, _less, _less, _less, _less},
+	/*STRING */ {_more, _more, _more, cmp_b_ss, cmp_b_ss, _less, _less, _less, _less, _less, _less},
+	/*ARRAY  */ {_more, _more, _more, _more, _more, _same, _less, _less, _less, _less, _less},
+	/*MAP    */ {_more, _more, _more, _more, _more, _more, _same, _less, _less, _less, _less},
+	/*func   */ {_more, _more, _more, _more, _more, _more, _more, _same, _less, _less, _less},
+	/*ERROR  */ {_more, _more, _more, _more, _more, _more, _more, _more, _same, _less, _less},
+	/*NULL   */ {_more, _more, _more, _more, _more, _more, _more, _more, _more, _same, _less},
+	/*ABSENT */ {_more, _more, _more, _more, _more, _more, _more, _more, _more, _more, _same},
 }
