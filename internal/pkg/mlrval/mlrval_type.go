@@ -167,8 +167,7 @@ const MT_TYPE_MASK_BOOL = 1 << MT_BOOL
 const MT_TYPE_MASK_STRING = (1 << MT_STRING) | (1 << MT_VOID)
 const MT_TYPE_MASK_ARRAY = 1 << MT_ARRAY
 const MT_TYPE_MASK_MAP = 1 << MT_MAP
-const MT_TYPE_MASK_VAR =
-	(1 << MT_INT) |
+const MT_TYPE_MASK_VAR = (1 << MT_INT) |
 	(1 << MT_FLOAT) |
 	(1 << MT_BOOL) |
 	(1 << MT_VOID) |
