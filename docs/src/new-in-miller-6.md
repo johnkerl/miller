@@ -262,6 +262,8 @@ The following differences are rather technical. If they don't sound familiar to 
 [page on emit statements](reference-dsl-output-statements.md#emit1-and-emitemitpemitf) for more information.
 * By default, field names are deduped for all file formats except JSON. So if you have an input record with `x=8,x=9` then the second field's key is renamed to `x_2` and so on -- the record scans as `x=8,x_2=9`. Use `mlr --no-dedupe-field-names` to suppress this, and have the record be scanned as `x=9`. For JSON, the last duplicated key in an input record is always retained, regardless of `mlr --no-dedupe-field-names`: `{"x":8,"x":9}` scans as if it were `{"x":9}`.
 
+**Please drop an issue at [https://github.com/johnkerl/miller/issues](https://github.com/johnkerl/miller/issues) with any/all backward-compatibility concerns between Miller 5 and Miller 6.**
+
 ## Developer-specific aspects
 
 * Miller has been ported from C to Go. Developer notes: [https://github.com/johnkerl/miller/blob/main/README-go-port.md](https://github.com/johnkerl/miller/blob/main/README-go-port.md).
