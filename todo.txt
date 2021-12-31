@@ -38,6 +38,16 @@ PUNCHDOWN LIST
 ================================================================
 NON-BLOCKERS
 
+* Better functions for values manipulation, e.g. easier conversion of strings like "$1,234.56" into numeric values
+
+* IP addresses and ranges as a datatype so one could do membership tests like "if 10.10.10.10 in 10.0.0.0/8".
+
+* Ability to specify some formats that are fixed. Like we can process
+  "5d18h53m20s" format in *dhms* commands, but what about "5-18:53:20"? This is
+  a common format used by the SLURM resource manager.
+
+* csvstat / Panda's describe
+
 * cmp for array & map
 
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in

@@ -44,6 +44,12 @@ more complex/niche material has been pushed farther down. The long reference
 pages have been split up into separate pages. (See also
 [Structure of these documents](structure-of-these-documents.md).)
 
+One of the main feedback themes from the 2021 Miller User Survey was that some
+things should be easier to find. Namely, on each doc page there's now a banner
+across the top with things that should be one click away from the landing page
+(or any page): command-line flags, verbs, functions, glossary/acronyms, and a
+finder for docs by release.
+
 Since CSV is overwhelmingly the most popular data format for Miller, it is
 now discussed first, and more examples use CSV.
 
@@ -77,9 +83,16 @@ mlr: cannot parse DSL expression.
 Parse error on token ">" at line 63 columnn 7.
 </pre>
 
+### Scripting
+
+Scripting is now easier -- support for `#!` with `sh`, as always, along with now support for `#!` with `mlr -s`. For
+Windows, `mlr -s` can also be used.  These help reduce backslash-clutter and let you do more while typing less.
+See the [scripting page](scripting.md).
+
 ### REPL
 
-Miller now has a read-evaluate-print-loop ([REPL](repl.md)) where you can single-step through your data-file record, express arbitrary statements to converse with the data, etc.
+Miller now has a read-evaluate-print-loop ([REPL](repl.md)) where you can single-step through your data-file record,
+express arbitrary statements to converse with the data, etc.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr repl</b>
