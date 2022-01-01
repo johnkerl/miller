@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"container/list"
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -210,12 +209,7 @@ func NewTransformerStats2(
 ) (*TransformerStats2, error) {
 	for _, name := range accumulatorNameList {
 		if !utils.ValidateStats2AccumulatorName(name) {
-			return nil, errors.New(
-				fmt.Sprintf(
-					"%s stats2: accumulator \"%s\" not found.\n",
-					"mlr", name,
-				),
-			)
+			return nil, fmt.Errorf("mlr stats2: accumulator \"%s\" not found.", name)
 		}
 	}
 

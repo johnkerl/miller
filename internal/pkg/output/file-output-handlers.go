@@ -15,7 +15,6 @@ package output
 import (
 	"bufio"
 	"container/list"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -283,13 +282,7 @@ func NewPipeWriteOutputHandler(
 ) (*FileOutputHandler, error) {
 	writePipe, err := lib.OpenOutboundHalfPipe(commandString)
 	if err != nil {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"%s: could not launch command \"%s\" for pipe-to.",
-				"mlr",
-				commandString,
-			),
-		)
+		return nil, fmt.Errorf("could not launch command \"%s\" for pipe-to.", commandString)
 	}
 
 	return newOutputHandlerCommon(

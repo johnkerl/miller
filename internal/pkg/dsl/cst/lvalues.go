@@ -6,7 +6,6 @@
 package cst
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
@@ -54,12 +53,12 @@ func (root *RootNode) BuildAssignableNode(
 		break
 
 	case dsl.NodeTypeArrayOrMapPositionalNameAccess:
-		return nil, errors.New(
+		return nil, fmt.Errorf(
 			"mlr: '[[...]]' is allowed on assignment left-hand sides only when immediately preceded by '$'.",
 		)
 		break
 	case dsl.NodeTypeArrayOrMapPositionalValueAccess:
-		return nil, errors.New(
+		return nil, fmt.Errorf(
 			"mlr: '[[[...]]]' is allowed on assignment left-hand sides only when immediately preceded by '$'.",
 		)
 		break
@@ -77,8 +76,8 @@ func (root *RootNode) BuildAssignableNode(
 		break
 	}
 
-	return nil, errors.New(
-		"CST BuildAssignableNode: unhandled AST node " + string(astNode.Type),
+	return nil, fmt.Errorf(
+		"at CST BuildAssignableNode: unhandled AST node " + string(astNode.Type),
 	)
 }
 
@@ -121,7 +120,7 @@ func (node *DirectFieldValueLvalueNode) AssignIndexed(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return errors.New("There is no current record to assign to.")
+		return fmt.Errorf("there is no current record to assign to.")
 	}
 
 	// AssignmentNode checks for absent, so we just assign whatever we get
@@ -220,7 +219,7 @@ func (node *IndirectFieldValueLvalueNode) AssignIndexed(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return errors.New("There is no current record to assign to.")
+		return fmt.Errorf("there is no current record to assign to.")
 	}
 
 	lhsFieldName := node.lhsFieldNameExpression.Evaluate(state)
@@ -313,7 +312,7 @@ func (node *PositionalFieldNameLvalueNode) Assign(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return errors.New("There is no current record to assign to.")
+		return fmt.Errorf("there is no current record to assign to.")
 	}
 
 	lhsFieldIndex := node.lhsFieldIndexExpression.Evaluate(state)
@@ -324,11 +323,9 @@ func (node *PositionalFieldNameLvalueNode) Assign(
 		state.Inrec.PutNameWithPositionalIndex(index, rvalue)
 		return nil
 	} else {
-		return errors.New(
-			fmt.Sprintf(
-				"mlr: positional index for $[[...]] assignment must be integer; got %s.",
-				lhsFieldIndex.GetTypeName(),
-			),
+		return fmt.Errorf(
+			"mlr: positional index for $[[...]] assignment must be integer; got %s.",
+			lhsFieldIndex.GetTypeName(),
 		)
 	}
 }
@@ -340,7 +337,7 @@ func (node *PositionalFieldNameLvalueNode) AssignIndexed(
 ) error {
 	// TODO: reconsider this if /when we decide to allow string-slice
 	// assignments.
-	return errors.New(
+	return fmt.Errorf(
 		"mlr: $[[...]] = ... expressions are not indexable.",
 	)
 }
@@ -433,7 +430,7 @@ func (node *PositionalFieldValueLvalueNode) AssignIndexed(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return errors.New("There is no current record to assign to.")
+		return fmt.Errorf("there is no current record to assign to.")
 	}
 
 	lhsFieldIndex := node.lhsFieldIndexExpression.Evaluate(state)
@@ -450,11 +447,9 @@ func (node *PositionalFieldValueLvalueNode) AssignIndexed(
 			state.Inrec.PutCopyWithPositionalIndex(index, rvalue)
 			return nil
 		} else {
-			return errors.New(
-				fmt.Sprintf(
-					"mlr: positional index for $[[[...]]] assignment must be integer; got %s.",
-					lhsFieldIndex.GetTypeName(),
-				),
+			return fmt.Errorf(
+				"mlr: positional index for $[[[...]]] assignment must be integer; got %s.",
+				lhsFieldIndex.GetTypeName(),
 			)
 		}
 	} else {
@@ -536,7 +531,7 @@ func (node *FullSrecLvalueNode) AssignIndexed(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return errors.New("There is no current record to assign to.")
+		return fmt.Errorf("there is no current record to assign to.")
 	}
 
 	// AssignmentNode checks for absentness of the rvalue, so we just assign
@@ -1095,12 +1090,10 @@ func (node *EnvironmentVariableLvalueNode) Assign(
 	}
 
 	if !name.IsString() {
-		return errors.New(
-			fmt.Sprintf(
-				"ENV[...] assignments must have string names; got %s \"%s\"\n",
-				name.GetTypeName(),
-				name.String(),
-			),
+		return fmt.Errorf(
+			"assignments to ENV[...] must have string names; got %s \"%s\"\n",
+			name.GetTypeName(),
+			name.String(),
 		)
 	}
 
@@ -1118,7 +1111,7 @@ func (node *EnvironmentVariableLvalueNode) AssignIndexed(
 	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
-	return errors.New("mlr: ENV[...] cannot be indexed.")
+	return fmt.Errorf("mlr: ENV[...] cannot be indexed.")
 }
 
 func (node *EnvironmentVariableLvalueNode) Unassign(

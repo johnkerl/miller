@@ -6,7 +6,6 @@
 package dsl
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
@@ -255,12 +254,7 @@ func (node *ASTNode) CheckArity(
 	arity int,
 ) error {
 	if len(node.Children) != arity {
-		return errors.New(
-			fmt.Sprintf(
-				"AST node arity %d, expected %d",
-				len(node.Children), arity,
-			),
-		)
+		return fmt.Errorf("expected AST node arity %d, got %d", arity, len(node.Children))
 	} else {
 		return nil
 	}

@@ -3,7 +3,7 @@ package output
 import (
 	"bufio"
 	"encoding/csv"
-	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
@@ -23,10 +23,10 @@ type RecordWriterCSV struct {
 
 func NewRecordWriterCSV(writerOptions *cli.TWriterOptions) (*RecordWriterCSV, error) {
 	if len(writerOptions.OFS) != 1 {
-		return nil, errors.New("CSV OFS can only be a single character")
+		return nil, fmt.Errorf("for CSV, OFS can only be a single character")
 	}
 	if writerOptions.ORS != "\n" && writerOptions.ORS != "\r\n" {
-		return nil, errors.New("CSV ORS cannot be altered")
+		return nil, fmt.Errorf("for CSV, ORS cannot be altered")
 	}
 	return &RecordWriterCSV{
 		writerOptions:      writerOptions,

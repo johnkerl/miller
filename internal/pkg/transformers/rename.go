@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"container/list"
-	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -149,7 +148,7 @@ func NewTransformerRename(
 	doGsub bool,
 ) (*TransformerRename, error) {
 	if len(names)%2 != 0 {
-		return nil, errors.New("Rename: names string must have even length.")
+		return nil, fmt.Errorf("mlr rename: names string must have even length")
 	}
 
 	oldToNewNames := lib.NewOrderedMap()

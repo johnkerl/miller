@@ -20,7 +20,6 @@ package input
 
 import (
 	"container/list"
-	"errors"
 	"fmt"
 	"io"
 	"strconv"
@@ -228,12 +227,10 @@ func getRecordBatchExplicitCSVHeader(
 			// Get data lines on subsequent loop iterations
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
-				err := errors.New(
-					fmt.Sprintf(
-						"mlr: CSV header/data length mismatch %d != %d "+
-							"at filename %s line  %d.\n",
-						len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
-					),
+				err := fmt.Errorf(
+					"mlr: CSV header/data length mismatch %d != %d "+
+						"at filename %s line  %d.\n",
+					len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
 				)
 				errorChannel <- err
 				return
@@ -348,12 +345,10 @@ func getRecordBatchImplicitCSVHeader(
 			}
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
-				err := errors.New(
-					fmt.Sprintf(
-						"mlr: CSV header/data length mismatch %d != %d "+
-							"at filename %s line  %d.\n",
-						len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
-					),
+				err := fmt.Errorf(
+					"mlr: CSV header/data length mismatch %d != %d "+
+						"at filename %s line  %d.\n",
+					len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
 				)
 				errorChannel <- err
 				return

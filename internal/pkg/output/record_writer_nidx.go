@@ -9,8 +9,6 @@ import (
 
 type RecordWriterNIDX struct {
 	writerOptions *cli.TWriterOptions
-	ofs           string
-	ors           string
 }
 
 func NewRecordWriterNIDX(writerOptions *cli.TWriterOptions) (*RecordWriterNIDX, error) {

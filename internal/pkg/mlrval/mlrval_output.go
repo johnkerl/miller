@@ -42,33 +42,27 @@ func (mv *Mlrval) setPrintRep() {
 			// clearly visually if it should (buggily) slip through to
 			// user-level visibility.
 			mv.printrep = "(bug-if-you-see-this:case=3)" // xxx constdef at top of file
-			break
 
 		case MT_ERROR:
 			mv.printrep = "(error)" // xxx constdef at top of file
-			break
 
 		case MT_ABSENT:
 			// Callsites should be using absence to do non-assigns, so flag
 			// this clearly visually if it should (buggily) slip through to
 			// user-level visibility.
 			mv.printrep = "(bug-if-you-see-this:case=4)" // xxx constdef at top of file
-			break
 
 		case MT_VOID:
 			mv.printrep = "" // xxx constdef at top of file
-			break
 
 		case MT_STRING:
 			break
 
 		case MT_INT:
 			mv.printrep = strconv.Itoa(mv.intval)
-			break
 
 		case MT_FLOAT:
 			mv.printrep = strconv.FormatFloat(mv.floatval, 'f', -1, 64)
-			break
 
 		case MT_BOOL:
 			if mv.boolval == true {
@@ -76,7 +70,6 @@ func (mv *Mlrval) setPrintRep() {
 			} else {
 				mv.printrep = "false"
 			}
-			break
 
 		case MT_ARRAY:
 			bytes, err := mv.MarshalJSON(JSON_MULTILINE, false)
@@ -87,8 +80,6 @@ func (mv *Mlrval) setPrintRep() {
 			}
 			mv.printrep = string(bytes)
 
-			break
-
 		case MT_MAP:
 			bytes, err := mv.MarshalJSON(JSON_MULTILINE, false)
 			// maybe just InternalCodingErrorIf(err != nil)
@@ -97,8 +88,6 @@ func (mv *Mlrval) setPrintRep() {
 				os.Exit(1)
 			}
 			mv.printrep = string(bytes)
-
-			break
 		}
 		mv.printrepValid = true
 	}

@@ -2,7 +2,6 @@ package input
 
 import (
 	"container/list"
-	"errors"
 	"fmt"
 
 	"github.com/johnkerl/miller/internal/pkg/bifs"
@@ -124,9 +123,7 @@ func (reader *PseudoReaderGen) tryParse(
 ) (*mlrval.Mlrval, error) {
 	mvalue := mlrval.FromDeferredType(svalue)
 	if mvalue == nil || !mvalue.IsNumeric() {
-		return nil, errors.New(
-			fmt.Sprintf("mlr: gen: %s \"%s\" is not parseable as number", name, svalue),
-		)
+		return nil, fmt.Errorf("mlr: gen: %s \"%s\" is not parseable as number", name, svalue)
 	}
 	return mvalue, nil
 }

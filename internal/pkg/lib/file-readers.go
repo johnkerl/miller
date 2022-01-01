@@ -24,7 +24,7 @@ import (
 	"compress/bzip2"
 	"compress/gzip"
 	"compress/zlib"
-	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -236,10 +236,10 @@ func IsUpdateableInPlace(
 	if strings.HasPrefix(filename, "http://") ||
 		strings.HasPrefix(filename, "https://") ||
 		strings.HasPrefix(filename, "file://") {
-		return errors.New("http://, https://, and file:// URLs are not updateable in place.")
+		return fmt.Errorf("http://, https://, and file:// URLs are not updateable in place.")
 	}
 	if prepipe != "" {
-		return errors.New("input with --prepipe or --prepipex is not updateable in place.")
+		return fmt.Errorf("input with --prepipe or --prepipex is not updateable in place.")
 	}
 	return nil
 }
@@ -281,7 +281,7 @@ func WrapOutputHandle(
 ) (io.WriteCloser, bool, error) {
 	switch inputFileEncoding {
 	case FileInputEncodingBzip2:
-		return fileWriteHandle, false, errors.New("bzip2 is not currently supported for in-place mode.")
+		return fileWriteHandle, false, fmt.Errorf("bzip2 is not currently supported for in-place mode.")
 	case FileInputEncodingGzip:
 		return gzip.NewWriter(fileWriteHandle), true, nil
 	case FileInputEncodingZlib:

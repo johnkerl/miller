@@ -5,7 +5,7 @@
 package cst
 
 import (
-	"errors"
+	"fmt"
 	"math"
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
@@ -97,9 +97,7 @@ func (root *RootNode) BuildLeafNode(
 		break
 	}
 
-	return nil, errors.New(
-		"CST BuildLeafNode: unhandled AST node " + string(astNode.Type),
-	)
+	return nil, fmt.Errorf("at CST BuildLeafNode: unhandled AST node %s", string(astNode.Type))
 }
 
 // ----------------------------------------------------------------
@@ -443,9 +441,7 @@ func (root *RootNode) BuildContextVariableNode(astNode *dsl.ASTNode) (IEvaluable
 
 	}
 
-	return nil, errors.New(
-		"CST BuildContextVariableNode: unhandled context variable " + sval,
-	)
+	return nil, fmt.Errorf("at CST BuildContextVariableNode: unhandled context variable %s", sval)
 }
 
 // ----------------------------------------------------------------
@@ -620,9 +616,7 @@ func (root *RootNode) BuildConstantNode(astNode *dsl.ASTNode) (IEvaluable, error
 
 	}
 
-	return nil, errors.New(
-		"CST BuildContextVariableNode: unhandled context variable " + sval,
-	)
+	return nil, fmt.Errorf("at CST BuildContextVariableNode: unhandled context variable %s", sval)
 }
 
 // ----------------------------------------------------------------

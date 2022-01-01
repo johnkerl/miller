@@ -27,7 +27,6 @@ package runtime
 
 import (
 	"container/list"
-	"errors"
 	"fmt"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
@@ -407,11 +406,9 @@ func (frame *StackFrame) defineTyped(
 		frame.namesToOffsets[stackVariable.name] = offsetInFrame
 		return nil
 	} else {
-		return errors.New(
-			fmt.Sprintf(
-				"%s: variable %s has already been defined in the same scope.",
-				"mlr", stackVariable.name,
-			),
+		return fmt.Errorf(
+			"%s: variable %s has already been defined in the same scope.",
+			"mlr", stackVariable.name,
 		)
 	}
 }
@@ -431,11 +428,9 @@ func (frame *StackFrame) setIndexed(
 			newval.PutIndexed(indices, mv)
 			return frame.set(stackVariable, newval)
 		} else {
-			return errors.New(
-				fmt.Sprintf(
-					"%s: map indices must be int or string; got %s.\n",
-					"mlr", leadingIndex.GetTypeName(),
-				),
+			return fmt.Errorf(
+				"%s: map indices must be int or string; got %s.\n",
+				"mlr", leadingIndex.GetTypeName(),
 			)
 		}
 	} else {

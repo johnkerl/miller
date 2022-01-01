@@ -24,7 +24,6 @@ func RunMillerCommand(
 	stdout string,
 	stderr string,
 	exitCode int,
-	executionError error, // failure to even start the process
 ) {
 	argsString = strings.TrimRight(argsString, "\n")
 	argsString = strings.TrimRight(argsString, "\r")
@@ -59,7 +58,7 @@ func RunMillerCommand(
 		}
 	}
 
-	return stdout, stderr, exitCode, nil
+	return stdout, stderr, exitCode
 }
 
 // RunDiffCommandOnStrings runs either diff or fc (not-Windows / Windows

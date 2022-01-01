@@ -6,7 +6,7 @@
 package cst
 
 import (
-	"errors"
+	"fmt"
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
@@ -57,7 +57,7 @@ func (node *CondBlockNode) Execute(
 		boolValue = false
 	} else if !isBool {
 		// TODO: line-number/token info for the DSL expression.
-		return nil, errors.New("mlr: conditional expression did not evaluate to boolean.")
+		return nil, fmt.Errorf("mlr: conditional expression did not evaluate to boolean.")
 	}
 
 	if boolValue == true {

@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"container/list"
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -447,12 +446,7 @@ func NewTransformerPut(
 		for _, preset := range presets {
 			pair := strings.SplitN(preset, "=", 2)
 			if len(pair) != 2 {
-				return nil, errors.New(
-					fmt.Sprintf(
-						"mlr: missing \"=\" in preset expression \"%s\".",
-						preset,
-					),
-				)
+				return nil, fmt.Errorf("missing \"=\" in preset expression \"%s\".", preset)
 			}
 			key := pair[0]
 			svalue := pair[1]

@@ -7,7 +7,6 @@
 package cst
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
@@ -80,8 +79,8 @@ func (root *RootNode) BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, erro
 		return root.BuildUnnamedUDFNode(astNode)
 	}
 
-	return nil, errors.New(
-		"CST BuildEvaluableNode: unhandled AST node type " + string(astNode.Type),
+	return nil, fmt.Errorf(
+		"at CST BuildEvaluableNode: unhandled AST node type %s", string(astNode.Type),
 	)
 }
 
