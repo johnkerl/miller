@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"container/list"
-	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -257,11 +256,9 @@ func NewTransformerMergeFields(
 
 	for _, accumulatorName := range accumulatorNameList {
 		if !utils.ValidateStats1AccumulatorName(accumulatorName) {
-			return nil, errors.New(
-				fmt.Sprintf(
-					"%s %s: accumulator \"%s\" not found.\n",
-					"mlr", verbNameMergeFields, accumulatorName,
-				),
+			return nil, fmt.Errorf(
+				"mlr %s: accumulator \"%s\" not found.\n",
+				verbNameMergeFields, accumulatorName,
 			)
 		}
 	}

@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"container/list"
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -108,12 +107,7 @@ func NewTransformerLabel(
 	for _, newName := range newNames {
 		_, ok := uniquenessChecker[newName]
 		if ok {
-			return nil, errors.New(
-				fmt.Sprintf(
-					"mlr label: labels must be unique; got duplicate \"%s\"\n",
-					newName,
-				),
-			)
+			return nil, fmt.Errorf("mlr label: labels must be unique; got duplicate \"%s\"\n", newName)
 		}
 		uniquenessChecker[newName] = true
 	}

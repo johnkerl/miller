@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"container/list"
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -180,16 +179,12 @@ func NewTransformerStep(
 ) (*TransformerStep, error) {
 
 	if len(stepperNames) == 0 || len(valueFieldNames) == 0 {
-		return nil, errors.New(
-			// TODO: parameterize verb here somehow
-			"mlr step: -a and -f are both required arguments.",
-		)
+		return nil, fmt.Errorf("mlr %s: -a and -f are both required arguments.", verbNameStep)
 	}
 	if len(stringAlphas) != 0 && len(ewmaSuffixes) != 0 {
 		if len(ewmaSuffixes) != len(stringAlphas) {
-			return nil, errors.New(
-				// TODO: parameterize verb here somehow
-				"mlr step: If -d and -o are provided, their values must have the same length.",
+			return nil, fmt.Errorf(
+				"mlr %s: If -d and -o are provided, their values must have the same length.", verbNameStep,
 			)
 		}
 	}

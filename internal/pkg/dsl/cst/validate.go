@@ -7,7 +7,6 @@
 package cst
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
@@ -32,7 +31,7 @@ func ValidateAST(
 	// But filter '' is an error.
 	if ast.RootNode.Children == nil || len(ast.RootNode.Children) == 0 {
 		if dslInstanceType == DSLInstanceTypeFilter {
-			return errors.New("mlr: filter statement must not be empty.")
+			return fmt.Errorf("mlr: filter statement must not be empty.")
 		}
 	}
 
@@ -82,7 +81,7 @@ func validateASTAux(
 
 	if astNode.Type == dsl.NodeTypeFilterStatement {
 		if dslInstanceType == DSLInstanceTypeFilter {
-			return errors.New(
+			return fmt.Errorf(
 				"mlr: filter expressions must not also contain the \"filter\" keyword.",
 			)
 		}
@@ -91,21 +90,21 @@ func validateASTAux(
 	// Check: begin/end/func/subr must be at top-level
 	if astNode.Type == dsl.NodeTypeBeginBlock {
 		if !atTopLevel {
-			return errors.New(
+			return fmt.Errorf(
 				"mlr: begin blocks can only be at top level.",
 			)
 		}
 		nextLevelInBeginOrEnd = true
 	} else if astNode.Type == dsl.NodeTypeEndBlock {
 		if !atTopLevel {
-			return errors.New(
+			return fmt.Errorf(
 				"mlr: end blocks can only be at top level.",
 			)
 		}
 		nextLevelInBeginOrEnd = true
 	} else if astNode.Type == dsl.NodeTypeNamedFunctionDefinition {
 		if !atTopLevel {
-			return errors.New(
+			return fmt.Errorf(
 				"mlr: func blocks can only be at top level.",
 			)
 		}
@@ -114,7 +113,7 @@ func validateASTAux(
 		nextLevelInUDF = true
 	} else if astNode.Type == dsl.NodeTypeSubroutineDefinition {
 		if !atTopLevel {
-			return errors.New(
+			return fmt.Errorf(
 				"mlr: subr blocks can only be at top level.",
 			)
 		}
@@ -136,7 +135,7 @@ func validateASTAux(
 		if astNode.Type == dsl.NodeTypeDirectFieldValue ||
 			astNode.Type == dsl.NodeTypeIndirectFieldValue ||
 			astNode.Type == dsl.NodeTypeFullSrec {
-			return errors.New(
+			return fmt.Errorf(
 				"mlr: begin/end blocks cannot refer to records via $x, $*, etc.",
 			)
 		}
@@ -145,7 +144,7 @@ func validateASTAux(
 	// Check: break/continue outside of loop
 	if !inLoop {
 		if astNode.Type == dsl.NodeTypeBreak {
-			return errors.New(
+			return fmt.Errorf(
 				"mlr: break statements are only valid within for/do/while loops.",
 			)
 		}
@@ -153,7 +152,7 @@ func validateASTAux(
 
 	if !inLoop {
 		if astNode.Type == dsl.NodeTypeContinue {
-			return errors.New(
+			return fmt.Errorf(
 				"mlr: break statements are only valid within for/do/while loops.",
 			)
 		}
@@ -171,7 +170,7 @@ func validateASTAux(
 	// Check: return outside of func/subr
 	if !inUDF && !inUDS {
 		if astNode.Type == dsl.NodeTypeReturn {
-			return errors.New(
+			return fmt.Errorf(
 				"mlr: return statements are only valid within func/subr blocks.",
 			)
 		}
@@ -181,14 +180,14 @@ func validateASTAux(
 	if astNode.Type == dsl.NodeTypeReturn {
 		if inUDF {
 			if len(astNode.Children) != 1 {
-				return errors.New(
+				return fmt.Errorf(
 					"mlr: return statements in func blocks must return a value.",
 				)
 			}
 		}
 		if inUDS {
 			if len(astNode.Children) != 0 {
-				return errors.New(
+				return fmt.Errorf(
 					"mlr: return statements in subr blocks must not return a value.",
 				)
 			}
@@ -199,11 +198,9 @@ func validateASTAux(
 	if isAssignmentLHS {
 		ok := VALID_LHS_NODE_TYPES[astNode.Type]
 		if !ok {
-			return errors.New(
-				fmt.Sprintf(
-					"mlr: %s is not valid on the left-hand side of an assignment.",
-					astNode.Type,
-				),
+			return fmt.Errorf(
+				"mlr: %s is not valid on the left-hand side of an assignment.",
+				astNode.Type,
 			)
 		}
 	}
@@ -212,11 +209,9 @@ func validateASTAux(
 	if isUnset {
 		ok := VALID_LHS_NODE_TYPES[astNode.Type]
 		if !ok {
-			return errors.New(
-				fmt.Sprintf(
-					"mlr: %s is not valid for unset statement.",
-					astNode.Type,
-				),
+			return fmt.Errorf(
+				"mlr: %s is not valid for unset statement.",
+				astNode.Type,
 			)
 		}
 	}
@@ -268,13 +263,7 @@ func validateForLoopTwoVariableUniqueNames(astNode *dsl.ASTNode) error {
 	keyVarName := string(keyVarNode.Token.Lit)
 	valVarName := string(valVarNode.Token.Lit)
 	if keyVarName == valVarName {
-		return errors.New(
-			fmt.Sprintf(
-				"%s: redefinition of variable %s in the same scope.",
-				"mlr",
-				keyVarName,
-			),
-		)
+		return fmt.Errorf("mlr: redefinition of variable %s in the same scope.", keyVarName)
 	} else {
 		return nil
 	}
@@ -304,26 +293,14 @@ func validateForLoopMultivariableUniqueNames(astNode *dsl.ASTNode) error {
 		name := string(keyVarNode.Token.Lit)
 		_, present := seen[name]
 		if present {
-			return errors.New(
-				fmt.Sprintf(
-					"%s: redefinition of variable %s in the same scope.",
-					"mlr",
-					name,
-				),
-			)
+			return fmt.Errorf("mlr: redefinition of variable %s in the same scope.", name)
 		}
 		seen[name] = true
 	}
 
 	valVarName := string(valVarNode.Token.Lit)
 	if seen[valVarName] {
-		return errors.New(
-			fmt.Sprintf(
-				"%s: redefinition of variable %s in the same scope.",
-				"mlr",
-				valVarName,
-			),
-		)
+		return fmt.Errorf("mlr: redefinition of variable %s in the same scope.", valVarName)
 	}
 
 	return nil

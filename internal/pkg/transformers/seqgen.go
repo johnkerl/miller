@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"container/list"
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -140,32 +139,17 @@ func NewTransformerSeqgen(
 
 	fstart, startIsNumeric := start.GetNumericToFloatValue()
 	if !startIsNumeric {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr seqgen: start value should be number; got \"%s\"",
-				startString,
-			),
-		)
+		return nil, fmt.Errorf("mlr seqgen: start value should be number; got \"%s\"", startString)
 	}
 
 	fstop, stopIsNumeric := stop.GetNumericToFloatValue()
 	if !stopIsNumeric {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr seqgen: stop value should be number; got \"%s\"",
-				stopString,
-			),
-		)
+		return nil, fmt.Errorf("mlr seqgen: stop value should be number; got \"%s\"", stopString)
 	}
 
 	fstep, stepIsNumeric := step.GetNumericToFloatValue()
 	if !stepIsNumeric {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr seqgen: step value should be number; got \"%s\"",
-				stepString,
-			),
-		)
+		return nil, fmt.Errorf("mlr seqgen: step value should be number; got \"%s\"", stepString)
 	}
 
 	if fstep > 0 {
@@ -176,9 +160,7 @@ func NewTransformerSeqgen(
 		if fstart == fstop {
 			doneComparator = bifs.BIF_equals
 		} else {
-			return nil, errors.New(
-				"mlr seqgen: step must not be zero unless start == stop.",
-			)
+			return nil, fmt.Errorf("mlr seqgen: step must not be zero unless start == stop.")
 		}
 	}
 

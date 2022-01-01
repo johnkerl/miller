@@ -6,7 +6,6 @@
 package types
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
@@ -25,11 +24,7 @@ func NewTypeGatedMlrvalName(
 ) (*TypeGatedMlrvalName, error) {
 	typeMask, ok := mlrval.TypeNameToMask(typeName)
 	if !ok {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr: couldn't resolve type name \"%s\".", typeName,
-			),
-		)
+		return nil, fmt.Errorf("mlr: couldn't resolve type name \"%s\".", typeName)
 	}
 	return &TypeGatedMlrvalName{
 		Name:     name,
@@ -43,11 +38,9 @@ func (tname *TypeGatedMlrvalName) Check(value *mlrval.Mlrval) error {
 	if bit&tname.TypeMask != 0 {
 		return nil
 	} else {
-		return errors.New(
-			fmt.Sprintf(
-				"mlr: couldn't assign variable %s %s from value %s %s\n",
-				tname.TypeName, tname.Name, value.GetTypeName(), value.String(),
-			),
+		return fmt.Errorf(
+			"mlr: couldn't assign variable %s %s from value %s %s\n",
+			tname.TypeName, tname.Name, value.GetTypeName(), value.String(),
 		)
 	}
 }

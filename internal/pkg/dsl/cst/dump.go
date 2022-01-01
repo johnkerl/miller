@@ -17,7 +17,6 @@ package cst
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -138,12 +137,7 @@ func (root *RootNode) buildDumpxStatementNode(
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
 				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
-				return nil, errors.New(
-					fmt.Sprintf(
-						"%s: unhandled redirector node type %s.",
-						"mlr", string(redirectorNode.Type),
-					),
-				)
+				return nil, fmt.Errorf("mlr: unhandled redirector node type %s.", string(redirectorNode.Type))
 			}
 		}
 	}
@@ -216,11 +210,9 @@ func (node *DumpStatementNode) dumpToFileOrPipe(
 ) error {
 	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
-		return errors.New(
-			fmt.Sprintf(
-				"%s: output redirection yielded %s, not string.",
-				"mlr", redirectorTarget.GetTypeName(),
-			),
+		return fmt.Errorf(
+			"mlr: output redirection yielded %s, not string.",
+			redirectorTarget.GetTypeName(),
 		)
 	}
 	outputFileName := redirectorTarget.String()

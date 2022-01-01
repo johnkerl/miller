@@ -60,11 +60,6 @@ regression-test:
 	go test -v regression_test.go
 
 # ----------------------------------------------------------------
-# Experimental executables:
-scan:
-	go build github.com/johnkerl/miller/cmd/scan
-
-# ----------------------------------------------------------------
 # Formatting
 # go fmt ./... finds experimental C files which we want to ignore.
 fmt:
@@ -121,4 +116,4 @@ release_tarball: build check
 
 # ================================================================
 # Go does its own dependency management, outside of make.
-.PHONY: build mlr scan check unit_test regression_test bench fmt staticcheck dev docs
+.PHONY: build mlr check unit_test regression_test bench fmt staticcheck dev docs

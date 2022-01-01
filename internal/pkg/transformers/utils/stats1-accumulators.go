@@ -219,16 +219,13 @@ func (factory *Stats1AccumulatorFactory) MakeNamedAccumulator(
 		valueFieldName,
 		doInterpolatedPercentiles,
 	)
-	// We don't return errors.New here. The nominal case is that the stats1
-	// verb has already pre-validated accumulator names, and this is just a
-	// fallback. The accumulators are instantiated for every unique combination
-	// of group-by field values in the record stream, only as those values are
-	// encountered: for example, with 'mlr stats1 -a count,sum -f x,y -g
-	// color,shape', we make a new accumulator the first time we find a record
-	// with 'color=blue,shape=square' and another the first time we find a
-	// record with 'color=red,shape=circle', and so on. The right thing is to
-	// pre-validate names once when the stats1 transformer is being
-	// instantiated.
+	// We don't return an error here -- we fatal. The nominal case is that the stats1 verb has already
+	// pre-validated accumulator names, and this is just a fallback. The accumulators are instantiated for
+	// every unique combination of group-by field values in the record stream, only as those values are
+	// encountered: for example, with 'mlr stats1 -a count,sum -f x,y -g color,shape', we make a new
+	// accumulator the first time we find a record with 'color=blue,shape=square' and another the first time
+	// we find a record with 'color=red,shape=circle', and so on. The right thing is to pre-validate names
+	// once when the stats1 transformer is being instantiated.
 	lib.InternalCodingErrorIf(accumulator == nil)
 
 	return NewStats1NamedAccumulator(

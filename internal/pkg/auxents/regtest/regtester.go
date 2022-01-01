@@ -57,7 +57,6 @@ package regtest
 
 import (
 	"container/list"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -422,14 +421,6 @@ func (regtester *RegTester) executeSingleCmdFile(
 	expectFailFileName := caseDir + slash + ShouldFailName
 	postCompareFileName := caseDir + slash + PostCompareName
 
-	cmd, err = regtester.loadFile(cmdFilePath, caseDir)
-	if err != nil {
-		if verbosityLevel >= 2 {
-			fmt.Printf("%s: %v\n", cmdFilePath, err)
-		}
-		return false
-	}
-
 	if verbosityLevel >= 2 {
 		fmt.Println("Command:")
 		fmt.Println(cmd)
@@ -502,7 +493,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 
 	// ****************************************************************
 	// HERE IS WHERE WE RUN THE MILLER COMMAND LINE FOR THE TEST CASE
-	actualStdout, actualStderr, actualExitCode, err := RunMillerCommand(regtester.exeName, cmd)
+	actualStdout, actualStderr, actualExitCode := RunMillerCommand(regtester.exeName, cmd)
 	// ****************************************************************
 
 	// Unset any case-specific environment variables after running the case.
@@ -859,11 +850,9 @@ func (regtester *RegTester) loadEnvFile(
 		}
 		fields := strings.SplitN(line, "=", 2)
 		if len(fields) != 2 {
-			return nil, errors.New(
-				fmt.Sprintf(
-					"mlr: could not parse line \"%s\" from file \"%s\".\n",
-					line, filename,
-				),
+			return nil, fmt.Errorf(
+				"mlr: could not parse line \"%s\" from file \"%s\".\n",
+				line, filename,
 			)
 		}
 		keyValuePairs.Put(fields[0], fields[1])
@@ -898,11 +887,9 @@ func (regtester *RegTester) loadStringPairFile(
 		}
 		fields := strings.SplitN(line, " ", 2) // TODO: split on multi-space
 		if len(fields) != 2 {
-			return nil, errors.New(
-				fmt.Sprintf(
-					"mlr: could not parse line \"%s\" from file \"%s\".\n",
-					line, filename,
-				),
+			return nil, fmt.Errorf(
+				"mlr: could not parse line \"%s\" from file \"%s\".\n",
+				line, filename,
 			)
 		}
 		pair := stringPair{first: fields[0], second: fields[1]}

@@ -1,7 +1,6 @@
 package input
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
@@ -26,6 +25,6 @@ func Create(readerOptions *cli.TReaderOptions, recordsPerBatch int) (IRecordRead
 	case "gen":
 		return NewPseudoReaderGen(readerOptions, recordsPerBatch)
 	default:
-		return nil, errors.New(fmt.Sprintf("input file format \"%s\" not found", readerOptions.InputFileFormat))
+		return nil, fmt.Errorf("input file format \"%s\" not found", readerOptions.InputFileFormat)
 	}
 }

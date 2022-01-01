@@ -1,7 +1,6 @@
 package output
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
@@ -26,6 +25,6 @@ func Create(writerOptions *cli.TWriterOptions) (IRecordWriter, error) {
 	case "xtab":
 		return NewRecordWriterXTAB(writerOptions)
 	default:
-		return nil, errors.New(fmt.Sprintf("output file format \"%s\" not found", writerOptions.OutputFileFormat))
+		return nil, fmt.Errorf("output file format \"%s\" not found", writerOptions.OutputFileFormat)
 	}
 }
