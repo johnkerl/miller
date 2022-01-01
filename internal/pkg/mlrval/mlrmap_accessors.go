@@ -2,7 +2,6 @@ package mlrval
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"strconv"
 
@@ -84,9 +83,7 @@ func (mlrmap *Mlrmap) PutReferenceMaybeDedupe(key string, value *Mlrval, dedupe 
 			return newKey, nil
 		}
 	}
-	return key, errors.New(
-		fmt.Sprintf("record has too many input fields named \"%s\"", key),
-	)
+	return key, fmt.Errorf("record has too many input fields named \"%s\"", key)
 }
 
 // PutCopy copies the key and value (deep-copying in case the value is array/map).
@@ -250,8 +247,8 @@ func (mlrmap *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 		mlrmap.PutCopy(key.String(), value)
 		return nil
 	} else {
-		return errors.New(
-			"mlr: record/map indices must be string, int, or array thereof; got " + key.GetTypeName(),
+		return fmt.Errorf(
+			"mlr: record/map indices must be string, int, or array thereof; got %s", key.GetTypeName(),
 		)
 	}
 }
@@ -352,9 +349,7 @@ func (mlrmap *Mlrmap) getWithMlrvalArrayIndex(index *Mlrval) (*Mlrval, error) {
 		}
 		if i < n-1 {
 			if !next.IsMap() {
-				return nil, errors.New(
-					"mlr: cannot multi-index non-map.",
-				)
+				return nil, fmt.Errorf("mlr: cannot multi-index non-map.")
 			}
 			current = next.mapval
 		} else {
@@ -371,8 +366,8 @@ func (mlrmap *Mlrmap) getWithMlrvalSingleIndex(index *Mlrval) (*Mlrval, error) {
 	} else if index.IsInt() {
 		return mlrmap.Get(index.String()), nil
 	} else {
-		return nil, errors.New(
-			"Record/map indices must be string, int, or array thereof; got " + index.GetTypeName(),
+		return nil, fmt.Errorf(
+			"Record/map indices must be string, int, or array thereof; got %s", index.GetTypeName(),
 		)
 	}
 }

@@ -1,7 +1,6 @@
 package mlrval
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -85,13 +84,11 @@ func newFormatter(
 ) (IFormatter, error) {
 	numPercents := strings.Count(userLevelFormatString, "%")
 	if numPercents < 1 {
-		return nil, errors.New(
-			fmt.Sprintf("unhandled format string \"%s\": no leading \"%%\"", userLevelFormatString),
-		)
+		return nil, fmt.Errorf("unhandled format string \"%s\": no leading \"%%\"", userLevelFormatString)
 	}
 	if numPercents > 1 {
-		return nil, errors.New(
-			fmt.Sprintf("unhandled format string \"%s\": needs no \"%%\" after the first", userLevelFormatString),
+		return nil, fmt.Errorf(
+			"unhandled format string \"%s\": needs no \"%%\" after the first", userLevelFormatString,
 		)
 	}
 

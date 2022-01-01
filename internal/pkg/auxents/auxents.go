@@ -62,14 +62,6 @@ func Dispatch(args []string) {
 	// Else, return control to main for the rest of Miller.
 }
 
-// auxListUsage shows the available auxents.
-func auxListUsage(verbName string, o *os.File, exitCode int) {
-	fmt.Fprintf(o, "Usage: mlr %s [options]\n", verbName)
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h or --help: print this message\n")
-	os.Exit(exitCode)
-}
-
 // auxListMain is the handler for 'mlr aux-list'.
 func auxListMain(args []string) int {
 	ShowAuxEntries(os.Stdout)
