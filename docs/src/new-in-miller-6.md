@@ -18,6 +18,8 @@ Quick links:
 
 ## User experience
 
+Features are driven largely by great feedback in the [2021 Miller User Survey results](https://github.com/johnkerl/miller/discussions/670) and [GitHub Issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue).
+
 ### Performance
 
 Performance is on par with Miller 5 for simple processing, and is far better than Miller 5 for

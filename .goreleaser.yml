@@ -1,0 +1,60 @@
+# .goreleaser.yml
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+      - freebsd
+      - aix
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+      - s390x
+      - ppc64le
+      - ppc64
+      - riscv64
+    goarm:
+      - 6
+      - 7
+    ignore:
+      - goos: linux
+        goarch: ppc64
+      - goos: darwin
+        goarch: arm
+      - goos: darwin
+        goarch: ppc64le
+      - goos: darwin
+        goarch: s390x
+      - goos: windows
+        goarch: arm64
+      - goos: windows
+        goarch: arm
+      - goos: windows
+        goarch: ppc64le
+      - goos: windows
+        goarch: s390x
+      - goos: freebsd
+        goarch: arm
+      - goos: freebsd
+        goarch: s390x
+    dir: .
+    main: ./cmd/mlr
+    flags:
+      - -trimpath
+    #ldflags:
+    #  - -s -w 
+
+checksum:
+  algorithm: sha256
+
+release:
+  github:
+    owner: johnkerl
+    name: miller
