@@ -493,7 +493,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 
 	// ****************************************************************
 	// HERE IS WHERE WE RUN THE MILLER COMMAND LINE FOR THE TEST CASE
-	actualStdout, actualStderr, actualExitCode, err := RunMillerCommand(regtester.exeName, cmd)
+	actualStdout, actualStderr, actualExitCode := RunMillerCommand(regtester.exeName, cmd)
 	// ****************************************************************
 
 	// Unset any case-specific environment variables after running the case.

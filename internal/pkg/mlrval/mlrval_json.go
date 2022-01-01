@@ -273,37 +273,26 @@ func (mv *Mlrval) marshalJSONAux(
 	switch mv.Type() {
 	case MT_PENDING:
 		return mv.marshalJSONPending(outputIsStdout)
-		break
 	case MT_ERROR:
 		return mv.marshalJSONError(outputIsStdout)
-		break
 	case MT_ABSENT:
 		return mv.marshalJSONAbsent(outputIsStdout)
-		break
 	case MT_NULL:
 		return mv.marshalJSONNull(outputIsStdout)
-		break
 	case MT_VOID:
 		return mv.marshalJSONVoid(outputIsStdout)
-		break
 	case MT_STRING:
 		return mv.marshalJSONString(outputIsStdout)
-		break
 	case MT_INT:
 		return mv.marshalJSONInt(outputIsStdout)
-		break
 	case MT_FLOAT:
 		return mv.marshalJSONFloat(outputIsStdout)
-		break
 	case MT_BOOL:
 		return mv.marshalJSONBool(outputIsStdout)
-		break
 	case MT_ARRAY:
 		return mv.marshalJSONArray(jsonFormatting, elementNestingDepth, outputIsStdout)
-		break
 	case MT_MAP:
 		return mv.marshalJSONMap(jsonFormatting, elementNestingDepth, outputIsStdout)
-		break
 	case MT_DIM: // MT_DIM is one past the last valid type
 		return "", fmt.Errorf("mlr: internal coding error detected")
 	}
