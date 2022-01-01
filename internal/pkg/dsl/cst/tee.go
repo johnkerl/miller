@@ -5,7 +5,6 @@
 package cst
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
@@ -139,12 +138,7 @@ func (root *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 func (node *TeeStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	expression := node.expressionEvaluable.Evaluate(state)
 	if !expression.IsMap() {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"%s: tee-evaluaiton yielded %s, not map.",
-				"mlr", expression.GetTypeName(),
-			),
-		)
+		return nil, fmt.Errorf("mlr: tee-evaluaiton yielded %s, not map.", expression.GetTypeName())
 	}
 	err := node.teeToRedirectFunc(expression.GetMap(), state)
 	return nil, err
@@ -157,12 +151,7 @@ func (node *TeeStatementNode) teeToFileOrPipe(
 ) error {
 	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
-		return errors.New(
-			fmt.Sprintf(
-				"%s: output redirection yielded %s, not string.",
-				"mlr", redirectorTarget.GetTypeName(),
-			),
-		)
+		return fmt.Errorf("mlr: output redirection yielded %s, not string.", redirectorTarget.GetTypeName())
 	}
 	outputFileName := redirectorTarget.String()
 

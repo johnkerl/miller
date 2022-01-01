@@ -5,7 +5,6 @@
 package cst
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/johnkerl/miller/internal/pkg/bifs"
@@ -53,9 +52,9 @@ func (root *RootNode) BuildBuiltinFunctionCallsiteNode(
 		} else if builtinFunctionInfo.variadicFuncWithState != nil {
 			return root.BuildVariadicFunctionWithStateCallsiteNode(astNode, builtinFunctionInfo)
 		} else {
-			return nil, errors.New(
-				"CST BuildFunctionCallsiteNode: builtin function not implemented yet: " +
-					functionName,
+			return nil, fmt.Errorf(
+				"at CST BuildFunctionCallsiteNode: builtin function not implemented yet: %s",
+				functionName,
 			)
 		}
 	}
@@ -79,11 +78,9 @@ func (root *RootNode) BuildMultipleArityFunctionCallsiteNode(
 		return root.BuildTernaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 	}
 
-	return nil, errors.New(
-		fmt.Sprintf(
-			"CST BuildMultipleArityFunctionCallsiteNode: function name not found: " +
-				builtinFunctionInfo.name,
-		),
+	return nil, fmt.Errorf(
+		"at CST BuildMultipleArityFunctionCallsiteNode: function name not found: " +
+			builtinFunctionInfo.name,
 	)
 }
 
@@ -99,14 +96,12 @@ func (root *RootNode) BuildZaryFunctionCallsiteNode(
 	callsiteArity := len(astNode.Children)
 	expectedArity := 0
 	if callsiteArity != expectedArity {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr: function %s invoked with %d argument%s; expected %d",
-				builtinFunctionInfo.name,
-				callsiteArity,
-				lib.Plural(callsiteArity),
-				expectedArity,
-			),
+		return nil, fmt.Errorf(
+			"mlr: function %s invoked with %d argument%s; expected %d",
+			builtinFunctionInfo.name,
+			callsiteArity,
+			lib.Plural(callsiteArity),
+			expectedArity,
 		)
 	}
 
@@ -134,14 +129,12 @@ func (root *RootNode) BuildUnaryFunctionCallsiteNode(
 	callsiteArity := len(astNode.Children)
 	expectedArity := 1
 	if callsiteArity != expectedArity {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr: function %s invoked with %d argument%s; expected %d",
-				builtinFunctionInfo.name,
-				callsiteArity,
-				lib.Plural(callsiteArity),
-				expectedArity,
-			),
+		return nil, fmt.Errorf(
+			"mlr: function %s invoked with %d argument%s; expected %d",
+			builtinFunctionInfo.name,
+			callsiteArity,
+			lib.Plural(callsiteArity),
+			expectedArity,
 		)
 	}
 
@@ -175,14 +168,12 @@ func (root *RootNode) BuildUnaryFunctionWithContextCallsiteNode(
 	callsiteArity := len(astNode.Children)
 	expectedArity := 1
 	if callsiteArity != expectedArity {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr: function %s invoked with %d argument%s; expected %d",
-				builtinFunctionInfo.name,
-				callsiteArity,
-				lib.Plural(callsiteArity),
-				expectedArity,
-			),
+		return nil, fmt.Errorf(
+			"mlr: function %s invoked with %d argument%s; expected %d",
+			builtinFunctionInfo.name,
+			callsiteArity,
+			lib.Plural(callsiteArity),
+			expectedArity,
 		)
 	}
 
@@ -217,14 +208,12 @@ func (root *RootNode) BuildBinaryFunctionCallsiteNode(
 	callsiteArity := len(astNode.Children)
 	expectedArity := 2
 	if callsiteArity != expectedArity {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr: function %s invoked with %d argument%s; expected %d",
-				builtinFunctionInfo.name,
-				callsiteArity,
-				lib.Plural(callsiteArity),
-				expectedArity,
-			),
+		return nil, fmt.Errorf(
+			"mlr: function %s invoked with %d argument%s; expected %d",
+			builtinFunctionInfo.name,
+			callsiteArity,
+			lib.Plural(callsiteArity),
+			expectedArity,
 		)
 	}
 
@@ -293,14 +282,12 @@ func (root *RootNode) BuildBinaryFunctionWithStateCallsiteNode(
 	callsiteArity := len(astNode.Children)
 	expectedArity := 2
 	if callsiteArity != expectedArity {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr: function %s invoked with %d argument%s; expected %d",
-				builtinFunctionInfo.name,
-				callsiteArity,
-				lib.Plural(callsiteArity),
-				expectedArity,
-			),
+		return nil, fmt.Errorf(
+			"mlr: function %s invoked with %d argument%s; expected %d",
+			builtinFunctionInfo.name,
+			callsiteArity,
+			lib.Plural(callsiteArity),
+			expectedArity,
 		)
 	}
 
@@ -345,14 +332,12 @@ func (root *RootNode) BuildTernaryFunctionWithStateCallsiteNode(
 	callsiteArity := len(astNode.Children)
 	expectedArity := 3
 	if callsiteArity != expectedArity {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr: function %s invoked with %d argument%s; expected %d",
-				builtinFunctionInfo.name,
-				callsiteArity,
-				lib.Plural(callsiteArity),
-				expectedArity,
-			),
+		return nil, fmt.Errorf(
+			"mlr: function %s invoked with %d argument%s; expected %d",
+			builtinFunctionInfo.name,
+			callsiteArity,
+			lib.Plural(callsiteArity),
+			expectedArity,
 		)
 	}
 
@@ -433,14 +418,12 @@ func (root *RootNode) BuildRegexCaptureBinaryFunctionCallsiteNode(
 	callsiteArity := len(astNode.Children)
 	expectedArity := 2
 	if callsiteArity != expectedArity {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr: function %s invoked with %d argument%s; expected %d",
-				builtinFunctionInfo.name,
-				callsiteArity,
-				lib.Plural(callsiteArity),
-				expectedArity,
-			),
+		return nil, fmt.Errorf(
+			"mlr: function %s invoked with %d argument%s; expected %d",
+			builtinFunctionInfo.name,
+			callsiteArity,
+			lib.Plural(callsiteArity),
+			expectedArity,
 		)
 	}
 
@@ -487,14 +470,12 @@ func (root *RootNode) BuildDotCallsiteNode(
 	callsiteArity := len(astNode.Children)
 	expectedArity := 2
 	if callsiteArity != expectedArity {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr: function %s invoked with %d argument%s; expected %d",
-				".",
-				callsiteArity,
-				lib.Plural(callsiteArity),
-				expectedArity,
-			),
+		return nil, fmt.Errorf(
+			"mlr: function %s invoked with %d argument%s; expected %d",
+			".",
+			callsiteArity,
+			lib.Plural(callsiteArity),
+			expectedArity,
 		)
 	}
 
@@ -551,14 +532,12 @@ func (root *RootNode) BuildTernaryFunctionCallsiteNode(
 	callsiteArity := len(astNode.Children)
 	expectedArity := 3
 	if callsiteArity != expectedArity {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr: function %s invoked with %d argument%s; expected %d",
-				builtinFunctionInfo.name,
-				callsiteArity,
-				lib.Plural(callsiteArity),
-				expectedArity,
-			),
+		return nil, fmt.Errorf(
+			"mlr: function %s invoked with %d argument%s; expected %d",
+			builtinFunctionInfo.name,
+			callsiteArity,
+			lib.Plural(callsiteArity),
+			expectedArity,
 		)
 	}
 
@@ -618,25 +597,21 @@ func (root *RootNode) BuildVariadicFunctionCallsiteNode(
 	callsiteArity := len(astNode.Children)
 
 	if callsiteArity < builtinFunctionInfo.minimumVariadicArity {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr: function %s takes minimum argument count %d; got %d.\n",
-				builtinFunctionInfo.name,
-				builtinFunctionInfo.minimumVariadicArity,
-				callsiteArity,
-			),
+		return nil, fmt.Errorf(
+			"mlr: function %s takes minimum argument count %d; got %d.\n",
+			builtinFunctionInfo.name,
+			builtinFunctionInfo.minimumVariadicArity,
+			callsiteArity,
 		)
 	}
 
 	if builtinFunctionInfo.maximumVariadicArity != 0 {
 		if callsiteArity > builtinFunctionInfo.maximumVariadicArity {
-			return nil, errors.New(
-				fmt.Sprintf(
-					"mlr: function %s takes maximum argument count %d; got %d.\n",
-					builtinFunctionInfo.name,
-					builtinFunctionInfo.maximumVariadicArity,
-					callsiteArity,
-				),
+			return nil, fmt.Errorf(
+				"mlr: function %s takes maximum argument count %d; got %d.\n",
+				builtinFunctionInfo.name,
+				builtinFunctionInfo.maximumVariadicArity,
+				callsiteArity,
 			)
 		}
 	}
@@ -680,25 +655,21 @@ func (root *RootNode) BuildVariadicFunctionWithStateCallsiteNode(
 	callsiteArity := len(astNode.Children)
 
 	if callsiteArity < builtinFunctionInfo.minimumVariadicArity {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr: function %s takes minimum argument count %d; got %d.\n",
-				builtinFunctionInfo.name,
-				builtinFunctionInfo.minimumVariadicArity,
-				callsiteArity,
-			),
+		return nil, fmt.Errorf(
+			"mlr: function %s takes minimum argument count %d; got %d.\n",
+			builtinFunctionInfo.name,
+			builtinFunctionInfo.minimumVariadicArity,
+			callsiteArity,
 		)
 	}
 
 	if builtinFunctionInfo.maximumVariadicArity != 0 {
 		if callsiteArity > builtinFunctionInfo.maximumVariadicArity {
-			return nil, errors.New(
-				fmt.Sprintf(
-					"mlr: function %s takes maximum argument count %d; got %d.\n",
-					builtinFunctionInfo.name,
-					builtinFunctionInfo.maximumVariadicArity,
-					callsiteArity,
-				),
+			return nil, fmt.Errorf(
+				"mlr: function %s takes maximum argument count %d; got %d.\n",
+				builtinFunctionInfo.name,
+				builtinFunctionInfo.maximumVariadicArity,
+				callsiteArity,
 			)
 		}
 	}

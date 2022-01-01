@@ -5,7 +5,7 @@
 package cst
 
 import (
-	"errors"
+	"fmt"
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
@@ -195,11 +195,9 @@ func (node *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 	// silent zero-pass. But maybe we should surface it as an error. Maybe
 	// with a "mlr put --errors" flag or something.
 	//	} else {
-	//		return nil, errors.New(
-	//			fmt.Sprintf(
-	//				"mlr: looped-over item is not a map or array; got %s",
-	//				indexMlrval.GetTypeName(),
-	//			),
+	//		return nil, fmt.Errorf(
+	//			"mlr: looped-over item is not a map or array; got %s",
+	//			indexMlrval.GetTypeName(),
 	//		)
 
 	return nil, nil
@@ -390,11 +388,9 @@ func (node *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 	// silent zero-pass. But maybe we should surface it as an error. Maybe
 	// with a "mlr put --errors" flag or something.
 	//	} else {
-	//		return nil, errors.New(
-	//			fmt.Sprintf(
-	//				"mlr: looped-over item is not a map or array; got %s",
-	//				indexMlrval.GetTypeName(),
-	//			),
+	//		return nil, fmt.Errorf(
+	//			"mlr: looped-over item is not a map or array; got %s",
+	//			indexMlrval.GetTypeName(),
 	//		)
 
 	return nil, nil
@@ -605,11 +601,9 @@ func (node *ForLoopMultivariableNode) executeOuter(
 	// silent zero-pass. But maybe we should surface it as an error. Maybe
 	// with a "mlr put --errors" flag or something.
 	//	} else {
-	//		return nil, errors.New(
-	//			fmt.Sprintf(
-	//				"mlr: looped-over item is not a map or array; got %s",
-	//				mv.GetTypeName(),
-	//			),
+	//		return nil, fmt.Errorf(
+	//			"mlr: looped-over item is not a map or array; got %s",
+	//			mv.GetTypeName(),
 	//		)
 
 	return nil, nil
@@ -702,11 +696,9 @@ func (node *ForLoopMultivariableNode) executeInner(
 	// silent zero-pass. But maybe we should surface it as an error. Maybe
 	// with a "mlr put --errors" flag or something.
 	//	} else {
-	//		return nil, errors.New(
-	//			fmt.Sprintf(
-	//				"mlr: looped-over item is not a map or array; got %s",
-	//				mv.GetTypeName(),
-	//			),
+	//		return nil, fmt.Errorf(
+	//			"mlr: looped-over item is not a map or array; got %s",
+	//			mv.GetTypeName(),
 	//		)
 
 	return nil, nil
@@ -808,7 +800,7 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 			precontinuationAssignments = make([]IExecutable, n-1)
 			for i := 0; i < n-1; i++ {
 				if continuationExpressionASTNode.Children[i].Type != dsl.NodeTypeAssignment {
-					return nil, errors.New(
+					return nil, fmt.Errorf(
 						"mlr: the non-final triple-for continutation statements must be assignments.",
 					)
 				}
@@ -825,11 +817,11 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 		bareBooleanASTNode := continuationExpressionASTNode.Children[n-1]
 		if bareBooleanASTNode.Type != dsl.NodeTypeBareBoolean {
 			if n == 1 {
-				return nil, errors.New(
+				return nil, fmt.Errorf(
 					"mlr: the triple-for continutation statement must be a bare boolean.",
 				)
 			} else {
-				return nil, errors.New(
+				return nil, fmt.Errorf(
 					"mlr: the final triple-for continutation statement must be a bare boolean.",
 				)
 			}
@@ -902,7 +894,7 @@ func (node *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload,
 			boolValue, isBool := continuationValue.GetBoolValue()
 			if !isBool {
 				// TODO: propagate line-number context
-				return nil, errors.New("mlr: for-loop continuation did not evaluate to boolean.")
+				return nil, fmt.Errorf("mlr: for-loop continuation did not evaluate to boolean.")
 			}
 			if boolValue == false {
 				break

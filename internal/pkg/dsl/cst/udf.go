@@ -5,7 +5,6 @@
 package cst
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
@@ -324,14 +323,12 @@ func (manager *UDFManager) LookUp(functionName string, callsiteArity int) (*UDF,
 		return nil, nil
 	}
 	if udf.signature.arity != callsiteArity {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr: function %s invoked with %d argument%s; expected %d",
-				functionName,
-				callsiteArity,
-				lib.Plural(callsiteArity),
-				udf.signature.arity,
-			),
+		return nil, fmt.Errorf(
+			"mlr: function %s invoked with %d argument%s; expected %d",
+			functionName,
+			callsiteArity,
+			lib.Plural(callsiteArity),
+			udf.signature.arity,
 		)
 	}
 	return udf, nil
@@ -391,21 +388,17 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 	functionName := string(astNode.Token.Lit)
 
 	if BuiltinFunctionManagerInstance.LookUp(functionName) != nil {
-		return errors.New(
-			fmt.Sprintf(
-				"mlr: function named \"%s\" must not override a built-in function of the same name.",
-				functionName,
-			),
+		return fmt.Errorf(
+			"mlr: function named \"%s\" must not override a built-in function of the same name.",
+			functionName,
 		)
 	}
 
 	if !root.allowUDFUDSRedefinitions {
 		if root.udfManager.ExistsByName(functionName) {
-			return errors.New(
-				fmt.Sprintf(
-					"mlr: function named \"%s\" has already been defined.",
-					functionName,
-				),
+			return fmt.Errorf(
+				"mlr: function named \"%s\" has already been defined.",
+				functionName,
 			)
 		}
 	}

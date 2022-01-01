@@ -5,7 +5,6 @@
 package cst
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
@@ -174,14 +173,12 @@ func (manager *UDSManager) LookUp(subroutineName string, callsiteArity int) (*UD
 		return nil, nil
 	}
 	if uds.signature.arity != callsiteArity {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"mlr: subroutine %s invoked with %d argument%s; expected %d",
-				subroutineName,
-				callsiteArity,
-				lib.Plural(callsiteArity),
-				uds.signature.arity,
-			),
+		return nil, fmt.Errorf(
+			"mlr: subroutine %s invoked with %d argument%s; expected %d",
+			subroutineName,
+			callsiteArity,
+			lib.Plural(callsiteArity),
+			uds.signature.arity,
 		)
 	}
 	return uds, nil
@@ -244,11 +241,9 @@ func (root *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
 
 	if !root.allowUDFUDSRedefinitions {
 		if root.udsManager.ExistsByName(subroutineName) {
-			return errors.New(
-				fmt.Sprintf(
-					"mlr: subroutine named \"%s\" has already been defined.",
-					subroutineName,
-				),
+			return fmt.Errorf(
+				"mlr: subroutine named \"%s\" has already been defined.",
+				subroutineName,
 			)
 		}
 	}

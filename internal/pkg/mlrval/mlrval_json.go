@@ -229,8 +229,8 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 
 		imbalanceError := fmt.Errorf(
 			"mlr: JSON reader: did not find closing token \"%s\" for %s",
-				string(expectedClosingDelimiter),
-				collectionType,
+			string(expectedClosingDelimiter),
+			collectionType,
 		)
 
 		endToken, err := decoder.Token()
