@@ -3,7 +3,6 @@ package input
 import (
 	"bufio"
 	"container/list"
-	"errors"
 	"fmt"
 	"io"
 	"strings"
@@ -126,7 +125,7 @@ func (reader *RecordReaderJSON) processHandle(
 			// TODO: make a helper method
 			record := mlrval.GetMap()
 			if record == nil {
-				errorChannel <- errors.New("Internal coding error detected in JSON record-reader")
+				errorChannel <- fmt.Errorf("internal coding error detected in JSON record-reader")
 				return
 			}
 			context.UpdateForInputRecord()
@@ -140,24 +139,22 @@ func (reader *RecordReaderJSON) processHandle(
 		} else if mlrval.IsArray() {
 			records := mlrval.GetArray()
 			if records == nil {
-				errorChannel <- errors.New("Internal coding error detected in JSON record-reader")
+				errorChannel <- fmt.Errorf("internal coding error detected in JSON record-reader")
 				return
 			}
 
 			for _, mlrval := range records {
 				if !mlrval.IsMap() {
 					// TODO: more context
-					errorChannel <- errors.New(
-						fmt.Sprintf(
-							"Valid but unmillerable JSON. Expected map (JSON object); got %s.",
-							mlrval.GetTypeName(),
-						),
+					errorChannel <- fmt.Errorf(
+						"valid but unmillerable JSON. Expected map (JSON object); got %s.",
+						mlrval.GetTypeName(),
 					)
 					return
 				}
 				record := mlrval.GetMap()
 				if record == nil {
-					errorChannel <- errors.New("Internal coding error detected in JSON record-reader")
+					errorChannel <- fmt.Errorf("internal coding error detected in JSON record-reader")
 					return
 				}
 				context.UpdateForInputRecord()
@@ -170,11 +167,9 @@ func (reader *RecordReaderJSON) processHandle(
 			}
 
 		} else {
-			errorChannel <- errors.New(
-				fmt.Sprintf(
-					"Valid but unmillerable JSON. Expected map (JSON object); got %s.",
-					mlrval.GetTypeName(),
-				),
+			errorChannel <- fmt.Errorf(
+				"valid but unmillerable JSON. Expected map (JSON object); got %s.",
+				mlrval.GetTypeName(),
 			)
 			return
 		}

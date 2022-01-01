@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"container/list"
 	"encoding/csv"
-	"errors"
 	"fmt"
 	"io"
 	"strconv"
@@ -33,10 +32,10 @@ func NewRecordReaderCSV(
 	recordsPerBatch int,
 ) (*RecordReaderCSV, error) {
 	if readerOptions.IRS != "\n" && readerOptions.IRS != "\r\n" {
-		return nil, errors.New("CSV IRS cannot be altered; LF vs CR/LF is autodetected")
+		return nil, fmt.Errorf("for CSV, IRS cannot be altered; LF vs CR/LF is autodetected")
 	}
 	if len(readerOptions.IFS) != 1 {
-		return nil, errors.New("CSV IFS can only be a single character")
+		return nil, fmt.Errorf("for CSV, IFS can only be a single character")
 	}
 	return &RecordReaderCSV{
 		readerOptions:   readerOptions,
@@ -236,12 +235,10 @@ func (reader *RecordReaderCSV) getRecordBatch(
 
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput {
-				err := errors.New(
-					fmt.Sprintf(
-						"mlr: CSV header/data length mismatch %d != %d "+
-							"at filename %s row %d.\n",
-						nh, nd, reader.filename, reader.rowNumber,
-					),
+				err := fmt.Errorf(
+					"mlr: CSV header/data length mismatch %d != %d "+
+						"at filename %s row %d.\n",
+					nh, nd, reader.filename, reader.rowNumber,
 				)
 				errorChannel <- err
 				return

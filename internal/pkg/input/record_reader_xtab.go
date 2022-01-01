@@ -3,7 +3,7 @@ package input
 import (
 	"bufio"
 	"container/list"
-	"errors"
+	"fmt"
 	"io"
 	"regexp"
 	"strings"
@@ -311,7 +311,7 @@ func (s *tXTABIPSSplitter) Split(input string) (key, value string, err error) {
 	// Empty string is a length-0 return value.
 	n := len(input)
 	if n == 0 {
-		return "", "", errors.New("mlr: internal coding error in XTAB reader")
+		return "", "", fmt.Errorf("internal coding error in XTAB reader")
 	}
 
 	// '   abc 123' splits as key '', value 'abc 123'.
@@ -360,12 +360,12 @@ type tXTABIPSRegexSplitter struct {
 func (s *tXTABIPSRegexSplitter) Split(input string) (key, value string, err error) {
 	kv := lib.RegexSplitString(s.ipsRegex, input, 2)
 	if len(kv) == 0 {
-		return "", "", errors.New("mlr: internal coding error in XTAB reader")
+		return "", "", fmt.Errorf("internal coding error in XTAB reader")
 	} else if len(kv) == 1 {
 		return kv[0], "", nil
 	} else if len(kv) == 2 {
 		return kv[0], kv[1], nil
 	} else {
-		return "", "", errors.New("mlr: internal coding error in XTAB reader")
+		return "", "", fmt.Errorf("internal coding error in XTAB reader")
 	}
 }

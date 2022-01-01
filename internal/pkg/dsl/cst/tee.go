@@ -122,12 +122,7 @@ func (root *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 		} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
 			retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 		} else {
-			return nil, errors.New(
-				fmt.Sprintf(
-					"%s: unhandled redirector node type %s.",
-					"mlr", string(redirectorNode.Type),
-				),
-			)
+			return nil, fmt.Errorf("mlr: unhandled redirector node type %s.", string(redirectorNode.Type))
 		}
 	}
 
