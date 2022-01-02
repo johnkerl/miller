@@ -2,7 +2,7 @@
 # ----------------------------------------------------------------
 # Expect magenta:
 M_PI M_E
-# Expect blue, like identifer:
+# Expect blue, like identifier:
 M_UUU
 
 # ----------------------------------------------------------------

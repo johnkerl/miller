@@ -140,7 +140,7 @@ nil through the reader/transformer/writer sequence.
 
 * Go has garbage collection which immediately simplifies the coding compared to the C port.
 * Pointers are used freely for record-processing: record-readers allocate pointed records; pointed records are passed on Go channels from record-readers to record-transformers to record-writers.
-  * Any transformer which passes an input record through is fine -- be it unmodifed as in `mlr cat` or modified as in `mlr cut`.
+  * Any transformer which passes an input record through is fine -- be it unmodified as in `mlr cat` or modified as in `mlr cut`.
   * If a transformer drops a record (`mlr filter` in false cases, for example, or `mlr nothing`) it will be GCed.
   * One caveat is any transformer which produces multiples, e.g. `mlr repeat` -- this needs to explicitly copy records instead of producing multiple pointers to the same record.
 * Right-hand-sides of DSL expressions all pass around pointers to records and Mlrvals.
