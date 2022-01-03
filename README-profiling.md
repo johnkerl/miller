@@ -43,7 +43,7 @@ Scripts:
 
 Notes:
 
-* Any of the above can be run using the profiler. I find Flame Graph mode particuarly informative for drill-down.
+* Any of the above can be run using the profiler. I find Flame Graph mode particularly informative for drill-down.
 * The above refer to `mlr5` and `~/tmp/miller/mlr` as well as `./mlr`. The idea is I have a copy of Miller 5.10.3 (the C implementation) saved off in my path as `mlr5`. Then I keep `~/tmp/miller` on recent HEAD. Then I have `.` on a dev branch. Comparing `mlr5` to `./mlr` shows relative performance of the C and Go implementations. Comparing `~/tmp/miller/mlr` to `./mlr` shows relative performance of whatever optimization I'm currently working on.
 * Several of the above scripts use [justtime](https://github.com/johnkerl/scripts/blob/main/fundam/justtime) to get one-line timing information.
 
