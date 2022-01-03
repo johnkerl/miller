@@ -4,7 +4,7 @@ PUNCHDOWN LIST
 * compat emph
 
 * doc
-  o new-in-miller-6: missings:
+  o new-in-miller-6: missing:
     - dump syntax -- ?
     - emittable constraints -- ?
   o wut h1 spacing before/after ...
@@ -18,7 +18,7 @@ PUNCHDOWN LIST
       once for NR=2, etc.
   o C-style triple-for loops: loop to NR -> NO!!!
   o Since uninitialized out-of-stream variables default to 0 for
-    addition/substraction and 1 for multiplication when they appear on expression
+    addition/subtraction and 1 for multiplication when they appear on expression
     right-hand sides (not quite as in awk, where they'd default to 0 either way)
     <-> xlink to other page
   r fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
