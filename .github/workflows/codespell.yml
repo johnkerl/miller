@@ -6,8 +6,9 @@ name: Codespell
 # Start the job on all push #
 on:
   push:
+    branches: [ main ]
   pull_request:
-  workflow_dispatch:
+    branches: [ main ]
 
 # Set the Job #
 jobs:
