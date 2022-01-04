@@ -59,7 +59,7 @@ func maybeInterpolateDashS(args []string) []string {
 	}
 
 	// TODO: maybe support comment lines deeper within the script-file.
-	// Make sure they're /^[\s]+#/ since we dont' want to disrupt a "#" within
+	// Make sure they're /^[\s]+#/ since we don't want to disrupt a "#" within
 	// strings which are not actually comment characters.
 
 	// Re-join lines to strings, and pass off to a shell-parser to split into

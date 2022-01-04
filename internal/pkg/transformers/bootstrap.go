@@ -138,7 +138,7 @@ func (tr *TransformerBootstrap) Transform(
 	//
 	// However, in Go, there is concurrent processing.  It would be
 	// possible for us to emit a pointer to a particular record without
-	// copying, then when emitting that saem record a second time, copy it.
+	// copying, then when emitting that same record a second time, copy it.
 	// But due to concurrency, the pointed-to record could have already
 	// been mutated downstream. We wouldn't be copying our input as we
 	// received it -- we'd be copying something potentially modified.

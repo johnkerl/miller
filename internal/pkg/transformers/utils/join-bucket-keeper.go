@@ -326,7 +326,7 @@ func (keeper *JoinBucketKeeper) FindJoinBucket(
 }
 
 // ----------------------------------------------------------------
-// This finds the first peek record which posseses all the necessary join-field
+// This finds the first peek record which possesses all the necessary join-field
 // keys.  Any other records found along the way, lacking the necessary
 // join-field keys, are moved to the left-unpaired list.
 

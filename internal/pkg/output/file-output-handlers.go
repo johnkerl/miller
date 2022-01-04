@@ -49,7 +49,7 @@ type MultiOutputHandlerManager struct {
 	// For stdout or stderr
 	singleHandler *FileOutputHandler
 
-	// TOOD: make an enum
+	// TODO: make an enum
 	append              bool // True for ">>", false for ">" and "|"
 	pipe                bool // True for "|", false for ">" and ">>"
 	recordWriterOptions *cli.TWriterOptions

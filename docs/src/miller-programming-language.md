@@ -382,7 +382,7 @@ You can read more about this in the [arithmetic reference](reference-main-arithm
 ## Absent data
 
 In addition to types including string, number (int/float), maps, and arrays,
-Miller varibles can also be **absent**. This is when a variable never had a
+Miller variables can also be **absent**. This is when a variable never had a
 value assigned to it. Miller's treatment of absent data is intended to make it
 easy for you to handle [non-homogeneous data](record-heterogeneity.md). We'll
 see more in the [null-data reference](reference-main-null-data.md) but the

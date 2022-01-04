@@ -46,7 +46,7 @@ Look at the file to find names of fields:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR
-masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
+masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Witter;Biały;Alb;Beyaz
 masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
 </pre>
 
@@ -65,7 +65,7 @@ Use XTAB output format to get a sharper picture of where records/fields are bein
 <b>mlr --icsv --oxtab cat data/colours.csv </b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
+KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Witter;Biały;Alb;Beyaz
 
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
 </pre>
@@ -83,7 +83,7 @@ ES  Blanco
 FI  Valkoinen
 FR  Blanc
 IT  Bianco
-NL  Wit
+NL  Witter
 PL  Biały
 RO  Alb
 TR  Beyaz

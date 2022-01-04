@@ -209,7 +209,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 				if !key.IsString() {
 					return nil, false, fmt.Errorf(
 						// TODO: print out what was gotten
-						"mlr JSON reader: obejct keys must be string-valued.",
+						"mlr JSON reader: object keys must be string-valued.",
 					)
 				}
 

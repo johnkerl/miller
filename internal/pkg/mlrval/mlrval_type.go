@@ -147,7 +147,7 @@ var TYPE_NAMES = [MT_DIM]string{
 	"int",
 	"float",
 	"bool",
-	"empty", // For backward compatiblity with the C impl: this is user-visible
+	"empty", // For backward compatibility with the C impl: this is user-visible
 	"string",
 	"array",
 	"map",
