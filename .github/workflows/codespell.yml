@@ -31,4 +31,6 @@ jobs:
         with:
           check_filenames: true
           ignore_words_file: .codespellignore
-          skip: *.txt,*.csv
+          exclude:
+            - "**/*.csv"
+            - "**/*.txt"
