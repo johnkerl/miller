@@ -32,4 +32,5 @@ jobs:
         with:
           check_filenames: true
           ignore_words_file: .codespellignore
-          skip: "*.csv","*.txt"
+          # This simply does not work despite multiple attempts:
+          # skip: "*.csv","*.txt"
