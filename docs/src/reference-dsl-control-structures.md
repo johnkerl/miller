@@ -546,7 +546,7 @@ a=wye,b=pan,i=5,x=0.573288,y=0.863624
 x_sum=2.26476
 </pre>
 
-Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in `awk`, where they'd default to 0 either way), the above can be written more succinctly as
+Since uninitialized out-of-stream variables default to 0 for addition/subtraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in `awk`, where they'd default to 0 either way), the above can be written more succinctly as
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put '</b>

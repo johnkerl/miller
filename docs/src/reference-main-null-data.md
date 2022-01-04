@@ -26,9 +26,9 @@ Miller has three kinds of null data:
 
 * **Absent (key not present)**: a field name is not present, e.g. input record is `x=1,y=2` and a `put` or `filter` expression refers to `$z`. Or, reading an out-of-stream variable which hasn't been assigned a value yet, e.g.  `mlr put -q '@sum += $x; end{emit @sum}'` or `mlr put -q '@sum[$a][$b] += $x; end{emit @sum, "a", "b"}'`.
 
-* **JSON null**: The main purpose of this is to support reading the `null` type in JSON files. The [Miller programming language](miller-programming-language.md) has a `null` keyword as well, so you can also write the null type using `$x = null`. Addtionally, though, when you write past the end of an array, leaving gaps -- e.g. writing `a[12]` when the array `a` has length 10 -- JSON-null is used to fill the gaps. See also the [arrays page](reference-main-arrays.md#auto-extend-and-null-gaps).
+* **JSON null**: The main purpose of this is to support reading the `null` type in JSON files. The [Miller programming language](miller-programming-language.md) has a `null` keyword as well, so you can also write the null type using `$x = null`. Additionally, though, when you write past the end of an array, leaving gaps -- e.g. writing `a[12]` when the array `a` has length 10 -- JSON-null is used to fill the gaps. See also the [arrays page](reference-main-arrays.md#auto-extend-and-null-gaps).
 
-You can test these programatically using the functions `is_empty`/`is_not_empty`, `is_absent`/`is_present`, and `is_null`/`is_not_null`. For the last pair, note that null means either empty or absent. Here is a full list of such functions:
+You can test these programmatically using the functions `is_empty`/`is_not_empty`, `is_absent`/`is_present`, and `is_null`/`is_not_null`. For the last pair, note that null means either empty or absent. Here is a full list of such functions:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -f | grep is_</b>
@@ -146,7 +146,7 @@ The reasoning is as follows:
 
 * Empty values are explicit in the data so they should explicitly affect accumulations: `mlr put '@sum += $x'` should accumulate numeric `x` values into the sum but an empty `x`, when encountered in the input data stream, should make the sum non-numeric. To work around this you can use the `is_not_null` function as follows: `mlr put 'is_not_null($x) { @sum += $x }'`
 
-* Absent stream-record values should not break accumulations, since Miller by design handles heterogenous data: the running `@sum` in `mlr put '@sum += $x'` should not be invalidated for records which have no `x`.
+* Absent stream-record values should not break accumulations, since Miller by design handles heterogeneous data: the running `@sum` in `mlr put '@sum += $x'` should not be invalidated for records which have no `x`.
 
 * Absent out-of-stream-variable values are precisely what allow you to write `mlr put '@sum += $x'`. Otherwise you would have to write `mlr put 'begin{@sum = 0}; @sum += $x'` -- which is tolerable -- but for `mlr put 'begin{...}; @sum[$a][$b] += $x'` you'd have to pre-initialize `@sum` for all values of `$a` and `$b` in your input data stream, which is intolerable.
 
@@ -154,7 +154,7 @@ The reasoning is as follows:
 
 ## Absent-test functions
 
-Since absent plus absent is absent (and likewise for other operators), accumulations such as `@sum += $x` work correctly on heterogenous data, as do within-record formulas if both operands are absent. If one operand is present, you may get behavior you don't desire.  To work around this -- namely, to set an output field only for records which have all the inputs present -- you can use a pattern-action block with `is_present`:
+Since absent plus absent is absent (and likewise for other operators), accumulations such as `@sum += $x` work correctly on heterogeneous data, as do within-record formulas if both operands are absent. If one operand is present, you may get behavior you don't desire.  To work around this -- namely, to set an output field only for records which have all the inputs present -- you can use a pattern-action block with `is_present`:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr cat data/het.dkvp</b>
