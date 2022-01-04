@@ -3,30 +3,35 @@ name: Codespell
 # Documentation:
 # https://help.github.com/en/articles/workflow-syntax-for-github-actions
 
-# Start the job on all push #
+# Start the job on all pushes
 on:
   push:
+    branches: [ main ]
   pull_request:
-  workflow_dispatch:
+    branches: [ main ]
 
-# Set the Job #
+# Set the Job
 jobs:
   build:
     name: Codespell
     # Set the agent to run on
     runs-on: ubuntu-latest
 
-    # Load all steps #
+    # Load all steps
     steps:
-      # Checkout the code base #
-      - name: Checkout Code
+      # Check out the code base
+      - name: Check out code
         uses: actions/checkout@v2.4.0
         with:
           # Full git history is needed to get a proper list of changed files within `super-linter`
           fetch-depth: 0
 
-      # Run Linter against code base #
+      # Run linter against code base
+      # https://github.com/codespell-project/codespell
       - name: Codespell
         uses: codespell-project/actions-codespell@master
         with:
           check_filenames: true
+          ignore_words_file: .codespellignore
+          # ignore_words_list: denom,inout,iput,nd,nin,numer,te,wee
+          skip: "*.csv,*.dkvp,*.txt,*.js,*.html,*.map,./tags,./test/cases"
