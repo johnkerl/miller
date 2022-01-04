@@ -32,9 +32,12 @@ jobs:
         with:
           check_filenames: true
           ignore_words_file: .codespellignore
-          # This simply does not work despite multiple attempts:
+          # This simply does not work despite multiple attempts, despite
+          # https://github.com/codespell-project/codespell
+          #
           # skip: "*.csv","*.txt"
-          skip:
-            - docs/src/data/english-words.txt
-            - docs/src/ngrams/gsl-2000.txt
-            - "test/cases/**/*"
+          skip: "*.csv,*.txt,./test/cases"
+          #skip:
+          #  - docs/src/data/english-words.txt
+          #  - docs/src/ngrams/gsl-2000.txt
+          #  - "test/cases/**/*"
