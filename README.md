@@ -96,7 +96,7 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 * Feature requests / bug reports: https://github.com/johnkerl/miller/issues
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-39-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-40-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 # Features
@@ -224,6 +224,7 @@ Thanks to all the fine people who help make Miller better ([emoji key](https://a
     <td align="center"><a href="https://github.com/BEFH"><img src="https://avatars.githubusercontent.com/u/3386600?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Brian Fulton-Howard</b></sub></a><br /><a href="#platform-BEFH" title="Packaging/porting to new platform">📦</a></td>
     <td align="center"><a href="https://github.com/ChCyrill"><img src="https://avatars.githubusercontent.com/u/2165604?v=4?s=50" width="50px;" alt=""/><br /><sub><b>ChCyrill</b></sub></a><br /><a href="#ideas-ChCyrill" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/jauderho"><img src="https://avatars.githubusercontent.com/u/13562?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Jauder Ho</b></sub></a><br /><a href="https://github.com/johnkerl/miller/commits?author=jauderho" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/psacawa"><img src="https://avatars.githubusercontent.com/u/21274063?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Paweł Sacawa</b></sub></a><br /><a href="https://github.com/johnkerl/miller/issues?q=author%3Apsacawa" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
