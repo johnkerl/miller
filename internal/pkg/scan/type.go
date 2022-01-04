@@ -6,13 +6,13 @@ type ScanType int
 
 const (
 	scanTypeString                ScanType = 0
-	scanTypeDecimalInt                     = 1
-	scanTypeLeadingZeroDecimalInt          = 2
-	scanTypeOctalInt                       = 3
-	scanTypeLeadingZeroOctalInt            = 4
-	scanTypeHexInt                         = 5
-	scanTypeBinaryInt                      = 6
-	scanTypeMaybeFloat                     = 7
+	scanTypeDecimalInt            ScanType = 1
+	scanTypeLeadingZeroDecimalInt ScanType = 2
+	scanTypeOctalInt              ScanType = 3
+	scanTypeLeadingZeroOctalInt   ScanType = 4
+	scanTypeHexInt                ScanType = 5
+	scanTypeBinaryInt             ScanType = 6
+	scanTypeMaybeFloat            ScanType = 7
 )
 
 const typeNameString = "string"
