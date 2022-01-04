@@ -31,6 +31,7 @@ jobs:
         uses: codespell-project/actions-codespell@master
         with:
           check_filenames: true
-          ignore_words_file: .codespellignore
+          # ignore_words_file: .codespellignore
+          ignore_words_list: denom,inTerm,inout,iput,nd,nin,numer,Wit,te,wee
           # https://github.com/codespell-project/codespell
-          skip: "*.csv,*.dkvp,*.txt,./test/cases"
+          skip: "*.csv,*.dkvp,*.txt,*.js,*.html,*.map,./tags,./test/cases"

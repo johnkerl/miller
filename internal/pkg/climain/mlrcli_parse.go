@@ -301,7 +301,7 @@ func parseCommandLinePassTwo(
 			options,
 			true, // false for first pass of CLI-parse, true for second pass -- this is the first pass
 		)
-		// Unparseable verb-setups should have been found in pass one.
+		// Unparsable verb-setups should have been found in pass one.
 		lib.InternalCodingErrorIf(transformer == nil)
 		// Make sure we consumed the entire verb sequence as parsed by pass one.
 		lib.InternalCodingErrorIf(argi != argc)

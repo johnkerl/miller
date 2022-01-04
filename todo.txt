@@ -2,6 +2,11 @@
 PUNCHDOWN LIST
 
 * compat emph
+* document cloudthings, e.g.
+  o go.yml
+  o codespell.yml
+    - codespell --ignore-words .codespellignore --skip "*.csv,*.dkvp,*.txt,./tags,./test/cases"
+  o readthedocs triggers
 
 * doc
   o new-in-miller-6: missing:

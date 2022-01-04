@@ -7,7 +7,7 @@ package mlrval
 // MlrvalFromPending is designed solely for the JSON API, for something
 // intended to be mutated after construction once its type is (later) known.
 // Whereas ERROR, ABSENT, etc are all singletons, this one
-// must be mutable and therefor non-singleton.
+// must be mutable and therefore non-singleton.
 
 func MlrvalFromPending() Mlrval {
 	return Mlrval{
