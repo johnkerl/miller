@@ -659,7 +659,7 @@ func BIF_append(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // ----------------------------------------------------------------
-// First argumemnt is prefix.
+// First argument is prefix.
 // Second argument is delimiter.
 // Third argument is map or array.
 // flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.

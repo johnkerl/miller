@@ -185,7 +185,7 @@ func (reader *RecordReaderJSON) processHandle(
 //
 // Miller lets users (on an opt-in basis) have comments in their data files,
 // for all formats including JSON. Comments are only honored at start of line.
-// Users can have them be printed to stdout straightaway, or simply discarded.
+// Users can have them be printed to stdout straight away, or simply discarded.
 //
 // For most file formats Miller is doing line-based I/O and can deal with
 // comment lines easily and simply. But for JSON, the Go library needs an

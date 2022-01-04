@@ -165,7 +165,7 @@ func handleLoad(repl *Repl, args []string) bool {
 // ----------------------------------------------------------------
 func usageOpen(repl *Repl) {
 	fmt.Printf(
-		":open {one or more data-file names in the format specifed by %s %s}.\n",
+		":open {one or more data-file names in the format specified by %s %s}.\n",
 		repl.exeName, repl.replName,
 	)
 	fmt.Print(
@@ -515,7 +515,7 @@ func handleSkipOrProcessUntil(repl *Repl, dslString string, processingNotSkippin
 				repl,
 				recordAndContext,
 				processingNotSkipping,
-				true, // testingByFilterExpression -- since we're continuing until the filter expresssion is true
+				true, // testingByFilterExpression -- since we're continuing until the filter expression is true
 			)
 			if shouldBreak {
 				break
@@ -597,7 +597,7 @@ func skipOrProcessRecord(
 // ----------------------------------------------------------------
 func usageWrite(repl *Repl) {
 	fmt.Println(":write with no arguments.")
-	fmt.Println("Sends the current record (maybe modifed by statements you enter)")
+	fmt.Println("Sends the current record (maybe modified by statements you enter)")
 	fmt.Printf("to standard output, with format as specified by %s %s.\n",
 		repl.exeName, repl.replName)
 }
