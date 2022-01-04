@@ -43,7 +43,7 @@ THE SOFTWARE.
 // supported specifier (i.e. there must be intervening text to match first)
 
 // Local mods (johnkerl 2021-10-17): ParseTZ and strptime_tz supporting
-// Miller's idiosyncracies.
+// Miller's idiosyncrasies.
 
 package strptime
 
@@ -214,7 +214,7 @@ var (
 	// ErrFormatMismatch means that intervening text in the strptime format string did not
 	// match within the parsed string.
 	ErrFormatMismatch = errors.New("date format mismatch")
-	// ErrFormatUnsupported means that the format string includes unsupport percent-escapes.
+	// ErrFormatUnsupported means that the format string includes unsupported percent-escapes.
 	ErrFormatUnsupported = errors.New("date format contains unsupported percent-encodings")
 
 	formatMap = map[int]string{

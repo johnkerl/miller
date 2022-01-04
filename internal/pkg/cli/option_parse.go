@@ -2358,7 +2358,7 @@ var OutputColorizationFlagSection = FlagSection{
 // FLATTEN/UNFLATTEN FLAGS
 
 func FlattenUnflattenPrintInfo() {
-	fmt.Println("These flags control how Miller converts record values which are maps or arrays, when input is JSON and ouput is non-JSON (flattening) or input is non-JSON and output is JSON (unflattening).")
+	fmt.Println("These flags control how Miller converts record values which are maps or arrays, when input is JSON and output is non-JSON (flattening) or input is non-JSON and output is JSON (unflattening).")
 	fmt.Println()
 	fmt.Println("See the Flatten/unflatten doc page for more information.")
 }
@@ -2519,7 +2519,7 @@ var MiscFlagSection = FlagSection{
 		{
 			name: "--ofmt",
 			arg:  "{format}",
-			help: "E.g. `%.18f`, `%.0f`, `%9.6e`. Please use sprintf-style codes for floating-point nummbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.",
+			help: "E.g. `%.18f`, `%.0f`, `%9.6e`. Please use sprintf-style codes for floating-point numbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.WriterOptions.FPOFMT = args[*pargi+1]
