@@ -180,7 +180,7 @@ are overridden in all cases by setting output format to `format2`.
 
 ## Flatten-unflatten flags
 
-These flags control how Miller converts record values which are maps or arrays, when input is JSON and ouput is non-JSON (flattening) or input is non-JSON and output is JSON (unflattening).
+These flags control how Miller converts record values which are maps or arrays, when input is JSON and output is non-JSON (flattening) or input is non-JSON and output is JSON (unflattening).
 
 See the Flatten/unflatten doc page for more information.
 
@@ -268,7 +268,7 @@ These are flags which don't fit into any other category.
 * `--no-fflush`: Let buffered output not be written after every output record. The default is flush output after every record if the output is to the terminal, or less often if the output is to a file or a pipe. The default is a significant performance optimization for large files.  Use this flag to allow less-frequent updates when output is to the terminal. This is unlikely to be a noticeable performance improvement, since direct-to-screen output for large files has its own overhead.
 * `--no-hash-records`: See --hash-records.
 * `--nr-progress-mod {m}`: With m a positive integer: print filename and record count to os.Stderr every m input records.
-* `--ofmt {format}`: E.g. `%.18f`, `%.0f`, `%9.6e`. Please use sprintf-style codes for floating-point nummbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.
+* `--ofmt {format}`: E.g. `%.18f`, `%.0f`, `%9.6e`. Please use sprintf-style codes for floating-point numbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.
 * `--records-per-batch {n}`: This is an internal parameter for maximum number of records in a batch size. Normally this does not need to be modified.
 * `--seed {n}`: with `n` of the form `12345678` or `0xcafefeed`. For `put`/`filter` `urand`, `urandint`, and `urand32`.
 * `--tz {timezone}`: Specify timezone, overriding `$TZ` environment variable (if any).

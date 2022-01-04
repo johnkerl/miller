@@ -355,7 +355,7 @@ mlr put '
 ' ./data/small
 GENMD-EOF
 
-Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in `awk`, where they'd default to 0 either way), the above can be written more succinctly as
+Since uninitialized out-of-stream variables default to 0 for addition/subtraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in `awk`, where they'd default to 0 either way), the above can be written more succinctly as
 
 GENMD-RUN-COMMAND
 mlr put '

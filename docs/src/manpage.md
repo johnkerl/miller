@@ -383,7 +383,7 @@ FILE-FORMAT FLAGS
                                 csv` is the same as `--ocsv`.
 
 FLATTEN-UNFLATTEN FLAGS
-       These flags control how Miller converts record values which are maps or arrays, when input is JSON and ouput is non-JSON (flattening) or input is non-JSON and output is JSON (unflattening).
+       These flags control how Miller converts record values which are maps or arrays, when input is JSON and output is non-JSON (flattening) or input is non-JSON and output is JSON (unflattening).
 
        See the Flatten/unflatten doc page for more information.
 
@@ -530,7 +530,7 @@ MISCELLANEOUS FLAGS
        --nr-progress-mod {m}    With m a positive integer: print filename and record
                                 count to os.Stderr every m input records.
        --ofmt {format}          E.g. `%.18f`, `%.0f`, `%9.6e`. Please use
-                                sprintf-style codes for floating-point nummbers. If
+                                sprintf-style codes for floating-point numbers. If
                                 not specified, default formatting is used. See also
                                 the `fmtnum` function and the `format-values` verb.
        --records-per-batch {n}  This is an internal parameter for maximum number of
@@ -3040,5 +3040,5 @@ SEE ALSO
 
 
 
-                                  2021-12-30                         MILLER(1)
+                                  2022-01-04                         MILLER(1)
 </pre>

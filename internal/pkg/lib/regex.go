@@ -15,8 +15,8 @@
 //   where the '=~' sets the captures and the "\2:\1" uses them.  (Note that
 //   https://github.com/johnkerl/miller/issues/388 has a better suggestion
 //   which would make the captures explicit as variables, rather than implicit
-//   within CST state -- regardless, the current syntax will still be supprted
-//   for backward compatability and so is here to stay.) Here we make use of Go
+//   within CST state -- regardless, the current syntax will still be supported
+//   for backward compatibility and so is here to stay.) Here we make use of Go
 //   regexp-library functions to write to, and then later interpolate from, a
 //   captures array which is stored within CST state. (See the `runtime.State`
 //   object.)

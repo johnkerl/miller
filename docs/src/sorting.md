@@ -662,7 +662,7 @@ an array. Here the map keys will be `NR` values `"1"`, `"2"`, etc.
 Why would we do this? When we're operating across all records and keeping all
 of them -- densely -- accumulating them in an array is fine. If we're only
 taking a subset -- sparsely -- and we want to retain the original `NR` as keys,
-using a map is handy, since we don't need continguous keys.
+using a map is handy, since we don't need contiguous keys.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint --from example.csv put -q '</b>

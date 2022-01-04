@@ -206,7 +206,7 @@ purple square   0    91 0.259926 0.824322 0.723735 6.854221
 
 ### Nested JSON objects
 
-Additionally, Miller can **tabularize nested objects by concatentating keys**. If your processing has
+Additionally, Miller can **tabularize nested objects by concatenating keys**. If your processing has
 input as well as output in JSON format, JSON structure is preserved throughout the processing:
 
 <pre class="pre-highlight-in-pair">
@@ -466,7 +466,7 @@ resource=/some/other/path,loadsec=0.97,ok=false
 etc. and I just log them as needed. Then later, I can use `grep`, `mlr --opprint group-like`, etc.
 to analyze my logs.
 
-See the [seprators page](reference-main-separators.md) regarding how to specify separators other than the default equals-sign and comma.
+See the [separators page](reference-main-separators.md) regarding how to specify separators other than the default equals-sign and comma.
 
 ## NIDX: Index-numbered (toolkit style)
 
@@ -549,24 +549,6 @@ While you can do format conversion using `mlr --icsv --ojson cat myfile.csv`, th
 No help found for "format-conversion". Please try 'mlr help find format-conversion' for approximate match.
 See also 'mlr help topics'.
 </pre>
-
-<!---
-TODO: probably entirely unsupport this feature in Miller6.
-
-## Autodetect of line endings
-
-Default line endings (`--irs` and `--ors`) are `'auto'` which means **autodetect from the input file format**, as long as the input file(s) have lines ending in either LF (also known as linefeed, `'\n'`, `0x0a`, Unix-style) or CRLF (also known as carriage-return/linefeed pairs, `'\r\n'`, `0x0d 0x0a`, Windows style).
-
-**If both IRS and ORS are auto (which is the default) then LF input will lead to LF output and CRLF input will lead to CRLF output, regardless of the platform you're running on.**
-
-The line-ending autodetector triggers on the first line ending detected in the input stream. E.g. if you specify a CRLF-terminated file on the command line followed by an LF-terminated file then autodetected line endings will be CRLF.
-
-If you use `--ors {something else}` with (default or explicitly specified) `--irs auto` then line endings are autodetected on input and set to what you specify on output.
-
-If you use `--irs {something else}` with (default or explicitly specified) `--ors auto` then the output line endings used are LF on Unix/Linux/BSD/MacOS X, and CRLF on Windows.
-
-See also the [separators page](reference-main-separators.md) for more information about record/field/pair separators.
---->
 
 ## Comments in data
 
