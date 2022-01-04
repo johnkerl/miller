@@ -328,7 +328,7 @@ func (node *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 // Example:
 // DSL expression: @sum[$a][$b] += $n; end { dump; emit @sum }
 // Name: "sum"
-// Values: single array contaning the map
+// Values: single array containing the map
 //   {
 //     "sum": {
 //       "vee": {

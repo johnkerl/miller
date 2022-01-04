@@ -150,7 +150,7 @@ input data -- and they wait for end of input to produce their output.
 Any `end` blocks you provide will not be executed until end of stream; otherwise these
 don't want for end of stream. Similarly, if you write logic to retain all records
 (see also the page on [operating on all records](operating-on-all-records.md.in))
-these will be memory-unfriendly; otherwhise they are memory-friendly.
+these will be memory-unfriendly; otherwise they are memory-friendly.
 
 Most simple operations such as `mlr put '$z = $x + $y'` are fully streaming.
 

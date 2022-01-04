@@ -35,7 +35,7 @@ Miller can do many kinds of processing on key-value-pair data using elapsed time
 ## Some examples
 
 This is some data from [https://community.opencellid.org](https://community.opencellid.org): approximately 40
-million records, 0.9GB compressed, 3.2GB uncommpressed.
+million records, 0.9GB compressed, 3.2GB uncompressed.
 
 First we see that decompression is much cheaper than compression: 10 seconds vs. 2.5 minutes:
 

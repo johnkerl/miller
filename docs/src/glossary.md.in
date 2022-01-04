@@ -309,7 +309,7 @@ A [keyword](#keyword) used for defining a
 
 A bit of callable code in the
 [Miller programming language](miller-programming-language.md)
-which takes zero or more arguments, and optionall returns a value.
+which takes zero or more arguments, and optionally returns a value.
 
 See the [page on built-in functions](reference-dsl-builtin-functions.md) to see
 functions which are present in Miller.
@@ -440,7 +440,7 @@ entire [record stream](#streaming). See the
 ## manpage / manual page
 
 A form of on-line help which is [common in Unix-like operating
-systems](https://en.wikipedia.org/wiki/Man_page), includig MacOS and BSD
+systems](https://en.wikipedia.org/wiki/Man_page), including MacOS and BSD
 variants.
 
 If you've [installed Miller](installing-miller.md) using your system's package-install tools

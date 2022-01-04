@@ -171,7 +171,7 @@ parser not being able to efficiently disambiguate all the punctuational
 opportunities.
 
 So, `emit1` can handle syntactic richness in the one thing being emitted;
-`emitf`, `emit`, and `emitp` can handle syntatic richness in the side-by-side
+`emitf`, `emit`, and `emitp` can handle syntactic richness in the side-by-side
 placement, indexing, and redirection.
 
 (Mnemonic: If all you want is to insert a new record into the record stream, `emit1` is probably the one you want.)

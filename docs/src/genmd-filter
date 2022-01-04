@@ -96,7 +96,7 @@ end
 # Our job is to read foo.md.in and write foo.md. Then Mkdocs will create HTML
 # in the build directory. However, Mkdocs writes not foo.html but
 # foo/index.html. This is true for all pages except the base index.html. Also,
-# in this funciton we're writing raw HTML not Markdown so we can't leverage
+# in this function we're writing raw HTML not Markdown so we can't leverage
 # Mkdocs foo.md -> foo/index.html renaming.  This also means we need to be
 # mindful of directory structure. Given input
 #   index.md.in
