@@ -71,6 +71,16 @@ func transformerTailParseCLI(
 		} else if opt == "-n" {
 			tailCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 
+			// This is a bit of a hack. In our Getoptify routine we preprocess
+			// the command line sending '-xyz' to '-x -y -z', but leaving
+			// '--xyz' as-is. Also, Unix-like tools often support 'head -n4'
+			// and 'tail -n4' in addition to 'head -n 4' and 'tail -n 4'.  Our
+			// getoptify paradigm, combined with syntax familiar to users,
+			// means we get '-n -4' here. So, take the absolute value to handle this.
+			if tailCount < 0 {
+				tailCount = -tailCount
+			}
+
 		} else if opt == "-g" {
 			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
