@@ -31,6 +31,5 @@ jobs:
         with:
           check_filenames: true
           ignore_words_file: .codespellignore
-          exclude_file: docs/src/data/english-words.txt
-          exclude_file: docs/src/data/colours.csv
+          exclude_file: docs/src/data/english-words.txt docs/src/data/colours.csv
           
