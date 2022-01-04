@@ -34,4 +34,7 @@ jobs:
           ignore_words_file: .codespellignore
           # This simply does not work despite multiple attempts:
           # skip: "*.csv","*.txt"
-          skip: docs/src/data/english-words.txt,docs/src/ngrams/gsl-2000.txt
+          skip:
+            - docs/src/data/english-words.txt
+            - docs/src/ngrams/gsl-2000.txt
+            - "test/cases/**/*"
