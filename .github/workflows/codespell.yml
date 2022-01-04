@@ -27,11 +27,11 @@ jobs:
           fetch-depth: 0
 
       # Run linter against code base
+      # https://github.com/codespell-project/codespell
       - name: Codespell
         uses: codespell-project/actions-codespell@master
         with:
           check_filenames: true
-          # ignore_words_file: .codespellignore
-          ignore_words_list: denom,inTerm,inout,iput,nd,nin,numer,Wit,te,wee
-          # https://github.com/codespell-project/codespell
+          ignore_words_file: .codespellignore
+          # ignore_words_list: denom,inout,iput,nd,nin,numer,te,wee
           skip: "*.csv,*.dkvp,*.txt,*.js,*.html,*.map,./tags,./test/cases"
