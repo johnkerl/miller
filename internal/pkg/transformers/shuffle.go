@@ -129,7 +129,7 @@ func (tr *TransformerShuffle) Transform(
 			images[u] = images[i]
 			images[i] = temp
 			// Decrease the size of the pool by 1.  (Yes, unusedStart and k always have the same value.
-			// Using two variables wastes neglible memory and makes the code easier to understand.)
+			// Using two variables wastes negligible memory and makes the code easier to understand.)
 			unusedStart++
 			numUnused--
 		}

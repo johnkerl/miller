@@ -98,7 +98,7 @@ FILENAME="foo.dat",FILENUM=1,NR=1,FNR=1
 
 This is a small modification around the [CST](../../dsl/cst/) and the [`put` verb](../../transformers/put_or_filter.go).. Most of the keystroking here is for online help and command-line parsing.
 
-One subtlety is that non-assignment expressions like `NR < 10` are filter statements within `put` -- they can be used to control whether or not a given record is included in the outut stream. Here, in the REPL, these expressions are simply printed to the terminal. And for `:skip until ...` or `:process until ...`, they're used as the exit condition to break out of reading input records.
+One subtlety is that non-assignment expressions like `NR < 10` are filter statements within `put` -- they can be used to control whether or not a given record is included in the output stream. Here, in the REPL, these expressions are simply printed to the terminal. And for `:skip until ...` or `:process until ...`, they're used as the exit condition to break out of reading input records.
 
 # File structure
 

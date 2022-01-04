@@ -202,7 +202,7 @@ func BIF_minus_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // 2**63-1 (or is less than -2**63) using integer arithmetic (it may have
 // already overflowed) *or* using double-precision (granularity). Instead we
 // check if the absolute value of the product exceeds the largest representable
-// double less than 2**63. (An alterative would be to do all integer multiplies
+// double less than 2**63. (An alternative would be to do all integer multiplies
 // using handcrafted multi-word 128-bit arithmetic).
 
 func times_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {

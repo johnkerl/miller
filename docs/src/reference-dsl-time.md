@@ -19,7 +19,7 @@ Quick links:
 Dates/times are not a separate data type; Miller uses ints for
 [seconds since the epoch](https://en.wikipedia.org/wiki/Unix_time) and strings for formatted
 date/times. In this page we take a look at what some of the various options are
-for processing datetimes andd timezones in your data.
+for processing datetimes and timezones in your data.
 
 See also the [section on time-related
 functions](reference-dsl-builtin-functions.md#time-functions) for
@@ -43,7 +43,7 @@ they're independent of timezone or daylight-savings time.
 One minus is that, being just numbers, they're not particularly human-readable
 -- hence the to-string and from-string functions described below.  Another
 caveat (not really a minus) is that _epoch milliseconds_, rather than epoch
-seconds, are common in some contexts, particulary JavaScript. If you ever
+seconds, are common in some contexts, particularly JavaScript. If you ever
 (anywhere) see a timestamp for the year 49,000-something -- probably someone is
 treating epoch-milliseconds as epoch-seconds.
 

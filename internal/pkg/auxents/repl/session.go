@@ -1,7 +1,7 @@
 // ================================================================
 // Top-level handler for a REPL session, including setup/construction, and
 // ingesting command-lines. Command-line strings are triaged and send off to
-// the appropriate handlers: DSL parse/execute if the comand is a DSL statement
+// the appropriate handlers: DSL parse/execute if the command is a DSL statement
 // (like '$z = $x + $y'); REPL-command-line parse/execute otherwise (like
 // ':open foo.dat' or ':help').
 //
@@ -66,7 +66,7 @@ func NewRepl(
 	runtimeState := runtime.NewEmptyState(options)
 	runtimeState.Update(inrec, context)
 	// The filter expression for the main Miller DSL is any non-assignment
-	// statment like 'true' or '$x > 0.5' etc. For the REPL, we re-use this for
+	// statement like 'true' or '$x > 0.5' etc. For the REPL, we re-use this for
 	// interactive expressions to be printed to the terminal. For the main DSL,
 	// the default is mlrval.FromTrue(); for the REPL, the default is
 	// mlrval.VOID.

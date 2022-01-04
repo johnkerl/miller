@@ -26,7 +26,7 @@ var unbackslashReplacements = map[byte]string{
 	'?':  "?",
 }
 
-// UnbackslashStringLiteral replaces "\t" with TAB, etc. for DSL expresions
+// UnbackslashStringLiteral replaces "\t" with TAB, etc. for DSL expressions
 // like '$foo = "a\tb"'.  See also
 // https://en.wikipedia.org/wiki/Escape_sequences_in_C
 // (predates the port of Miller from C to Go).

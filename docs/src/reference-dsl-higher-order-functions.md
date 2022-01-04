@@ -38,7 +38,7 @@ respectively.
 
 The [`select`](reference-dsl-builtin-functions.md#select) function takes a map
 or array as its first argument and a function as second argument.  It includes
-each input element in the ouptut if the function returns true.
+each input element in the output if the function returns true.
 
 For arrays, that function should take one argument, for array element; for
 maps, it should take two, for map-element key and value. In either case it
@@ -776,7 +776,7 @@ Sorted, then cubed, then summed:
 
 ### Remember return
 
-From other languages it's easy to accidentially write
+From other languages it's easy to accidentally write
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put 'end { print select([1,2,3,4,5], func (e) { e >= 3 })}'</b>

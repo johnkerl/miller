@@ -26,8 +26,8 @@ func termcvtUsage(verbName string, o *os.File, exitCode int) {
 }
 
 func termcvtMain(args []string) int {
-	inTerm := "\n"
-	outTerm := "\n"
+	inputTerminator := "\n"
+	outputTerminator := "\n"
 	doInPlace := false
 
 	// 'mlr' and 'termcvt' are already argv[0] and argv[1].
@@ -49,30 +49,30 @@ func termcvtMain(args []string) int {
 		} else if opt == "-I" {
 			doInPlace = true
 		} else if opt == "--cr2crlf" {
-			inTerm = "\r"
-			outTerm = "\r\n"
+			inputTerminator = "\r"
+			outputTerminator = "\r\n"
 		} else if opt == "--lf2crlf" {
-			inTerm = "\n"
-			outTerm = "\r\n"
+			inputTerminator = "\n"
+			outputTerminator = "\r\n"
 		} else if opt == "--crlf2cr" {
-			inTerm = "\r\n"
-			outTerm = "\r"
+			inputTerminator = "\r\n"
+			outputTerminator = "\r"
 		} else if opt == "--lf2cr" {
-			inTerm = "\n"
-			outTerm = "\r"
+			inputTerminator = "\n"
+			outputTerminator = "\r"
 		} else if opt == "--crlf2lf" {
-			inTerm = "\r\n"
-			outTerm = "\n"
+			inputTerminator = "\r\n"
+			outputTerminator = "\n"
 		} else if opt == "--cr2lf" {
-			inTerm = "\r"
-			outTerm = "\n"
+			inputTerminator = "\r"
+			outputTerminator = "\n"
 		} else {
 			termcvtUsage(verb, os.Stderr, 1)
 		}
 	}
 
 	if len(args) == 0 {
-		termcvtFile(os.Stdin, os.Stdout, inTerm, outTerm)
+		termcvtFile(os.Stdin, os.Stdout, inputTerminator, outputTerminator)
 
 	} else if doInPlace {
 		for _, filename := range args {
@@ -94,7 +94,7 @@ func termcvtMain(args []string) int {
 				os.Exit(1)
 			}
 
-			termcvtFile(istream, ostream, inTerm, outTerm)
+			termcvtFile(istream, ostream, inputTerminator, outputTerminator)
 
 			istream.Close()
 			// TODO: check return status
@@ -118,7 +118,7 @@ func termcvtMain(args []string) int {
 				os.Exit(1)
 			}
 
-			termcvtFile(istream, os.Stdout, inTerm, outTerm)
+			termcvtFile(istream, os.Stdout, inputTerminator, outputTerminator)
 
 			istream.Close()
 		}
@@ -126,12 +126,12 @@ func termcvtMain(args []string) int {
 	return 0
 }
 
-func termcvtFile(istream *os.File, ostream *os.File, inTerm string, outTerm string) {
+func termcvtFile(istream *os.File, ostream *os.File, inputTerminator string, outputTerminator string) {
 	lineReader := bufio.NewReader(istream)
-	inTermFinal := []byte(inTerm[len(inTerm)-1:])[0] // bufio.Reader.ReadString takes char not string delimiter :(
+	inputTerminatorBytes := []byte(inputTerminator[len(inputTerminator)-1:])[0] // bufio.Reader.ReadString takes char not string delimiter :(
 
 	for {
-		line, err := lineReader.ReadString(inTermFinal)
+		line, err := lineReader.ReadString(inputTerminatorBytes)
 		if err == io.EOF {
 			break
 		}
@@ -143,7 +143,7 @@ func termcvtFile(istream *os.File, ostream *os.File, inTerm string, outTerm stri
 		}
 
 		// This is how to do a chomp:
-		line = strings.TrimRight(line, inTerm)
-		ostream.Write([]byte(line + outTerm))
+		line = strings.TrimRight(line, inputTerminator)
+		ostream.Write([]byte(line + outputTerminator))
 	}
 }
