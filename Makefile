@@ -20,7 +20,7 @@ check: unit-test regression-test
 # DESTDIR is for package installs; nominally blank when this is run interactively.
 # See also https://www.gnu.org/prep/standards/html_node/DESTDIR.html
 install: build
-        mkdir -p $(DESTDIR)/$(INSTALLDIR)
+	mkdir -p $(DESTDIR)/$(INSTALLDIR)
 	cp mlr $(DESTDIR)/$(INSTALLDIR)/
 	make -C man install
 
