@@ -159,28 +159,27 @@ coinmate
 
 ## Randomly generating jabberwocky words
 
-These are simple *n*-grams as [described here](http://johnkerl.org/randspell/randspell-slides-ts.pdf). Some common functions are [located here](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ngfuncs.mlr.txt). Then here are scripts for [1-grams](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng1.mlr.txt), [2-grams](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng2.mlr.txt), [3-grams](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng3.mlr.txt), [4-grams](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng4.mlr.txt), and [5-grams](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng5.mlr.txt).
+These are simple *n*-grams, adapted from a previous version [described here](http://johnkerl.org/randspell/randspell-slides-ts.pdf). Some common functions are [located here](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ngfuncs.mlr) with main Miller script [here](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ngrams.mlr) and wrapper script [here](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ngrams.sh).
 
 The idea is that words from the input file are consumed, then taken apart and pasted back together in ways which imitate the letter-to-letter transitions found in the word list -- giving us automatically generated words in the same vein as *bromance* and *spork*:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --nidx --from ./ngrams/gsl-2000.txt put -q -f ./ngrams/ngfuncs.mlr -f ./ngrams/ng5.mlr</b>
+<b>mlr --nidx --from ./ngrams/gsl-2000.txt put -q -f ./ngrams/ngfuncs.mlr -f ./ngrams/ngrams.mlr</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-beard
-plastinguish
-politicially
-noise
-loan
-country
-controductionary
-suppery
-lose
-lessors
-dollar
-judge
-rottendence
-lessenger
-diffendant
-suggestional
+burse
+serious
+land
+seasure
+clainst
+tray
+wherhoose
+stry
+jourt
+strue
+partist
+ornear
+devel
+praction
+roup
 </pre>
