@@ -38,7 +38,6 @@ nav:
     - "Syntax highlighting: vimrc": "vimrc.md"
     - "The REPL": "repl.md"
     - "Online help": "online-help.md"
-    - "What's new in Miller 6": "new-in-miller-6.md"
     - "How to contribute": "contributing.md"
   - 'FAQs and examples':
     - "CSV, with and without headers": "csv-with-and-without-headers.md"
@@ -110,3 +109,4 @@ nav:
     - "Building from source": "build.md"
     - "Documents for previous releases": "release-docs.md"
     - "Glossary": "glossary.md"
+  - "What's new in Miller 6": "new-in-miller-6.md"
