@@ -32,7 +32,7 @@ As a first check, you should be able to run `mlr --version` at your system's com
 <b>mlr --version</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-mlr 6.0.0-rc
+mlr 6.0.0-rc1
 </pre>
 
 As a second check, given [example.csv](./example.csv) you should be able to do
