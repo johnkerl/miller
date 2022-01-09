@@ -1,3 +1,4 @@
+[
 {
   "a": "pan",
   "b": "pan",
@@ -7,7 +8,7 @@
   "abc": {
     "test/input/2.dkvp": "def"
   }
-}
+},
 {
   "a": "eks",
   "b": "pan",
@@ -18,3 +19,4 @@
     "test/input/2.dkvp": "def"
   }
 }
+]

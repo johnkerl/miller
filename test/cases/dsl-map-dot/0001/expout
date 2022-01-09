@@ -1,3 +1,4 @@
+[
 {
   "hostname": "localhost",
   "pid": 12345,
@@ -26,3 +27,4 @@
   },
   "zzzzzzz": "bar.baz"
 }
+]

@@ -1,3 +1,4 @@
+[
 {
   "hostname": "localhost",
   "pid": 12345,
@@ -25,3 +26,4 @@
     "emtpy4": []
   }
 }
+]
