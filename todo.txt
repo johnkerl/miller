@@ -10,6 +10,7 @@ PUNCHDOWN LIST
 * ngrams.sh -v -o 1 one-word-list.txt
 * sync-print option; or (yuck) another xprint variant; or ...; emph dump/eprint
 ? trace-mode ?
+* double-check utf8 / ngram splicing
 
 * doc
   o new-in-miller-6: missing:
