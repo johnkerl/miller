@@ -21,10 +21,10 @@ GENMD-RUN-COMMAND
 mlr --csv cat data/het/hom.csv
 GENMD-EOF
 
-It has three records (written here using JSON formatting):
+It has three records (written here using JSON Lines formatting):
 
 GENMD-RUN-COMMAND
-mlr --icsv --ojson --no-jvstack cat data/het/hom.csv
+mlr --icsv --ojsonl cat data/het/hom.csv
 GENMD-EOF
 
 Here every row has the same keys, in the same order: `a,b,c`.
@@ -44,7 +44,7 @@ mlr --csv cat data/het/fillable.csv
 GENMD-EOF
 
 GENMD-RUN-COMMAND
-mlr --icsv --ojson --no-jvstack cat data/het/fillable.csv
+mlr --icsv --ojsonl cat data/het/fillable.csv
 GENMD-EOF
 
 This example is still homogeneous, though: every row has the same keys, in the same order: `a,b,c`.
@@ -108,7 +108,7 @@ We can use the [`regularize`](reference-verbs.md#regularize) or
 the keys:
 
 GENMD-RUN-COMMAND
-mlr --json --no-jvstack regularize data/het/irregular.json
+mlr --jsonl regularize data/het/irregular.json
 GENMD-EOF
 
 The `regularize` verb tries to re-order subsequent rows to look like the first

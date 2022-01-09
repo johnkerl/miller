@@ -43,17 +43,15 @@ a,b,c
 7,8,9
 </pre>
 
-It has three records (written here using JSON formatting):
+It has three records (written here using JSON Lines formatting):
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --icsv --ojson --no-jvstack cat data/het/hom.csv</b>
+<b>mlr --icsv --ojsonl cat data/het/hom.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-[
-{"a": 1, "b": 2, "c": 3},
-{"a": 4, "b": 5, "c": 6},
+{"a": 1, "b": 2, "c": 3}
+{"a": 4, "b": 5, "c": 6}
 {"a": 7, "b": 8, "c": 9}
-]
 </pre>
 
 Here every row has the same keys, in the same order: `a,b,c`.
@@ -85,14 +83,12 @@ a,b,c
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --icsv --ojson --no-jvstack cat data/het/fillable.csv</b>
+<b>mlr --icsv --ojsonl cat data/het/fillable.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-[
-{"a": 1, "b": 2, "c": 3},
-{"a": 4, "b": "", "c": 6},
+{"a": 1, "b": 2, "c": 3}
+{"a": 4, "b": "", "c": 6}
 {"a": "", "b": 8, "c": 9}
-]
 </pre>
 
 This example is still homogeneous, though: every row has the same keys, in the same order: `a,b,c`.
@@ -197,14 +193,12 @@ We can use the [`regularize`](reference-verbs.md#regularize) or
 the keys:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --json --no-jvstack regularize data/het/irregular.json</b>
+<b>mlr --jsonl regularize data/het/irregular.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-[
-{"a": 1, "b": 2, "c": 3},
-{"a": 4, "b": 5, "c": 6},
+{"a": 1, "b": 2, "c": 3}
+{"a": 4, "b": 5, "c": 6}
 {"a": 7, "b": 8, "c": 9}
-]
 </pre>
 
 The `regularize` verb tries to re-order subsequent rows to look like the first

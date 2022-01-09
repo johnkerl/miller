@@ -54,50 +54,50 @@ last_update_time int(11)      YES -   NULL -
 Since Miller handles TSV output, we can do as much or as little processing as we want in the SQL query, then send the rest on to Miller. This includes outputting as JSON, doing further selects/joins in Miller, doing stats, etc.  etc.:
 
 <pre class="pre-highlight-in-pair">
-<b>mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --ojson --jlistwrap --jvstack cat</b>
+<b>mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --ojson cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 [
-  {
-    "Field": "id",
-    "Type": "bigint(20)",
-    "Null": "NO",
-    "Key": "MUL",
-    "Default": "NULL",
-    "Extra": ""
-  },
-  {
-    "Field": "category",
-    "Type": "varchar(256)",
-    "Null": "NO",
-    "Key": "",
-    "Default": "NULL",
-    "Extra": ""
-  },
-  {
-    "Field": "is_permanent",
-    "Type": "tinyint(1)",
-    "Null": "NO",
-    "Key": "",
-    "Default": "NULL",
-    "Extra": ""
-  },
-  {
-    "Field": "assigned_to",
-    "Type": "bigint(20)",
-    "Null": "YES",
-    "Key": "",
-    "Default": "NULL",
-    "Extra": ""
-  },
-  {
-    "Field": "last_update_time",
-    "Type": "int(11)",
-    "Null": "YES",
-    "Key": "",
-    "Default": "NULL",
-    "Extra": ""
-  }
+{
+  "Field": "id",
+  "Type": "bigint(20)",
+  "Null": "NO",
+  "Key": "MUL",
+  "Default": "NULL",
+  "Extra": ""
+},
+{
+  "Field": "category",
+  "Type": "varchar(256)",
+  "Null": "NO",
+  "Key": "",
+  "Default": "NULL",
+  "Extra": ""
+},
+{
+  "Field": "is_permanent",
+  "Type": "tinyint(1)",
+  "Null": "NO",
+  "Key": "",
+  "Default": "NULL",
+  "Extra": ""
+},
+{
+  "Field": "assigned_to",
+  "Type": "bigint(20)",
+  "Null": "YES",
+  "Key": "",
+  "Default": "NULL",
+  "Extra": ""
+},
+{
+  "Field": "last_update_time",
+  "Type": "int(11)",
+  "Null": "YES",
+  "Key": "",
+  "Default": "NULL",
+  "Extra": ""
+}
 ]
 </pre>
 

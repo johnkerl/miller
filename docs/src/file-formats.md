@@ -16,7 +16,9 @@ Quick links:
 </div>
 # File formats
 
-Miller handles name-indexed data using several formats: some you probably know by name, such as CSV, TSV, and JSON -- and other formats you're likely already seeing and using in your structured data.
+Miller handles name-indexed data using several formats: some you probably know
+by name, such as CSV, TSV, JSON, and JSON Lines -- and other formats you're likely already
+seeing and using in your structured data.
 
 Additionally, Miller gives you the option of including comments within your data.
 
@@ -135,11 +137,11 @@ Here are things they have in common:
 
 ## JSON
 
-JSON is a format which supports scalars (numbers, strings, boolean, etc.) as
-well as "objects" (maps) and "arrays" (lists), while Miller is a tool for
-handling **tabular data** only.  By *tabular JSON* I mean the data is either a
-sequence of one or more objects, or an array consisting of one or more objects.
-Miller treats JSON objects as name-indexed records.
+[JSON](https://json.org) is a format which supports scalars (numbers, strings,
+boolean, etc.) as well as "objects" (maps) and "arrays" (lists), while Miller
+is a tool for handling **tabular data** only.  By *tabular JSON* I mean the
+data is either a sequence of one or more objects, or an array consisting of one
+or more objects.  Miller treats JSON objects as name-indexed records.
 
 This means Miller cannot (and should not) handle arbitrary JSON.  In practice,
 though, Miller can handle single JSON objects as well as list of them. The only
@@ -224,7 +226,7 @@ Additionally, Miller can **tabularize nested objects by concatenating keys**. If
 input as well as output in JSON format, JSON structure is preserved throughout the processing:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --json --jvstack head -n 2 data/json-example-2.json</b>
+<b>mlr --json head -n 2 data/json-example-2.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 [
@@ -274,26 +276,62 @@ flag i  attributes.color attributes.shape values.u values.v values.w values.x
 
 This is discussed in more detail on the page [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md).
 
-### JSON-formatting options
-
-JSON isn't a parameterized format, so `RS`, `FS`, `PS` aren't specifiable. Nonetheless, you can do the following:
-
-* Use `--no-jvstack` to print JSON objects one per line.  By default, each Miller record (JSON object) is pretty-printed in multi-line format.
-
-* Use `--jlistwrap` to print the sequence of JSON objects wrapped in an outermost `[` and `]`. By default, these aren't printed.
-
-<!---
-TODO: probably remove entirely
-* Use `--jquoteall` to double-quote all object values. By default, integers, floating-point numbers, and booleans `true` and `false` are not double-quoted when they appear as JSON-object keys.
--->
-
-* Use `--jflatsep yourseparatorhere` to specify the string used for key concatenation: this defaults to a single dot.
+Use `--jflatsep yourseparatorhere` to specify the string used for key concatenation: this defaults to a single dot.
 
 ### JSON-in-CSV
 
 It's quite common to have CSV data which contains stringified JSON as a column.
 See the [JSON parse and stringify section](reference-main-data-types.md#json-parse-and-stringify) for ways to
 decode these in Miller.
+
+## JSON Lines
+
+[JSON Lines](https://jsonlines.org) is similar to JSON, except:
+
+* UTF-8 encoding must be supported
+* There is no outermost `[...]`
+* Each record is on a single line
+
+Miller handles this:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ojson head -n 2 example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "color": "yellow",
+  "shape": "triangle",
+  "flag": "true",
+  "k": 1,
+  "index": 11,
+  "quantity": 43.6498,
+  "rate": 9.8870
+},
+{
+  "color": "red",
+  "shape": "square",
+  "flag": "true",
+  "k": 2,
+  "index": 15,
+  "quantity": 79.2778,
+  "rate": 0.0130
+}
+]
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ojsonl head -n 2 example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{"color": "yellow", "shape": "triangle", "flag": "true", "k": 1, "index": 11, "quantity": 43.6498, "rate": 9.8870}
+{"color": "red", "shape": "square", "flag": "true", "k": 2, "index": 15, "quantity": 79.2778, "rate": 0.0130}
+</pre>
+
+Note that for _input_ data, either is acceptable: whether you use `--ijson` or `--ijsonl`, Miller
+won't reject your input data for lack of outermost `[...]`, nor will it reject your data for placement
+of newlines. The difference is on _output_: using `--ojson`, you get outermost `[...]` and pretty-printed
+records; using `--ojsonl`, you get no outermost `[...]`, and one line per record.
 
 ## PPRINT: Pretty-printed tabular
 
@@ -408,7 +446,7 @@ _networkd  * 24 24 Network Services           /var/networkd   /usr/bin/false
 
 <pre class="pre-highlight-in-pair">
 <b>$ grep -v '^#' /etc/passwd | head -n 2 | \</b>
-<b>  mlr --nidx --fs : --ojson --jvstack --jlistwrap \</b>
+<b>  mlr --nidx --fs : --ojson \</b>
 <b>    label name,password,uid,gid,gecos,home_dir,shell</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">

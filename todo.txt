@@ -7,16 +7,14 @@ k on input each will accept the other; key is on output
 k mark as legacy: --jlistwrap and --jvstack
 k olh
 k --l2X and --X2l -- ?
-* docs:
-  o 10min
-  o file-formats (obv)
+k docs:
+  k 10min
+  k file-formats (obv)
     https://jsonlines.org/
-  o glossary
-  o note: on input each will accept the other; key is on output
-  o click through all docs, to check
-  o nim6
+  k glossary
+  k jlistwrap/jvstack grep
+  k nim6
 * RT cases
-* contact re https://jsonlines.org/on_the_web/
 
 ----------------------------------------------------------------
 
@@ -65,6 +63,8 @@ k --l2X and --X2l -- ?
 
 ================================================================
 NON-BLOCKERS
+
+* contact re https://jsonlines.org/on_the_web/
 
 * Better functions for values manipulation, e.g. easier conversion of strings like "$1,234.56" into numeric values
 
