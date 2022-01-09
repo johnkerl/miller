@@ -2,21 +2,6 @@
 PUNCHDOWN LIST
 
 ----------------------------------------------------------------
-JSON LINES
-k on input each will accept the other; key is on output
-k mark as legacy: --jlistwrap and --jvstack
-k olh
-k --l2X and --X2l -- ?
-k docs:
-  k 10min
-  k file-formats (obv)
-    https://jsonlines.org/
-  k glossary
-  k jlistwrap/jvstack grep
-  k nim6
-* RT cases
-
-----------------------------------------------------------------
 
 * compat emph
 * document cloudthings, e.g.
