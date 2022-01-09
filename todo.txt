@@ -1,6 +1,20 @@
 ================================================================
 PUNCHDOWN LIST
 
+----------------------------------------------------------------
+JSON LINES
+* on input each will accept the other; key is on output
+* mark as legacy: --jlistwrap and --jvstack
+* docs:
+  o 10min
+  o file-formats (obv)
+    https://jsonlines.org/
+  o glossary
+* olh
+
+
+----------------------------------------------------------------
+
 * compat emph
 * document cloudthings, e.g.
   o go.yml
