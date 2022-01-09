@@ -12,6 +12,7 @@ JSON LINES
   o glossary
 * olh
 * RT cases
+* --l2X and --X2l -- ?
 * contact re https://jsonlines.org/on_the_web/
 
 ----------------------------------------------------------------

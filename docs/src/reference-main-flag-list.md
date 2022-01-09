@@ -218,17 +218,6 @@ Additionally:
 * `-p` is a keystroke-saver for `--nidx --fs space --repifs`.
 * `-T` is a keystroke-saver for `--nidx --fs tab`.
 
-## JSON-only flags
-
-These are flags which are applicable to JSON format.
-
-
-**Flags:**
-
-* `--jlistwrap or --jl`: Wrap JSON output in outermost `[ ]`.
-* `--jvstack`: Put one key-value pair per line for JSON output (multi-line output).
-* `--no-jvstack`: Put objects/arrays all on one line for JSON output.
-
 ## Legacy flags
 
 These are flags which don't do anything in the current Miller version.
@@ -238,13 +227,17 @@ They are accepted as no-op flags in order to keep old scripts from breaking.
 **Flags:**
 
 * `--jknquoteint`: Type information from JSON input files is now preserved throughout the processing stream.
+* `--jlistwrap or --jl`: Wrap JSON output in outermost `[ ]`. This is the default for JSON output format.
 * `--jquoteall`: Type information from JSON input files is now preserved throughout the processing stream.
 * `--json-fatal-arrays-on-input`: Miller now supports arrays as of version 6.
 * `--json-map-arrays-on-input`: Miller now supports arrays as of version 6.
 * `--json-skip-arrays-on-input`: Miller now supports arrays as of version 6.
 * `--jsonx`: The `--jvstack` flag is now default true in Miller 6.
 * `--jvquoteall`: Type information from JSON input files is now preserved throughout the processing stream.
+* `--jvstack`: Put one key-value pair per line for JSON output (multi-line output). This is the default for JSON output format.
 * `--mmap`: Miller no longer uses memory-mapping to access data files.
+* `--no-jlistwrap`: Wrap JSON output in outermost `[ ]`. This is the default for JSON Lines output format.
+* `--no-jvstack`: Put objects/arrays all on one line for JSON output. This is the default for JSON Lines output format.
 * `--no-mmap`: Miller no longer uses memory-mapping to access data files.
 * `--ojsonx`: The `--jvstack` flag is now default true in Miller 6.
 * `--quote-all`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
