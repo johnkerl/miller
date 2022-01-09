@@ -22,6 +22,7 @@ Here are flags you can use when invoking Miller.  For example, when you type
 <b>mlr --icsv --ojson head -n 1 example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "color": "yellow",
   "shape": "triangle",
@@ -31,6 +32,7 @@ Here are flags you can use when invoking Miller.  For example, when you type
   "quantity": 43.6498,
   "rate": 9.8870
 }
+]
 </pre>
 
 the `--icsv` and `--ojson` bits are _flags_.  See the [Miller command
@@ -149,6 +151,7 @@ are overridden in all cases by setting output format to `format2`.
 * `--idkvp`: Use DKVP format for input data.
 * `--igen`: Ignore input files and instead generate sequential numeric input using --gen-field-name, --gen-start, --gen-step, and --gen-stop values. See also the seqgen verb, which is more useful/intuitive.
 * `--ijson`: Use JSON format for input data.
+* `--ijsonl`: Use JSON Lines format for input data.
 * `--inidx`: Use NIDX format for input data.
 * `--io {format name}`: Use format name for input and output data. For example: `--io csv` is the same as `--csv`.
 * `--ipprint`: Use PPRINT format for input data.
@@ -157,12 +160,14 @@ are overridden in all cases by setting output format to `format2`.
 * `--iusv or --iusvlite`: Use USV format for input data.
 * `--ixtab`: Use XTAB format for input data.
 * `--json or -j`: Use JSON format for input and output data.
+* `--jsonl`: Use JSON Lines format for input and output data.
 * `--nidx`: Use NIDX format for input and output data.
 * `--oasv or --oasvlite`: Use ASV format for output data.
 * `--ocsv`: Use CSV format for output data.
 * `--ocsvlite`: Use CSV-lite format for output data.
 * `--odkvp`: Use DKVP format for output data.
 * `--ojson`: Use JSON format for output data.
+* `--ojsonl`: Use JSON Lines format for output data.
 * `--omd`: Use markdown-tabular format for output data.
 * `--onidx`: Use NIDX format for output data.
 * `--opprint`: Use PPRINT format for output data.

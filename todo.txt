@@ -11,6 +11,7 @@ JSON LINES
     https://jsonlines.org/
   o glossary
 * olh
+* RT cases
 * contact re https://jsonlines.org/on_the_web/
 
 ----------------------------------------------------------------

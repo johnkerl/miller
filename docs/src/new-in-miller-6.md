@@ -210,19 +210,23 @@ For example (see [https://github.com/johnkerl/miller/issues/178](https://github.
 <b>echo '{ "a": "0123" }' | mlr --json cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "a": "0123"
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>echo '{ "x": 1.230, "y": 1.230000000 }' | mlr --json cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "x": 1.230,
   "y": 1.230000000
 }
+]
 </pre>
 
 ### Regex support for IFS and IPS

@@ -701,6 +701,15 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name: "--ijsonl",
+			help: "Use JSON Lines format for input data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--inidx",
 			help: "Use NIDX format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
@@ -892,6 +901,19 @@ var FileFormatFlagSection = FlagSection{
 			help: "Use JSON format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--ojsonl",
+			help: "Use JSON Lines format for output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = false
+				options.WriterOptions.JSONOutputMultiline = false
 				*pargi += 1
 			},
 		},
@@ -1046,9 +1068,22 @@ var FileFormatFlagSection = FlagSection{
 			help:     "Use JSON format for input and output data.",
 			altNames: []string{"-j"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--jsonl",
+			help: "Use JSON Lines format for input and output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = false
+				options.WriterOptions.JSONOutputMultiline = false
 				*pargi += 1
 			},
 		},
@@ -1202,6 +1237,8 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
 				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
 			},
@@ -1318,6 +1355,8 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
 				options.ReaderOptions.ifsWasSpecified = true
 				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
@@ -1435,6 +1474,8 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
 				*pargi += 1
 			},
 		},
@@ -1537,6 +1578,8 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
 				*pargi += 1
 			},
 		},
@@ -1762,6 +1805,8 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
 			},
@@ -1856,6 +1901,8 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
 				*pargi += 1
 			},
 		},

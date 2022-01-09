@@ -68,22 +68,24 @@ after all the input is read.
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "word": "apple",
   "value": 37
-}
+},
 {
   "word": "ball",
   "value": 28
-}
+},
 {
   "word": "cat",
   "value": 54
-}
+},
 {
   "count": 3,
   "sum": 119
 }
+]
 </pre>
 
 And if all we want is the final output and not the input data, we can use `put
@@ -103,10 +105,12 @@ And if all we want is the final output and not the input data, we can use `put
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "count": 3,
   "sum": 119
 }
+]
 </pre>
 
 As discussed a bit more on the page on [streaming processing and memory
@@ -163,10 +167,12 @@ cat,54
     "value": 54
   }
 }
+[
 {
   "count": 3,
   "sum": 119
 }
+]
 </pre>
 
 The downside to this, of course, is that this retains all records (plus data-structure overhead) in memory, so you're limited to processing files that fit in your computer's memory. The upside, though, is that you can do random access over the records using things like
@@ -220,10 +226,12 @@ The third option is to retain records in an [array](reference-main-arrays.md), t
     "value": 54
   }
 ]
+[
 {
   "count": 3,
   "sum": 119
 }
+]
 </pre>
 
 Just as with the retain-as-map approach, the downside is the overhead of
@@ -266,6 +274,8 @@ array will have [null-gaps](reference-main-arrays.md) in it:
     "value": 54
   }
 ]
+[
+]
 </pre>
 
 You can index `@records` by `@count` rather than `NR` to get a contiguous array:
@@ -303,10 +313,12 @@ You can index `@records` by `@count` rather than `NR` to get a contiguous array:
     "value": 54
   }
 ]
+[
 {
   "count": 2,
   "sum": 91
 }
+]
 </pre>
 
 If you use a map to retain records, then this is a non-issue: maps can retain whatever values you like:
@@ -342,10 +354,12 @@ If you use a map to retain records, then this is a non-issue: maps can retain wh
     "value": 54
   }
 }
+[
 {
   "count": 2,
   "sum": 91
 }
+]
 </pre>
 
 Do note that Miller [maps](reference-main-maps.md) preserve insertion order, so
@@ -384,10 +398,12 @@ interested in:
   "1": 37,
   "3": 54
 }
+[
 {
   "count": 2,
   "sum": 91
 }
+]
 </pre>
 
 ## Sorting

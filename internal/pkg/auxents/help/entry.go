@@ -357,18 +357,18 @@ TSV: same but with tabs in places of commas
 JSON (array of objects):
 +---------------------+
 | [                   |
-|   {                 |
-|    "apple": 1,      | Record 1: "apple":"1", "bat":"2", "cog":"3"
-|    "bat": 2,        |
-|    "cog": 3         |
+| {                   |
+|  "apple": 1,        | Record 1: "apple":"1", "bat":"2", "cog":"3"
+|  "bat": 2,          |
+|  "cog": 3           |
+| },                  |
+| {                   |
+|   "dish": {         | Record 2: "dish.egg":"7",
+|     "egg": 7,       | "dish.flint":"8", "garlic":""
+|     "flint": 8      |
 |   },                |
-|   {                 |
-|     "dish": {       | Record 2: "dish.egg":"7",
-|       "egg": 7,     | "dish.flint":"8", "garlic":""
-|       "flint": 8    |
-|     },              |
-|     "garlic": ""    |
-|   }                 |
+|   "garlic": ""      |
+| }                   |
 | ]                   |
 +---------------------+
 

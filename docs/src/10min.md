@@ -88,6 +88,7 @@ purple,square,false,10,91,72.3735,8.2430
 <b>mlr --icsv --ojson tail -n 2 example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "color": "yellow",
   "shape": "circle",
@@ -96,7 +97,7 @@ purple,square,false,10,91,72.3735,8.2430
   "index": 87,
   "quantity": 63.5058,
   "rate": 8.3350
-}
+},
 {
   "color": "purple",
   "shape": "square",
@@ -106,6 +107,7 @@ purple,square,false,10,91,72.3735,8.2430
   "quantity": 72.3735,
   "rate": 8.2430
 }
+]
 </pre>
 
 You can sort on a single field:
@@ -655,6 +657,7 @@ a matter of specifying input-format and output-format flags:
 <b>mlr --json cat example.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "color": "yellow",
   "shape": "triangle",
@@ -663,7 +666,7 @@ a matter of specifying input-format and output-format flags:
   "index": 11,
   "quantity": 43.6498,
   "rate": 9.8870
-}
+},
 {
   "color": "red",
   "shape": "square",
@@ -673,6 +676,7 @@ a matter of specifying input-format and output-format flags:
   "quantity": 79.2778,
   "rate": 0.0130
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -747,6 +751,7 @@ These transformations are reversible:
 <b>mlr --ijson --oxtab cat data/server-log.json | mlr --ixtab --ojson cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "hostname": "localhost",
   "pid": 12345,
@@ -768,6 +773,7 @@ These transformations are reversible:
     }
   }
 }
+]
 </pre>
 
 See the [flatten/unflatten page](flatten-unflatten.md) for more information.

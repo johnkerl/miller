@@ -155,27 +155,30 @@ id,blob
 <b>mlr --icsv --ojson --from data/json-in-csv.csv cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "id": 100,
   "blob": "{\"a\":1,\"b\":[2,3,4]}"
-}
+},
 {
   "id": 105,
   "blob": "{\"a\":6,\"b\":[7,8,9]}"
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson --from data/json-in-csv.csv json-parse -f blob</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "id": 100,
   "blob": {
     "a": 1,
     "b": [2, 3, 4]
   }
-}
+},
 {
   "id": 105,
   "blob": {
@@ -183,19 +186,21 @@ id,blob
     "b": [7, 8, 9]
   }
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson --from data/json-in-csv.csv put '$blob = json_parse($blob)'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "id": 100,
   "blob": {
     "a": 1,
     "b": [2, 3, 4]
   }
-}
+},
 {
   "id": 105,
   "blob": {
@@ -203,6 +208,7 @@ id,blob
     "b": [7, 8, 9]
   }
 }
+]
 </pre>
 
 These have their respective operations to convert back to string: the

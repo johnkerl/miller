@@ -33,6 +33,7 @@ red    square   true 2 15    79.2778  0.0130
 <b>mlr --c2j head -n 2 example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "color": "yellow",
   "shape": "triangle",
@@ -41,7 +42,7 @@ red    square   true 2 15    79.2778  0.0130
   "index": 11,
   "quantity": 43.6498,
   "rate": 9.8870
-}
+},
 {
   "color": "red",
   "shape": "square",
@@ -51,6 +52,7 @@ red    square   true 2 15    79.2778  0.0130
   "quantity": 79.2778,
   "rate": 0.0130
 }
+]
 </pre>
 
 You can get the full list [here](file-formats.md#data-conversion-keystroke-savers).

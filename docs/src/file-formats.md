@@ -37,18 +37,18 @@ TSV: same but with tabs in places of commas
 JSON (array of objects):
 +---------------------+
 | [                   |
-|   {                 |
-|    "apple": 1,      | Record 1: "apple":"1", "bat":"2", "cog":"3"
-|    "bat": 2,        |
-|    "cog": 3         |
+| {                   |
+|  "apple": 1,        | Record 1: "apple":"1", "bat":"2", "cog":"3"
+|  "bat": 2,          |
+|  "cog": 3           |
+| },                  |
+| {                   |
+|   "dish": {         | Record 2: "dish.egg":"7",
+|     "egg": 7,       | "dish.flint":"8", "garlic":""
+|     "flint": 8      |
 |   },                |
-|   {                 |
-|     "dish": {       | Record 2: "dish.egg":"7",
-|       "egg": 7,     | "dish.flint":"8", "garlic":""
-|       "flint": 8    |
-|     },              |
-|     "garlic": ""    |
-|   }                 |
+|   "garlic": ""      |
+| }                   |
 | ]                   |
 +---------------------+
 
@@ -159,30 +159,34 @@ An **array of single-level objects** is, quite simply, **a table**:
 <b>mlr --json head -n 2 then cut -f color,shape data/json-example-1.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "color": "yellow",
   "shape": "triangle"
-}
+},
 {
   "color": "red",
   "shape": "square"
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --json head -n 2 then cut -f color,u,v data/json-example-1.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "color": "yellow",
   "u": 0.632170,
   "v": 0.988721
-}
+},
 {
   "color": "red",
   "u": 0.219668,
   "v": 0.001257
 }
+]
 </pre>
 
 Single-level JSON data goes back and forth between JSON and tabular formats
@@ -223,6 +227,7 @@ input as well as output in JSON format, JSON structure is preserved throughout t
 <b>mlr --json --jvstack head -n 2 data/json-example-2.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "flag": 1,
   "i": 11,
@@ -236,7 +241,7 @@ input as well as output in JSON format, JSON structure is preserved throughout t
     "w": 0.436498,
     "x": 5.798188
   }
-}
+},
 {
   "flag": 1,
   "i": 15,
@@ -251,6 +256,7 @@ input as well as output in JSON format, JSON structure is preserved throughout t
     "x": 2.944117
   }
 }
+]
 </pre>
 
 But if the input format is JSON and the output format is not (or vice versa) then key-concatenation applies:

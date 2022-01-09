@@ -49,9 +49,11 @@ It has three records (written here using JSON formatting):
 <b>mlr --icsv --ojson --no-jvstack cat data/het/hom.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-{"a": 1, "b": 2, "c": 3}
-{"a": 4, "b": 5, "c": 6}
+[
+{"a": 1, "b": 2, "c": 3},
+{"a": 4, "b": 5, "c": 6},
 {"a": 7, "b": 8, "c": 9}
+]
 </pre>
 
 Here every row has the same keys, in the same order: `a,b,c`.
@@ -86,9 +88,11 @@ a,b,c
 <b>mlr --icsv --ojson --no-jvstack cat data/het/fillable.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-{"a": 1, "b": 2, "c": 3}
-{"a": 4, "b": "", "c": 6}
+[
+{"a": 1, "b": 2, "c": 3},
+{"a": 4, "b": "", "c": 6},
 {"a": "", "b": 8, "c": 9}
+]
 </pre>
 
 This example is still homogeneous, though: every row has the same keys, in the same order: `a,b,c`.
@@ -144,22 +148,24 @@ with 1) for too-long rows:
 <b>mlr --icsv --ojson --allow-ragged-csv-input cat data/het/ragged.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "a": 1,
   "b": 2,
   "c": 3
-}
+},
 {
   "a": 4,
   "b": 5,
   "c": ""
-}
+},
 {
   "a": 7,
   "b": 8,
   "c": 9,
   "4": 10
 }
+]
 </pre>
 
 ### Irregular data
@@ -194,9 +200,11 @@ the keys:
 <b>mlr --json --no-jvstack regularize data/het/irregular.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-{"a": 1, "b": 2, "c": 3}
-{"a": 4, "b": 5, "c": 6}
+[
+{"a": 1, "b": 2, "c": 3},
+{"a": 4, "b": 5, "c": 6},
 {"a": 7, "b": 8, "c": 9}
+]
 </pre>
 
 The `regularize` verb tries to re-order subsequent rows to look like the first
@@ -213,21 +221,23 @@ data for items which are present, but won't log data for items which aren't.
 <b>mlr --json cat data/het/sparse.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "host": "xy01.east",
   "status": "running",
   "volume": "/dev/sda1"
-}
+},
 {
   "host": "xy92.west",
   "status": "running"
-}
+},
 {
   "purpose": "failover",
   "host": "xy55.east",
   "volume": "/dev/sda1",
   "reimaged": true
 }
+]
 </pre>
 
 This data is called **sparse** (from the [data-storage term](https://en.wikipedia.org/wiki/Sparse_matrix)).
@@ -239,20 +249,21 @@ every record has the same keys:
 <b>mlr --json unsparsify data/het/sparse.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "host": "xy01.east",
   "status": "running",
   "volume": "/dev/sda1",
   "purpose": "",
   "reimaged": ""
-}
+},
 {
   "host": "xy92.west",
   "status": "running",
   "volume": "",
   "purpose": "",
   "reimaged": ""
-}
+},
 {
   "host": "xy55.east",
   "status": "",
@@ -260,6 +271,7 @@ every record has the same keys:
   "purpose": "failover",
   "reimaged": true
 }
+]
 </pre>
 
 Since this data is now homogeneous (rectangular), it pretty-prints nicely:

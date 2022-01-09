@@ -81,18 +81,18 @@ TSV: same but with tabs in places of commas
 JSON (array of objects):
 +---------------------+
 | [                   |
-|   {                 |
-|    "apple": 1,      | Record 1: "apple":"1", "bat":"2", "cog":"3"
-|    "bat": 2,        |
-|    "cog": 3         |
+| {                   |
+|  "apple": 1,        | Record 1: "apple":"1", "bat":"2", "cog":"3"
+|  "bat": 2,          |
+|  "cog": 3           |
+| },                  |
+| {                   |
+|   "dish": {         | Record 2: "dish.egg":"7",
+|     "egg": 7,       | "dish.flint":"8", "garlic":""
+|     "flint": 8      |
 |   },                |
-|   {                 |
-|     "dish": {       | Record 2: "dish.egg":"7",
-|       "egg": 7,     | "dish.flint":"8", "garlic":""
-|       "flint": 8    |
-|     },              |
-|     "garlic": ""    |
-|   }                 |
+|   "garlic": ""      |
+| }                   |
 | ]                   |
 +---------------------+
 
@@ -418,6 +418,7 @@ are overridden in all cases by setting output format to `format2`.
                          --gen-step, and --gen-stop values. See also the
                          seqgen verb, which is more useful/intuitive.
 --ijson                  Use JSON format for input data.
+--ijsonl                 Use JSON Lines format for input data.
 --inidx                  Use NIDX format for input data.
 --io {format name}       Use format name for input and output data. For
                          example: `--io csv` is the same as `--csv`.
@@ -427,12 +428,14 @@ are overridden in all cases by setting output format to `format2`.
 --iusv or --iusvlite     Use USV format for input data.
 --ixtab                  Use XTAB format for input data.
 --json or -j             Use JSON format for input and output data.
+--jsonl                  Use JSON Lines format for input and output data.
 --nidx                   Use NIDX format for input and output data.
 --oasv or --oasvlite     Use ASV format for output data.
 --ocsv                   Use CSV format for output data.
 --ocsvlite               Use CSV-lite format for output data.
 --odkvp                  Use DKVP format for output data.
 --ojson                  Use JSON format for output data.
+--ojsonl                 Use JSON Lines format for output data.
 --omd                    Use markdown-tabular format for output data.
 --onidx                  Use NIDX format for output data.
 --opprint                Use PPRINT format for output data.

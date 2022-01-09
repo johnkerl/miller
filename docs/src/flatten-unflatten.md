@@ -181,13 +181,14 @@ a,b.x,b.y
 <b>mlr --ijson --ocsv cat data/map-values.json | mlr --icsv --ojson cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "a": 1,
   "b": {
     "x": 2,
     "y": 3
   }
-}
+},
 {
   "a": 4,
   "b": {
@@ -195,6 +196,7 @@ a,b.x,b.y
     "y": 6
   }
 }
+]
 </pre>
 
 ## Converting arrays between JSON and non-JSON
@@ -284,14 +286,16 @@ a,b.1,b.2
 <b>mlr --ijson --ocsv cat data/array-values.json | mlr --icsv --ojson cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "a": 1,
   "b": [2, 3]
-}
+},
 {
   "a": 4,
   "b": [5, 6]
 }
+]
 </pre>
 
 ## Auto-inferencing of arrays on unflatten
@@ -314,9 +318,11 @@ a.1,a.2,a.3
 <b>mlr --c2j cat data/consecutive.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "a": [4, 5, 6]
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -331,6 +337,7 @@ a.1,a.3,a.5
 <b>mlr --c2j cat data/non-consecutive.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "a": {
     "1": 4,
@@ -338,6 +345,7 @@ a.1,a.3,a.5
     "5": 6
   }
 }
+]
 </pre>
 
 ## Manual control
@@ -373,16 +381,18 @@ Using JSON output, we can see that `splita` has produced an array-valued field n
 <b>mlr --icsv --ojson --from data/hostnames.csv put '$components = splita($host, ".")'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "host": "apoapsis.east.our.org",
   "status": "up",
   "components": ["apoapsis", "east", "our", "org"]
-}
+},
 {
   "host": "nadir.west.our.org",
   "status": "down",
   "components": ["nadir", "west", "our", "org"]
 }
+]
 </pre>
 
 Using CSV output, with default auto-flatten, we get `components.1` through `components.4`:
@@ -452,18 +462,20 @@ leave `b` JSON-stringified:
 <b>mlr --ixtab --ojson json-parse -f a data/hostnames.xtab</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "host": "apoapsis.east.our.org",
   "status": "up",
   "a": ["apoapsis", "east", "our", "org"],
   "b": "[\"apoapsis\", \"east\", \"our\", \"org\"]"
-}
+},
 {
   "host": "nadir.west.our.org",
   "status": "down",
   "a": ["nadir", "west", "our", "org"],
   "b": "[\"nadir\", \"west\", \"our\", \"org\"]"
 }
+]
 </pre>
 
 See also the
