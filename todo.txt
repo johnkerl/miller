@@ -3,16 +3,16 @@ PUNCHDOWN LIST
 
 ----------------------------------------------------------------
 
-* compat emph
+* field-dedupe separate section at nim6
+* mrpl -v/-d doc
+* emit1 note
 * document cloudthings, e.g.
   o go.yml
   o codespell.yml
     - codespell  --check-filenames --skip *.csv,*.dkvp,*.txt,*.js,*.html,*.map,./tags,./test/cases --ignore-words-list denom,inTerm,inout,iput,nd,nin,numer,Wit,te,wee
   o readthedocs triggers
-* ngrams.sh -v -o 1 one-word-list.txt
 * sync-print option; or (yuck) another xprint variant; or ...; emph dump/eprint
 ? trace-mode ?
-* double-check utf8 / ngram splicing
 
 * doc
   o new-in-miller-6: missing:
@@ -20,7 +20,6 @@ PUNCHDOWN LIST
     - emittable constraints -- ?
   o wut h1 spacing before/after ...
   o shell-commands: while-read example from issues
-  ? special-symbols-and-formatting: How to escape '?' in regexes? -> still true? link to torbiak297?
   E reference-dsl-user-defined-functions: UDSes -> non-factorial example -- maybe some useful aggregator
   o reference-main-arithmetic: ? test stats1/step -F flag
   o reference-dsl-control-structures:
@@ -48,6 +47,10 @@ PUNCHDOWN LIST
 
 ================================================================
 NON-BLOCKERS
+
+* profile sort
+
+* RT ngrams.sh -v -o 1 one-word-list.txt
 
 * contact re https://jsonlines.org/on_the_web/
 
