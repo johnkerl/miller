@@ -14,13 +14,13 @@ default_ocount=40
 default_verbose="false"
 
 usage() {
-	echo "Usage: $us [options] {word-list files}" 1>&2
+  echo "Usage: $us [options] {word-list files}" 1>&2
   echo "Options:" 1>&2
   echo "-n {n} The n for n-grams; default $default_n." 1>&2
   echo "-o {o} Number of words to produce; default $default_ocount." 1>&2
   echo "-v     Verbose processing; default off." 1>&2
   echo "If no wordlists are provided, stdin i=s read." 1>&2
-	exit 1
+  exit 1
 }
 
 # ----------------------------------------------------------------
@@ -31,13 +31,13 @@ wordlist=$default_wordlist
 
 while getopts n:o:vh? f
 do
-	case $f in
+  case $f in
     n)  n="$OPTARG";      continue;;
     o)  ocount="$OPTARG"; continue;;
     v)  verbose="true";   continue;;
     h)  usage;;
     \?) usage;;
-	esac
+  esac
 done
 shift $(($OPTIND-1))
 
