@@ -1,0 +1,1 @@
+mlr --ijsonl --oxtab cat test/input/small-nested.json

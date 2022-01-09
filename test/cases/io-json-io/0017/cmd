@@ -1,1 +1,0 @@
-mlr --ojson --jvstack --jknquoteint cat test/input/json-output-options.dkvp
