@@ -98,8 +98,11 @@ type TWriterOptions struct {
 	RightAlignedPPRINTOutput bool
 	RightAlignedXTABOutput   bool
 
-	WrapJSONOutputInOuterList bool
-	JSONOutputMultiline       bool // Not using miller/types enum to avoid package cycle
+	// JSON output: --jlistwrap on, --jvstack on
+	// JSON Lines output: --jlistwrap off, --jvstack off
+	WrapJSONOutputInOuterList bool // --jlistwrap
+	JSONOutputMultiline       bool // --jvstack
+	// Not using miller/types enum to avoid package cycle
 
 	// When we read things like
 	//
@@ -202,11 +205,14 @@ func DefaultWriterOptions() TWriterOptions {
 		FLATSEP:            ".",
 		FlushOnEveryRecord: true,
 
-		HeaderlessCSVOutput:       false,
-		WrapJSONOutputInOuterList: false,
+		HeaderlessCSVOutput: false,
+
+		WrapJSONOutputInOuterList: true,
 		JSONOutputMultiline:       true,
-		AutoUnflatten:             true,
-		AutoFlatten:               true,
-		FPOFMT:                    "",
+
+		AutoUnflatten: true,
+		AutoFlatten:   true,
+
+		FPOFMT: "",
 	}
 }
