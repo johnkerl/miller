@@ -159,7 +159,7 @@ coinmate
 
 ## Randomly generating jabberwocky words
 
-These are simple *n*-grams, adapted from a previous version [described here](http://johnkerl.org/randspell/randspell-slides-ts.pdf). Some common functions are [located here](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ngfuncs.mlr) with main Miller script [here](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ngrams.mlr) and wrapper script [here](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ngrams.sh).
+These are simple *n*-grams, adapted from a previous version [described here](http://johnkerl.org/randspell/randspell-slides-ts.pdf). Some common functions are [located here](https://github.com/johnkerl/miller/blob/master/docs/src/ngrams/ngfuncs.mlr) with main Miller script [here](https://github.com/johnkerl/miller/blob/master/docs/src/ngrams/ngrams.mlr) and wrapper script [here](https://github.com/johnkerl/miller/blob/master/docs/src/ngrams/ngrams.sh).
 
 The idea is that words from the input file are consumed, then taken apart and pasted back together in ways which imitate the letter-to-letter transitions found in the word list -- giving us automatically generated words in the same vein as *bromance* and *spork*:
 
