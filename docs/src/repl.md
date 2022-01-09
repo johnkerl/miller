@@ -66,6 +66,7 @@ Using `put` and `filter`, you can do the following as we've seen above:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 HELLO
+[
 {
   "color": "yellow",
   "shape": "triangle",
@@ -75,7 +76,7 @@ HELLO
   "quantity": 43.6498,
   "rate": 9.8870,
   "qr": 4.414868008496004
-}
+},
 {
   "color": "red",
   "shape": "square",
@@ -85,8 +86,9 @@ HELLO
   "quantity": 79.2778,
   "rate": 0.0130,
   "qr": 6098.292307692308
-}
-GOODBYE
+}GOODBYE
+
+]
 </pre>
 
 ## Using Miller with the REPL

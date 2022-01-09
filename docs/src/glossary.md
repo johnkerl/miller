@@ -427,6 +427,14 @@ Stands for _input record separator_. See the [separators page](reference-main-se
 Stands for [_JavaScript object notation_](https://www.json.org).  A popular
 [file format](file-formats.md#json) for tabular data supported by Miller.
 
+## JSON Lines
+
+A [file format](file-formats.md#json-lines) related to
+[JSON](https://www.json.org), supported by Miller. Key points are that every
+record is an object written on a single line, without need to be wrapped an
+outermost list. This format helps people interoperate with non-JSON-aware
+tools in the [Unix toolkit](#unix-toolkit) which generally operate on lines.
+
 ## key
 
 The string index in a [map](#map). Also, the name of a field in a [record](#record).

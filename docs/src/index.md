@@ -16,7 +16,7 @@ Quick links:
 </div>
 # Introduction
 
-**Miller is a command-line tool for querying, shaping, and reformatting data files in various formats including CSV, TSV, and JSON.**
+**Miller is a command-line tool for querying, shaping, and reformatting data files in various formats including CSV, TSV, JSON, and JSON Lines.**
 
 In several senses, Miller is more than one tool:
 

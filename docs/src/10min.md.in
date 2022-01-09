@@ -243,6 +243,7 @@ Miller supports the following formats:
 * CSV (comma-separared values)
 * TSV (tab-separated values)
 * JSON (JavaScript Object Notation)
+* JSON Lines (JSON with one record per line, and no outermost `[...]`)
 * PPRINT (pretty-printed tabular)
 * XTAB (vertical-tabular or sideways-tabular)
 * NIDX (numerically indexed, label-free, with implicit labels `"1"`, `"2"`, etc.)
@@ -274,16 +275,22 @@ circle,1,24           circle 1    24
 square,0,36           square 0    36
 
 JSON                  XTAB
-{                     shape circle
-  "shape": "circle",  flag  1
-  "flag": 1,          index 24
-  "index": 24         .
-}                     shape square
-{                     flag  0
-  "shape": "square",  index 36
+[                     shape circle
+{                     flag  1
+  "shape": "circle",  index 24
+  "flag": 1,
+  "index": 24         shape square
+}                     flag  0
+{                     index 36
+  "shape": "square",
   "flag": 0,
   "index": 36
 }
+]
+
+JSON Lines
+{ "shape": "circle", "flag": 1, "index": 24 }
+{ "shape": "square", "flag": 0, "index": 36 }
 
 DKVP
 shape=circle,flag=1,index=24

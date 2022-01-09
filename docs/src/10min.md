@@ -88,6 +88,7 @@ purple,square,false,10,91,72.3735,8.2430
 <b>mlr --icsv --ojson tail -n 2 example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "color": "yellow",
   "shape": "circle",
@@ -96,7 +97,7 @@ purple,square,false,10,91,72.3735,8.2430
   "index": 87,
   "quantity": 63.5058,
   "rate": 8.3350
-}
+},
 {
   "color": "purple",
   "shape": "square",
@@ -106,6 +107,7 @@ purple,square,false,10,91,72.3735,8.2430
   "quantity": 72.3735,
   "rate": 8.2430
 }
+]
 </pre>
 
 You can sort on a single field:
@@ -592,6 +594,7 @@ Miller supports the following formats:
 * CSV (comma-separared values)
 * TSV (tab-separated values)
 * JSON (JavaScript Object Notation)
+* JSON Lines (JSON with one record per line, and no outermost `[...]`)
 * PPRINT (pretty-printed tabular)
 * XTAB (vertical-tabular or sideways-tabular)
 * NIDX (numerically indexed, label-free, with implicit labels `"1"`, `"2"`, etc.)
@@ -623,16 +626,22 @@ circle,1,24           circle 1    24
 square,0,36           square 0    36
 
 JSON                  XTAB
-{                     shape circle
-  "shape": "circle",  flag  1
-  "flag": 1,          index 24
-  "index": 24         .
-}                     shape square
-{                     flag  0
-  "shape": "square",  index 36
+[                     shape circle
+{                     flag  1
+  "shape": "circle",  index 24
+  "flag": 1,
+  "index": 24         shape square
+}                     flag  0
+{                     index 36
+  "shape": "square",
   "flag": 0,
   "index": 36
 }
+]
+
+JSON Lines
+{ "shape": "circle", "flag": 1, "index": 24 }
+{ "shape": "square", "flag": 0, "index": 36 }
 
 DKVP
 shape=circle,flag=1,index=24
@@ -655,6 +664,7 @@ a matter of specifying input-format and output-format flags:
 <b>mlr --json cat example.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "color": "yellow",
   "shape": "triangle",
@@ -663,7 +673,7 @@ a matter of specifying input-format and output-format flags:
   "index": 11,
   "quantity": 43.6498,
   "rate": 9.8870
-}
+},
 {
   "color": "red",
   "shape": "square",
@@ -673,6 +683,7 @@ a matter of specifying input-format and output-format flags:
   "quantity": 79.2778,
   "rate": 0.0130
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -747,6 +758,7 @@ These transformations are reversible:
 <b>mlr --ijson --oxtab cat data/server-log.json | mlr --ixtab --ojson cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "hostname": "localhost",
   "pid": 12345,
@@ -768,6 +780,7 @@ These transformations are reversible:
     }
   }
 }
+]
 </pre>
 
 See the [flatten/unflatten page](flatten-unflatten.md) for more information.

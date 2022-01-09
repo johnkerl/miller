@@ -1,6 +1,23 @@
 ================================================================
 PUNCHDOWN LIST
 
+----------------------------------------------------------------
+JSON LINES
+k on input each will accept the other; key is on output
+k mark as legacy: --jlistwrap and --jvstack
+k olh
+k --l2X and --X2l -- ?
+k docs:
+  k 10min
+  k file-formats (obv)
+    https://jsonlines.org/
+  k glossary
+  k jlistwrap/jvstack grep
+  k nim6
+* RT cases
+
+----------------------------------------------------------------
+
 * compat emph
 * document cloudthings, e.g.
   o go.yml
@@ -10,6 +27,7 @@ PUNCHDOWN LIST
 * ngrams.sh -v -o 1 one-word-list.txt
 * sync-print option; or (yuck) another xprint variant; or ...; emph dump/eprint
 ? trace-mode ?
+* double-check utf8 / ngram splicing
 
 * doc
   o new-in-miller-6: missing:
@@ -45,6 +63,8 @@ PUNCHDOWN LIST
 
 ================================================================
 NON-BLOCKERS
+
+* contact re https://jsonlines.org/on_the_web/
 
 * Better functions for values manipulation, e.g. easier conversion of strings like "$1,234.56" into numeric values
 

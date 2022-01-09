@@ -1,0 +1,1 @@
+mlr --jsonl cat test/input/escapes.json

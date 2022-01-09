@@ -1,3 +1,4 @@
+[
 {
   "hostname": "localhost",
   "pid": 12345,
@@ -24,5 +25,6 @@
     "empty3": {},
     "emtpy4": []
   }
-}
-End of record stream
+}End of record stream
+
+]

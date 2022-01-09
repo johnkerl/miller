@@ -1,16 +1,16 @@
 # Features
 
 Miller is like awk, sed, cut, join, and sort for **name-indexed data such as
-CSV, TSV, and tabular JSON**. You get to work with your data using named
+CSV, TSV, JSON, and JSON Lines**. You get to work with your data using named
 fields, without needing to count positional column indices.
 
-This is something the Unix toolkit always could have done, and arguably
-always should have done.  It operates on key-value-pair data while the familiar
-Unix tools operate on integer-indexed fields: if the natural data structure for
-the latter is the array, then Miller's natural data structure is the
+This is something the Unix toolkit always could have done, and arguably always
+should have done.  It operates on key-value-pair data while the familiar Unix
+tools operate on integer-indexed fields: if the natural data structure for the
+latter is the array, then Miller's natural data structure is the
 insertion-ordered hash map.  This encompasses a **variety of data formats**,
-including but not limited to the familiar CSV, TSV, and JSON.  (Miller can handle
-**positionally-indexed data** as a special case.)
+including but not limited to the familiar CSV, TSV, JSON, and JSON Lines.
+(Miller can handle **positionally-indexed data** as a special case.)
 
 * Miller is **multi-purpose**: it's useful for **data cleaning**, **data reduction**, **statistical reporting**, **devops**, **system administration**, **log-file processing**, **format conversion**, and **database-query post-processing**.
 

@@ -167,7 +167,7 @@ purple,triangle,false,7,65,80.1405,5.8240
 
 ## Data processing
 
-### Improved JSON support, and arrays
+### Improved JSON / JSON Lines support, and arrays
 
 Arrays are now supported in Miller's `put`/`filter` programming language, as
 described in the [Arrays reference](reference-main-arrays.md). (Also, `array` is
@@ -175,11 +175,19 @@ now a keyword so this is no longer usable as a local-variable or UDF name.)
 
 JSON support is improved:
 
-* Direct support for arrays means that you can now use Miller to process more JSON files.
-* Streamable JSON parsing: Miller's internal record-processing pipeline starts as soon as the first record is read (which was already the case for other file formats). This means that, unless records are wrapped with outermost `[...]`, Miller now handles JSON in `tail -f` contexts like it does for other file formats.
+* Direct support for arrays means that you can now use Miller to process more JSON files than ever before.
+* Streamable JSON parsing: Miller's internal record-processing pipeline starts as soon as the first record is read (which was already the case for other file formats). This means that, unless records are wrapped with outermost `[...]`, Miller now handles JSON / JSON Lines in `tail -f` contexts like it does for other file formats.
 * Flatten/unflatten -- conversion of JSON nested data structures (arrays and/or maps in record values) to/from non-JSON formats is a powerful new feature, discussed in the page [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md).
 * Since types are better handled now, the workaround flags `--jvquoteall` and `--jknquoteint` no longer have meaning -- although they're accepted as no-ops at the command line for backward compatibility.
-* Multi-line JSON is now the default. Use `--no-jvstack` for Miller-5 style, which required `--jvstack` to get multiline output.
+
+JSON vs JSON Lines:
+
+* Miller 5 accepted input records either with or without enclosing `[...]`; on output, by default it produced single-line records without outermost `[...]`.  Miller 5 let you customize output formatting using `--jvstack` (multi-line records) and `--jlistwrap` (write outermost `[...]`). _Thus, Miller 5's JSON output format, with default flags, was in fact [JSON Lines](file-formats.md#json-lines) all along._
+* In Miller 6, [JSON Lines](file-formats.md#json-lines) is acknowledged explicitly.
+* On input, your records are accepted whether or not they have outermost `[...]`, and regardless of line breaks, whether the specified input format is JSON or JSON Lines. (This is similar to [jq](https://stedolan.github.io/jq/).)
+* With `--ojson`, output records are written multiline (pretty-printed), with outermost `[...]`.
+* With `--ojsonl`, output records are written single-line, without outermost `[...]`.
+* This makes `--jvstack` and `--jlistwrap` unnecessary. However, if you want outermost `[...]` with single-line records, you can use `--ojson --no-jvstack`.
 
 See also the [Arrays reference](reference-main-arrays.md) for more information.
 
@@ -210,19 +218,23 @@ For example (see [https://github.com/johnkerl/miller/issues/178](https://github.
 <b>echo '{ "a": "0123" }' | mlr --json cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "a": "0123"
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>echo '{ "x": 1.230, "y": 1.230000000 }' | mlr --json cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "x": 1.230,
   "y": 1.230000000
 }
+]
 </pre>
 
 ### Regex support for IFS and IPS
@@ -261,23 +273,40 @@ See also the [list of issues tagged with go-port](https://github.com/johnkerl/mi
 
 The following differences are rather technical. If they don't sound familiar to you, not to worry! Most users won't be affected by the (relatively minor) changes between Miller 5 and Miller 6.
 
-* Line endings: The `--auto` flag is now ignored. Before, if a file had CR/LF (Windows-style) line endings on input (on any platform), it would have the same on output; likewise, LF (Unix-style) line endings. Now, files with CR/LF or LF line endings are processed on any platform, but the output line-ending is for the platform. E.g. reading CR/LF files on Linux will now produce LF output.
-* Since IFS and IPS can be regular expressions now, if your `IFS` or `IPS` is a `.` (which is a regular-expression metacharacter) you can either use `--ifs '\.'` or `--ifs . --no-ifs-regex` (and similarly for `IPS`).  Please see the section on [multi-character and regular-expression separators](reference-main-separators.md#multi-character-and-regular-expression-separators).
-* JSON formatting:
-    * `--jvstack` and `--jsonx` (multi-line JSON output) is now the default for JSON; use `--no-jvstack` to suppress it.
-    * `--jknquoteint` and `jquoteall` are ignored; they were workarounds for the (now much-improved) tyoe-inference and type-tracking in Miller 6.
-    * `--json-fatal-arrays-on-input`, `--json-map-arrays-on-input`, and `--json-skip-arrays-on-input` are ignored; Miller 6 now supports arrays fully.
-    * See also `mlr help legacy-flags` or the [legacy-flags reference](reference-main-flag-list.md#legacy-flags).
-* Type-inference:
-    * The `-S` and `-F` flags to `mlr put` and `mlr filter` are ignored, since type-inference is no longer done in `mlr put` and `mlr filter`, but rather, when records are first read. You can use `mlr -S` and `mlr -A`, respectively, instead to control type-inference within the record-readers.
-    * Octal numbers like `0123` and `07` are type-inferred as string. Use `mlr -O` to infer them as octal integers. Note that `08` and `09` will then infer as deicmal integers.
-    * Any numbers prefix with `0o`, e.g. `0o377`, are already treated as octal regardless of `mlr -O` -- `mlr -O` only affects how leading-zero integers are handled.
-    * See also the [miscellaneous-flags reference](reference-main-flag-list.md#miscellaneous-flags).
+**Please drop an issue at [https://github.com/johnkerl/miller/issues](https://github.com/johnkerl/miller/issues) with any/all backward-compatibility concerns between Miller 5 and Miller 6.**
+
+### Line endings
+
+The `--auto` flag is now ignored. Before, if a file had CR/LF (Windows-style) line endings on input (on any platform), it would have the same on output; likewise, LF (Unix-style) line endings. Now, files with CR/LF or LF line endings are processed on any platform, but the output line-ending is for the platform. E.g. reading CR/LF files on Linux will now produce LF output.
+
+### IFS and IPS as regular expressions
+
+IFS and IPS can be regular expressions now. Please see the section on [multi-character and regular-expression separators](reference-main-separators.md#multi-character-and-regular-expression-separators).
+
+### JSON and JSON Lines formatting
+
+* `--jknquoteint` and `jquoteall` are ignored; they were workarounds for the (now much-improved) tyoe-inference and type-tracking in Miller 6.
+* `--json-fatal-arrays-on-input`, `--json-map-arrays-on-input`, and `--json-skip-arrays-on-input` are ignored; Miller 6 now supports arrays fully.
+* See also `mlr help legacy-flags` or the [legacy-flags reference](reference-main-flag-list.md#legacy-flags).
+* Miller 5 accepted input records either with or without enclosing `[...]`; on output, by default it produced single-line records without outermost `[...]`.  Miller 5 let you customize output formatting using `--jvstack` (multi-line records) and `--jlistwrap` (write outermost `[...]`). _Thus, Miller 5's JSON output format, with default flags, was in fact [JSON Lines](file-formats.md#json-lines) all along._
+* In Miller 6, [JSON Lines](file-formats.md#json-lines) is acknowledged explicitly.
+* On input, your records are accepted whether or not they have outermost `[...]`, and regardless of line breaks, whether the specified input format is JSON or JSON Lines. (This is similar to [jq](https://stedolan.github.io/jq/).)
+* With `--ojson`, output records are written multiline (pretty-printed), with outermost `[...]`.
+* With `--ojsonl`, output records are written single-line, without outermost `[...]`.
+* This makes `--jvstack` and `--jlistwrap` unnecessary. However, if you want outermost `[...]` with single-line records, you can use `--ojson --no-jvstack`.
+
+### Type-inference
+
+* The `-S` and `-F` flags to `mlr put` and `mlr filter` are ignored, since type-inference is no longer done in `mlr put` and `mlr filter`, but rather, when records are first read. You can use `mlr -S` and `mlr -A`, respectively, instead to control type-inference within the record-readers.
+* Octal numbers like `0123` and `07` are type-inferred as string. Use `mlr -O` to infer them as octal integers. Note that `08` and `09` will then infer as deicmal integers.
+* Any numbers prefix with `0o`, e.g. `0o377`, are already treated as octal regardless of `mlr -O` -- `mlr -O` only affects how leading-zero integers are handled.
+* See also the [miscellaneous-flags reference](reference-main-flag-list.md#miscellaneous-flags).
+
+### Emit statements
+
 * Emitting a map-valued expression now requires either a temporary variable or the new `emit1` keyword. Please see the
 [page on emit statements](reference-dsl-output-statements.md#emit1-and-emitemitpemitf) for more information.
 * By default, field names are deduped for all file formats except JSON. So if you have an input record with `x=8,x=9` then the second field's key is renamed to `x_2` and so on -- the record scans as `x=8,x_2=9`. Use `mlr --no-dedupe-field-names` to suppress this, and have the record be scanned as `x=9`. For JSON, the last duplicated key in an input record is always retained, regardless of `mlr --no-dedupe-field-names`: `{"x":8,"x":9}` scans as if it were `{"x":9}`.
-
-**Please drop an issue at [https://github.com/johnkerl/miller/issues](https://github.com/johnkerl/miller/issues) with any/all backward-compatibility concerns between Miller 5 and Miller 6.**
 
 ## Developer-specific aspects
 

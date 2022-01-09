@@ -1,1 +1,0 @@
-mlr --icsv --ojson --jvquoteall --rs lf cat ./${CASEDIR}/input

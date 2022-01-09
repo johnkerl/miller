@@ -70,21 +70,31 @@ FILE FORMATS
        | 4,5,6               | Record 2: "apple":"4", "bat":"5", "cog":"6"
        +---------------------+
 
-       JSON (sequence or array of objects):
+       JSON (array of objects):
        +---------------------+
+       | [                   |
        | {                   |
        |  "apple": 1,        | Record 1: "apple":"1", "bat":"2", "cog":"3"
        |  "bat": 2,          |
        |  "cog": 3           |
-       | }                   |
+       | },                  |
        | {                   |
-       |   "dish": {         | Record 2: "dish:egg":"7",
-       |     "egg": 7,       | "dish:flint":"8", "garlic":""
+       |   "dish": {         | Record 2: "dish.egg":"7",
+       |     "egg": 7,       | "dish.flint":"8", "garlic":""
        |     "flint": 8      |
        |   },                |
        |   "garlic": ""      |
        | }                   |
+       | ]                   |
        +---------------------+
+
+       JSON Lines (sequence of one-line objects):
+       +------------------------------------------------+
+       | {"apple": 1, "bat": 2, "cog": 3}               |
+       | {"dish": {"egg": 7, "flint": 8}, "garlic": ""} |
+       +------------------------------------------------+
+         Record 1: "apple":"1", "bat":"2", "cog":"3"
+         Record 2: "dish:egg":"7", "dish:flint":"8", "garlic":""
 
        PPRINT: pretty-printed tabular
        +---------------------+
@@ -139,7 +149,6 @@ HELP OPTIONS
          mlr help file-format-flags
          mlr help flatten-unflatten-flags
          mlr help format-conversion-keystroke-saver-flags
-         mlr help json-only-flags
          mlr help legacy-flags
          mlr help miscellaneous-flags
          mlr help output-colorization-flags
@@ -350,6 +359,7 @@ FILE-FORMAT FLAGS
                                 --gen-step, and --gen-stop values. See also the
                                 seqgen verb, which is more useful/intuitive.
        --ijson                  Use JSON format for input data.
+       --ijsonl                 Use JSON Lines format for input data.
        --inidx                  Use NIDX format for input data.
        --io {format name}       Use format name for input and output data. For
                                 example: `--io csv` is the same as `--csv`.
@@ -359,12 +369,14 @@ FILE-FORMAT FLAGS
        --iusv or --iusvlite     Use USV format for input data.
        --ixtab                  Use XTAB format for input data.
        --json or -j             Use JSON format for input and output data.
+       --jsonl                  Use JSON Lines format for input and output data.
        --nidx                   Use NIDX format for input and output data.
        --oasv or --oasvlite     Use ASV format for output data.
        --ocsv                   Use CSV format for output data.
        --ocsvlite               Use CSV-lite format for output data.
        --odkvp                  Use DKVP format for output data.
        --ojson                  Use JSON format for output data.
+       --ojsonl                 Use JSON Lines format for output data.
        --omd                    Use markdown-tabular format for output data.
        --onidx                  Use NIDX format for output data.
        --opprint                Use PPRINT format for output data.
@@ -406,30 +418,23 @@ FLATTEN-UNFLATTEN FLAGS
 
 FORMAT-CONVERSION KEYSTROKE-SAVER FLAGS
        As keystroke-savers for format-conversion you may use the following.
-       The letters c, t, j, d, n, x, p, and m refer to formats CSV, TSV, DKVP, NIDX,
-       JSON, XTAB, PPRINT, and markdown, respectively. Note that markdown format is
-       available for output only.
+       The letters c, t, j, l, d, n, x, p, and m refer to formats CSV, TSV, DKVP, NIDX,
+       JSON, JSON Lines, XTAB, PPRINT, and markdown, respectively. Note that markdown
+       format is available for output only.
 
-       | In\out | CSV   | TSV   | JSON   | DKVP   | NIDX   | XTAB   | PPRINT | Markdown |
+       | In\out | CSV   | TSV   | JSON   | JSONL  | DKVP   | NIDX   | XTAB   | PPRINT | Markdown |
        +--------+-------+-------+--------+--------+--------+--------+--------+----------+
-       | CSV    |       | --c2t | --c2j  | --c2d  | --c2n  | --c2x  | --c2p  | --c2m    |
-       | TSV    | --t2c |       | --t2j  | --t2d  | --t2n  | --t2x  | --t2p  | --t2m    |
-       | JSON   | --j2c | --j2t |        | --j2d  | --j2n  | --j2x  | --j2p  | --j2m    |
-       | DKVP   | --d2c | --d2t | --d2j  |        | --d2n  | --d2x  | --d2p  | --d2m    |
-       | NIDX   | --n2c | --n2t | --n2j  | --n2d  |        | --n2x  | --n2p  | --n2m    |
-       | XTAB   | --x2c | --x2t | --x2j  | --x2d  | --x2n  |        | --x2p  | --x2m    |
-       | PPRINT | --p2c | --p2t | --p2j  | --p2d  | --p2n  | --p2x  |        | --p2m    |
+       | CSV    |       | --c2t | --c2j  | --c2l  | --c2d  | --c2n  | --c2x  | --c2p  | --c2m    |
+       | TSV    | --t2c |       | --t2j  | --t2l  | --t2d  | --t2n  | --t2x  | --t2p  | --t2m    |
+       | JSON   | --j2c | --j2t |        | --j2l  | --j2d  | --j2n  | --j2x  | --j2p  | --j2m    |
+       | JSONL  | --l2c | --l2t |        |        | --l2d  | --l2n  | --l2x  | --l2p  | --l2m    |
+       | DKVP   | --d2c | --d2t | --d2j  | --d2l  |        | --d2n  | --d2x  | --d2p  | --d2m    |
+       | NIDX   | --n2c | --n2t | --n2j  | --n2l  | --n2d  |        | --n2x  | --n2p  | --n2m    |
+       | XTAB   | --x2c | --x2t | --x2j  | --x2l  | --x2d  | --x2n  |        | --x2p  | --x2m    |
+       | PPRINT | --p2c | --p2t | --p2j  | --p2l  | --p2d  | --p2n  | --p2x  |        | --p2m    |
 
        -p                       Keystroke-saver for `--nidx --fs space --repifs`.
        -T                       Keystroke-saver for `--nidx --fs tab`.
-
-JSON-ONLY FLAGS
-       These are flags which are applicable to JSON format.
-
-       --jlistwrap or --jl      Wrap JSON output in outermost `[ ]`.
-       --jvstack                Put one key-value pair per line for JSON output
-                                (multi-line output).
-       --no-jvstack             Put objects/arrays all on one line for JSON output.
 
 LEGACY FLAGS
        These are flags which don't do anything in the current Miller version.
@@ -437,6 +442,8 @@ LEGACY FLAGS
 
        --jknquoteint            Type information from JSON input files is now
                                 preserved throughout the processing stream.
+       --jlistwrap or --jl      Wrap JSON output in outermost `[ ]`. This is the
+                                default for JSON output format.
        --jquoteall              Type information from JSON input files is now
                                 preserved throughout the processing stream.
        --json-fatal-arrays-on-input
@@ -448,8 +455,15 @@ LEGACY FLAGS
        --jsonx                  The `--jvstack` flag is now default true in Miller 6.
        --jvquoteall             Type information from JSON input files is now
                                 preserved throughout the processing stream.
+       --jvstack                Put one key-value pair per line for JSON output
+                                (multi-line output). This is the default for JSON
+                                output format.
        --mmap                   Miller no longer uses memory-mapping to access data
                                 files.
+       --no-jlistwrap           Wrap JSON output in outermost `[ ]`. This is the
+                                default for JSON Lines output format.
+       --no-jvstack             Put objects/arrays all on one line for JSON output.
+                                This is the default for JSON Lines output format.
        --no-mmap                Miller no longer uses memory-mapping to access data
                                 files.
        --ojsonx                 The `--jvstack` flag is now default true in Miller 6.
@@ -3040,5 +3054,5 @@ SEE ALSO
 
 
 
-                                  2022-01-08                         MILLER(1)
+                                  2022-01-09                         MILLER(1)
 </pre>

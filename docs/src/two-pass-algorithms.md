@@ -296,57 +296,59 @@ Then
 <b>mlr --json put -q -f data/feature-count.mlr data/features.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "record_count": 12
-}
+},
 {
   "key": "qoh",
   "key_counts": 8
-}
+},
 {
   "key": "rate",
   "key_counts": 8
-}
+},
 {
   "key": "latency",
   "key_counts": 7
-}
+},
 {
   "key": "name",
   "key_counts": 4
-}
+},
 {
   "key": "uid",
   "key_counts": 3
-}
+},
 {
   "key": "uid2",
   "key_counts": 1
-}
+},
 {
   "key": "qoh",
   "key_fraction": 0.6666666666666666
-}
+},
 {
   "key": "rate",
   "key_fraction": 0.6666666666666666
-}
+},
 {
   "key": "latency",
   "key_fraction": 0.5833333333333334
-}
+},
 {
   "key": "name",
   "key_fraction": 0.3333333333333333
-}
+},
 {
   "key": "uid",
   "key_fraction": 0.25
-}
+},
 {
   "key": "uid2",
   "key_fraction": 0.08333333333333333
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -429,6 +431,7 @@ end {
 <b>mlr --json put -q -f data/unsparsify.mlr data/sparse.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "a": 1,
   "b": 2,
@@ -436,7 +439,7 @@ end {
   "u": "",
   "x": "",
   "w": ""
-}
+},
 {
   "a": "",
   "b": 2,
@@ -444,7 +447,7 @@ end {
   "u": 1,
   "x": "",
   "w": ""
-}
+},
 {
   "a": 1,
   "b": "",
@@ -452,7 +455,7 @@ end {
   "u": "",
   "x": 3,
   "w": ""
-}
+},
 {
   "a": "",
   "b": "",
@@ -461,6 +464,7 @@ end {
   "x": "",
   "w": 2
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">

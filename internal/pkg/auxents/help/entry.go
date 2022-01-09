@@ -354,21 +354,31 @@ TSV: same but with tabs in places of commas
 | 4,5,6               | Record 2: "apple":"4", "bat":"5", "cog":"6"
 +---------------------+
 
-JSON (sequence or array of objects):
+JSON (array of objects):
 +---------------------+
+| [                   |
 | {                   |
 |  "apple": 1,        | Record 1: "apple":"1", "bat":"2", "cog":"3"
 |  "bat": 2,          |
 |  "cog": 3           |
-| }                   |
+| },                  |
 | {                   |
-|   "dish": {         | Record 2: "dish:egg":"7",
-|     "egg": 7,       | "dish:flint":"8", "garlic":""
+|   "dish": {         | Record 2: "dish.egg":"7",
+|     "egg": 7,       | "dish.flint":"8", "garlic":""
 |     "flint": 8      |
 |   },                |
 |   "garlic": ""      |
 | }                   |
+| ]                   |
 +---------------------+
+
+JSON Lines (sequence of one-line objects):
++------------------------------------------------+
+| {"apple": 1, "bat": 2, "cog": 3}               |
+| {"dish": {"egg": 7, "flint": 8}, "garlic": ""} |
++------------------------------------------------+
+  Record 1: "apple":"1", "bat":"2", "cog":"3"
+  Record 2: "dish:egg":"7", "dish:flint":"8", "garlic":""
 
 PPRINT: pretty-printed tabular
 +---------------------+

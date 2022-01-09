@@ -407,6 +407,7 @@ Also note that, unlike the `sort-within-record` verb with its `-r` flag,
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "hostname": "localhost",
   "pid": 12345,
@@ -428,6 +429,7 @@ Also note that, unlike the `sort-within-record` verb with its `-r` flag,
     }
   }
 }
+]
 </pre>
 
 ## Simple sorting of maps across records
@@ -529,6 +531,7 @@ recaptiulate (for reference) what `sort` with default flags already does; the th
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "key": "alpha",
   "values": "5;2;8;6;1;4;9;10;3;7",
@@ -536,6 +539,7 @@ recaptiulate (for reference) what `sort` with default flags already does; the th
   "reverse": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
   "even_then_odd": [2, 4, 6, 8, 10, 1, 3, 5, 7, 9]
 }
+]
 </pre>
 
 ## Custom sorting of arrays across records
