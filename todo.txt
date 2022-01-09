@@ -3,16 +3,19 @@ PUNCHDOWN LIST
 
 ----------------------------------------------------------------
 JSON LINES
-* on input each will accept the other; key is on output
-* mark as legacy: --jlistwrap and --jvstack
+k on input each will accept the other; key is on output
+k mark as legacy: --jlistwrap and --jvstack
+k olh
+k --l2X and --X2l -- ?
 * docs:
   o 10min
   o file-formats (obv)
     https://jsonlines.org/
   o glossary
-* olh
+  o note: on input each will accept the other; key is on output
+  o click through all docs, to check
+  o nim6
 * RT cases
-* --l2X and --X2l -- ?
 * contact re https://jsonlines.org/on_the_web/
 
 ----------------------------------------------------------------
