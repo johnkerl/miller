@@ -3,7 +3,6 @@ PUNCHDOWN LIST
 
 ----------------------------------------------------------------
 
-* emit1 note
 * document cloudthings, e.g.
   o go.yml
   o codespell.yml

@@ -316,8 +316,24 @@ IFS and IPS can be regular expressions now. Please see the section on [multi-cha
 
 ### Emit statements
 
-Emitting a map-valued expression now requires either a temporary variable or the new `emit1` keyword. Please see the
-[page on emit statements](reference-dsl-output-statements.md#emit1-and-emitemitpemitf) for more information.
+Variables must be non-indexed on `emit`. To emit an indexed variable now requires the new `emit1` keyword.
+
+<pre class="pre-highlight-in-pair">
+<b>mlr5 -n put 'end {@input={"a":1}; emit @input["a"]}'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+input=1
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put 'end {@input={"a":1}; emit1 {"input":@input["a"]}}'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+input=1
+</pre>
+
+Please see the [section on emit statements](reference-dsl-output-statements.md#emit1-and-emitemitpemitf)
+for more information.
 
 ## Developer-specific aspects
 

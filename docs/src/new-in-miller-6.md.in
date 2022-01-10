@@ -270,8 +270,19 @@ IFS and IPS can be regular expressions now. Please see the section on [multi-cha
 
 ### Emit statements
 
-Emitting a map-valued expression now requires either a temporary variable or the new `emit1` keyword. Please see the
-[page on emit statements](reference-dsl-output-statements.md#emit1-and-emitemitpemitf) for more information.
+Variables must be non-indexed on `emit`. To emit an indexed variable now requires the new `emit1` keyword.
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+mlr5 -n put 'end {@input={"a":1}; emit @input["a"]}'
+input=1
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr -n put 'end {@input={"a":1}; emit1 {"input":@input["a"]}}'
+GENMD-EOF
+
+Please see the [section on emit statements](reference-dsl-output-statements.md#emit1-and-emitemitpemitf)
+for more information.
 
 ## Developer-specific aspects
 
