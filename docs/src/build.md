@@ -76,9 +76,9 @@ In this example I am using version 6.1.0 to 6.2.0; of course that will change fo
 * Create the release tarball:
 
     * `make release_tarball`
-    * This creates `miller-6.2.0-dev.tar.gz` which we'll upload to GitHub, the URL of which will be in our `miller.spec`
+    * This creates `miller-6.2.0.tar.gz` which we'll upload to GitHub, the URL of which will be in our `miller.spec`
     * Get `mlr.{arch}` binaries from latest successful build from [https://github.com/johnkerl/miller/actions](https://github.com/johnkerl/miller/actions), or, build them on buildboxes.
-    * Prepare the source RPM following `README-RPM.md`.
+    * Prepare the source RPM following [README-RPM.md](https://github.com/johnkerl/miller/blob/main/README-RPM.md).
 
 * Create the Github release tag:
 

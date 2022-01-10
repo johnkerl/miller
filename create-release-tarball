@@ -69,7 +69,7 @@ fi
 TGZ_NAME=miller-${VERSION}.tar.gz
 
 # Create the release tarball.
-echo "Wrtiting $TGZ_NAME ..."
+echo "Writing $TGZ_NAME ..."
 $tar \
   --transform 's,^./,miller-'$VERSION'/,'  \
   --exclude data \
@@ -94,4 +94,4 @@ $tar \
   ./man \
   ./test
 
-echo "Wrote    $TGZ_NAME"
+echo "Wrote   $TGZ_NAME"
