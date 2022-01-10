@@ -46,6 +46,7 @@ builds:
         goarch: s390x
     dir: .
     main: ./cmd/mlr
+    binary: mlr
     flags:
       - -trimpath
     #ldflags:
