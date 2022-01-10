@@ -3,13 +3,10 @@ PUNCHDOWN LIST
 
 ----------------------------------------------------------------
 
-* field-dedupe separate section at nim6
-* mrpl -v/-d doc
-* emit1 note
 * document cloudthings, e.g.
   o go.yml
   o codespell.yml
-    - codespell  --check-filenames --skip *.csv,*.dkvp,*.txt,*.js,*.html,*.map,./tags,./test/cases --ignore-words-list denom,inTerm,inout,iput,nd,nin,numer,Wit,te,wee
+    - codespell --check-filenames --skip *.csv,*.dkvp,*.txt,*.js,*.html,*.map,./tags,./test/cases --ignore-words-list denom,inTerm,inout,iput,nd,nin,numer,Wit,te,wee
   o readthedocs triggers
 * sync-print option; or (yuck) another xprint variant; or ...; emph dump/eprint
 ? trace-mode ?
@@ -318,7 +315,7 @@ MAYBES
 
 * dotted-syntax support in verbs?
 
-* repl as verb -- ?  'put --repl' maybe
+* repl as verb -- ? 'put --repl' maybe
 
 * json-triple-quote -- what can be done here?
 

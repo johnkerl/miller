@@ -363,23 +363,49 @@ So, `emit1` can handle syntactic richness in the one thing being emitted;
 `emitf`, `emit`, and `emitp` can handle syntactic richness in the side-by-side
 placement, indexing, and redirection.
 
-(Mnemonic: If all you want is to insert a new record into the record stream, `emit1` is probably the one you want.)
+(Mnemonic: If all you want is to insert a new record into the record stream, `emit1` is probably the _one_ you want.)
 
 What this means is that if you want to emit an expression which evaluates to a map, you can do quite simply
 
-<pre class="pre-non-highlight-non-pair">
-  mlr --c2p --from example.csv put -q '
-    emit1 mapsum({"id": NR}, $*)
-  '
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p --from example.csv put -q '</b>
+<b>  emit1 mapsum({"id": NR}, $*)</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id color  shape    flag  k  index quantity rate
+1  yellow triangle true  1  11    43.6498  9.8870
+2  red    square   true  2  15    79.2778  0.0130
+3  red    circle   true  3  16    13.8103  2.9010
+4  red    square   false 4  48    77.5542  7.4670
+5  purple triangle false 5  51    81.2290  8.5910
+6  red    square   false 6  64    77.1991  9.5310
+7  purple triangle false 7  65    80.1405  5.8240
+8  yellow circle   true  8  73    63.9785  4.2370
+9  yellow circle   true  9  87    63.5058  8.3350
+10 purple square   false 10 91    72.3735  8.2430
 </pre>
 
 And if you want indexing, redirects, etc., just assign to a temporary variable and use one of the other emit variants:
 
-<pre class="pre-non-highlight-non-pair">
-  mlr --c2p --from example.csv put -q '
-    o = mapsum({"id": NR}, $*);
-    emit > stderr, o;
-  '
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p --from example.csv put -q '</b>
+<b>  o = mapsum({"id": NR}, $*);</b>
+<b>  emit o;</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id color  shape    flag  k  index quantity rate
+1  yellow triangle true  1  11    43.6498  9.8870
+2  red    square   true  2  15    79.2778  0.0130
+3  red    circle   true  3  16    13.8103  2.9010
+4  red    square   false 4  48    77.5542  7.4670
+5  purple triangle false 5  51    81.2290  8.5910
+6  red    square   false 6  64    77.1991  9.5310
+7  purple triangle false 7  65    80.1405  5.8240
+8  yellow circle   true  8  73    63.9785  4.2370
+9  yellow circle   true  9  87    63.5058  8.3350
+10 purple square   false 10 91    72.3735  8.2430
 </pre>
 
 ## Emitf statements

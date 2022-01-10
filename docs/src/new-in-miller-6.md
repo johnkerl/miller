@@ -237,6 +237,18 @@ For example (see [https://github.com/johnkerl/miller/issues/178](https://github.
 ]
 </pre>
 
+### Deduping of repeated field names
+
+By default, field names are deduped for all file formats except JSON / JSON Lines. So if you
+have an input record with `x=8,x=9` then the second field's key is renamed to
+`x_2` and so on -- the record scans as `x=8,x_2=9`. Use `mlr
+--no-dedupe-field-names` to suppress this, and have the record be scanned as
+`x=9`.
+
+For JSON and JSON Lines, the last duplicated key in an input record is always retained,
+regardless of `mlr --no-dedupe-field-names`: `{"x":8,"x":9}` scans as if it
+were `{"x":9}`.
+
 ### Regex support for IFS and IPS
 
 You can now split fields on whitespace when whitespace is a mix of tabs and
@@ -304,9 +316,24 @@ IFS and IPS can be regular expressions now. Please see the section on [multi-cha
 
 ### Emit statements
 
-* Emitting a map-valued expression now requires either a temporary variable or the new `emit1` keyword. Please see the
-[page on emit statements](reference-dsl-output-statements.md#emit1-and-emitemitpemitf) for more information.
-* By default, field names are deduped for all file formats except JSON. So if you have an input record with `x=8,x=9` then the second field's key is renamed to `x_2` and so on -- the record scans as `x=8,x_2=9`. Use `mlr --no-dedupe-field-names` to suppress this, and have the record be scanned as `x=9`. For JSON, the last duplicated key in an input record is always retained, regardless of `mlr --no-dedupe-field-names`: `{"x":8,"x":9}` scans as if it were `{"x":9}`.
+Variables must be non-indexed on `emit`. To emit an indexed variable now requires the new `emit1` keyword.
+
+<pre class="pre-highlight-in-pair">
+<b>mlr5 -n put 'end {@input={"a":1}; emit @input["a"]}'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+input=1
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put 'end {@input={"a":1}; emit1 {"input":@input["a"]}}'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+input=1
+</pre>
+
+Please see the [section on emit statements](reference-dsl-output-statements.md#emit1-and-emitemitpemitf)
+for more information.
 
 ## Developer-specific aspects
 

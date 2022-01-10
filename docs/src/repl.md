@@ -207,6 +207,71 @@ Skip until deep into a larger file, then inspect a record:
 }
 </pre>
 
+## Parsing and operator precedence
+
+You can invoke `mlr repl` with the `-v` or `-d` flags to show parse trees for expressions you enter.
+(The `-v` and `-d` flags differ only in the format they use to present the parse trees.)
+For example, if you have any questions about operator precedence, you can check the
+[operator-precedence section](reference-dsl-operators.md#operator-precedence) -- or, you can
+try it out and see for yourself:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr repl -v</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Miller 6.0.0-rc1 REPL for darwin/amd64/go1.16.5
+Docs: https://miller.readthedocs.io
+Type ':h' or ':help' for online help; ':q' or ':quit' to quit.
+[mlr] x = 1 * 2 + 3
+* statement block
+    * assignment "="
+        * local variable "x"
+        * operator "+"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+[mlr] x = 1 + 2 * 3
+* statement block
+    * assignment "="
+        * local variable "x"
+        * operator "+"
+            * int literal "1"
+            * operator "*"
+                * int literal "2"
+                * int literal "3"
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr repl -d</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+$ mrpl -d
+Miller 6.0.0-rc1 REPL for darwin/amd64/go1.16.5
+Docs: https://miller.readthedocs.io
+Type ':h' or ':help' for online help; ':q' or ':quit' to quit.
+[mlr] x = 1 * 2 + 3
+(statement-block
+    (=
+        x
+        (+
+            (* 1 2)
+            3
+        )
+    )
+)
+[mlr] x = 1 + 2 * 3
+(statement-block
+    (=
+        x
+        (+
+            1
+            (* 2 3)
+        )
+    )
+)
+</pre>
+
 ## History-editing
 
 No command-line-history-editing feature is built in but **rlwrap mlr repl** is a
