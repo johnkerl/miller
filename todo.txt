@@ -2,8 +2,8 @@
 PUNCHDOWN LIST
 
 * post-release:
-  ! go-releaser .tar.gz files have a `miller` exe not a `mlr` exe :( -- debug
-  ! windows should have a .zip not just a .tar.gz -- probably a manual step still (copy from GH artifacts)
+  ! conda
+  o windows should have a .zip not just a .tar.gz -- probably a manual step still (copy from GH artifacts)
   w installing-miller.md.in
 
 * document cloudthings, e.g.
@@ -16,10 +16,12 @@ PUNCHDOWN LIST
 ? trace-mode ?
 
 * release ordering?
-  conda
-  brew macports chocolatey
-  ubuntu debian fedora gentoo prolinux archlinux
-  netbsd freebsd
+  o done: brew macports archlinux
+  o todo:
+    conda
+    chocolatey
+    ubuntu debian fedora gentoo prolinux
+    netbsd freebsd
 
 ================================================================
 NON-BLOCKERS

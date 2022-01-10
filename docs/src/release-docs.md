@@ -18,7 +18,7 @@ Quick links:
 
 | Release | Docs                                                                | Release notes |
 |---------|---------------------------------------------------------------------|---------------|
-6.0.0     | [Miller 6.0.0]](https://johnkerl.org/miller-docs-by-release/6.0.0)  | [Miller 6](https://github.com/johnkerl/miller/releases/tag/v6.0.0) |
+6.0.0     | [Miller 6.0.0](https://johnkerl.org/miller-docs-by-release/6.0.0)  | [Miller 6](https://github.com/johnkerl/miller/releases/tag/v6.0.0) |
 5.10.3    | [Miller 5.10.3](https://johnkerl.org/miller-docs-by-release/5.10.3) | [Address Conda-build issue](https://github.com/johnkerl/miller/releases/tag/v5.10.3) |
 5.10.2    | [Miller 5.10.2](https://johnkerl.org/miller-docs-by-release/5.10.2) | [Restore mlr manpage to distro file](https://github.com/johnkerl/miller/releases/tag/v5.10.2) |
 5.10.1    |                                                                     | [Bugfixes](https://github.com/johnkerl/miller/releases/tag/v5.10.1) |

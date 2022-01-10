@@ -68,6 +68,8 @@ There's a good chance you can get Miller pre-built for your system:
 |Mac|`brew install miller`<br/>`port install miller`|
 |Windows|`choco install miller`|
 
+See also [README-versions.md](./README-versions.md) for a full list of package versions. Note that long-term-support (LtS) releases will likely be on older versions.
+
 See also [building from source](https://miller.readthedocs.io/en/latest/build.html).
 
 # Build status
