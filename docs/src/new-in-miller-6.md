@@ -279,7 +279,8 @@ absent-empty-coalesce operator [`???`](reference-dsl-builtin-functions.md#absent
 
 ## See also
 
-See also the [list of issues tagged with go-port](https://github.com/johnkerl/miller/issues?q=label%3Ago-port).
+* The [list of issues tagged with go-port](https://github.com/johnkerl/miller/issues?q=label%3Ago-port).
+* The [6.0.0 release tag](https://github.com/johnkerl/miller/releases/tag/v6.0.0).
 
 ## Changes from Miller 5
 
