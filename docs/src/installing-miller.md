@@ -18,16 +18,18 @@ Quick links:
 
 You can install Miller for various platforms as follows.
 
-* Download a binary
-    * You can get 6.0.0 binaries for several platforms on the [6.0.0 release page](https://github.com/johnkerl/miller/releases/tag/v6.0.0).
-    * You can get latest (head) Miller 6 builds for Linux, MacOS, and Windows by visiting [https://github.com/johnkerl/miller/actions](https://github.com/johnkerl/miller/actions), selecting the latest build, and clicking _Artifacts_. (These are retained for 5 days after each commit.)
-    * See also the [build page](build.md) if you prefer to build from source.
+Download a binary:
 
-* Using a package manager
-    * Linux: `yum install miller` or `apt-get install miller` depending on your flavor of Linux, or [Homebrew](https://docs.brew.sh/linux).
-    * MacOS: `brew update` and `brew install miller`, or `sudo port selfupdate` and `sudo port install miller`, depending on your preference of [Homebrew](https://brew.sh) or [MacPorts](https://macports.org).
-    * Windows: `choco install miller` using [Chocolatey](https://chocolatey.org).
-    * Note: Miller 6 was released 2022-01-09; several platform may have Miller 5 available at the moment.
+* You can get 6.0.0 binaries for several platforms on the [6.0.0 release page](https://github.com/johnkerl/miller/releases/tag/v6.0.0).
+* You can get latest (head) Miller 6 builds for Linux, MacOS, and Windows by visiting [https://github.com/johnkerl/miller/actions](https://github.com/johnkerl/miller/actions), selecting the latest build, and clicking _Artifacts_. (These are retained for 5 days after each commit.)
+* See also the [build page](build.md) if you prefer to build from source.
+
+Using a package manager:
+
+* Linux: `yum install miller` or `apt-get install miller` depending on your flavor of Linux, or [Homebrew](https://docs.brew.sh/linux).
+* MacOS: `brew update` and `brew install miller`, or `sudo port selfupdate` and `sudo port install miller`, depending on your preference of [Homebrew](https://brew.sh) or [MacPorts](https://macports.org).
+* Windows: `choco install miller` using [Chocolatey](https://chocolatey.org).
+* Note: Miller 6 was released 2022-01-09; [several platforms](https://github.com/johnkerl/miller/blob/main/README-versions.md) may have Miller 5 available.
 
 As a first check, you should be able to run `mlr --version` at your system's command prompt and see something like the following:
 
