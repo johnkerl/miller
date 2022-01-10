@@ -52,7 +52,7 @@ func (e *Error) Error() string {
 	w := new(strings.Builder)
 	fmt.Fprintf(
 		w,
-		"Parse error on token \"%s\" at line %d columnn %d.\n",
+		"Parse error on token \"%s\" at line %d column %d.\n",
 		string(e.ErrorToken.Lit),
 		e.ErrorToken.Pos.Line,
 		e.ErrorToken.Pos.Column,
