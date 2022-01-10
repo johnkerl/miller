@@ -46,6 +46,9 @@ Operators are listed in order of decreasing precedence, highest first.
 | `? :`                         | right to left |
 | `=`                           |  N/A for Miller (there is no $a=$b=$c) |
 
+See also the [section on parsing and operator precedence in the REPL](repl.md#parsing-and-operator-precedence)
+for information on how to examine operator precedence interactively.
+
 ## Operator and function semantics
 
 * Functions are often pass-throughs straight to the system-standard Go libraries.
