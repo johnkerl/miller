@@ -1,20 +1,28 @@
 ================================================================
 PUNCHDOWN LIST
 
-----------------------------------------------------------------
-
 * document cloudthings, e.g.
   o go.yml
   o codespell.yml
     - codespell --check-filenames --skip *.csv,*.dkvp,*.txt,*.js,*.html,*.map,./tags,./test/cases --ignore-words-list denom,inTerm,inout,iput,nd,nin,numer,Wit,te,wee
   o readthedocs triggers
+* update build docs re artifacts -- thanks to #821/#822 no need for buildboxing anymore :)
 * sync-print option; or (yuck) another xprint variant; or ...; emph dump/eprint
 ? trace-mode ?
 
+* release ordering?
+  conda
+  brew macports chocolatey
+  ubuntu debian fedora gentoo prolinux archlinux
+  netbsd freebsd
+
+* post-release:
+  w installing-miller.md.in
+
+================================================================
+NON-BLOCKERS
+
 * doc
-  o new-in-miller-6: missing:
-    - dump syntax -- ?
-    - emittable constraints -- ?
   o wut h1 spacing before/after ...
   o shell-commands: while-read example from issues
   E reference-dsl-user-defined-functions: UDSes -> non-factorial example -- maybe some useful aggregator
@@ -32,18 +40,6 @@ PUNCHDOWN LIST
   ! https://github.com/johnkerl/miller/issues/653 -- stats1 w/ empties? check stats2
     - needs UTs as well
   o while-read example from issues
-
-* release ordering?
-  conda
-  brew macports chocolatey
-  ubuntu debian fedora gentoo prolinux archlinux
-  netbsd freebsd
-
-* post-release:
-  w installing-miller.md.in
-
-================================================================
-NON-BLOCKERS
 
 * profile sort
 
