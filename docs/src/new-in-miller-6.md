@@ -20,7 +20,7 @@ Quick links:
 
 Features are driven largely by great feedback in the [2021 Miller User Survey results](https://github.com/johnkerl/miller/discussions/670) and [GitHub Issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue).
 
-TL;DRs: [install](installing-miller.md), [compatibility with Miller 5](#changes-from-miller-5).
+TL;DRs: [install](installing-miller.md), [binaries](https://github.com/johnkerl/miller/releases/tag/v6.0.0), [compatibility with Miller 5](#changes-from-miller-5).
 
 ### Performance
 
