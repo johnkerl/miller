@@ -300,7 +300,7 @@ IFS and IPS can be regular expressions now. Please see the section on [multi-cha
 
 ### JSON and JSON Lines formatting
 
-* `--jknquoteint` and `jquoteall` are ignored; they were workarounds for the (now much-improved) tyoe-inference and type-tracking in Miller 6.
+* `--jknquoteint` and `jquoteall` are ignored; they were workarounds for the (now much-improved) type-inference and type-tracking in Miller 6.
 * `--json-fatal-arrays-on-input`, `--json-map-arrays-on-input`, and `--json-skip-arrays-on-input` are ignored; Miller 6 now supports arrays fully.
 * See also `mlr help legacy-flags` or the [legacy-flags reference](reference-main-flag-list.md#legacy-flags).
 * Miller 5 accepted input records either with or without enclosing `[...]`; on output, by default it produced single-line records without outermost `[...]`.  Miller 5 let you customize output formatting using `--jvstack` (multi-line records) and `--jlistwrap` (write outermost `[...]`). _Thus, Miller 5's JSON output format, with default flags, was in fact [JSON Lines](file-formats.md#json-lines) all along._
