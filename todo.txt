@@ -1,27 +1,21 @@
 ================================================================
 PUNCHDOWN LIST
 
-* post-release:
-  ! conda
-  o windows should have a .zip not just a .tar.gz -- probably a manual step still (copy from GH artifacts)
-  w installing-miller.md.in
-
 * document cloudthings, e.g.
   o go.yml
   o codespell.yml
     - codespell --check-filenames --skip *.csv,*.dkvp,*.txt,*.js,*.html,*.map,./tags,./test/cases --ignore-words-list denom,inTerm,inout,iput,nd,nin,numer,Wit,te,wee
   o readthedocs triggers
-* update build docs re artifacts -- thanks to #821/#822 no need for buildboxing anymore :)
 * sync-print option; or (yuck) another xprint variant; or ...; emph dump/eprint
 ? trace-mode ?
 
 * release ordering?
-  o done: brew macports archlinux
+  o done: brew macports archlinux conda
   o todo:
-    conda
     chocolatey
     ubuntu debian fedora gentoo prolinux
     netbsd freebsd
+    README-versions.md
 
 ================================================================
 NON-BLOCKERS
