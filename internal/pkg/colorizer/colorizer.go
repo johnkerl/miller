@@ -292,6 +292,31 @@ func colorize(text string, colorString string) string {
 	return colorString + text + defaultColorString
 }
 
+// GetColorization is for the CSV writer
+func GetColorization(outputIsStdout bool, isKey bool) (string, string) {
+	if outputIsStdout && stdoutIsATTY {
+		if colorization == ColorizeOutputNever {
+			return "", ""
+		} else {
+			if isKey {
+				return keyColorString, defaultColorString
+			} else {
+				return valueColorString, defaultColorString
+			}
+		}
+	} else {
+		if colorization == ColorizeOutputAlways {
+			if isKey {
+				return keyColorString, defaultColorString
+			} else {
+				return valueColorString, defaultColorString
+			}
+		} else {
+			return "", ""
+		}
+	}
+}
+
 // ----------------------------------------------------------------
 // Name-to-code lookup table.
 //

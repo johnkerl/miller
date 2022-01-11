@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
-	"github.com/johnkerl/miller/internal/pkg/colorizer"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
@@ -78,18 +77,19 @@ func (writer *RecordWriterCSV) Write(
 		fields := make([]string, outrec.FieldCount)
 		i := 0
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
-			fields[i] = colorizer.MaybeColorizeKey(pe.Key, outputIsStdout)
+			fields[i] = pe.Key
 			i++
 		}
-		writer.csvWriter.Write(fields)
+		//////writer.csvWriter.Write(fields)
+		writer.WriteCSVRecordMaybeColorized(fields, bufferedOutputStream, outputIsStdout, true)
 	}
 
 	fields := make([]string, outrec.FieldCount)
 	i := 0
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		fields[i] = colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout)
+		fields[i] = pe.Value.String()
 		i++
 	}
-	writer.csvWriter.Write(fields)
+	writer.WriteCSVRecordMaybeColorized(fields, bufferedOutputStream, outputIsStdout, false)
 	writer.justWroteEmptyLine = false
 }
