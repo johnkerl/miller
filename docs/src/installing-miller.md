@@ -31,6 +31,12 @@ Using a package manager:
 * Windows: `choco install miller` using [Chocolatey](https://chocolatey.org).
 * Note: Miller 6 was released 2022-01-09; [several platforms](https://github.com/johnkerl/miller/blob/main/README-versions.md) may have Miller 5 available.
 
+See also:
+
+* [Conda](https://anaconda.org/conda-forge/miller).
+* [@jauderho](https://github.com/jauderho)'s [docker images](https://hub.docker.com/r/jauderho/miller/tags) as discussed in [GitHub Discussions](https://github.com/johnkerl/miller/discussions/851#discussioncomment-1943255)
+    * Example invocation: `docker run --rm -i jauderho/miller:latest --csv sort -f shape < ./example.csv`
+
 As a first check, you should be able to run `mlr --version` at your system's command prompt and see something like the following:
 
 <pre class="pre-highlight-in-pair">
@@ -39,6 +45,9 @@ As a first check, you should be able to run `mlr --version` at your system's com
 <pre class="pre-non-highlight-in-pair">
 mlr 6.0.0
 </pre>
+
+If you Miller version is not 6 or above, please see the [release docs
+page](release-docs.md) to find the documentation for your version.
 
 As a second check, given [example.csv](./example.csv) you should be able to do
 
