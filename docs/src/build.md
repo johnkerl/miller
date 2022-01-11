@@ -120,8 +120,7 @@ git push -u origin miller-6.1.0
 * Afterwork:
 
     * Edit `internal/pkg/version/version.go` to change version from `6.2.0` to `6.2.0-dev`.
-    * `cd go`
-    * `./build`
+    * `make dev`
     * Commit and push.
 
 ## Misc. development notes
