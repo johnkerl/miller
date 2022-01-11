@@ -321,12 +321,16 @@ IFS and IPS can be regular expressions now. Please see the section on [multi-cha
 
 Variables must be non-indexed on `emit`. To emit an indexed variable now requires the new `emit1` keyword.
 
+This worked in Miller 5 but is no longer supported in Miller 6:
+
 <pre class="pre-highlight-in-pair">
 <b>mlr5 -n put 'end {@input={"a":1}; emit @input["a"]}'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 input=1
 </pre>
+
+This works in Miller 6 (and worked in Miller 5 as well) and is supported:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put 'end {@input={"a":1}; emit1 {"input":@input["a"]}}'</b>
