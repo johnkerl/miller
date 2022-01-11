@@ -57,6 +57,7 @@
 _letter : 'a'-'z' | 'A'-'Z' | '\u0100'-'\U0010FFFF';
 _decdig : '0'-'9' ;
 _hexdig : '0'-'9' | 'a'-'f' | 'A'-'F';
+_octdig : '0'-'7' ;
 _bindig : '0'-'1' ;
 _leading_idchar : _letter | '_' ;
 _idchar : _letter | _decdig | '_' ;
@@ -106,6 +107,7 @@ regex_case_insensitive : '"' {_string_literal_element} '"' 'i';
 int_literal
   : _decdig { _decdig }
   | '0' 'x' _hexdig { _hexdig }
+  | '0' 'o' _octdig { _octdig }
   | '0' 'b' _bindig { _bindig }
 ;
 
