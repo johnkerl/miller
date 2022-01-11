@@ -91,7 +91,6 @@ var FLAG_TABLE = FlagTable{
 		&SeparatorFlagSection,
 		&FileFormatFlagSection,
 		&FormatConversionKeystrokeSaverFlagSection,
-		&JSONOnlyFlagSection,
 		&CSVOnlyFlagSection,
 		&PPRINTOnlyFlagSection,
 		&CompressedDataFlagSection,
@@ -408,50 +407,6 @@ var SeparatorFlagSection = FlagSection{
 }
 
 // ================================================================
-// JSON-ONLY FLAGS
-
-func JSONOnlyPrintInfo() {
-	fmt.Println("These are flags which are applicable to JSON format.")
-}
-
-func init() { JSONOnlyFlagSection.Sort() }
-
-var JSONOnlyFlagSection = FlagSection{
-	name:        "JSON-only flags",
-	infoPrinter: JSONOnlyPrintInfo,
-	flags: []Flag{
-
-		{
-			name: "--jvstack",
-			help: "Put one key-value pair per line for JSON output (multi-line output).",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.JSONOutputMultiline = true
-				*pargi += 1
-			},
-		},
-
-		{
-			name: "--no-jvstack",
-			help: "Put objects/arrays all on one line for JSON output.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.JSONOutputMultiline = false
-				*pargi += 1
-			},
-		},
-
-		{
-			name:     "--jlistwrap",
-			altNames: []string{"--jl"},
-			help:     "Wrap JSON output in outermost `[ ]`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.WrapJSONOutputInOuterList = true
-				*pargi += 1
-			},
-		},
-	},
-}
-
-// ================================================================
 // PPRINT-ONLY FLAGS
 
 func PPRINTOnlyPrintInfo() {
@@ -590,6 +545,43 @@ var LegacyFlagSection = FlagSection{
 			help:   "Ignored as of version 6. Types are inferred/retained through the processing flow now.",
 			parser: NoOpParse1,
 		},
+
+		{
+			name: "--jvstack",
+			help: "Put one key-value pair per line for JSON output (multi-line output). This is the default for JSON output format.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.JSONOutputMultiline = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--no-jvstack",
+			help: "Put objects/arrays all on one line for JSON output. This is the default for JSON Lines output format.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.JSONOutputMultiline = false
+				*pargi += 1
+			},
+		},
+
+		{
+			name:     "--jlistwrap",
+			altNames: []string{"--jl"},
+			help:     "Wrap JSON output in outermost `[ ]`. This is the default for JSON output format.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--no-jlistwrap",
+			help: "Wrap JSON output in outermost `[ ]`. This is the default for JSON Lines output format.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.WrapJSONOutputInOuterList = false
+				*pargi += 1
+			},
+		},
 	},
 }
 
@@ -694,6 +686,15 @@ var FileFormatFlagSection = FlagSection{
 		{
 			name: "--ijson",
 			help: "Use JSON format for input data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--ijsonl",
+			help: "Use JSON Lines format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				*pargi += 1
@@ -892,6 +893,19 @@ var FileFormatFlagSection = FlagSection{
 			help: "Use JSON format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--ojsonl",
+			help: "Use JSON Lines format for output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = false
+				options.WriterOptions.JSONOutputMultiline = false
 				*pargi += 1
 			},
 		},
@@ -1046,9 +1060,22 @@ var FileFormatFlagSection = FlagSection{
 			help:     "Use JSON format for input and output data.",
 			altNames: []string{"-j"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--jsonl",
+			help: "Use JSON Lines format for input and output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = false
+				options.WriterOptions.JSONOutputMultiline = false
 				*pargi += 1
 			},
 		},
@@ -1096,19 +1123,20 @@ var FileFormatFlagSection = FlagSection{
 
 func FormatConversionKeystrokeSaverPrintInfo() {
 	fmt.Println(`As keystroke-savers for format-conversion you may use the following.
-The letters c, t, j, d, n, x, p, and m refer to formats CSV, TSV, DKVP, NIDX,
-JSON, XTAB, PPRINT, and markdown, respectively. Note that markdown format is
-available for output only.
+The letters c, t, j, l, d, n, x, p, and m refer to formats CSV, TSV, DKVP, NIDX,
+JSON, JSON Lines, XTAB, PPRINT, and markdown, respectively. Note that markdown
+format is available for output only.
 
-| In\out | CSV   | TSV   | JSON   | DKVP   | NIDX   | XTAB   | PPRINT | Markdown |
+| In\out | CSV   | TSV   | JSON   | JSONL  | DKVP   | NIDX   | XTAB   | PPRINT | Markdown |
 +--------+-------+-------+--------+--------+--------+--------+--------+----------+
-| CSV    |       | --c2t | --c2j  | --c2d  | --c2n  | --c2x  | --c2p  | --c2m    |
-| TSV    | --t2c |       | --t2j  | --t2d  | --t2n  | --t2x  | --t2p  | --t2m    |
-| JSON   | --j2c | --j2t |        | --j2d  | --j2n  | --j2x  | --j2p  | --j2m    |
-| DKVP   | --d2c | --d2t | --d2j  |        | --d2n  | --d2x  | --d2p  | --d2m    |
-| NIDX   | --n2c | --n2t | --n2j  | --n2d  |        | --n2x  | --n2p  | --n2m    |
-| XTAB   | --x2c | --x2t | --x2j  | --x2d  | --x2n  |        | --x2p  | --x2m    |
-| PPRINT | --p2c | --p2t | --p2j  | --p2d  | --p2n  | --p2x  |        | --p2m    |`)
+| CSV    |       | --c2t | --c2j  | --c2l  | --c2d  | --c2n  | --c2x  | --c2p  | --c2m    |
+| TSV    | --t2c |       | --t2j  | --t2l  | --t2d  | --t2n  | --t2x  | --t2p  | --t2m    |
+| JSON   | --j2c | --j2t |        | --j2l  | --j2d  | --j2n  | --j2x  | --j2p  | --j2m    |
+| JSONL  | --l2c | --l2t |        |        | --l2d  | --l2n  | --l2x  | --l2p  | --l2m    |
+| DKVP   | --d2c | --d2t | --d2j  | --d2l  |        | --d2n  | --d2x  | --d2p  | --d2m    |
+| NIDX   | --n2c | --n2t | --n2j  | --n2l  | --n2d  |        | --n2x  | --n2p  | --n2m    |
+| XTAB   | --x2c | --x2t | --x2j  | --x2l  | --x2d  | --x2n  |        | --x2p  | --x2m    |
+| PPRINT | --p2c | --p2t | --p2j  | --p2l  | --p2d  | --p2n  | --p2x  |        | --p2m    |`)
 }
 
 func init() { FormatConversionKeystrokeSaverFlagSection.Sort() }
@@ -1202,6 +1230,23 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
+				options.ReaderOptions.irsWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--c2l",
+			help: "Use CSV for input, JSON Lines for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = false
+				options.WriterOptions.JSONOutputMultiline = false
 				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
 			},
@@ -1318,6 +1363,25 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
+				options.ReaderOptions.ifsWasSpecified = true
+				options.ReaderOptions.irsWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--t2l",
+			help: "Use TSV for input, JSON Lines for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IFS = "\t"
+				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = false
+				options.WriterOptions.JSONOutputMultiline = false
 				options.ReaderOptions.ifsWasSpecified = true
 				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
@@ -1435,6 +1499,22 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--d2l",
+			help: "Use DKVP for input, JSON Lines for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dkvp"
+				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = false
+				options.WriterOptions.JSONOutputMultiline = false
 				*pargi += 1
 			},
 		},
@@ -1537,6 +1617,22 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--n2l",
+			help: "Use NIDX for input, JSON Lines for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "nidx"
+				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = false
+				options.WriterOptions.JSONOutputMultiline = false
 				*pargi += 1
 			},
 		},
@@ -1693,6 +1789,108 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 		},
 
 		{
+			name: "--l2c",
+			help: "Use JSON Lines for input, CSV for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.orsWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--l2t",
+			help: "Use JSON Lines for input, TSV for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.OFS = "\t"
+				options.WriterOptions.ofsWasSpecified = true
+				options.WriterOptions.orsWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--l2d",
+			help: "Use JSON Lines for input, DKVP for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "dkvp"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--l2n",
+			help: "Use JSON Lines for input, NIDX for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "nidx"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--l2p",
+			help: "Use JSON Lines for input, PPRINT for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "pprint"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--l2b",
+			help: "Use JSON Lines for input, PPRINT with --barred for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "pprint"
+				options.WriterOptions.BarredPprintOutput = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--l2x",
+			help: "Use JSON Lines for input, XTAB for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "xtab"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--l2m",
+			help: "Use JSON Lines for input, markdown-tabular for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "markdown"
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--p2c",
 			help: "Use PPRINT for input, CSV for output.",
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
@@ -1762,6 +1960,24 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
+				options.ReaderOptions.ifsWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--p2l",
+			help: "Use PPRINT for input, JSON Lines for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "pprint"
+				options.ReaderOptions.IFS = " "
+				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = false
+				options.WriterOptions.JSONOutputMultiline = false
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
 			},
@@ -1856,6 +2072,22 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--x2l",
+			help: "Use XTAB for input, JSON Lines for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "xtab"
+				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = false
+				options.WriterOptions.JSONOutputMultiline = false
 				*pargi += 1
 			},
 		},

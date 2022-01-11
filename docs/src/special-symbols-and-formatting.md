@@ -35,14 +35,16 @@ Likewise [JSON](file-formats.md#json):
 <b>mlr --icsv --ojson cat commas.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "Name": "Xiao, Lin",
   "Role": "administrator"
-}
+},
 {
   "Name": "Khavari, Darius",
   "Role": "tester"
 }
+]
 </pre>
 
 For Miller's [XTAB](file-formats.md#xtab-vertical-tabular) there is no escaping for carriage returns, but commas work fine:

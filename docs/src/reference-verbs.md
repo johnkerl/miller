@@ -366,72 +366,80 @@ leave off -k as well as -v.
 <b>mlr --icsv --ojson cat data/clean-whitespace.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "  Name  ": "  Ann  Simons",
   " Preference  ": "  blue  "
-}
+},
 {
   "  Name  ": "Bob Wang  ",
   " Preference  ": " red       "
-}
+},
 {
   "  Name  ": " Carol  Vee",
   " Preference  ": "    yellow"
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson clean-whitespace -k data/clean-whitespace.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "Name": "  Ann  Simons",
   "Preference": "  blue  "
-}
+},
 {
   "Name": "Bob Wang  ",
   "Preference": " red       "
-}
+},
 {
   "Name": " Carol  Vee",
   "Preference": "    yellow"
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson clean-whitespace -v data/clean-whitespace.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "  Name  ": "Ann Simons",
   " Preference  ": "blue"
-}
+},
 {
   "  Name  ": "Bob Wang",
   " Preference  ": "red"
-}
+},
 {
   "  Name  ": "Carol Vee",
   " Preference  ": "yellow"
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson clean-whitespace data/clean-whitespace.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "Name": "Ann Simons",
   "Preference": "blue"
-}
+},
 {
   "Name": "Bob Wang",
   "Preference": "red"
-}
+},
 {
   "Name": "Carol Vee",
   "Preference": "yellow"
 }
+]
 </pre>
 
 Function links:
@@ -2941,21 +2949,23 @@ c b a
 <b>mlr --json sort-within-records data/sort-within-records.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "a": 1,
   "b": 2,
   "c": 3
-}
+},
 {
   "a": 5,
   "b": 4,
   "c": 6
-}
+},
 {
   "a": 9,
   "b": 8,
   "c": 7
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3874,6 +3884,7 @@ Examples:
 <b>mlr --json unsparsify data/sparse.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "a": 1,
   "b": 2,
@@ -3881,7 +3892,7 @@ Examples:
   "u": "",
   "x": "",
   "w": ""
-}
+},
 {
   "a": "",
   "b": 2,
@@ -3889,7 +3900,7 @@ Examples:
   "u": 1,
   "x": "",
   "w": ""
-}
+},
 {
   "a": 1,
   "b": "",
@@ -3897,7 +3908,7 @@ Examples:
   "u": "",
   "x": 3,
   "w": ""
-}
+},
 {
   "a": "",
   "b": "",
@@ -3906,6 +3917,7 @@ Examples:
   "x": "",
   "w": 2
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">

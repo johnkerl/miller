@@ -174,23 +174,23 @@ So, `emit1` can handle syntactic richness in the one thing being emitted;
 `emitf`, `emit`, and `emitp` can handle syntactic richness in the side-by-side
 placement, indexing, and redirection.
 
-(Mnemonic: If all you want is to insert a new record into the record stream, `emit1` is probably the one you want.)
+(Mnemonic: If all you want is to insert a new record into the record stream, `emit1` is probably the _one_ you want.)
 
 What this means is that if you want to emit an expression which evaluates to a map, you can do quite simply
 
-GENMD-CARDIFY
-  mlr --c2p --from example.csv put -q '
-    emit1 mapsum({"id": NR}, $*)
-  '
+GENMD-RUN-COMMAND
+mlr --c2p --from example.csv put -q '
+  emit1 mapsum({"id": NR}, $*)
+'
 GENMD-EOF
 
 And if you want indexing, redirects, etc., just assign to a temporary variable and use one of the other emit variants:
 
-GENMD-CARDIFY
-  mlr --c2p --from example.csv put -q '
-    o = mapsum({"id": NR}, $*);
-    emit > stderr, o;
-  '
+GENMD-RUN-COMMAND
+mlr --c2p --from example.csv put -q '
+  o = mapsum({"id": NR}, $*);
+  emit o;
+'
 GENMD-EOF
 
 ## Emitf statements

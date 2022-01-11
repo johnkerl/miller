@@ -46,6 +46,9 @@ Operators are listed in order of decreasing precedence, highest first.
 | `? :`                         | right to left |
 | `=`                           |  N/A for Miller (there is no $a=$b=$c) |
 
+See also the [section on parsing and operator precedence in the REPL](repl.md#parsing-and-operator-precedence)
+for information on how to examine operator precedence interactively.
+
 ## Operator and function semantics
 
 * Functions are often pass-throughs straight to the system-standard Go libraries.
@@ -106,6 +109,8 @@ However, in Miller 6 it has optional use for map traversal. Example:
 <pre class="pre-non-highlight-in-pair">
 bar.baz
 bar.baz
+[
+]
 </pre>
 
 This also works on the left-hand sides of assignment statements:
@@ -116,6 +121,7 @@ This also works on the left-hand sides of assignment statements:
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "hostname": "localhost",
   "pid": 12345,
@@ -137,6 +143,7 @@ This also works on the left-hand sides of assignment statements:
     }
   }
 }
+]
 </pre>
 
 A few caveats:
@@ -150,6 +157,8 @@ A few caveats:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 6989
+[
+]
 </pre>
 
 * However (awkwardly), if you want to use `.` for map-traversal as well as string-concatenation in the same statement, you'll need to insert parentheses, as the default associativity is left-to-right:
@@ -161,6 +170,8 @@ A few caveats:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 (error)
+[
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -170,4 +181,6 @@ A few caveats:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 GET -- api/check
+[
+]
 </pre>

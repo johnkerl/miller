@@ -43,10 +43,10 @@ a,b,c
 7,8,9
 </pre>
 
-It has three records (written here using JSON formatting):
+It has three records (written here using JSON Lines formatting):
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --icsv --ojson --no-jvstack cat data/het/hom.csv</b>
+<b>mlr --icsv --ojsonl cat data/het/hom.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 {"a": 1, "b": 2, "c": 3}
@@ -83,7 +83,7 @@ a,b,c
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --icsv --ojson --no-jvstack cat data/het/fillable.csv</b>
+<b>mlr --icsv --ojsonl cat data/het/fillable.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 {"a": 1, "b": 2, "c": 3}
@@ -144,22 +144,24 @@ with 1) for too-long rows:
 <b>mlr --icsv --ojson --allow-ragged-csv-input cat data/het/ragged.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "a": 1,
   "b": 2,
   "c": 3
-}
+},
 {
   "a": 4,
   "b": 5,
   "c": ""
-}
+},
 {
   "a": 7,
   "b": 8,
   "c": 9,
   "4": 10
 }
+]
 </pre>
 
 ### Irregular data
@@ -191,7 +193,7 @@ We can use the [`regularize`](reference-verbs.md#regularize) or
 the keys:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --json --no-jvstack regularize data/het/irregular.json</b>
+<b>mlr --jsonl regularize data/het/irregular.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 {"a": 1, "b": 2, "c": 3}
@@ -213,21 +215,23 @@ data for items which are present, but won't log data for items which aren't.
 <b>mlr --json cat data/het/sparse.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "host": "xy01.east",
   "status": "running",
   "volume": "/dev/sda1"
-}
+},
 {
   "host": "xy92.west",
   "status": "running"
-}
+},
 {
   "purpose": "failover",
   "host": "xy55.east",
   "volume": "/dev/sda1",
   "reimaged": true
 }
+]
 </pre>
 
 This data is called **sparse** (from the [data-storage term](https://en.wikipedia.org/wiki/Sparse_matrix)).
@@ -239,20 +243,21 @@ every record has the same keys:
 <b>mlr --json unsparsify data/het/sparse.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "host": "xy01.east",
   "status": "running",
   "volume": "/dev/sda1",
   "purpose": "",
   "reimaged": ""
-}
+},
 {
   "host": "xy92.west",
   "status": "running",
   "volume": "",
   "purpose": "",
   "reimaged": ""
-}
+},
 {
   "host": "xy55.east",
   "status": "",
@@ -260,6 +265,7 @@ every record has the same keys:
   "purpose": "failover",
   "reimaged": true
 }
+]
 </pre>
 
 Since this data is now homogeneous (rectangular), it pretty-prints nicely:

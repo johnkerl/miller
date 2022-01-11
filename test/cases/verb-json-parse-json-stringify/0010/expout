@@ -1,3 +1,4 @@
+[
 {
   "hostname": "\"localhost\"",
   "pid": "12345",
@@ -7,3 +8,4 @@
   "empty2": "[]",
   "wrapper": "{\n  \"empty3\": {},\n  \"emtpy4\": []\n}"
 }
+]

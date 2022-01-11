@@ -8,7 +8,7 @@ You can ask questions -- or answer them! -- following the links on the [Communit
 
 Pre-release Miller documentation is at [https://github.com/johnkerl/miller/tree/main/docs](https://github.com/johnkerl/miller/tree/main/docs).
 
-Instructions for modifying, viewing, and submitting PRs for these are in the [docs/README.md](https://github.com/johnkerl/miller/blob/main/docs/README.md).
+Instructions for modifying, viewing, and submitting PRs for these are in [README-docs.md](https://github.com/johnkerl/miller/blob/main/README-docs.md).
 
 Once PRs are merged, readthedocs creates [https://miller.readthedocs.io](https://miller.readthedocs.io) using the following configs:
 

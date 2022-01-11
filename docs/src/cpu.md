@@ -34,7 +34,7 @@ $x + $y' a.csv b.csv c.csv` will have seven goroutines running:
 * record-reader record-builder,
 * `cut`,
 * `sort`,
-* `rename`,
+* `put`,
 * record-writer,
 * controller.
 

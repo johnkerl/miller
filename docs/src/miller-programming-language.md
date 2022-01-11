@@ -162,9 +162,11 @@ sum
 <b>mlr --c2j --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "sum": 652.7185
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -176,10 +178,12 @@ sum
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "count": 10,
   "sum": 652.7185
 }
+]
 </pre>
 
 We'll see in the documentation for [stats1](reference-verbs.md#stats1) that there's a lower-keystroking way to get counts and sums of things:
@@ -188,10 +192,12 @@ We'll see in the documentation for [stats1](reference-verbs.md#stats1) that ther
 <b>mlr --c2j --from example.csv stats1 -a sum,count -f quantity</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "quantity_sum": 652.7185,
   "quantity_count": 10
 }
+]
 </pre>
 
 So, take this sum/count example as an indication of the kinds of things you can do using Miller's programming language.
@@ -397,35 +403,39 @@ For example, you can sum up all the `$a` values across records without having to
 <b>mlr --json cat absent-example.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "a": 1,
   "b": 2
-}
+},
 {
   "c": 3
-}
+},
 {
   "a": 4,
   "b": 5
 }
+]
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --json put '@sum_of_a += $a; end {emit @sum_of_a}' absent-example.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+[
 {
   "a": 1,
   "b": 2
-}
+},
 {
   "c": 3
-}
+},
 {
   "a": 4,
   "b": 5
-}
+},
 {
   "sum_of_a": 5
 }
+]
 </pre>

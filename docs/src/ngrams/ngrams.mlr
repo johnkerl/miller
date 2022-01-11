@@ -1,0 +1,277 @@
+# ================================================================
+# See for context
+# https://miller.readthedocs.io/en/latest/randomizing-examples/#randomly-generating-jabberwocky-words
+# ================================================================
+
+# ================================================================
+# MAIN PROCESSING
+
+# Get options
+begin {
+  if (is_absent(@n)) {
+    @n = 4;
+  }
+  if (is_absent(@ocount)) {
+    @ocount = 15;
+  }
+  if (is_absent(@verbose)) {
+    @verbose = false;
+  }
+
+  call init();
+}
+
+# Ingest words from the word-list file(s).
+for (_, word in $*) {
+  call ingest_word(word);
+}
+
+# Compute CMFs from histograms, for weighted sampling.
+end {
+  call compute_cmfs();
+  if (@verbose) {
+    dump;
+  }
+}
+
+# Emit words
+end {
+  for (int i = 0; i < @ocount; i += 1) {
+    str word = emit_word();
+    if (word == "") {
+      # Error message already printed out.
+      break;
+    }
+    print word;
+  }
+}
+
+# ================================================================
+# NGRAM STATE
+
+subr init() {
+  @len_histo    = {};
+  @start_histos = []; # Make this an array; auto-extend would make it a map
+}
+
+# ----------------------------------------------------------------
+subr ingest_word(str word) {
+  # Accumulate a histogram of word lengths, so when we're asked to emit words,
+  # we can emit them with word-lengths of this same distribution.
+  int wordlen = strlen(word);
+  if (wordlen < 1) {
+    return;
+  }
+  @len_histo[wordlen] += 1;
+
+  int from_begin = 1;
+  int from_end   = 0;
+  int to_index   = 1;
+
+  if (@verbose) {
+    print;
+    print "INGEST", word, wordlen;
+  }
+
+  # We are doing n-grams, so say with n=5, each 4 letter predicts the 5th.
+  # However at the start of a word we don't *have* 4 yet. So the starting
+  # histograms are for stats on the first few letters.
+  #
+  # * For picking the first letter we get stats on the (arbitrary) start symbol
+  #   "_" as mapping to the first letter.
+  # * Then stats on the first mapping to the second.
+  # * Then stats on the first & second mapping to the third.
+  # * Etc.
+  #
+  # Exammple: input word "abcdefghij" with n=5.
+  # * @start_histo[1] is { "_"   : { "a": 1 }}
+  # * @start_histo[2] is { "a"   : { "b": 1 }}
+  # * @start_histo[3] is { "ab"  : { "c": 1 }}
+  # * @start_histo[4] is { "abc" : { "d": 1 }}
+  for (i = 1; i < @n; i += 1) {
+    if (to_index > wordlen) {
+      return;
+    }
+    str from = "_";
+    if (to_index > 1) {
+      from = word[from_begin:from_end];
+    }
+    str to = word[to_index];
+    if (@verbose) {
+      print "START  [" . from_begin . ":" . from_end . " -> ". to_index . "]", from, "->", to;
+    }
+    @start_histos[i][from][to] += 1;
+
+    from_end += 1;
+    to_index += 1;
+  }
+
+  # Now we have n-1 letters for the "from" part followed by the 1 letter "to" part.
+  # Exammple: input word "abcdefghij" with n=5.
+  # * @middle_histo is {
+  #   "abcd"   : { "e": 1 },
+  #   "bcde"   : { "f": 1 },
+  #   "cdef"   : { "g": 1 },
+  #   "defg"   : { "h": 1 },
+  # }
+  # We don't get stats on "efgh" -> "i" since we track that separately in the word-ending histogram.
+  while (to_index < wordlen) {
+    str from = word[from_begin:from_end];
+    str to   = word[to_index];
+    if (@verbose) {
+      print "MIDDLE [" . from_begin . ":" . from_end . " -> ". to_index . "]", from, "->", to;
+    }
+    @middle_histo[from][to] += 1;
+
+    from_begin += 1;
+    from_end   += 1;
+    to_index   += 1;
+  }
+
+  if (to_index > wordlen) {
+    return;
+  }
+
+  # Word-ending histogram: separately tracks what words end in. Without this, it'd be easy
+  # to produce words like "childhoo" or somesuch, not matching *endings* of words in the input.
+  str from = word[from_begin:from_end];
+  str to   = word[to_index];
+  if (@verbose) {
+    print "END    [" . from_begin . ":" . from_end . " -> ". to_index . "]", from, "->", to;
+  }
+  @end_histo[from][to] += 1;
+}
+
+# ----------------------------------------------------------------
+# See ngfuncs.mlr. Here we simply turn the histograms into cumulative mass functions
+# which are convenient for sampling.
+#
+# Example: if the input list has first letter 'a' twice, 'b' once, and 'c' once, then
+# the histogram is 'a':2, 'b':1, 'c':1. The CMF is 'a':0.50, 'b':0.75, 'c':1.00.
+
+subr compute_cmfs() {
+  @len_cmf = compute_cmf_from_histo(@len_histo);
+
+  for (i = 1; i < @n; i += 1) {
+    for (from in @start_histos[i]) {
+      @start_cmfs[i][from] = compute_cmf_from_histo(asserting_map(@start_histos[i][from]))
+    }
+  }
+
+  for (from in @middle_histo) {
+    @middle_cmf[from] = compute_cmf_from_histo(asserting_map(@middle_histo[from]));
+  }
+
+  for (from in @end_histo) {
+    @end_cmf[from] = compute_cmf_from_histo(asserting_map(@end_histo[from]));
+  }
+}
+
+# ----------------------------------------------------------------
+# Splicing n-gram chains for start/middle of word with end-of-word data, doesn't always
+# connect. Hence the emit_word_aux helper function.
+func emit_word(): str {
+  int max_tries = 100;
+  for (i = 0; i < max_tries; i += 1) {
+    str word = emit_word_aux();
+    if (word != "") {
+      return word;
+    }
+  }
+  print "Could not generate ngram word after", max_tries, "tries.";
+  return "";
+}
+
+func emit_word_aux(): str {
+  # Pick a word length distributed according to the word lengths in the input.
+  int olen = int(sample_from_cmf(@len_cmf));
+
+  if (@verbose) {
+    print;
+    print "OLEN  ", olen;
+  }
+  str word = "";
+
+  # Walk through the 'start' chains to build up a word of length n.
+  str from = "_";
+  for (i = 1; i < @n; i += 1) {
+    if (@verbose) {
+      print "FROM  ", from;
+    }
+    if (i > olen) {
+      if (@verbose) {
+        print "OUT1";
+        return word;
+      }
+    }
+    if (!is_map(@start_cmfs[i][from])) {
+      if (@verbose) {
+        print "OUT2";
+      }
+      return "";
+    }
+    str letter = sample_from_cmf(@start_cmfs[i][from]);
+    word .= letter;
+    if (@verbose) {
+      print "START YIELD ", word;
+    }
+    from = word;
+  }
+
+  # Now having a word of length n, continue it using the middle-of-word chain.
+  for (int i = @n; i < olen; i += 1) {
+    if (@verbose) {
+      print "FROM  ", from;
+    }
+    if (strlen(word) >= olen) {
+      if (@verbose) {
+        print "OUT3";
+      }
+      return word;
+    }
+    if (is_absent(@middle_cmf[from])) {
+      if (@verbose) {
+        print "OUT4  ", from;
+      }
+      return "";
+    }
+    str letter = sample_from_cmf(@middle_cmf[from]);
+    if (is_absent(letter)) {
+      if (@verbose) {
+        print "OUT5";
+      }
+      return "";
+    }
+    word .= letter;
+    from = word[-@n+1:];
+    if (@verbose) {
+      print "MIDDLE YIELD", word;
+    }
+  }
+
+  if (@verbose) {
+    print "FROM  ", from;
+  }
+
+  if (is_absent(@end_cmf[from])) {
+    if (@verbose) {
+      print "OUT6";
+    }
+    return "";
+  }
+
+  # Finally, finish off the word using the end-of-word distribution.
+  str last_letter = sample_from_cmf(@end_cmf[from]);
+  if (is_absent(last_letter)) {
+    if (@verbose) {
+      print "OUT7";
+    }
+    return "";
+  }
+  word .= last_letter;
+  if (@verbose) {
+    print "END YIELD   ", word;
+  }
+
+  return word;
+}

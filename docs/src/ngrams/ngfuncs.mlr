@@ -1,4 +1,9 @@
 # ================================================================
+# See for context
+# https://miller.readthedocs.io/en/latest/randomizing-examples/#randomly-generating-jabberwocky-words
+# ================================================================
+
+# ----------------------------------------------------------------
 func compute_sum_from_histo(map histo) : num {
   num sum = 0;
   for (k, n in histo) {

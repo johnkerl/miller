@@ -66,6 +66,7 @@ Using `put` and `filter`, you can do the following as we've seen above:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 HELLO
+[
 {
   "color": "yellow",
   "shape": "triangle",
@@ -75,7 +76,7 @@ HELLO
   "quantity": 43.6498,
   "rate": 9.8870,
   "qr": 4.414868008496004
-}
+},
 {
   "color": "red",
   "shape": "square",
@@ -85,8 +86,9 @@ HELLO
   "quantity": 79.2778,
   "rate": 0.0130,
   "qr": 6098.292307692308
-}
-GOODBYE
+}GOODBYE
+
+]
 </pre>
 
 ## Using Miller with the REPL
@@ -203,6 +205,71 @@ Skip until deep into a larger file, then inspect a record:
   "w": 0.4799125551304738,
   "x": 6.379888206335166
 }
+</pre>
+
+## Parsing and operator precedence
+
+You can invoke `mlr repl` with the `-v` or `-d` flags to show parse trees for expressions you enter.
+(The `-v` and `-d` flags differ only in the format they use to present the parse trees.)
+For example, if you have any questions about operator precedence, you can check the
+[operator-precedence section](reference-dsl-operators.md#operator-precedence) -- or, you can
+try it out and see for yourself:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr repl -v</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Miller 6.0.0-rc1 REPL for darwin/amd64/go1.16.5
+Docs: https://miller.readthedocs.io
+Type ':h' or ':help' for online help; ':q' or ':quit' to quit.
+[mlr] x = 1 * 2 + 3
+* statement block
+    * assignment "="
+        * local variable "x"
+        * operator "+"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+[mlr] x = 1 + 2 * 3
+* statement block
+    * assignment "="
+        * local variable "x"
+        * operator "+"
+            * int literal "1"
+            * operator "*"
+                * int literal "2"
+                * int literal "3"
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr repl -d</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+$ mrpl -d
+Miller 6.0.0-rc1 REPL for darwin/amd64/go1.16.5
+Docs: https://miller.readthedocs.io
+Type ':h' or ':help' for online help; ':q' or ':quit' to quit.
+[mlr] x = 1 * 2 + 3
+(statement-block
+    (=
+        x
+        (+
+            (* 1 2)
+            3
+        )
+    )
+)
+[mlr] x = 1 + 2 * 3
+(statement-block
+    (=
+        x
+        (+
+            1
+            (* 2 3)
+        )
+    )
+)
 </pre>
 
 ## History-editing

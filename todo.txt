@@ -1,20 +1,28 @@
 ================================================================
 PUNCHDOWN LIST
 
-* compat emph
 * document cloudthings, e.g.
   o go.yml
   o codespell.yml
-    - codespell  --check-filenames --skip *.csv,*.dkvp,*.txt,*.js,*.html,*.map,./tags,./test/cases --ignore-words-list denom,inTerm,inout,iput,nd,nin,numer,Wit,te,wee
+    - codespell --check-filenames --skip *.csv,*.dkvp,*.txt,*.js,*.html,*.map,./tags,./test/cases --ignore-words-list denom,inTerm,inout,iput,nd,nin,numer,Wit,te,wee
   o readthedocs triggers
+* sync-print option; or (yuck) another xprint variant; or ...; emph dump/eprint
+? trace-mode ?
+
+* release ordering?
+  o done: brew macports archlinux conda
+  o todo:
+    chocolatey
+    ubuntu debian fedora gentoo prolinux
+    netbsd freebsd
+    README-versions.md
+
+================================================================
+NON-BLOCKERS
 
 * doc
-  o new-in-miller-6: missing:
-    - dump syntax -- ?
-    - emittable constraints -- ?
   o wut h1 spacing before/after ...
   o shell-commands: while-read example from issues
-  ? special-symbols-and-formatting: How to escape '?' in regexes? -> still true? link to torbiak297?
   E reference-dsl-user-defined-functions: UDSes -> non-factorial example -- maybe some useful aggregator
   o reference-main-arithmetic: ? test stats1/step -F flag
   o reference-dsl-control-structures:
@@ -31,17 +39,11 @@ PUNCHDOWN LIST
     - needs UTs as well
   o while-read example from issues
 
-* release ordering?
-  conda
-  brew macports chocolatey
-  ubuntu debian fedora gentoo prolinux archlinux
-  netbsd freebsd
+* profile sort
 
-* post-release:
-  w installing-miller.md.in
+* RT ngrams.sh -v -o 1 one-word-list.txt
 
-================================================================
-NON-BLOCKERS
+* contact re https://jsonlines.org/on_the_web/
 
 * Better functions for values manipulation, e.g. easier conversion of strings like "$1,234.56" into numeric values
 
@@ -307,7 +309,7 @@ MAYBES
 
 * dotted-syntax support in verbs?
 
-* repl as verb -- ?  'put --repl' maybe
+* repl as verb -- ? 'put --repl' maybe
 
 * json-triple-quote -- what can be done here?
 

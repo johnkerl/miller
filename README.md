@@ -1,11 +1,11 @@
 # What is Miller?
 
-**Miller is like awk, sed, cut, join, and sort for data formats such as CSV, TSV, tabular JSON and positionally-indexed.**
+**Miller is like awk, sed, cut, join, and sort for data formats such as CSV, TSV, JSON, JSON Lines, and positionally-indexed.**
 
 # What can Miller do for me?
 
 With Miller, you get to use named fields without needing to count positional
-indices, using familiar formats such as CSV, TSV, JSON, and
+indices, using familiar formats such as CSV, TSV, JSON, JSON Lines, and
 positionally-indexed.  Then, on the fly, you can add new fields which are
 functions of existing fields, drop fields, sort, aggregate statistically,
 pretty-print, and more.
@@ -18,7 +18,7 @@ the latter is the array, then Miller's natural data structure is the
 insertion-ordered hash map.
 
 * Miller handles a **variety of data formats**,
-including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
+including but not limited to the familiar **CSV**, **TSV**, and **JSON**/**JSON Lines**.
 (Miller can handle **positionally-indexed data** too!)
 
 In the above image you can see how Miller embraces the common themes of
@@ -67,6 +67,8 @@ There's a good chance you can get Miller pre-built for your system:
 |Linux|`yum install miller`<br/> `apt-get install miller`|
 |Mac|`brew install miller`<br/>`port install miller`|
 |Windows|`choco install miller`|
+
+See also [README-versions.md](./README-versions.md) for a full list of package versions. Note that long-term-support (LtS) releases will likely be on older versions.
 
 See also [building from source](https://miller.readthedocs.io/en/latest/build.html).
 
@@ -136,7 +138,7 @@ system&rsquo;s available RAM, and you can use Miller in **tail -f** contexts.
 * Miller is **pipe-friendly** and interoperates with the Unix toolkit.
 
 * Miller's I/O formats include **tabular pretty-printing**, **positionally
-  indexed** (Unix-toolkit style), CSV, JSON, and others.
+  indexed** (Unix-toolkit style), CSV, TSV, JSON, JSON Lines, and others.
 
 * Miller does **conversion** between formats.
 
