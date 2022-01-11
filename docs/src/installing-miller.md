@@ -43,7 +43,7 @@ As a first check, you should be able to run `mlr --version` at your system's com
 <b>mlr --version</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-mlr 6.0.0-dev
+mlr 6.0.0
 </pre>
 
 If your Miller version is not 6 or above, please see the [release docs
