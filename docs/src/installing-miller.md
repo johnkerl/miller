@@ -46,7 +46,7 @@ As a first check, you should be able to run `mlr --version` at your system's com
 mlr 6.0.0
 </pre>
 
-If you Miller version is not 6 or above, please see the [release docs
+If your Miller version is not 6 or above, please see the [release docs
 page](release-docs.md) to find the documentation for your version.
 
 As a second check, given [example.csv](./example.csv) you should be able to do
