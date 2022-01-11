@@ -383,7 +383,7 @@ For the [third benchmark](https://github.com/johnkerl/miller/blob/main/scripts/c
 Notes:
 
 * CSV processing is particularly improved in Miller 6.
-* Record I/O is improved across the board, except that JSON continues to be a CPU-intensive format. Miller 6 JSON throughput is the same on Mac and Linux; Miller 5 did better on Miller 5 but only on Linux, not Mac.
+* Record I/O is improved across the board, except that JSON continues to be a CPU-intensive format. Miller 6 JSON throughput is the same on Mac and Linux; Miller 5 did better than Miller 6 but only on Linux, not Mac.
 * Miller 6's `sort` merits more performance analysis.
 * Even single-verb processing with `put` and `stats1` is significantly faster on both platforms.
 * Longer then-chains benefit even more from Miller 6's [multicore approach](cpu.md).
