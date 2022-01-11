@@ -275,10 +275,14 @@ IFS and IPS can be regular expressions now. Please see the section on [multi-cha
 
 Variables must be non-indexed on `emit`. To emit an indexed variable now requires the new `emit1` keyword.
 
+This worked in Miller 5 but is no longer supported in Miller 6:
+
 GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr5 -n put 'end {@input={"a":1}; emit @input["a"]}'
 input=1
 GENMD-EOF
+
+This works in Miller 6 (and worked in Miller 5 as well) and is supported:
 
 GENMD-RUN-COMMAND
 mlr -n put 'end {@input={"a":1}; emit1 {"input":@input["a"]}}'
