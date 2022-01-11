@@ -169,7 +169,7 @@ For [maps](reference-main-maps.md), the first loop variable is the key and the
 second is the value; for [arrays](reference-main-arrays.md), the first loop
 variable is the (1-up) array index and the second is the value.
 
-Single-level keys may be gotten at using either `for(k,v)` or `for((k),v)`; multi-level keys may be gotten at using `for((k1,k2,k3),v)` and so on.  The `v` variable will be bound to to a scalar value (non-array/non-map) if the map stops at that level, or to a map-valued or array-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
+Single-level keys may be gotten at using either `for(k,v)` or `for((k),v)`; multi-level keys may be gotten at using `for((k1,k2,k3),v)` and so on.  The `v` variable will be bound to a scalar value (non-array/non-map) if the map stops at that level, or to a map-valued or array-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
 
 GENMD-RUN-COMMAND
 cat data/for-srec-example.tbl
