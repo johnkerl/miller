@@ -2,7 +2,7 @@
 
 ## Input scanning
 
-Numbers in Miller are double-precision float or 64-bit signed integers. Anything scannable as int, e.g `123` or `0xabcd`, is treated as an integer; otherwise, input scannable as float (`4.56` or `8e9`) is treated as float; everything else is a string.
+Numbers in Miller are double-precision float or 64-bit signed integers. Anything scannable as int, e.g `123` or `0xabcd`, is treated as an integer; otherwise, input scannable as float (`4.56` or `8e9`) is treated as float; everything else is a string. Prefixes include `0x` for hexadecimal, e.g. `0xff` is 255 in decimal; `0o` for octal, e.g. `0x377` is 255 in decimal; and `0b`, e.g. `0b1101` is 13 in decimal.
 
 Three flags control input-scanning for numbers: `mlr -O`, `mlr -A`, and `mlr -S`.
 
