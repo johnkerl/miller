@@ -1,5 +1,5 @@
 mlr: cannot parse DSL expression.
-Parse error on token "x" at line 20 columnn 5.
+Parse error on token "x" at line 20 column 5.
 Please check for missing semicolon.
 Expected one of:
   ; { } = > >> | ( ||= ^^= &&= ??= ???= |= &= ^= <<= >>= >>>= += .= -= *=

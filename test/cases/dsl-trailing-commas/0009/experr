@@ -1,5 +1,5 @@
 mlr: cannot parse DSL expression.
-Parse error on token "," at line 1 columnn 37.
+Parse error on token "," at line 1 column 37.
 Expected one of:
   { ( ) field_name $[ braced_field_name $[[ $[[[ full_srec oosvar_name @[
   braced_oosvar_name full_oosvar all non_sigil_name float int + - .+ .- !

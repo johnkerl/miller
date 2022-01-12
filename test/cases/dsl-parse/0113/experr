@@ -1,5 +1,5 @@
 mlr: cannot parse DSL expression.
-Parse error on token "`" at line 20 columnn 3.
+Parse error on token "`" at line 20 column 3.
 Please check for missing semicolon.
 Expected one of:
   ; { } unset filter print printn eprint eprintn dump edump tee emitf emit1
