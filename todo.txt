@@ -6,43 +6,104 @@ RELEASES
 ================================================================
 FEATURES
 
-* better print-interpolate with {} etc
-* Better functions for values manipulation, e.g. easier conversion of strings like "$1,234.56" into numeric values
-  o Ability to specify some formats that are fixed. Like we can process
-  "5d18h53m20s" format in *dhms* commands, but what about "5-18:53:20"? This is
-  a common format used by the SLURM resource manager.
-* sysdate, sysdate_local; datediff ...
-* strmatch https://github.com/johnkerl/miller/issues/77#issuecomment-538790927
-* sliding window / moving average
-* shift_lead and shift_lag steps
-* CSV default unsparsify ... note this must trust the *first* record .......
-* rank
-* DKVP encodings/decodings for \n etc
+! better print-interpolate with {} etc
+! Better functions for values manipulation, e.g. easier conversion of strings like "$1,234.56" into numeric values
+  o 'Ability to specify some formats that are fixed. Like we can process
+    "5d18h53m20s" format in *dhms* commands, but what about "5-18:53:20"? This is
+    a common format used by the SLURM resource manager.'
+  o generalize dhms w/ sscanf-style something -- ?
+! sysdate, sysdate_local; datediff ...
+! strmatch https://github.com/johnkerl/miller/issues/77#issuecomment-538790927
+! sliding window / moving average
+  o port u/window*.mlr from mlrc to mlr (actually, fix mlr of course)
+  o sliding-window averages into mapper step (C + Go)
+! shift_lead and shift_lag steps
+! rank
+! CSV default unsparsify ... note this must trust the *first* record .......
 
+! quoted NIDX
+  - how with whitespace regex -- ?
+! quoted DKVP
+  - what about csvlite-style -- ? needs a --dkvplite ?
+! pprint emit on schema change, not all-at-end.
+
+* new columns-to-arrays and arrays-to-columns for stan format
+* transpose ...
+* DKVP encodings/decodings for \n etc; non-lite DKVP reader -- or nah? broken already for these cases
 * csvstat / Panda's describe
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
-? BIFs as FCFs?
+* non-streaming DSL-enabled cut: https://github.com/johnkerl/miller/discussions/613
+
 * pv: 'mlr --prepipex pv --gzin tail -n 10 ~/tmp/zhuge.gz' needs --gzin & --prepipex both
   o plus corresponding docwork
 * -W to mlr main also -- so it can be used with .mlrrc
+
+? json-triple-quote -- what can be done here?
+? dotted-syntax support in verbs?
+? full format-string parser for corner cases like "X%08lldX"
+? array and string slices on LHS of assignments
+? feature/shorthand for repl newline before prompt
+? meta: nr, nf, keys
+? BIFs as FCFs?
 ? IP addresses and ranges as a datatype so one could do membership tests like "if 10.10.10.10 in 10.0.0.0/8".
 ? push/pop/shift/unshift functions
+? IIFEs: 'func f = (func(){ return udf})()'
+? non-top-level func defs
+? support 'x[1]["a"]' etc notation in various verbs?
+? sort within nested data structures?
+? ast-parex separate mlr auxents entrypoint?
+? het ifmt-reading
+  - separate out InputFormat into per-file (or tbd) & have autodetect on file endings -- ?
+  - maybe a TBD reader -- ?
+  - InputFormat into Context
+  - TBD writer -- defer factory until first context?
+  - deeper refactor pulling format out of reader/writer options entirely -- ?
+? multiple-valued return/assign -- ?
+  ? array destructure at LHS for multi-retval assign (maps too?)
+? new file formats
+  o https://brandur.org/logfmt is simply DKVP w/ IFS = space (need dquot though)
+  o https://docs.fluentbit.io/manual/pipeline/parsers/ltsv is just DKVP with IFS tab and IPS colon
+? string/array slices on assignment LHS -- ?
+? zip -- but that is an archive case too not just an encoding case
+  ? miller support for archive-traversal; directory-traversal even w/o zip -- ?
+  ? as 6.1 follow-on work -- ?
+
+* mlr -k
+  o various test cases
+  o OLH re limitations
+  o check JSON-parser x 2 -- is there really a 'restart'?
+    - infinite-loop avoidance for sure
 
 ================================================================
 UX
 
-* broadly rethink os.Exit, especially as affecting mlr repl
+! bnf fix for '[[' ']]' etc -- make it a nesting of singles. since otherwise no '[[3,4]]' literals :(
+! broadly rethink os.Exit, especially as affecting mlr repl
+
+* consider expanding '(error)' to have more useful error-text
 * sync-print option; or (yuck) another xprint variant; or ...; emph dump/eprint
-? trace-mode ?
 * strptime w/ ...00.Z -> error
-* main-level (verb-level?) flag for "," -> X in verbs -- in case commas in field names
-* bnf fix for '[[' ']]' etc -- make it a nesting of singles. since otherwise no '[[3,4]]' literals :(
+* short 'asserting' functions (absent/error); and/or strict or somesuch (DSL, or global ...)
+* header-only csv ... reminder ...
+* bash completion script https://github.com/johnkerl/miller/issues/77#issuecomment-308247402
+  https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial#:~:text=Bash%20completion%20is%20a%20functionality,key%20while%20typing%20a%20command.
+* tilde-expand for REPL load/open: if '~' is at the start of the string, run it though 'sh -c echo'
+  o or, simpler, just slice[1:] and prepend with os.Getenv("HOME")
+
+? $0 as raw-record string -- ? would make mlr grep simpler and more natural ...
+? fmtnum(98, "%3d%%") -- ? workaround: fmtnum(98, "%3d") . "%"
+? main-level (verb-level?) flag for "," -> X in verbs -- in case commas in field names
+? trace-mode ?
+? re silent zero-pass for-loops on non-collections:
+  o intended as a heterogenity feature ...
+  o consider a --errors or --strict mode; something
 
 ================================================================
 DOC
 
 ! link to SE table ...
   https://github.com/johnkerl/miller/discussions/609#discussioncomment-1115715
+
 * document cloudthings, e.g.
   o go.yml
   o codespell.yml
@@ -78,12 +139,26 @@ w contact re https://jsonlines.org/on_the_web/
 * back-incompat:
   mlr -n put $vflag '@x=1; dump > stdout, @x'
   mlr -n put $vflag '@x=1; dump > stdout @x'
+* single cheatsheet page -- put out RFH?
+  https://twitter.com/icymi_py/status/1426622817785765898/photo/1
+* more about HTTP logs in miller -- doc and encapsulate:
+  mlr --icsv --implicit-csv-header --ifs space --oxtab --from elb-log put -q 'print $27'
+* hofs section on typedecls
+* write up how git status after test should show any missed extra-outs
+* docs nest simplers now that we have getoptish
+* zlib: n.b. brew install pigz, then pigz -z
+* doc shift/unshift as using [2:] and append
+* comment schema-change supported only in csvlite reader, not csv reader
+* consider -w/-W to stderr not stdout -- ?
+
+? grep out all error message from regtest outputs & doc them all & make sure index-searchable at readthedocs
 
  ===============================================================
 TESTING
 
+! pos/neg 0x/0b/0o UTs
+
 * RT ngrams.sh -v -o 1 one-word-list.txt
-* pos/neg 0x/0b/0o UTs
 * JIT UT:
   o JSON I/O
   o mlrval_cmp.go
@@ -91,11 +166,14 @@ TESTING
   o dash-O and octal infer
   o populate each bifs/X_test.go for each bifs/X.go etc etc
 * xtab splitter UT; nidx too
+* hofs+typedecls RT cases
+* UT per se for lrec ops
 
 ================================================================
 PERFORMANCE
 
-* profile sort
+! profile sort
+
 * JSON perf -- try alternate packages to encoding/json
 * more perf?
   - batchify source-quench -- experiment 1st
@@ -105,10 +183,11 @@ PERFORMANCE
 ================================================================
 CODE-NEATENS / QUALITY
 
-* ast namings etc
+! ast namings etc
   ? make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
+! broad commenting pass / TODO
+
 * []Mlrval -> []*Mlrval ?
-* broad commenting pass / TODO
 * cmp for array & map
 o JIT neatens
   - carefully read all $mlv files
@@ -118,153 +197,36 @@ o JIT neatens
 * https://staticcheck.io/docs
   o lots of nice little things to clean up -- no bugs per se, all stylistic i *think* ...
 * funcptr away the ifs/ifsregex check in record-readers
-* golinter?
 * all case-files could use top-notes
 * godoc neatens at func/const/etc level
-
-================================================================
-TBF
-
-* fmtnum(98, "%3d%%") -- ? workaround: fmtnum(98, "%3d") . "%"
-
-* hofs section on typedecls
-  o hofs+typedecls RT cases
-
-* meta: nr, nf, keys
-* transpose ...
-
-* consider expanding '(error)' to have more useful error-text
-
-* mlr -k
-  o various test cases
-  o OLH re limitations
-  o check JSON-parser x 2 -- is there really a 'restart'?
-    - infinite-loop avoidance for sure
-
-* non-streaming DSL-enabled cut
-  https://github.com/johnkerl/miller/discussions/613
-
-* single cheatsheet page -- put out RFH?
-  https://twitter.com/icymi_py/status/1426622817785765898/photo/1
-
-? $0 as raw-record string -- ? would make mlr grep simpler and more natural ...
-
-* IIFEs: 'func f = (func(){ return udf})()'
-* BIFs in non-sigil context (UDFs already are)
-* non-top-level func defs
-
-* non-lite DKVP reader/writer
-
-* full format-string parser for corner cases like "X%08lldX"
-
-* non-blocker: array and string slices on LHS of assignments
-
-* non-blocker: feature/shorthand for repl newline before prompt
-
-* non-blocker: new functions:
-  o new columns-to-arrays and arrays-to-columns for stan format
-
-? gzout, bz2out -- ? make sure this works through tee? bleah ...
-? zip -- but that is an archive case too not just an encoding case
-  ? miller support for archive-traversal; directory-traversal even w/o zip -- ?
-  ? as 6.1 follow-on work -- ?
-
-* more about HTTP logs in miller -- doc and encapsulate:
-  mlr --icsv --implicit-csv-header --ifs space --oxtab --from elb-log put -q 'print $27'
-
-* also: write up how git status after test should show any missed extra-outs
-
-* https://segment.com/blog/allocation-efficiency-in-high-performance-go-services/
-
-* formats
-  o https://brandur.org/logfmt is simply DKVP w/ IFS = space (need dquot though)
-  o https://docs.fluentbit.io/manual/pipeline/parsers/ltsv is just DKVP with IFS tab and IPS colon
-* do some profiling every so often
-
-* bash completion script https://github.com/johnkerl/miller/issues/77#issuecomment-308247402
-  https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial#:~:text=Bash%20completion%20is%20a%20functionality,key%20while%20typing%20a%20command.
-
-* sliding-window averages into mapper step (C + Go)
-
-* double-check rand-seeding
-  o all rand invocations should go through the seeder for UT/other determinism
-
-! quoted NIDX
-  - how with whitespace regex -- ?
-! quoted DKVP
-  - what about csvlite-style -- ? needs a --dkvplite ?
-! pprint emit on schema change, not all-at-end.
-
-* widen DSL coverage
-  o err-return for array/map get/put if incorrect types ... currently go-void ...
-    ! the DSL needs a full, written-down-and-published spell-out of error-eval semantics
-  o multiple-valued return/assign -- ?
-    - array destructure at LHS for multi-retval assign (maps too?)
-
-* UT per se for lrec ops
-
-* libify errors.New callsites for DSL/CST
-* record-readers are fully in-channel/loop; record-writers are multi with in-channel/loop being
-  done by ChannelWriter, which is very small. opportunity to refactor.
-* empty csv ... reminder ...
-
-* het ifmt-reading
-  - separate out InputFormat into per-file (or tbd) & have autodetect on file endings -- ?
-  - maybe a TBD reader -- ?
-  - InputFormat into Context
-  - TBD writer -- defer factory until first context?
-  - deeper refactor pulling format out of reader/writer options entirely -- ?
-
-* dotted-syntax support in verbs?
-* json-triple-quote -- what can be done here?
-
 * unset, unassign, remove -- too many different names. also assign/put ... maybe stick w/ 2?
-* go exe 17MB, wut. try to discover. (gocc presumably but verify.)
-* fill-down make columns required. also, --all.
 * check triple-dash at mlr fill-down-h ; check others
 * clean up unused exitCode arg in sort/put usage.
   o also document pre/post conditions for flag and non-flag usages x all mappers
-? emit @x or emit x -- should make k/v pairs w/ "x" & value -- ? check against C impl
-i emitp/emitf -- note for-loops didn't appear until 4.1.0 & emits are much older (emitp 3.5.0).
-  if i were starting clean-slate, i'd have had just a single `emit`.
-* asserting_{type}: os.Exit(1) -> return nil, err flow?
-* bitwise_and_dispositions et al should not have _absn for collections -- _erro instead
-* ast-parex separate mlr auxents entrypoint?
-* port u/window*.mlr from mlrc to mlr (actually, fix mlr of course)
-* comment schema-change supported only in csvlite reader, not csv reader
-* for-multi: C semantics 'k1: data k2: a:x v:1', sigh ...
 * neaten mlr gap -g (default) print
-! write out thorough min/max/cmp cases for all orderings by type
-* silent zero-pass for-loops on non-collections:
-  o intended as a heterogenity feature ...
-  o consider a --errors or --strict mode; something
-* [[...]] / [[[...]]]:
-  o put '$array = [1,2,3,[4,5]]' is a syntax error unfortunately; need '$array = [1,2,3,[4,5] ]'
-i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
-* grep out all error message from regtest outputs & doc them all & make sure index-searchable at readthedocs
-* short 'asserting' functions (absent/error); and/or put --strict or somesuch
+* typedecls w/ for-multi: C semantics 'k1: data k2: a:x v:1', sigh ...
+* fill-down make columns required. also, --all.
+* bitwise_and_dispositions et al should not have _absn for collections -- _erro instead
+* libify errors.New callsites for DSL/CST
+* record-readers are fully in-channel/loop; record-writers are multi with in-channel/loop being
+  done by ChannelWriter, which is very small. opportunity to refactor.
+* widen DSL coverage
+  o err-return for array/map get/put if incorrect types ... currently go-void ...
+    ! the DSL needs a full, written-down-and-published spell-out of error-eval semantics
+* double-check rand-seeding
+  o all rand invocations should go through the seeder for UT/other determinism
 * dev-note on why `int` not `int64` -- processor-arch & those who most need it get it
-* tilde-expand for REPL load/open: if '~' is at the start of the string, run it though 'sh -c echo'
-  o or, simpler, just slice[1:] and prepend with os.Getenv("HOME")
-* doc shift/unshift as using [2:] and append
-? ctx invars -> ptr w/ cmt
-? string/array slices on assignment LHS -- ?
-* beyond:
-  o support 'x[1]["a"]' etc notation in various verbs?
-  o sort within nested data structures?
-  o array-sort, map-key sort, map-value sort in the DSL?
-  o closures for sorting and more -- ?!?
-  o or maybe just use UDFs ...
-* consider -w/-W to stderr not stdout -- ?
-* doc6 re warnings
-* zlib: n.b. brew install pigz, then pigz -z
-* regex-capture follow-on: https://github.com/johnkerl/miller/issues/388 is much cleaner
-  o keep current syntax for backward compatibility
-  o but encourage use of this
-* docs nest simplers now that we have getoptish
+
+? gzout, bz2out -- ? make sure this works through tee? bleah ...
+? golinter?
+? go exe 17MB b/c gocc -- gogll ?
 
 ================================================================
 INFO
+
+i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
+
+i https://segment.com/blog/allocation-efficiency-in-high-performance-go-services/
 
 i go tool nm -size mlr | sort -nrk 2
 
