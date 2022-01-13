@@ -33,7 +33,7 @@ k better print-interpolate with {} etc
 * new columns-to-arrays and arrays-to-columns for stan format
 * transpose ...
 * DKVP encodings/decodings for \n etc; non-lite DKVP reader -- or nah? broken already for these cases
-* csvstat / Panda's describe
+* csvstat / pandas describe
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
 * non-streaming DSL-enabled cut: https://github.com/johnkerl/miller/discussions/613
 
