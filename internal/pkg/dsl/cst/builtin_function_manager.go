@@ -523,6 +523,31 @@ each "{}" in the format string. Too-few arguments are treated as the empty strin
 			variadicFunc: bifs.BIF_format,
 		},
 
+		{
+			name:  "unformat",
+			class: FUNC_CLASS_STRING,
+			help: `Using first argument as format string, unpacks second argument into an array of matches,
+with type-inference. On non-match, returns error -- use is_error() to check.`,
+			examples: []string{
+				`unformat("{}:{}:{}",  "1:2:3") gives [1, 2, 3]".`,
+				`unformat("{}h{}m{}s", "3h47m22s") gives [3, 47, 22]".`,
+				`is_error(unformat("{}h{}m{}s", "3:47:22")) gives true.`,
+			},
+			binaryFunc: bifs.BIF_unformat,
+		},
+
+		{
+			name:  "unformatx",
+			class: FUNC_CLASS_STRING,
+			help:  `Same as unformat, but without type-inference.`,
+			examples: []string{
+				`unformatx("{}:{}:{}",  "1:2:3") gives ["1", "2", "3"]".`,
+				`unformatx("{}h{}m{}s", "3h47m22s") gives ["3", "47", "22"]".`,
+				`is_error(unformatx("{}h{}m{}s", "3:47:22")) gives true.`,
+			},
+			binaryFunc: bifs.BIF_unformatx,
+		},
+
 		// ----------------------------------------------------------------
 		// FUNC_CLASS_HASHING
 

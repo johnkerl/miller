@@ -6,12 +6,15 @@ RELEASES
 ================================================================
 FEATURES
 
-! better print-interpolate with {} etc
 ! Better functions for values manipulation, e.g. easier conversion of strings like "$1,234.56" into numeric values
+  o note on is_error(x) (or string(x) == "(error)")
+  ?  dhms w/ optional separgs -- ? what about fenceposting? ["d","h","m","s"] vs ["-",":",":",""] -- ?
   o 'Ability to specify some formats that are fixed. Like we can process
     "5d18h53m20s" format in *dhms* commands, but what about "5-18:53:20"? This is
     a common format used by the SLURM resource manager.'
-  o generalize dhms w/ sscanf-style something -- ?
+  o linked-to faqent w/ -f -s etc ...
+  o ... AND, if it's frequent then submit a feature request b/c other people probably also would like it! :)
+k better print-interpolate with {} etc
 ! sysdate, sysdate_local; datediff ...
 ! strmatch https://github.com/johnkerl/miller/issues/77#issuecomment-538790927
 ! sliding window / moving average
