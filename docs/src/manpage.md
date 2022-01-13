@@ -205,9 +205,9 @@ FUNCTION LIST
        asserting_map asserting_nonempty_map asserting_not_array asserting_not_empty
        asserting_not_map asserting_not_null asserting_null asserting_numeric
        asserting_present asserting_string atan atan2 atanh bitcount boolean
-       capitalize cbrt ceil clean_whitespace collapse_whitespace cos cosh depth
-       dhms2fsec dhms2sec erf erfc every exp expm1 flatten float floor fmtnum fold
-       fsec2dhms fsec2hms get_keys get_values gmt2localtime gmt2sec gsub haskey
+       capitalize cbrt ceil clean_whitespace collapse_whitespace concat cos cosh
+       depth dhms2fsec dhms2sec erf erfc every exp expm1 flatten float floor fmtnum
+       fold fsec2dhms fsec2hms get_keys get_values gmt2localtime gmt2sec gsub haskey
        hexfmt hms2fsec hms2sec hostname int invqnorm is_absent is_array is_bool
        is_boolean is_empty is_empty_map is_error is_float is_int is_map
        is_nonempty_map is_not_array is_not_empty is_not_map is_not_null is_null
@@ -2077,6 +2077,13 @@ FUNCTIONS FOR FILTER/PUT
    collapse_whitespace
         (class=string #args=1) Strip repeated whitespace from string.
 
+   concat
+        (class=collections #args=variadic) Returns the array concatenation of the arguments. Non-array arguments are treated as single-element arrays.
+       Examples:
+       concat(1,2,3) is [1,2,3]
+       concat([1,2],3) is [1,2,3]
+       concat([1,2],[3]) is [1,2,3]
+
    cos
         (class=math #args=1) Trigonometric cosine.
 
@@ -3054,5 +3061,5 @@ SEE ALSO
 
 
 
-                                  2022-01-11                         MILLER(1)
+                                  2022-01-13                         MILLER(1)
 </pre>
