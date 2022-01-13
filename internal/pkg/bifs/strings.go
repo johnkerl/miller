@@ -335,6 +335,67 @@ func BIF_format(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromString(buffer.String())
 }
 
+// unformat("{}:{}:{}",  "1:2:3")    gives [1, 2]
+// unformat("{}h{}m{}s", "3h47m22s") gives [3, 47, 22]
+func BIF_unformat(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_unformat_aux(input1, input2, true)
+}
+func BIF_unformatx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_unformat_aux(input1, input2, false)
+}
+
+func bif_unformat_aux(input1, input2 *mlrval.Mlrval, inferTypes bool) *mlrval.Mlrval {
+	template, ok1 := input1.GetStringValue()
+	if !ok1 {
+		return mlrval.ERROR
+	}
+	input, ok2 := input2.GetStringValue()
+	if !ok2 {
+		return mlrval.ERROR
+	}
+
+	templatePieces := strings.Split(template, "{}")
+	output := mlrval.FromEmptyArray()
+
+	// template "{}h{}m{}s"
+	// input    "12h34m56s"
+	// templatePieces   ["", "h", "m", "s"]
+
+	remaining := input
+
+	if !strings.HasPrefix(remaining, templatePieces[0]) {
+		return mlrval.ERROR
+	}
+	remaining = remaining[len(templatePieces[0]):]
+	templatePieces = templatePieces[1:]
+
+	n := len(templatePieces)
+	for i, templatePiece := range templatePieces {
+
+		var index int
+		if i == n-1 && templatePiece == "" {
+			// strings.Index("", ...) will match the *start* of what's
+			// remaining, whereas we want it to match the end.
+			index = len(remaining)
+		} else {
+			index = strings.Index(remaining, templatePiece)
+			if index < 0 {
+				return mlrval.ERROR
+			}
+		}
+
+		inputPiece := remaining[:index]
+		remaining = remaining[index+len(templatePiece):]
+		if inferTypes {
+			output.ArrayAppend(mlrval.FromInferredType(inputPiece))
+		} else {
+			output.ArrayAppend(mlrval.FromString(inputPiece))
+		}
+	}
+
+	return output
+}
+
 // ================================================================
 func BIF_hexfmt(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsInt() {

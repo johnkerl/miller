@@ -6,7 +6,7 @@ RELEASES
 ================================================================
 FEATURES
 
-! better print-interpolate with {} etc
+k better print-interpolate with {} etc
 ! Better functions for values manipulation, e.g. easier conversion of strings like "$1,234.56" into numeric values
   o 'Ability to specify some formats that are fixed. Like we can process
     "5d18h53m20s" format in *dhms* commands, but what about "5-18:53:20"? This is
