@@ -539,7 +539,7 @@ with type-inference. On non-match, returns error -- use is_error() to check.`,
 		{
 			name:  "unformatx",
 			class: FUNC_CLASS_STRING,
-			help: `Same as unformat, but without type-inference.`,
+			help:  `Same as unformat, but without type-inference.`,
 			examples: []string{
 				`unformatx("{}:{}:{}",  "1:2:3") gives ["1", "2", "3"]".`,
 				`unformatx("{}h{}m{}s", "3h47m22s") gives ["3", "47", "22"]".`,
