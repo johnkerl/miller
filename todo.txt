@@ -80,6 +80,8 @@ UX
 ! bnf fix for '[[' ']]' etc -- make it a nesting of singles. since otherwise no '[[3,4]]' literals :(
 ! broadly rethink os.Exit, especially as affecting mlr repl
 
+* ?xyz and ??xyz in repl, for :help and :help find respectively
+
 * consider expanding '(error)' to have more useful error-text
 * sync-print option; or (yuck) another xprint variant; or ...; emph dump/eprint
 * strptime w/ ...00.Z -> error

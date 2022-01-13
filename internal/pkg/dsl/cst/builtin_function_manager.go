@@ -510,6 +510,19 @@ Arrays are new in Miller 6; the substr function is older.`,
 			binaryFunc: bifs.BIF_truncate,
 		},
 
+		{
+			name:  "format",
+			class: FUNC_CLASS_STRING,
+			help: `Using first argument as format string, interpolate remaining arguments in place of
+each "{}" in the format string. Too-few arguments are treated as the empty string; too-many arguments are discarded.`,
+			examples: []string{
+				`format("{}:{}:{}", 1,2)     gives "1:2:".`,
+				`format("{}:{}:{}", 1,2,3)   gives "1:2:3".`,
+				`format("{}:{}:{}", 1,2,3,4) gives "1:2:3".`,
+			},
+			variadicFunc: bifs.BIF_format,
+		},
+
 		// ----------------------------------------------------------------
 		// FUNC_CLASS_HASHING
 

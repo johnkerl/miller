@@ -28,6 +28,11 @@ Options:
                     with s in them. Undefined behavior results otherwise.
 -n                  Coerce field values autodetected as int to float, and then
                     apply the float format.
+format  (class=string #args=variadic) Using first argument as format string, interpolate remaining arguments in place of each "{}" in the format string. Too-few arguments are treated as the empty string; too-many arguments are discarded.
+Examples:
+format("{}:{}:{}", 1,2)     gives "1:2:".
+format("{}:{}:{}", 1,2,3)   gives "1:2:3".
+format("{}:{}:{}", 1,2,3,4) gives "1:2:3".
 for: defines a for-loop using one of three styles. The body statements must
 be wrapped in curly braces.
 For-loop over stream record:

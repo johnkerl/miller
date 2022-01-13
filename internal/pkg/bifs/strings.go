@@ -1,6 +1,7 @@
 package bifs
 
 import (
+	"bytes"
 	"regexp"
 	"strconv"
 	"strings"
@@ -285,6 +286,53 @@ func BIF_clean_whitespace(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 			input1, WhitespaceRegexp(),
 		),
 	)
+}
+
+// ================================================================
+func BIF_format(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
+	if len(mlrvals) == 0 {
+		return mlrval.VOID
+	}
+	formatString, ok := mlrvals[0].GetStringValue()
+	if !ok { // not a string
+		return mlrval.ERROR
+	}
+
+	pieces := lib.SplitString(formatString, "{}")
+
+	var buffer bytes.Buffer
+
+	// Example: format("{}:{}", 8, 9)
+	//
+	// * piece[0] ""
+	// * piece[1] ":"
+	// * piece[2] ""
+	// * mlrval[1] 8
+	// * mlrval[2] 9
+	//
+	// So:
+	// * Write piece[0]
+	// * Write mlrvals[1]
+	// * Write piece[1]
+	// * Write mlrvals[2]
+	// * Write piece[2]
+
+	// Q: What if too few arguments for format?
+	// A: Leave them off
+	// Q: What if too many arguments for format?
+	// A: Leave them off
+
+	n := len(mlrvals)
+	for i, piece := range pieces {
+		if i > 0 {
+			if i < n {
+				buffer.WriteString(mlrvals[i].String())
+			}
+		}
+		buffer.WriteString(piece)
+	}
+
+	return mlrval.FromString(buffer.String())
 }
 
 // ================================================================

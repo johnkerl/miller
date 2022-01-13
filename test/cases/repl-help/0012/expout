@@ -13,3 +13,8 @@ For-loop over out-of-stream variables:
 C-style for-loop:
 
   Example:  'for (var i = 0, var b = 1; i < 10; i += 1, b *= 2) { ... }'
+format  (class=string #args=variadic) Using first argument as format string, interpolate remaining arguments in place of each "{}" in the format string. Too-few arguments are treated as the empty string; too-many arguments are discarded.
+Examples:
+format("{}:{}:{}", 1,2)     gives "1:2:".
+format("{}:{}:{}", 1,2,3)   gives "1:2:3".
+format("{}:{}:{}", 1,2,3,4) gives "1:2:3".
