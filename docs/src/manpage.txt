@@ -186,9 +186,9 @@ FUNCTION LIST
        asserting_present asserting_string atan atan2 atanh bitcount boolean
        capitalize cbrt ceil clean_whitespace collapse_whitespace concat cos cosh
        depth dhms2fsec dhms2sec erf erfc every exp expm1 flatten float floor fmtnum
-       fold fsec2dhms fsec2hms get_keys get_values gmt2localtime gmt2sec gsub haskey
-       hexfmt hms2fsec hms2sec hostname int invqnorm is_absent is_array is_bool
-       is_boolean is_empty is_empty_map is_error is_float is_int is_map
+       fold format fsec2dhms fsec2hms get_keys get_values gmt2localtime gmt2sec gsub
+       haskey hexfmt hms2fsec hms2sec hostname int invqnorm is_absent is_array
+       is_bool is_boolean is_empty is_empty_map is_error is_float is_int is_map
        is_nonempty_map is_not_array is_not_empty is_not_map is_not_null is_null
        is_numeric is_present is_string joink joinkv joinv json_parse json_stringify
        leafcount length localtime2gmt localtime2sec log log10 log1p logifit lstrip
@@ -2117,6 +2117,13 @@ FUNCTIONS FOR FILTER/PUT
        Examples:
        Array example: fold([1,2,3,4,5], func(acc,e) {return acc + e**3}, 10000) returns 10225.
        Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum": accv+ev**2}}, {"sum":10000}) returns 10035.
+
+   format
+        (class=string #args=variadic) Using first argument as format string, interpolate remaining arguments in place of each "{}" in the format string. Too-few arguments are treated as the empty string; too-many arguments are discarded.
+       Examples:
+       format("{}:{}:{}", 1,2)     gives "1:2:".
+       format("{}:{}:{}", 1,2,3)   gives "1:2:3".
+       format("{}:{}:{}", 1,2,3,4) gives "1:2:3".
 
    fsec2dhms
         (class=time #args=1) Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
