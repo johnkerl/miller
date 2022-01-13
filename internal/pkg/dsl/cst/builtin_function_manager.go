@@ -1495,6 +1495,19 @@ strftime_local.`,
 		},
 
 		{
+			name:  "concat",
+			class: FUNC_CLASS_COLLECTIONS,
+			help: `Returns the array concatenation of the arguments. Non-array arguments are treated as
+single-element arrays.`,
+			examples: []string{
+				`concat(1,2,3) is [1,2,3]`,
+				`concat([1,2],3) is [1,2,3]`,
+				`concat([1,2],[3]) is [1,2,3]`,
+			},
+			variadicFunc: bifs.BIF_concat,
+		},
+
+		{
 			name:      "depth",
 			class:     FUNC_CLASS_COLLECTIONS,
 			help:      "Prints maximum depth of map/array. Scalars have depth 0.",

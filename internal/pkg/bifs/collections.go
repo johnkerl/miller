@@ -188,6 +188,24 @@ func BIF_haskey(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // ================================================================
+func BIF_concat(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
+	output := mlrval.FromEmptyArray()
+
+	for _, arg := range mlrvals {
+		argArray := arg.GetArray()
+		if argArray == nil { // not an array
+			output.ArrayAppend(arg.Copy())
+		} else {
+			for i := range argArray {
+				output.ArrayAppend(argArray[i].Copy())
+			}
+		}
+	}
+
+	return output
+}
+
+// ================================================================
 func BIF_mapselect(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) < 1 {
 		return mlrval.ERROR
