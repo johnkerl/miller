@@ -36,6 +36,7 @@ UX
 ? trace-mode ?
 * strptime w/ ...00.Z -> error
 * main-level (verb-level?) flag for "," -> X in verbs -- in case commas in field names
+* bnf fix for '[[' ']]' etc -- make it a nesting of singles. since otherwise no '[[3,4]]' literals :(
 
 ================================================================
 DOC
