@@ -1105,15 +1105,27 @@ GENMD-EOF
 Note that `top` is distinct from [head](reference-verbs.md#head) -- `head` shows fields which appear first in the data stream; `top` shows fields which are numerically largest (or smallest).
 
 GENMD-RUN-COMMAND
-mlr --opprint top -n 4 -f x data/medium
+mlr --c2p cat example.csv
 GENMD-EOF
 
 GENMD-RUN-COMMAND
-mlr --opprint top -n 4 -f x -o someothername data/medium
+mlr --c2p top -n 1 -f quantity example.csv
 GENMD-EOF
 
 GENMD-RUN-COMMAND
-mlr --opprint top -n 2 -f x -g a then sort -f a data/medium
+mlr --c2p top -n 1 -f quantity -g shape example.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p top -n 1 -f quantity -g shape -o someothername example.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p top -n 1 -f quantity -g shape -a example.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p top -n 1 -f quantity -g shape -a then sort -f shape example.csv
 GENMD-EOF
 
 ## unflatten

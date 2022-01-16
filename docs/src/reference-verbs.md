@@ -3564,49 +3564,79 @@ Usage: mlr top [options]
 --min         Print top smallest values; default is top largest values.
 -F            Keep top values as floats even if they look like integers.
 -o {name}     Field name for output indices. Default "top_idx".
+              This is ignored if -a is used.
 Prints the n records with smallest/largest values at specified fields,
-optionally by category.
+optionally by category. If -a is given, then the top records are emitted
+with the same fields as they appeared in the input. Without -a, only fields
+from -f, fields from -g, and the top-index field are emitted. For more information
+please see https://miller.readthedocs.io/en/latest/reference-verbs#top
 </pre>
 
 Note that `top` is distinct from [head](reference-verbs.md#head) -- `head` shows fields which appear first in the data stream; `top` shows fields which are numerically largest (or smallest).
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint top -n 4 -f x data/medium</b>
+<b>mlr --c2p cat example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-top_idx x_top
-1       0.999952670371898
-2       0.9998228522652893
-3       0.99973332327313
-4       0.9995625801977208
+color  shape    flag  k  index quantity rate
+yellow triangle true  1  11    43.6498  9.8870
+red    square   true  2  15    79.2778  0.0130
+red    circle   true  3  16    13.8103  2.9010
+red    square   false 4  48    77.5542  7.4670
+purple triangle false 5  51    81.2290  8.5910
+red    square   false 6  64    77.1991  9.5310
+purple triangle false 7  65    80.1405  5.8240
+yellow circle   true  8  73    63.9785  4.2370
+yellow circle   true  9  87    63.5058  8.3350
+purple square   false 10 91    72.3735  8.2430
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint top -n 4 -f x -o someothername data/medium</b>
+<b>mlr --c2p top -n 1 -f quantity example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-someothername x_top
-1             0.999952670371898
-2             0.9998228522652893
-3             0.99973332327313
-4             0.9995625801977208
+top_idx quantity_top
+1       81.2290
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint top -n 2 -f x -g a then sort -f a data/medium</b>
+<b>mlr --c2p top -n 1 -f quantity -g shape example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   top_idx x_top
-eks 1       0.9988110946859143
-eks 2       0.9985342548358704
-hat 1       0.999952670371898
-hat 2       0.99973332327313
-pan 1       0.9994029107062516
-pan 2       0.9990440068491747
-wye 1       0.9998228522652893
-wye 2       0.9992635865771493
-zee 1       0.9994904324789629
-zee 2       0.9994378171787394
+shape    top_idx quantity_top
+triangle 1       81.2290
+square   1       79.2778
+circle   1       63.9785
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p top -n 1 -f quantity -g shape -o someothername example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+shape    someothername quantity_top
+triangle 1             81.2290
+square   1             79.2778
+circle   1             63.9785
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p top -n 1 -f quantity -g shape -a example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k index quantity rate
+purple triangle false 5 51    81.2290  8.5910
+red    square   true  2 15    79.2778  0.0130
+yellow circle   true  8 73    63.9785  4.2370
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p top -n 1 -f quantity -g shape -a then sort -f shape example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k index quantity rate
+yellow circle   true  8 73    63.9785  4.2370
+red    square   true  2 15    79.2778  0.0130
+purple triangle false 5 51    81.2290  8.5910
 </pre>
 
 ## unflatten
