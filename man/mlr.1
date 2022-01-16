@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2022-01-13
+.\"      Date: 2022-01-16
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2022-01-13" "\ \&" "\ \&"
+.TH "MILLER" "1" "2022-01-16" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -245,9 +245,9 @@ sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime select sgn sha1 sha256
 sha512 sin sinh sort splita splitax splitkv splitkvx splitnv splitnvx sqrt
 ssub strftime strftime_local string strip strlen strptime strptime_local sub
 substr substr0 substr1 system systime systimeint tan tanh tolower toupper
-truncate typeof unflatten uptime urand urand32 urandelement urandint
-urandrange version ! != !=~ % & && * ** + - . .* .+ .- ./ / // < << <= <=> ==
-=~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
+truncate typeof unflatten unformat unformatx uptime urand urand32 urandelement
+urandint urandrange version ! != !=~ % & && * ** + - . .* .+ .- ./ / // < <<
+<= <=> == =~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
 .fi
 .if n \{\
 .RE
@@ -2392,8 +2392,12 @@ Usage: mlr top [options]
 --min         Print top smallest values; default is top largest values.
 -F            Keep top values as floats even if they look like integers.
 -o {name}     Field name for output indices. Default "top_idx".
+              This is ignored if -a is used.
 Prints the n records with smallest/largest values at specified fields,
-optionally by category.
+optionally by category. If -a is given, then the top records are emitted
+with the same fields as they appeared in the input. Without -a, only fields
+from -f, fields from -g, and the top-index field are emitted. For more information
+please see https://miller.readthedocs.io/en/latest/reference-verbs#top
 .fi
 .if n \{\
 .RE
@@ -4037,6 +4041,32 @@ strptime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S", "Asia/Istanbul") 
  (class=collections #args=2) Reverses flatten. Useful for nested JSON-like structures for non-JSON file formats like CSV. See also arrayify.
 Example:
 unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
+.fi
+.if n \{\
+.RE
+.SS "unformat"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=string #args=2) Using first argument as format string, unpacks second argument into an array of matches, with type-inference. On non-match, returns error -- use is_error() to check.
+Examples:
+unformat("{}:{}:{}",  "1:2:3") gives [1, 2, 3]".
+unformat("{}h{}m{}s", "3h47m22s") gives [3, 47, 22]".
+is_error(unformat("{}h{}m{}s", "3:47:22")) gives true.
+.fi
+.if n \{\
+.RE
+.SS "unformatx"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=string #args=2) Same as unformat, but without type-inference.
+Examples:
+unformatx("{}:{}:{}",  "1:2:3") gives ["1", "2", "3"]".
+unformatx("{}h{}m{}s", "3h47m22s") gives ["3", "47", "22"]".
+is_error(unformatx("{}h{}m{}s", "3:47:22")) gives true.
 .fi
 .if n \{\
 .RE

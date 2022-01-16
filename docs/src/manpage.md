@@ -219,9 +219,9 @@ FUNCTION LIST
        sha512 sin sinh sort splita splitax splitkv splitkvx splitnv splitnvx sqrt
        ssub strftime strftime_local string strip strlen strptime strptime_local sub
        substr substr0 substr1 system systime systimeint tan tanh tolower toupper
-       truncate typeof unflatten uptime urand urand32 urandelement urandint
-       urandrange version ! != !=~ % & && * ** + - . .* .+ .- ./ / // &lt; &lt;&lt; &lt;= &lt;=&gt; ==
-       =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
+       truncate typeof unflatten unformat unformatx uptime urand urand32 urandelement
+       urandint urandrange version ! != !=~ % & && * ** + - . .* .+ .- ./ / // &lt; &lt;&lt;
+       &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
 
 COMMENTS-IN-DATA FLAGS
        Miller lets you put comments in your data, such as
@@ -1914,8 +1914,12 @@ VERBS
        --min         Print top smallest values; default is top largest values.
        -F            Keep top values as floats even if they look like integers.
        -o {name}     Field name for output indices. Default "top_idx".
+                     This is ignored if -a is used.
        Prints the n records with smallest/largest values at specified fields,
-       optionally by category.
+       optionally by category. If -a is given, then the top records are emitted
+       with the same fields as they appeared in the input. Without -a, only fields
+       from -f, fields from -g, and the top-index field are emitted. For more information
+       please see https://miller.readthedocs.io/en/latest/reference-verbs#top
 
    unflatten
        Usage: mlr unflatten [options]
@@ -2550,6 +2554,20 @@ FUNCTIONS FOR FILTER/PUT
        Example:
        unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
 
+   unformat
+        (class=string #args=2) Using first argument as format string, unpacks second argument into an array of matches, with type-inference. On non-match, returns error -- use is_error() to check.
+       Examples:
+       unformat("{}:{}:{}",  "1:2:3") gives [1, 2, 3]".
+       unformat("{}h{}m{}s", "3h47m22s") gives [3, 47, 22]".
+       is_error(unformat("{}h{}m{}s", "3:47:22")) gives true.
+
+   unformatx
+        (class=string #args=2) Same as unformat, but without type-inference.
+       Examples:
+       unformatx("{}:{}:{}",  "1:2:3") gives ["1", "2", "3"]".
+       unformatx("{}h{}m{}s", "3h47m22s") gives ["3", "47", "22"]".
+       is_error(unformatx("{}h{}m{}s", "3:47:22")) gives true.
+
    uptime
         (class=time #args=0) help string will go here
 
@@ -3068,5 +3086,5 @@ SEE ALSO
 
 
 
-                                  2022-01-13                         MILLER(1)
+                                  2022-01-16                         MILLER(1)
 </pre>

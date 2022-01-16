@@ -45,7 +45,7 @@ func transformerTopUsage(
 
 	fmt.Fprintf(o, "Prints the n records with smallest/largest values at specified fields,\n")
 	fmt.Fprintf(o, "optionally by category. If -a is given, then the top records are emitted\n")
-	fmt.Fprintf(o, "with the same fields as they appered in the input. Without -a, only fields\n")
+	fmt.Fprintf(o, "with the same fields as they appeared in the input. Without -a, only fields\n")
 	fmt.Fprintf(o, "from -f, fields from -g, and the top-index field are emitted. For more information\n")
 	fmt.Fprintf(o, "please see https://miller.readthedocs.io/en/latest/reference-verbs#top\n")
 

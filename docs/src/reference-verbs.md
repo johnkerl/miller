@@ -3564,8 +3564,12 @@ Usage: mlr top [options]
 --min         Print top smallest values; default is top largest values.
 -F            Keep top values as floats even if they look like integers.
 -o {name}     Field name for output indices. Default "top_idx".
+              This is ignored if -a is used.
 Prints the n records with smallest/largest values at specified fields,
-optionally by category.
+optionally by category. If -a is given, then the top records are emitted
+with the same fields as they appeared in the input. Without -a, only fields
+from -f, fields from -g, and the top-index field are emitted. For more information
+please see https://miller.readthedocs.io/en/latest/reference-verbs#top
 </pre>
 
 Note that `top` is distinct from [head](reference-verbs.md#head) -- `head` shows fields which appear first in the data stream; `top` shows fields which are numerically largest (or smallest).
