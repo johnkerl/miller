@@ -41,9 +41,13 @@ func transformerTopUsage(
 	fmt.Fprintf(o, "--min         Print top smallest values; default is top largest values.\n")
 	fmt.Fprintf(o, "-F            Keep top values as floats even if they look like integers.\n")
 	fmt.Fprintf(o, "-o {name}     Field name for output indices. Default \"%s\".\n", verbTopDefaultOutputFieldName)
+	fmt.Fprintf(o, "              This is ignored if -a is used.\n")
 
 	fmt.Fprintf(o, "Prints the n records with smallest/largest values at specified fields,\n")
-	fmt.Fprintf(o, "optionally by category.\n")
+	fmt.Fprintf(o, "optionally by category. If -a is given, then the top records are emitted\n")
+	fmt.Fprintf(o, "with the same fields as they appered in the input. Without -a, only fields\n")
+	fmt.Fprintf(o, "from -f, fields from -g, and the top-index field are emitted. For more information\n")
+	fmt.Fprintf(o, "please see https://miller.readthedocs.io/en/latest/reference-verbs#top\n")
 
 	if doExit {
 		os.Exit(exitCode)
