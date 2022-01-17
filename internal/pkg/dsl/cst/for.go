@@ -163,7 +163,7 @@ func (node *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		state.Stack.PushStackFrame()
 		defer state.Stack.PopStackFrame()
 		for _, element := range arrayval {
-			err := state.Stack.SetAtScope(node.indexVariable, &element)
+			err := state.Stack.SetAtScope(node.indexVariable, element)
 			if err != nil {
 				return nil, err
 			}
@@ -356,7 +356,7 @@ func (node *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 			if err != nil {
 				return nil, err
 			}
-			err = state.Stack.SetAtScope(node.valueIndexVariable, &element)
+			err = state.Stack.SetAtScope(node.valueIndexVariable, element)
 			if err != nil {
 				return nil, err
 			}
@@ -573,7 +573,7 @@ func (node *ForLoopMultivariableNode) executeOuter(
 				return nil, err
 			}
 
-			blockExitPayload, err := node.executeOuter(&element, keyIndexVariables[1:], state)
+			blockExitPayload, err := node.executeOuter(element, keyIndexVariables[1:], state)
 			if err != nil {
 				return nil, err
 			}
@@ -663,7 +663,7 @@ func (node *ForLoopMultivariableNode) executeInner(
 			if err != nil {
 				return nil, err
 			}
-			err = state.Stack.SetAtScope(node.valueIndexVariable, &element)
+			err = state.Stack.SetAtScope(node.valueIndexVariable, element)
 			if err != nil {
 				return nil, err
 			}

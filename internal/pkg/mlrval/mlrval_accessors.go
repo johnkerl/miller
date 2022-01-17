@@ -14,18 +14,14 @@ func (mv *Mlrval) GetArrayLength() (int, bool) {
 	}
 }
 
-func CopyMlrvalArray(input []Mlrval) []Mlrval {
-	output := make([]Mlrval, len(input))
-	for i, element := range input {
-		output[i] = *element.Copy()
-	}
-	return output
-}
-
-func CopyMlrvalPointerArray(input []*Mlrval) []*Mlrval {
+func CopyMlrvalArray(input []*Mlrval) []*Mlrval {
 	output := make([]*Mlrval, len(input))
 	for i, element := range input {
-		output[i] = element.Copy()
+		if element == nil {
+			output[i] = nil
+		} else {
+			output[i] = element.Copy()
+		}
 	}
 	return output
 }

@@ -1016,7 +1016,7 @@ func (node *IndexedLvalueNode) Assign(
 	// This lets the user do '$y[ ["a", "b", "c"] ] = $x' in lieu of
 	// '$y["a"]["b"]["c"] = $x'.
 	if len(indices) == 1 && indices[0].IsArray() {
-		indices = mlrval.MakePointerArray(indices[0].GetArray())
+		indices = mlrval.CopyMlrvalArray(indices[0].GetArray())
 	}
 
 	return node.baseLvalue.AssignIndexed(rvalue, indices, state)
