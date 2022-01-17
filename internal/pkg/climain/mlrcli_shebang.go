@@ -73,20 +73,13 @@ func maybeInterpolateDashS(args []string) []string {
 
 	// Join "mlr", the args from the script-file contents, and all the remaining arguments
 	// on the original command line after "mlr -s {scriptfile}"
-	newArgs := make([]string, 1)
-	newArgs[0] = arg0
-
-	for _, argFromFile := range argsFromFile {
-		newArgs = append(newArgs, argFromFile)
-	}
+	newArgs := []string{arg0}
+	newArgs = append(newArgs, argsFromFile...)
 
 	// So people can have verb-chains in their shebang file and flags like
 	// --icsv --ojson after
 	newArgs = append(newArgs, "--")
-
-	for _, remainingArg := range remainingArgs {
-		newArgs = append(newArgs, remainingArg)
-	}
+	newArgs = append(newArgs, remainingArgs...)
 
 	return newArgs
 }

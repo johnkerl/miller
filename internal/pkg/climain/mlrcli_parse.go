@@ -338,9 +338,7 @@ func parseCommandLinePassTwo(
 
 	// There may already be one or more because of --from on the command line,
 	// so append.
-	for _, dataFileName := range dataFileNames {
-		options.FileNames = append(options.FileNames, dataFileName)
-	}
+	options.FileNames = append(options.FileNames, dataFileNames...)
 
 	// E.g. mlr -n put -v '...'
 	if options.NoInput {
