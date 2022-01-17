@@ -773,6 +773,7 @@ func (regtester *RegTester) loadFile(
 	contents := string(byteContents)
 	contents = strings.ReplaceAll(contents, "${CASEDIR}", caseDir)
 	contents = strings.ReplaceAll(contents, "${PATHSEP}", string(os.PathSeparator))
+	contents = strings.ReplaceAll(contents, "${MLR}", regtester.exeName)
 	return contents, nil
 }
 

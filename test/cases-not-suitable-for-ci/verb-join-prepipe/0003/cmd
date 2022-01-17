@@ -1,1 +1,1 @@
-mlr --prepipe '.${PATHSEP}mlr cat' --odkvp join --prepipe cat -j a -f test/input/join-het.dkvp test/input/abixy-het
+mlr --prepipe '${MLR} cat' --odkvp join --prepipe cat -j a -f test/input/join-het.dkvp test/input/abixy-het
