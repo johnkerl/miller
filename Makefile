@@ -57,7 +57,7 @@ bench-input:
 # for debugging.  TL;DR is for CI jobs, we have 'go test -v'; for
 # interactive use, instead of 'go test -v' simply use 'mlr regtest
 # -vvv' or 'mlr regtest -s 20'. See also internal/pkg/auxents/regtest.
-regression-test:
+regression-test: build
 	go test -v regression_test.go
 
 # ----------------------------------------------------------------
