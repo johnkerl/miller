@@ -14,7 +14,6 @@ FEATURES
     "5d18h53m20s" format in *dhms* commands, but what about "5-18:53:20"? This is
     a common format used by the SLURM resource manager.'
   o linked-to faqent w/ -f -s etc ...
-  o ... AND, if it's frequent then submit a feature request b/c other people probably also would like it! :)
 
 ----------------------------------------------------------------
 k better print-interpolate with {} etc
@@ -121,6 +120,11 @@ UX
 
 ================================================================
 DOC
+
+! slwin / unformat narrative:
+  o prototype in DSL
+  o mlr put -f / mlr -s
+  o and, if it's frequent then submit a feature request b/c other people probably also would like it! :)
 
 ! link to SE table ...
   https://github.com/johnkerl/miller/discussions/609#discussioncomment-1115715
