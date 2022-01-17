@@ -414,7 +414,7 @@ func (mlrmap *Mlrmap) RemoveWithPositionalIndex(position int) {
 
 // ----------------------------------------------------------------
 func (mlrmap *Mlrmap) Equals(other *Mlrmap) bool {
-	if mlrmap.FieldCount != mlrmap.FieldCount {
+	if mlrmap.FieldCount != other.FieldCount {
 		return false
 	}
 	if !mlrmap.Contains(other) {
