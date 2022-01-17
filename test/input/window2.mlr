@@ -1,3 +1,8 @@
+# ================================================================
+# Sliding average with window over m previous rows, current row, and
+# n subsequent rows.
+# ================================================================
+
 begin {
   # Input parameters
   # They can do 'mlr put -s input_field_names=x,y ...'

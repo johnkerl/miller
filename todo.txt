@@ -29,6 +29,7 @@ a-b.go -> a_b.go renamer PR
 
 ----------------------------------------------------------------
 ! sliding window / moving average
+  i https://github.com/johnkerl/miller/issues/362
   o port u/window*.mlr from mlrc to mlr (actually, fix mlr of course)
   o sliding-window averages into mapper step (C + Go)
   i $ ~/git/johnkerl/scripts-math/stats/cump 0.9 3 100 > ccump.dat
@@ -99,10 +100,10 @@ a-b.go -> a_b.go renamer PR
 ================================================================
 UX
 
+* ?xyz and ??xyz in repl, for :help and :help find respectively
+
 ! bnf fix for '[[' ']]' etc -- make it a nesting of singles. since otherwise no '[[3,4]]' literals :(
 ! broadly rethink os.Exit, especially as affecting mlr repl
-
-* ?xyz and ??xyz in repl, for :help and :help find respectively
 
 * consider expanding '(error)' to have more useful error-text
 * sync-print option; or (yuck) another xprint variant; or ...; emph dump/eprint
@@ -184,6 +185,8 @@ w contact re https://jsonlines.org/on_the_web/
 
  ===============================================================
 TESTING
+
+! ./mlr vs mlr ...
 
 ! pos/neg 0x/0b/0o UTs
 
