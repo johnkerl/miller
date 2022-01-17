@@ -6,6 +6,7 @@ RELEASES
 ================================================================
 FEATURES
 
+----------------------------------------------------------------
 ! Better functions for values manipulation, e.g. easier conversion of strings like "$1,234.56" into numeric values
   o note on is_error(x) (or string(x) == "(error)")
   ?  dhms w/ optional separgs -- ? what about fenceposting? ["d","h","m","s"] vs ["-",":",":",""] -- ?
@@ -14,16 +15,31 @@ FEATURES
     a common format used by the SLURM resource manager.'
   o linked-to faqent w/ -f -s etc ...
   o ... AND, if it's frequent then submit a feature request b/c other people probably also would like it! :)
+
+----------------------------------------------------------------
 k better print-interpolate with {} etc
+  doc: mlr --csv --from example.csv  put -q 'print format("Index {} at quantity {} and rate {}", $index, $quantity, $rate)'
+----------------------------------------------------------------
 ! sysdate, sysdate_local; datediff ...
+
+----------------------------------------------------------------
 ! strmatch https://github.com/johnkerl/miller/issues/77#issuecomment-538790927
+
+----------------------------------------------------------------
 ! sliding window / moving average
   o port u/window*.mlr from mlrc to mlr (actually, fix mlr of course)
   o sliding-window averages into mapper step (C + Go)
+
+----------------------------------------------------------------
 ! shift_lead and shift_lag steps
+
+----------------------------------------------------------------
 ! rank
+
+----------------------------------------------------------------
 ! CSV default unsparsify ... note this must trust the *first* record .......
 
+----------------------------------------------------------------
 ! quoted NIDX
   - how with whitespace regex -- ?
 ! quoted DKVP
@@ -32,7 +48,7 @@ k better print-interpolate with {} etc
 
 * new columns-to-arrays and arrays-to-columns for stan format
 * transpose ...
-* DKVP encodings/decodings for \n etc; non-lite DKVP reader -- or nah? broken already for these cases
+* DKVP/XTAB encodings/decodings for \n etc; non-lite DKVP reader -- or nah? broken already for these cases
 * csvstat / pandas describe
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
 * non-streaming DSL-enabled cut: https://github.com/johnkerl/miller/discussions/613
