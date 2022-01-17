@@ -213,7 +213,7 @@ func FromFunction(funcval interface{}, name string) *Mlrval {
 	}
 }
 
-func FromArray(arrayval []Mlrval) *Mlrval {
+func FromArray(arrayval []*Mlrval) *Mlrval {
 	return &Mlrval{
 		mvtype:        MT_ARRAY,
 		printrep:      "(bug-if-you-see-this:case-4)", // INVALID_PRINTREP,
@@ -223,7 +223,7 @@ func FromArray(arrayval []Mlrval) *Mlrval {
 }
 
 func FromEmptyArray() *Mlrval {
-	return FromArray(make([]Mlrval, 0))
+	return FromArray(make([]*Mlrval, 0))
 }
 
 func FromMap(mapval *Mlrmap) *Mlrval {

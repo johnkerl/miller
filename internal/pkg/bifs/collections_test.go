@@ -31,8 +31,8 @@ func TestBIF_depth(t *testing.T) {
 	assert.True(t, ok)
 	assert.Equal(t, 1, intval)
 
-	arrayval := make([]mlrval.Mlrval, 1)
-	arrayval[0] = *mlrval.FromString("value")
+	arrayval := make([]*mlrval.Mlrval, 1)
+	arrayval[0] = mlrval.FromString("value")
 	input1 = mlrval.FromArray(arrayval)
 	output = BIF_depth(input1)
 	intval, ok = output.GetIntValue()

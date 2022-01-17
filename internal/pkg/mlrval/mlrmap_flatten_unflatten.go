@@ -143,7 +143,7 @@ func (mlrmap *Mlrmap) CopyUnflattened(
 			affectedBaseIndices[baseIndex] = true
 			// Use PutIndexed to assign $x["a"] = 7, or $x["b"] = 8, etc.
 			other.PutIndexed(
-				MakePointerArray(arrayOfIndices.arrayval),
+				CopyMlrvalArray(arrayOfIndices.arrayval),
 				unflattenTerminal(pe.Value).Copy(),
 			)
 		} else {
@@ -193,7 +193,7 @@ func (mlrmap *Mlrmap) CopyUnflattenFields(
 			if fieldNameSet[baseIndex] {
 				// Use PutIndexed to assign $x["a"] = 7, or $x["b"] = 8, etc.
 				other.PutIndexed(
-					MakePointerArray(arrayOfIndices.arrayval),
+					CopyMlrvalArray(arrayOfIndices.arrayval),
 					unflattenTerminal(pe.Value).Copy(),
 				)
 				affectedBaseIndices[baseIndex] = true
@@ -234,7 +234,7 @@ func unflattenTerminal(input *Mlrval) *Mlrval {
 		return FromMap(NewMlrmap())
 	}
 	if input.printrep == "[]" {
-		return FromArray(make([]Mlrval, 0))
+		return FromArray(make([]*Mlrval, 0))
 	}
 	return input
 }
@@ -244,10 +244,10 @@ func unflattenTerminal(input *Mlrval) *Mlrval {
 func SplitAXHelper(input string, separator string) *Mlrval {
 	fields := lib.SplitString(input, separator)
 
-	output := FromArray(make([]Mlrval, len(fields)))
+	output := FromArray(make([]*Mlrval, len(fields)))
 
 	for i, field := range fields {
-		output.arrayval[i] = *FromString(field)
+		output.arrayval[i] = FromString(field)
 	}
 
 	return output

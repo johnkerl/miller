@@ -343,7 +343,7 @@ func (mlrmap *Mlrmap) getWithMlrvalArrayIndex(index *Mlrval) (*Mlrval, error) {
 	array := index.arrayval
 	n := len(array)
 	for i, piece := range array {
-		next, err := current.GetWithMlrvalIndex(&piece)
+		next, err := current.GetWithMlrvalIndex(piece)
 		if err != nil {
 			return nil, err
 		}

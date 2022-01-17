@@ -128,7 +128,7 @@ func TestFromFunction(t *testing.T) {
 }
 
 func TestFromArray(t *testing.T) {
-	mv := FromArray([]Mlrval{*FromInt(10)})
+	mv := FromArray([]*Mlrval{FromInt(10)})
 	assert.Equal(t, MVType(MT_ARRAY), MVType(mv.mvtype))
 	assert.Equal(t, 1, len(mv.arrayval))
 }
