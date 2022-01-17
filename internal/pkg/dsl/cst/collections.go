@@ -44,9 +44,9 @@ func (node *RootNode) BuildArrayLiteralNode(
 func (node *ArrayLiteralNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	mlrvals := make([]mlrval.Mlrval, len(node.evaluables))
+	mlrvals := make([]*mlrval.Mlrval, len(node.evaluables))
 	for i := range node.evaluables {
-		mlrvals[i] = *node.evaluables[i].Evaluate(state)
+		mlrvals[i] = node.evaluables[i].Evaluate(state)
 	}
 	return mlrval.FromArray(mlrvals)
 }
@@ -204,7 +204,7 @@ func (node *ArraySliceAccessNode) Evaluate(
 	upperZindex, _ := mlrval.UnaliasArrayIndex(&array, upperIndex)
 
 	if lowerZindex > upperZindex {
-		return mlrval.FromArray(make([]mlrval.Mlrval, 0))
+		return mlrval.FromEmptyArray()
 	}
 
 	// Semantics: say x=[1,2,3,4,5]. Then x[3:10] is [3,4,5].
@@ -221,13 +221,13 @@ func (node *ArraySliceAccessNode) Evaluate(
 	if lowerZindex < 0 {
 		lowerZindex = 0
 		if lowerZindex > upperZindex {
-			return mlrval.FromArray(make([]mlrval.Mlrval, 0))
+			return mlrval.FromEmptyArray()
 		}
 	}
 	if upperZindex > n-1 {
 		upperZindex = n - 1
 		if lowerZindex > upperZindex {
-			return mlrval.FromArray(make([]mlrval.Mlrval, 0))
+			return mlrval.FromEmptyArray()
 		}
 	}
 
@@ -235,11 +235,11 @@ func (node *ArraySliceAccessNode) Evaluate(
 	// Miller slices have inclusive lower bound, inclusive upper bound.
 	var m = upperZindex - lowerZindex + 1
 
-	retval := make([]mlrval.Mlrval, m)
+	retval := make([]*mlrval.Mlrval, m)
 
 	di := 0
 	for si := lowerZindex; si <= upperZindex; si++ {
-		retval[di] = *array[si].Copy()
+		retval[di] = array[si].Copy()
 		di++
 	}
 

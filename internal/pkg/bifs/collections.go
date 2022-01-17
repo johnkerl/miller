@@ -36,7 +36,7 @@ func depth_from_array(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	maxChildDepth := 0
 	arrayval := input1.AcquireArrayValue()
 	for _, child := range arrayval {
-		childDepth := BIF_depth(&child)
+		childDepth := BIF_depth(child)
 		lib.InternalCodingErrorIf(!childDepth.IsInt())
 		iChildDepth := int(childDepth.AcquireIntValue())
 		if iChildDepth > maxChildDepth {
@@ -99,9 +99,9 @@ func leafcount_from_array(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 		childLeafCount := mlrval.FromInt(1)
 		if child.IsArray() {
-			childLeafCount = leafcount_from_array(&child)
+			childLeafCount = leafcount_from_array(child)
 		} else if child.IsMap() {
-			childLeafCount = leafcount_from_map(&child)
+			childLeafCount = leafcount_from_map(child)
 		}
 
 		lib.InternalCodingErrorIf(!childLeafCount.IsInt())
@@ -574,11 +574,11 @@ func BIF_splita(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 	fields := lib.SplitString(input1.AcquireStringValue(), fieldSeparator)
 
-	arrayval := make([]mlrval.Mlrval, len(fields))
+	arrayval := make([]*mlrval.Mlrval, len(fields))
 
 	for i, field := range fields {
 		value := mlrval.FromInferredType(field)
-		arrayval[i] = *value
+		arrayval[i] = value
 	}
 
 	return mlrval.FromArray(arrayval)
@@ -605,10 +605,10 @@ func BIF_splitax(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 func bif_splitax_helper(input string, separator string) *mlrval.Mlrval {
 	fields := lib.SplitString(input, separator)
 
-	arrayval := make([]mlrval.Mlrval, len(fields))
+	arrayval := make([]*mlrval.Mlrval, len(fields))
 
 	for i, field := range fields {
-		arrayval[i] = *mlrval.FromString(field)
+		arrayval[i] = mlrval.FromString(field)
 	}
 
 	return mlrval.FromArray(arrayval)
@@ -619,19 +619,19 @@ func BIF_get_keys(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsMap() {
 		// TODO: make a ReferenceFrom with comments
 		mapval := input1.AcquireMapValue()
-		arrayval := make([]mlrval.Mlrval, mapval.FieldCount)
+		arrayval := make([]*mlrval.Mlrval, mapval.FieldCount)
 		i := 0
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
-			arrayval[i] = *mlrval.FromString(pe.Key)
+			arrayval[i] = mlrval.FromString(pe.Key)
 			i++
 		}
 		return mlrval.FromArray(arrayval)
 
 	} else if input1.IsArray() {
 		inputarrayval := input1.AcquireArrayValue()
-		arrayval := make([]mlrval.Mlrval, len(inputarrayval))
+		arrayval := make([]*mlrval.Mlrval, len(inputarrayval))
 		for i := range inputarrayval {
-			arrayval[i] = *mlrval.FromInt(int(i + 1)) // Miller user-space indices are 1-up
+			arrayval[i] = mlrval.FromInt(int(i + 1)) // Miller user-space indices are 1-up
 		}
 		return mlrval.FromArray(arrayval)
 
@@ -644,19 +644,19 @@ func BIF_get_keys(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_get_values(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsMap() {
 		mapval := input1.AcquireMapValue()
-		arrayval := make([]mlrval.Mlrval, mapval.FieldCount)
+		arrayval := make([]*mlrval.Mlrval, mapval.FieldCount)
 		i := 0
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
-			arrayval[i] = *pe.Value.Copy()
+			arrayval[i] = pe.Value.Copy()
 			i++
 		}
 		return mlrval.FromArray(arrayval)
 
 	} else if input1.IsArray() {
 		inputarrayval := input1.AcquireArrayValue()
-		arrayval := make([]mlrval.Mlrval, len(inputarrayval))
+		arrayval := make([]*mlrval.Mlrval, len(inputarrayval))
 		for i, value := range inputarrayval {
-			arrayval[i] = *value.Copy()
+			arrayval[i] = value.Copy()
 		}
 		return mlrval.FromArray(arrayval)
 
@@ -743,10 +743,10 @@ func BIF_arrayify(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 		if convertible {
 			mapval := input1.AcquireMapValue()
-			arrayval := make([]mlrval.Mlrval, input1.AcquireMapValue().FieldCount)
+			arrayval := make([]*mlrval.Mlrval, input1.AcquireMapValue().FieldCount)
 			i := 0
 			for pe := mapval.Head; pe != nil; pe = pe.Next {
-				arrayval[i] = *pe.Value.Copy()
+				arrayval[i] = pe.Value.Copy()
 				i++
 			}
 			return mlrval.FromArray(arrayval)
@@ -758,8 +758,9 @@ func BIF_arrayify(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	} else if input1.IsArray() {
 		// TODO: comment (or rethink) that this modifies its inputs!!
 		output := input1.Copy()
+		arrayval := output.AcquireArrayValue()
 		for i := range input1.AcquireArrayValue() {
-			output.AcquireArrayValue()[i] = *BIF_arrayify(&output.AcquireArrayValue()[i])
+			arrayval[i] = BIF_arrayify(arrayval[i])
 		}
 		return output
 
@@ -811,7 +812,7 @@ func BIF_json_stringify_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-func unaliasArrayIndex(array *[]mlrval.Mlrval, mindex int) (int, bool) {
+func unaliasArrayIndex(array *[]*mlrval.Mlrval, mindex int) (int, bool) {
 	n := int(len(*array))
 	return unaliasArrayLengthIndex(n, mindex)
 }

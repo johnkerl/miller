@@ -65,7 +65,7 @@ type Mlrval struct {
 	floatval      float64
 	boolval       bool
 
-	arrayval []Mlrval
+	arrayval []*Mlrval
 	mapval   *Mlrmap
 	// First-class-function literals from internal/pkg/dsl/cst.
 	// Interfaced here to avoid package-dependency cycles.

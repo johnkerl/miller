@@ -63,7 +63,7 @@ func (mv *Mlrval) GetBoolValue() (boolValue bool, isBool bool) {
 	}
 }
 
-func (mv *Mlrval) GetArray() []Mlrval {
+func (mv *Mlrval) GetArray() []*Mlrval {
 	if mv.IsArray() {
 		return mv.arrayval
 	} else {
@@ -120,7 +120,7 @@ func (mv *Mlrval) AcquireBoolValue() bool {
 	return mv.boolval
 }
 
-func (mv *Mlrval) AcquireArrayValue() []Mlrval {
+func (mv *Mlrval) AcquireArrayValue() []*Mlrval {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_ARRAY)
 	return mv.arrayval
 }
