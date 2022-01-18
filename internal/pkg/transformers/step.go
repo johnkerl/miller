@@ -110,18 +110,23 @@ func transformerStepParseCLI(
 			transformerStepUsage(os.Stdout, true, 0)
 
 		} else if opt == "-a" {
+			// TODO: append ...
 			stepperNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-f" {
+			// TODO: append ...
 			valueFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-g" {
+			// TODO: append ...
 			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-d" {
+			// TODO: append ...
 			stringAlphas = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-o" {
+			// TODO: append ...
 			ewmaSuffixes = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-F" {
@@ -616,10 +621,10 @@ func (stepper *tStepperEWMA) process(
 	} else {
 		for i := range stepper.alphas {
 			curr := valueFieldValue.Copy()
-			// xxx pending pointer-output refactor
-			product1 := bifs.BIF_times(curr, stepper.alphas[i])
-			product2 := bifs.BIF_times(stepper.prevs[i], stepper.oneMinusAlphas[i])
-			next := bifs.BIF_plus_binary(product1, product2)
+			next := bifs.BIF_plus_binary(
+				bifs.BIF_times(curr, stepper.alphas[i]),
+				bifs.BIF_times(stepper.prevs[i], stepper.oneMinusAlphas[i]),
+			)
 			inrec.PutCopy(stepper.outputFieldNames[i], next)
 			stepper.prevs[i] = next
 		}

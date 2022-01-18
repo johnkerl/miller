@@ -1,27 +1,15 @@
 begin {
   # Input parameters
   # They can do 'mlr put -s input_field_names=x,y ...'
-  if (is_absent(@window_size_backward)) {
-    @window_size_backward = 3;
-  }
-  if (is_absent(@window_size_forward)) {
-    @window_size_forward = 3;
-  }
-  # In Miller 6 (Go port) we'll have arrays and you'll be able to do
-  # @input_field_names = ["x", "y"].
-  if (is_absent(@input_field_names)) {
-    @input_field_names = splitnv("x,y", ",")
-  } else {
-    @input_field_names = splitnv(@input_field_names, ",")
-  }
+  @window_size_backward ??= 3;
+  @window_size_forward ??= 3;
+  @input_field_names ??= "x,y";
+  @input_field_names = splitnv(@input_field_names, ",");
 
   # Initialization
   @window_size = @window_size_backward + 1 + @window_size_forward;
   @center_record_index = @window_size_backward; # index 0-up
-  @output_field_names = {};
-  for (_, name in @input_field_names) {
-    @output_field_names[name] = name . "_avg";
-  }
+  @output_field_names = apply(@input_field_names, func(k,v) { return {v: v . "_avg"}});
   @window_records = {};
   # dump;
 }
@@ -50,10 +38,7 @@ for (_, name in @input_field_names) {
 }
 
 # Emit the record from the window center, with averages attached to it
-print "HMM?";
-print NR;
 if (NR > @center_record_index) {
-print "YUP!";
   output_record = @window_records[@center_record_index];
   for (_, name in @input_field_names) {
     output_record[@output_field_names[name]] = sums[name] / denominator;
