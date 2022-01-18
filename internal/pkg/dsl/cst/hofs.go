@@ -562,9 +562,9 @@ func SortHOF(
 type tSortType int
 
 const (
-	sortTypeLexical   tSortType = 1
-	sortTypeCaseFold            = 2
-	sortTypeNumerical           = 3
+	sortTypeLexical tSortType = iota
+	sortTypeCaseFold
+	sortTypeNumerical
 )
 
 // decodeSortFlags maps strings like "cr" in the second argument to sort
