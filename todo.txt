@@ -27,6 +27,7 @@ k better print-interpolate with {} etc
 ----------------------------------------------------------------
 ! shift_lead and shift_lag steps
   o RT: mlr --c2p --from $exv step -a delta -a rsum -f quantity -f rate -g color -g shape
+  o next: utils/stepper-window.go w/ dedicated UTs
   i https://github.com/johnkerl/miller/issues/355
 
 ----------------------------------------------------------------

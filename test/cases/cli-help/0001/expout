@@ -1039,7 +1039,7 @@ Options:
 -F         Computes integerable things (e.g. counter) in floating point.
            As of Miller 6 this happens automatically, but the flag is accepted
            as a no-op for backward compatibility with Miller 5 and below.
--d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no
+-d {x,y,z} Weights for EWMA. 1 means current sample gets all weight (no
            smoothing), near under under 1 is light smoothing, near over 0 is
            heavy smoothing. Multiple weights may be specified, e.g.
            "mlr step -a ewma -f sys_load -d 0.01,0.1,0.9". Default if omitted

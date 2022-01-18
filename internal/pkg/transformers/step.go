@@ -48,7 +48,7 @@ func transformerStepUsage(
 	fmt.Fprintf(o, "           As of Miller 6 this happens automatically, but the flag is accepted\n")
 	fmt.Fprintf(o, "           as a no-op for backward compatibility with Miller 5 and below.\n")
 
-	fmt.Fprintf(o, "-d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no\n")
+	fmt.Fprintf(o, "-d {x,y,z} Weights for EWMA. 1 means current sample gets all weight (no\n")
 	fmt.Fprintf(o, "           smoothing), near under under 1 is light smoothing, near over 0 is\n")
 	fmt.Fprintf(o, "           heavy smoothing. Multiple weights may be specified, e.g.\n")
 	fmt.Fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", "mlr", verbNameStep)
@@ -90,7 +90,7 @@ func transformerStepParseCLI(
 	verb := args[argi]
 	argi++
 
-	var stepperNames []string = nil
+	var stepperInputs []*tStepperInput = nil
 	var valueFieldNames []string = nil
 	var groupByFieldNames []string = nil
 	var stringAlphas []string = nil
@@ -111,7 +111,17 @@ func transformerStepParseCLI(
 
 		} else if opt == "-a" {
 			// Let them do '-a delta -a rsum' or '-a delta,rsum'
-			stepperNames = append(stepperNames, cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)...)
+			stepperNames := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+
+			for _, stepperName := range stepperNames {
+				stepperInput := stepperInputFromName(stepperName)
+				if stepperInput == nil {
+					fmt.Fprintf(os.Stderr, "mlr %s: stepper \"%s\" not found.\n",
+						verbNameStep, stepperName)
+					os.Exit(1)
+				}
+				stepperInputs = append(stepperInputs, stepperInput)
+			}
 
 		} else if opt == "-f" {
 			// Let them do '-f x -f y' or '-f x,y'
@@ -144,7 +154,7 @@ func transformerStepParseCLI(
 	}
 
 	transformer, err := NewTransformerStep(
-		stepperNames,
+		stepperInputs,
 		valueFieldNames,
 		groupByFieldNames,
 		stringAlphas,
@@ -158,16 +168,10 @@ func transformerStepParseCLI(
 	return transformer
 }
 
-type tStepperInput struct {
-	name string
-	numRecordsBackward int
-	numRecordsForward int
-}
-
 // ----------------------------------------------------------------
 type TransformerStep struct {
 	// INPUT
-	stepperNames      []string
+	stepperInputs     []*tStepperInput
 	valueFieldNames   []string
 	groupByFieldNames []string
 	stringAlphas      []string
@@ -182,14 +186,14 @@ type TransformerStep struct {
 }
 
 func NewTransformerStep(
-	stepperNames []string,
+	stepperInputs []*tStepperInput,
 	valueFieldNames []string,
 	groupByFieldNames []string,
 	stringAlphas []string,
 	ewmaSuffixes []string,
 ) (*TransformerStep, error) {
 
-	if len(stepperNames) == 0 || len(valueFieldNames) == 0 {
+	if len(stepperInputs) == 0 || len(valueFieldNames) == 0 {
 		return nil, fmt.Errorf("mlr %s: -a and -f are both required arguments.", verbNameStep)
 	}
 	if len(stringAlphas) != 0 && len(ewmaSuffixes) != 0 {
@@ -201,12 +205,13 @@ func NewTransformerStep(
 	}
 
 	tr := &TransformerStep{
-		stepperNames:      stepperNames,
+		stepperInputs:     stepperInputs,
 		valueFieldNames:   valueFieldNames,
 		groupByFieldNames: groupByFieldNames,
 		stringAlphas:      stringAlphas,
 		ewmaSuffixes:      ewmaSuffixes,
-		groups:            make(map[string]map[string]map[string]tStepper),
+		// TODO: pair of tStepper and tWindow
+		groups: make(map[string]map[string]map[string]tStepper),
 	}
 
 	return tr, nil
@@ -290,22 +295,21 @@ func (tr *TransformerStep) Transform(
 		}
 
 		// for "delta", "rsum":
-		for _, stepperName := range tr.stepperNames {
-			stepper, present := accFieldToAccState[stepperName]
+		for _, stepperInput := range tr.stepperInputs {
+			stepper, present := accFieldToAccState[stepperInput.name]
 			if !present {
 				stepper = allocateStepper(
-					stepperName,
+					stepperInput,
 					valueFieldName,
 					tr.stringAlphas,
 					tr.ewmaSuffixes,
 				)
 				if stepper == nil {
-					// TODO: parameterize verb name
-					fmt.Fprintf(os.Stderr, "mlr step: stepper \"%s\" not found.\n",
-						stepperName)
+					fmt.Fprintf(os.Stderr, "mlr %s: stepper \"%s\" not found.\n",
+						verbNameStep, stepperInput.name)
 					os.Exit(1)
 				}
-				accFieldToAccState[stepperName] = stepper
+				accFieldToAccState[stepperInput.name] = stepper
 			}
 			stepper.process(valueFieldValue, inrec)
 		}
@@ -317,42 +321,64 @@ func (tr *TransformerStep) Transform(
 // ================================================================
 // Lookups for individual steppers, like "delta" or "rsum"
 
+type tStepperInputFromName func(
+	stepperName string,
+) *tStepperInput
+
 type tStepperAllocator func(
 	inputFieldName string,
 	stringAlphas []string,
 	ewmaSuffixes []string,
 ) tStepper
 
+type tStepperInput struct {
+	name               string
+	numRecordsBackward int
+	numRecordsForward  int
+}
+
 type tStepper interface {
 	process(valueFieldValue *mlrval.Mlrval, inputRecord *mlrval.Mlrmap)
 }
 
 type tStepperLookup struct {
-	name             string
-	stepperAllocator tStepperAllocator
-	desc             string
+	name                 string
+	stepperInputFromName tStepperInputFromName
+	stepperAllocator     tStepperAllocator
+	desc                 string
 }
 
 var STEPPER_LOOKUP_TABLE = []tStepperLookup{
-	{"counter", stepperCounterAlloc, "Count instances of field(s) between successive records"},
-	{"delta", stepperDeltaAlloc, "Compute differences in field(s) between successive records"},
-	{"ewma", stepperEWMAAlloc, "Exponentially weighted moving average over successive records"},
-	{"from-first", stepperFromFirstAlloc, "Compute differences in field(s) from first record"},
-	{"ratio", stepperRatioAlloc, "Compute ratios in field(s) between successive records"},
-	{"rsum", stepperRsumAlloc, "Compute running sums of field(s) between successive records"},
-	{"shift", stepperShiftAlloc, "Alias for shift-lag"},
-	{"shift-lag", stepperShiftLagAlloc, "Include value(s) in field(s) from previous record, if any"},
-	{"shift-lead", stepperShiftLeadAlloc, "Include value(s) in field(s) from previous record, if any"},
+	{"counter", stepperCounterInputFromName, stepperCounterAlloc, "Count instances of field(s) between successive records"},
+	{"delta", stepperDeltaInputFromName, stepperDeltaAlloc, "Compute differences in field(s) between successive records"},
+	{"ewma", stepperEWMAInputFromName, stepperEWMAAlloc, "Exponentially weighted moving average over successive records"},
+	{"from-first", stepperFromFirstInputFromName, stepperFromFirstAlloc, "Compute differences in field(s) from first record"},
+	{"ratio", stepperRatioInputFromName, stepperRatioAlloc, "Compute ratios in field(s) between successive records"},
+	{"rsum", stepperRsumInputFromName, stepperRsumAlloc, "Compute running sums of field(s) between successive records"},
+	{"shift", stepperShiftInputFromName, stepperShiftAlloc, "Alias for shift-lag"},
+	{"shift-lag", stepperShiftLagInputFromName, stepperShiftLagAlloc, "Include value(s) in field(s) from previous record, if any"},
+	{"shift-lead", stepperShiftLeadInputFromName, stepperShiftLeadAlloc, "Include value(s) in field(s) from previous record, if any"},
+}
+
+func stepperInputFromName(
+	name string,
+) *tStepperInput {
+	for _, stepperLookup := range STEPPER_LOOKUP_TABLE {
+		if stepperLookup.name == name {
+			return stepperLookup.stepperInputFromName(name)
+		}
+	}
+	return nil
 }
 
 func allocateStepper(
-	stepperName string,
+	stepperInput *tStepperInput,
 	inputFieldName string,
 	stringAlphas []string,
 	ewmaSuffixes []string,
 ) tStepper {
 	for _, stepperLookup := range STEPPER_LOOKUP_TABLE {
-		if stepperLookup.name == stepperName {
+		if stepperLookup.name == stepperInput.name {
 			return stepperLookup.stepperAllocator(
 				inputFieldName,
 				stringAlphas,
@@ -370,6 +396,16 @@ func allocateStepper(
 type tStepperDelta struct {
 	previous        *mlrval.Mlrval
 	outputFieldName string
+}
+
+func stepperDeltaInputFromName(
+	stepperName string,
+) *tStepperInput {
+	return &tStepperInput{
+		name:               stepperName,
+		numRecordsBackward: 1,
+		numRecordsForward:  0,
+	}
 }
 
 func stepperDeltaAlloc(
@@ -407,6 +443,16 @@ type tStepperShiftLag struct {
 	outputFieldName string
 }
 
+func stepperShiftInputFromName(
+	stepperName string,
+) *tStepperInput {
+	return &tStepperInput{
+		name:               stepperName,
+		numRecordsBackward: 1,
+		numRecordsForward:  0,
+	}
+}
+
 func stepperShiftAlloc(
 	inputFieldName string,
 	_unused1 []string,
@@ -415,6 +461,16 @@ func stepperShiftAlloc(
 	return &tStepperShiftLag{
 		previous:        nil,
 		outputFieldName: inputFieldName + "_shift",
+	}
+}
+
+func stepperShiftLagInputFromName(
+	stepperName string,
+) *tStepperInput {
+	return &tStepperInput{
+		name:               stepperName,
+		numRecordsBackward: 1,
+		numRecordsForward:  0,
 	}
 }
 
@@ -449,6 +505,16 @@ type tStepperShiftLead struct {
 	outputFieldName string
 }
 
+func stepperShiftLeadInputFromName(
+	stepperName string,
+) *tStepperInput {
+	return &tStepperInput{
+		name:               stepperName,
+		numRecordsBackward: 0,
+		numRecordsForward:  1,
+	}
+}
+
 func stepperShiftLeadAlloc(
 	inputFieldName string,
 	_unused1 []string,
@@ -480,6 +546,16 @@ type tStepperFromFirst struct {
 	outputFieldName string
 }
 
+func stepperFromFirstInputFromName(
+	stepperName string,
+) *tStepperInput {
+	return &tStepperInput{
+		name:               stepperName,
+		numRecordsBackward: 0, // doesn't use record-windowing; retains its own pointer
+		numRecordsForward:  0,
+	}
+}
+
 func stepperFromFirstAlloc(
 	inputFieldName string,
 	_unused1 []string,
@@ -508,6 +584,16 @@ func (stepper *tStepperFromFirst) process(
 type tStepperRatio struct {
 	previous        *mlrval.Mlrval
 	outputFieldName string
+}
+
+func stepperRatioInputFromName(
+	stepperName string,
+) *tStepperInput {
+	return &tStepperInput{
+		name:               stepperName,
+		numRecordsBackward: 1,
+		numRecordsForward:  0,
+	}
 }
 
 func stepperRatioAlloc(
@@ -545,6 +631,16 @@ type tStepperRsum struct {
 	outputFieldName string
 }
 
+func stepperRsumInputFromName(
+	stepperName string,
+) *tStepperInput {
+	return &tStepperInput{
+		name:               stepperName,
+		numRecordsBackward: 0, // doesn't use record-windowing; retains its own pointer
+		numRecordsForward:  0,
+	}
+}
+
 func stepperRsumAlloc(
 	inputFieldName string,
 	_unused1 []string,
@@ -573,6 +669,16 @@ type tStepperCounter struct {
 	counter         *mlrval.Mlrval
 	one             *mlrval.Mlrval
 	outputFieldName string
+}
+
+func stepperCounterInputFromName(
+	stepperName string,
+) *tStepperInput {
+	return &tStepperInput{
+		name:               stepperName,
+		numRecordsBackward: 0, // doesn't use record-windowing; retains its own pointer
+		numRecordsForward:  0,
+	}
 }
 
 func stepperCounterAlloc(
@@ -609,6 +715,16 @@ type tStepperEWMA struct {
 	prevs            []*mlrval.Mlrval
 	outputFieldNames []string
 	havePrevs        bool
+}
+
+func stepperEWMAInputFromName(
+	stepperName string,
+) *tStepperInput {
+	return &tStepperInput{
+		name:               stepperName,
+		numRecordsBackward: 0, // doesn't use record-windowing; retains its own accumulators
+		numRecordsForward:  0,
+	}
 }
 
 func stepperEWMAAlloc(
