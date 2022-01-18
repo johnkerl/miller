@@ -38,11 +38,11 @@ import (
 
 // captureDetector is used to see if a string literal interpolates previous
 // captures (like "\2:\1") or not (like "2:1").
-var captureDetector = regexp.MustCompile("\\\\[0-9]")
+var captureDetector = regexp.MustCompile(`\\[0-9]`)
 
 // captureSplitter is used to precompute an offsets matrix for strings like
 // "\2:\1" so they don't need to be recomputed on every record.
-var captureSplitter = regexp.MustCompile("(\\\\[0-9])")
+var captureSplitter = regexp.MustCompile(`(\\[0-9])`)
 
 // CompileMillerRegex wraps Go regex-compile with some Miller-specific syntax
 // which predate the port of Miller from C to Go.  Miller regexes use a final

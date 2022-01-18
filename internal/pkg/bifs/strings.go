@@ -238,7 +238,7 @@ func BIF_collapse_whitespace_regexp(input1 *mlrval.Mlrval, whitespaceRegexp *reg
 }
 
 func WhitespaceRegexp() *regexp.Regexp {
-	return regexp.MustCompile("\\s+")
+	return regexp.MustCompile(`\s+`)
 }
 
 // ================================================================
