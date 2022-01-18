@@ -194,10 +194,10 @@ func BIF_is_notarray(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(!input1.IsArray())
 }
 func BIF_is_notnull(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromBool(!input1.IsAbsent() && !input1.IsVoid())
+	return mlrval.FromBool(!input1.IsAbsent() && !input1.IsVoid() && !input1.IsNull())
 }
 func BIF_is_null(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromBool(input1.IsAbsent() || input1.IsVoid())
+	return mlrval.FromBool(input1.IsAbsent() || input1.IsVoid() || input1.IsNull())
 }
 func BIF_is_numeric(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.IsInt() || input1.IsFloat())

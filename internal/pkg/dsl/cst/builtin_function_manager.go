@@ -1203,14 +1203,14 @@ strftime_local.`,
 		{
 			name:      "is_not_null",
 			class:     FUNC_CLASS_TYPING,
-			help:      "False if argument is null (empty or absent), true otherwise.",
+			help:      "False if argument is null (empty, absent, or JSON null), true otherwise.",
 			unaryFunc: bifs.BIF_is_notnull,
 		},
 
 		{
 			name:      "is_null",
 			class:     FUNC_CLASS_TYPING,
-			help:      "True if argument is null (empty or absent), false otherwise.",
+			help:      "True if argument is null (empty, absent, or JSON null), false otherwise.",
 			unaryFunc: bifs.BIF_is_null,
 		},
 
