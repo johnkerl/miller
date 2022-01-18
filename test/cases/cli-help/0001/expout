@@ -1024,13 +1024,15 @@ Usage: mlr step [options]
 Computes values dependent on the previous record, optionally grouped by category.
 Options:
 -a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:
+  counter  Count instances of field(s) between successive records
   delta    Compute differences in field(s) between successive records
-  shift    Include value(s) in field(s) from previous record, if any
+  ewma     Exponentially weighted moving average over successive records
   from-first Compute differences in field(s) from first record
   ratio    Compute ratios in field(s) between successive records
   rsum     Compute running sums of field(s) between successive records
-  counter  Count instances of field(s) between successive records
-  ewma     Exponentially weighted moving average over successive records
+  shift    Alias for shift-lag
+  shift-lag Include value(s) in field(s) from previous record, if any
+  shift-lead Include value(s) in field(s) from previous record, if any
 
 -f {a,b,c} Value-field names on which to compute statistics
 -g {d,e,f} Optional group-by-field names

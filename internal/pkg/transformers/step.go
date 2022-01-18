@@ -110,24 +110,24 @@ func transformerStepParseCLI(
 			transformerStepUsage(os.Stdout, true, 0)
 
 		} else if opt == "-a" {
-			// TODO: append ...
-			stepperNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			// Let them do '-a delta -a rsum' or '-a delta,rsum'
+			stepperNames = append(stepperNames, cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)...)
 
 		} else if opt == "-f" {
-			// TODO: append ...
-			valueFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			// Let them do '-f x -f y' or '-f x,y'
+			valueFieldNames = append(valueFieldNames, cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)...)
 
 		} else if opt == "-g" {
-			// TODO: append ...
-			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			// Let them do '-g a -g b' or '-g a,b'
+			groupByFieldNames = append(groupByFieldNames, cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)...)
 
 		} else if opt == "-d" {
-			// TODO: append ...
-			stringAlphas = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			// Let them do '-d 0.8 -d 0.9' or '-d 0.8,0.9'
+			stringAlphas = append(stringAlphas, cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)...)
 
 		} else if opt == "-o" {
-			// TODO: append ...
-			ewmaSuffixes = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			// Let them do '-o fast -o slow' or '-o fast,slow'
+			ewmaSuffixes = append(ewmaSuffixes, cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)...)
 
 		} else if opt == "-F" {
 			// As of Miller 6 this happens automatically, but the flag is accepted
@@ -156,6 +156,12 @@ func transformerStepParseCLI(
 	}
 
 	return transformer
+}
+
+type tStepperInput struct {
+	name string
+	numRecordsBackward int
+	numRecordsForward int
 }
 
 // ----------------------------------------------------------------
@@ -328,13 +334,15 @@ type tStepperLookup struct {
 }
 
 var STEPPER_LOOKUP_TABLE = []tStepperLookup{
+	{"counter", stepperCounterAlloc, "Count instances of field(s) between successive records"},
 	{"delta", stepperDeltaAlloc, "Compute differences in field(s) between successive records"},
-	{"shift", stepperShiftAlloc, "Include value(s) in field(s) from previous record, if any"},
+	{"ewma", stepperEWMAAlloc, "Exponentially weighted moving average over successive records"},
 	{"from-first", stepperFromFirstAlloc, "Compute differences in field(s) from first record"},
 	{"ratio", stepperRatioAlloc, "Compute ratios in field(s) between successive records"},
 	{"rsum", stepperRsumAlloc, "Compute running sums of field(s) between successive records"},
-	{"counter", stepperCounterAlloc, "Count instances of field(s) between successive records"},
-	{"ewma", stepperEWMAAlloc, "Exponentially weighted moving average over successive records"},
+	{"shift", stepperShiftAlloc, "Alias for shift-lag"},
+	{"shift-lag", stepperShiftLagAlloc, "Include value(s) in field(s) from previous record, if any"},
+	{"shift-lead", stepperShiftLeadAlloc, "Include value(s) in field(s) from previous record, if any"},
 }
 
 func allocateStepper(
@@ -394,7 +402,7 @@ func (stepper *tStepperDelta) process(
 }
 
 // ================================================================
-type tStepperShift struct {
+type tStepperShiftLag struct {
 	previous        *mlrval.Mlrval
 	outputFieldName string
 }
@@ -404,13 +412,55 @@ func stepperShiftAlloc(
 	_unused1 []string,
 	_unused2 []string,
 ) tStepper {
-	return &tStepperShift{
+	return &tStepperShiftLag{
 		previous:        nil,
 		outputFieldName: inputFieldName + "_shift",
 	}
 }
 
-func (stepper *tStepperShift) process(
+func stepperShiftLagAlloc(
+	inputFieldName string,
+	_unused1 []string,
+	_unused2 []string,
+) tStepper {
+	return &tStepperShiftLag{
+		previous:        nil,
+		outputFieldName: inputFieldName + "_shift_lag",
+	}
+}
+
+func (stepper *tStepperShiftLag) process(
+	valueFieldValue *mlrval.Mlrval,
+	inrec *mlrval.Mlrmap,
+) {
+	if stepper.previous == nil {
+		shift := mlrval.VOID
+		inrec.PutCopy(stepper.outputFieldName, shift)
+	} else {
+		inrec.PutCopy(stepper.outputFieldName, stepper.previous)
+		stepper.previous = valueFieldValue.Copy()
+	}
+	stepper.previous = valueFieldValue.Copy()
+}
+
+// ================================================================
+type tStepperShiftLead struct {
+	previous        *mlrval.Mlrval
+	outputFieldName string
+}
+
+func stepperShiftLeadAlloc(
+	inputFieldName string,
+	_unused1 []string,
+	_unused2 []string,
+) tStepper {
+	return &tStepperShiftLead{
+		previous:        nil,
+		outputFieldName: inputFieldName + "_shift_lead",
+	}
+}
+
+func (stepper *tStepperShiftLead) process(
 	valueFieldValue *mlrval.Mlrval,
 	inrec *mlrval.Mlrmap,
 ) {
