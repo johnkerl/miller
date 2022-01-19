@@ -54,11 +54,7 @@ func unhexFile(istream *os.File, ostream *os.File) {
 	var scanValue int
 	byteArray := make([]byte, 1)
 
-	re, err := regexp.Compile("\\s+")
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "mlr unhex: internal coding error detected.")
-		os.Exit(1)
-	}
+	re := regexp.MustCompile(`\s+`)
 
 	eof := false
 	for !eof {
