@@ -18,5 +18,5 @@ func TestTypeNames(t *testing.T) {
 	assert.Equal(t, "error", TYPE_NAMES[MT_ERROR])
 	assert.Equal(t, "null", TYPE_NAMES[MT_NULL])
 	assert.Equal(t, "absent", TYPE_NAMES[MT_ABSENT])
-	assert.Equal(t, MT_DIM, len(TYPE_NAMES))
+	assert.Equal(t, int(MT_DIM), len(TYPE_NAMES))
 }

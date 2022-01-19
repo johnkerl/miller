@@ -102,22 +102,22 @@ const (
 	// optimization.
 	MT_PENDING MVType = -1
 
-	MT_INT = 0
+	MT_INT MVType = 0
 
-	MT_FLOAT = 1
+	MT_FLOAT MVType = 1
 
-	MT_BOOL = 2
+	MT_BOOL MVType = 2
 
 	// Key present in input record with empty value, e.g. input data '$x=,$y=2'
-	MT_VOID = 3
+	MT_VOID MVType = 3
 
-	MT_STRING = 4
+	MT_STRING MVType = 4
 
-	MT_ARRAY = 5
+	MT_ARRAY MVType = 5
 
-	MT_MAP = 6
+	MT_MAP MVType = 6
 
-	MT_FUNC = 7
+	MT_FUNC MVType = 7
 
 	// E.g. error encountered in one eval & it propagates up the AST at
 	// evaluation time.  Various runtime errors, such as file-not-found, result
@@ -125,22 +125,22 @@ const (
 	// are intended to result in "(error)"-valued output rather than a crash.
 	// This is analogous to the way that IEEE-754 arithmetic carries around
 	// Inf and NaN through computation chains.
-	MT_ERROR = 8
+	MT_ERROR MVType = 8
 
 	// Used only for JSON null, and for 'empty' slots when an array is
 	// auto-extended by assigning to an index having a gap from the last index.
 	// E.g. x=[1,2,3] then x[5]=5; now x[4] is null
-	MT_NULL = 9
+	MT_NULL MVType = 9
 
 	// Key not present in input record, e.g. 'foo = $nosuchkey'
-	MT_ABSENT = 10
+	MT_ABSENT MVType = 10
 
 	// Not a type -- this is a dimension for disposition vectors and
 	// disposition matrices. For example, when we want to add two mlrvals,
 	// instead of if/elsing or switching on the types of both operands, we
 	// instead jump directly to a type-specific function in a matrix of
 	// function pointers which is MT_DIM x MT_DIM.
-	MT_DIM = 11
+	MT_DIM MVType = 11
 )
 
 var TYPE_NAMES = [MT_DIM]string{
