@@ -28,16 +28,16 @@ type TFunctionClass string
 
 const (
 	FUNC_CLASS_ARITHMETIC  TFunctionClass = "arithmetic"
-	FUNC_CLASS_MATH                       = "math"
-	FUNC_CLASS_BOOLEAN                    = "boolean"
-	FUNC_CLASS_STRING                     = "string"
-	FUNC_CLASS_HASHING                    = "hashing"
-	FUNC_CLASS_CONVERSION                 = "conversion"
-	FUNC_CLASS_TYPING                     = "typing"
-	FUNC_CLASS_COLLECTIONS                = "collections"
-	FUNC_CLASS_HOFS                       = "higher-order-functions"
-	FUNC_CLASS_SYSTEM                     = "system"
-	FUNC_CLASS_TIME                       = "time"
+	FUNC_CLASS_MATH        TFunctionClass = "math"
+	FUNC_CLASS_BOOLEAN     TFunctionClass = "boolean"
+	FUNC_CLASS_STRING      TFunctionClass = "string"
+	FUNC_CLASS_HASHING     TFunctionClass = "hashing"
+	FUNC_CLASS_CONVERSION  TFunctionClass = "conversion"
+	FUNC_CLASS_TYPING      TFunctionClass = "typing"
+	FUNC_CLASS_COLLECTIONS TFunctionClass = "collections"
+	FUNC_CLASS_HOFS        TFunctionClass = "higher-order-functions"
+	FUNC_CLASS_SYSTEM      TFunctionClass = "system"
+	FUNC_CLASS_TIME        TFunctionClass = "time"
 )
 
 // ================================================================
