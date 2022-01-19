@@ -208,6 +208,8 @@ PERFORMANCE
 ================================================================
 CODE-NEATENS / QUALITY
 
+* go-style assert.Equal(t, actual, expected) in place of R style expect_equal(expected, actual) in .../*_test.go
+
 ! ast namings etc
   ? make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
 ! broad commenting pass / TODO
