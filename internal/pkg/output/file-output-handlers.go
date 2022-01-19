@@ -149,33 +149,25 @@ func (manager *MultiOutputHandlerManager) getOutputHandlerFor(
 	// TODO: LRU with close and re-open in case too many files are open
 	outputHandler := manager.outputHandlers[filename]
 	if outputHandler == nil {
-		var err error = nil
+		var err error
 		if manager.pipe {
 			outputHandler, err = NewPipeWriteOutputHandler(
 				filename,
 				manager.recordWriterOptions,
 			)
-			if err != nil {
-				return nil, err
-			}
-			if outputHandler != nil {
-			}
 		} else if manager.append {
 			outputHandler, err = NewFileAppendOutputHandler(
 				filename,
 				manager.recordWriterOptions,
 			)
-			if err != nil {
-				return nil, err
-			}
 		} else {
 			outputHandler, err = NewFileWriteOutputHandler(
 				filename,
 				manager.recordWriterOptions,
 			)
-			if err != nil {
-				return nil, err
-			}
+		}
+		if err != nil {
+			return nil, err
 		}
 		manager.outputHandlers[filename] = outputHandler
 	}
