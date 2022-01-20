@@ -2219,10 +2219,10 @@ FUNCTIONS FOR FILTER/PUT
         (class=typing #args=1) True if argument is not a map.
 
    is_not_null
-        (class=typing #args=1) False if argument is null (empty or absent), true otherwise.
+        (class=typing #args=1) False if argument is null (empty, absent, or JSON null), true otherwise.
 
    is_null
-        (class=typing #args=1) True if argument is null (empty or absent), false otherwise.
+        (class=typing #args=1) True if argument is null (empty, absent, or JSON null), false otherwise.
 
    is_numeric
         (class=typing #args=1) True if field is present with value inferred to be int or float
@@ -3065,4 +3065,4 @@ SEE ALSO
 
 
 
-                                  2022-01-16                         MILLER(1)
+                                  2022-01-20                         MILLER(1)
