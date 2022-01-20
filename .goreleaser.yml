@@ -1,7 +1,19 @@
 # .goreleaser.yml
+release:
+  github:
+    owner: johnkerl
+    name: miller
+
+snapshot:
+  name_template: SNAPSHOT-{{ .Commit }}
+
+#gomod:
+#  proxy: true
+
 before:
   hooks:
     - go mod tidy
+
 builds:
   - env:
       - CGO_ENABLED=0
@@ -52,10 +64,32 @@ builds:
     #ldflags:
     #  - -s -w 
 
+archives:
+  - format: tar.gz
+    wrap_in_directory: true
+    format_overrides:
+      - goos: windows
+        format: zip
+    replacements:
+      darwin: macos
+    name_template: '{{ .ProjectName }}-{{ .Version }}-{{ .Os }}-{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    files:
+      - LICENSE
+      - README.md
+
+nfpms:
+  -
+    id: miller-nfpms
+    package_name: miller
+    file_name_template: "{{ .ProjectName }}-{{ .Version }}-{{ .Os }}-{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    homepage: https://github.com/johnkerl/miller
+    maintainer: "John Kerl <johnkerl@users.noreply.github.com>"
+    description: Miller is like awk, sed, cut, join, and sort for data formats such as CSV, TSV, tabular JSON etc
+    license: BSD
+    formats:
+      - deb
+      - rpm
+
 checksum:
   algorithm: sha256
-
-release:
-  github:
-    owner: johnkerl
-    name: miller
+  name_template: '{{ .ProjectName }}-{{ .Version }}-checksums.txt'
