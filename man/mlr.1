@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2022-01-16
+.\"      Date: 2022-01-20
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2022-01-16" "\ \&" "\ \&"
+.TH "MILLER" "1" "2022-01-20" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3242,7 +3242,7 @@ gmt2sec("2001-02-03T04:05:06Z") = 981173106
 .RS 0
 .\}
 .nf
- (class=typing #args=1) False if argument is null (empty or absent), true otherwise.
+ (class=typing #args=1) False if argument is null (empty, absent, or JSON null), true otherwise.
 .fi
 .if n \{\
 .RE
@@ -3251,7 +3251,7 @@ gmt2sec("2001-02-03T04:05:06Z") = 981173106
 .RS 0
 .\}
 .nf
- (class=typing #args=1) True if argument is null (empty or absent), false otherwise.
+ (class=typing #args=1) True if argument is null (empty, absent, or JSON null), false otherwise.
 .fi
 .if n \{\
 .RE

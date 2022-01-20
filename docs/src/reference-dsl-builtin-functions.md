@@ -1464,13 +1464,13 @@ is_not_map  (class=typing #args=1) True if argument is not a map.
 
 ### is_not_null
 <pre class="pre-non-highlight-non-pair">
-is_not_null  (class=typing #args=1) False if argument is null (empty or absent), true otherwise.
+is_not_null  (class=typing #args=1) False if argument is null (empty, absent, or JSON null), true otherwise.
 </pre>
 
 
 ### is_null
 <pre class="pre-non-highlight-non-pair">
-is_null  (class=typing #args=1) True if argument is null (empty or absent), false otherwise.
+is_null  (class=typing #args=1) True if argument is null (empty, absent, or JSON null), false otherwise.
 </pre>
 
 
