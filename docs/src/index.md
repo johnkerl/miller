@@ -16,6 +16,8 @@ Quick links:
 </div>
 # Introduction
 
+**The big picture:** Even well into the 21st century, our world is full of text-formatted data like CSV. Google _CSV memes_, for example. We need tooling to _thrive in this world_, nimbly manipulating data which is in CSVs. And we need tooling to _move beyond CSV_, to be able to pull data out and into other storage and processing systems. Miller is designed for both these goals.
+
 **Miller is a command-line tool for querying, shaping, and reformatting data files in various formats including CSV, TSV, JSON, and JSON Lines.**
 
 In several senses, Miller is more than one tool:
@@ -50,5 +52,3 @@ which allow you to succintly express your own logic.
 In the following you can see how CSV, TSV, tabular, JSON, and other **file formats** share a common theme which is **lists of key-value-pairs**. Miller embraces this common theme.
 
 ![coverart/cover-combined.png](coverart/cover-combined.png)
-
-**The big picture:** Even well into the 21st century, our world is full of text-formatted data like CSV. Google _CSV memes_, for example. We need tooling to _thrive in this world_, nimbly manipulating data which is in CSVs. And we need tooling to _move beyond CSV_, to be able to pull data out and into other storage and processing systems. Miller is designed for both these goals.
