@@ -1,3 +1,70 @@
+// ================================================================
+// Options for the step verb are mostly simple operations involving the previous record and the
+// current record, optionally grouped by one or more group-by field names. For example, with input
+// data
+//
+//   $ cat sample.csv
+//   shape,count
+//   square,10
+//   circle,20
+//   square,11
+//   circle,23
+//
+// using the delta stepper we have
+//
+//   $ mlr --csv --from sample.csv step -a delta -f count
+//   shape,count,count_delta
+//   square,10,0
+//   circle,20,10
+//   square,11,-9
+//   circle,23,12
+//
+// whereas if we group by shape when we have
+//
+//   $ mlr --csv --from sample.csv step -a delta -f count -g shape
+//   shape,count,count_delta
+//   square,10,0
+//   circle,20,0
+//   square,11,1
+//   circle,23,3
+//
+// This is (rather, was) straightforward until we added the ability to do *forward* operations such
+// as shift-lead. Namely:
+//
+// * If the stepper is shift-lead then output lags input by one, e.g.  we emit the 10th record only
+//   after seeing the 11th. Likewise, for sliding-window average with look-forward of 4, we emit the
+//   10th record only after seeing the 14th. More generally, if there are multiple steppers
+//   specified with -a, then the delay is the max of each stepper's look-forward.
+//
+// * Then we need to produce output at the end of the record stream -- e.g.  if there are only 20
+//   records and we're doing shift-lead, then we'd normally emit the 20th record only when the 21st
+//   is received -- but there isn't one.  And we can't use a simple next-is-nil rule for the last
+//   record received in the group-by case. For example, if a given record has shape=square and we're
+//   grouping by shape, we don't know a priori where in the record stream the next record with
+//   shape=square will be -- or if there will be one at all.
+//
+// * If we keep a simple hashmap from grouping key to delayed records and process that at end of
+//   record stream, since Go hashmaps don't preserve insertion order, we'd have non-deterministic
+//   output ordering which would frustrate users and would also break automated regression tests.
+//   For example, doing shift-lead with the above sample data, the last square and circle record
+//   could appear in either order.
+//
+// * For these reasons we have an ordered hashmap -- basically a mashup of hashmap and doubly linked
+//   list -- of all "window" objects per grouping-key.
+//
+// * The window object is just the current record along with previous/next records as required by a
+//   given stepper. The shift-lag stepper keeps the previous and current record; when the 10th
+//   record is ingested, the previous is the 9th, and it emits the 10th record with a value from the
+//   9th.  The shift-lead stepper has a current and next. When the 11th record is ingested, the
+//   'current' is the 10th record and the 'next' is the 11th, and it emits the 10th record with a
+//   value from the 11th.
+//
+// * The ordered hashmap is called a "stepper log" and it has -- in order -- records pointing to the
+//   window object for their grouping key.  We don't know a priori when the end of the record stream
+//   is so we keep the last n records for each grouping key.  At end of the record stream we process
+//   these.
+// ================================================================
+
 package transformers
 
 import (
@@ -10,9 +77,11 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
+	"github.com/johnkerl/miller/internal/pkg/transformers/utils"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
+// For EWMA
 const DEFAULT_STRING_ALPHA = "0.5"
 
 // ----------------------------------------------------------------
@@ -31,33 +100,33 @@ func transformerStepUsage(
 	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameStep)
-	fmt.Fprintf(o, "Computes values dependent on the previous record, optionally grouped by category.\n")
+	fmt.Fprintf(o, "Computes values dependent on earlier/later records, optionally grouped by category.\n")
 	fmt.Fprintf(o, "Options:\n")
 
-	fmt.Fprintf(o, "-a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:\n")
+	fmt.Fprintf(o, "-a {delta,rsum,...} Names of steppers: comma-separated, one or more of:\n")
 	for _, stepperLookup := range STEPPER_LOOKUP_TABLE {
-		fmt.Fprintf(o, "  %-8s %s\n", stepperLookup.name, stepperLookup.desc)
+		fmt.Fprintf(o, "  %-10s %s\n", stepperLookup.name, stepperLookup.desc)
 	}
 	fmt.Fprintf(o, "\n")
 
-	fmt.Fprintf(o, "-f {a,b,c} Value-field names on which to compute statistics\n")
+	fmt.Fprintf(o, "-f {a,b,c}   Value-field names on which to compute statistics\n")
 
-	fmt.Fprintf(o, "-g {d,e,f} Optional group-by-field names\n")
+	fmt.Fprintf(o, "-g {d,e,f}   Optional group-by-field names\n")
 
-	fmt.Fprintf(o, "-F         Computes integerable things (e.g. counter) in floating point.\n")
-	fmt.Fprintf(o, "           As of Miller 6 this happens automatically, but the flag is accepted\n")
-	fmt.Fprintf(o, "           as a no-op for backward compatibility with Miller 5 and below.\n")
+	fmt.Fprintf(o, "-F           Computes integerable things (e.g. counter) in floating point.\n")
+	fmt.Fprintf(o, "             As of Miller 6 this happens automatically, but the flag is accepted\n")
+	fmt.Fprintf(o, "             as a no-op for backward compatibility with Miller 5 and below.\n")
 
-	fmt.Fprintf(o, "-d {x,y,z} Weights for EWMA. 1 means current sample gets all weight (no\n")
-	fmt.Fprintf(o, "           smoothing), near under under 1 is light smoothing, near over 0 is\n")
-	fmt.Fprintf(o, "           heavy smoothing. Multiple weights may be specified, e.g.\n")
-	fmt.Fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", "mlr", verbNameStep)
-	fmt.Fprintf(o, "           is \"-d %s\".\n", DEFAULT_STRING_ALPHA)
+	fmt.Fprintf(o, "-d {x,y,z}   Weights for EWMA. 1 means current sample gets all weight (no\n")
+	fmt.Fprintf(o, "             smoothing), near under under 1 is light smoothing, near over 0 is\n")
+	fmt.Fprintf(o, "             heavy smoothing. Multiple weights may be specified, e.g.\n")
+	fmt.Fprintf(o, "             \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", "mlr", verbNameStep)
+	fmt.Fprintf(o, "             is \"-d %s\".\n", DEFAULT_STRING_ALPHA)
 
-	fmt.Fprintf(o, "-o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to\n")
-	fmt.Fprintf(o, "           the -d values. If supplied, the number of -o values must be the same\n")
-	fmt.Fprintf(o, "           as the number of -d values.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	fmt.Fprintf(o, "-o {a,b,c}   Custom suffixes for EWMA output fields. If omitted, these default to\n")
+	fmt.Fprintf(o, "             the -d values. If supplied, the number of -o values must be the same\n")
+	fmt.Fprintf(o, "             as the number of -d values.\n")
+	fmt.Fprintf(o, "-h|--help S  how this message.\n")
 
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Examples:\n")
@@ -169,20 +238,42 @@ func transformerStepParseCLI(
 }
 
 // ----------------------------------------------------------------
+// This is the "stepper log" referred to in comments at the top of this file.
+type tStepLogEntry struct {
+	recordAndContext *types.RecordAndContext
+	windowKeeper     *utils.TWindowKeeper
+	// Map from value field name to stepper name to stepper.  E.g. with 'mlr step -g a,b -f x,y -a
+	// shift-lag,shift-lead', value field names are 'x' and 'y', and stepper names are 'shift-lag'
+	// and 'shift-lead'.
+	steppers map[string]map[string]tStepper
+}
+
 type TransformerStep struct {
 	// INPUT
+
 	stepperInputs     []*tStepperInput
 	valueFieldNames   []string
 	groupByFieldNames []string
 	stringAlphas      []string
 	ewmaSuffixes      []string
 
+	maxNumRecordsBackward int
+	maxNumRecordsForward  int
+
 	// STATE
+
 	// Scratch space used per-record
 	valueFieldValues []mlrval.Mlrval
-	// Map from group-by field names to value-field names to array of
-	// stepper objects.  See the Transform method below for more details.
+	// Map from group-by field names to value-field names to stepper name to stepper object.  See
+	// the Transform method below for more details.
 	groups map[string]map[string]map[string]tStepper
+	// Map from group-by field names to window-keeper object.  These keep rows before and after a
+	// 'current' row center point for lag/lead computations, etc.
+	windowKeepers map[string]*utils.TWindowKeeper
+
+	// Ordered map from stringified pointer to recordAndContext, to *tStepLogEntry,
+	// as described in comments at the top of this file.
+	log *lib.OrderedMap
 }
 
 func NewTransformerStep(
@@ -204,14 +295,28 @@ func NewTransformerStep(
 		}
 	}
 
+	maxNumRecordsBackward := 0
+	maxNumRecordsForward := 0
+	for _, stepperInput := range stepperInputs {
+		if maxNumRecordsBackward < stepperInput.numRecordsBackward {
+			maxNumRecordsBackward = stepperInput.numRecordsBackward
+		}
+		if maxNumRecordsForward < stepperInput.numRecordsForward {
+			maxNumRecordsForward = stepperInput.numRecordsForward
+		}
+	}
+
 	tr := &TransformerStep{
-		stepperInputs:     stepperInputs,
-		valueFieldNames:   valueFieldNames,
-		groupByFieldNames: groupByFieldNames,
-		stringAlphas:      stringAlphas,
-		ewmaSuffixes:      ewmaSuffixes,
-		// TODO: pair of tStepper and tWindow
-		groups: make(map[string]map[string]map[string]tStepper),
+		stepperInputs:         stepperInputs,
+		valueFieldNames:       valueFieldNames,
+		groupByFieldNames:     groupByFieldNames,
+		stringAlphas:          stringAlphas,
+		ewmaSuffixes:          ewmaSuffixes,
+		maxNumRecordsBackward: maxNumRecordsBackward,
+		maxNumRecordsForward:  maxNumRecordsForward,
+		groups:                make(map[string]map[string]map[string]tStepper),
+		windowKeepers:         make(map[string]*utils.TWindowKeeper),
+		log:                   lib.NewOrderedMap(),
 	}
 
 	return tr, nil
@@ -254,11 +359,34 @@ func (tr *TransformerStep) Transform(
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	if inrecAndContext.EndOfStream {
+
+	if !inrecAndContext.EndOfStream {
+		tr.handleRecord(inrecAndContext, outputRecordsAndContexts)
+
+	} else {
+		// As described in comments at the top of this file: process through all delayed-input
+		// records for shift-lead, forward-sliding-window, etc. steppers.
+		for pe := tr.log.Head; pe != nil; pe = pe.Next {
+			logEntry := pe.Value.(*tStepLogEntry)
+			// Shift by one -- if 'current' is the 9th record and 'next' is 10th, and there's no
+			// 11th, 'current' becomes the 10th and the 'next' becomes nil.
+			logEntry.windowKeeper.Ingest(nil)
+			tr.handleDrainRecord(logEntry, outputRecordsAndContexts)
+		}
+
 		outputRecordsAndContexts.PushBack(inrecAndContext)
 		return
 	}
+}
 
+// handleRecord processes records received before the end of the record stream is seen.
+// The records emitted here are the ones we can emit now. For example, with shift-lead, if the most
+// recent input record is the 11th, then here we're emitting the 10th.  At EOS, we'll drain any
+// delayed-input records in the order in which they were received.
+func (tr *TransformerStep) handleRecord(
+	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+) {
 	inrec := inrecAndContext.Record
 
 	// Group-by field names are ["a", "b"]
@@ -278,10 +406,23 @@ func (tr *TransformerStep) Transform(
 		tr.groups[groupingKey] = groupToAccField
 	}
 
-	// [3.4, 5.6]
+	windowKeeper := tr.windowKeepers[groupingKey]
+	if windowKeeper == nil {
+		windowKeeper = utils.NewWindowKeeper(
+			tr.maxNumRecordsBackward,
+			tr.maxNumRecordsForward,
+		)
+		tr.windowKeepers[groupingKey] = windowKeeper
+	}
+	windowKeeper.Ingest(inrecAndContext)
+
+	// Keep a log of delayed-input records, which we'll drain at end of record stream.
+	tr.insertToLog(inrecAndContext, windowKeeper, groupToAccField)
+
+	// E.g. if x=3.4 and y=5.6 then this is [3.4, 5.6]
 	valueFieldValues, _ := inrec.ReferenceSelectedValues(tr.valueFieldNames)
 
-	// for x=3.4 and y=5.6:
+	// For x=3.4 and y=5.6:
 	for i, valueFieldName := range tr.valueFieldNames {
 		valueFieldValue := valueFieldValues[i]
 		if valueFieldValue == nil { // not present in the current record
@@ -311,11 +452,91 @@ func (tr *TransformerStep) Transform(
 				}
 				accFieldToAccState[stepperInput.name] = stepper
 			}
-			stepper.process(valueFieldValue, inrec)
+
+			stepper.process(windowKeeper)
 		}
 	}
 
-	outputRecordsAndContexts.PushBack(inrecAndContext)
+	if windowKeeper.Get(0) != nil {
+		outrecAndContext := windowKeeper.Get(0).(*types.RecordAndContext)
+		outputRecordsAndContexts.PushBack(outrecAndContext)
+		tr.removeFromLog(outrecAndContext)
+	}
+}
+
+// handleDrainRecord processes records received after the end of the record stream is seen.  The
+// records emitted here are the ones we couldn't emit before. For example, with shift-lead, if the
+// most recent input record is the 11th, then before EOS we emitted the 10th. Here, we'll drain any
+// delayed-input records in the order in which they were received.
+func (tr *TransformerStep) handleDrainRecord(
+	logEntry *tStepLogEntry,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+) {
+	inrecAndContext := logEntry.recordAndContext
+	inrec := inrecAndContext.Record
+	windowKeeper := logEntry.windowKeeper
+	steppers := logEntry.steppers
+
+	// [3.4, 5.6]
+	valueFieldValues, _ := inrec.ReferenceSelectedValues(tr.valueFieldNames)
+
+	// for x=3.4 and y=5.6:
+	for i, valueFieldName := range tr.valueFieldNames {
+		valueFieldValue := valueFieldValues[i]
+		if valueFieldValue == nil { // not present in the current record
+			continue
+		}
+
+		accFieldToAccState := steppers[valueFieldName]
+		lib.InternalCodingErrorIf(accFieldToAccState == nil)
+
+		// for "delta", "rsum":
+		for _, stepperInput := range tr.stepperInputs {
+			stepper, present := accFieldToAccState[stepperInput.name]
+			lib.InternalCodingErrorIf(!present)
+			lib.InternalCodingErrorIf(windowKeeper.Get(0) == nil)
+			stepper.process(windowKeeper)
+		}
+	}
+
+	lib.InternalCodingErrorIf(windowKeeper.Get(0) == nil)
+	outrecAndContext := windowKeeper.Get(0).(*types.RecordAndContext)
+	outputRecordsAndContexts.PushBack(outrecAndContext)
+}
+
+// insertToLog remembers a delayed-input record so we can process it in the order it was received,
+// perhaps only after the end of the record stream has been seen.
+func (tr *TransformerStep) insertToLog(
+	recordAndContext *types.RecordAndContext,
+	windowKeeper *utils.TWindowKeeper,
+	steppers map[string]map[string]tStepper,
+) {
+	key := tr.makeLogKey(recordAndContext)
+	ientry := tr.log.Get(key)
+	lib.InternalCodingErrorIf(ientry != nil)
+	tr.log.Put(key, &tStepLogEntry{
+		recordAndContext: recordAndContext,
+		windowKeeper:     windowKeeper,
+		steppers:         steppers,
+	})
+}
+
+// removeFromLog shifts records out of the log. For example, with shift-lead, we only have
+// look-forward of 1, so the log will only have one record per grouping key.
+func (tr *TransformerStep) removeFromLog(
+	recordAndContext *types.RecordAndContext,
+) {
+	key := tr.makeLogKey(recordAndContext)
+	ientry := tr.log.Get(key)
+	lib.InternalCodingErrorIf(ientry == nil)
+	tr.log.Remove(key)
+}
+
+// makeLogKey stringifies record-and-context pointer for use as a map key for the stepper log.
+func (tr *TransformerStep) makeLogKey(
+	inrecAndContext *types.RecordAndContext,
+) string {
+	return fmt.Sprintf("%p", inrecAndContext)
 }
 
 // ================================================================
@@ -338,7 +559,7 @@ type tStepperInput struct {
 }
 
 type tStepper interface {
-	process(valueFieldValue *mlrval.Mlrval, inputRecord *mlrval.Mlrmap)
+	process(windowKeeper *utils.TWindowKeeper)
 }
 
 type tStepperLookup struct {
@@ -349,15 +570,60 @@ type tStepperLookup struct {
 }
 
 var STEPPER_LOOKUP_TABLE = []tStepperLookup{
-	{"counter", stepperCounterInputFromName, stepperCounterAlloc, "Count instances of field(s) between successive records"},
-	{"delta", stepperDeltaInputFromName, stepperDeltaAlloc, "Compute differences in field(s) between successive records"},
-	{"ewma", stepperEWMAInputFromName, stepperEWMAAlloc, "Exponentially weighted moving average over successive records"},
-	{"from-first", stepperFromFirstInputFromName, stepperFromFirstAlloc, "Compute differences in field(s) from first record"},
-	{"ratio", stepperRatioInputFromName, stepperRatioAlloc, "Compute ratios in field(s) between successive records"},
-	{"rsum", stepperRsumInputFromName, stepperRsumAlloc, "Compute running sums of field(s) between successive records"},
-	{"shift", stepperShiftInputFromName, stepperShiftAlloc, "Alias for shift-lag"},
-	{"shift-lag", stepperShiftLagInputFromName, stepperShiftLagAlloc, "Include value(s) in field(s) from previous record, if any"},
-	{"shift-lead", stepperShiftLeadInputFromName, stepperShiftLeadAlloc, "Include value(s) in field(s) from previous record, if any"},
+	{
+		"counter",
+		stepperCounterInputFromName,
+		stepperCounterAlloc,
+		"Count instances of field(s) between successive records",
+	},
+	{
+		"delta",
+		stepperDeltaInputFromName,
+		stepperDeltaAlloc,
+		"Compute differences in field(s) between successive records",
+	},
+	{
+		"ewma",
+		stepperEWMAInputFromName,
+		stepperEWMAAlloc,
+		"Exponentially weighted moving average over successive records",
+	},
+	{
+		"from-first",
+		stepperFromFirstInputFromName,
+		stepperFromFirstAlloc,
+		"Compute differences in field(s) from first record",
+	},
+	{
+		"ratio",
+		stepperRatioInputFromName,
+		stepperRatioAlloc,
+		"Compute ratios in field(s) between successive records",
+	},
+	{
+		"rsum",
+		stepperRsumInputFromName,
+		stepperRsumAlloc,
+		"Compute running sums of field(s) between successive records",
+	},
+	{
+		"shift",
+		stepperShiftInputFromName,
+		stepperShiftAlloc,
+		"Alias for shift-lag",
+	},
+	{
+		"shift-lag",
+		stepperShiftLagInputFromName,
+		stepperShiftLagAlloc,
+		"Include value(s) in field(s) from the previous record, if any",
+	},
+	{
+		"shift-lead",
+		stepperShiftLeadInputFromName,
+		stepperShiftLeadAlloc,
+		"Include value(s) in field(s) from the next record, if any",
+	},
 }
 
 func stepperInputFromName(
@@ -394,7 +660,7 @@ func allocateStepper(
 
 // ================================================================
 type tStepperDelta struct {
-	previous        *mlrval.Mlrval
+	inputFieldName  string
 	outputFieldName string
 }
 
@@ -414,36 +680,58 @@ func stepperDeltaAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperDelta{
-		previous:        nil,
+		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_delta",
 	}
 }
 
 func (stepper *tStepperDelta) process(
-	valueFieldValue *mlrval.Mlrval,
-	inrec *mlrval.Mlrmap,
+	windowKeeper *utils.TWindowKeeper,
 ) {
-	if valueFieldValue.IsVoid() {
-		inrec.PutCopy(stepper.outputFieldName, mlrval.VOID)
+	icur := windowKeeper.Get(0)
+	if icur == nil {
+		return
+	}
+	currecAndContext := icur.(*types.RecordAndContext)
+	currec := currecAndContext.Record
+	currval := currec.Get(stepper.inputFieldName)
+
+	if currval.IsVoid() {
+		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 		return
 	}
 
 	delta := mlrval.FromInt(0)
-	if stepper.previous != nil {
-		delta = bifs.BIF_minus_binary(valueFieldValue, stepper.previous)
-	}
-	inrec.PutCopy(stepper.outputFieldName, delta)
 
-	stepper.previous = valueFieldValue.Copy()
+	iprev := windowKeeper.Get(-1)
+	if iprev != nil {
+		prevrec := iprev.(*types.RecordAndContext).Record
+		prevval := prevrec.Get(stepper.inputFieldName)
+		if prevval != nil {
+			delta = bifs.BIF_minus_binary(currval, prevval)
+		}
+	}
+	currec.PutCopy(stepper.outputFieldName, delta.Copy())
 }
 
 // ================================================================
+// shift is an alias for shift
 type tStepperShiftLag struct {
-	previous        *mlrval.Mlrval
+	inputFieldName  string
 	outputFieldName string
 }
 
 func stepperShiftInputFromName(
+	stepperName string,
+) *tStepperInput {
+	return &tStepperInput{
+		name:               stepperName,
+		numRecordsBackward: 1,
+		numRecordsForward:  0,
+	}
+}
+
+func stepperShiftLagInputFromName(
 	stepperName string,
 ) *tStepperInput {
 	return &tStepperInput{
@@ -459,18 +747,8 @@ func stepperShiftAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperShiftLag{
-		previous:        nil,
+		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_shift",
-	}
-}
-
-func stepperShiftLagInputFromName(
-	stepperName string,
-) *tStepperInput {
-	return &tStepperInput{
-		name:               stepperName,
-		numRecordsBackward: 1,
-		numRecordsForward:  0,
 	}
 }
 
@@ -480,28 +758,39 @@ func stepperShiftLagAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperShiftLag{
-		previous:        nil,
+		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_shift_lag",
 	}
 }
 
 func (stepper *tStepperShiftLag) process(
-	valueFieldValue *mlrval.Mlrval,
-	inrec *mlrval.Mlrmap,
+	windowKeeper *utils.TWindowKeeper,
 ) {
-	if stepper.previous == nil {
-		shift := mlrval.VOID
-		inrec.PutCopy(stepper.outputFieldName, shift)
-	} else {
-		inrec.PutCopy(stepper.outputFieldName, stepper.previous)
-		stepper.previous = valueFieldValue.Copy()
+	icur := windowKeeper.Get(0)
+	if icur == nil {
+		return
 	}
-	stepper.previous = valueFieldValue.Copy()
+	currecAndContext := icur.(*types.RecordAndContext)
+	currec := currecAndContext.Record
+
+	iprev := windowKeeper.Get(-1)
+	if iprev == nil {
+		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
+		return
+	}
+	prevrec := iprev.(*types.RecordAndContext).Record
+	prevval := prevrec.Get(stepper.inputFieldName)
+
+	if prevval == nil {
+		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
+	} else {
+		currec.PutCopy(stepper.outputFieldName, prevval.Copy())
+	}
 }
 
 // ================================================================
 type tStepperShiftLead struct {
-	previous        *mlrval.Mlrval
+	inputFieldName  string
 	outputFieldName string
 }
 
@@ -521,28 +810,38 @@ func stepperShiftLeadAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperShiftLead{
-		previous:        nil,
+		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_shift_lead",
 	}
 }
 
 func (stepper *tStepperShiftLead) process(
-	valueFieldValue *mlrval.Mlrval,
-	inrec *mlrval.Mlrmap,
+	windowKeeper *utils.TWindowKeeper,
 ) {
-	if stepper.previous == nil {
-		shift := mlrval.VOID
-		inrec.PutCopy(stepper.outputFieldName, shift)
-	} else {
-		inrec.PutCopy(stepper.outputFieldName, stepper.previous)
-		stepper.previous = valueFieldValue.Copy()
+	icur := windowKeeper.Get(0)
+	if icur == nil {
+		return
 	}
-	stepper.previous = valueFieldValue.Copy()
+	currecAndContext := icur.(*types.RecordAndContext)
+	currec := currecAndContext.Record
+
+	inextrec := windowKeeper.Get(1)
+	if inextrec == nil {
+		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
+		return
+	}
+	nextrec := inextrec.(*types.RecordAndContext).Record
+	nextval := nextrec.Get(stepper.inputFieldName)
+
+	if nextval != nil {
+		currec.PutCopy(stepper.outputFieldName, nextval.Copy())
+	}
 }
 
 // ================================================================
 type tStepperFromFirst struct {
 	first           *mlrval.Mlrval
+	inputFieldName  string
 	outputFieldName string
 }
 
@@ -563,26 +862,34 @@ func stepperFromFirstAlloc(
 ) tStepper {
 	return &tStepperFromFirst{
 		first:           nil,
+		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_from_first",
 	}
 }
 
 func (stepper *tStepperFromFirst) process(
-	valueFieldValue *mlrval.Mlrval,
-	inrec *mlrval.Mlrmap,
+	windowKeeper *utils.TWindowKeeper,
 ) {
+	icur := windowKeeper.Get(0)
+	if icur == nil {
+		return
+	}
+	currecAndContext := icur.(*types.RecordAndContext)
+	currec := currecAndContext.Record
+	currval := currec.Get(stepper.inputFieldName)
+
 	fromFirst := mlrval.FromInt(0)
 	if stepper.first == nil {
-		stepper.first = valueFieldValue.Copy()
+		stepper.first = currval.Copy()
 	} else {
-		fromFirst = bifs.BIF_minus_binary(valueFieldValue, stepper.first)
+		fromFirst = bifs.BIF_minus_binary(currval, stepper.first)
 	}
-	inrec.PutCopy(stepper.outputFieldName, fromFirst)
+	currec.PutCopy(stepper.outputFieldName, fromFirst)
 }
 
 // ================================================================
 type tStepperRatio struct {
-	previous        *mlrval.Mlrval
+	inputFieldName  string
 	outputFieldName string
 }
 
@@ -602,32 +909,44 @@ func stepperRatioAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperRatio{
-		previous:        nil,
+		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_ratio",
 	}
 }
 
 func (stepper *tStepperRatio) process(
-	valueFieldValue *mlrval.Mlrval,
-	inrec *mlrval.Mlrmap,
+	windowKeeper *utils.TWindowKeeper,
 ) {
-	if valueFieldValue.IsVoid() {
-		inrec.PutCopy(stepper.outputFieldName, mlrval.VOID)
+	icur := windowKeeper.Get(0)
+	if icur == nil {
+		return
+	}
+	currecAndContext := icur.(*types.RecordAndContext)
+	currec := currecAndContext.Record
+	currval := currec.Get(stepper.inputFieldName)
+
+	if currval.IsVoid() {
+		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 		return
 	}
 
 	ratio := mlrval.FromInt(1)
-	if stepper.previous != nil {
-		ratio = bifs.BIF_divide(valueFieldValue, stepper.previous)
-	}
-	inrec.PutCopy(stepper.outputFieldName, ratio)
 
-	stepper.previous = valueFieldValue.Copy()
+	iprev := windowKeeper.Get(-1)
+	if iprev != nil {
+		prevrec := iprev.(*types.RecordAndContext).Record
+		prevval := prevrec.Get(stepper.inputFieldName)
+		if prevval != nil {
+			ratio = bifs.BIF_divide(currval, prevval)
+		}
+	}
+	currec.PutCopy(stepper.outputFieldName, ratio.Copy())
 }
 
 // ================================================================
 type tStepperRsum struct {
 	rsum            *mlrval.Mlrval
+	inputFieldName  string
 	outputFieldName string
 }
 
@@ -648,26 +967,34 @@ func stepperRsumAlloc(
 ) tStepper {
 	return &tStepperRsum{
 		rsum:            mlrval.FromInt(0),
+		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_rsum",
 	}
 }
 
 func (stepper *tStepperRsum) process(
-	valueFieldValue *mlrval.Mlrval,
-	inrec *mlrval.Mlrmap,
+	windowKeeper *utils.TWindowKeeper,
 ) {
-	if valueFieldValue.IsVoid() {
-		inrec.PutCopy(stepper.outputFieldName, mlrval.VOID)
+	icur := windowKeeper.Get(0)
+	if icur == nil {
+		return
+	}
+	currecAndContext := icur.(*types.RecordAndContext)
+	currec := currecAndContext.Record
+	currval := currec.Get(stepper.inputFieldName)
+
+	if currval.IsVoid() {
+		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 	} else {
-		stepper.rsum = bifs.BIF_plus_binary(valueFieldValue, stepper.rsum)
-		inrec.PutCopy(stepper.outputFieldName, stepper.rsum)
+		stepper.rsum = bifs.BIF_plus_binary(currval, stepper.rsum)
+		currec.PutCopy(stepper.outputFieldName, stepper.rsum)
 	}
 }
 
 // ================================================================
 type tStepperCounter struct {
 	counter         *mlrval.Mlrval
-	one             *mlrval.Mlrval
+	inputFieldName  string
 	outputFieldName string
 }
 
@@ -688,31 +1015,38 @@ func stepperCounterAlloc(
 ) tStepper {
 	return &tStepperCounter{
 		counter:         mlrval.FromInt(0),
-		one:             mlrval.FromInt(1),
+		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_counter",
 	}
 }
 
 func (stepper *tStepperCounter) process(
-	valueFieldValue *mlrval.Mlrval,
-	inrec *mlrval.Mlrmap,
+	windowKeeper *utils.TWindowKeeper,
 ) {
-	if valueFieldValue.IsVoid() {
-		inrec.PutCopy(stepper.outputFieldName, mlrval.VOID)
+	icur := windowKeeper.Get(0)
+	if icur == nil {
+		return
+	}
+	currecAndContext := icur.(*types.RecordAndContext)
+	currec := currecAndContext.Record
+	currval := currec.Get(stepper.inputFieldName)
+
+	if currval.IsVoid() {
+		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 	} else {
-		stepper.counter = bifs.BIF_plus_binary(stepper.counter, stepper.one)
-		inrec.PutCopy(stepper.outputFieldName, stepper.counter)
+		stepper.counter = bifs.BIF_plus_binary(stepper.counter, mlrval.ONE)
+		currec.PutCopy(stepper.outputFieldName, stepper.counter)
 	}
 }
 
-// ----------------------------------------------------------------
+// ================================================================
 // https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
 
-// ================================================================
 type tStepperEWMA struct {
 	alphas           []*mlrval.Mlrval
 	oneMinusAlphas   []*mlrval.Mlrval
 	prevs            []*mlrval.Mlrval
+	inputFieldName   string
 	outputFieldNames []string
 	havePrevs        bool
 }
@@ -733,8 +1067,8 @@ func stepperEWMAAlloc(
 	ewmaSuffixes []string,
 ) tStepper {
 
-	// We trust our caller has already checked len(stringAlphas) ==
-	// len(ewmaSuffixes) in the CLI parser.
+	// We trust our caller has already checked len(stringAlphas) == len(ewmaSuffixes) in the CLI
+	// parser.
 	n := len(stringAlphas)
 
 	alphas := make([]*mlrval.Mlrval, n)
@@ -769,29 +1103,37 @@ func stepperEWMAAlloc(
 		alphas:           alphas,
 		oneMinusAlphas:   oneMinusAlphas,
 		prevs:            prevs,
+		inputFieldName:   inputFieldName,
 		outputFieldNames: outputFieldNames,
 		havePrevs:        false,
 	}
 }
 
 func (stepper *tStepperEWMA) process(
-	valueFieldValue *mlrval.Mlrval,
-	inrec *mlrval.Mlrmap,
+	windowKeeper *utils.TWindowKeeper,
 ) {
+	icur := windowKeeper.Get(0)
+	if icur == nil {
+		return
+	}
+	currecAndContext := icur.(*types.RecordAndContext)
+	currec := currecAndContext.Record
+	currval := currec.Get(stepper.inputFieldName)
+
 	if !stepper.havePrevs {
 		for i := range stepper.alphas {
-			inrec.PutCopy(stepper.outputFieldNames[i], valueFieldValue)
-			stepper.prevs[i] = valueFieldValue.Copy()
+			currec.PutCopy(stepper.outputFieldNames[i], currval)
+			stepper.prevs[i] = currval.Copy()
 		}
 		stepper.havePrevs = true
 	} else {
 		for i := range stepper.alphas {
-			curr := valueFieldValue.Copy()
+			curr := currval.Copy()
 			next := bifs.BIF_plus_binary(
 				bifs.BIF_times(curr, stepper.alphas[i]),
 				bifs.BIF_times(stepper.prevs[i], stepper.oneMinusAlphas[i]),
 			)
-			inrec.PutCopy(stepper.outputFieldNames[i], next)
+			currec.PutCopy(stepper.outputFieldNames[i], next)
 			stepper.prevs[i] = next
 		}
 	}

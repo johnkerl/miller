@@ -1,1 +1,1 @@
-mlr --odkvp step -a rsum,shift,delta,counter -f x,y test/input/abixy-het
+mlr --ojson step -a rsum,shift,delta,counter -f x,y test/input/abixy-het
