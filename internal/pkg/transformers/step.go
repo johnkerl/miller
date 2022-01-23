@@ -208,6 +208,16 @@ func transformerStepParseCLI(
 			// Let them do '-o fast -o slow' or '-o fast,slow'
 			ewmaSuffixes = append(ewmaSuffixes, cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)...)
 
+		} else if opt == "-x" {
+			// TODO TEMP TEMP TEMP
+			// TODO: methodize
+			stepperInput := &tStepperInput{
+				name:               "slwin", // TODO: needs separate names for construction and keying
+				numRecordsBackward: 5,
+				numRecordsForward:  5,
+			}
+			stepperInputs = append(stepperInputs, stepperInput)
+
 		} else if opt == "-F" {
 			// As of Miller 6 this happens automatically, but the flag is accepted
 			// as a no-op for backward compatibility with Miller 5 and below.
@@ -623,6 +633,12 @@ var STEPPER_LOOKUP_TABLE = []tStepperLookup{
 		stepperShiftLeadInputFromName,
 		stepperShiftLeadAlloc,
 		"Include value(s) in field(s) from the next record, if any",
+	},
+	{
+		"slwin",
+		nil, // TODO COMMENT ME
+		stepperSlwinAlloc,
+		"TODO DESCRIBE ME",
 	},
 }
 
@@ -1136,5 +1152,64 @@ func (stepper *tStepperEWMA) process(
 			currec.PutCopy(stepper.outputFieldNames[i], next)
 			stepper.prevs[i] = next
 		}
+	}
+}
+
+// ================================================================
+type tStepperSlwin struct {
+	inputFieldName     string
+	numRecordsBackward int
+	numRecordsForward  int
+	outputFieldName    string
+}
+
+func stepperSlwinAlloc(
+	inputFieldName string,
+	_unused1 []string,
+	_unused2 []string,
+) tStepper {
+	return &tStepperSlwin{
+		inputFieldName:  inputFieldName,
+		outputFieldName: inputFieldName + "_slwin", // TODO _b_f
+		// TODO
+		numRecordsBackward: 5,
+		numRecordsForward: 5,
+	}
+}
+
+func (stepper *tStepperSlwin) process(
+	windowKeeper *utils.TWindowKeeper,
+) {
+	count := 0
+	sum := mlrval.FromFloat(0.0)
+	for i := -stepper.numRecordsBackward; i <= stepper.numRecordsForward; i++ {
+		irac := windowKeeper.Get(i)
+		if irac == nil {
+			continue
+		}
+		rac := irac.(*types.RecordAndContext)
+		rec := rac.Record
+		val := rec.Get(stepper.inputFieldName)
+		if val.IsVoid() {
+			continue
+		}
+		sum = bifs.BIF_plus_binary(sum, val)
+		count++
+	}
+
+	icur := windowKeeper.Get(0)
+	if icur == nil {
+		return
+	}
+	currac := icur.(*types.RecordAndContext)
+	currec := currac.Record
+
+	if count == 0 {
+		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
+	} else {
+		currec.PutReference(
+			stepper.outputFieldName,
+			bifs.BIF_divide(sum, mlrval.FromInt(count)),
+		)
 	}
 }
