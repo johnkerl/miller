@@ -3280,31 +3280,33 @@ donesec                 25.10852919630297
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr step [options]
-Computes values dependent on the previous record, optionally grouped by category.
+Computes values dependent on earlier/later records, optionally grouped by category.
 Options:
--a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:
-  delta    Compute differences in field(s) between successive records
-  shift    Include value(s) in field(s) from previous record, if any
+-a {delta,rsum,...} Names of steppers: comma-separated, one or more of:
+  counter    Count instances of field(s) between successive records
+  delta      Compute differences in field(s) between successive records
+  ewma       Exponentially weighted moving average over successive records
   from-first Compute differences in field(s) from first record
-  ratio    Compute ratios in field(s) between successive records
-  rsum     Compute running sums of field(s) between successive records
-  counter  Count instances of field(s) between successive records
-  ewma     Exponentially weighted moving average over successive records
+  ratio      Compute ratios in field(s) between successive records
+  rsum       Compute running sums of field(s) between successive records
+  shift      Alias for shift-lag
+  shift-lag  Include value(s) in field(s) from the previous record, if any
+  shift-lead Include value(s) in field(s) from the next record, if any
 
--f {a,b,c} Value-field names on which to compute statistics
--g {d,e,f} Optional group-by-field names
--F         Computes integerable things (e.g. counter) in floating point.
-           As of Miller 6 this happens automatically, but the flag is accepted
-           as a no-op for backward compatibility with Miller 5 and below.
--d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no
-           smoothing), near under under 1 is light smoothing, near over 0 is
-           heavy smoothing. Multiple weights may be specified, e.g.
-           "mlr step -a ewma -f sys_load -d 0.01,0.1,0.9". Default if omitted
-           is "-d 0.5".
--o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to
-           the -d values. If supplied, the number of -o values must be the same
-           as the number of -d values.
--h|--help Show this message.
+-f {a,b,c}   Value-field names on which to compute statistics
+-g {d,e,f}   Optional group-by-field names
+-F           Computes integerable things (e.g. counter) in floating point.
+             As of Miller 6 this happens automatically, but the flag is accepted
+             as a no-op for backward compatibility with Miller 5 and below.
+-d {x,y,z}   Weights for EWMA. 1 means current sample gets all weight (no
+             smoothing), near under under 1 is light smoothing, near over 0 is
+             heavy smoothing. Multiple weights may be specified, e.g.
+             "mlr step -a ewma -f sys_load -d 0.01,0.1,0.9". Default if omitted
+             is "-d 0.5".
+-o {a,b,c}   Custom suffixes for EWMA output fields. If omitted, these default to
+             the -d values. If supplied, the number of -o values must be the same
+             as the number of -d values.
+-h|--help S  how this message.
 
 Examples:
   mlr step -a rsum -f request_size

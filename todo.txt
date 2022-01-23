@@ -25,12 +25,14 @@ k better print-interpolate with {} etc
 ! strmatch https://github.com/johnkerl/miller/issues/77#issuecomment-538790927
 
 ----------------------------------------------------------------
+a-b.go -> a_b.go renamer PR
+
+----------------------------------------------------------------
 ! sliding window / moving average
   o port u/window*.mlr from mlrc to mlr (actually, fix mlr of course)
   o sliding-window averages into mapper step (C + Go)
 
-----------------------------------------------------------------
-! shift_lead and shift_lag steps
+! make a lag-by-n and lead-by-n
 
 ----------------------------------------------------------------
 ! rank
