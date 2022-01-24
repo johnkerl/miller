@@ -1,1 +1,1 @@
-mlr --opprint --from test/input/abixy step -a shift-lead -f i -g a then sort -f a
+mlr --opprint --from test/input/abixy step -a shift_lead -f i -g a then sort -f a
