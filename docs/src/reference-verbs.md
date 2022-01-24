@@ -3307,7 +3307,7 @@ Options:
 -o {a,b,c}   Custom suffixes for EWMA output fields. If omitted, these default to
              the -d values. If supplied, the number of -o values must be the same
              as the number of -d values.
--h|--help S  how this message.
+-h|--help   Show this message.
 
 Examples:
   mlr step -a rsum -f request_size

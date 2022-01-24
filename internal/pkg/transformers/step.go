@@ -126,7 +126,7 @@ func transformerStepUsage(
 	fmt.Fprintf(o, "-o {a,b,c}   Custom suffixes for EWMA output fields. If omitted, these default to\n")
 	fmt.Fprintf(o, "             the -d values. If supplied, the number of -o values must be the same\n")
 	fmt.Fprintf(o, "             as the number of -d values.\n")
-	fmt.Fprintf(o, "-h|--help S  how this message.\n")
+	fmt.Fprintf(o, "-h|--help   Show this message.\n")
 
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Examples:\n")
