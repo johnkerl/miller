@@ -2,6 +2,12 @@
 RELEASES
 
 * follow ...
+* plan 6.1.0
+  ? w/ natural sort order
+  ? strptime
+  ? split
+  ? fmt/unfmt/regex doc
+  ? datediff et al.
 
 ================================================================
 FEATURES
@@ -16,25 +22,27 @@ FEATURES
   o linked-to faqent w/ -f -s etc ...
 
 ----------------------------------------------------------------
+* example page for format/scan options
+  o format/unformat
+  o strmatch
+  o =~
+
+----------------------------------------------------------------
 k better print-interpolate with {} etc
   doc: mlr --csv --from example.csv  put -q 'print format("Index {} at quantity {} and rate {}", $index, $quantity, $rate)'
 ----------------------------------------------------------------
 ! sysdate, sysdate_local; datediff ...
 
 ----------------------------------------------------------------
+mlr split ... -n, -g -- ?
+- how to specify filenames?
+
+----------------------------------------------------------------
 ! strmatch https://github.com/johnkerl/miller/issues/77#issuecomment-538790927
 
 ----------------------------------------------------------------
-a-b.go -> a_b.go renamer PR
-
-----------------------------------------------------------------
-! sliding window / moving average
-  i https://github.com/johnkerl/miller/issues/362
-  i $ ~/git/johnkerl/scripts-math/stats/cump 0.9 3 100 > ccump.dat
-    $ pgr -nc -n -p -ms 5 ccump.dat &
-  o new example entry, with ccump and pgr
-
-! make a lag-by-n and lead-by-n
+* new example entry, with ccump and pgr
+* make a lag-by-n and lead-by-n
 
 ----------------------------------------------------------------
 ! rank
@@ -114,13 +122,13 @@ UX
 * tilde-expand for REPL load/open: if '~' is at the start of the string, run it though 'sh -c echo'
   o or, simpler, just slice[1:] and prepend with os.Getenv("HOME")
 
-? $0 as raw-record string -- ? would make mlr grep simpler and more natural ...
 ? fmtnum(98, "%3d%%") -- ? workaround: fmtnum(98, "%3d") . "%"
 ? main-level (verb-level?) flag for "," -> X in verbs -- in case commas in field names
 ? trace-mode ?
 ? re silent zero-pass for-loops on non-collections:
   o intended as a heterogenity feature ...
   o consider a --errors or --strict mode; something
+? $0 as raw-record string -- ? would make mlr grep simpler and more natural ...
 
 ================================================================
 DOC
