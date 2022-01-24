@@ -1,1 +1,1 @@
-mlr --opprint --from test/input/abixy step -a shift-lead -f i
+mlr --opprint --from test/input/abixy step -a shift_lead -f i

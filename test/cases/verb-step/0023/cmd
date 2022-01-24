@@ -1,0 +1,1 @@
+mlr --opprint --from test/input/abixy step -a slwin_2_0,slwin_1_1,slwin_0_2 -f i -g a then sort -f a
