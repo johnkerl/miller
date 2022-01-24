@@ -30,8 +30,6 @@ a-b.go -> a_b.go renamer PR
 ----------------------------------------------------------------
 ! sliding window / moving average
   i https://github.com/johnkerl/miller/issues/362
-  o port u/window*.mlr from mlrc to mlr (actually, fix mlr of course)
-  o sliding-window averages into mapper step (C + Go)
   i $ ~/git/johnkerl/scripts-math/stats/cump 0.9 3 100 > ccump.dat
     $ pgr -nc -n -p -ms 5 ccump.dat &
   o new example entry, with ccump and pgr

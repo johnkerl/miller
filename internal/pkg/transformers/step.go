@@ -29,15 +29,15 @@
 //   circle,23,3
 //
 // This is (rather, was) straightforward until we added the ability to do *forward* operations such
-// as shift-lead. Namely:
+// as shift_lead. Namely:
 //
-// * If the stepper is shift-lead then output lags input by one, e.g.  we emit the 10th record only
+// * If the stepper is shift_lead then output lags input by one, e.g.  we emit the 10th record only
 //   after seeing the 11th. Likewise, for sliding-window average with look-forward of 4, we emit the
 //   10th record only after seeing the 14th. More generally, if there are multiple steppers
 //   specified with -a, then the delay is the max of each stepper's look-forward.
 //
 // * Then we need to produce output at the end of the record stream -- e.g.  if there are only 20
-//   records and we're doing shift-lead, then we'd normally emit the 20th record only when the 21st
+//   records and we're doing shift_lead, then we'd normally emit the 20th record only when the 21st
 //   is received -- but there isn't one.  And we can't use a simple next-is-nil rule for the last
 //   record received in the group-by case. For example, if a given record has shape=square and we're
 //   grouping by shape, we don't know a priori where in the record stream the next record with
@@ -46,16 +46,16 @@
 // * If we keep a simple hashmap from grouping key to delayed records and process that at end of
 //   record stream, since Go hashmaps don't preserve insertion order, we'd have non-deterministic
 //   output ordering which would frustrate users and would also break automated regression tests.
-//   For example, doing shift-lead with the above sample data, the last square and circle record
+//   For example, doing shift_lead with the above sample data, the last square and circle record
 //   could appear in either order.
 //
 // * For these reasons we have an ordered hashmap -- basically a mashup of hashmap and doubly linked
 //   list -- of all "window" objects per grouping-key.
 //
 // * The window object is just the current record along with previous/next records as required by a
-//   given stepper. The shift-lag stepper keeps the previous and current record; when the 10th
+//   given stepper. The shift_lag stepper keeps the previous and current record; when the 10th
 //   record is ingested, the previous is the 9th, and it emits the 10th record with a value from the
-//   9th.  The shift-lead stepper has a current and next. When the 11th record is ingested, the
+//   9th.  The shift_lead stepper has a current and next. When the 11th record is ingested, the
 //   'current' is the 10th record and the 'next' is the 11th, and it emits the 10th record with a
 //   value from the 11th.
 //
@@ -244,8 +244,8 @@ type tStepLogEntry struct {
 	recordAndContext *types.RecordAndContext
 	windowKeeper     *utils.TWindowKeeper
 	// Map from value field name to stepper name to stepper.  E.g. with 'mlr step -g a,b -f x,y -a
-	// shift-lag,shift-lead', value field names are 'x' and 'y', and stepper names are 'shift-lag'
-	// and 'shift-lead'.
+	// shift_lag,shift_lead', value field names are 'x' and 'y', and stepper names are 'shift_lag'
+	// and 'shift_lead'.
 	steppers map[string]map[string]tStepper
 }
 
@@ -366,7 +366,7 @@ func (tr *TransformerStep) Transform(
 
 	} else {
 		// As described in comments at the top of this file: process through all delayed-input
-		// records for shift-lead, forward-sliding-window, etc. steppers.
+		// records for shift_lead, forward-sliding-window, etc. steppers.
 		for pe := tr.log.Head; pe != nil; pe = pe.Next {
 			logEntry := pe.Value.(*tStepLogEntry)
 			// Shift by one -- if 'current' is the 9th record and 'next' is 10th, and there's no
@@ -381,7 +381,7 @@ func (tr *TransformerStep) Transform(
 }
 
 // handleRecord processes records received before the end of the record stream is seen.
-// The records emitted here are the ones we can emit now. For example, with shift-lead, if the most
+// The records emitted here are the ones we can emit now. For example, with shift_lead, if the most
 // recent input record is the 11th, then here we're emitting the 10th.  At EOS, we'll drain any
 // delayed-input records in the order in which they were received.
 func (tr *TransformerStep) handleRecord(
@@ -466,7 +466,7 @@ func (tr *TransformerStep) handleRecord(
 }
 
 // handleDrainRecord processes records received after the end of the record stream is seen.  The
-// records emitted here are the ones we couldn't emit before. For example, with shift-lead, if the
+// records emitted here are the ones we couldn't emit before. For example, with shift_lead, if the
 // most recent input record is the 11th, then before EOS we emitted the 10th. Here, we'll drain any
 // delayed-input records in the order in which they were received.
 func (tr *TransformerStep) handleDrainRecord(
@@ -495,14 +495,14 @@ func (tr *TransformerStep) handleDrainRecord(
 		for _, stepperInput := range tr.stepperInputs {
 			stepper, present := accFieldToAccState[stepperInput.name]
 			lib.InternalCodingErrorIf(!present)
-			lib.InternalCodingErrorIf(windowKeeper.Get(0) == nil)
 			stepper.process(windowKeeper)
 		}
 	}
 
-	lib.InternalCodingErrorIf(windowKeeper.Get(0) == nil)
-	outrecAndContext := windowKeeper.Get(0).(*types.RecordAndContext)
-	outputRecordsAndContexts.PushBack(outrecAndContext)
+	if windowKeeper.Get(0) != nil {
+		outrecAndContext := windowKeeper.Get(0).(*types.RecordAndContext)
+		outputRecordsAndContexts.PushBack(outrecAndContext)
+	}
 }
 
 // insertToLog remembers a delayed-input record so we can process it in the order it was received,
@@ -522,7 +522,7 @@ func (tr *TransformerStep) insertToLog(
 	})
 }
 
-// removeFromLog shifts records out of the log. For example, with shift-lead, we only have
+// removeFromLog shifts records out of the log. For example, with shift_lead, we only have
 // look-forward of 1, so the log will only have one record per grouping key.
 func (tr *TransformerStep) removeFromLog(
 	recordAndContext *types.RecordAndContext,
@@ -618,16 +618,16 @@ var STEPPER_LOOKUP_TABLE = []tStepperLookup{
 		name:                 "shift",
 		stepperInputFromName: stepperShiftInputFromName,
 		stepperAllocator:     stepperShiftAlloc,
-		desc:                 "Alias for shift-lag",
+		desc:                 "Alias for shift_lag",
 	},
 	{
-		name:                 "shift-lag",
+		name:                 "shift_lag",
 		stepperInputFromName: stepperShiftLagInputFromName,
 		stepperAllocator:     stepperShiftLagAlloc,
 		desc:                 "Include value(s) in field(s) from the previous record, if any",
 	},
 	{
-		name:                 "shift-lead",
+		name:                 "shift_lead",
 		stepperInputFromName: stepperShiftLeadInputFromName,
 		stepperAllocator:     stepperShiftLeadAlloc,
 		desc:                 "Include value(s) in field(s) from the next record, if any",
@@ -1201,7 +1201,7 @@ func stepperSlwinInputFromName(
 	stepperName string,
 ) *tStepperInput {
 	var numRecordsBackward, numRecordsForward int
-	n, err := fmt.Sscanf(stepperName, "slwin-%d-%d", &numRecordsBackward, &numRecordsForward)
+	n, err := fmt.Sscanf(stepperName, "slwin_%d_%d", &numRecordsBackward, &numRecordsForward)
 	if n == 2 && err == nil {
 		if numRecordsBackward < 0 || numRecordsForward < 0 {
 			fmt.Fprintf(
@@ -1232,7 +1232,7 @@ func stepperSlwinAlloc(
 	nf := stepperInput.numRecordsForward
 	return &tStepperSlwin{
 		inputFieldName:     inputFieldName,
-		outputFieldName:    fmt.Sprintf("%s-%d-%d", inputFieldName, nb, nf),
+		outputFieldName:    fmt.Sprintf("%s_%d_%d", inputFieldName, nb, nf),
 		numRecordsBackward: nb,
 		numRecordsForward:  nf,
 	}

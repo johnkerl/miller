@@ -1834,9 +1834,9 @@ VERBS
          from-first Compute differences in field(s) from first record
          ratio      Compute ratios in field(s) between successive records
          rsum       Compute running sums of field(s) between successive records
-         shift      Alias for shift-lag
-         shift-lag  Include value(s) in field(s) from the previous record, if any
-         shift-lead Include value(s) in field(s) from the next record, if any
+         shift      Alias for shift_lag
+         shift_lag  Include value(s) in field(s) from the previous record, if any
+         shift_lead Include value(s) in field(s) from the next record, if any
          slwin      Sliding-window averages over m records back and n forward. E.g. slwin-7-2 for 7 back and 2 forward.
 
        -f {a,b,c}   Value-field names on which to compute statistics
@@ -3090,5 +3090,5 @@ SEE ALSO
 
 
 
-                                  2022-01-23                         MILLER(1)
+                                  2022-01-24                         MILLER(1)
 </pre>
