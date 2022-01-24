@@ -1837,7 +1837,7 @@ VERBS
          shift      Alias for shift_lag
          shift_lag  Include value(s) in field(s) from the previous record, if any
          shift_lead Include value(s) in field(s) from the next record, if any
-         slwin      Sliding-window averages over m records back and n forward. E.g. slwin-7-2 for 7 back and 2 forward.
+         slwin      Sliding-window averages over m records back and n forward. E.g. slwin_7_2 for 7 back and 2 forward.
 
        -f {a,b,c}   Value-field names on which to compute statistics
        -g {d,e,f}   Optional group-by-field names
@@ -1860,7 +1860,7 @@ VERBS
          mlr step -a ewma -d 0.1,0.9 -f x,y
          mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y
          mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name
-         mlr step -a slwin-9-0,slwin-0-9 -f x
+         mlr step -a slwin_9_0,slwin_0_9 -f x
 
        Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or
        https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average

@@ -135,7 +135,7 @@ func transformerStepUsage(
 	fmt.Fprintf(o, "  mlr %s -a ewma -d 0.1,0.9 -f x,y\n", verbNameStep)
 	fmt.Fprintf(o, "  mlr %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y\n", verbNameStep)
 	fmt.Fprintf(o, "  mlr %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name\n", verbNameStep)
-	fmt.Fprintf(o, "  mlr %s -a slwin-9-0,slwin-0-9 -f x\n", verbNameStep)
+	fmt.Fprintf(o, "  mlr %s -a slwin_9_0,slwin_0_9 -f x\n", verbNameStep)
 
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or\n")
@@ -638,7 +638,7 @@ var STEPPER_LOOKUP_TABLE = []tStepperLookup{
 		ownsPrefix:           stepperSlwintOwnsPrefix,
 		stepperInputFromName: stepperSlwinInputFromName,
 		stepperAllocator:     stepperSlwinAlloc,
-		desc:                 "Sliding-window averages over m records back and n forward. E.g. slwin-7-2 for 7 back and 2 forward.",
+		desc:                 "Sliding-window averages over m records back and n forward. E.g. slwin_7_2 for 7 back and 2 forward.",
 	},
 }
 
