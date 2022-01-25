@@ -2751,7 +2751,7 @@ var MiscFlagSection = FlagSection{
 		{
 			name: "--ofmt",
 			arg:  "{format}",
-			help: "E.g. `%.18f`, `%.0f`, `%9.6e`. Please use sprintf-style codes for floating-point numbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.",
+			help: "E.g. `%.18f`, `%.0f`, `%9.6e`. Please use sprintf-style codes (https://pkg.go.dev/fmt) for floating-point numbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.WriterOptions.FPOFMT = args[*pargi+1]
