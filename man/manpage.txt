@@ -523,9 +523,10 @@ MISCELLANEOUS FLAGS
        --nr-progress-mod {m}    With m a positive integer: print filename and record
                                 count to os.Stderr every m input records.
        --ofmt {format}          E.g. `%.18f`, `%.0f`, `%9.6e`. Please use
-                                sprintf-style codes for floating-point numbers. If
-                                not specified, default formatting is used. See also
-                                the `fmtnum` function and the `format-values` verb.
+                                sprintf-style codes (https://pkg.go.dev/fmt) for
+                                floating-point numbers. If not specified, default
+                                formatting is used. See also the `fmtnum` function
+                                and the `format-values` verb.
        --records-per-batch {n}  This is an internal parameter for maximum number of
                                 records in a batch size. Normally this does not need
                                 to be modified.
@@ -2118,7 +2119,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) Floor: nearest integer at or below.
 
    fmtnum
-        (class=conversion #args=2) Convert int/float/bool to string using printf-style format string, e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'.
+        (class=conversion #args=2) Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'.
 
    fold
         (class=higher-order-functions #args=3) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is taken from the third argument.
@@ -3069,4 +3070,4 @@ SEE ALSO
 
 
 
-                                  2022-01-24                         MILLER(1)
+                                  2022-01-25                         MILLER(1)

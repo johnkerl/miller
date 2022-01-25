@@ -1395,7 +1395,7 @@ strftime_local.`,
 		{
 			name:  "fmtnum",
 			class: FUNC_CLASS_CONVERSION,
-			help: `Convert int/float/bool to string using printf-style format string, e.g.
+			help: `Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g.
 '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'.`,
 			binaryFunc: bifs.BIF_fmtnum,
 		},
