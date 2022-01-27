@@ -13,6 +13,11 @@ RELEASES
 FEATURES
 
 ----------------------------------------------------------------
+* colors
+  o RT w/ -C
+  o olh/webdocs x several
+
+----------------------------------------------------------------
 example pages as feature catch-up:
 * example page for format/scan options
   o format/unformat

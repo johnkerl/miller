@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/mattn/go-isatty"
 )
@@ -35,51 +36,51 @@ func SetColorization(arg TOutputColorization) {
 
 // For command-line flags like --pass-color 208 etc
 func SetKeyColor(name string) bool {
-	code, ok := makeColorCodeFromName(name)
+	escape, ok := makeANSIEscapesFromName(name)
 	if ok {
-		keyColorString = makeColorString(code)
+		keyColorString = escape
 	}
 	return ok
 }
 func SetValueColor(name string) bool {
-	code, ok := makeColorCodeFromName(name)
+	escape, ok := makeANSIEscapesFromName(name)
 	if ok {
-		valueColorString = makeColorString(code)
+		valueColorString = escape
 	}
 	return ok
 }
 func SetPassColor(name string) bool {
-	code, ok := makeColorCodeFromName(name)
+	escape, ok := makeANSIEscapesFromName(name)
 	if ok {
-		passColorString = makeColorString(code)
+		passColorString = escape
 	}
 	return ok
 }
 func SetFailColor(name string) bool {
-	code, ok := makeColorCodeFromName(name)
+	escape, ok := makeANSIEscapesFromName(name)
 	if ok {
-		failColorString = makeColorString(code)
+		failColorString = escape
 	}
 	return ok
 }
 func SetREPLPS1Color(name string) bool {
-	code, ok := makeColorCodeFromName(name)
+	escape, ok := makeANSIEscapesFromName(name)
 	if ok {
-		replPS1ColorString = makeColorString(code)
+		replPS1ColorString = escape
 	}
 	return ok
 }
 func SetREPLPS2Color(name string) bool {
-	code, ok := makeColorCodeFromName(name)
+	escape, ok := makeANSIEscapesFromName(name)
 	if ok {
-		replPS2ColorString = makeColorString(code)
+		replPS2ColorString = escape
 	}
 	return ok
 }
 func SetHelpColor(name string) bool {
-	code, ok := makeColorCodeFromName(name)
+	escape, ok := makeANSIEscapesFromName(name)
 	if ok {
-		helpColorString = makeColorString(code)
+		helpColorString = escape
 	}
 	return ok
 }
@@ -139,6 +140,51 @@ func ListColorNames() {
 	}
 }
 
+// makeANSIEscapesFromName takes several pieces delimited by "-", e.g.  "bold-red" or "red-bold" or
+// "underline-236".
+func makeANSIEscapesFromName(name string) (string, bool) {
+	namePieces := strings.Split(name, "-")
+	escapePieces := make([]string, len(namePieces))
+	for i := range namePieces {
+		escapePiece, ok := makeANSIEscapeFromName(namePieces[i])
+		if !ok {
+			return "", false
+		}
+		escapePieces[i] = escapePiece
+	}
+	return strings.Join(escapePieces, ""), true
+}
+
+// makeANSIEscapesFromNameUnconditionally is for hard-coded defaults within this source file.
+func makeANSIEscapesFromNameUnconditionally(name string) string {
+	escape, ok := makeANSIEscapesFromName(name)
+	if !ok {
+		fmt.Fprintf(os.Stderr, "mlr: internal coding error in colorizer initialization.\n")
+	}
+	return escape
+}
+
+// makeANSIEscapeFromName operates on a single piece from makeANSIEscapesFromName, e.g. the "bold",
+// "red", etc.
+func makeANSIEscapeFromName(name string) (string, bool) {
+	if name == "plain" {
+		return "", true
+	} else if name == "bold" || name == "bolded" {
+		return boldString, true
+	} else if name == "underline" || name == "underlined" {
+		return underlineString, true
+	} else if name == "reverse" || name == "reversed" {
+		return reversedString, true
+	} else {
+		code, ok := makeColorCodeFromName(name)
+		if ok {
+			return makeColorString(code), true
+		} else {
+			return "", false
+		}
+	}
+}
+
 // makeColorCodeFromName looks up a named code, if available: e.g. "orchid"
 // maps to 170.
 func makeColorCodeFromName(name string) (int, bool) {
@@ -161,16 +207,24 @@ func makeColorCodeFromName(name string) (int, bool) {
 // Internal implementation
 
 // Default ANSI color codes
-var keyColorString = make256ColorString(208)  // orange
-var valueColorString = make256ColorString(33) // blue
-var passColorString = make16ColorString(10)   // bold green
-var failColorString = make16ColorString(9)    // bold red
-var replPS1ColorString = make16ColorString(9) // bold red
-var replPS2ColorString = make16ColorString(1) // red
-var helpColorString = make16ColorString(9)    // bold red
+// 6.0.0:
+// var keyColorString = makeANSIEscapesFromNameUnconditionally("orange")
+// var valueColorString = makeANSIEscapesFromNameUnconditionally("blue")
+// 6.1.0:
+var keyColorString = makeANSIEscapesFromNameUnconditionally("bold")
+var valueColorString = makeANSIEscapesFromNameUnconditionally("plain")
+var passColorString = makeANSIEscapesFromNameUnconditionally("bold-lime")
+var failColorString = makeANSIEscapesFromNameUnconditionally("bold-red")
+var replPS1ColorString = makeANSIEscapesFromNameUnconditionally("bold-red")
+var replPS2ColorString = makeANSIEscapesFromNameUnconditionally("red")
+var helpColorString = makeANSIEscapesFromNameUnconditionally("bold-red")
+
+const boldString = "\u001b[1m"
+const underlineString = "\u001b[4m"
+const reversedString = "\u001b[7m"
 
 // Used to switch back to default color
-var defaultColorString = "\033[0m"
+var defaultColorString = "\u001b[0m"
 
 // Default: colorize if writing to stdout and if stdout is a TTY
 var colorization TOutputColorization = ColorizeOutputIfTTY
@@ -237,13 +291,13 @@ func make16ColorString(i int) string {
 	i &= 15
 	boldBit := (i >> 3) & 1
 	colorBits := i & 7
-	return fmt.Sprintf("\033[%d;%dm", boldBit, 30+colorBits)
+	return fmt.Sprintf("\u001b[%d;%dm", boldBit, 30+colorBits)
 }
 
 // make256ColorString constructs an ANSI-256-color-mode escape sequence
 func make256ColorString(i int) string {
 	i &= 255
-	return fmt.Sprintf("\033[1;38;5;%dm", i&255)
+	return fmt.Sprintf("\u001b[1;38;5;%dm", i&255)
 }
 
 // makeColorString constructs an ANSI-16-color-mode escape sequence if arg is
@@ -261,15 +315,8 @@ func makeColorStringFromEnv(envName string) (string, bool) {
 	if envValue == "" {
 		return "", false
 	}
-	code, ok := makeColorCodeFromName(envValue)
-	if !ok {
-		return "", false // TODO: return error?
-	}
-	if code < 0 {
-		return "", false // TODO: return error?
-	}
-	code &= 255
-	return makeColorString(code), true
+
+	return makeANSIEscapesFromName(envValue)
 }
 
 func maybeColorize(text string, colorString string, outputIsStdout bool) string {
