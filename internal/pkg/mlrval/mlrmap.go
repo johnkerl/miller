@@ -66,7 +66,7 @@ func HashRecords(onOff bool) {
 
 // ----------------------------------------------------------------
 type Mlrmap struct {
-	FieldCount int
+	FieldCount int64
 	Head       *MlrmapEntry
 	Tail       *MlrmapEntry
 

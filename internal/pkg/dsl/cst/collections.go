@@ -102,7 +102,7 @@ func (node *CollectionIndexAccessNode) Evaluate(
 		// Handle UTF-8 correctly: len(input1.printrep) will count bytes, not runes.
 		runes := []rune(baseMlrval.String())
 		// Miller uses 1-up, and negatively aliased, indexing for strings and arrays.
-		zindex, inBounds := mlrval.UnaliasArrayLengthIndex(len(runes), mindex)
+		zindex, inBounds := mlrval.UnaliasArrayLengthIndex(len(runes), int(mindex))
 		if !inBounds {
 			return mlrval.ERROR
 		}
@@ -191,7 +191,7 @@ func (node *ArraySliceAccessNode) Evaluate(
 	upperIndex, ok := upperIndexMlrval.GetIntValue()
 	if !ok {
 		if upperIndexMlrval.IsVoid() {
-			upperIndex = n
+			upperIndex = int64(n)
 		} else {
 			return mlrval.ERROR
 		}
@@ -200,8 +200,8 @@ func (node *ArraySliceAccessNode) Evaluate(
 	// UnaliasArrayIndex returns a boolean second return value to indicate
 	// whether the index is in range. But here, for the slicing operation, we
 	// inspect the in-range-ness ourselves so we discard that 2nd return value.
-	lowerZindex, _ := mlrval.UnaliasArrayIndex(&array, lowerIndex)
-	upperZindex, _ := mlrval.UnaliasArrayIndex(&array, upperIndex)
+	lowerZindex, _ := mlrval.UnaliasArrayIndex(&array, int(lowerIndex))
+	upperZindex, _ := mlrval.UnaliasArrayIndex(&array, int(upperIndex))
 
 	if lowerZindex > upperZindex {
 		return mlrval.FromEmptyArray()
@@ -388,9 +388,9 @@ func (node *ArrayOrMapPositionalNameAccessNode) Evaluate(
 
 	if baseMlrval.IsArray() {
 		n, _ := baseMlrval.GetArrayLength()
-		zindex, ok := mlrval.UnaliasArrayLengthIndex(int(n), index)
+		zindex, ok := mlrval.UnaliasArrayLengthIndex(int(n), int(index))
 		if ok {
-			return mlrval.FromInt(zindex + 1) // Miller user-space indices are 1-up
+			return mlrval.FromInt(int64(zindex + 1)) // Miller user-space indices are 1-up
 		} else {
 			return mlrval.ABSENT
 		}

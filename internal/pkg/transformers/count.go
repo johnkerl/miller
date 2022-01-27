@@ -113,7 +113,7 @@ type TransformerCount struct {
 
 	// state
 	recordTransformerFunc RecordTransformerFunc
-	ungroupedCount        int
+	ungroupedCount        int64
 	// Example:
 	// * Suppose group-by fields are a,b.
 	// * One record has a=foo,b=bar
@@ -198,13 +198,13 @@ func (tr *TransformerCount) countGrouped(
 		}
 
 		if !tr.groupedCounts.Has(groupingKey) {
-			var count int = 1
+			var count int64 = 1
 			tr.groupedCounts.Put(groupingKey, count)
 			tr.groupingValues.Put(groupingKey, selectedValues)
 		} else {
 			tr.groupedCounts.Put(
 				groupingKey,
-				tr.groupedCounts.Get(groupingKey).(int)+1,
+				tr.groupedCounts.Get(groupingKey).(int64)+1,
 			)
 		}
 
@@ -235,7 +235,7 @@ func (tr *TransformerCount) countGrouped(
 					i++
 				}
 
-				countForGroup := outer.Value.(int)
+				countForGroup := outer.Value.(int64)
 				newrec.PutCopy(tr.outputFieldName, mlrval.FromInt(countForGroup))
 
 				outrecAndContext := types.NewRecordAndContext(newrec, &inrecAndContext.Context)

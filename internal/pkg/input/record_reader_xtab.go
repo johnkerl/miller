@@ -20,7 +20,7 @@ type iXTABPairSplitter interface {
 
 type RecordReaderXTAB struct {
 	readerOptions   *cli.TReaderOptions
-	recordsPerBatch int // distinct from readerOptions.RecordsPerBatch for join/repl
+	recordsPerBatch int64 // distinct from readerOptions.RecordsPerBatch for join/repl
 	pairSplitter    iXTABPairSplitter
 
 	// Note: XTAB uses two consecutive IFS in place of an IRS; IRS is ignored
@@ -46,7 +46,7 @@ func newStanza() *tStanza {
 
 func NewRecordReaderXTAB(
 	readerOptions *cli.TReaderOptions,
-	recordsPerBatch int,
+	recordsPerBatch int64,
 ) (*RecordReaderXTAB, error) {
 	return &RecordReaderXTAB{
 		readerOptions:   readerOptions,
@@ -141,9 +141,9 @@ func channelizedStanzaScanner(
 	readerOptions *cli.TReaderOptions,
 	stanzasChannel chan<- *list.List, // list of list of string
 	downstreamDoneChannel <-chan bool, // for mlr head
-	recordsPerBatch int,
+	recordsPerBatch int64,
 ) {
-	numStanzasSeen := 0
+	numStanzasSeen := int64(0)
 	inStanza := false
 	done := false
 

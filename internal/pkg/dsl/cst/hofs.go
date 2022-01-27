@@ -684,7 +684,7 @@ func sortMK(
 
 	// Make a new map with keys in the new sort order.
 	outmap := mlrval.NewMlrmap()
-	for i := 0; i < n; i++ {
+	for i := int64(0); i < n; i++ {
 		key := keys[i]
 		outmap.PutCopy(key, inmap.Get(key))
 	}

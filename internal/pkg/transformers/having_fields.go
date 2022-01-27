@@ -156,7 +156,7 @@ func transformerHavingFieldsParseCLI(
 // ----------------------------------------------------------------
 type TransformerHavingFields struct {
 	fieldNames    []string
-	numFieldNames int
+	numFieldNames int64
 	fieldNameSet  map[string]bool
 
 	regex *regexp.Regexp
@@ -175,7 +175,7 @@ func NewTransformerHavingFields(
 
 	if fieldNames != nil {
 		tr.fieldNames = fieldNames
-		tr.numFieldNames = len(fieldNames)
+		tr.numFieldNames = int64(len(fieldNames))
 		tr.fieldNameSet = lib.StringListToSet(fieldNames)
 
 		if havingFieldsCriterion == havingFieldsAtLeast {
@@ -240,7 +240,7 @@ func (tr *TransformerHavingFields) transformHavingFieldsAtLeast(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		numFound := 0
+		numFound := int64(0)
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if tr.fieldNameSet[pe.Key] {
 				numFound++

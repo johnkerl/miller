@@ -4,7 +4,7 @@
 // type-conversion logic for various operators.
 //
 // Whenever I say "int" and "float" with regard to mlrvals I always mean
-// "int" and "float64". If I ever miss a spot and use Go int/float types then
+// "int64" and "float64". If I ever miss a spot and use Go int/float types then
 // that is a bug. It would be great to be able to somehow lint for this.
 // ================================================================
 
@@ -61,7 +61,7 @@ type Mlrval struct {
 
 	printrep      string
 	printrepValid bool
-	intval        int
+	intval        int64
 	floatval      float64
 	boolval       bool
 

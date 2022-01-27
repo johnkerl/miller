@@ -15,7 +15,7 @@ func BIF_urand() *mlrval.Mlrval {
 
 func BIF_urand32() *mlrval.Mlrval {
 	return mlrval.FromInt(
-		int(
+		int64(
 			lib.RandUint32(),
 		),
 	)
@@ -39,8 +39,8 @@ func BIF_urandint(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	a := input1.AcquireIntValue()
 	b := input2.AcquireIntValue()
 
-	var lo int = 0
-	var hi int = 0
+	var lo int64 = 0
+	var hi int64 = 0
 	if a <= b {
 		lo = a
 		hi = b + 1
@@ -48,7 +48,7 @@ func BIF_urandint(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		lo = b
 		hi = a + 1
 	}
-	u := int(math.Floor(float64(lo) + float64((hi-lo))*lib.RandFloat64()))
+	u := int64(math.Floor(float64(lo) + float64((hi-lo))*lib.RandFloat64()))
 	return mlrval.FromInt(u)
 }
 
@@ -82,6 +82,6 @@ func BIF_urandelement(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 
 	// lo is inclusive, hi is exclusive
-	index := lib.RandRange(0, len(arrayval))
+	index := lib.RandRange(0, int64(len(arrayval)))
 	return arrayval[index].Copy()
 }

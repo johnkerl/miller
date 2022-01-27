@@ -19,13 +19,13 @@ func TestRecordFromDKVPLine(t *testing.T) {
 	record, err := recordFromDKVPLine(reader, line)
 	assert.NotNil(t, record)
 	assert.Nil(t, err)
-	assert.Equal(t, 0, record.FieldCount)
+	assert.Equal(t, int64(0), record.FieldCount)
 
 	line = "a=1,b=2,c=3"
 	record, err = recordFromDKVPLine(reader, line)
 	assert.NotNil(t, record)
 	assert.Nil(t, err)
-	assert.Equal(t, 3, record.FieldCount)
+	assert.Equal(t, int64(3), record.FieldCount)
 
 	assert.NotNil(t, record.Head)
 	assert.NotNil(t, record.Head.Next)
@@ -40,7 +40,7 @@ func TestRecordFromDKVPLine(t *testing.T) {
 	record, err = recordFromDKVPLine(reader, line)
 	assert.NotNil(t, record)
 	assert.Nil(t, err)
-	assert.Equal(t, 3, record.FieldCount)
+	assert.Equal(t, int64(3), record.FieldCount)
 
 	assert.NotNil(t, record.Head)
 	assert.NotNil(t, record.Head.Next)
@@ -54,7 +54,7 @@ func TestRecordFromDKVPLine(t *testing.T) {
 	record, err = recordFromDKVPLine(reader, line)
 	assert.NotNil(t, record)
 	assert.Nil(t, err)
-	assert.Equal(t, 3, record.FieldCount)
+	assert.Equal(t, int64(3), record.FieldCount)
 
 	assert.NotNil(t, record.Head)
 	assert.NotNil(t, record.Head.Next)

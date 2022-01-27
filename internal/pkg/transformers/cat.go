@@ -107,8 +107,8 @@ type TransformerCat struct {
 	doCounters        bool
 	groupByFieldNames []string
 
-	counter          int
-	countsByGroup    map[string]int
+	counter          int64
+	countsByGroup    map[string]int64
 	counterFieldName string
 
 	recordTransformerFunc RecordTransformerFunc
@@ -129,7 +129,7 @@ func NewTransformerCat(
 		doCounters:        doCounters,
 		groupByFieldNames: groupByFieldNames,
 		counter:           0,
-		countsByGroup:     make(map[string]int),
+		countsByGroup:     make(map[string]int64),
 		counterFieldName:  counterFieldName,
 	}
 
@@ -195,7 +195,7 @@ func (tr *TransformerCat) countersGrouped(
 		inrec := inrecAndContext.Record
 
 		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
-		var counter int = 0
+		var counter int64 = 0
 		if !ok {
 			// Treat as unkeyed
 			tr.counter++

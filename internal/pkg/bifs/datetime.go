@@ -25,7 +25,7 @@ func BIF_systime() *mlrval.Mlrval {
 	)
 }
 func BIF_systimeint() *mlrval.Mlrval {
-	return mlrval.FromInt(int(time.Now().Unix()))
+	return mlrval.FromInt(time.Now().Unix())
 }
 
 var startTime float64
@@ -63,7 +63,7 @@ func BIF_sec2gmt_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ERROR
 	}
 
-	return mlrval.FromString(lib.Sec2GMT(floatValue, numDecimalPlaces))
+	return mlrval.FromString(lib.Sec2GMT(floatValue, int(numDecimalPlaces)))
 }
 
 func BIF_sec2localtime_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -88,7 +88,7 @@ func BIF_sec2localtime_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ERROR
 	}
 
-	return mlrval.FromString(lib.Sec2LocalTime(floatValue, numDecimalPlaces))
+	return mlrval.FromString(lib.Sec2LocalTime(floatValue, int(numDecimalPlaces)))
 }
 
 func BIF_sec2localtime_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -112,7 +112,7 @@ func BIF_sec2localtime_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Ml
 		return mlrval.ERROR
 	}
 
-	return mlrval.FromString(lib.Sec2LocationTime(floatValue, numDecimalPlaces, location))
+	return mlrval.FromString(lib.Sec2LocationTime(floatValue, int(numDecimalPlaces), location))
 }
 
 func BIF_sec2gmtdate(input1 *mlrval.Mlrval) *mlrval.Mlrval {

@@ -21,11 +21,11 @@ func BIF_length(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		break
 	case mlrval.MT_ARRAY:
 		arrayval := input1.AcquireArrayValue()
-		return mlrval.FromInt(int(len(arrayval)))
+		return mlrval.FromInt(int64(len(arrayval)))
 		break
 	case mlrval.MT_MAP:
 		mapval := input1.AcquireMapValue()
-		return mlrval.FromInt(int(mapval.FieldCount))
+		return mlrval.FromInt(mapval.FieldCount)
 		break
 	}
 	return mlrval.FromInt(1)
@@ -33,32 +33,32 @@ func BIF_length(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ================================================================
 func depth_from_array(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	maxChildDepth := 0
+	maxChildDepth := int64(0)
 	arrayval := input1.AcquireArrayValue()
 	for _, child := range arrayval {
 		childDepth := BIF_depth(child)
 		lib.InternalCodingErrorIf(!childDepth.IsInt())
-		iChildDepth := int(childDepth.AcquireIntValue())
+		iChildDepth := childDepth.AcquireIntValue()
 		if iChildDepth > maxChildDepth {
 			maxChildDepth = iChildDepth
 		}
 	}
-	return mlrval.FromInt(int(1 + maxChildDepth))
+	return mlrval.FromInt(1 + maxChildDepth)
 }
 
 func depth_from_map(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	maxChildDepth := 0
+	maxChildDepth := int64(0)
 	mapval := input1.AcquireMapValue()
 	for pe := mapval.Head; pe != nil; pe = pe.Next {
 		child := pe.Value
 		childDepth := BIF_depth(child)
 		lib.InternalCodingErrorIf(!childDepth.IsInt())
-		iChildDepth := int(childDepth.AcquireIntValue())
+		iChildDepth := childDepth.AcquireIntValue()
 		if iChildDepth > maxChildDepth {
 			maxChildDepth = iChildDepth
 		}
 	}
-	return mlrval.FromInt(int(1 + maxChildDepth))
+	return mlrval.FromInt(1 + maxChildDepth)
 }
 
 func depth_from_scalar(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -91,7 +91,7 @@ func BIF_depth(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ================================================================
 func leafcount_from_array(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	sumChildLeafCount := 0
+	sumChildLeafCount := int64(0)
 	arrayval := input1.AcquireArrayValue()
 	for _, child := range arrayval {
 		// Golang initialization loop if we do this :(
@@ -105,14 +105,14 @@ func leafcount_from_array(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		}
 
 		lib.InternalCodingErrorIf(!childLeafCount.IsInt())
-		iChildLeafCount := int(childLeafCount.AcquireIntValue())
+		iChildLeafCount := childLeafCount.AcquireIntValue()
 		sumChildLeafCount += iChildLeafCount
 	}
-	return mlrval.FromInt(int(sumChildLeafCount))
+	return mlrval.FromInt(sumChildLeafCount)
 }
 
 func leafcount_from_map(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	sumChildLeafCount := 0
+	sumChildLeafCount := int64(0)
 	mapval := input1.AcquireMapValue()
 	for pe := mapval.Head; pe != nil; pe = pe.Next {
 		child := pe.Value
@@ -128,10 +128,10 @@ func leafcount_from_map(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		}
 
 		lib.InternalCodingErrorIf(!childLeafCount.IsInt())
-		iChildLeafCount := int(childLeafCount.AcquireIntValue())
+		iChildLeafCount := childLeafCount.AcquireIntValue()
 		sumChildLeafCount += iChildLeafCount
 	}
-	return mlrval.FromInt(int(sumChildLeafCount))
+	return mlrval.FromInt(sumChildLeafCount)
 }
 
 func leafcount_from_scalar(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -165,7 +165,7 @@ func has_key_in_array(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ERROR
 	}
 	arrayval := input1.AcquireArrayValue()
-	_, ok := unaliasArrayIndex(&arrayval, input2.AcquireIntValue())
+	_, ok := unaliasArrayIndex(&arrayval, int(input2.AcquireIntValue()))
 	return mlrval.FromBool(ok)
 }
 
@@ -631,7 +631,7 @@ func BIF_get_keys(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		inputarrayval := input1.AcquireArrayValue()
 		arrayval := make([]*mlrval.Mlrval, len(inputarrayval))
 		for i := range inputarrayval {
-			arrayval[i] = mlrval.FromInt(int(i + 1)) // Miller user-space indices are 1-up
+			arrayval[i] = mlrval.FromInt(int64(i + 1)) // Miller user-space indices are 1-up
 		}
 		return mlrval.FromArray(arrayval)
 

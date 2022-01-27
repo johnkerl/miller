@@ -52,7 +52,7 @@ func transformerTailParseCLI(
 	verb := args[argi]
 	argi++
 
-	tailCount := 10
+	tailCount := int64(10)
 	var groupByFieldNames []string = nil
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -109,7 +109,7 @@ func transformerTailParseCLI(
 // ----------------------------------------------------------------
 type TransformerTail struct {
 	// input
-	tailCount         int
+	tailCount         int64
 	groupByFieldNames []string
 
 	// state
@@ -118,7 +118,7 @@ type TransformerTail struct {
 }
 
 func NewTransformerTail(
-	tailCount int,
+	tailCount int64,
 	groupByFieldNames []string,
 ) (*TransformerTail, error) {
 
@@ -157,7 +157,7 @@ func (tr *TransformerTail) Transform(
 		recordListForGroup := irecordListForGroup.(*list.List)
 
 		recordListForGroup.PushBack(inrecAndContext)
-		for recordListForGroup.Len() > tr.tailCount {
+		for int64(recordListForGroup.Len()) > tr.tailCount {
 			recordListForGroup.Remove(recordListForGroup.Front())
 		}
 

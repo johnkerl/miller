@@ -86,7 +86,7 @@ func (mv *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 	if !mindex.IsInt() {
 		return *ERROR
 	}
-	value := arrayGetAliased(&mv.arrayval, mindex.intval)
+	value := arrayGetAliased(&mv.arrayval, int(mindex.intval))
 	if value == nil {
 		return *ABSENT
 	} else {
@@ -116,7 +116,7 @@ func (mv *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
 		os.Exit(1)
 	}
 
-	ok := arrayPutAliased(&mv.arrayval, mindex.intval, value)
+	ok := arrayPutAliased(&mv.arrayval, int(mindex.intval), value)
 	if !ok {
 		fmt.Fprintf(
 			os.Stderr,
@@ -381,7 +381,7 @@ func putIndexedOnArray(
 				".",
 		)
 	}
-	zindex, inBounds := UnaliasArrayIndex(baseArray, mindex.intval)
+	zindex, inBounds := UnaliasArrayIndex(baseArray, int(mindex.intval))
 
 	if numIndices == 1 {
 		// If last index, then assign.
@@ -394,7 +394,7 @@ func putIndexedOnArray(
 		} else {
 			// Array is [a,b,c] with mindices 1,2,3. Length is 3. Zindices are 0,1,2.
 			// Given mindex is 4.
-			LengthenMlrvalArray(baseArray, mindex.intval)
+			LengthenMlrvalArray(baseArray, int(mindex.intval))
 			zindex := mindex.intval - 1
 			(*baseArray)[zindex] = rvalue.Copy()
 		}
@@ -428,7 +428,7 @@ func putIndexedOnArray(
 			return errors.New("mlr: Cannot use negative indices to auto-lengthen arrays.")
 		} else {
 			// Already allocated but needs to be longer
-			LengthenMlrvalArray(baseArray, mindex.intval)
+			LengthenMlrvalArray(baseArray, int(mindex.intval))
 			zindex := mindex.intval - 1
 			return (*baseArray)[zindex].PutIndexed(indices[1:], rvalue)
 		}
@@ -510,7 +510,7 @@ func removeIndexedOnArray(
 				".",
 		)
 	}
-	zindex, inBounds := UnaliasArrayIndex(baseArray, mindex.intval)
+	zindex, inBounds := UnaliasArrayIndex(baseArray, int(mindex.intval))
 
 	// If last index, then unset.
 	if numIndices == 1 {
@@ -545,19 +545,19 @@ func removeIndexedOnArray(
 
 type BsearchMlrvalArrayFunc func(
 	array *[]*Mlrval,
-	size int, // maybe less than len(array)
+	size int64, // maybe less than len(array)
 	value *Mlrval,
-) int
+) int64
 
 func BsearchMlrvalArrayForDescendingInsert(
 	array *[]*Mlrval,
-	size int, // maybe less than len(array)
+	size int64, // maybe less than len(array)
 	value *Mlrval,
-) int {
-	lo := 0
+) int64 {
+	lo := int64(0)
 	hi := size - 1
 	mid := (hi + lo) / 2
-	var newmid int
+	var newmid int64
 
 	if size == 0 {
 		return 0
@@ -598,13 +598,13 @@ func BsearchMlrvalArrayForDescendingInsert(
 
 func BsearchMlrvalArrayForAscendingInsert(
 	array *[]*Mlrval,
-	size int, // maybe less than len(array)
+	size int64, // maybe less than len(array)
 	value *Mlrval,
-) int {
-	lo := 0
+) int64 {
+	lo := int64(0)
 	hi := size - 1
 	mid := (hi + lo) / 2
-	var newmid int
+	var newmid int64
 
 	if size == 0 {
 		return 0

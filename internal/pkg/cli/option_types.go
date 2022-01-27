@@ -73,7 +73,7 @@ type TReaderOptions struct {
 	FileInputEncoding lib.TFileInputEncoding
 
 	// TODO: comment
-	RecordsPerBatch int
+	RecordsPerBatch int64
 }
 
 // ----------------------------------------------------------------
@@ -150,12 +150,12 @@ type TOptions struct {
 	// denied in the .mlrrc reader.
 	DSLPreloadFileNames []string
 
-	NRProgressMod int
+	NRProgressMod int64
 	DoInPlace     bool // mlr -I
 	NoInput       bool // mlr -n
 
 	HaveRandSeed bool
-	RandSeed     int
+	RandSeed     int64
 
 	PrintElapsedTime bool // mlr --time
 }

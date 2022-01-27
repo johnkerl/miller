@@ -278,7 +278,7 @@ func (factory *Stats1AccumulatorFactory) MakeAccumulator(
 
 // ================================================================
 type Stats1CountAccumulator struct {
-	count int
+	count int64
 }
 
 func NewStats1CountAccumulator() IStats1Accumulator {
@@ -312,9 +312,9 @@ func (acc *Stats1ModeAccumulator) Ingest(value *mlrval.Mlrval) {
 	key := value.String() // 1, 1.0, and 1.000 are distinct
 	iPrevious, ok := acc.countsByValue.GetWithCheck(key)
 	if !ok {
-		acc.countsByValue.Put(key, int(1))
+		acc.countsByValue.Put(key, int64(1))
 	} else {
-		acc.countsByValue.Put(key, iPrevious.(int)+1)
+		acc.countsByValue.Put(key, iPrevious.(int64)+1)
 	}
 }
 func (acc *Stats1ModeAccumulator) Emit() *mlrval.Mlrval {
@@ -322,10 +322,10 @@ func (acc *Stats1ModeAccumulator) Emit() *mlrval.Mlrval {
 		return mlrval.VOID
 	}
 	maxValue := ""
-	var maxCount = int(0)
+	var maxCount = int64(0)
 	for pe := acc.countsByValue.Head; pe != nil; pe = pe.Next {
 		value := pe.Key
-		count := pe.Value.(int)
+		count := pe.Value.(int64)
 		if maxValue == "" || count > maxCount {
 			maxValue = value
 			maxCount = count
@@ -353,9 +353,9 @@ func (acc *Stats1AntimodeAccumulator) Ingest(value *mlrval.Mlrval) {
 	key := value.String() // 1, 1.0, and 1.000 are distinct
 	iPrevious, ok := acc.countsByValue.GetWithCheck(key)
 	if !ok {
-		acc.countsByValue.Put(key, int(1))
+		acc.countsByValue.Put(key, int64(1))
 	} else {
-		acc.countsByValue.Put(key, iPrevious.(int)+1)
+		acc.countsByValue.Put(key, iPrevious.(int64)+1)
 	}
 }
 func (acc *Stats1AntimodeAccumulator) Emit() *mlrval.Mlrval {
@@ -363,10 +363,10 @@ func (acc *Stats1AntimodeAccumulator) Emit() *mlrval.Mlrval {
 		return mlrval.VOID
 	}
 	minValue := ""
-	var minCount = int(0)
+	var minCount = int64(0)
 	for pe := acc.countsByValue.Head; pe != nil; pe = pe.Next {
 		value := pe.Key
-		count := pe.Value.(int)
+		count := pe.Value.(int64)
 		if minValue == "" || count < minCount {
 			minValue = value
 			minCount = count
@@ -401,7 +401,7 @@ func (acc *Stats1SumAccumulator) Reset() {
 // ----------------------------------------------------------------
 type Stats1MeanAccumulator struct {
 	sum   *mlrval.Mlrval
-	count int
+	count int64
 }
 
 func NewStats1MeanAccumulator() IStats1Accumulator {
@@ -476,7 +476,7 @@ func (acc *Stats1MaxAccumulator) Reset() {
 
 // ----------------------------------------------------------------
 type Stats1VarAccumulator struct {
-	count int
+	count int64
 	sum   *mlrval.Mlrval
 	sum2  *mlrval.Mlrval
 }
@@ -505,7 +505,7 @@ func (acc *Stats1VarAccumulator) Reset() {
 
 // ----------------------------------------------------------------
 type Stats1StddevAccumulator struct {
-	count int
+	count int64
 	sum   *mlrval.Mlrval
 	sum2  *mlrval.Mlrval
 }
@@ -534,7 +534,7 @@ func (acc *Stats1StddevAccumulator) Reset() {
 
 // ----------------------------------------------------------------
 type Stats1MeanEBAccumulator struct {
-	count int
+	count int64
 	sum   *mlrval.Mlrval
 	sum2  *mlrval.Mlrval
 }
@@ -564,7 +564,7 @@ func (acc *Stats1MeanEBAccumulator) Reset() {
 
 // ----------------------------------------------------------------
 type Stats1SkewnessAccumulator struct {
-	count int
+	count int64
 	sum   *mlrval.Mlrval
 	sum2  *mlrval.Mlrval
 	sum3  *mlrval.Mlrval
@@ -599,7 +599,7 @@ func (acc *Stats1SkewnessAccumulator) Reset() {
 
 // ----------------------------------------------------------------
 type Stats1KurtosisAccumulator struct {
-	count int
+	count int64
 	sum   *mlrval.Mlrval
 	sum2  *mlrval.Mlrval
 	sum3  *mlrval.Mlrval

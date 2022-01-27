@@ -55,7 +55,7 @@ func transformerGapParseCLI(
 	verb := args[argi]
 	argi++
 
-	gapCount := -1
+	gapCount := int64(-1)
 	var groupByFieldNames []string = nil
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -106,17 +106,17 @@ func transformerGapParseCLI(
 // ----------------------------------------------------------------
 type TransformerGap struct {
 	// input
-	gapCount          int
+	gapCount          int64
 	groupByFieldNames []string
 
 	// state
 	recordTransformerFunc RecordTransformerFunc
-	recordCount           int
+	recordCount           int64
 	previousGroupingKey   string
 }
 
 func NewTransformerGap(
-	gapCount int,
+	gapCount int64,
 	groupByFieldNames []string,
 ) (*TransformerGap, error) {
 

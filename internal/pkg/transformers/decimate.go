@@ -52,7 +52,7 @@ func transformerDecimateParseCLI(
 	verb := args[argi]
 	argi++
 
-	decimateCount := 10
+	decimateCount := int64(10)
 	atStart := false
 	atEnd := false
 	var groupByFieldNames []string = nil
@@ -111,16 +111,16 @@ func transformerDecimateParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerDecimate struct {
-	decimateCount     int
-	remainderToKeep   int
+	decimateCount     int64
+	remainderToKeep   int64
 	groupByFieldNames []string
 
-	countsByGroup map[string]int
+	countsByGroup map[string]int64
 }
 
 // ----------------------------------------------------------------
 func NewTransformerDecimate(
-	decimateCount int,
+	decimateCount int64,
 	atStart bool,
 	atEnd bool,
 	groupByFieldNames []string,
@@ -135,7 +135,7 @@ func NewTransformerDecimate(
 		decimateCount:     decimateCount,
 		remainderToKeep:   remainderToKeep,
 		groupByFieldNames: groupByFieldNames,
-		countsByGroup:     make(map[string]int),
+		countsByGroup:     make(map[string]int64),
 	}
 
 	return tr, nil

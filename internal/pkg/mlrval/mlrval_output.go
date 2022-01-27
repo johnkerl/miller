@@ -59,7 +59,7 @@ func (mv *Mlrval) setPrintRep() {
 			break
 
 		case MT_INT:
-			mv.printrep = strconv.Itoa(mv.intval)
+			mv.printrep = strconv.FormatInt(mv.intval, 10)
 
 		case MT_FLOAT:
 			mv.printrep = strconv.FormatFloat(mv.floatval, 'f', -1, 64)
