@@ -1,0 +1,3 @@
+${CASEDIR}/split_1.json.expect ${CASEDIR}/split_1.json
+${CASEDIR}/split_2.json.expect ${CASEDIR}/split_2.json
+

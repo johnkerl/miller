@@ -1,0 +1,1 @@
+mlr --csv split -g shape --prefix ${CASEDIR}/split test/input/example.csv

@@ -1,0 +1,3 @@
+${CASEDIR}/split_1.csv.expect ${CASEDIR}/split_1.csv
+${CASEDIR}/split_2.csv.expect ${CASEDIR}/split_2.csv
+
