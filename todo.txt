@@ -26,6 +26,7 @@ FEATURES
   o format/unformat
   o strmatch
   o =~
+* separate examples from FAQs
 
 ----------------------------------------------------------------
 k better print-interpolate with {} etc
@@ -42,6 +43,7 @@ mlr split ... -n, -g -- ?
 
 ----------------------------------------------------------------
 * new example entry, with ccump and pgr
+  o slwin --prune (or somesuch) to only emit averages over full windows -- ?
 * make a lag-by-n and lead-by-n
 
 ----------------------------------------------------------------
