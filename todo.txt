@@ -13,6 +13,22 @@ RELEASES
 FEATURES
 
 ----------------------------------------------------------------
+example pages as feature catch-up:
+* example page for format/scan options
+  o format/unformat
+  o strmatch
+  o =~
+* separate examples section from (new) FAQs section
+* mlr split -- needs an example page along with the tee DSL function
+  o narrative about in-memory, shard-out to workers, holdouts, sample/bootstrap, etc etc.
+  o ulimit note
+* new slwin/ewma example entry, with ccump and pgr
+  o slwin --prune (or somesuch) to only emit averages over full windows -- ?
+
+----------------------------------------------------------------
+mlr join --left-fields a,b,c
+
+----------------------------------------------------------------
 ! Better functions for values manipulation, e.g. easier conversion of strings like "$1,234.56" into numeric values
   o note on is_error(x) (or string(x) == "(error)")
   ?  dhms w/ optional separgs -- ? what about fenceposting? ["d","h","m","s"] vs ["-",":",":",""] -- ?
@@ -22,18 +38,9 @@ FEATURES
   o linked-to faqent w/ -f -s etc ...
 
 ----------------------------------------------------------------
-* example page for format/scan options
-  o format/unformat
-  o strmatch
-  o =~
-* separate examples from FAQs
-* mlr split -- needs an example page along with the tee DSL function
-* new example entry, with ccump and pgr
-  o slwin --prune (or somesuch) to only emit averages over full windows -- ?
-
-----------------------------------------------------------------
 k better print-interpolate with {} etc
   doc: mlr --csv --from example.csv  put -q 'print format("Index {} at quantity {} and rate {}", $index, $quantity, $rate)'
+
 ----------------------------------------------------------------
 ! sysdate, sysdate_local; datediff ...
 
