@@ -419,11 +419,11 @@ func handleProcess(repl *Repl, args []string) bool {
 }
 
 // ----------------------------------------------------------------
-func handleSkipOrProcessN(repl *Repl, n int, processingNotSkipping bool) {
+func handleSkipOrProcessN(repl *Repl, n int64, processingNotSkipping bool) {
 	var recordsAndContexts *list.List // list of *types.RecordAndContext
 	var err error = nil
 
-	for i := 1; i <= n; i++ {
+	for i := int64(1); i <= n; i++ {
 		select {
 		case recordsAndContexts = <-repl.readerChannel:
 			break

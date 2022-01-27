@@ -41,10 +41,10 @@ func VerbGetStringArrayArgOrDie(verb string, opt string, args []string, pargi *i
 
 // E.g. with ["-n", "10"], makes sure there is something in the "10" position,
 // scans it as int, and returns it.
-func VerbGetIntArgOrDie(verb string, opt string, args []string, pargi *int, argc int) int {
+func VerbGetIntArgOrDie(verb string, opt string, args []string, pargi *int, argc int) int64 {
 	flag := args[*pargi]
 	stringArg := VerbGetStringArgOrDie(verb, opt, args, pargi, argc)
-	retval, err := strconv.Atoi(stringArg)
+	retval, err := strconv.ParseInt(stringArg, 10, 64)
 	if err != nil {
 		fmt.Fprintf(os.Stderr,
 			"%s %s: could not scan flag \"%s\" argument \"%s\" as int.\n",

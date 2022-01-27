@@ -17,7 +17,7 @@ import (
 const verbNameMostFrequent = "most-frequent"
 const verbNameLeastFrequent = "least-frequent"
 
-const mostLeastFrequentDefaultMaxOutputLength = 10
+const mostLeastFrequentDefaultMaxOutputLength = int64(10)
 const mostLeastFrequentDefaultOutputFieldName = "count"
 
 var MostFrequentSetup = TransformerSetup{
@@ -174,7 +174,7 @@ func transformerMostOrLeastFrequentParseCLI(
 // ----------------------------------------------------------------
 type TransformerMostOrLeastFrequent struct {
 	groupByFieldNames []string
-	maxOutputLength   int
+	maxOutputLength   int64
 	showCounts        bool
 	outputFieldName   string
 	descending        bool
@@ -183,14 +183,14 @@ type TransformerMostOrLeastFrequent struct {
 }
 
 type tMostOrLeastFrequentSortPair struct {
-	count       int
+	count       int64
 	groupingKey string
 }
 
 // ----------------------------------------------------------------
 func NewTransformerMostOrLeastFrequent(
 	groupByFieldNames []string,
-	maxOutputLength int,
+	maxOutputLength int64,
 	showCounts bool,
 	outputFieldName string,
 	descending bool,
@@ -226,9 +226,9 @@ func (tr *TransformerMostOrLeastFrequent) Transform(
 
 		iCount := tr.countsByGroup.Get(groupingKey)
 		if iCount == nil {
-			tr.countsByGroup.Put(groupingKey, 1)
+			tr.countsByGroup.Put(groupingKey, int64(1))
 		} else {
-			tr.countsByGroup.Put(groupingKey, iCount.(int)+1)
+			tr.countsByGroup.Put(groupingKey, iCount.(int64)+1)
 		}
 		if tr.valuesForGroup[groupingKey] == nil {
 			selectedValues, _ := inrec.GetSelectedValues(tr.groupByFieldNames)
@@ -247,7 +247,7 @@ func (tr *TransformerMostOrLeastFrequent) Transform(
 		i := 0
 		for pe := tr.countsByGroup.Head; pe != nil; pe = pe.Next {
 			groupingKey := pe.Key
-			count := pe.Value.(int)
+			count := pe.Value.(int64)
 			sortPairs[i].groupingKey = groupingKey
 			sortPairs[i].count = count
 			i++
@@ -274,7 +274,7 @@ func (tr *TransformerMostOrLeastFrequent) Transform(
 		if inputLength > tr.maxOutputLength {
 			outputLength = tr.maxOutputLength
 		}
-		for i := 0; i < outputLength; i++ {
+		for i := int64(0); i < outputLength; i++ {
 			outrec := mlrval.NewMlrmapAsRecord()
 			groupByFieldValues := tr.valuesForGroup[sortPairs[i].groupingKey]
 			for j := range tr.groupByFieldNames {

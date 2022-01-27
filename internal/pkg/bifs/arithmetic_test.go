@@ -13,7 +13,7 @@ func TestBIF_plus_unary(t *testing.T) {
 	output := BIF_plus_unary(input)
 	intval, ok := output.GetIntValue()
 	assert.True(t, ok)
-	assert.Equal(t, 123, intval)
+	assert.Equal(t, int64(123), intval)
 
 	input = mlrval.FromDeferredType("-123.5")
 	output = BIF_plus_unary(input)
@@ -27,7 +27,7 @@ func TestBIF_minus_unary(t *testing.T) {
 	output := BIF_minus_unary(input)
 	intval, ok := output.GetIntValue()
 	assert.True(t, ok)
-	assert.Equal(t, -123, intval)
+	assert.Equal(t, int64(-123), intval)
 
 	input = mlrval.FromDeferredType("-123.5")
 	output = BIF_minus_unary(input)
@@ -42,7 +42,7 @@ func TestBIF_plus_binary(t *testing.T) {
 	output := BIF_plus_binary(input1, input2)
 	intval, ok := output.GetIntValue()
 	assert.True(t, ok)
-	assert.Equal(t, 579, intval)
+	assert.Equal(t, int64(579), intval)
 
 	input1 = mlrval.FromDeferredType("123.5")
 	input2 = mlrval.FromDeferredType("456")
@@ -58,7 +58,7 @@ func TestBIF_plus_binary_overflow(t *testing.T) {
 	output := BIF_plus_binary(input1, input2)
 	intval, ok := output.GetIntValue()
 	assert.True(t, ok)
-	assert.Equal(t, 0x0ffffffffffffffd, intval)
+	assert.Equal(t, int64(0x0ffffffffffffffd), intval)
 
 	input1 = mlrval.FromInt(0x7fffffffffffffff)
 	input2 = mlrval.FromInt(0x7ffffffffffffffe)

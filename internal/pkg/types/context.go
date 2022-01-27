@@ -93,12 +93,12 @@ func NewEndOfStreamMarkerList(context *Context) *list.List {
 // ----------------------------------------------------------------
 type Context struct {
 	FILENAME string
-	FILENUM  int
+	FILENUM  int64
 
 	// This is computed dynammically from the current record's field-count
 	// NF int
-	NR  int
-	FNR int
+	NR  int64
+	FNR int64
 }
 
 // TODO: comment: Remember command-line values to pass along to CST evaluators.
@@ -154,13 +154,13 @@ func (context *Context) GetStatusString() string {
 	buffer.WriteString(context.FILENAME)
 
 	buffer.WriteString("\",FILENUM=")
-	buffer.WriteString(strconv.Itoa(context.FILENUM))
+	buffer.WriteString(strconv.FormatInt(context.FILENUM, 10))
 
 	buffer.WriteString(",NR=")
-	buffer.WriteString(strconv.Itoa(context.NR))
+	buffer.WriteString(strconv.FormatInt(context.NR, 10))
 
 	buffer.WriteString(",FNR=")
-	buffer.WriteString(strconv.Itoa(context.FNR))
+	buffer.WriteString(strconv.FormatInt(context.FNR, 10))
 
 	return buffer.String()
 }

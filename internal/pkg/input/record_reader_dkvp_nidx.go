@@ -20,7 +20,7 @@ type line_splitter_DKVP_NIDX func(reader *RecordReaderDKVPNIDX, line string) (*m
 
 type RecordReaderDKVPNIDX struct {
 	readerOptions   *cli.TReaderOptions
-	recordsPerBatch int // distinct from readerOptions.RecordsPerBatch for join/repl
+	recordsPerBatch int64 // distinct from readerOptions.RecordsPerBatch for join/repl
 	lineSplitter    line_splitter_DKVP_NIDX
 	fieldSplitter   iFieldSplitter
 	pairSplitter    iPairSplitter
@@ -28,7 +28,7 @@ type RecordReaderDKVPNIDX struct {
 
 func NewRecordReaderDKVP(
 	readerOptions *cli.TReaderOptions,
-	recordsPerBatch int,
+	recordsPerBatch int64,
 ) (*RecordReaderDKVPNIDX, error) {
 	return &RecordReaderDKVPNIDX{
 		readerOptions:   readerOptions,
@@ -41,7 +41,7 @@ func NewRecordReaderDKVP(
 
 func NewRecordReaderNIDX(
 	readerOptions *cli.TReaderOptions,
-	recordsPerBatch int,
+	recordsPerBatch int64,
 ) (*RecordReaderDKVPNIDX, error) {
 	return &RecordReaderDKVPNIDX{
 		readerOptions:   readerOptions,

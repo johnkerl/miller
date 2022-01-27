@@ -13,7 +13,7 @@ func TestBIF_length(t *testing.T) {
 	output := BIF_length(input1)
 	intval, ok := output.GetIntValue()
 	assert.True(t, ok)
-	assert.Equal(t, 1, intval)
+	assert.Equal(t, int64(1), intval)
 }
 
 func TestBIF_depth(t *testing.T) {
@@ -21,7 +21,7 @@ func TestBIF_depth(t *testing.T) {
 	output := BIF_depth(input1)
 	intval, ok := output.GetIntValue()
 	assert.True(t, ok)
-	assert.Equal(t, 0, intval)
+	assert.Equal(t, int64(0), intval)
 
 	mapval := mlrval.NewMlrmap()
 	mapval.PutReference("key", mlrval.FromString("value"))
@@ -29,7 +29,7 @@ func TestBIF_depth(t *testing.T) {
 	output = BIF_depth(input1)
 	intval, ok = output.GetIntValue()
 	assert.True(t, ok)
-	assert.Equal(t, 1, intval)
+	assert.Equal(t, int64(1), intval)
 
 	arrayval := make([]*mlrval.Mlrval, 1)
 	arrayval[0] = mlrval.FromString("value")
@@ -37,7 +37,7 @@ func TestBIF_depth(t *testing.T) {
 	output = BIF_depth(input1)
 	intval, ok = output.GetIntValue()
 	assert.True(t, ok)
-	assert.Equal(t, 1, intval)
+	assert.Equal(t, int64(1), intval)
 }
 
 // TODO: copy in more unit-test cases from existing regression-test data

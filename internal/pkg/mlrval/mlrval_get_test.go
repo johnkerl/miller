@@ -51,12 +51,12 @@ func TestGetString(t *testing.T) {
 func TestGetIntValue(t *testing.T) {
 	mv := FromInferredType("123")
 	intval, ok := mv.GetIntValue()
-	assert.Equal(t, 123, intval)
+	assert.Equal(t, int64(123), intval)
 	assert.True(t, ok)
 
 	mv = FromDeferredType("123")
 	intval, ok = mv.GetIntValue()
-	assert.Equal(t, 123, intval)
+	assert.Equal(t, int64(123), intval)
 	assert.True(t, ok)
 
 	mv = FromInferredType("123.4")

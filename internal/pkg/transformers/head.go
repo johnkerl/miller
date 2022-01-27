@@ -52,7 +52,7 @@ func transformerHeadParseCLI(
 	verb := args[argi]
 	argi++
 
-	headCount := 10
+	headCount := int64(10)
 	var groupByFieldNames []string = nil
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -109,20 +109,20 @@ func transformerHeadParseCLI(
 // ----------------------------------------------------------------
 type TransformerHead struct {
 	// input
-	headCount         int
+	headCount         int64
 	groupByFieldNames []string
 
 	// state
 	recordTransformerFunc RecordTransformerFunc
-	unkeyedRecordCount    int
-	keyedRecordCounts     map[string]int
+	unkeyedRecordCount    int64
+	keyedRecordCounts     map[string]int64
 
 	// See ChainTransformer
 	wroteDownstreamDone bool
 }
 
 func NewTransformerHead(
-	headCount int,
+	headCount int64,
 	groupByFieldNames []string,
 ) (*TransformerHead, error) {
 
@@ -130,7 +130,7 @@ func NewTransformerHead(
 		headCount:           headCount,
 		groupByFieldNames:   groupByFieldNames,
 		unkeyedRecordCount:  0,
-		keyedRecordCounts:   make(map[string]int),
+		keyedRecordCounts:   make(map[string]int64),
 		wroteDownstreamDone: false,
 	}
 

@@ -17,12 +17,12 @@ import (
 
 type RecordReaderJSON struct {
 	readerOptions   *cli.TReaderOptions
-	recordsPerBatch int // distinct from readerOptions.RecordsPerBatch for join/repl
+	recordsPerBatch int64 // distinct from readerOptions.RecordsPerBatch for join/repl
 }
 
 func NewRecordReaderJSON(
 	readerOptions *cli.TReaderOptions,
-	recordsPerBatch int,
+	recordsPerBatch int64,
 ) (*RecordReaderJSON, error) {
 	return &RecordReaderJSON{
 		readerOptions:   readerOptions,
@@ -87,7 +87,7 @@ func (reader *RecordReaderJSON) processHandle(
 	recordsAndContexts := list.New()
 
 	eof := false
-	i := 0
+	i := int64(0)
 	for {
 		// See if downstream processors will be ignoring further data (e.g. mlr
 		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
@@ -131,7 +131,7 @@ func (reader *RecordReaderJSON) processHandle(
 			context.UpdateForInputRecord()
 			recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
 
-			if recordsAndContexts.Len() >= recordsPerBatch {
+			if int64(recordsAndContexts.Len()) >= recordsPerBatch {
 				readerChannel <- recordsAndContexts
 				recordsAndContexts = list.New()
 			}
@@ -160,7 +160,7 @@ func (reader *RecordReaderJSON) processHandle(
 				context.UpdateForInputRecord()
 				recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
 
-				if recordsAndContexts.Len() >= recordsPerBatch {
+				if int64(recordsAndContexts.Len()) >= recordsPerBatch {
 					readerChannel <- recordsAndContexts
 					recordsAndContexts = list.New()
 				}

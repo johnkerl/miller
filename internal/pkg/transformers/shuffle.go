@@ -114,15 +114,15 @@ func (tr *TransformerShuffle) Transform(
 		// Knuth shuffle:
 		// * Initial permutation is identity.
 		// * Make a pseudorandom permutation using pseudorandom swaps in the image map.
-		// TODO: Go list Len() maxes at 2^31. We should track this ourselves in an int.
-		n := tr.recordsAndContexts.Len()
-		images := make([]int, n)
-		for i := 0; i < n; i++ {
+		// TODO: Go list Len() maxes at 2^31. We should track this ourselves in an int64.
+		n := int64(tr.recordsAndContexts.Len())
+		images := make([]int64, n)
+		for i := int64(0); i < n; i++ {
 			images[i] = i
 		}
-		unusedStart := 0
+		unusedStart := int64(0)
 		numUnused := n
-		for i := 0; i < n; i++ {
+		for i := int64(0); i < n; i++ {
 			// Select a pseudorandom element from the pool of unused images.
 			u := lib.RandRange(unusedStart, unusedStart+numUnused)
 			temp := images[u]
@@ -136,7 +136,7 @@ func (tr *TransformerShuffle) Transform(
 
 		// Move the record-pointers from linked list to array.
 		array := make([]*types.RecordAndContext, n)
-		for i := 0; i < n; i++ {
+		for i := int64(0); i < n; i++ {
 			head := tr.recordsAndContexts.Front()
 			if head == nil {
 				break
@@ -148,7 +148,7 @@ func (tr *TransformerShuffle) Transform(
 		// Transfer from input array to output list. Because permutations are one-to-one maps,
 		// all input records have ownership transferred exactly once. So, there are no
 		// records to copy here.
-		for i := 0; i < n; i++ {
+		for i := int64(0); i < n; i++ {
 			outputRecordsAndContexts.PushBack(array[images[i]])
 		}
 

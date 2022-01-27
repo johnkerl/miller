@@ -102,7 +102,7 @@ var leadingZeroAsIntInferrerTable []tInferrer = []tInferrer{
 func inferDecimalInt(mv *Mlrval) *Mlrval {
 	intval, err := strconv.ParseInt(mv.printrep, 10, 64)
 	if err == nil {
-		return mv.SetFromPrevalidatedIntString(mv.printrep, int(intval))
+		return mv.SetFromPrevalidatedIntString(mv.printrep, intval)
 	} else {
 		return mv.SetFromString(mv.printrep)
 	}
@@ -112,7 +112,7 @@ func inferDecimalInt(mv *Mlrval) *Mlrval {
 func inferLeadingZeroDecimalIntAsInt(mv *Mlrval) *Mlrval {
 	intval, err := strconv.ParseInt(mv.printrep, 10, 64)
 	if err == nil {
-		return mv.SetFromPrevalidatedIntString(mv.printrep, int(intval))
+		return mv.SetFromPrevalidatedIntString(mv.printrep, intval)
 	} else {
 		return mv.SetFromString(mv.printrep)
 	}
@@ -128,7 +128,7 @@ func inferOctalInt(mv *Mlrval) *Mlrval {
 func inferFromLeadingZeroOctalIntAsInt(mv *Mlrval) *Mlrval {
 	intval, err := strconv.ParseInt(mv.printrep, 8, 64)
 	if err == nil {
-		return mv.SetFromPrevalidatedIntString(mv.printrep, int(intval))
+		return mv.SetFromPrevalidatedIntString(mv.printrep, intval)
 	} else {
 		return mv.SetFromString(mv.printrep)
 	}
@@ -160,7 +160,7 @@ func inferHexInt(mv *Mlrval) *Mlrval {
 	i0 := input[0]
 	if len(input) == 16 && ('8' <= i0 && i0 <= 'f') {
 		uintval, err := strconv.ParseUint(input, 16, 64)
-		intval := int(uintval)
+		intval := int64(uintval)
 		if negate {
 			intval = -intval
 		}
@@ -175,7 +175,7 @@ func inferHexInt(mv *Mlrval) *Mlrval {
 			intval = -intval
 		}
 		if err == nil {
-			return mv.SetFromPrevalidatedIntString(mv.printrep, int(intval))
+			return mv.SetFromPrevalidatedIntString(mv.printrep, intval)
 		} else {
 			return mv.SetFromString(mv.printrep)
 		}
@@ -225,7 +225,7 @@ func inferBaseInt(mv *Mlrval, base int) *Mlrval {
 		if negate {
 			intval = -intval
 		}
-		return mv.SetFromPrevalidatedIntString(mv.printrep, int(intval))
+		return mv.SetFromPrevalidatedIntString(mv.printrep, intval)
 	} else {
 		return mv.SetFromString(mv.printrep)
 	}

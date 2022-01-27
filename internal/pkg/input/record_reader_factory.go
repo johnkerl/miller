@@ -6,7 +6,7 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/cli"
 )
 
-func Create(readerOptions *cli.TReaderOptions, recordsPerBatch int) (IRecordReader, error) {
+func Create(readerOptions *cli.TReaderOptions, recordsPerBatch int64) (IRecordReader, error) {
 	switch readerOptions.InputFileFormat {
 	case "csv":
 		return NewRecordReaderCSV(readerOptions, recordsPerBatch)

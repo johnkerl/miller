@@ -68,7 +68,7 @@ func transformerTopParseCLI(
 	argi++
 
 	// Parse local flags
-	topCount := 1
+	topCount := int64(1)
 	var valueFieldNames []string = nil
 	var groupByFieldNames []string = nil
 	showFullRecords := false
@@ -136,7 +136,7 @@ func transformerTopParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerTop struct {
-	topCount          int
+	topCount          int64
 	valueFieldNames   []string
 	groupByFieldNames []string
 	showFullRecords   bool
@@ -151,7 +151,7 @@ type TransformerTop struct {
 
 // ----------------------------------------------------------------
 func NewTransformerTop(
-	topCount int,
+	topCount int64,
 	valueFieldNames []string,
 	groupByFieldNames []string,
 	showFullRecords bool,
@@ -253,14 +253,14 @@ func (tr *TransformerTop) emit(
 		if tr.showFullRecords {
 			for pb := secondLevel.Head; pb != nil; pb = pb.Next {
 				topKeeper := pb.Value.(*utils.TopKeeper)
-				for i := 0; i < topKeeper.GetSize(); i++ {
+				for i := int64(0); i < topKeeper.GetSize(); i++ {
 					outputRecordsAndContexts.PushBack(topKeeper.TopRecordsAndContexts[i].Copy())
 				}
 			}
 
 		} else {
 
-			for i := 0; i < tr.topCount; i++ {
+			for i := int64(0); i < tr.topCount; i++ {
 				newrec := mlrval.NewMlrmapAsRecord()
 
 				// Add in a=s,b=t fields:

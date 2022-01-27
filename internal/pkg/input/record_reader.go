@@ -93,9 +93,9 @@ func channelizedLineScanner(
 	lineScanner *bufio.Scanner,
 	linesChannel chan<- *list.List,
 	downstreamDoneChannel <-chan bool, // for mlr head
-	recordsPerBatch int,
+	recordsPerBatch int64,
 ) {
-	i := 0
+	i := int64(0)
 	done := false
 
 	lines := list.New()

@@ -17,7 +17,7 @@ const barDefaultOOBString = "#"
 const barDefaultBlankString = "."
 const barDefaultLo = 0.0
 const barDefaultHi = 100.0
-const barDefaultWidth = 40
+const barDefaultWidth = int64(40)
 
 // ----------------------------------------------------------------
 const verbNameBar = "bar"
@@ -130,7 +130,7 @@ func transformerBarParseCLI(
 		fieldNames,
 		lo,
 		hi,
-		width,
+		int(width),
 		doAuto,
 		fillString,
 		oobString,

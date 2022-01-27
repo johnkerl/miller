@@ -74,7 +74,7 @@ func transformerRepeatParseCLI(
 ) IRecordTransformer {
 
 	repeatCountSource := repeatCountSourceUnspecified
-	repeatCount := 0
+	repeatCount := int64(0)
 	repeatCountFieldName := ""
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -132,7 +132,7 @@ func transformerRepeatParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerRepeat struct {
-	repeatCount           int
+	repeatCount           int64
 	repeatCountFieldName  string
 	recordTransformerFunc RecordTransformerFunc
 }
@@ -140,7 +140,7 @@ type TransformerRepeat struct {
 // ----------------------------------------------------------------
 func NewTransformerRepeat(
 	repeatCountSource tRepeatCountSource,
-	repeatCount int,
+	repeatCount int64,
 	repeatCountFieldName string,
 ) (*TransformerRepeat, error) {
 
@@ -178,7 +178,7 @@ func (tr *TransformerRepeat) repeatByCount(
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	if !inrecAndContext.EndOfStream {
-		for i := 0; i < tr.repeatCount; i++ {
+		for i := int64(0); i < tr.repeatCount; i++ {
 			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(
 				inrecAndContext.Record.Copy(),
 				&inrecAndContext.Context,
