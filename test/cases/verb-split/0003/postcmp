@@ -1,0 +1,3 @@
+${CASEDIR}/split_square.csv.expect ${CASEDIR}/split_square.csv
+${CASEDIR}/split_circle.csv.expect ${CASEDIR}/split_circle.csv
+${CASEDIR}/split_triangle.csv.expect ${CASEDIR}/split_triangle.csv

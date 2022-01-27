@@ -1,0 +1,7 @@
+${CASEDIR}/split_purple_square.csv.expect ${CASEDIR}/split_purple_square.csv
+${CASEDIR}/split_purple_triangle.csv.expect ${CASEDIR}/split_purple_triangle.csv
+${CASEDIR}/split_red_circle.csv.expect ${CASEDIR}/split_red_circle.csv
+${CASEDIR}/split_red_square.csv.expect ${CASEDIR}/split_red_square.csv
+${CASEDIR}/split_yellow_circle.csv.expect ${CASEDIR}/split_yellow_circle.csv
+${CASEDIR}/split_yellow_triangle.csv.expect ${CASEDIR}/split_yellow_triangle.csv
+

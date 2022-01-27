@@ -936,6 +936,12 @@ GENMD-RUN-COMMAND
 mlr --ijson --opprint sort-within-records data/sort-within-records.json
 GENMD-EOF
 
+## split
+
+GENMD-RUN-COMMAND
+mlr split --help
+GENMD-EOF
+
 ## stats1
 
 GENMD-RUN-COMMAND

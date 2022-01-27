@@ -1,0 +1,1 @@
+mlr --csv split -g color,shape --prefix ${CASEDIR}/split test/input/example.csv

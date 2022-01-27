@@ -1,0 +1,3 @@
+${CASEDIR}/split_1.dat.expect ${CASEDIR}/split_1.dat
+${CASEDIR}/split_2.dat.expect ${CASEDIR}/split_2.dat
+
