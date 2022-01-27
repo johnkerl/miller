@@ -24,7 +24,6 @@ func (mlrmap *Mlrmap) Get(key string) *Mlrval {
 	} else {
 		return pe.Value
 	}
-	return nil
 }
 
 // PutReference copies the key but not the value. This is not safe for DSL use,

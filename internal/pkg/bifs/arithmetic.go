@@ -278,14 +278,6 @@ func divide_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	} else {
 		return mlrval.FromFloat(float64(a) / float64(b))
 	}
-
-	c := float64(a) * float64(b)
-
-	if math.Abs(c) > 9223372036854774784.0 {
-		return mlrval.FromFloat(c)
-	} else {
-		return mlrval.FromInt(a * b)
-	}
 }
 
 func divide_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {

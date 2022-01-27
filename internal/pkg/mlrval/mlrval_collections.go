@@ -310,8 +310,6 @@ func (mv *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 			)
 		}
 	}
-
-	return nil
 }
 
 // ----------------------------------------------------------------
@@ -432,10 +430,7 @@ func putIndexedOnArray(
 			zindex := mindex.intval - 1
 			return (*baseArray)[zindex].PutIndexed(indices[1:], rvalue)
 		}
-
 	}
-
-	return nil
 }
 
 // ----------------------------------------------------------------

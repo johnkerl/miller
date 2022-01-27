@@ -179,8 +179,6 @@ func BIF_sec2dhms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 			fmt.Sprintf("%ds", s),
 		)
 	}
-
-	return mlrval.ERROR
 }
 
 func BIF_sec2hms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -202,8 +200,6 @@ func BIF_sec2hms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromString(
 		fmt.Sprintf("%s%02d:%02d:%02d", sign, h, m, s),
 	)
-
-	return mlrval.ERROR
 }
 
 func BIF_fsec2dhms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -285,8 +281,6 @@ func BIF_fsec2hms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 			fmt.Sprintf("%s%02d:%02d:%.6f", sign, h, m, float64(s)+fractional),
 		)
 	}
-
-	return mlrval.ERROR
 }
 
 // Helper function

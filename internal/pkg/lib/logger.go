@@ -91,7 +91,6 @@ func InternalCodingErrorPanic(message string) {
 			),
 		)
 	}
-	os.Exit(1)
 }
 
 // WhereAreWe shows a stack trace from the current callsite.
