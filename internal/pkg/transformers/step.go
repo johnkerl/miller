@@ -1241,7 +1241,7 @@ func stepperSlwinAlloc(
 func (stepper *tStepperSlwin) process(
 	windowKeeper *utils.TWindowKeeper,
 ) {
-	count := 0
+	count := int64(0)
 	sum := mlrval.FromFloat(0.0)
 	for i := -stepper.numRecordsBackward; i <= stepper.numRecordsForward; i++ {
 		irac := windowKeeper.Get(i)

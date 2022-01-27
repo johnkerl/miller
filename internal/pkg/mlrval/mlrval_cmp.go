@@ -64,7 +64,7 @@ func _more(input1, input2 *Mlrval) int {
 }
 
 // int_cmp implements the spaceship operator for ints.
-func int_cmp(a, b int) int {
+func int_cmp(a, b int64) int {
 	if a < b {
 		return -1
 	}
@@ -121,7 +121,7 @@ func cmp_b_ff(input1, input2 *Mlrval) int {
 	return float_cmp(input1.floatval, input2.floatval)
 }
 func cmp_b_bb(input1, input2 *Mlrval) int {
-	return int_cmp(lib.BoolToInt(input1.boolval), lib.BoolToInt(input2.boolval))
+	return int_cmp(int64(lib.BoolToInt(input1.boolval)), int64(lib.BoolToInt(input2.boolval)))
 }
 
 // TODO: cmp on array & map

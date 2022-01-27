@@ -37,7 +37,7 @@ func math_unary_f_i(input1 *mlrval.Mlrval, f mathLibUnaryFunc) *mlrval.Mlrval {
 	return mlrval.FromFloat(f(float64(input1.AcquireIntValue())))
 }
 func math_unary_i_i(input1 *mlrval.Mlrval, f mathLibUnaryFunc) *mlrval.Mlrval {
-	return mlrval.FromInt(int(f(float64(input1.AcquireIntValue()))))
+	return mlrval.FromInt(int64(f(float64(input1.AcquireIntValue()))))
 }
 func math_unary_f_f(input1 *mlrval.Mlrval, f mathLibUnaryFunc) *mlrval.Mlrval {
 	return mlrval.FromFloat(f(input1.AcquireFloatValue()))
@@ -132,7 +132,7 @@ func BIF_sgn(input1 *mlrval.Mlrval) *mlrval.Mlrval { return imudispo[input1.Type
 
 func pow_f_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	foutput := math.Pow(float64(input1.AcquireIntValue()), float64(input2.AcquireIntValue()))
-	ioutput := int(foutput)
+	ioutput := int64(foutput)
 	// Int raised to int power should be float if it can be (i.e. unless overflow)
 	if float64(ioutput) == foutput {
 		return mlrval.FromInt(ioutput)
@@ -208,7 +208,7 @@ func mlr_roundm(x, m float64) float64 {
 }
 
 func roundm_f_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromInt(int(mlr_roundm(float64(input1.AcquireIntValue()), float64(input2.AcquireIntValue()))))
+	return mlrval.FromInt(int64(mlr_roundm(float64(input1.AcquireIntValue()), float64(input2.AcquireIntValue()))))
 }
 func roundm_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromFloat(mlr_roundm(float64(input1.AcquireIntValue()), input2.AcquireFloatValue()))

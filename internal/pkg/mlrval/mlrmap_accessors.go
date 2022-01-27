@@ -215,12 +215,12 @@ func (mlrmap *Mlrmap) findEntry(key string) *MlrmapEntry {
 //   get the -1st field than the nth.
 // * Returns 0 on invalid index: 0, or < -n, or > n where n is the number of
 //   fields.
-func (mlrmap *Mlrmap) findEntryByPositionalIndex(position int) *MlrmapEntry {
+func (mlrmap *Mlrmap) findEntryByPositionalIndex(position int64) *MlrmapEntry {
 	if position > mlrmap.FieldCount || position < -mlrmap.FieldCount || position == 0 {
 		return nil
 	}
 	if position > 0 {
-		var i int = 1
+		var i int64 = 1
 		for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 			if i == position {
 				return pe
@@ -229,7 +229,7 @@ func (mlrmap *Mlrmap) findEntryByPositionalIndex(position int) *MlrmapEntry {
 		}
 		lib.InternalCodingErrorIf(true)
 	} else {
-		var i int = -1
+		var i int64 = -1
 		for pe := mlrmap.Tail; pe != nil; pe = pe.Prev {
 			if i == position {
 				return pe
@@ -284,7 +284,7 @@ func (mlrmap *Mlrmap) GetKeys() []string {
 
 // ----------------------------------------------------------------
 // TODO: put error-return into this API
-func (mlrmap *Mlrmap) PutNameWithPositionalIndex(position int, name *Mlrval) {
+func (mlrmap *Mlrmap) PutNameWithPositionalIndex(position int64, name *Mlrval) {
 	positionalEntry := mlrmap.findEntryByPositionalIndex(position)
 
 	if positionalEntry == nil {
@@ -318,7 +318,7 @@ func (mlrmap *Mlrmap) PutNameWithPositionalIndex(position int, name *Mlrval) {
 	}
 }
 
-func (mlrmap *Mlrmap) GetWithPositionalIndex(position int) *Mlrval {
+func (mlrmap *Mlrmap) GetWithPositionalIndex(position int64) *Mlrval {
 	mapEntry := mlrmap.findEntryByPositionalIndex(position)
 	if mapEntry == nil {
 		return nil
@@ -382,7 +382,7 @@ func (mlrmap *Mlrmap) getWithMlrvalSingleIndex(index *Mlrval) (*Mlrval, error) {
 // * Returns 0 on invalid index: 0, or < -n, or > n where n is the number of
 //   fields.
 
-func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
+func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int64) (string, bool) {
 	mapEntry := mlrmap.findEntryByPositionalIndex(position)
 	if mapEntry == nil {
 		return "", false
@@ -395,7 +395,7 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 // This is safe for DSL use. See also PutReference.
 
 // TODO: put error-return into this API
-func (mlrmap *Mlrmap) PutCopyWithPositionalIndex(position int, value *Mlrval) {
+func (mlrmap *Mlrmap) PutCopyWithPositionalIndex(position int64, value *Mlrval) {
 	mapEntry := mlrmap.findEntryByPositionalIndex(position)
 
 	if mapEntry != nil {
@@ -405,7 +405,7 @@ func (mlrmap *Mlrmap) PutCopyWithPositionalIndex(position int, value *Mlrval) {
 	}
 }
 
-func (mlrmap *Mlrmap) RemoveWithPositionalIndex(position int) {
+func (mlrmap *Mlrmap) RemoveWithPositionalIndex(position int64) {
 	mapEntry := mlrmap.findEntryByPositionalIndex(position)
 	if mapEntry != nil {
 		mlrmap.Unlink(mapEntry)

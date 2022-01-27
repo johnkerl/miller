@@ -48,7 +48,7 @@ func bitcount_i_i(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	a = (a & _m08) + ((a >> 8) & _m08)
 	a = (a & _m16) + ((a >> 16) & _m16)
 	a = (a & _m32) + ((a >> 32) & _m32)
-	return mlrval.FromInt(int(a))
+	return mlrval.FromInt(int64(a))
 }
 
 var bitcount_dispositions = [mlrval.MT_DIM]UnaryFunc{
@@ -206,7 +206,7 @@ func ursh_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	var ua uint64 = uint64(input1.AcquireIntValue())
 	var ub uint64 = uint64(input2.AcquireIntValue())
 	var uc = ua >> ub
-	return mlrval.FromInt(int(uc))
+	return mlrval.FromInt(int64(uc))
 }
 
 var unsigned_right_shift_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{

@@ -13,7 +13,7 @@ func BooleanXOR(a, b bool) bool {
 	return a != b
 }
 
-func BoolToInt(b bool) int {
+func BoolToInt(b bool) int64 {
 	if b == false {
 		return 0
 	} else {
@@ -84,7 +84,7 @@ func SortedStrings(strings []string) []string {
 	return copy
 }
 
-func IntMin2(a, b int) int {
+func IntMin2(a, b int64) int64 {
 	if a < b {
 		return a
 	} else {
@@ -93,7 +93,7 @@ func IntMin2(a, b int) int {
 }
 
 // TryIntFromString tries decimal, hex, octal, and binary.
-func TryIntFromString(input string) (int, bool) {
+func TryIntFromString(input string) (int64, bool) {
 	// Go's strconv parses "1_2" as 12; not OK for Miller syntax. (Also not valid JSON.)
 	for i := 0; i < len(input); i++ {
 		if input[i] == '_' {
@@ -112,11 +112,11 @@ func TryIntFromString(input string) (int, bool) {
 	// through 0xff....ff.
 	i64, ierr := strconv.ParseInt(input, 0 /* check all*/, 64)
 	if ierr == nil {
-		return int(i64), true
+		return i64, true
 	}
 	u64, uerr := strconv.ParseUint(input, 0 /* check all*/, 64)
 	if uerr == nil {
-		return int(u64), true
+		return int64(u64), true
 	}
 	return 0, false
 }

@@ -12,12 +12,12 @@ import (
 
 type PseudoReaderGen struct {
 	readerOptions   *cli.TReaderOptions
-	recordsPerBatch int // distinct from readerOptions.RecordsPerBatch for join/repl
+	recordsPerBatch int64 // distinct from readerOptions.RecordsPerBatch for join/repl
 }
 
 func NewPseudoReaderGen(
 	readerOptions *cli.TReaderOptions,
-	recordsPerBatch int,
+	recordsPerBatch int64,
 ) (*PseudoReaderGen, error) {
 	return &PseudoReaderGen{
 		readerOptions:   readerOptions,
@@ -86,7 +86,7 @@ func (reader *PseudoReaderGen) process(
 		context.UpdateForInputRecord()
 		recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
 
-		if recordsAndContexts.Len() >= recordsPerBatch {
+		if int64(recordsAndContexts.Len()) >= recordsPerBatch {
 			readerChannel <- recordsAndContexts
 			recordsAndContexts = list.New()
 

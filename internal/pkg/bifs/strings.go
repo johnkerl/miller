@@ -16,7 +16,7 @@ func BIF_strlen(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
 		return mlrval.ERROR
 	} else {
-		return mlrval.FromInt(int(utf8.RuneCountInString(input1.AcquireStringValue())))
+		return mlrval.FromInt(int64(utf8.RuneCountInString(input1.AcquireStringValue())))
 	}
 }
 
@@ -85,7 +85,7 @@ func BIF_substr_1_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsInt() {
 		return mlrval.ERROR
 	}
-	lowerMindex := input2.AcquireIntValue()
+	lowerMindex := int(input2.AcquireIntValue())
 
 	upperMindex := strlen
 	if input3.IsVoid() {
@@ -93,7 +93,7 @@ func BIF_substr_1_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	} else if !input3.IsInt() {
 		return mlrval.ERROR
 	} else {
-		upperMindex = input3.AcquireIntValue()
+		upperMindex = int(input3.AcquireIntValue())
 	}
 
 	// Convert from negative-aliased 1-up to positive-only 0-up
@@ -135,7 +135,7 @@ func BIF_substr_0_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsInt() {
 		return mlrval.ERROR
 	}
-	lowerMindex := input2.AcquireIntValue()
+	lowerMindex := int(input2.AcquireIntValue())
 	if lowerMindex >= 0 {
 		// Make 1-up
 		lowerMindex += 1
@@ -147,7 +147,7 @@ func BIF_substr_0_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	} else if !input3.IsInt() {
 		return mlrval.ERROR
 	} else {
-		upperMindex = input3.AcquireIntValue()
+		upperMindex = int(input3.AcquireIntValue())
 		if upperMindex >= 0 {
 			// Make 1-up
 			upperMindex += 1
@@ -191,7 +191,7 @@ func BIF_truncate(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	// Handle UTF-8 correctly: len(input1.AcquireStringValue()) will count bytes, not runes.
 	runes := []rune(input1.AcquireStringValue())
 	oldLength := int(len(runes))
-	maxLength := input2.AcquireIntValue()
+	maxLength := int(input2.AcquireIntValue())
 	if oldLength <= maxLength {
 		return input1
 	} else {

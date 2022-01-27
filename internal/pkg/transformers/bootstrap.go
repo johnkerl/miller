@@ -56,7 +56,7 @@ func transformerBootstrapParseCLI(
 	verb := args[argi]
 	argi++
 
-	nout := -1
+	nout := int64(-1)
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
@@ -96,10 +96,10 @@ func transformerBootstrapParseCLI(
 // ----------------------------------------------------------------
 type TransformerBootstrap struct {
 	recordsAndContexts *list.List
-	nout               int
+	nout               int64
 }
 
-func NewTransformerBootstrap(nout int) (*TransformerBootstrap, error) {
+func NewTransformerBootstrap(nout int64) (*TransformerBootstrap, error) {
 	tr := &TransformerBootstrap{
 		recordsAndContexts: list.New(),
 		nout:               nout,
@@ -146,7 +146,7 @@ func (tr *TransformerBootstrap) Transform(
 	// For that reason, this transformer must copy all output.
 
 	// TODO: Go list Len() maxes at 2^31. We should track this ourselves in an int.
-	nin := tr.recordsAndContexts.Len()
+	nin := int64(tr.recordsAndContexts.Len())
 	nout := tr.nout
 	if nout == -1 {
 		nout = nin
@@ -160,7 +160,7 @@ func (tr *TransformerBootstrap) Transform(
 
 	// Make an array of pointers into the input list.
 	recordArray := make([]*types.RecordAndContext, nin)
-	for i := 0; i < nin; i++ {
+	for i := int64(0); i < nin; i++ {
 		head := tr.recordsAndContexts.Front()
 		if head == nil {
 			break
@@ -171,7 +171,7 @@ func (tr *TransformerBootstrap) Transform(
 
 	// Do the sample-with-replacment, reading from random indices in the input
 	// array and emitting output.
-	for i := 0; i < nout; i++ {
+	for i := int64(0); i < nout; i++ {
 		index := lib.RandRange(0, nin)
 		recordAndContext := recordArray[index]
 		// Already emitted once; copy

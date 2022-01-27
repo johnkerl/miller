@@ -350,7 +350,7 @@ func (node *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		state.Stack.PushStackFrame()
 		defer state.Stack.PopStackFrame()
 		for zindex, element := range arrayval {
-			mindex := mlrval.FromInt(int(zindex + 1))
+			mindex := mlrval.FromInt(int64(zindex + 1))
 
 			err := state.Stack.SetAtScope(node.keyIndexVariable, mindex)
 			if err != nil {
@@ -566,7 +566,7 @@ func (node *ForLoopMultivariableNode) executeOuter(
 		// Go storage ("zindex") is 0-up.
 
 		for zindex, element := range arrayval {
-			mindex := mlrval.FromInt(int(zindex + 1))
+			mindex := mlrval.FromInt(int64(zindex + 1))
 
 			err := state.Stack.SetAtScope(keyIndexVariables[0], mindex)
 			if err != nil {
@@ -657,7 +657,7 @@ func (node *ForLoopMultivariableNode) executeInner(
 		// Go storage ("zindex") is 0-up.
 
 		for zindex, element := range arrayval {
-			mindex := mlrval.FromInt(int(zindex + 1))
+			mindex := mlrval.FromInt(int64(zindex + 1))
 
 			err := state.Stack.SetAtScope(keyIndexVariable, mindex)
 			if err != nil {

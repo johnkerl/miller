@@ -56,7 +56,7 @@ import (
 // ----------------------------------------------------------------
 
 func GetLinearRegressionOLS(
-	nint int,
+	nint int64,
 	sumx float64,
 	sumx2 float64,
 	sumxy float64,
@@ -90,7 +90,7 @@ func GetLinearRegressionOLS(
 // GetVar is the finalizing function for computing variance from streamed
 // accumulator values.
 func GetVar(
-	nint int,
+	nint int64,
 	sumx float64,
 	sumx2 float64,
 ) float64 {
@@ -195,7 +195,7 @@ func GetKurtosis(
 //      return sum / (n-1.0)
 
 func GetCov(
-	nint int,
+	nint int64,
 	sumx float64,
 	sumy float64,
 	sumxy float64,
@@ -211,7 +211,7 @@ func GetCov(
 
 // ----------------------------------------------------------------
 func GetCovMatrix(
-	nint int,
+	nint int64,
 	sumx float64,
 	sumx2 float64,
 	sumy float64,

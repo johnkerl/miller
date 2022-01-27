@@ -25,7 +25,7 @@ func string_to_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func float_to_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromInt(int(input1.AcquireFloatValue()))
+	return mlrval.FromInt(int64(input1.AcquireFloatValue()))
 }
 
 func bool_to_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {

@@ -126,7 +126,7 @@ func (factory *Stats2AccumulatorFactory) Make(
 
 // ================================================================
 type Stats2LinRegOLSAccumulator struct {
-	count              int
+	count              int64
 	sumx               float64
 	sumy               float64
 	sumx2              float64
@@ -273,7 +273,7 @@ func (acc *Stats2LogiRegAccumulator) Populate(
 		outrec.PutCopy(acc.mOutputFieldName, mlrval.FromFloat(m))
 		outrec.PutCopy(acc.bOutputFieldName, mlrval.FromFloat(b))
 	}
-	outrec.PutReference(acc.nOutputFieldName, mlrval.FromInt(len(acc.xs)))
+	outrec.PutReference(acc.nOutputFieldName, mlrval.FromInt(int64(len(acc.xs))))
 }
 
 func (acc *Stats2LogiRegAccumulator) Fit(
@@ -389,7 +389,7 @@ const (
 )
 
 type Stats2CorrCovAccumulator struct {
-	count int
+	count int64
 	sumx  float64
 	sumy  float64
 	sumx2 float64

@@ -54,7 +54,7 @@ func transformerSampleParseCLI(
 	verb := args[argi]
 	argi++
 
-	sampleCount := -1
+	sampleCount := int64(-1)
 	var groupByFieldNames []string = nil
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -104,19 +104,19 @@ func transformerSampleParseCLI(
 
 // ----------------------------------------------------------------
 type sampleBucketType struct {
-	nalloc             int
-	nused              int
+	nalloc             int64
+	nused              int64
 	recordsAndContexts []*types.RecordAndContext
 }
 
 type TransformerSample struct {
 	groupByFieldNames []string
-	sampleCount       int
+	sampleCount       int64
 	bucketsByGroup    *lib.OrderedMap
 }
 
 func NewTransformerSample(
-	sampleCount int,
+	sampleCount int64,
 	groupByFieldNames []string,
 ) (*TransformerSample, error) {
 	tr := &TransformerSample{
@@ -153,7 +153,7 @@ func (tr *TransformerSample) Transform(
 
 		for pe := tr.bucketsByGroup.Head; pe != nil; pe = pe.Next {
 			sampleBucket := pe.Value.(*sampleBucketType)
-			for i := 0; i < sampleBucket.nused; i++ {
+			for i := int64(0); i < sampleBucket.nused; i++ {
 				outputRecordsAndContexts.PushBack(sampleBucket.recordsAndContexts[i])
 
 			}
@@ -165,7 +165,7 @@ func (tr *TransformerSample) Transform(
 }
 
 // ----------------------------------------------------------------
-func newSampleBucket(sampleCount int) *sampleBucketType {
+func newSampleBucket(sampleCount int64) *sampleBucketType {
 	return &sampleBucketType{
 		nalloc:             sampleCount,
 		nused:              0,
@@ -179,7 +179,7 @@ func newSampleBucket(sampleCount int) *sampleBucketType {
 // sample).
 func (t *sampleBucketType) handleRecord(
 	inrecAndContext *types.RecordAndContext,
-	recordNumber int,
+	recordNumber int64,
 ) {
 	if t.nused < t.nalloc {
 		// Always accept new entries until the bucket is full.
@@ -191,7 +191,7 @@ func (t *sampleBucketType) handleRecord(
 		t.recordsAndContexts[t.nused] = inrecAndContext.Copy()
 		t.nused++
 	} else {
-		r := int(lib.RandInt63()) % recordNumber
+		r := int64(lib.RandInt63()) % recordNumber
 		if r < t.nalloc {
 			t.recordsAndContexts[r] = inrecAndContext.Copy()
 		}

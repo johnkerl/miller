@@ -11,7 +11,7 @@ import (
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // string_cmp implements the spaceship operator for strings.
-func string_cmp(a, b string) int {
+func string_cmp(a, b string) int64 {
 	if a < b {
 		return -1
 	}
@@ -22,7 +22,7 @@ func string_cmp(a, b string) int {
 }
 
 // int_cmp implements the spaceship operator for ints.
-func int_cmp(a, b int) int {
+func int_cmp(a, b int64) int64 {
 	if a < b {
 		return -1
 	}
@@ -33,7 +33,7 @@ func int_cmp(a, b int) int {
 }
 
 // float_cmp implements the spaceship operator for floats.
-func float_cmp(a, b float64) int {
+func float_cmp(a, b float64) int64 {
 	if a < b {
 		return -1
 	}
@@ -63,7 +63,7 @@ func le_b_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.AcquireStringValue() <= input2.AcquireStringValue())
 }
 func cmp_b_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromInt(string_cmp(input1.AcquireStringValue(), input2.AcquireStringValue()))
+	return mlrval.FromInt(int64(string_cmp(input1.AcquireStringValue(), input2.AcquireStringValue())))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -86,7 +86,7 @@ func le_b_xs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.String() <= input2.AcquireStringValue())
 }
 func cmp_b_xs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromInt(string_cmp(input1.String(), input2.AcquireStringValue()))
+	return mlrval.FromInt(int64(string_cmp(input1.String(), input2.AcquireStringValue())))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

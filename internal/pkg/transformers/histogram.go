@@ -14,7 +14,7 @@ import (
 
 // ----------------------------------------------------------------
 const verbNameHistogram = "histogram"
-const histogramDefaultBinCount = 20
+const histogramDefaultBinCount = int64(20)
 
 var HistogramSetup = TransformerSetup{
 	Verb:         verbNameHistogram,
@@ -142,11 +142,11 @@ const histogramVectorInitialSize = 1024
 type TransformerHistogram struct {
 	valueFieldNames []string
 	lo              float64
-	nbins           int
+	nbins           int64
 	hi              float64
 	mul             float64
 
-	countsByField      map[string][]int
+	countsByField      map[string][]int64
 	vectorsByFieldName map[string][]float64 // For auto-mode
 	outputPrefix       string
 
@@ -157,16 +157,16 @@ type TransformerHistogram struct {
 func NewTransformerHistogram(
 	valueFieldNames []string,
 	lo float64,
-	nbins int,
+	nbins int64,
 	hi float64,
 	doAuto bool,
 	outputPrefix string,
 ) (*TransformerHistogram, error) {
 
-	countsByField := make(map[string][]int)
+	countsByField := make(map[string][]int64)
 	for _, valueFieldName := range valueFieldNames {
-		countsByField[valueFieldName] = make([]int, nbins)
-		for i := 0; i < nbins; i++ {
+		countsByField[valueFieldName] = make([]int64, nbins)
+		for i := int64(0); i < nbins; i++ {
 			countsByField[valueFieldName][i] = 0
 		}
 	}
@@ -257,7 +257,7 @@ func (tr *TransformerHistogram) emitNonAuto(
 	for _, valueFieldName := range tr.valueFieldNames {
 		countFieldNames[valueFieldName] = tr.outputPrefix + valueFieldName + "_count"
 	}
-	for i := 0; i < tr.nbins; i++ {
+	for i := int64(0); i < tr.nbins; i++ {
 		outrec := mlrval.NewMlrmapAsRecord()
 
 		outrec.PutReference(
@@ -363,7 +363,7 @@ func (tr *TransformerHistogram) emitAuto(
 		countFieldNames[valueFieldName] = tr.outputPrefix + valueFieldName + "_count"
 	}
 
-	for i := 0; i < nbins; i++ {
+	for i := int64(0); i < nbins; i++ {
 		outrec := mlrval.NewMlrmapAsRecord()
 
 		outrec.PutReference(

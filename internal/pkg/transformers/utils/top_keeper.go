@@ -13,13 +13,13 @@ import (
 type TopKeeper struct {
 	TopValues             []*mlrval.Mlrval
 	TopRecordsAndContexts []*types.RecordAndContext
-	size                  int
-	capacity              int
+	size                  int64
+	capacity              int64
 	bsearchFunc           mlrval.BsearchMlrvalArrayFunc
 }
 
 // ----------------------------------------------------------------
-func NewTopKeeper(capacity int, doMax bool) *TopKeeper {
+func NewTopKeeper(capacity int64, doMax bool) *TopKeeper {
 	keeper := &TopKeeper{
 		TopValues:             make([]*mlrval.Mlrval, capacity),
 		TopRecordsAndContexts: make([]*types.RecordAndContext, capacity),
@@ -34,7 +34,7 @@ func NewTopKeeper(capacity int, doMax bool) *TopKeeper {
 	return keeper
 }
 
-func (keeper *TopKeeper) GetSize() int {
+func (keeper *TopKeeper) GetSize() int64 {
 	return keeper.size
 }
 

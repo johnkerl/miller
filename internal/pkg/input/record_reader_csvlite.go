@@ -46,18 +46,18 @@ type recordBatchGetterCSV func(
 
 type RecordReaderCSVLite struct {
 	readerOptions   *cli.TReaderOptions
-	recordsPerBatch int // distinct from readerOptions.RecordsPerBatch for join/repl
+	recordsPerBatch int64 // distinct from readerOptions.RecordsPerBatch for join/repl
 
 	fieldSplitter     iFieldSplitter
 	recordBatchGetter recordBatchGetterCSV
 
-	inputLineNumber int
+	inputLineNumber int64
 	headerStrings   []string
 }
 
 func NewRecordReaderCSVLite(
 	readerOptions *cli.TReaderOptions,
-	recordsPerBatch int,
+	recordsPerBatch int64,
 ) (*RecordReaderCSVLite, error) {
 	reader := &RecordReaderCSVLite{
 		readerOptions:   readerOptions,
@@ -74,7 +74,7 @@ func NewRecordReaderCSVLite(
 
 func NewRecordReaderPPRINT(
 	readerOptions *cli.TReaderOptions,
-	recordsPerBatch int,
+	recordsPerBatch int64,
 ) (*RecordReaderCSVLite, error) {
 	reader := &RecordReaderCSVLite{
 		readerOptions:   readerOptions,
@@ -247,10 +247,10 @@ func getRecordBatchExplicitCSVHeader(
 					}
 				}
 			} else {
-				nh := len(reader.headerStrings)
-				nd := len(fields)
+				nh := int64(len(reader.headerStrings))
+				nd := int64(len(fields))
 				n := lib.IntMin2(nh, nd)
-				var i int
+				var i int64
 				for i = 0; i < n; i++ {
 					value := mlrval.FromDeferredType(fields[i])
 					_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
@@ -262,7 +262,7 @@ func getRecordBatchExplicitCSVHeader(
 				if nh < nd {
 					// if header shorter than data: use 1-up itoa keys
 					for i = nh; i < nd; i++ {
-						key := strconv.Itoa(i + 1)
+						key := strconv.FormatInt(i+1, 10)
 						value := mlrval.FromDeferredType(fields[i])
 						_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
 						if err != nil {
@@ -366,10 +366,10 @@ func getRecordBatchImplicitCSVHeader(
 				}
 			}
 		} else {
-			nh := len(reader.headerStrings)
-			nd := len(fields)
+			nh := int64(len(reader.headerStrings))
+			nd := int64(len(fields))
 			n := lib.IntMin2(nh, nd)
-			var i int
+			var i int64
 			for i = 0; i < n; i++ {
 				value := mlrval.FromDeferredType(fields[i])
 				_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
@@ -380,7 +380,7 @@ func getRecordBatchImplicitCSVHeader(
 			}
 			if nh < nd {
 				// if header shorter than data: use 1-up itoa keys
-				key := strconv.Itoa(i + 1)
+				key := strconv.FormatInt(i+1, 10)
 				value := mlrval.FromDeferredType(fields[i])
 				_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
 				if err != nil {

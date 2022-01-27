@@ -13,7 +13,7 @@ func TestBIF_bitcount(t *testing.T) {
 	output := BIF_bitcount(input1)
 	intval, ok := output.GetIntValue()
 	assert.True(t, ok)
-	assert.Equal(t, 11, intval)
+	assert.Equal(t, int64(11), intval)
 }
 
 // TODO: copy in more unit-test cases from existing regression-test data

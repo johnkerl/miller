@@ -88,7 +88,7 @@ func transformerSplitParseCLI(
 	verb := args[argi]
 	argi++
 
-	var n int = 0
+	var n int64 = 0
 	var doMod bool = false
 	var doSize bool = false
 	var groupByFieldNames []string = nil
@@ -198,18 +198,18 @@ func transformerSplitParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerSplit struct {
-	n                    int
+	n                    int64
 	outputFileNamePrefix string
 	outputFileNameSuffix string
 	emitDownstream       bool
-	ungroupedCounter     int
+	ungroupedCounter     int64
 	groupByFieldNames    []string
 	recordWriterOptions  *cli.TWriterOptions
 	doAppend             bool
 
 	// For doSize ungrouped: only one file open at a time
 	outputHandler    output.OutputHandler
-	previousQuotient int
+	previousQuotient int64
 
 	// For all other cases: multiple files open at a time
 	outputHandlerManager output.OutputHandlerManager
@@ -218,7 +218,7 @@ type TransformerSplit struct {
 }
 
 func NewTransformerSplit(
-	n int,
+	n int64,
 	doMod bool,
 	doSize bool,
 	groupByFieldNames []string,
@@ -397,7 +397,7 @@ func (tr *TransformerSplit) splitGrouped(
 }
 
 // makeUngroupedOutputFileName example: "split_53.csv"
-func (tr *TransformerSplit) makeUngroupedOutputFileName(k int) string {
+func (tr *TransformerSplit) makeUngroupedOutputFileName(k int64) string {
 	return fmt.Sprintf("%s_%d.%s", tr.outputFileNamePrefix, k, tr.outputFileNameSuffix)
 }
 

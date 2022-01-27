@@ -362,10 +362,10 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
 		recordAsString := inrec.String()
 		icount, present := tr.uniqifiedRecordCounts.GetWithCheck(recordAsString)
 		if !present { // first time seen
-			tr.uniqifiedRecordCounts.Put(recordAsString, 1)
+			tr.uniqifiedRecordCounts.Put(recordAsString, int64(1))
 			tr.uniqifiedRecords.Put(recordAsString, inrecAndContext.Copy())
 		} else { // have seen before
-			tr.uniqifiedRecordCounts.Put(recordAsString, icount.(int)+1)
+			tr.uniqifiedRecordCounts.Put(recordAsString, icount.(int64)+1)
 		}
 
 	} else { // end of record stream
@@ -373,7 +373,7 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
 		for pe := tr.uniqifiedRecords.Head; pe != nil; pe = pe.Next {
 			outrecAndContext := pe.Value.(*types.RecordAndContext)
 			icount := tr.uniqifiedRecordCounts.Get(pe.Key)
-			mcount := mlrval.FromInt(icount.(int))
+			mcount := mlrval.FromInt(icount.(int64))
 			outrecAndContext.Record.PrependReference(tr.outputFieldName, mcount)
 			outputRecordsAndContexts.PushBack(outrecAndContext)
 		}
@@ -396,7 +396,7 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
 		inrec := inrecAndContext.Record
 		recordAsString := inrec.String()
 		if !tr.uniqifiedRecordCounts.Has(recordAsString) {
-			tr.uniqifiedRecordCounts.Put(recordAsString, 1)
+			tr.uniqifiedRecordCounts.Put(recordAsString, int64(1))
 		}
 
 	} else { // end of record stream
@@ -424,7 +424,7 @@ func (tr *TransformerUniq) transformUniqifyEntireRecords(
 
 		recordAsString := inrec.String()
 		if !tr.uniqifiedRecordCounts.Has(recordAsString) {
-			tr.uniqifiedRecordCounts.Put(recordAsString, 1)
+			tr.uniqifiedRecordCounts.Put(recordAsString, int64(1))
 			outputRecordsAndContexts.PushBack(inrecAndContext)
 		}
 
@@ -459,10 +459,10 @@ func (tr *TransformerUniq) transformUnlashed(
 			if fieldValue != nil {
 				fieldValueString := fieldValue.String()
 				if !countsForFieldName.Has(fieldValueString) {
-					countsForFieldName.Put(fieldValueString, 1)
+					countsForFieldName.Put(fieldValueString, int64(1))
 					tr.unlashedCountValues.Get(fieldName).(*lib.OrderedMap).Put(fieldValueString, fieldValue.Copy())
 				} else {
-					countsForFieldName.Put(fieldValueString, countsForFieldName.Get(fieldValueString).(int)+1)
+					countsForFieldName.Put(fieldValueString, countsForFieldName.Get(fieldValueString).(int64)+1)
 				}
 			}
 		}
@@ -480,7 +480,7 @@ func (tr *TransformerUniq) transformUnlashed(
 					"value",
 					tr.unlashedCountValues.Get(fieldName).(*lib.OrderedMap).Get(fieldValueString).(*mlrval.Mlrval),
 				)
-				outrec.PutReference("count", mlrval.FromInt(pf.Value.(int)))
+				outrec.PutReference("count", mlrval.FromInt(pf.Value.(int64)))
 				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 			}
 		}
@@ -503,9 +503,9 @@ func (tr *TransformerUniq) transformNumDistinctOnly(
 		if ok {
 			iCount, present := tr.countsByGroup.GetWithCheck(groupingKey)
 			if !present {
-				tr.countsByGroup.Put(groupingKey, 1)
+				tr.countsByGroup.Put(groupingKey, int64(1))
 			} else {
-				tr.countsByGroup.Put(groupingKey, iCount.(int)+1)
+				tr.countsByGroup.Put(groupingKey, iCount.(int64)+1)
 			}
 		}
 
@@ -535,10 +535,10 @@ func (tr *TransformerUniq) transformWithCounts(
 		if ok {
 			iCount, present := tr.countsByGroup.GetWithCheck(groupingKey)
 			if !present {
-				tr.countsByGroup.Put(groupingKey, 1)
+				tr.countsByGroup.Put(groupingKey, int64(1))
 				tr.valuesByGroup.Put(groupingKey, selectedValues)
 			} else {
-				tr.countsByGroup.Put(groupingKey, iCount.(int)+1)
+				tr.countsByGroup.Put(groupingKey, iCount.(int64)+1)
 			}
 		}
 
@@ -556,7 +556,7 @@ func (tr *TransformerUniq) transformWithCounts(
 			if tr.showCounts {
 				outrec.PutReference(
 					tr.outputFieldName,
-					mlrval.FromInt(pa.Value.(int)),
+					mlrval.FromInt(pa.Value.(int64)),
 				)
 			}
 			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
@@ -583,7 +583,7 @@ func (tr *TransformerUniq) transformWithoutCounts(
 
 		iCount, present := tr.countsByGroup.GetWithCheck(groupingKey)
 		if !present {
-			tr.countsByGroup.Put(groupingKey, 1)
+			tr.countsByGroup.Put(groupingKey, int64(1))
 			tr.valuesByGroup.Put(groupingKey, selectedValues)
 			outrec := mlrval.NewMlrmapAsRecord()
 
@@ -597,7 +597,7 @@ func (tr *TransformerUniq) transformWithoutCounts(
 			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 
 		} else {
-			tr.countsByGroup.Put(groupingKey, iCount.(int)+1)
+			tr.countsByGroup.Put(groupingKey, iCount.(int64)+1)
 		}
 
 	} else { // end of record stream
