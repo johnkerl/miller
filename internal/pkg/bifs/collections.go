@@ -15,18 +15,14 @@ func BIF_length(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	switch input1.Type() {
 	case mlrval.MT_ERROR:
 		return mlrval.FromInt(0)
-		break
 	case mlrval.MT_ABSENT:
 		return mlrval.FromInt(0)
-		break
 	case mlrval.MT_ARRAY:
 		arrayval := input1.AcquireArrayValue()
 		return mlrval.FromInt(int(len(arrayval)))
-		break
 	case mlrval.MT_MAP:
 		mapval := input1.AcquireMapValue()
 		return mlrval.FromInt(int(mapval.FieldCount))
-		break
 	}
 	return mlrval.FromInt(1)
 }

@@ -253,8 +253,6 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 
 		return mv, false, nil
 	}
-
-	return nil, false, fmt.Errorf("mlr: unimplemented")
 }
 
 // ================================================================

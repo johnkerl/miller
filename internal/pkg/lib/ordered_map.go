@@ -97,7 +97,6 @@ func (omap *OrderedMap) Get(key string) interface{} {
 	} else {
 		return pe.Value
 	}
-	return nil
 }
 
 // The Get is sufficient for pointer values -- the caller can check if the
@@ -110,7 +109,6 @@ func (omap *OrderedMap) GetWithCheck(key string) (interface{}, bool) {
 	} else {
 		return pe.Value, true
 	}
-	return nil, false
 }
 
 // ----------------------------------------------------------------

@@ -156,13 +156,10 @@ func openEncodedHandleForRead(
 	switch encoding {
 	case FileInputEncodingBzip2:
 		return NewBZip2ReadCloser(handle), nil
-		break
 	case FileInputEncodingGzip:
 		return gzip.NewReader(handle)
-		break
 	case FileInputEncodingZlib:
 		return zlib.NewReader(handle)
-		break
 	}
 
 	InternalCodingErrorIf(encoding != FileInputEncodingDefault)
