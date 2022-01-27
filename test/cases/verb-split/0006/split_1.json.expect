@@ -1,0 +1,47 @@
+[
+{
+  "color": "yellow",
+  "shape": "triangle",
+  "flag": "true",
+  "k": 1,
+  "index": 11,
+  "quantity": 43.6498,
+  "rate": 9.8870
+},
+{
+  "color": "red",
+  "shape": "circle",
+  "flag": "true",
+  "k": 3,
+  "index": 16,
+  "quantity": 13.8103,
+  "rate": 2.9010
+},
+{
+  "color": "purple",
+  "shape": "triangle",
+  "flag": "false",
+  "k": 5,
+  "index": 51,
+  "quantity": 81.2290,
+  "rate": 8.5910
+},
+{
+  "color": "purple",
+  "shape": "triangle",
+  "flag": "false",
+  "k": 7,
+  "index": 65,
+  "quantity": 80.1405,
+  "rate": 5.8240
+},
+{
+  "color": "yellow",
+  "shape": "circle",
+  "flag": "true",
+  "k": 9,
+  "index": 87,
+  "quantity": 63.5058,
+  "rate": 8.3350
+}
+]

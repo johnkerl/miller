@@ -2978,6 +2978,52 @@ a b c
 9 8 7
 </pre>
 
+## split
+
+<pre class="pre-highlight-in-pair">
+<b>mlr split --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr split [options] {filename}
+Options:
+-n {n}:      Cap file sizes at N records.
+-m {m}:      Produce M files, round-robining records among them.
+-g {a,b,c}:  Write separate files with records having distinct values for fields named a,b,c.
+Exactly one  of -m, -n, or -g must be supplied.
+--prefix {p} Specify filename prefix; default "split".
+--suffix {s} Specify filename suffix; default is from mlr output format, e.g. "csv".
+-a           Append to existing file(s), if any, rather than overwriting.
+-v           Send records along to downstream verbs as well as splitting to files.
+-h|--help    Show this message.
+Any of the output-format command-line flags (see mlr -h). For example, using
+  mlr --icsv --from myfile.csv split --ojson -n 1000
+the input is CSV, but the output files are JSON.
+
+Examples: Suppose myfile.csv has 1,000,000 records.
+
+100 output files, 10,000 records each. First 10,000 records in split_1.csv, next in split_2.csv, etc.
+  mlr --csv --from myfile.csv split -n 10000
+
+10 output files, 100,000 records each. Records 1,11,21,etc in split_1.csv, records 2,12,22, etc in split_2.csv, etc.
+  mlr --csv --from myfile.csv split -m 10
+Same, but with JSON output.
+  mlr --csv --from myfile.csv split -m 10 -o json
+
+Same but instead of split_1.csv, split_2.csv, etc. there are test_1.dat, test_2.dat, etc.
+  mlr --csv --from myfile.csv split -m 10 --prefix test --suffix dat
+Same, but written to the /tmp/ directory.
+  mlr --csv --from myfile.csv split -m 10 --prefix /tmp/test --suffix dat
+
+If the shape field has values triangle and square, then there will be split_triangle.csv and split_square.csv.
+  mlr --csv --from myfile.csv split -g shape
+
+If the color field has values yellow and green, and the shape field has values triangle and square,
+then there will be split_yellow_triangle.csv, split_yellow_square.csv, etc.
+  mlr --csv --from myfile.csv split -g color,shape
+
+See also the "tee" DSL function which lets you do more ad-hoc customization.
+</pre>
+
 ## stats1
 
 <pre class="pre-highlight-in-pair">

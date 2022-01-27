@@ -56,6 +56,17 @@ type MultiOutputHandlerManager struct {
 }
 
 // ----------------------------------------------------------------
+func NewFileOutputHandlerManager(
+	recordWriterOptions *cli.TWriterOptions,
+	doAppend bool,
+) *MultiOutputHandlerManager {
+	if doAppend {
+		return NewFileAppendHandlerManager(recordWriterOptions)
+	} else {
+		return NewFileWritetHandlerManager(recordWriterOptions)
+	}
+}
+
 func NewFileWritetHandlerManager(
 	recordWriterOptions *cli.TWriterOptions,
 ) *MultiOutputHandlerManager {
@@ -228,6 +239,18 @@ func newOutputHandlerCommon(
 }
 
 // ----------------------------------------------------------------
+func NewFileOutputHandler(
+	filename string,
+	recordWriterOptions *cli.TWriterOptions,
+	doAppend bool,
+) (*FileOutputHandler, error) {
+	if doAppend {
+		return NewFileAppendOutputHandler(filename, recordWriterOptions)
+	} else {
+		return NewFileWriteOutputHandler(filename, recordWriterOptions)
+	}
+}
+
 func NewFileWriteOutputHandler(
 	filename string,
 	recordWriterOptions *cli.TWriterOptions,
