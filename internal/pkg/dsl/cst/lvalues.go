@@ -24,56 +24,42 @@ func (root *RootNode) BuildAssignableNode(
 
 	case dsl.NodeTypeDirectFieldValue:
 		return root.BuildDirectFieldValueLvalueNode(astNode)
-		break
 	case dsl.NodeTypeIndirectFieldValue:
 		return root.BuildIndirectFieldValueLvalueNode(astNode)
-		break
 	case dsl.NodeTypePositionalFieldName:
 		return root.BuildPositionalFieldNameLvalueNode(astNode)
-		break
 	case dsl.NodeTypePositionalFieldValue:
 		return root.BuildPositionalFieldValueLvalueNode(astNode)
-		break
 
 	case dsl.NodeTypeFullSrec:
 		return root.BuildFullSrecLvalueNode(astNode)
-		break
 
 	case dsl.NodeTypeDirectOosvarValue:
 		return root.BuildDirectOosvarValueLvalueNode(astNode)
-		break
 	case dsl.NodeTypeIndirectOosvarValue:
 		return root.BuildIndirectOosvarValueLvalueNode(astNode)
-		break
 	case dsl.NodeTypeFullOosvar:
 		return root.BuildFullOosvarLvalueNode(astNode)
-		break
 	case dsl.NodeTypeLocalVariable:
 		return root.BuildLocalVariableLvalueNode(astNode)
-		break
 
 	case dsl.NodeTypeArrayOrMapPositionalNameAccess:
 		return nil, fmt.Errorf(
 			"mlr: '[[...]]' is allowed on assignment left-hand sides only when immediately preceded by '$'.",
 		)
-		break
 	case dsl.NodeTypeArrayOrMapPositionalValueAccess:
 		return nil, fmt.Errorf(
 			"mlr: '[[[...]]]' is allowed on assignment left-hand sides only when immediately preceded by '$'.",
 		)
-		break
 
 	case dsl.NodeTypeArrayOrMapIndexAccess:
 		return root.BuildIndexedLvalueNode(astNode)
-		break
 
 	case dsl.NodeTypeDotOperator:
 		return root.BuildIndexedLvalueNode(astNode)
-		break
 
 	case dsl.NodeTypeEnvironmentVariable:
 		return root.BuildEnvironmentVariableLvalueNode(astNode)
-		break
 	}
 
 	return nil, fmt.Errorf(

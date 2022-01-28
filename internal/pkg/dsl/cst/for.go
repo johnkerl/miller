@@ -580,7 +580,6 @@ func (node *ForLoopMultivariableNode) executeOuter(
 			if blockExitPayload != nil {
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
 					return blockExitPayload, nil
-					break
 				}
 				// If BLOCK_EXIT_CONTINUE, keep going -- this means the body was exited
 				// early but we keep going at this level

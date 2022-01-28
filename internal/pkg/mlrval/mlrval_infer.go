@@ -199,15 +199,6 @@ func inferMaybeFloat(mv *Mlrval) *Mlrval {
 }
 
 // TODO: comment
-func inferFromBool(mv *Mlrval) *Mlrval {
-	if mv.printrep == "true" {
-		return mv.SetFromPrevalidatedBoolString(mv.printrep, true)
-	} else {
-		return mv.SetFromPrevalidatedBoolString(mv.printrep, false)
-	}
-}
-
-// TODO: comment
 // Shared code for 0o/0b integers
 func inferBaseInt(mv *Mlrval, base int) *Mlrval {
 	var input string

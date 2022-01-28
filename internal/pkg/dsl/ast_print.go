@@ -262,7 +262,6 @@ func (node *ASTNode) Text() string {
 		return tokenText
 	case NodeTypeEprintStatement:
 		return tokenText
-		return tokenText
 	case NodeTypePrintnStatement:
 		return tokenText
 	case NodeTypeEprintnStatement:

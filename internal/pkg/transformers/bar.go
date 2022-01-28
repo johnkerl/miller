@@ -219,14 +219,6 @@ func (tr *TransformerBar) Transform(
 }
 
 // ----------------------------------------------------------------
-func (tr *TransformerBar) simpleBar(
-	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
-) {
-	outputRecordsAndContexts.PushBack(inrecAndContext)
-}
-
-// ----------------------------------------------------------------
 func (tr *TransformerBar) processNoAuto(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
