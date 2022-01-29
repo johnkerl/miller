@@ -1,13 +1,23 @@
 ===============================================================
 RELEASES
 
-* follow ...
 * plan 6.1.0
   ? w/ natural sort order
   ? strptime
-  ? split
-  ? fmt/unfmt/regex doc
   ? datediff et al.
+  ? mlr join --left-fields a,b,c
+  ? rank
+  ? ?foo and ??foo @ repl help
+  o default colors; bold/underline/reverse
+  o fmt/unfmt/regex doc
+  o FAQ/examples reorg
+  k array concat
+  k format/unformat
+  k split
+  k slwin & shift-lead
+* plan 6.2.0
+  k 0o.. octal literals in the DSL
+  ? YAML
 
 ================================================================
 FEATURES
@@ -18,9 +28,14 @@ FEATURES
   o olh/webdocs x several
 
 ----------------------------------------------------------------
+* natural sort order
+   https://github.com/facette/natsort
+
+----------------------------------------------------------------
 example pages as feature catch-up:
 * example page for format/scan options
   o format/unformat
+    x=unformat(1,2); x; string(x); is_error(x)
   o strmatch
   o =~
 * separate examples section from (new) FAQs section
@@ -60,6 +75,8 @@ k better print-interpolate with {} etc
 
 ----------------------------------------------------------------
 ! CSV default unsparsify ... note this must trust the *first* record .......
+* CSV: acceptance somehow for \" in place of ""
+  o & more flex more generally
 
 ----------------------------------------------------------------
 ! quoted NIDX
@@ -119,6 +136,7 @@ k better print-interpolate with {} etc
 UX
 
 * ?xyz and ??xyz in repl, for :help and :help find respectively
+? NF?
 
 ! bnf fix for '[[' ']]' etc -- make it a nesting of singles. since otherwise no '[[3,4]]' literals :(
 ! broadly rethink os.Exit, especially as affecting mlr repl
@@ -151,6 +169,33 @@ DOC
 
 ! link to SE table ...
   https://github.com/johnkerl/miller/discussions/609#discussioncomment-1115715
+
+* put -f link in scrpting.html
+* no --load in .mlrrc b/c
+  https://github.com/johnkerl/miller/security/advisories/GHSA-mw2v-4q78-j2cw
+  (system() in begin{})
+  but suggest alias
+
+* surface readme-versions.md @ install & tell them how to get current
+  o in particular, older distros won't auto-update
+
+* how-to-contribute @ rmd
+* more clear miller docs == head
+
+* go version & why not generics (not all distros w/ newer go compilers)
+
+* document the fill-empty verb in
+  https://miller.readthedocs.io/en/latest/reference-main-null-data/#rules-for-null-handling
+
+* mlr R numpy/scipy/pandas ref.
+* ffmts page <-> R read.table read.csv ...
+* https://github.com/agarrharr/awesome-cli-apps#data-manipulation
+
+* "Miller, if I understand correctly, was born for those who already frequented
+  the command line, awk, for users with at least average data skills. While for
+  me, a basic user, it made me discover how it gives the possibility of
+  analyzing and transforming data, even complex ones, with a very low learning
+  curve."
 
 * document cloudthings, e.g.
   o go.yml
@@ -278,9 +323,13 @@ INFO
 
 i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 
+i https://framework.frictionlessdata.io/docs/tutorials/working-with-cli/
+
 i https://segment.com/blog/allocation-efficiency-in-high-performance-go-services/
 
 i go tool nm -size mlr | sort -nrk 2
+
+i https://go.dev/play/p/hrB77U3d0S3?v=gotip
 
 * godoc notes:
   o go get golang.org/x/tools/cmd/godoc
