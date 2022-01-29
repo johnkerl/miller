@@ -24,6 +24,8 @@ FEATURES
 
 ----------------------------------------------------------------
 * colors
+  o lumin import
+    - lumin verstag
   o RT w/ -C
   o olh/webdocs x several
 

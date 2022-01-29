@@ -2,6 +2,8 @@ github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/goccmack/gocc v0.0.0-20211213154817-7ea699349eca h1:NuA6w6b01Ojdig+4K1l9p4Pp3unlv4owphbOiENm8m4=
 github.com/goccmack/gocc v0.0.0-20211213154817-7ea699349eca/go.mod h1:c4Mb67Mg9+pl6OlxvnFBUiiQOSlXfh0QukINLl54OD0=
+github.com/johnkerl/lumin v0.0.0-20220129204714-283014bb72b1 h1:FetY3jOiWueTvowAxPakTBsZpMEd7bGQF3ejoH2rycc=
+github.com/johnkerl/lumin v0.0.0-20220129204714-283014bb72b1/go.mod h1:eLf5AdQOaLvzZ2zVy4REr/DSeEwG+CZreHwNLICqv9E=
 github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 h1:Z9n2FFNUXsshfwJMBgNA0RU6/i7WVaAegv3PtuIHPMs=
 github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51/go.mod h1:CzGEWj7cYgsdH8dAjBGEr58BoE7ScuLd+fwFZ44+/x8=
 github.com/lestrrat-go/envload v0.0.0-20180220234015-a3eb8ddeffcc h1:RKf14vYWi2ttpEmkA4aQ3j4u9dStX2t4M8UM6qqNsG8=

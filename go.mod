@@ -14,6 +14,7 @@ go 1.15
 
 require (
 	github.com/goccmack/gocc v0.0.0-20211213154817-7ea699349eca // indirect
+	github.com/johnkerl/lumin v0.0.0-20220129204714-283014bb72b1 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/lestrrat-go/strftime v1.0.5
 	github.com/mattn/go-isatty v0.0.14
