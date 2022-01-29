@@ -8,15 +8,10 @@
 
 # Get options
 begin {
-  if (is_absent(@n)) {
-    @n = 4;
-  }
-  if (is_absent(@ocount)) {
-    @ocount = 15;
-  }
-  if (is_absent(@verbose)) {
-    @verbose = false;
-  }
+  @n ??= 4;
+  @ocount ??= 15;
+  @olen ??= 0; # 0 means sample from input-length distribution
+  @verbose ??= false;
 
   call init();
 }
@@ -185,6 +180,9 @@ func emit_word(): str {
 func emit_word_aux(): str {
   # Pick a word length distributed according to the word lengths in the input.
   int olen = int(sample_from_cmf(@len_cmf));
+  if (@olen > 0) {
+    olen = @olen; # If fixed-length output was requsted
+  }
 
   if (@verbose) {
     print;
