@@ -65,7 +65,7 @@ Key points here:
 Then you can do
 
 <pre class="pre-highlight-in-pair">
-<b>example-shell-script example.csv</b>
+<b>./example-shell-script example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 shape    count count_fraction
@@ -75,7 +75,7 @@ circle   3     0.3
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>cat example.csv | example-shell-script</b>
+<b>cat example.csv | ./example-shell-script</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 shape    count count_fraction
@@ -85,7 +85,7 @@ circle   3     0.3
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>example-shell-script --ojson example.csv</b>
+<b>./example-shell-script --ojson example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 [
@@ -108,7 +108,7 @@ circle   3     0.3
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>example-shell-script --ojson then filter '$count == 3' example.csv</b>
+<b>./example-shell-script --ojson then filter '$count == 3' example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 [
@@ -132,7 +132,7 @@ etc.
 Here instead of putting `#!/bin/bash` on the first line, we can put `mlr` directly:
 
 <pre class="pre-highlight-in-pair">
-<b>cat example-mlr-s-script</b>
+<b>cat ./example-mlr-s-script</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 #!/usr/bin/env mlr -s
@@ -153,7 +153,7 @@ Points:
 Then you can do
 
 <pre class="pre-highlight-in-pair">
-<b>example-mlr-s-script example.csv</b>
+<b>./example-mlr-s-script example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 shape    count count_fraction
@@ -163,7 +163,7 @@ circle   3     0.3
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>cat example.csv | example-mlr-s-script</b>
+<b>cat example.csv | ./example-mlr-s-script</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 shape    count count_fraction
@@ -173,7 +173,7 @@ circle   3     0.3
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>example-mlr-s-script --ojson example.csv</b>
+<b>./example-mlr-s-script --ojson example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 [
@@ -196,7 +196,7 @@ circle   3     0.3
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>example-mlr-s-script --ojson then filter '$count == 3' example.csv</b>
+<b>./example-mlr-s-script --ojson then filter '$count == 3' example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 [
