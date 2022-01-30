@@ -25,25 +25,19 @@ func (root *RootNode) BuildLeafNode(
 
 	case dsl.NodeTypeDirectFieldValue:
 		return root.BuildDirectFieldRvalueNode(sval), nil
-		break
 	case dsl.NodeTypeFullSrec:
 		return root.BuildFullSrecRvalueNode(), nil
-		break
 
 	case dsl.NodeTypeDirectOosvarValue:
 		return root.BuildDirectOosvarRvalueNode(sval), nil
-		break
 	case dsl.NodeTypeFullOosvar:
 		return root.BuildFullOosvarRvalueNode(), nil
-		break
 
 	case dsl.NodeTypeLocalVariable:
 		return root.BuildLocalVariableNode(sval), nil
-		break
 
 	case dsl.NodeTypeStringLiteral:
 		return root.BuildStringLiteralNode(sval), nil
-		break
 
 	case dsl.NodeTypeRegex:
 		// During the BNF parse all string literals -- "foo" or "(..)_(...)"
@@ -54,7 +48,6 @@ func (root *RootNode) BuildLeafNode(
 		// handling backslash sequences for regex literals differently from
 		// those for non-regex string literals.
 		return root.BuildRegexLiteralNode(sval), nil
-		break
 
 	case dsl.NodeTypeRegexCaseInsensitive:
 		// StringLiteral nodes like '"abc"' entered by the user come in from
@@ -64,37 +57,27 @@ func (root *RootNode) BuildLeafNode(
 		// (The alternative would be to make a separate Mlrval type separate
 		// from string.)
 		return root.BuildRegexLiteralNode(sval), nil
-		break
 
 	case dsl.NodeTypeIntLiteral:
 		return root.BuildIntLiteralNode(sval), nil
-		break
 	case dsl.NodeTypeFloatLiteral:
 		return root.BuildFloatLiteralNode(sval), nil
-		break
 	case dsl.NodeTypeBoolLiteral:
 		return root.BuildBoolLiteralNode(sval), nil
-		break
 	case dsl.NodeTypeNullLiteral:
 		return root.BuildNullLiteralNode(), nil
-		break
 	case dsl.NodeTypeContextVariable:
 		return root.BuildContextVariableNode(astNode)
-		break
 	case dsl.NodeTypeConstant:
 		return root.BuildConstantNode(astNode)
-		break
 
 	case dsl.NodeTypeArraySliceEmptyLowerIndex:
 		return root.BuildArraySliceEmptyLowerIndexNode(astNode)
-		break
 	case dsl.NodeTypeArraySliceEmptyUpperIndex:
 		return root.BuildArraySliceEmptyUpperIndexNode(astNode)
-		break
 
 	case dsl.NodeTypePanic:
 		return root.BuildPanicNode(astNode)
-		break
 	}
 
 	return nil, fmt.Errorf("at CST BuildLeafNode: unhandled AST node %s", string(astNode.Type))
@@ -401,43 +384,31 @@ func (root *RootNode) BuildContextVariableNode(astNode *dsl.ASTNode) (IEvaluable
 
 	case "FILENAME":
 		return root.BuildFILENAMENode(), nil
-		break
 	case "FILENUM":
 		return root.BuildFILENUMNode(), nil
-		break
 
 	case "NF":
 		return root.BuildNFNode(), nil
-		break
 	case "NR":
 		return root.BuildNRNode(), nil
-		break
 	case "FNR":
 		return root.BuildFNRNode(), nil
-		break
 
 	case "IRS":
 		return root.BuildIRSNode(), nil
-		break
 	case "IFS":
 		return root.BuildIFSNode(), nil
-		break
 	case "IPS":
 		return root.BuildIPSNode(), nil
-		break
 
 	case "ORS":
 		return root.BuildORSNode(), nil
-		break
 	case "OFS":
 		return root.BuildOFSNode(), nil
-		break
 	case "OPS":
 		return root.BuildOPSNode(), nil
-		break
 	case "FLATSEP":
 		return root.BuildFLATSEPNode(), nil
-		break
 
 	}
 
@@ -609,10 +580,8 @@ func (root *RootNode) BuildConstantNode(astNode *dsl.ASTNode) (IEvaluable, error
 
 	case "M_PI":
 		return root.BuildMathPINode(), nil
-		break
 	case "M_E":
 		return root.BuildMathENode(), nil
-		break
 
 	}
 

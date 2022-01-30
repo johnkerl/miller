@@ -102,12 +102,6 @@ func string_cmp(a, b string) int {
 func cmp_b_ss(input1, input2 *Mlrval) int {
 	return string_cmp(input1.printrep, input2.printrep)
 }
-func cmp_b_xs(input1, input2 *Mlrval) int {
-	return string_cmp(input1.String(), input2.printrep)
-}
-func cmp_b_sx(input1, input2 *Mlrval) int {
-	return string_cmp(input1.printrep, input2.String())
-}
 func cmp_b_ii(input1, input2 *Mlrval) int {
 	return int_cmp(input1.intval, input2.intval)
 }

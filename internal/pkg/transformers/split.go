@@ -415,23 +415,3 @@ func (tr *TransformerSplit) makeGroupedOutputFileName(
 	buffer.WriteString(tr.outputFileNameSuffix)
 	return buffer.String()
 }
-
-// makeGroupedIndexedOutputFileName example: "split_yellow_53.csv"
-func (tr *TransformerSplit) makeGroupedIndexedOutputFileName(
-	groupByFieldValues []*mlrval.Mlrval,
-	index int,
-) string {
-	// URL-escape the fields which come from data and which may have '/'
-	// etc within. Don't URL-escape the prefix since people may want to
-	// use prefixes like '/tmp/split' to write to the /tmp directory, etc.
-	var buffer bytes.Buffer
-	buffer.WriteString(tr.outputFileNamePrefix)
-	for _, groupByFieldValue := range groupByFieldValues {
-		buffer.WriteString("_")
-		buffer.WriteString(url.QueryEscape(groupByFieldValue.String()))
-	}
-	buffer.WriteString(fmt.Sprintf("_%d", index))
-	buffer.WriteString(".")
-	buffer.WriteString(tr.outputFileNameSuffix)
-	return buffer.String()
-}

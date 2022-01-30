@@ -86,11 +86,3 @@ func OpenInboundHalfPipe(commandString string) (*os.File, error) {
 
 	return readPipe, nil
 }
-
-func waitAndClose(process *os.Process, readPipe *os.File) {
-	_, err := process.Wait()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s: %v\n", "mlr", err)
-	}
-	readPipe.Close()
-}

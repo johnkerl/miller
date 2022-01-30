@@ -141,11 +141,6 @@ func _void(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.VOID
 }
 
-// Return 0 (binary)
-func _zero2(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromInt(0)
-}
-
 // Return first argument (binary)
 func _1___(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return input1
