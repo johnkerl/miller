@@ -18,6 +18,7 @@ RELEASES
 * plan 6.2.0
   k 0o.. octal literals in the DSL
   ? YAML
+-> more badges -- ?
 
 ================================================================
 FEATURES
@@ -25,9 +26,9 @@ FEATURES
 ----------------------------------------------------------------
 * colors
   o lumin import
-    - lumin verstag
+    k lumin verstag
     - lumin needs bold/underline/reversed -> help; plus x-y-z syntax
-    - wup for local go.mod override
+    k wup for local go.mod override
   o RT w/ -C
   o olh/webdocs x several
 
