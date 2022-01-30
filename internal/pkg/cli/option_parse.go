@@ -2452,8 +2452,11 @@ How you can control colorization:
 If environment-variable settings and command-line flags are both provided, the
 latter take precedence.
 
-Please do mlr ` + "`--list-color-codes`" + ` to see the available color codes (like 170),
-and ` + "`mlr --list-color-names`" + ` to see available names (like ` + "`orchid`" + `).
+Colors can be specified using names such as "red" or "orchid": please see
+` + "`mlr --list-color-names`" + ` to see available names. They can also be specified using
+numbers in the range 0..255, like 170: please see ` + "`mlr --list-color-codes`" + `.
+You can also use "bold", "underline", and/or "reverse". Additionally, combinations of
+those can be joined with a "-", like "red-bold", "bold-170", "bold-underline", etc.
 `)
 }
 
