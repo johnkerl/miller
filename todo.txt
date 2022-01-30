@@ -26,6 +26,8 @@ FEATURES
 * colors
   o lumin import
     - lumin verstag
+    - lumin needs bold/underline/reversed -> help; plus x-y-z syntax
+    - wup for local go.mod override
   o RT w/ -C
   o olh/webdocs x several
 
