@@ -35,19 +35,19 @@ Key points here:
 Then you can do
 
 GENMD-RUN-COMMAND
-example-shell-script example.csv
+./example-shell-script example.csv
 GENMD-EOF
 
 GENMD-RUN-COMMAND
-cat example.csv | example-shell-script
+cat example.csv | ./example-shell-script
 GENMD-EOF
 
 GENMD-RUN-COMMAND
-example-shell-script --ojson example.csv
+./example-shell-script --ojson example.csv
 GENMD-EOF
 
 GENMD-RUN-COMMAND
-example-shell-script --ojson then filter '$count == 3' example.csv
+./example-shell-script --ojson then filter '$count == 3' example.csv
 GENMD-EOF
 
 etc.
@@ -57,7 +57,7 @@ etc.
 Here instead of putting `#!/bin/bash` on the first line, we can put `mlr` directly:
 
 GENMD-RUN-COMMAND
-cat example-mlr-s-script
+cat ./example-mlr-s-script
 GENMD-EOF
 
 Points:
@@ -71,19 +71,19 @@ Points:
 Then you can do
 
 GENMD-RUN-COMMAND
-example-mlr-s-script example.csv
+./example-mlr-s-script example.csv
 GENMD-EOF
 
 GENMD-RUN-COMMAND
-cat example.csv | example-mlr-s-script
+cat example.csv | ./example-mlr-s-script
 GENMD-EOF
 
 GENMD-RUN-COMMAND
-example-mlr-s-script --ojson example.csv
+./example-mlr-s-script --ojson example.csv
 GENMD-EOF
 
 GENMD-RUN-COMMAND
-example-mlr-s-script --ojson then filter '$count == 3' example.csv
+./example-mlr-s-script --ojson then filter '$count == 3' example.csv
 GENMD-EOF
 
 ## Miller scripts on Windows
