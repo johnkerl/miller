@@ -74,10 +74,10 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 
 # Build status
 
-[![Multi-platform build status](https://github.com/johnkerl/miller/actions/workflows/go.yml/badge.svg)](https://github.com/johnkerl/miller/actions)
-[![CodeQL status](https://github.com/johnkerl/miller/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/johnkerl/miller/actions)
-[![Codespell status](https://github.com/johnkerl/miller/actions/workflows/codespell.yml/badge.svg)](https://github.com/johnkerl/miller/actions)
-[![Release status](https://github.com/johnkerl/miller/actions/workflows/release.yml/badge.svg)](https://github.com/johnkerl/miller/actions)
+[![Multi-platform build status](https://github.com/johnkerl/miller/actions/workflows/go.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/go.yml)
+[![CodeQL status](https://github.com/johnkerl/miller/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/codeql-analysis.yml)
+[![Codespell status](https://github.com/johnkerl/miller/actions/workflows/codespell.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/codespell.yml)
+[![Release status](https://github.com/johnkerl/miller/actions/workflows/release.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/release.yml)
 
 # Building from source
 
