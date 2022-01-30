@@ -181,7 +181,7 @@ func emit_word_aux(): str {
   # Pick a word length distributed according to the word lengths in the input.
   int olen = int(sample_from_cmf(@len_cmf));
   if (@olen > 0) {
-    olen = @olen; # If fixed-length output was requsted
+    olen = @olen; # If fixed-length output was requested
   }
 
   if (@verbose) {
