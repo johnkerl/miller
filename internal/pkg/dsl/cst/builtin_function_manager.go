@@ -1081,21 +1081,21 @@ strftime_local.`,
 		{
 			name:     "systime",
 			class:    FUNC_CLASS_TIME,
-			help:     "help string will go here",
+			help:     "Returns the system time in floating-point seconds since the epoch.",
 			zaryFunc: bifs.BIF_systime,
 		},
 
 		{
 			name:     "systimeint",
 			class:    FUNC_CLASS_TIME,
-			help:     "help string will go here",
+			help:     "Returns the system time in integer seconds since the epoch.",
 			zaryFunc: bifs.BIF_systimeint,
 		},
 
 		{
 			name:     "uptime",
 			class:    FUNC_CLASS_TIME,
-			help:     "help string will go here",
+			help:     "Returns the time in floating-point seconds since the current Miller program was started.",
 			zaryFunc: bifs.BIF_uptime,
 		},
 
