@@ -1210,6 +1210,8 @@ var TransTab = TransitionTable{
 			return 57
 		case r == 116: // ['t','t']
 			return 57
+		case r == 117: // ['u','u']
+			return 57
 		case r == 120: // ['x','x']
 			return 57
 		}
