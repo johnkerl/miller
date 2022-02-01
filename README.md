@@ -77,7 +77,9 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 [![Multi-platform build status](https://github.com/johnkerl/miller/actions/workflows/go.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/go.yml)
 [![CodeQL status](https://github.com/johnkerl/miller/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/codeql-analysis.yml)
 [![Codespell status](https://github.com/johnkerl/miller/actions/workflows/codespell.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/codespell.yml)
+<!--
 [![Release status](https://github.com/johnkerl/miller/actions/workflows/release.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/release.yml)
+-->
 
 # Building from source
 
@@ -101,6 +103,7 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 
 * Discussion forum: https://github.com/johnkerl/miller/discussions
 * Feature requests / bug reports: https://github.com/johnkerl/miller/issues
+* How to contribute: [https://miller.readthedocs.io/en/latest/contributing/](https://miller.readthedocs.io/en/latest/contributing/)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-40-orange.svg?style=flat-square)](#contributors-)
