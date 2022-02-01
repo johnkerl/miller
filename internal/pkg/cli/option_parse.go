@@ -1086,10 +1086,6 @@ var FileFormatFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "nidx"
-				options.ReaderOptions.IFS = " "
-				options.WriterOptions.OFS = " "
-				options.ReaderOptions.ifsWasSpecified = true
-				options.WriterOptions.ofsWasSpecified = true
 				*pargi += 1
 			},
 		},
