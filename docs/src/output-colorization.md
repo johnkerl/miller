@@ -67,6 +67,9 @@ If environment-variable settings and command-line flags are both provided, the l
 
 ## How to see available color codes
 
-You can use `mlr --list-color-codes` to see the available color codes (like `170`), and `mlr --list-color-names` to see available names (like `orchid`).
+Use `mlr --list-color-names` to see available names, like `orchid`. Colors can also be specified
+using numbers in the range 0..255, like 170: please see `mlr --list-color-codes`.  You can also use
+`bold`, `underline`, and/or `reverse`.  Additionally, combinations of all of these can be joined
+with a `-`, like `red-bold`, `bold-170`, `bold-underline`, etc.
 
 ![pix/colorization2.png](pix/colorization2.png)

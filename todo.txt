@@ -8,9 +8,9 @@ RELEASES
   ? mlr join --left-fields a,b,c
   ? rank
   ? ?foo and ??foo @ repl help
-  o default colors; bold/underline/reverse
   o fmt/unfmt/regex doc
   o FAQ/examples reorg
+  k default colors; bold/underline/reverse
   k array concat
   k format/unformat
   k split
@@ -22,15 +22,6 @@ RELEASES
 
 ================================================================
 FEATURES
-
-----------------------------------------------------------------
-* colors
-  o lumin import
-    k lumin verstag
-    - lumin needs bold/underline/reversed -> help; plus x-y-z syntax
-    k wup for local go.mod override
-  o RT w/ -C
-  o olh/webdocs x several
 
 ----------------------------------------------------------------
 * natural sort order
