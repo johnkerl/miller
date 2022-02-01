@@ -15,10 +15,9 @@ RELEASES
   k format/unformat
   k split
   k slwin & shift-lead
-* plan 6.2.0
   k 0o.. octal literals in the DSL
+* plan 6.2.0
   ? YAML
--> more badges -- ?
 
 ================================================================
 FEATURES

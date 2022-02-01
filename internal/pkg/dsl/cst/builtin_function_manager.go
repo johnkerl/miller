@@ -112,7 +112,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:       "/",
 			class:      FUNC_CLASS_ARITHMETIC,
-			help:       `Division. Integer / integer is floating-point.`,
+			help:       `Division. Integer / integer is integer when exact, else floating-point: e.g. 6/3 is 2 but 6/4 is 1.5.`,
 			binaryFunc: bifs.BIF_divide,
 		},
 
@@ -161,7 +161,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:       "./",
 			class:      FUNC_CLASS_ARITHMETIC,
-			help:       `Integer division; not pythonic.`,
+			help:       `Integer division, rounding toward zero.`,
 			binaryFunc: bifs.BIF_dot_divide,
 		},
 
@@ -361,7 +361,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:       "???",
 			class:      FUNC_CLASS_BOOLEAN,
-			help:       `Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.`,
+			help:       `Absent/empty-coalesce operator. $a ??? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.`,
 			binaryFunc: BinaryShortCircuitPlaceholder,
 		},
 
