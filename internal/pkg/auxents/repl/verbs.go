@@ -106,6 +106,16 @@ func (repl *Repl) handleNonDSLLine(trimmedLine string) bool {
 	}
 	verbName := args[0]
 
+	// TODO: describe me
+	if strings.HasPrefix(verbName, "??") {
+		handleHelpFindSingle(repl, verbName[2:])
+		return true
+	}
+	if strings.HasPrefix(verbName, "?") {
+		handleHelpSingle(repl, verbName[1:])
+		return true
+	}
+
 	// We handle all single lines starting with a colon.  Anything that starts
 	// with a semicolon but which we don't recognize, we should say so here --
 	// rather than deferring to the DSL parser which would only say "cannot
@@ -827,8 +837,8 @@ func usageHelp(repl *Repl) {
 	fmt.Println(":help prompt")
 	fmt.Println(":help function-names")
 	fmt.Println(":help function-details")
-	fmt.Println(":help find {substring}, e.g. :help find gmt or :help find map")
-	fmt.Println(":help {function name}, e.g. :help sec2gmt")
+	fmt.Println(":help find {substring}, e.g. :help find gmt or :help find map. Shorthand: ??map")
+	fmt.Println(":help {name}, e.g. :help sec2gmt. Shorthand: ?sec2gmt")
 }
 
 func handleHelp(repl *Repl, args []string) bool {
