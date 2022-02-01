@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2022-01-30
+.\"      Date: 2022-02-01
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2022-01-30" "\ \&" "\ \&"
+.TH "MILLER" "1" "2022-02-01" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -4320,7 +4320,7 @@ Int-valued example: '$n=floor(20+urand()*11)'.
 .RS 0
 .\}
 .nf
- (class=arithmetic #args=2) Integer division; not pythonic.
+ (class=arithmetic #args=2) Integer division, rounding toward zero.
 .fi
 .if n \{\
 .RE
@@ -4329,7 +4329,7 @@ Int-valued example: '$n=floor(20+urand()*11)'.
 .RS 0
 .\}
 .nf
- (class=arithmetic #args=2) Division. Integer / integer is floating-point.
+ (class=arithmetic #args=2) Division. Integer / integer is integer when exact, else floating-point: e.g. 6/3 is 2 but 6/4 is 1.5.
 .fi
 .if n \{\
 .RE
@@ -4455,7 +4455,7 @@ Int-valued example: '$n=floor(20+urand()*11)'.
 .RS 0
 .\}
 .nf
- (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
+ (class=boolean #args=2) Absent/empty-coalesce operator. $a ??? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
 .fi
 .if n \{\
 .RE

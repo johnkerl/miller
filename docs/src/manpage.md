@@ -2682,10 +2682,10 @@ FUNCTIONS FOR FILTER/PUT
         (class=arithmetic #args=2) Subtraction, with integer-to-integer overflow.
 
    ./
-        (class=arithmetic #args=2) Integer division; not pythonic.
+        (class=arithmetic #args=2) Integer division, rounding toward zero.
 
    /
-        (class=arithmetic #args=2) Division. Integer / integer is floating-point.
+        (class=arithmetic #args=2) Division. Integer / integer is integer when exact, else floating-point: e.g. 6/3 is 2 but 6/4 is 1.5.
 
    //
         (class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
@@ -2727,7 +2727,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record.
 
    ???
-        (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
+        (class=boolean #args=2) Absent/empty-coalesce operator. $a ??? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
 
    ^
         (class=arithmetic #args=2) Bitwise XOR.
@@ -3134,5 +3134,5 @@ SEE ALSO
 
 
 
-                                  2022-01-30                         MILLER(1)
+                                  2022-02-01                         MILLER(1)
 </pre>

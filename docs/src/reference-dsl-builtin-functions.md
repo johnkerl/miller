@@ -184,14 +184,14 @@ pow  (class=arithmetic #args=2) Exponentiation. Same as **, but as a function.
 <a id=dot-slash />
 ### \./
 <pre class="pre-non-highlight-non-pair">
-./  (class=arithmetic #args=2) Integer division; not pythonic.
+./  (class=arithmetic #args=2) Integer division, rounding toward zero.
 </pre>
 
 
 <a id=slash />
 ### /
 <pre class="pre-non-highlight-non-pair">
-/  (class=arithmetic #args=2) Division. Integer / integer is floating-point.
+/  (class=arithmetic #args=2) Division. Integer / integer is integer when exact, else floating-point: e.g. 6/3 is 2 but 6/4 is 1.5.
 </pre>
 
 
@@ -339,7 +339,7 @@ pow  (class=arithmetic #args=2) Exponentiation. Same as **, but as a function.
 <a id=absent-empty-coalesce />
 ### ???
 <pre class="pre-non-highlight-non-pair">
-???  (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
+???  (class=boolean #args=2) Absent/empty-coalesce operator. $a ??? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
 </pre>
 
 
