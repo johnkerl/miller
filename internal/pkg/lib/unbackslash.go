@@ -6,6 +6,7 @@ package lib
 
 import (
 	"bytes"
+	"strconv"
 )
 
 var unbackslashReplacements = map[byte]string{
@@ -65,6 +66,12 @@ func UnbackslashStringLiteral(input string) string {
 		} else if ok, code := isBackslashHex(input[i:]); ok {
 			buffer.WriteByte(byte(code))
 			i += 4
+		} else if ok, s := isUnicode4(input[i:]); ok {
+			buffer.WriteString(s)
+			i += 6
+		} else if ok, s := isUnicode8(input[i:]); ok {
+			buffer.WriteString(s)
+			i += 10
 		} else {
 			buffer.WriteByte('\\')
 			buffer.WriteByte(next)
@@ -178,6 +185,7 @@ func isBackslashHex(input string) (bool, int) {
 	return true, code
 }
 
+// isHexDigit tries to parse e.g. "\x41"
 func isHexDigit(b byte) (bool, byte) {
 	if '0' <= b && b <= '9' {
 		return true, b - '0'
@@ -189,4 +197,34 @@ func isHexDigit(b byte) (bool, byte) {
 		return true, b - 'A' + 10
 	}
 	return false, 0
+}
+
+// isUnicode4 tries to parse e.g. "\u2766"
+func isUnicode4(input string) (bool, string) {
+	if len(input) < 6 {
+		return false, ""
+	}
+	if input[0:2] != `\u` {
+		return false, ""
+	}
+	s, err := strconv.Unquote(`"` + input[0:6] + `"`)
+	if err == nil {
+		return true, s
+	}
+	return false, ""
+}
+
+// isUnicode8 tries to parse e.g. "\U00010877"
+func isUnicode8(input string) (bool, string) {
+	if len(input) < 10 {
+		return false, ""
+	}
+	if input[0:2] != `\U` {
+		return false, ""
+	}
+	s, err := strconv.Unquote(`"` + input[0:10] + `"`)
+	if err == nil {
+		return true, s
+	}
+	return false, ""
 }

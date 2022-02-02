@@ -29,6 +29,9 @@ var dataForUnbackslash = []tDataForUnbackslash{
 	{`a\x42c`, `aBc`},
 	{`[\101\102\103]`, `[ABC]`},
 	{`[\x44\x45\x46]`, `[DEF]`},
+	{`\u2766`, `❦`},
+	{`\U00010877`, `𐡷`},
+	{`a\u0062c`, `abc`},
 }
 
 func TestUnbackslash(t *testing.T) {
