@@ -17,6 +17,7 @@ module github.com/johnkerl/miller
 go 1.15
 
 require (
+	github.com/goccmack/gocc v0.0.0-20211213154817-7ea699349eca // indirect
 	github.com/johnkerl/lumin v1.0.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/lestrrat-go/strftime v1.0.5

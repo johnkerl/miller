@@ -24,7 +24,6 @@ var dataForUnbackslash = []tDataForUnbackslash{
 	{`a\fb\rc`, "a\fb\rc"},
 	{`a"b"c`, `a"b"c`},
 	{`a\"b\"c`, `a"b"c`},
-	{`a\'b\'c`, `a'b'c`},
 	{`a\102c`, `aBc`},
 	{`a\x42c`, `aBc`},
 	{`[\101\102\103]`, `[ABC]`},

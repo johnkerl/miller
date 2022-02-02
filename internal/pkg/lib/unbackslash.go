@@ -38,6 +38,18 @@ var unbackslashReplacements = map[byte]string{
 // Note "\0" .. "\9" are used for regex captures within the DSL CST builder
 // and are not touched here. (See also lib/regex.go.)
 func UnbackslashStringLiteral(input string) string {
+
+	// We could just do this. However, if someone has a valid "\t" in one part of the string,
+	// and something else strconv.Unquote doesn't handle in another part of the string,
+	// we'd fail to unbackslash the former ...
+	//
+	//	output, err := strconv.Unquote(`"` + input + `"`)
+	//	if err == nil {
+	//		return output
+	//	} else {
+	//		return input
+	//	}
+
 	var buffer bytes.Buffer
 
 	n := len(input)
