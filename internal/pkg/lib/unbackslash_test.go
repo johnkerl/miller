@@ -19,16 +19,16 @@ type tDataForUnbackslash struct {
 var dataForUnbackslash = []tDataForUnbackslash{
 	{"", ""},
 	{"abcde", "abcde"},
-	{"\\1", "\\1"},
-	{"a\\tb\\tc", "a\tb\tc"},
-	{"a\\fb\\rc", "a\fb\rc"},
-	{"a\"b\"c", "a\"b\"c"},
-	{"a\\\"b\\\"c", "a\"b\"c"},
-	{"a\\'b\\'c", "a'b'c"},
-	{"a\102c", "aBc"},
-	{"a\x42c", "aBc"},
-	{"[\101\102\103]", "[ABC]"},
-	{"[\x44\x45\x46]", "[DEF]"},
+	{`\1`, `\1`},
+	{`a\tb\tc`, "a\tb\tc"},
+	{`a\fb\rc`, "a\fb\rc"},
+	{`a"b"c`, `a"b"c`},
+	{`a\"b\"c`, `a"b"c`},
+	{`a\'b\'c`, `a'b'c`},
+	{`a\102c`, `aBc`},
+	{`a\x42c`, `aBc`},
+	{`[\101\102\103]`, `[ABC]`},
+	{`[\x44\x45\x46]`, `[DEF]`},
 }
 
 func TestUnbackslash(t *testing.T) {
