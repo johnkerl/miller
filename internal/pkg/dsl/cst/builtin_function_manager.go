@@ -1417,7 +1417,7 @@ strftime_local.`,
 		{
 			name:  "joink",
 			class: FUNC_CLASS_CONVERSION,
-			help:  `Makes string from map/array keys.`,
+			help:  `Makes string from map/array keys. First argument is map/array; second is separator string.`,
 			examples: []string{
 				`joink({"a":3,"b":4,"c":5}, ",") = "a,b,c".`,
 				`joink([1,2,3], ",") = "1,2,3".`,
@@ -1428,7 +1428,7 @@ strftime_local.`,
 		{
 			name:  "joinv",
 			class: FUNC_CLASS_CONVERSION,
-			help:  `Makes string from map/array values.`,
+			help:  `Makes string from map/array values. First argument is map/array; second is separator string.`,
 			examples: []string{
 				`joinv([3,4,5], ",") = "3,4,5"`,
 				`joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"`,
@@ -1439,10 +1439,11 @@ strftime_local.`,
 		{
 			name:  "joinkv",
 			class: FUNC_CLASS_CONVERSION,
-			help:  `Makes string from map/array key-value pairs.`,
+			help:  `Makes string from map/array key-value pairs. First argument is map/array;
+second is pair-separator string; third is field-separator string.`,
 			examples: []string{
 				`joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"`,
-				`joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"`,
+				`joinkv({"a":3,"b":4,"c":5}, ":", ";") = "a:3;b:4;c:5"`,
 			},
 			ternaryFunc: bifs.BIF_joinkv,
 		},
