@@ -1194,6 +1194,8 @@ var TransTab = TransitionTable{
 			return 57
 		case r == 57: // ['9','9']
 			return 57
+		case r == 85: // ['U','U']
+			return 57
 		case r == 91: // ['[','[']
 			return 57
 		case r == 92: // ['\','\']
