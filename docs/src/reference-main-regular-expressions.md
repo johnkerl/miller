@@ -20,6 +20,8 @@ Miller lets you use regular expressions (of the [types accepted by Go](https://p
 
 * In `mlr filter` with `=~` or `!=~`, e.g. `mlr filter '$url =~ "http.*com"'`
 
+* In `mlr put` with `regextract`, e.g. `mlr put '$output = regextract($input, "[a-z][a-z][0-9][0-9]")`
+
 * In `mlr put` with `sub` or `gsub`, e.g. `mlr put '$url = sub($url, "http.*com", "")'`
 
 * In `mlr having-fields`, e.g. `mlr having-fields --any-matching '^sda[0-9]'`

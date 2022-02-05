@@ -235,8 +235,8 @@ GENMD-EOF
 You can get the seconds since the Miller process start using
 [uptime](reference-dsl-builtin-functions.md#uptime):
 
-
 GENMD-CARDIFY-HIGHLIGHT-ONE
+mlr --c2p --from example.csv put '$u=uptime()'
 color  shape    flag  k  index quantity rate   u
 yellow triangle true  1  11    43.6498  9.8870 0.0011110305786132812
 red    square   true  2  15    79.2778  0.0130 0.0011241436004638672

@@ -20,6 +20,17 @@ RELEASES
   ? YAML
 
 ================================================================
+908
+
+* is_not_empty (class=typing #args=1) False if field is present in input with empty value, true
+  otherwise -> That means that and absent value will return true. While technically it makes sense,
+  many people will ask if "is not empty" to get the green flag before processing the value, which will
+  be nonexistent if the field is absent. Would it make sense to consider absent fields as empty ones?
+  Probably you already though about those concerns, but just in case.
+
+  -> engage in issue
+
+================================================================
 FEATURES
 
 ----------------------------------------------------------------
