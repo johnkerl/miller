@@ -1600,7 +1600,7 @@ single-element arrays.`,
 			help: `Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures
 for non-JSON file formats like CSV. With two arguments, the first argument is a map (maybe $*) and
 the second argument is the flatten separator. With three arguments, the first argument is prefix,
-the second is the flatten separator, and the third argument is a map, and flatten($*, ".") is the
+the second is the flatten separator, and the third argument is a map; flatten($*, ".") is the
 same as flatten("", ".", $*).  See "Flatten/unflatten: converting between JSON and tabular formats"
 at ` + lib.DOC_URL + ` for more information.`,
 			examples: []string{

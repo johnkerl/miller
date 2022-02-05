@@ -2149,7 +2149,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) e**x - 1.
 
    flatten
-        (class=collections #args=2,3) Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures for non-JSON file formats like CSV. With two arguments, the first argument is a map (maybe $*) and the second argument is the flatten separator. With three arguments, the first argument is prefix, the second is the flatten separator, and the third argument is a map, and flatten($*, ".") is the same as flatten("", ".", $*). See "Flatten/unflatten: converting between JSON and tabular formats" at https://miller.readthedocs.io for more information.
+        (class=collections #args=2,3) Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures for non-JSON file formats like CSV. With two arguments, the first argument is a map (maybe $*) and the second argument is the flatten separator. With three arguments, the first argument is prefix, the second is the flatten separator, and the third argument is a map; flatten($*, ".") is the same as flatten("", ".", $*). See "Flatten/unflatten: converting between JSON and tabular formats" at https://miller.readthedocs.io for more information.
        Examples:
        flatten({"a":[1,2],"b":3}, ".") is {"a.1": 1, "a.2": 2, "b": 3}.
        flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
