@@ -2202,6 +2202,12 @@ FUNCTIONS FOR FILTER/PUT
 
    gsub
         (class=string #args=3) '$name=gsub($name, "old", "new")' (replace all).
+       Examples:
+       gsub("ababab", "ab", "XY") gives "XYXYXY"
+       gsub("abc.def", ".", "X") gives "XXXXXXX"
+       gsub("abc.def", "\.", "X") gives "abcXdef"
+       gsub("abcdefg", "[ce]", "X") gives "abXdXfg"
+       gsub("prefix4529:suffix8567", "(....ix)([0-9]+)", "[\1 : \2]") gives "[prefix : 4529]:[suffix : 8567]"
 
    haskey
         (class=collections #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds. Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
@@ -2282,19 +2288,19 @@ FUNCTIONS FOR FILTER/PUT
         (class=typing #args=1) True if field is present with string (including empty-string) value
 
    joink
-        (class=conversion #args=2) Makes string from map/array keys.
+        (class=conversion #args=2) Makes string from map/array keys. First argument is map/array; second is separator string.
        Examples:
        joink({"a":3,"b":4,"c":5}, ",") = "a,b,c".
        joink([1,2,3], ",") = "1,2,3".
 
    joinkv
-        (class=conversion #args=3) Makes string from map/array key-value pairs.
+        (class=conversion #args=3) Makes string from map/array key-value pairs. First argument is map/array; second is pair-separator string; third is field-separator string. Mnemonic: the "=" comes before the "," in the output and in the arguments to joinkv.
        Examples:
        joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
-       joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
+       joinkv({"a":3,"b":4,"c":5}, ":", ";") = "a:3;b:4;c:5"
 
    joinv
-        (class=conversion #args=2) Makes string from map/array values.
+        (class=conversion #args=2) Makes string from map/array values. First argument is map/array; second is separator string.
        Examples:
        joinv([3,4,5], ",") = "3,4,5"
        joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
@@ -2498,6 +2504,8 @@ FUNCTIONS FOR FILTER/PUT
 
    ssub
         (class=string #args=3) Like sub but does no regexing. No characters are special.
+       Example:
+       ssub("abc.def", ".", "X") gives "abcXdef"
 
    strftime
         (class=time #args=2) Formats seconds since the epoch as timestamp. Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.
@@ -2539,6 +2547,12 @@ FUNCTIONS FOR FILTER/PUT
 
    sub
         (class=string #args=3) '$name=sub($name, "old", "new")' (replace once).
+       Examples:
+       sub("ababab", "ab", "XY") gives "XYabab"
+       sub("abc.def", ".", "X") gives "Xbc.def"
+       sub("abc.def", "\.", "X") gives "abcXdef"
+       sub("abcdefg", "[ce]", "X") gives "abXdefg"
+       sub("prefix4529:suffix8567", "suffix([0-9]+)", "name\1") gives "prefix4529:name8567"
 
    substr
         (class=string #args=3) substr is an alias for substr0. See also substr1. Miller is generally 1-up with all array and string indices, but, this is a backward-compatibility issue with Miller 5 and below. Arrays are new in Miller 6; the substr function is older.
@@ -2553,10 +2567,10 @@ FUNCTIONS FOR FILTER/PUT
         (class=system #args=1) Run command string, yielding its stdout minus final carriage return.
 
    systime
-        (class=time #args=0) help string will go here
+        (class=time #args=0) Returns the system time in floating-point seconds since the epoch.
 
    systimeint
-        (class=time #args=0) help string will go here
+        (class=time #args=0) Returns the system time in integer seconds since the epoch.
 
    tan
         (class=math #args=1) Trigonometric tangent.
@@ -2596,7 +2610,7 @@ FUNCTIONS FOR FILTER/PUT
        is_error(unformatx("{}h{}m{}s", "3:47:22")) gives true.
 
    uptime
-        (class=time #args=0) help string will go here
+        (class=time #args=0) Returns the time in floating-point seconds since the current Miller program was started.
 
    urand
         (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.
@@ -3113,4 +3127,4 @@ SEE ALSO
 
 
 
-                                  2022-02-01                         MILLER(1)
+                                  2022-02-05                         MILLER(1)

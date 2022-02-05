@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2022-02-01
+.\"      Date: 2022-02-05
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2022-02-01" "\ \&" "\ \&"
+.TH "MILLER" "1" "2022-02-05" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3099,6 +3099,12 @@ gmt2sec("2001-02-03T04:05:06Z") = 981173106
 .\}
 .nf
  (class=string #args=3) '$name=gsub($name, "old", "new")' (replace all).
+Examples:
+gsub("ababab", "ab", "XY") gives "XYXYXY"
+gsub("abc.def", ".", "X") gives "XXXXXXX"
+gsub("abc.def", "\e.", "X") gives "abcXdef"
+gsub("abcdefg", "[ce]", "X") gives "abXdXfg"
+gsub("prefix4529:suffix8567", "(....ix)([0-9]+)", "[\e1 : \e2]") gives "[prefix : 4529]:[suffix : 8567]"
 .fi
 .if n \{\
 .RE
@@ -3341,7 +3347,7 @@ gmt2sec("2001-02-03T04:05:06Z") = 981173106
 .RS 0
 .\}
 .nf
- (class=conversion #args=2) Makes string from map/array keys.
+ (class=conversion #args=2) Makes string from map/array keys. First argument is map/array; second is separator string.
 Examples:
 joink({"a":3,"b":4,"c":5}, ",") = "a,b,c".
 joink([1,2,3], ",") = "1,2,3".
@@ -3353,10 +3359,10 @@ joink([1,2,3], ",") = "1,2,3".
 .RS 0
 .\}
 .nf
- (class=conversion #args=3) Makes string from map/array key-value pairs.
+ (class=conversion #args=3) Makes string from map/array key-value pairs. First argument is map/array; second is pair-separator string; third is field-separator string. Mnemonic: the "=" comes before the "," in the output and in the arguments to joinkv.
 Examples:
 joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
-joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
+joinkv({"a":3,"b":4,"c":5}, ":", ";") = "a:3;b:4;c:5"
 .fi
 .if n \{\
 .RE
@@ -3365,7 +3371,7 @@ joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
 .RS 0
 .\}
 .nf
- (class=conversion #args=2) Makes string from map/array values.
+ (class=conversion #args=2) Makes string from map/array values. First argument is map/array; second is separator string.
 Examples:
 joinv([3,4,5], ",") = "3,4,5"
 joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
@@ -3887,6 +3893,8 @@ splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
 .\}
 .nf
  (class=string #args=3) Like sub but does no regexing. No characters are special.
+Example:
+ssub("abc.def", ".", "X") gives "abcXdef"
 .fi
 .if n \{\
 .RE
@@ -3976,6 +3984,12 @@ strptime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S", "Asia/Istanbul") 
 .\}
 .nf
  (class=string #args=3) '$name=sub($name, "old", "new")' (replace once).
+Examples:
+sub("ababab", "ab", "XY") gives "XYabab"
+sub("abc.def", ".", "X") gives "Xbc.def"
+sub("abc.def", "\e.", "X") gives "abcXdef"
+sub("abcdefg", "[ce]", "X") gives "abXdefg"
+sub("prefix4529:suffix8567", "suffix([0-9]+)", "name\e1") gives "prefix4529:name8567"
 .fi
 .if n \{\
 .RE
@@ -4020,7 +4034,7 @@ strptime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S", "Asia/Istanbul") 
 .RS 0
 .\}
 .nf
- (class=time #args=0) help string will go here
+ (class=time #args=0) Returns the system time in floating-point seconds since the epoch.
 .fi
 .if n \{\
 .RE
@@ -4029,7 +4043,7 @@ strptime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S", "Asia/Istanbul") 
 .RS 0
 .\}
 .nf
- (class=time #args=0) help string will go here
+ (class=time #args=0) Returns the system time in integer seconds since the epoch.
 .fi
 .if n \{\
 .RE
@@ -4129,7 +4143,7 @@ is_error(unformatx("{}h{}m{}s", "3:47:22")) gives true.
 .RS 0
 .\}
 .nf
- (class=time #args=0) help string will go here
+ (class=time #args=0) Returns the time in floating-point seconds since the current Miller program was started.
 .fi
 .if n \{\
 .RE

@@ -238,7 +238,7 @@ a,b,c
 <pre class="pre-non-highlight-in-pair">
 a,b,c
 1,2,3
-4,5
+4,5,
 6,7,8,9
 </pre>
 
@@ -255,7 +255,7 @@ or, more simply,
 <pre class="pre-non-highlight-in-pair">
 a,b,c
 1,2,3
-4,5
+4,5,
 6,7,8,9
 </pre>
 
