@@ -317,9 +317,16 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:                   "=~",
-			class:                  FUNC_CLASS_BOOLEAN,
-			help:                   `String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.`,
+			name:  "=~",
+			class: FUNC_CLASS_BOOLEAN,
+			help: `String (left-hand side) matches regex (right-hand side), e.g.
+'$name =~ "^a.*b$"'.
+Capture groups \1 through \9 are matched from (...) in the right-hand side, and can be
+used within subsequent DSL statements. See also "Regular expressions" at ` + lib.DOC_URL + `.`,
+			examples: []string{
+				`With if-statement: if ($url =~ "http.*com") { ... }`,
+				`Without if-statement: given $line = "index ab09 file", and $line =~ "([a-z][a-z])([0-9][0-9])", then $label = "[\1:\2]", $label is "[ab:09]"`,
+			},
 			regexCaptureBinaryFunc: bifs.BIF_string_matches_regexp,
 		},
 
@@ -411,17 +418,27 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:       "regextract",
-			class:      FUNC_CLASS_STRING,
-			help:       `'$name=regextract($name, "[A-Z]{3}[0-9]{2}")'`,
+			name:  "regextract",
+			class: FUNC_CLASS_STRING,
+			help: `Extracts a substring (the first, if there are multiple matches), matching a
+regular expression, from the input.  Does not use capture groups; see also the =~ operator which does.`,
 			binaryFunc: bifs.BIF_regextract,
+			examples: []string{
+				`regextract("index ab09 file", "[a-z][a-z][0-9][0-9]") gives "ab09"`,
+				`regextract("index a999 file", "[a-z][a-z][0-9][0-9]") gives (absent), which will result in an assignment not happening.`,
+			},
 		},
 
 		{
-			name:        "regextract_or_else",
-			class:       FUNC_CLASS_STRING,
-			help:        `'$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'`,
+			name:  "regextract_or_else",
+			class: FUNC_CLASS_STRING,
+			help: `Like regextract but the third argument is the return value in case the input string (first
+argument) doesn't match the pattern (second argument).`,
 			ternaryFunc: bifs.BIF_regextract_or_else,
+			examples: []string{
+				`regextract_or_else("index ab09 file", "[a-z][a-z][0-9][0-9]", "nonesuch") gives "ab09"`,
+				`regextract_or_else("index a999 file", "[a-z][a-z][0-9][0-9]", "nonesuch") gives "nonesuch"`,
+			},
 		},
 
 		{
@@ -456,9 +473,12 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:        "sub",
-			class:       FUNC_CLASS_STRING,
-			help:        `'$name=sub($name, "old", "new")' (replace once).`,
+			name:  "sub",
+			class: FUNC_CLASS_STRING,
+			help: `'$name = sub($name, "old", "new")': replace once (first match, if there are multiple matches),
+with support for regular expressions.  Capture groups \1 through \9 in the new part are matched from (...) in
+the old part, and must be used within the same call to sub -- they don't persist for subsequent DSL
+statements.  See also =~ and regextract. See also "Regular expressions" at ` + lib.DOC_URL + `.`,
 			ternaryFunc: bifs.BIF_sub,
 			examples: []string{
 				`sub("ababab", "ab", "XY") gives "XYabab"`,
@@ -470,9 +490,12 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:        "gsub",
-			class:       FUNC_CLASS_STRING,
-			help:        `'$name=gsub($name, "old", "new")' (replace all).`,
+			name:  "gsub",
+			class: FUNC_CLASS_STRING,
+			help: `'$name = gsub($name, "old", "new")': replace all, with support for regular expressions.
+Capture groups \1 through \9 in the new part are matched from (...) in the old part, and must be
+used within the same call to gsub -- they don't persist for subsequent DSL statements.  See also
+=~ and regextract. See also "Regular expressions" at ` + lib.DOC_URL + `.`,
 			ternaryFunc: bifs.BIF_gsub,
 			examples: []string{
 				`gsub("ababab", "ab", "XY") gives "XYXYXY"`,
@@ -983,10 +1006,11 @@ is supplied.`,
 		{
 			name:  "strftime",
 			class: FUNC_CLASS_TIME,
-			help: `Formats seconds since the epoch as timestamp. Format strings are as in the C library
-(please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which
+			help: `Formats seconds since the epoch as timestamp. Format strings are mostly as in the C library
+(see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which
 format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also
-strftime_local.`,
+strftime_local. See also "DSL datetime/timezone functions" at ` + lib.DOC_URL + ` for more information on the
+differences from the C library.`,
 			examples: []string{
 				`strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ")  = "2015-08-28T13:33:21Z"`,
 				`strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z"`,
@@ -1574,15 +1598,32 @@ single-element arrays.`,
 			name:  "flatten",
 			class: FUNC_CLASS_COLLECTIONS,
 			help: `Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures
-for non-JSON file formats like CSV.`,
+for non-JSON file formats like CSV. With two arguments, the first argument is a map (maybe $*) and
+the second argument is the flatten separator. With three arguments, the first argument is prefix,
+the second is the flatten separator, and the third argument is a map, and flatten($*, ".") is the
+same as flatten("", ".", $*).  See "Flatten/unflatten: converting between JSON and tabular formats"
+at ` + lib.DOC_URL + ` for more information.`,
 			examples: []string{
+				`flatten({"a":[1,2],"b":3}, ".") is {"a.1": 1, "a.2": 2, "b": 3}.`,
 				`flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.`,
 				`flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.`,
-				`Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).`,
 			},
 			binaryFunc:         bifs.BIF_flatten_binary,
 			ternaryFunc:        bifs.BIF_flatten,
 			hasMultipleArities: true,
+		},
+
+		{
+			name:  "unflatten",
+			class: FUNC_CLASS_COLLECTIONS,
+			help: `Reverses flatten. Useful for nested JSON-like structures for non-JSON file formats like CSV.
+The first argument is a map, and the second argument is the flatten separator.  See also arrayify.
+See "Flatten/unflatten: converting between JSON and tabular formats" at ` + lib.DOC_URL + ` for more
+information.`,
+			examples: []string{
+				`unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.`,
+			},
+			binaryFunc: bifs.BIF_unflatten,
 		},
 
 		{
@@ -1672,17 +1713,6 @@ Remaining arguments can be strings or arrays of string.  E.g. 'mapselect({1:2,3:
 			help: `With 0 args, returns empty map. With >= 1 arg, returns a map with key-value pairs
 from all arguments. Rightmost collisions win, e.g.  'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.`,
 			variadicFunc: bifs.BIF_mapsum,
-		},
-
-		{
-			name:  "unflatten",
-			class: FUNC_CLASS_COLLECTIONS,
-			help: `Reverses flatten. Useful for nested JSON-like structures for non-JSON file formats like CSV.
-See also arrayify.`,
-			examples: []string{
-				`unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.`,
-			},
-			binaryFunc: bifs.BIF_unflatten,
 		},
 
 		// ----------------------------------------------------------------

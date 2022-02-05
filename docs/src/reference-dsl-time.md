@@ -332,11 +332,11 @@ Thursday, January  1, 1970
 You can get the seconds since the Miller process start using
 [uptime](reference-dsl-builtin-functions.md#uptime):
 
-
 <pre class="pre-highlight-in-pair">
-<b>color  shape    flag  k  index quantity rate   u</b>
+<b>mlr --c2p --from example.csv put '$u=uptime()'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+color  shape    flag  k  index quantity rate   u
 yellow triangle true  1  11    43.6498  9.8870 0.0011110305786132812
 red    square   true  2  15    79.2778  0.0130 0.0011241436004638672
 red    circle   true  3  16    13.8103  2.9010 0.0011250972747802734
