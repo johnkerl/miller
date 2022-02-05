@@ -22,18 +22,6 @@ RELEASES
 ================================================================
 908
 
-* flatten method does not have a complete description. It explains what it does, but it does not
-  explain which are the arguments. You have to look and understand the examples to grasp the
-  meaning. The usage should be clear from the description itself.
-
-* regextract: It seems to extract a substring that matches the regex pattern, but what happens when
-  there are several matches in the string? It returns the first? The last? (Same doubts in sub). If
-  the user uses capture groups in regextract, would they work?
-
-  also needed regextract info at reference-main-regular-expressions/
-
-* strftime refers to the C library for the format string. Should it be the Go library?
-
 * is_not_empty (class=typing #args=1) False if field is present in input with empty value, true
   otherwise -> That means that and absent value will return true. While technically it makes sense,
   many people will ask if "is not empty" to get the green flag before processing the value, which will
