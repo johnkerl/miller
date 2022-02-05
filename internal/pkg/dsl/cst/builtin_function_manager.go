@@ -404,13 +404,6 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:        "gsub",
-			class:       FUNC_CLASS_STRING,
-			help:        `'$name=gsub($name, "old", "new")' (replace all).`,
-			ternaryFunc: bifs.BIF_gsub,
-		},
-
-		{
 			name:      "lstrip",
 			class:     FUNC_CLASS_STRING,
 			help:      "Strip leading whitespace from string.",
@@ -457,6 +450,9 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class:       FUNC_CLASS_STRING,
 			help:        `Like sub but does no regexing. No characters are special.`,
 			ternaryFunc: bifs.BIF_ssub,
+			examples: []string{
+				`ssub("abc.def", ".", "X") gives "abcXdef"`,
+			},
 		},
 
 		{
@@ -464,6 +460,27 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class:       FUNC_CLASS_STRING,
 			help:        `'$name=sub($name, "old", "new")' (replace once).`,
 			ternaryFunc: bifs.BIF_sub,
+			examples: []string{
+				`sub("ababab", "ab", "XY") gives "XYabab"`,
+				`sub("abc.def", ".", "X") gives "Xbc.def"`,
+				`sub("abc.def", "\.", "X") gives "abcXdef"`,
+				`sub("abcdefg", "[ce]", "X") gives "abXdefg"`,
+				`sub("prefix4529:suffix8567", "suffix([0-9]+)", "name\1") gives "prefix4529:name8567"`,
+			},
+		},
+
+		{
+			name:        "gsub",
+			class:       FUNC_CLASS_STRING,
+			help:        `'$name=gsub($name, "old", "new")' (replace all).`,
+			ternaryFunc: bifs.BIF_gsub,
+			examples: []string{
+				`gsub("ababab", "ab", "XY") gives "XYXYXY"`,
+				`gsub("abc.def", ".", "X") gives "XXXXXXX"`,
+				`gsub("abc.def", "\.", "X") gives "abcXdef"`,
+				`gsub("abcdefg", "[ce]", "X") gives "abXdXfg"`,
+				`gsub("prefix4529:suffix8567", "(....ix)([0-9]+)", "[\1 : \2]") gives "[prefix : 4529]:[suffix : 8567]"`,
+			},
 		},
 
 		{
@@ -1440,7 +1457,7 @@ strftime_local.`,
 			name:  "joinkv",
 			class: FUNC_CLASS_CONVERSION,
 			help:  `Makes string from map/array key-value pairs. First argument is map/array;
-second is pair-separator string; third is field-separator string.`,
+second is pair-separator string; third is field-separator string. Mnemonic: the "=" comes before the "," in the output and in the arguments to joinkv.`,
 			examples: []string{
 				`joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"`,
 				`joinkv({"a":3,"b":4,"c":5}, ":", ";") = "a:3;b:4;c:5"`,
