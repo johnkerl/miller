@@ -505,7 +505,7 @@ int  (class=conversion #args=1) Convert int/float/bool/string to int.
 
 ### joink
 <pre class="pre-non-highlight-non-pair">
-joink  (class=conversion #args=2) Makes string from map/array keys.
+joink  (class=conversion #args=2) Makes string from map/array keys. First argument is map/array; second is separator string.
 Examples:
 joink({"a":3,"b":4,"c":5}, ",") = "a,b,c".
 joink([1,2,3], ",") = "1,2,3".
@@ -514,16 +514,16 @@ joink([1,2,3], ",") = "1,2,3".
 
 ### joinkv
 <pre class="pre-non-highlight-non-pair">
-joinkv  (class=conversion #args=3) Makes string from map/array key-value pairs.
+joinkv  (class=conversion #args=3) Makes string from map/array key-value pairs. First argument is map/array; second is pair-separator string; third is field-separator string. Mnemonic: the "=" comes before the "," in the output and in the arguments to joinkv.
 Examples:
 joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
-joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
+joinkv({"a":3,"b":4,"c":5}, ":", ";") = "a:3;b:4;c:5"
 </pre>
 
 
 ### joinv
 <pre class="pre-non-highlight-non-pair">
-joinv  (class=conversion #args=2) Makes string from map/array values.
+joinv  (class=conversion #args=2) Makes string from map/array values. First argument is map/array; second is separator string.
 Examples:
 joinv([3,4,5], ",") = "3,4,5"
 joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
@@ -940,6 +940,12 @@ format("{}:{}:{}", 1,2,3,4) gives "1:2:3".
 ### gsub
 <pre class="pre-non-highlight-non-pair">
 gsub  (class=string #args=3) '$name=gsub($name, "old", "new")' (replace all).
+Examples:
+gsub("ababab", "ab", "XY") gives "XYXYXY"
+gsub("abc.def", ".", "X") gives "XXXXXXX"
+gsub("abc.def", "\.", "X") gives "abcXdef"
+gsub("abcdefg", "[ce]", "X") gives "abXdXfg"
+gsub("prefix4529:suffix8567", "(....ix)([0-9]+)", "[\1 : \2]") gives "[prefix : 4529]:[suffix : 8567]"
 </pre>
 
 
@@ -970,6 +976,8 @@ rstrip  (class=string #args=1) Strip trailing whitespace from string.
 ### ssub
 <pre class="pre-non-highlight-non-pair">
 ssub  (class=string #args=3) Like sub but does no regexing. No characters are special.
+Example:
+ssub("abc.def", ".", "X") gives "abcXdef"
 </pre>
 
 
@@ -988,6 +996,12 @@ strlen  (class=string #args=1) String length.
 ### sub
 <pre class="pre-non-highlight-non-pair">
 sub  (class=string #args=3) '$name=sub($name, "old", "new")' (replace once).
+Examples:
+sub("ababab", "ab", "XY") gives "XYabab"
+sub("abc.def", ".", "X") gives "Xbc.def"
+sub("abc.def", "\.", "X") gives "abcXdef"
+sub("abcdefg", "[ce]", "X") gives "abXdefg"
+sub("prefix4529:suffix8567", "suffix([0-9]+)", "name\1") gives "prefix4529:name8567"
 </pre>
 
 
@@ -1246,19 +1260,19 @@ strptime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S", "Asia/Istanbul") 
 
 ### systime
 <pre class="pre-non-highlight-non-pair">
-systime  (class=time #args=0) help string will go here
+systime  (class=time #args=0) Returns the system time in floating-point seconds since the epoch.
 </pre>
 
 
 ### systimeint
 <pre class="pre-non-highlight-non-pair">
-systimeint  (class=time #args=0) help string will go here
+systimeint  (class=time #args=0) Returns the system time in integer seconds since the epoch.
 </pre>
 
 
 ### uptime
 <pre class="pre-non-highlight-non-pair">
-uptime  (class=time #args=0) help string will go here
+uptime  (class=time #args=0) Returns the time in floating-point seconds since the current Miller program was started.
 </pre>
 
 ## Typing functions

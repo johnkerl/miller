@@ -1456,7 +1456,7 @@ strftime_local.`,
 		{
 			name:  "joinkv",
 			class: FUNC_CLASS_CONVERSION,
-			help:  `Makes string from map/array key-value pairs. First argument is map/array;
+			help: `Makes string from map/array key-value pairs. First argument is map/array;
 second is pair-separator string; third is field-separator string. Mnemonic: the "=" comes before the "," in the output and in the arguments to joinkv.`,
 			examples: []string{
 				`joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"`,
