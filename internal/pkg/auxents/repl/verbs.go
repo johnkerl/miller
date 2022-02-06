@@ -829,7 +829,7 @@ func usageResetBlocks(repl *Repl) {
 	fmt.Println(":resetblocks with no arguments clears out all begin, main, and end blocks that have been loaded.")
 	fmt.Println(":resetblocks begin clears out begin blocks.")
 	fmt.Println(":resetblocks main  clears out main-block statements.")
-	fmt.Println(":resetblocks end   clears out begin blocks.")
+	fmt.Println(":resetblocks end   clears out end blocks.")
 
 }
 func handleResetBlocks(repl *Repl, args []string) bool {
