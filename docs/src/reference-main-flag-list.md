@@ -273,6 +273,7 @@ These are flags which don't fit into any other category.
 * `--tz {timezone}`: Specify timezone, overriding `$TZ` environment variable (if any).
 * `-I`: Process files in-place. For each file name on the command line, output is written to a temp file in the same directory, which is then renamed over the original. Each file is processed in isolation: if the output format is CSV, CSV headers will be present in each output file, statistics are only over each file's own records; and so on.
 * `-n`: Process no input files, nor standard input either. Useful for `mlr put` with `begin`/`end` statements only. (Same as `--from /dev/null`.) Also useful in `mlr -n put -v '...'` for analyzing abstract syntax trees (if that's your thing).
+* `-s {file name}`: Take command-line flags from file name. For more information please see https://miller.readthedocs.io/en/latest/scripting/.
 
 ## Output-colorization flags
 

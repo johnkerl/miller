@@ -548,6 +548,9 @@ MISCELLANEOUS FLAGS
                                 only. (Same as `--from /dev/null`.) Also useful in
                                 `mlr -n put -v '...'` for analyzing abstract syntax
                                 trees (if that's your thing).
+       -s {file name}           Take command-line flags from file name. For more
+                                information please see
+                                https://miller.readthedocs.io/en/latest/scripting/.
 
 OUTPUT-COLORIZATION FLAGS
        Miller uses colors to highlight outputs. You can specify color preferences.
