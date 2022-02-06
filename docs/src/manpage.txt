@@ -2481,32 +2481,32 @@ FUNCTIONS FOR FILTER/PUT
        Map example: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) {return bv <=> av}) returns {"a":3,"c":2,"b":1}.
 
    splita
-        (class=conversion #args=2) Splits string into array with type inference.
+        (class=conversion #args=2) Splits string into array with type inference. First argument is string to split; second is the separator to split on.
        Example:
        splita("3,4,5", ",") = [3,4,5]
 
    splitax
-        (class=conversion #args=2) Splits string into array without type inference.
+        (class=conversion #args=2) Splits string into array without type inference. First argument is string to split; second is the separator to split on.
        Example:
        splita("3,4,5", ",") = ["3","4","5"]
 
    splitkv
-        (class=conversion #args=3) Splits string by separators into map with type inference.
+        (class=conversion #args=3) Splits string by separators into map with type inference. First argument is string to split; second argument is pair separator; third argument is field separator.
        Example:
        splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
 
    splitkvx
-        (class=conversion #args=3) Splits string by separators into map without type inference (keys and values are strings).
+        (class=conversion #args=3) Splits string by separators into map without type inference (keys and values are strings). First argument is string to split; second argument is pair separator; third argument is field separator.
        Example:
        splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
 
    splitnv
-        (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference.
+        (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference. First argument is string to split; second argument is separator to split on.
        Example:
        splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
 
    splitnvx
-        (class=conversion #args=2) Splits string by separator into integer-indexed map without type inference (values are strings).
+        (class=conversion #args=2) Splits string by separator into integer-indexed map without type inference (values are strings). First argument is string to split; second argument is separator to split on.
        Example:
        splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
 

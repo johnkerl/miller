@@ -3828,7 +3828,7 @@ Map example: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) {return bv <=> av}) ret
 .RS 0
 .\}
 .nf
- (class=conversion #args=2) Splits string into array with type inference.
+ (class=conversion #args=2) Splits string into array with type inference. First argument is string to split; second is the separator to split on.
 Example:
 splita("3,4,5", ",") = [3,4,5]
 .fi
@@ -3839,7 +3839,7 @@ splita("3,4,5", ",") = [3,4,5]
 .RS 0
 .\}
 .nf
- (class=conversion #args=2) Splits string into array without type inference.
+ (class=conversion #args=2) Splits string into array without type inference. First argument is string to split; second is the separator to split on.
 Example:
 splita("3,4,5", ",") = ["3","4","5"]
 .fi
@@ -3850,7 +3850,7 @@ splita("3,4,5", ",") = ["3","4","5"]
 .RS 0
 .\}
 .nf
- (class=conversion #args=3) Splits string by separators into map with type inference.
+ (class=conversion #args=3) Splits string by separators into map with type inference. First argument is string to split; second argument is pair separator; third argument is field separator.
 Example:
 splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
 .fi
@@ -3861,7 +3861,7 @@ splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
 .RS 0
 .\}
 .nf
- (class=conversion #args=3) Splits string by separators into map without type inference (keys and values are strings).
+ (class=conversion #args=3) Splits string by separators into map without type inference (keys and values are strings). First argument is string to split; second argument is pair separator; third argument is field separator.
 Example:
 splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
 .fi
@@ -3872,7 +3872,7 @@ splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
 .RS 0
 .\}
 .nf
- (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference.
+ (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference. First argument is string to split; second argument is separator to split on.
 Example:
 splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
 .fi
@@ -3883,7 +3883,7 @@ splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
 .RS 0
 .\}
 .nf
- (class=conversion #args=2) Splits string by separator into integer-indexed map without type inference (values are strings).
+ (class=conversion #args=2) Splits string by separator into integer-indexed map without type inference (values are strings). First argument is string to split; second argument is separator to split on.
 Example:
 splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
 .fi

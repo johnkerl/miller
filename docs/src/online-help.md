@@ -242,7 +242,7 @@ append  (class=collections #args=2) Appends second argument to end of first argu
 <b>mlr help function splita</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-splita  (class=conversion #args=2) Splits string into array with type inference.
+splita  (class=conversion #args=2) Splits string into array with type inference. First argument is string to split; second is the separator to split on.
 Example:
 splita("3,4,5", ",") = [3,4,5]
 </pre>
