@@ -2,25 +2,40 @@
 RELEASES
 
 * plan 6.1.0
+  ! IANA-TSV w/ \{X}
   ? w/ natural sort order
   ? strptime
   ? datediff et al.
   ? mlr join --left-fields a,b,c
   ? rank
-  ? ?foo and ??foo @ repl help
   o fmt/unfmt/regex doc
   o FAQ/examples reorg
   k default colors; bold/underline/reverse
   k array concat
   k format/unformat
-  k split
+  k split verb
   k slwin & shift-lead
+  m unicode string literals
   k 0o.. octal literals in the DSL
+  k codeql/codespell/goreleaseer binaries/zips
+  k :rb
+  k ?foo and ??foo @ repl help
+  k doc-improves
 * plan 6.2.0
   ? YAML
 
 ================================================================
 FEATURES
+
+----------------------------------------------------------------
+TSV etc
+
+? also: some escapes perhaps for dkvp, xtab, pprint -- ?
+  o nidx is a particular pure-text, leave-as-is
+? try out nidx single-line w/ \001, \002 FS/PS & \n or \n\n RS
+  o make/publicize a shorthand for this -- ?
+  o --words && --lines & --paragraphs -- ?
+* still need csv --lazy-quotes
 
 ----------------------------------------------------------------
 * natural sort order

@@ -20,6 +20,8 @@ func Create(readerOptions *cli.TReaderOptions, recordsPerBatch int64) (IRecordRe
 		return NewRecordReaderNIDX(readerOptions, recordsPerBatch)
 	case "pprint":
 		return NewRecordReaderPPRINT(readerOptions, recordsPerBatch)
+	case "tsv":
+		return NewRecordReaderTSV(readerOptions, recordsPerBatch)
 	case "xtab":
 		return NewRecordReaderXTAB(readerOptions, recordsPerBatch)
 	case "gen":

@@ -92,11 +92,11 @@ If there's more than one input file, you can use `--mfrom`, then however many fi
 The following have even shorter versions:
 
 * `-c` is the same as `--csv`
-* `-t` is the same as `--tsvlite`
+* `-t` is the same as `--tsv`
 * `-j` is the same as `--json`
 
 I don't use these within these documents, since I want the docs to be self-explanatory on every page, and
-I think `mlr --csv ...` explains itself better than `mlr -c ...`. Nonetheless, they're there for you to use.
+I think `mlr --csv ...` explains itself better than `mlr -c ...`. Nonetheless, they're always there for you to use.
 
 ## .mlrrc file
 
