@@ -1492,7 +1492,8 @@ second is pair-separator string; third is field-separator string. Mnemonic: the 
 		{
 			name:  "splita",
 			class: FUNC_CLASS_CONVERSION,
-			help:  `Splits string into array with type inference.`,
+			help: `Splits string into array with type inference. First argument is string to split;
+second is the separator to split on.`,
 			examples: []string{
 				`splita("3,4,5", ",") = [3,4,5]`,
 			},
@@ -1502,7 +1503,8 @@ second is pair-separator string; third is field-separator string. Mnemonic: the 
 		{
 			name:  "splitax",
 			class: FUNC_CLASS_CONVERSION,
-			help:  `Splits string into array without type inference.`,
+			help: `Splits string into array without type inference. First argument is string to split;
+second is the separator to split on.`,
 			examples: []string{
 				`splita("3,4,5", ",") = ["3","4","5"]`,
 			},
@@ -1512,7 +1514,8 @@ second is pair-separator string; third is field-separator string. Mnemonic: the 
 		{
 			name:  "splitkv",
 			class: FUNC_CLASS_CONVERSION,
-			help:  `Splits string by separators into map with type inference.`,
+			help: `Splits string by separators into map with type inference. First argument is string to split;
+second argument is pair separator; third argument is field separator.`,
 			examples: []string{
 				`splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}`,
 			},
@@ -1522,7 +1525,9 @@ second is pair-separator string; third is field-separator string. Mnemonic: the 
 		{
 			name:  "splitkvx",
 			class: FUNC_CLASS_CONVERSION,
-			help:  `Splits string by separators into map without type inference (keys and values are strings).`,
+			help: `Splits string by separators into map without type inference
+(keys and values are strings). First argument is string to split; second
+argument is pair separator; third argument is field separator.`,
 			examples: []string{
 				`splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}`,
 			},
@@ -1532,7 +1537,8 @@ second is pair-separator string; third is field-separator string. Mnemonic: the 
 		{
 			name:  "splitnv",
 			class: FUNC_CLASS_CONVERSION,
-			help:  `Splits string by separator into integer-indexed map with type inference.`,
+			help: `Splits string by separator into integer-indexed map with type inference. First argument is
+string to split; second argument is separator to split on.`,
 			examples: []string{
 				`splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}`,
 			},
@@ -1542,7 +1548,9 @@ second is pair-separator string; third is field-separator string. Mnemonic: the 
 		{
 			name:  "splitnvx",
 			class: FUNC_CLASS_CONVERSION,
-			help:  `Splits string by separator into integer-indexed map without type inference (values are strings).`,
+			help: `Splits string by separator into integer-indexed map without
+type inference (values are strings). First argument is string to split; second
+argument is separator to split on.`,
 			examples: []string{
 				`splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}`,
 			},
