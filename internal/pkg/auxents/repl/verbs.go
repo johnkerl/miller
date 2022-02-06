@@ -826,16 +826,36 @@ func handleBlocks(repl *Repl, args []string) bool {
 
 // ----------------------------------------------------------------
 func usageResetBlocks(repl *Repl) {
-	fmt.Println(":resetblocks with no arguments.")
-	fmt.Println("Clears out all begin, main, and end blocks that have been loaded.")
+	fmt.Println(":resetblocks with no arguments clears out all begin, main, and end blocks that have been loaded.")
+	fmt.Println(":resetblocks begin clears out begin blocks.")
+	fmt.Println(":resetblocks main  clears out main-block statements.")
+	fmt.Println(":resetblocks end   clears out begin blocks.")
 
 }
 func handleResetBlocks(repl *Repl, args []string) bool {
 	args = args[1:] // strip off verb
-	if len(args) != 0 {
-		return false
+	if len(args) == 0 {
+		repl.cstRootNode.ResetBeginBlocksForREPL()
+		repl.cstRootNode.ResetMainBlockForREPL()
+		repl.cstRootNode.ResetEndBlocksForREPL()
+	} else {
+		for _, arg := range args {
+			if arg != "begin" && arg != "main" && arg != "end" {
+				return false
+			}
+		}
+		for _, arg := range args {
+			if arg == "begin" {
+				repl.cstRootNode.ResetBeginBlocksForREPL()
+			}
+			if arg == "main" {
+				repl.cstRootNode.ResetMainBlockForREPL()
+			}
+			if arg == "end" {
+				repl.cstRootNode.ResetEndBlocksForREPL()
+			}
+		}
 	}
-	repl.cstRootNode.ResetBlocksForREPL()
 	return true
 }
 
