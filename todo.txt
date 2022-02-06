@@ -2,7 +2,6 @@
 RELEASES
 
 * plan 6.1.0
-  ! IANA-TSV w/ \{X}
   ? w/ natural sort order
   ? strptime
   ? datediff et al.
@@ -10,6 +9,8 @@ RELEASES
   ? rank
   o fmt/unfmt/regex doc
   o FAQ/examples reorg
+  k IANA-TSV w/ \{X}
+  k still need csv --lazy-quotes
   k default colors; bold/underline/reverse
   k array concat
   k format/unformat
@@ -35,7 +36,6 @@ TSV etc
 ? try out nidx single-line w/ \001, \002 FS/PS & \n or \n\n RS
   o make/publicize a shorthand for this -- ?
   o --words && --lines & --paragraphs -- ?
-* still need csv --lazy-quotes
 
 ----------------------------------------------------------------
 * natural sort order

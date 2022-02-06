@@ -45,6 +45,8 @@ Here are the differences between CSV and CSV-lite:
 
 CSV, TSV, CSV-lite, and TSV-lite have in common the `--implicit-csv-header` flag for input and the `--headerless-csv-output` flag for output.
 
+See also the [`--lazy-quotes` flag](reference-main-flag-list.md#csv-only-flags) which can help with CSV files which are not fully compliant with RFC-4180.
+
 ## JSON
 
 [JSON](https://json.org) is a format which supports scalars (numbers, strings,
