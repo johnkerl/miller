@@ -535,7 +535,7 @@ joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
 
 ### splita
 <pre class="pre-non-highlight-non-pair">
-splita  (class=conversion #args=2) Splits string into array with type inference.
+splita  (class=conversion #args=2) Splits string into array with type inference. First argument is string to split; second is the separator to split on.
 Example:
 splita("3,4,5", ",") = [3,4,5]
 </pre>
@@ -543,7 +543,7 @@ splita("3,4,5", ",") = [3,4,5]
 
 ### splitax
 <pre class="pre-non-highlight-non-pair">
-splitax  (class=conversion #args=2) Splits string into array without type inference.
+splitax  (class=conversion #args=2) Splits string into array without type inference. First argument is string to split; second is the separator to split on.
 Example:
 splita("3,4,5", ",") = ["3","4","5"]
 </pre>
@@ -551,7 +551,7 @@ splita("3,4,5", ",") = ["3","4","5"]
 
 ### splitkv
 <pre class="pre-non-highlight-non-pair">
-splitkv  (class=conversion #args=3) Splits string by separators into map with type inference.
+splitkv  (class=conversion #args=3) Splits string by separators into map with type inference. First argument is string to split; second argument is pair separator; third argument is field separator.
 Example:
 splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
 </pre>
@@ -559,7 +559,7 @@ splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
 
 ### splitkvx
 <pre class="pre-non-highlight-non-pair">
-splitkvx  (class=conversion #args=3) Splits string by separators into map without type inference (keys and values are strings).
+splitkvx  (class=conversion #args=3) Splits string by separators into map without type inference (keys and values are strings). First argument is string to split; second argument is pair separator; third argument is field separator.
 Example:
 splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
 </pre>
@@ -567,7 +567,7 @@ splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
 
 ### splitnv
 <pre class="pre-non-highlight-non-pair">
-splitnv  (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference.
+splitnv  (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference. First argument is string to split; second argument is separator to split on.
 Example:
 splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
 </pre>
@@ -575,7 +575,7 @@ splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
 
 ### splitnvx
 <pre class="pre-non-highlight-non-pair">
-splitnvx  (class=conversion #args=2) Splits string by separator into integer-indexed map without type inference (values are strings).
+splitnvx  (class=conversion #args=2) Splits string by separator into integer-indexed map without type inference (values are strings). First argument is string to split; second argument is separator to split on.
 Example:
 splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
 </pre>
