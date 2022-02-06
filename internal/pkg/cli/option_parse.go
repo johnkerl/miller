@@ -629,9 +629,7 @@ var FileFormatFlagSection = FlagSection{
 			name: "--itsv",
 			help: "Use TSV format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IFS = "\t"
-				options.ReaderOptions.ifsWasSpecified = true
+				options.ReaderOptions.InputFileFormat = "tsv"
 				*pargi += 1
 			},
 		},
@@ -824,7 +822,7 @@ var FileFormatFlagSection = FlagSection{
 			name: "--otsv",
 			help: "Use TSV format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.OutputFileFormat = "tsv"
 				options.WriterOptions.OFS = "\t"
 				options.WriterOptions.ofsWasSpecified = true
 				*pargi += 1
@@ -981,12 +979,8 @@ var FileFormatFlagSection = FlagSection{
 			name: "--tsv",
 			help: "Use TSV format for input and output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csv"
-				options.WriterOptions.OutputFileFormat = "csv"
-				options.ReaderOptions.IFS = "\t"
-				options.WriterOptions.OFS = "\t"
-				options.ReaderOptions.ifsWasSpecified = true
-				options.WriterOptions.ofsWasSpecified = true
+				options.ReaderOptions.InputFileFormat = "tsv"
+				options.WriterOptions.OutputFileFormat = "tsv"
 				*pargi += 1
 			},
 		},
@@ -1181,11 +1175,8 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
-				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.OFS = "\t"
+				options.WriterOptions.OutputFileFormat = "tsv"
 				options.ReaderOptions.irsWasSpecified = true
-				options.WriterOptions.ofsWasSpecified = true
-				options.WriterOptions.orsWasSpecified = true
 				*pargi += 1
 			},
 		},
@@ -1308,12 +1299,8 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "csv"
-				options.ReaderOptions.ifsWasSpecified = true
-				options.ReaderOptions.irsWasSpecified = true
-				options.WriterOptions.orsWasSpecified = true
 				*pargi += 1
 			},
 		},
@@ -1324,11 +1311,8 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "dkvp"
-				options.ReaderOptions.ifsWasSpecified = true
-				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
 			},
 		},
@@ -1339,12 +1323,9 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "nidx"
 				options.WriterOptions.OFS = " "
-				options.ReaderOptions.ifsWasSpecified = true
-				options.ReaderOptions.irsWasSpecified = true
 				options.WriterOptions.ofsWasSpecified = true
 				*pargi += 1
 			},
@@ -1356,13 +1337,10 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = true
 				options.WriterOptions.JSONOutputMultiline = true
-				options.ReaderOptions.ifsWasSpecified = true
-				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
 			},
 		},
@@ -1373,13 +1351,10 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = false
 				options.WriterOptions.JSONOutputMultiline = false
-				options.ReaderOptions.ifsWasSpecified = true
-				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
 			},
 		},
@@ -1390,11 +1365,8 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "pprint"
-				options.ReaderOptions.ifsWasSpecified = true
-				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
 			},
 		},
@@ -1405,12 +1377,9 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				options.WriterOptions.BarredPprintOutput = true
-				options.ReaderOptions.ifsWasSpecified = true
-				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
 			},
 		},
@@ -1421,11 +1390,8 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "xtab"
-				options.ReaderOptions.ifsWasSpecified = true
-				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
 			},
 		},
@@ -1436,11 +1402,8 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "markdown"
-				options.ReaderOptions.ifsWasSpecified = true
-				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
 			},
 		},
@@ -1465,7 +1428,7 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
-				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.OutputFileFormat = "tsv"
 				options.WriterOptions.OFS = "\t"
 				options.WriterOptions.ofsWasSpecified = true
 				options.WriterOptions.orsWasSpecified = true
@@ -1585,10 +1548,7 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
-				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.OFS = "\t"
-				options.WriterOptions.ofsWasSpecified = true
-				options.WriterOptions.orsWasSpecified = true
+				options.WriterOptions.OutputFileFormat = "tsv"
 				*pargi += 1
 			},
 		},
@@ -1703,10 +1663,7 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
-				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.OFS = "\t"
-				options.WriterOptions.ofsWasSpecified = true
-				options.WriterOptions.orsWasSpecified = true
+				options.WriterOptions.OutputFileFormat = "tsv"
 				*pargi += 1
 			},
 		},
@@ -1805,10 +1762,7 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
-				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.OFS = "\t"
-				options.WriterOptions.ofsWasSpecified = true
-				options.WriterOptions.orsWasSpecified = true
+				options.WriterOptions.OutputFileFormat = "tsv"
 				*pargi += 1
 			},
 		},
@@ -1910,11 +1864,8 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
-				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.OFS = "\t"
+				options.WriterOptions.OutputFileFormat = "tsv"
 				options.ReaderOptions.ifsWasSpecified = true
-				options.WriterOptions.ofsWasSpecified = true
-				options.WriterOptions.orsWasSpecified = true
 				*pargi += 1
 			},
 		},
@@ -2028,10 +1979,7 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
-				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.OFS = "\t"
-				options.WriterOptions.ofsWasSpecified = true
-				options.WriterOptions.orsWasSpecified = true
+				options.WriterOptions.OutputFileFormat = "tsv"
 				*pargi += 1
 			},
 		},

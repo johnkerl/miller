@@ -22,6 +22,8 @@ func Create(writerOptions *cli.TWriterOptions) (IRecordWriter, error) {
 		return NewRecordWriterNIDX(writerOptions)
 	case "pprint":
 		return NewRecordWriterPPRINT(writerOptions)
+	case "tsv":
+		return NewRecordWriterTSV(writerOptions)
 	case "xtab":
 		return NewRecordWriterXTAB(writerOptions)
 	default:
