@@ -320,6 +320,8 @@ CSV-ONLY FLAGS
                                 Use 1,2,3,... as field labels, rather than from line
                                 1 of input files. Tip: combine with `label` to
                                 recreate missing headers.
+       --lazy-quotes            Accepts quotes appearing in unquoted fields, and
+                                non-doubled quotes appearing in quoted fields.
        --no-implicit-csv-header Opposite of `--implicit-csv-header`. This is the
                                 default anyway -- the main use is for the flags to
                                 `mlr join` if you have main file(s) which are

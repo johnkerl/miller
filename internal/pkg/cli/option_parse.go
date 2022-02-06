@@ -1322,6 +1322,7 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 				options.WriterOptions.OutputFileFormat = "nidx"
 				options.WriterOptions.OFS = " "
 				options.WriterOptions.ofsWasSpecified = true
+				options.ReaderOptions.CSVLazyQuotes = true
 				*pargi += 1
 			},
 		},
@@ -2129,6 +2130,15 @@ var CSVOnlyFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.UseImplicitCSVHeader = true
 				options.WriterOptions.HeaderlessCSVOutput = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--lazy-quotes",
+			help: "Accepts quotes appearing in unquoted fields, and non-doubled quotes appearing in quoted fields.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.CSVLazyQuotes = true
 				*pargi += 1
 			},
 		},
