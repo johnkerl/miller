@@ -1,0 +1,1 @@
+mlr --ijson --otsv cat ${CASEDIR}/data.json

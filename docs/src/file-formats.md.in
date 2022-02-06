@@ -16,36 +16,34 @@ GENMD-EOF
 
 When `mlr` is invoked with the `--csv` or `--csvlite` option, key names are found on the first record and values are taken from subsequent records.  This includes the case of CSV-formatted files.  See [Record Heterogeneity](record-heterogeneity.md) for how Miller handles changes of field names within a single data stream.
 
-Miller has record separator `RS` and field separator `FS`, just as `awk` does.  For TSV, use `--fs tab`; to convert TSV to CSV, use `--ifs tab --ofs comma`, etc.  (See also the [separators page](reference-main-separators.md).)
+Miller has record separator `RS` and field separator `FS`, just as `awk` does. (See also the [separators page](reference-main-separators.md).)
 
-**TSV (tab-separated values):** the following are synonymous pairs:
+**TSV (tab-separated values):** `FS` is tab and `RS` is newline (or carriage return + linefeed for
+Windows).  On input, if fields have `\r`, `\n`, `\t`, or `\\`, those are decoded as carriage return,
+newline, tab, and backslash, respectively. On output, the reverse is done -- for example, if a field
+has an embedded newline, that newline is replaced by `\n`.
 
-* `--tsv` and `--csv --fs tab`
-* `--itsv` and `--icsv --ifs tab`
-* `--otsv` and `--ocsv --ofs tab`
-* `--tsvlite` and `--csvlite --fs tab`
-* `--itsvlite` and `--icsvlite --ifs tab`
-* `--otsvlite` and `--ocsvlite --ofs tab`
+**ASV (ASCII-separated values):** the flags `--asv`, `--iasv`, `--oasv`, `--asvlite`, `--iasvlite`, and `--oasvlite` are analogous except they use ASCII FS and RS `0x1f` and `0x1e`, respectively.
 
-**ASV (ASCII-separated values):** the flags `--asv`, `--iasv`, `--oasv`, `--asvlite`, `--iasvlite`, and `--oasvlite` are analogous except they use ASCII FS and RS 0x1f and 0x1e, respectively.
-
-**USV (Unicode-separated values):** likewise, the flags `--usv`, `--iusv`, `--ousv`, `--usvlite`, `--iusvlite`, and `--ousvlite` use Unicode FS and RS U+241F (UTF-8 0x0xe2909f) and U+241E (UTF-8 0xe2909e), respectively.
+**USV (Unicode-separated values):** likewise, the flags `--usv`, `--iusv`, `--ousv`, `--usvlite`, `--iusvlite`, and `--ousvlite` use Unicode FS and RS `U+241F` (UTF-8 `0x0xe2909f`) and `U+241E` (UTF-8 `0xe2909e`), respectively.
 
 Miller's `--csv` flag supports [RFC-4180 CSV](https://tools.ietf.org/html/rfc4180). This includes CRLF line-terminators by default, regardless of platform.
 
 Here are the differences between CSV and CSV-lite:
 
+* CSV-lite naively splits lines on newline, and fields on comma -- embedded commas and newlines are not escaped in any way.
+
 * CSV supports [RFC-4180](https://tools.ietf.org/html/rfc4180)-style double-quoting, including the ability to have commas and/or LF/CRLF line-endings contained within an input field; CSV-lite does not.
 
 * CSV does not allow heterogeneous data; CSV-lite does (see also [Record Heterogeneity](record-heterogeneity.md)).
 
-* The CSV-lite input-reading code is fractionally more efficient than the CSV input-reader.
+* TSV-lite is simply CSV-lite with field separator set to tab instead of comma.
 
-Here are things they have in common:
+* CSV-lite allows changing FS and/or RS to any values, perhaps multi-character.
 
-* The ability to specify record/field separators other than the default, e.g. CR-LF vs. LF, or tab instead of comma for TSV, and so on.
+* In short, use-cases for CSV-lite and TSV-lite are often found when dealing with CSV/TSV files which are formatted in some non-standard way -- you have a little more flexibility available to you. (As an example of this flexibility: ASV and USV are nothing more than CSV-lite with different values for FS and RS.)
 
-* The `--implicit-csv-header` flag for input and the `--headerless-csv-output` flag for output.
+CSV, TSV, CSV-lite, and TSV-lite have in common the `--implicit-csv-header` flag for input and the `--headerless-csv-output` flag for output.
 
 ## JSON
 

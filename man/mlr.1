@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2022-02-05
+.\"      Date: 2022-02-06
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2022-02-05" "\ \&" "\ \&"
+.TH "MILLER" "1" "2022-02-06" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -444,7 +444,7 @@ are overridden in all cases by setting output format to `format2`.
 --oxtab                  Use XTAB format for output data.
 --pprint                 Use PPRINT format for input and output data.
 --tsv                    Use TSV format for input and output data.
---tsvlite or -t          Use TSV-lite format for input and output data.
+--tsv or -t              Use TSV-lite format for input and output data.
 --usv or --usvlite       Use USV format for input and output data.
 --xtab                   Use XTAB format for input and output data.
 -i {format name}         Use format name for input data. For example: `-i csv`
@@ -830,7 +830,6 @@ Notes about all other separators:
   alignment impossible.
 * OPS may be multi-character for XTAB format, in which case alignment is
   disabled.
-* TSV is simply CSV using tab as field separator (`--fs tab`).
 * FS/PS are ignored for markdown format; RS is used.
 * All FS and PS options are ignored for JSON format, since they are not relevant
   to the JSON format.
@@ -885,6 +884,7 @@ Notes about all other separators:
         markdown " "    N/A    "\en"
         nidx     " "    N/A    "\en"
         pprint   " "    N/A    "\en"
+        tsv      "	"    N/A    "\en"
         xtab     "\en"   " "    "\en\en"
 
 --fs {string}            Specify FS for input and output.

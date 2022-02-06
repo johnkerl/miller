@@ -28,27 +28,14 @@ RELEASES
 FEATURES
 
 ----------------------------------------------------------------
-TSV
+TSV etc
 
-* force TAB @ IFS/OFS
-* various docspots re IANA + escapes
-* $cli/option_parse.go
-* reader & writer
-* c2t,t2c?
-* https://en.wikipedia.org/wiki/Tab-separated_values
-* https://www.iana.org/assignments/media-types/text/tab-separated-values
-  \n for newline,
-  \r for carriage return,
-  \t for tab,
-  \\ for backslash.
-
-  -> needs an decoder and an encoder: func string -> string
-
-* also: some escapes perhaps for dkvp, xtab, pprint -- ?
+? also: some escapes perhaps for dkvp, xtab, pprint -- ?
   o nidx is a particular pure-text, leave-as-is
-* try out nidx single-line w/ \001, \002 FS/PS & \n or \n\n RS
+? try out nidx single-line w/ \001, \002 FS/PS & \n or \n\n RS
   o make/publicize a shorthand for this -- ?
   o --words && --lines & --paragraphs -- ?
+* still need csv --lazy-quotes
 
 ----------------------------------------------------------------
 * natural sort order

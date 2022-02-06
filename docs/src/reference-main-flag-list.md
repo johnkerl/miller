@@ -177,7 +177,7 @@ are overridden in all cases by setting output format to `format2`.
 * `--oxtab`: Use XTAB format for output data.
 * `--pprint`: Use PPRINT format for input and output data.
 * `--tsv`: Use TSV format for input and output data.
-* `--tsvlite or -t`: Use TSV-lite format for input and output data.
+* `--tsv`: Use TSV format for input and output data.
 * `--usv or --usvlite`: Use USV format for input and output data.
 * `--xtab`: Use XTAB format for input and output data.
 * `-i {format name}`: Use format name for input data. For example: `-i csv` is the same as `--icsv`.
@@ -405,7 +405,6 @@ Notes about all other separators:
   alignment impossible.
 * OPS may be multi-character for XTAB format, in which case alignment is
   disabled.
-* TSV is simply CSV using tab as field separator (`--fs tab`).
 * FS/PS are ignored for markdown format; RS is used.
 * All FS and PS options are ignored for JSON format, since they are not relevant
   to the JSON format.
@@ -460,6 +459,7 @@ Notes about all other separators:
         markdown " "    N/A    "\n"
         nidx     " "    N/A    "\n"
         pprint   " "    N/A    "\n"
+        tsv      "	"    N/A    "\n"
         xtab     "\n"   " "    "\n\n"
 
 

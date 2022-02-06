@@ -147,7 +147,6 @@ Notes about all other separators:
   alignment impossible.
 * OPS may be multi-character for XTAB format, in which case alignment is
   disabled.
-* TSV is simply CSV using tab as field separator (` + "`--fs tab`" + `).
 * FS/PS are ignored for markdown format; RS is used.
 * All FS and PS options are ignored for JSON format, since they are not relevant
   to the JSON format.
@@ -986,16 +985,12 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name:     "--tsvlite",
+			name:     "--tsv",
 			help:     "Use TSV-lite format for input and output data.",
 			altNames: []string{"-t"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csvlite"
-				options.WriterOptions.OutputFileFormat = "csvlite"
-				options.ReaderOptions.IFS = "\t"
-				options.WriterOptions.OFS = "\t"
-				options.ReaderOptions.ifsWasSpecified = true
-				options.WriterOptions.ofsWasSpecified = true
+				options.ReaderOptions.InputFileFormat = "tsv"
+				options.WriterOptions.OutputFileFormat = "tsv"
 				*pargi += 1
 			},
 		},
