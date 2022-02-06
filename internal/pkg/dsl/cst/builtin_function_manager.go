@@ -1006,11 +1006,12 @@ is supplied.`,
 		{
 			name:  "strftime",
 			class: FUNC_CLASS_TIME,
-			help: `Formats seconds since the epoch as timestamp. Format strings are mostly as in the C library
-(see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which
-format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also
-strftime_local. See also "DSL datetime/timezone functions" at ` + lib.DOC_URL + ` for more information on the
-differences from the C library.`,
+			help: `Formats seconds since the epoch as timestamp. Format strings are as at
+https://pkg.go.dev/github.com/lestrrat-go/strftime, with the Miller-specific addition of "%1S"
+through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no
+decimal places.) See also "DSL datetime/timezone functions" at ` +
+				lib.DOC_URL + ` for more information on the differences from the C library ("man strftime" on your system).
+See also strftime_local.`,
 			examples: []string{
 				`strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ")  = "2015-08-28T13:33:21Z"`,
 				`strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z"`,
