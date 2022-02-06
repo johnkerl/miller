@@ -175,7 +175,9 @@ func BIF_is_nonemptymap(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.IsMap() && input1.AcquireMapValue().FieldCount != 0)
 }
 func BIF_is_notempty(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.IsVoid() {
+	if input1.IsAbsent() {
+		return mlrval.FALSE
+	} else if input1.IsVoid() {
 		return mlrval.FALSE
 	} else if input1.IsString() {
 		if input1.AcquireStringValue() == "" {

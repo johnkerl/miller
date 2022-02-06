@@ -1223,7 +1223,7 @@ differences from the C library.`,
 		{
 			name:      "is_not_empty",
 			class:     FUNC_CLASS_TYPING,
-			help:      "False if field is present in input with empty value, true otherwise",
+			help:      "True if field is present in input with non-empty value, false otherwise",
 			unaryFunc: bifs.BIF_is_notempty,
 		},
 

@@ -2,7 +2,7 @@
   "is_absent_array_out_of_bounds": true,
   "is_present_array_out_of_bounds": false,
   "is_empty_array_out_of_bounds": false,
-  "is_not_empty_array_out_of_bounds": true,
+  "is_not_empty_array_out_of_bounds": false,
   "is_null_array_out_of_bounds": true,
   "is_not_null_array_out_of_bounds": false,
   "is_bool_array_out_of_bounds": false,
