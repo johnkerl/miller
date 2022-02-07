@@ -2293,7 +2293,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=typing #args=1) True if argument is not an array.
 
    is_not_empty
-        (class=typing #args=1) False if field is present in input with empty value, true otherwise
+        (class=typing #args=1) True if field is present in input with non-empty value, false otherwise
 
    is_not_map
         (class=typing #args=1) True if argument is not a map.
@@ -2540,7 +2540,7 @@ FUNCTIONS FOR FILTER/PUT
        ssub("abc.def", ".", "X") gives "abcXdef"
 
    strftime
-        (class=time #args=2) Formats seconds since the epoch as timestamp. Format strings are mostly as in the C library (see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local. See also "DSL datetime/timezone functions" at https://miller.readthedocs.io for more information on the differences from the C library.
+        (class=time #args=2) Formats seconds since the epoch as timestamp. Format strings are as at https://pkg.go.dev/github.com/lestrrat-go/strftime, with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also "DSL datetime/timezone functions" at https://miller.readthedocs.io for more information on the differences from the C library ("man strftime" on your system). See also strftime_local.
        Examples:
        strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ")  = "2015-08-28T13:33:21Z"
        strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z"
@@ -3162,5 +3162,5 @@ SEE ALSO
 
 
 
-                                  2022-02-06                         MILLER(1)
+                                  2022-02-07                         MILLER(1)
 </pre>
