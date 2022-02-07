@@ -9,6 +9,8 @@ RELEASES
   ? rank
   o fmt/unfmt/regex doc
   o FAQ/examples reorg
+  m strptime/strftime tabulate options
+  m unicode string literals
   k IANA-TSV w/ \{X}
   k still need csv --lazy-quotes
   k default colors; bold/underline/reverse
@@ -16,7 +18,6 @@ RELEASES
   k format/unformat
   k split verb
   k slwin & shift-lead
-  m unicode string literals
   k 0o.. octal literals in the DSL
   k codeql/codespell/goreleaseer binaries/zips
   k :rb
