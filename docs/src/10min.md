@@ -258,8 +258,13 @@ red   square false 4 48    77.5542  7.4670
 red   square false 6 64    77.1991  9.5310
 </pre>
 
-<pre class="pre-highlight-non-pair">
-<b>mlr --icsv --opprint filter '$color == "red" && $flag == true' example.csv</b>
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint filter '$color == "red" && $flag == "true"' example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color shape  flag k index quantity rate
+red   square true 2 15    79.2778  0.0130
+red   circle true 3 16    13.8103  2.9010
 </pre>
 
 ## Computing new fields

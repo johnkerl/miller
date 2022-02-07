@@ -83,7 +83,7 @@ mlr --icsv --opprint filter '$color == "red"' example.csv
 GENMD-EOF
 
 GENMD-RUN-COMMAND
-mlr --icsv --opprint filter '$color == "red" && $flag == true' example.csv
+mlr --icsv --opprint filter '$color == "red" && $flag == "true"' example.csv
 GENMD-EOF
 
 ## Computing new fields
