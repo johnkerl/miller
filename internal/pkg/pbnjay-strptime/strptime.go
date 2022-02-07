@@ -54,6 +54,8 @@ import (
 	"time"
 )
 
+const _ignoreUnsupported = false
+
 // Parse accepts a percent-encoded strptime format string, converts it for use with
 // time.Parse, and returns the resulting time.Time value. If non-date-related format
 // text does not match within the string value, then ErrFormatMismatch will be returned.
@@ -62,25 +64,25 @@ import (
 // If a unsupported format specifier is provided, it will be ignored and matching
 // text will be skipped. To receive errors for unsupported formats, use ParseStrict or call Check.
 func Parse(value, format string) (time.Time, error) {
-	return strptime_tz(value, format, true, false, nil)
+	return strptime_tz(value, format, _ignoreUnsupported, false, nil)
 }
 
 // ParseLocal is like Parse except it consults the $TZ environment variable.
 // This is for Miller.
 func ParseLocal(value, format string) (time.Time, error) {
-	return strptime_tz(value, format, true, true, nil)
+	return strptime_tz(value, format, _ignoreUnsupported, true, nil)
 }
 
 // ParseLocation is like Parse except it uses the specified location (timezone).
 // This is for Miller.
 func ParseLocation(value, format string, location *time.Location) (time.Time, error) {
-	return strptime_tz(value, format, true, true, location)
+	return strptime_tz(value, format, _ignoreUnsupported, true, location)
 }
 
 // ParseStrict returns ErrFormatUnsupported for unsupported formats strings, but is otherwise
 // identical to Parse.
 func ParseStrict(value, format string) (time.Time, error) {
-	return strptime_tz(value, format, false, false, nil)
+	return strptime_tz(value, format, _ignoreUnsupported, false, nil)
 }
 
 // MustParse is a wrapper for Parse which panics on any error.
@@ -221,6 +223,7 @@ var (
 		'd': "02",
 		'b': "Jan",
 		'B': "January",
+		'j': "__2",
 		'm': "01",
 		'y': "06",
 		'Y': "2006",
