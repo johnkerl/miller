@@ -151,6 +151,9 @@ boolean_literal : ( _literal_true | _literal_false );
 
 null_literal  : 'n' 'u' 'l' 'l';
 
+inf_literal   : 'I' 'n' 'f';
+nan_literal   : 'N' 'a' 'N';
+
 // ----------------------------------------------------------------
 // MILLER CONTEXT VARIABLES
 // ----------------------------------------------------------------
@@ -1544,6 +1547,12 @@ MlrvalOrFunction
 
   | null_literal
     << dsl.NewASTNode($0, dsl.NodeTypeNullLiteral) >>
+
+  | inf_literal
+    << dsl.NewASTNode($0, dsl.NodeTypeFloatLiteral) >>
+
+  | nan_literal
+    << dsl.NewASTNode($0, dsl.NodeTypeFloatLiteral) >>
 
   | const_M_PI
     << dsl.NewASTNode(
