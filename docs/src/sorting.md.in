@@ -8,10 +8,12 @@ Miller gives you three ways to sort your data:
 
 ## Sorting records: the sort verb
 
-The `sort` verb (see [its documentation](reference-verbs.md#sort) for more
-information) reorders entire records within the data stream. You can sort
-lexically (with or without case-folding) or numerically, ascending or
-descending; and you can sort primary by one column, then secondarily by
+The `sort` verb (see [its documentation](reference-verbs.md#sort) for more information) reorders
+entire records within the data stream. You can sort lexically (with or without case-folding),
+numerically, or naturally (see
+[https://en.wikipedia.org/wiki/Natural_sort_order](https://en.wikipedia.org/wiki/Natural_sort_order)
+or [https://github.com/facette/natsort](https://github.com/facette/natsort) for more about natural
+sorting); ascending or descending; and you can sort primarily by one column, then secondarily by
 another, etc.
 
 Input data:
@@ -55,13 +57,13 @@ GENMD-EOF
 ## The sort function by example
 
 * It returns a sorted copy of an input array or map.
-* Without second argument, uses the natural ordering.
-* With second which is string, takes sorting flags from it: `"f"` for lexical or `"c"` for case-folded lexical, and/or `"r"` for reverse/descending.
+* Without second argument, uses Miller's default ordering which is numbers numerically, then strings lexically.
+* With second which is string, takes sorting flags from it: `"f"` for lexical or `"c"` for case-folded lexical, or `"t"` for natural sort order. An additional `"r"` in this string is for reverse/descending.
 
 GENMD-RUN-COMMAND
 mlr -n put '
   end {
-    # Sort array with natural ordering
+    # Sort array with default ordering
     print sort([5,2,3,1,4]);
   }
 '
@@ -70,7 +72,7 @@ GENMD-EOF
 GENMD-RUN-COMMAND
 mlr -n put '
   end {
-    # Sort array with reverse-natural ordering
+    # Sort array with reverse-default ordering
     print sort([5,2,3,1,4], "r");
   }
 '
@@ -79,7 +81,7 @@ GENMD-EOF
 GENMD-RUN-COMMAND
 mlr -n put '
   end {
-    # Sort array with custom function: natural ordering
+    # Sort array with custom function: another way to get default ordering
     print sort([5,2,3,1,4], func(a,b) { return a <=> b});
   }
 '
@@ -88,7 +90,7 @@ GENMD-EOF
 GENMD-RUN-COMMAND
 mlr -n put '
   end {
-    # Sort array with custom function: reverse-natural ordering
+    # Sort array with custom function: another way to get reverse-default ordering
     print sort([5,2,3,1,4], func(a,b) { return b <=> a});
   }
 '
@@ -97,7 +99,7 @@ GENMD-EOF
 GENMD-RUN-COMMAND
 mlr -n put '
   end {
-    # Sort map with natural ordering on keys
+    # Sort map with default ordering on keys
     print sort({"c":2, "a": 3, "b": 1});
   }
 '
@@ -106,7 +108,7 @@ GENMD-EOF
 GENMD-RUN-COMMAND
 mlr -n put '
   end {
-    # Sort map with reverse-natural ordering on keys
+    # Sort map with reverse-default ordering on keys
     print sort({"c":2, "a": 3, "b": 1}, "r");
   }
 '
@@ -115,7 +117,7 @@ GENMD-EOF
 GENMD-RUN-COMMAND
 mlr -n put '
   end {
-    # Sort map with custom function: natural ordering on values
+    # Sort map with custom function: default ordering on values
     print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv){return av <=> bv});
   }
 '
@@ -124,8 +126,17 @@ GENMD-EOF
 GENMD-RUN-COMMAND
 mlr -n put '
   end {
-    # Sort map with custom function: reverse-natural ordering on values
+    # Sort map with custom function: reverse-default ordering on values
     print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv){return bv <=> av});
+  }
+'
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr -n put '
+  end {
+    # Natural sort
+    print sort(["a1","a10","a100","a2","a20","a200"], "t");
   }
 '
 GENMD-EOF
