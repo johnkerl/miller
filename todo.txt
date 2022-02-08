@@ -1,11 +1,10 @@
-===============================================================
-RELEASES
+=============================================================== RELEASES
 
 * plan 6.1.0
   ? strptime
+  ? inference
   ? datediff et al.
   ? mlr join --left-fields a,b,c
-  ? rank
   o fmt/unfmt/regex doc
   o FAQ/examples reorg
   m strptime/strftime tabulate options
@@ -24,6 +23,7 @@ RELEASES
   k ?foo and ??foo @ repl help
   k doc-improves
 * plan 6.2.0
+  ? rank
   ? YAML
 
 ================================================================
@@ -39,10 +39,6 @@ TSV etc
   o --words && --lines & --paragraphs -- ?
 
 ----------------------------------------------------------------
-* natural sort order
-   https://github.com/facette/natsort
-
-----------------------------------------------------------------
 example pages as feature catch-up:
 * example page for format/scan options
   o format/unformat
@@ -55,6 +51,12 @@ example pages as feature catch-up:
   o ulimit note
 * new slwin/ewma example entry, with ccump and pgr
   o slwin --prune (or somesuch) to only emit averages over full windows -- ?
+
+----------------------------------------------------------------
+inference:
+
+* inf/nan (unquoted) -> DSL
+* for data files: --symbol-true yes --symbol-false off --symbol-infinity inf --symbol-not-available N/A
 
 ----------------------------------------------------------------
 mlr join --left-fields a,b,c
