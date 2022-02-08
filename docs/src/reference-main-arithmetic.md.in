@@ -52,4 +52,45 @@ Division and remainder are [pythonic](http://python-history.blogspot.com/2010/08
 
 * Quotient of integers is floating-point unless (unlike Python) exactly representable as integer: `7/2` is `3.5` but `6/2` is `3` (not 3.0).
 * Integer division is done with `//`: `7//2` is `3`.  This rounds toward the negative.
-* Remainders are non-negative.
+* Remainders are non-negative: `13 % 10` and `-17 % 10` are both `3`.
+
+## Infinity and NaN
+
+You can get IEEE `Inf` and `NaN` in the DSL by `1/0` and `0/0`, respectively. Should you need to, you can
+also refer to them by name.
+
+Also note that `NaN != NaN` -- this is a general fact of IEEE floating-point arithmetic, nothing to do with Miller. So, like other languages, Miller has an `is_nan` DSL function to check if something is the not-a-number value.
+
+GENMD-CARDIFY
+$ rlwrap mlr repl
+Miller 6.0.0-dev REPL for darwin/amd64/go1.17
+Docs: https://miller.readthedocs.io
+Type ':h' or ':help' for online help; ':q' or ':quit' to quit.
+
+[mlr] 1/0
++Inf
+[mlr] 0/0
+NaN
+
+[mlr] 1/0 == Inf
+true
+[mlr] 0/0 == NaN
+false
+[mlr] is_nan(0/0)
+true
+[mlr] is_nan(NaN)
+true
+
+[mlr] ?is_nan
+is_nan  (class=typing #args=1) True if the argument is the NaN (not-a-number) floating-point value. Note that NaN has the property that NaN != NaN, so you need 'is_nan(x)' rather than 'x == NaN'.
+
+[mlr] log10(0)
+-Inf
+[mlr] log10(-2)
+NaN
+[mlr] is_nan(log10(-2))
+true
+GENMD-EOF
+
+Lastly, note that in Miller, `NaN` is strictly for the use of math-library functions. It doesn't indicate
+a missing/absent or null value. See also the [page on null/empty/absent data](reference-main-null-data.md).
