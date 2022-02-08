@@ -1278,9 +1278,9 @@ See also strftime_local.`,
 		},
 
 		{
-			name:      "is_nan",
-			class:     FUNC_CLASS_TYPING,
-			help:      `True if the argument is the NaN (not-a-number) floating-point value.
+			name:  "is_nan",
+			class: FUNC_CLASS_TYPING,
+			help: `True if the argument is the NaN (not-a-number) floating-point value.
 Note that NaN has the property that NaN != NaN, so you need 'is_nan(x)' rather than 'x == NaN'.`,
 			unaryFunc: bifs.BIF_is_nan,
 		},

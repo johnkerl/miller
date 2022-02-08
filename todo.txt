@@ -56,6 +56,7 @@ example pages as feature catch-up:
 inference:
 
 * inf/nan (unquoted) -> DSL
+  o webdocs as in #933 description
 * for data files: --symbol-true yes --symbol-false off --symbol-infinity inf --symbol-not-available N/A
 
 ----------------------------------------------------------------

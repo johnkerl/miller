@@ -44,6 +44,7 @@ is_error
 is_float
 is_int
 is_map
+is_nan
 is_nonempty_map
 is_not_array
 is_not_empty
