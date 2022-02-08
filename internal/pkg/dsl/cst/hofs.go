@@ -12,6 +12,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/facette/natsort"
+
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
@@ -565,6 +567,7 @@ const (
 	sortTypeLexical tSortType = iota
 	sortTypeCaseFold
 	sortTypeNumerical
+	sortTypeNatural
 )
 
 // decodeSortFlags maps strings like "cr" in the second argument to sort
@@ -580,6 +583,8 @@ func decodeSortFlags(flags string) (tSortType, bool) {
 			sortType = sortTypeLexical
 		case 'c':
 			sortType = sortTypeCaseFold
+		case 't':
+			sortType = sortTypeNatural
 		case 'r':
 			reverse = true
 		}
@@ -608,6 +613,8 @@ func sortA(
 		sortALexical(a, reverse)
 	case sortTypeCaseFold:
 		sortACaseFold(a, reverse)
+	case sortTypeNatural:
+		sortANatural(a, reverse)
 	}
 
 	return output
@@ -649,6 +656,18 @@ func sortACaseFold(array []*mlrval.Mlrval, reverse bool) {
 	}
 }
 
+func sortANatural(array []*mlrval.Mlrval, reverse bool) {
+	if !reverse {
+		sort.Slice(array, func(i, j int) bool {
+			return natsort.Compare(array[i].String(), array[j].String())
+		})
+	} else {
+		sort.Slice(array, func(i, j int) bool {
+			return natsort.Compare(array[j].String(), array[i].String())
+		})
+	}
+}
+
 // sortA implements sort on map, with string flags rather than callback UDF.
 func sortMK(
 	input1 *mlrval.Mlrval,
@@ -680,6 +699,8 @@ func sortMK(
 		sortMKLexical(keys, reverse)
 	case sortTypeCaseFold:
 		sortMKCaseFold(keys, reverse)
+	case sortTypeNatural:
+		sortMKNatural(keys, reverse)
 	}
 
 	// Make a new map with keys in the new sort order.
@@ -737,6 +758,18 @@ func sortMKCaseFold(array []string, reverse bool) {
 	} else {
 		sort.Slice(array, func(i, j int) bool {
 			return strings.ToLower(array[i]) > strings.ToLower(array[j])
+		})
+	}
+}
+
+func sortMKNatural(array []string, reverse bool) {
+	if !reverse {
+		sort.Slice(array, func(i, j int) bool {
+			return natsort.Compare(strings.ToLower(array[i]), strings.ToLower(array[j]))
+		})
+	} else {
+		sort.Slice(array, func(i, j int) bool {
+			return natsort.Compare(strings.ToLower(array[j]), strings.ToLower(array[i]))
 		})
 	}
 }
