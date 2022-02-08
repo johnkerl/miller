@@ -2,6 +2,7 @@ package bifs
 
 import (
 	"fmt"
+	"math"
 	"os"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
@@ -209,6 +210,14 @@ func BIF_is_present(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 func BIF_is_string(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.IsStringOrVoid())
+}
+func BIF_is_nan(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	fval, ok := input1.GetFloatValue()
+	if ok {
+		return mlrval.FromBool(math.IsNaN(fval))
+	} else {
+		return mlrval.FALSE
+	}
 }
 
 // ----------------------------------------------------------------
