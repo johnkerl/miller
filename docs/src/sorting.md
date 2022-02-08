@@ -24,10 +24,12 @@ Miller gives you three ways to sort your data:
 
 ## Sorting records: the sort verb
 
-The `sort` verb (see [its documentation](reference-verbs.md#sort) for more
-information) reorders entire records within the data stream. You can sort
-lexically (with or without case-folding) or numerically, ascending or
-descending; and you can sort primary by one column, then secondarily by
+The `sort` verb (see [its documentation](reference-verbs.md#sort) for more information) reorders
+entire records within the data stream. You can sort lexically (with or without case-folding),
+numerically, or naturally (see
+[https://en.wikipedia.org/wiki/Natural_sort_order](https://en.wikipedia.org/wiki/Natural_sort_order)
+or [https://github.com/facette/natsort](https://github.com/facette/natsort) for more about natural
+sorting); ascending or descending; and you can sort primarily by one column, then secondarily by
 another, etc.
 
 Input data:
@@ -143,13 +145,13 @@ a b c
 ## The sort function by example
 
 * It returns a sorted copy of an input array or map.
-* Without second argument, uses the natural ordering.
-* With second which is string, takes sorting flags from it: `"f"` for lexical or `"c"` for case-folded lexical, and/or `"r"` for reverse/descending.
+* Without second argument, uses Miller's default ordering which is numbers numerically, then strings lexically.
+* With second which is string, takes sorting flags from it: `"f"` for lexical or `"c"` for case-folded lexical, or `"t"` for natural sort order. An additional `"r"` in this string is for reverse/descending.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put '</b>
 <b>  end {</b>
-<b>    # Sort array with natural ordering</b>
+<b>    # Sort array with default ordering</b>
 <b>    print sort([5,2,3,1,4]);</b>
 <b>  }</b>
 <b>'</b>
@@ -161,7 +163,7 @@ a b c
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put '</b>
 <b>  end {</b>
-<b>    # Sort array with reverse-natural ordering</b>
+<b>    # Sort array with reverse-default ordering</b>
 <b>    print sort([5,2,3,1,4], "r");</b>
 <b>  }</b>
 <b>'</b>
@@ -173,7 +175,7 @@ a b c
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put '</b>
 <b>  end {</b>
-<b>    # Sort array with custom function: natural ordering</b>
+<b>    # Sort array with custom function: another way to get default ordering</b>
 <b>    print sort([5,2,3,1,4], func(a,b) { return a <=> b});</b>
 <b>  }</b>
 <b>'</b>
@@ -185,7 +187,7 @@ a b c
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put '</b>
 <b>  end {</b>
-<b>    # Sort array with custom function: reverse-natural ordering</b>
+<b>    # Sort array with custom function: another way to get reverse-default ordering</b>
 <b>    print sort([5,2,3,1,4], func(a,b) { return b <=> a});</b>
 <b>  }</b>
 <b>'</b>
@@ -197,7 +199,7 @@ a b c
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put '</b>
 <b>  end {</b>
-<b>    # Sort map with natural ordering on keys</b>
+<b>    # Sort map with default ordering on keys</b>
 <b>    print sort({"c":2, "a": 3, "b": 1});</b>
 <b>  }</b>
 <b>'</b>
@@ -213,7 +215,7 @@ a b c
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put '</b>
 <b>  end {</b>
-<b>    # Sort map with reverse-natural ordering on keys</b>
+<b>    # Sort map with reverse-default ordering on keys</b>
 <b>    print sort({"c":2, "a": 3, "b": 1}, "r");</b>
 <b>  }</b>
 <b>'</b>
@@ -229,7 +231,7 @@ a b c
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put '</b>
 <b>  end {</b>
-<b>    # Sort map with custom function: natural ordering on values</b>
+<b>    # Sort map with custom function: default ordering on values</b>
 <b>    print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv){return av <=> bv});</b>
 <b>  }</b>
 <b>'</b>
@@ -245,7 +247,7 @@ a b c
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put '</b>
 <b>  end {</b>
-<b>    # Sort map with custom function: reverse-natural ordering on values</b>
+<b>    # Sort map with custom function: reverse-default ordering on values</b>
 <b>    print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv){return bv <=> av});</b>
 <b>  }</b>
 <b>'</b>
@@ -256,6 +258,18 @@ a b c
   "c": 2,
   "b": 1
 }
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    # Natural sort</b>
+<b>    print sort(["a1","a10","a100","a2","a20","a200"], "t");</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+["a1", "a2", "a10", "a20", "a100", "a200"]
 </pre>
 
 In the rest of this page we'll look more closely at these variants.

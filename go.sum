@@ -1,5 +1,7 @@
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/facette/natsort v0.0.0-20181210072756-2cd4dd1e2dcb h1:IT4JYU7k4ikYg1SCxNI1/Tieq/NFvh6dzLdgi7eu0tM=
+github.com/facette/natsort v0.0.0-20181210072756-2cd4dd1e2dcb/go.mod h1:bH6Xx7IW64qjjJq8M2u4dxNaBiDfKK+z/3eGDpXEQhc=
 github.com/goccmack/gocc v0.0.0-20211213154817-7ea699349eca h1:NuA6w6b01Ojdig+4K1l9p4Pp3unlv4owphbOiENm8m4=
 github.com/goccmack/gocc v0.0.0-20211213154817-7ea699349eca/go.mod h1:c4Mb67Mg9+pl6OlxvnFBUiiQOSlXfh0QukINLl54OD0=
 github.com/johnkerl/lumin v1.0.0 h1:CV34cHZOJ92Y02RbQ0rd4gA0C06Qck9q8blOyaPoWpU=

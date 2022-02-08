@@ -84,6 +84,8 @@ func transformerSortUsage(
 	fmt.Fprintf(o, "-n  {comma-separated field names}  Numerical ascending; nulls sort last\n")
 	fmt.Fprintf(o, "-nf {comma-separated field names}  Same as -n\n")
 	fmt.Fprintf(o, "-nr {comma-separated field names}  Numerical descending; nulls sort first\n")
+	fmt.Fprintf(o, "-t  {comma-separated field names}  Natural ascending\n")
+	fmt.Fprintf(o, "-tr {comma-separated field names}  Natural descending\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Example:\n")
@@ -148,6 +150,25 @@ func transformerSortParseCLI(
 				for _, item := range subList {
 					groupByFieldNames = append(groupByFieldNames, item)
 					comparatorFuncs = append(comparatorFuncs, mlrval.CaseFoldAscendingComparator)
+				}
+			}
+
+		} else if opt == "-t" {
+			// See comments over "-n" -- similar hack.
+			if args[argi] == "-r" {
+				// Treat like "-tr"
+				argi++
+				subList := cli.VerbGetStringArrayArgOrDie(verb, "-tr", args, &argi, argc)
+				for _, item := range subList {
+					groupByFieldNames = append(groupByFieldNames, item)
+					comparatorFuncs = append(comparatorFuncs, mlrval.NaturalAscendingComparator)
+				}
+			} else {
+
+				subList := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+				for _, item := range subList {
+					groupByFieldNames = append(groupByFieldNames, item)
+					comparatorFuncs = append(comparatorFuncs, mlrval.NaturalDescendingComparator)
 				}
 			}
 

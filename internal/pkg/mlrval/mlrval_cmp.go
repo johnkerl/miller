@@ -18,6 +18,10 @@ import (
 )
 
 type CmpFuncBool func(input1, input2 *Mlrval) bool
+
+// The Go sort API is just a bool a<b, not triple a<b, a==b, a>b. Miller does the latter since when
+// we sort primarily on field 1, then secondarily on field 2, etc., we need to be able to detect
+// ties on field 1 so we can know whether to compare on field 2 or not.
 type CmpFuncInt func(input1, input2 *Mlrval) int // -1, 0, 1 for <=>
 
 // ----------------------------------------------------------------

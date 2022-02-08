@@ -15,6 +15,8 @@ package mlrval
 
 import (
 	"strings"
+
+	"github.com/facette/natsort"
 )
 
 // LexicalAscendingComparator is for lexical sort: it stringifies
@@ -63,13 +65,6 @@ func CaseFoldDescendingComparator(input1 *Mlrval, input2 *Mlrval) int {
 	return CaseFoldAscendingComparator(input2, input1)
 }
 
-// TODO
-//func _xcmp(input1, input2 *Mlrval) int {
-//	fmt.Fprintf(os.Stderr, "mlr: functions cannot be sorted.\n")
-//	os.Exit(1)
-//	return 0
-//}
-
 func NumericAscendingComparator(input1 *Mlrval, input2 *Mlrval) int {
 	return Cmp(input1, input2)
 }
@@ -78,4 +73,20 @@ func NumericAscendingComparator(input1 *Mlrval, input2 *Mlrval) int {
 // rules by type, including numeric sort for numeric types.
 func NumericDescendingComparator(input1 *Mlrval, input2 *Mlrval) int {
 	return -Cmp(input1, input2)
+}
+
+func NaturalAscendingComparator(input1, input2 *Mlrval) int {
+	sa := input1.String()
+	sb := input2.String()
+	if sa == sb {
+		return 0
+	} else if natsort.Compare(input1.String(), input2.String()) {
+		return 1
+	} else {
+		return -1
+	}
+}
+
+func NaturalDescendingComparator(input1, input2 *Mlrval) int {
+	return NaturalAscendingComparator(input2, input1)
 }
