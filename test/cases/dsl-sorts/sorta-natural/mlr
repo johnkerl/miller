@@ -1,0 +1,7 @@
+end {
+  a = ["X1", "X10", "X100", "X2", "X20", "X200"];
+  print sort(a);
+  print sort(a, "r");
+  print sort(a, "t");
+  print sort(a, "tr");
+}
