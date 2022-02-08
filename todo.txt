@@ -2,7 +2,6 @@
 RELEASES
 
 * plan 6.1.0
-  ? w/ natural sort order
   ? strptime
   ? datediff et al.
   ? mlr join --left-fields a,b,c
@@ -11,6 +10,7 @@ RELEASES
   o FAQ/examples reorg
   m strptime/strftime tabulate options
   m unicode string literals
+  k natural sort order
   k IANA-TSV w/ \{X}
   k still need csv --lazy-quotes
   k default colors; bold/underline/reverse
