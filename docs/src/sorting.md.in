@@ -34,6 +34,16 @@ GENMD-RUN-COMMAND
 mlr --c2p sort -f color -nr quantity example.csv
 GENMD-EOF
 
+Example of natural sort, adapted from [https://github.com/facette/natsort](https://github.com/facette/natsort):
+
+GENMD-RUN-COMMAND
+mlr --c2p cat data/natsort.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p sort -t name data/natsort.csv
+GENMD-EOF
+
 ## Sorting fields within records: the sort-within-records verb
 
 The `sort-within-records` verb (see [its

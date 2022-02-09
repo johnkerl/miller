@@ -89,6 +89,76 @@ yellow circle   true  9  87    63.5058  8.3350
 yellow triangle true  1  11    43.6498  9.8870
 </pre>
 
+Example of natural sort, adapted from [https://github.com/facette/natsort](https://github.com/facette/natsort):
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p cat data/natsort.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+n  name
+1  Allegia 51 Clasteron
+2  Callisto Morphamax 6000 SE
+3  Xiph Xlater 58
+4  1000X Radonius Maximus
+5  20X Radonius Prime
+6  30X Radonius
+7  Alpha 2
+8  Allegia 50 Clasteron
+9  Alpha 2A-8000
+10 200X Radonius
+11 Allegia 50B Clasteron
+12 Xiph Xlater 5
+13 Callisto Morphamax 700
+14 Xiph Xlater 500
+15 Alpha 2A-900
+16 20X Radonius
+17 Callisto Morphamax 6000 SE2
+18 Allegia 500 Clasteron
+19 Alpha 100
+20 Alpha 2A
+21 Xiph Xlater 300
+22 Callisto Morphamax
+23 Callisto Morphamax 7000
+24 10X Radonius
+25 Xiph Xlater 40
+26 Allegia 6R Clasteron
+27 Callisto Morphamax 5000
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p sort -t name data/natsort.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+n  name
+24 10X Radonius
+16 20X Radonius
+5  20X Radonius Prime
+6  30X Radonius
+10 200X Radonius
+4  1000X Radonius Maximus
+26 Allegia 6R Clasteron
+8  Allegia 50 Clasteron
+11 Allegia 50B Clasteron
+1  Allegia 51 Clasteron
+18 Allegia 500 Clasteron
+7  Alpha 2
+20 Alpha 2A
+15 Alpha 2A-900
+9  Alpha 2A-8000
+19 Alpha 100
+22 Callisto Morphamax
+13 Callisto Morphamax 700
+27 Callisto Morphamax 5000
+2  Callisto Morphamax 6000 SE
+17 Callisto Morphamax 6000 SE2
+23 Callisto Morphamax 7000
+12 Xiph Xlater 5
+25 Xiph Xlater 40
+3  Xiph Xlater 58
+21 Xiph Xlater 300
+14 Xiph Xlater 500
+</pre>
+
 ## Sorting fields within records: the sort-within-records verb
 
 The `sort-within-records` verb (see [its
