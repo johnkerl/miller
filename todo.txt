@@ -2,10 +2,14 @@
 
 * plan 6.1.0
   ? strptime/882
+    m strptime/strftime tabulate options
+    ? https://github.com/bykof/gostradamus
+    ? https://golangrepo.com/repo/leekchan-timeutil-go-date-time
+    ? port mlr5 c -> go?
+  ? unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
   ? mlr join --left-fields a,b,c
   o fmt/unfmt/regex doc
   o FAQ/examples reorg
-  m strptime/strftime tabulate options
   k unicode string literals
   k natural sort order
   k IANA-TSV w/ \{X}
