@@ -236,8 +236,11 @@ Given the name of a DSL function (from `mlr -f`) you can use `mlr help function`
 append  (class=collections #args=2) Appends second argument to end of first argument, which must be an array.
 </pre>
 
-<pre class="pre-highlight-non-pair">
+<pre class="pre-highlight-in-pair">
 <b>mlr help function split</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Function "split" not found.
 </pre>
 
 <pre class="pre-highlight-in-pair">
