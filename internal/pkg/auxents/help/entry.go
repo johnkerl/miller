@@ -632,7 +632,7 @@ func usageFunctionsByClass() {
 
 func helpForFunction(args []string) {
 	for _, arg := range args {
-		cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg)
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsage(arg)
 	}
 }
 

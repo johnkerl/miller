@@ -1,14 +1,16 @@
 =============================================================== RELEASES
 
 * plan 6.1.0
-  ? strptime
-  ? inference
-  ? datediff et al.
+  ? strptime/882
+    m strptime/strftime tabulate options
+    ? https://github.com/bykof/gostradamus
+    ? https://golangrepo.com/repo/leekchan-timeutil-go-date-time
+    ? port mlr5 c -> go?
+  ? unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
   ? mlr join --left-fields a,b,c
   o fmt/unfmt/regex doc
   o FAQ/examples reorg
-  m strptime/strftime tabulate options
-  m unicode string literals
+  k unicode string literals
   k natural sort order
   k IANA-TSV w/ \{X}
   k still need csv --lazy-quotes
@@ -23,8 +25,10 @@
   k ?foo and ??foo @ repl help
   k doc-improves
 * plan 6.2.0
+  ? datediff et al.
   ? rank
   ? YAML
+  ? #908 inferencing options
 
 ================================================================
 FEATURES

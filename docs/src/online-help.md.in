@@ -61,7 +61,7 @@ GENMD-RUN-COMMAND
 mlr help function append
 GENMD-EOF
 
-GENMD-RUN-COMMAND
+GENMD-RUN-COMMAND-TOLERATING-ERROR
 mlr help function split
 GENMD-EOF
 
