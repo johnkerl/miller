@@ -1,14 +1,12 @@
 =============================================================== RELEASES
 
 * plan 6.1.0
-  ? strptime
-  ? inference
-  ? datediff et al.
+  ? strptime/882
   ? mlr join --left-fields a,b,c
   o fmt/unfmt/regex doc
   o FAQ/examples reorg
   m strptime/strftime tabulate options
-  m unicode string literals
+  k unicode string literals
   k natural sort order
   k IANA-TSV w/ \{X}
   k still need csv --lazy-quotes
@@ -23,8 +21,10 @@
   k ?foo and ??foo @ repl help
   k doc-improves
 * plan 6.2.0
+  ? datediff et al.
   ? rank
   ? YAML
+  ? #908 inferencing options
 
 ================================================================
 FEATURES

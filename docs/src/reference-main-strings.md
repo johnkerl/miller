@@ -173,6 +173,25 @@ You can use the following backslash escapes for strings such as between the doub
 * `\"`: double quote
 * `\123`: Octal 123, etc. for `\000` up to `\377`
 * `\x7f`: Hexadecimal 7f, etc. for `\x00` up to `\xff`
+* `\u2766`, `\U00010877:`: Unicode literals. For technical reasons, you must supply four hex digits after `\u` and eight hex digits after `\U`.
+
+<pre class="pre-highlight-in-pair">
+<b>mlr repl</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[mlr] "a\nb"
+"a
+b"
+
+[mlr] "a\tb"
+"a	b"
+
+[mlr] "a\x62c"
+"abc"
+
+[mlr] "\u2766\U00010877"
+"❦𐡷"
+</pre>
 
 See also [https://en.wikipedia.org/wiki/Escape_sequences_in_C](https://en.wikipedia.org/wiki/Escape_sequences_in_C).
 

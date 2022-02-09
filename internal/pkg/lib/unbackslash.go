@@ -49,6 +49,10 @@ func UnbackslashStringLiteral(input string) string {
 	//	} else {
 	//		return input
 	//	}
+	//
+	// ... and, given that desire, we don't a priori know how many digits in Unicode
+	// escape sequences -- so we *require* that people use four hex digits after \u
+	// and eight hex digits after \U.
 
 	var buffer bytes.Buffer
 
