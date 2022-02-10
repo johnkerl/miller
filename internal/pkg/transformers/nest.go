@@ -163,9 +163,21 @@ func transformerNestParseCLI(
 
 		} else if opt == "--evar" {
 			evfs = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			doExplode = true
+			doExplodeSpecified = true
+			doPairs = false
+			doPairsSpecified = true
+			doAcrossFields = false
+			doAcrossFieldsSpecified = true
 
 		} else if opt == "--ivar" {
 			ivfs = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			doExplode = false
+			doExplodeSpecified = true
+			doPairs = false
+			doPairsSpecified = true
+			doAcrossFields = false
+			doAcrossFieldsSpecified = true
 
 		} else {
 			transformerNestUsage(os.Stderr, true, 1)
