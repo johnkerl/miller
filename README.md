@@ -101,13 +101,16 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 
 # Community
 
+[![GitHub stars](https://img.shields.io/github/stars/johnkerl/miller.svg?label=GitHub%20stars)](https://github.com/johnkerl/miller/stargazers)
+[![Homebrew downloads](https://badges.weareopensource.me:/homebrew/installs/dy/miller?label=Homebrew%20downloads)](https://formulae.brew.sh/formula/miller)
+[![Conda downloads](https://anaconda.org/conda-forge/miller/badges/downloads.svg?label=Conda%20downloads)](https://anaconda.org/conda-forge/miller)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-40-orange.svg?style=flat-square&label=All%20contributors)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
 * Discussion forum: https://github.com/johnkerl/miller/discussions
 * Feature requests / bug reports: https://github.com/johnkerl/miller/issues
 * How to contribute: [https://miller.readthedocs.io/en/latest/contributing/](https://miller.readthedocs.io/en/latest/contributing/)
-
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-40-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 # Features
 
