@@ -110,3 +110,7 @@ nav:
     - "Documents for previous releases": "release-docs.md"
     - "Glossary": "glossary.md"
   - "What's new in Miller 6": "new-in-miller-6.md"
+
+markdown_extensions:
+- toc:
+      permalink: true
