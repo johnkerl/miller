@@ -129,7 +129,7 @@ GENMD-EOF
 
 ## cat
 
-Most useful for format conversions (see [File Formats](file-formats.md), and concatenating multiple same-schema CSV files to have the same header:
+Most useful for format conversions (see [File Formats](file-formats.md)) and concatenating multiple same-schema CSV files to have the same header:
 
 GENMD-RUN-COMMAND
 mlr cat -h
