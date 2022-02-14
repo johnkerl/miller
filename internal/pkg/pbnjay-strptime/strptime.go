@@ -239,19 +239,19 @@ var (
 	ErrFormatUnsupported = errors.New("date format contains unsupported percent-encodings")
 
 	formatMap = map[int]string{
-		'd': "02",
 		'b': "Jan",
 		'B': "January",
-		'j': "__2",
-		'm': "01",
-		'y': "06",
-		'Y': "2006",
+		'd': "02",
+		'f': "999999",
 		'H': "15",
 		'I': "03",
-		'p': "PM",
+		'j': "__2",
+		'm': "01",
 		'M': "04",
+		'p': "PM",
 		'S': "05",
-		'f': "999999",
+		'y': "06",
+		'Y': "2006",
 		'z': "-0700",
 		'Z': "MST",
 	}
