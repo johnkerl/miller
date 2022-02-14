@@ -1,0 +1,1 @@
+$sec = strptime($gmt, "%FT%TZ")

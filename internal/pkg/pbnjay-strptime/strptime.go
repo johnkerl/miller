@@ -96,6 +96,8 @@ func MustParse(value, format string) time.Time {
 
 // Check verifies that format is a fully-supported strptime format string for this implementation.
 func Check(format string) error {
+	format = expandShorthands(format)
+
 	parts := strings.Split(format, "%")
 	for _, ps := range parts {
 		// since we split on '%', this is the format code
@@ -112,6 +114,8 @@ func Check(format string) error {
 }
 
 func strptime_tz(value, format string, ignoreUnsupported bool, useTZ bool, location *time.Location) (time.Time, error) {
+	format = expandShorthands(format)
+
 	parseStr := ""
 	parseFmt := ""
 	vi := 0
@@ -212,6 +216,21 @@ func strptime_tz(value, format string, ignoreUnsupported bool, useTZ bool, locat
 	}
 }
 
+// expandShorthands handles some shorthands that the C library uses, which we can easily
+// replicate -- e.g. "%T" is "%Y-%m-%d".
+func expandShorthands(format string) string {
+	// TODO: mem cache
+	format = strings.ReplaceAll(format, "%T", "%H:%M:%S")
+	format = strings.ReplaceAll(format, "%D", "%m/%d/%y")
+	format = strings.ReplaceAll(format, "%F", "%Y-%m-%d")
+	format = strings.ReplaceAll(format, "%R", "%H:%M")
+	format = strings.ReplaceAll(format, "%r", "%I:%M:%S %p")
+	format = strings.ReplaceAll(format, "%T", "%H:%M:%S")
+	// We've no %e in this package
+	// format = strings.ReplaceAll(format, "%v", "%e-%b-%Y")
+	return format
+}
+
 var (
 	// ErrFormatMismatch means that intervening text in the strptime format string did not
 	// match within the parsed string.
@@ -220,19 +239,19 @@ var (
 	ErrFormatUnsupported = errors.New("date format contains unsupported percent-encodings")
 
 	formatMap = map[int]string{
-		'd': "02",
 		'b': "Jan",
 		'B': "January",
-		'j': "__2",
-		'm': "01",
-		'y': "06",
-		'Y': "2006",
+		'd': "02",
+		'f': "999999",
 		'H': "15",
 		'I': "03",
-		'p': "PM",
+		'j': "__2",
+		'm': "01",
 		'M': "04",
+		'p': "PM",
 		'S': "05",
-		'f': "999999",
+		'y': "06",
+		'Y': "2006",
 		'z': "-0700",
 		'Z': "MST",
 	}
