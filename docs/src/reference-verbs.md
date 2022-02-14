@@ -235,7 +235,7 @@ green  0.5129018241860459  1075
 
 ## cat
 
-Most useful for format conversions (see [File Formats](file-formats.md), and concatenating multiple same-schema CSV files to have the same header:
+Most useful for format conversions (see [File Formats](file-formats.md)) and concatenating multiple same-schema CSV files to have the same header:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr cat -h</b>
