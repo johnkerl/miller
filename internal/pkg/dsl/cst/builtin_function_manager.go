@@ -1451,9 +1451,9 @@ Note that NaN has the property that NaN != NaN, so you need 'is_nan(x)' rather t
 		},
 
 		{
-			name:  "fmtifnum",
-			class: FUNC_CLASS_CONVERSION,
-			help: `Identical to fmtnum, except returns the first argument as-is if the output would be an error.`,
+			name:       "fmtifnum",
+			class:      FUNC_CLASS_CONVERSION,
+			help:       `Identical to fmtnum, except returns the first argument as-is if the output would be an error.`,
 			binaryFunc: bifs.BIF_fmtifnum,
 		},
 

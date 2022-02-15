@@ -463,14 +463,50 @@ var fmtnum_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 }
 
 func BIF_fmtnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
+	if input1.IsArray() {
+		inputArray := input1.GetArray()
+		lib.InternalCodingErrorIf(inputArray == nil)
+		outputArray := make([]*mlrval.Mlrval, len(inputArray))
+		for i := range inputArray {
+			outputArray[i] = BIF_fmtnum(inputArray[i], input2)
+		}
+		return mlrval.FromArray(outputArray)
+	} else if input1.IsMap() {
+		inputMap := input1.GetMap()
+		lib.InternalCodingErrorIf(inputMap == nil)
+		outputMap := mlrval.NewMlrmap()
+		for pe := inputMap.Head; pe != nil; pe = pe.Next {
+			outputMap.PutReference(pe.Key, BIF_fmtnum(pe.Value, input2))
+		}
+		return mlrval.FromMap(outputMap)
+	} else {
+		return fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
+	}
 }
 
 func BIF_fmtifnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	output := fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
-	if output.IsError() {
-		return input1
+	if input1.IsArray() {
+		inputArray := input1.GetArray()
+		lib.InternalCodingErrorIf(inputArray == nil)
+		outputArray := make([]*mlrval.Mlrval, len(inputArray))
+		for i := range inputArray {
+			outputArray[i] = BIF_fmtifnum(inputArray[i], input2)
+		}
+		return mlrval.FromArray(outputArray)
+	} else if input1.IsMap() {
+		inputMap := input1.GetMap()
+		lib.InternalCodingErrorIf(inputMap == nil)
+		outputMap := mlrval.NewMlrmap()
+		for pe := inputMap.Head; pe != nil; pe = pe.Next {
+			outputMap.PutReference(pe.Key, BIF_fmtifnum(pe.Value, input2))
+		}
+		return mlrval.FromMap(outputMap)
 	} else {
-		return output
+		output := fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
+		if output.IsError() {
+			return input1
+		} else {
+			return output
+		}
 	}
 }
