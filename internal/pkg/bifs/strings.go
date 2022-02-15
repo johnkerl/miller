@@ -463,5 +463,22 @@ var fmtnum_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 }
 
 func BIF_fmtnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
+	if input1.IsArray() || input1.IsMap() {
+		return recuriseBinaryFuncOnInput1(BIF_fmtnum, input1, input2)
+	} else {
+		return fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
+	}
+}
+
+func BIF_fmtifnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.IsArray() || input1.IsMap() {
+		return recuriseBinaryFuncOnInput1(BIF_fmtifnum, input1, input2)
+	} else {
+		output := fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
+		if output.IsError() {
+			return input1
+		} else {
+			return output
+		}
+	}
 }

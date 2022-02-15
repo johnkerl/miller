@@ -206,11 +206,11 @@ FUNCTION LIST
        asserting_not_map asserting_not_null asserting_null asserting_numeric
        asserting_present asserting_string atan atan2 atanh bitcount boolean
        capitalize cbrt ceil clean_whitespace collapse_whitespace concat cos cosh
-       depth dhms2fsec dhms2sec erf erfc every exp expm1 flatten float floor fmtnum
-       fold format fsec2dhms fsec2hms get_keys get_values gmt2localtime gmt2sec gsub
-       haskey hexfmt hms2fsec hms2sec hostname int invqnorm is_absent is_array
-       is_bool is_boolean is_empty is_empty_map is_error is_float is_int is_map
-       is_nan is_nonempty_map is_not_array is_not_empty is_not_map is_not_null
+       depth dhms2fsec dhms2sec erf erfc every exp expm1 flatten float floor fmtifnum
+       fmtnum fold format fsec2dhms fsec2hms get_keys get_values gmt2localtime
+       gmt2sec gsub haskey hexfmt hms2fsec hms2sec hostname int invqnorm is_absent
+       is_array is_bool is_boolean is_empty is_empty_map is_error is_float is_int
+       is_map is_nan is_nonempty_map is_not_array is_not_empty is_not_map is_not_null
        is_null is_numeric is_present is_string joink joinkv joinv json_parse
        json_stringify leafcount length localtime2gmt localtime2sec log log10 log1p
        logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5 mexp min mmul
@@ -2189,8 +2189,15 @@ FUNCTIONS FOR FILTER/PUT
    floor
         (class=math #args=1) Floor: nearest integer at or below.
 
+   fmtifnum
+        (class=conversion #args=2) Identical to fmtnum, except returns the first argument as-is if the output would be an error.
+       Example:
+       $* = fmtifnum($*, "%.6f")
+
    fmtnum
-        (class=conversion #args=2) Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'.
+        (class=conversion #args=2) Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'. This function recurses on array and map values.
+       Example:
+       $x = fmtifnum($x, "%.6f")
 
    fold
         (class=higher-order-functions #args=3) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is taken from the third argument.
@@ -3174,5 +3181,5 @@ SEE ALSO
 
 
 
-                                  2022-02-08                         MILLER(1)
+                                  2022-02-15                         MILLER(1)
 </pre>

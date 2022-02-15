@@ -48,6 +48,7 @@
 package bifs
 
 import (
+	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
@@ -199,4 +200,28 @@ func _same(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // For the disposition-matrix entries behind the spaceship operator
 func _more(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(1)
+}
+
+// recuriseBinaryFuncOnInput1 is for fmtifnum and other functions which apply themselves recursively
+// on array/map inputs.
+func recuriseBinaryFuncOnInput1(binaryFunc BinaryFunc, input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.IsArray() {
+		inputArray := input1.GetArray()
+		lib.InternalCodingErrorIf(inputArray == nil)
+		outputArray := make([]*mlrval.Mlrval, len(inputArray))
+		for i := range inputArray {
+			outputArray[i] = binaryFunc(inputArray[i], input2)
+		}
+		return mlrval.FromArray(outputArray)
+	} else if input1.IsMap() {
+		inputMap := input1.GetMap()
+		lib.InternalCodingErrorIf(inputMap == nil)
+		outputMap := mlrval.NewMlrmap()
+		for pe := inputMap.Head; pe != nil; pe = pe.Next {
+			outputMap.PutReference(pe.Key, binaryFunc(pe.Value, input2))
+		}
+		return mlrval.FromMap(outputMap)
+	} else {
+		return fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
+	}
 }

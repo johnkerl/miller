@@ -1,5 +1,4 @@
 =============================================================== RELEASES
-
 * plan 6.1.0
   ? strptime/882
     m strptime/strftime tabulate options
@@ -8,6 +7,14 @@
     ? port mlr5 c -> go?
   ? unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
   ? mlr join --left-fields a,b,c
+  o fmtifnum, & recursive fmtnum/fmtifnum
+    k fmtifnum olh artifacts
+    k both: array/map code
+    k both: array/map olh artifacts
+    - fmtifnum UT cases
+    - both: array/map UT cases
+    - after UT: try a closure/curry on input2
+    - hexfmt also recursive
   o fmt/unfmt/regex doc
   o FAQ/examples reorg
   k unicode string literals

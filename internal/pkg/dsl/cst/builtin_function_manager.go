@@ -1446,8 +1446,21 @@ Note that NaN has the property that NaN != NaN, so you need 'is_nan(x)' rather t
 			name:  "fmtnum",
 			class: FUNC_CLASS_CONVERSION,
 			help: `Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g.
-'$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'.`,
+'$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'. This function recurses on array and map values.`,
 			binaryFunc: bifs.BIF_fmtnum,
+			examples: []string{
+				`$x = fmtifnum($x, "%.6f")`,
+			},
+		},
+
+		{
+			name:       "fmtifnum",
+			class:      FUNC_CLASS_CONVERSION,
+			help:       `Identical to fmtnum, except returns the first argument as-is if the output would be an error.`,
+			binaryFunc: bifs.BIF_fmtifnum,
+			examples: []string{
+				`$* = fmtifnum($*, "%.6f")`,
+			},
 		},
 
 		{
