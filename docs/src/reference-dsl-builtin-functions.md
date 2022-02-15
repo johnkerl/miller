@@ -491,12 +491,16 @@ float  (class=conversion #args=1) Convert int/float/bool/string to float.
 ### fmtifnum
 <pre class="pre-non-highlight-non-pair">
 fmtifnum  (class=conversion #args=2) Identical to fmtnum, except returns the first argument as-is if the output would be an error.
+Example:
+$* = fmtifnum($*, "%.6f")
 </pre>
 
 
 ### fmtnum
 <pre class="pre-non-highlight-non-pair">
-fmtnum  (class=conversion #args=2) Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'.
+fmtnum  (class=conversion #args=2) Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'. This function recurses on array and map values.
+Example:
+$x = fmtifnum($x, "%.6f")
 </pre>
 
 

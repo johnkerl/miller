@@ -3013,6 +3013,8 @@ flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
 .\}
 .nf
  (class=conversion #args=2) Identical to fmtnum, except returns the first argument as-is if the output would be an error.
+Example:
+$* = fmtifnum($*, "%.6f")
 .fi
 .if n \{\
 .RE
@@ -3021,7 +3023,9 @@ flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
 .RS 0
 .\}
 .nf
- (class=conversion #args=2) Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'.
+ (class=conversion #args=2) Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'. This function recurses on array and map values.
+Example:
+$x = fmtifnum($x, "%.6f")
 .fi
 .if n \{\
 .RE
