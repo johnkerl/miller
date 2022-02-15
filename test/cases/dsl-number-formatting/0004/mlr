@@ -1,0 +1,3 @@
+$a = fmtifnum($a, "%8.3e");
+$x = fmtifnum($x, "%8.3e");
+
