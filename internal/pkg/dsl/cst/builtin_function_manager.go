@@ -1451,6 +1451,13 @@ Note that NaN has the property that NaN != NaN, so you need 'is_nan(x)' rather t
 		},
 
 		{
+			name:  "fmtifnum",
+			class: FUNC_CLASS_CONVERSION,
+			help: `Identical to fmtnum, except returns the first argument as-is if the output would be an error.`,
+			binaryFunc: bifs.BIF_fmtifnum,
+		},
+
+		{
 			name:      "hexfmt",
 			class:     FUNC_CLASS_CONVERSION,
 			help:      `Convert int to hex string, e.g. 255 to "0xff".`,

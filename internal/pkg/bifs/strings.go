@@ -465,3 +465,12 @@ var fmtnum_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 func BIF_fmtnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
+
+func BIF_fmtifnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	output := fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
+	if output.IsError() {
+		return input1
+	} else {
+		return output
+	}
+}
