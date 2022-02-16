@@ -263,6 +263,7 @@ IFS and IPS can be regular expressions now. Please see the section on [multi-cha
 * With `--ojson`, output records are written multiline (pretty-printed), with outermost `[...]`.
 * With `--ojsonl`, output records are written single-line, without outermost `[...]`.
 * This makes `--jvstack` and `--jlistwrap` unnecessary. However, if you want outermost `[...]` with single-line records, you can use `--ojson --no-jvstack`.
+* Miller 5 tolerated trailing commas, which are not compliant with the JSON specification: for example, `{"x":1,"y":2,}`. Miller 6 uses a JSON parser which is compliant with the JSON specification and does not accept trailing commas.
 
 ### Type-inference
 
