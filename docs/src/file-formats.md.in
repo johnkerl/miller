@@ -317,7 +317,7 @@ GENMD-EOF
 While you can do format conversion using `mlr --icsv --ojson cat myfile.csv`, there are also keystroke-savers for this purpose, such as `mlr --c2j cat myfile.csv`.  For a complete list:
 
 GENMD-RUN-COMMAND
-mlr help format-conversion
+mlr help format-conversion-keystroke-saver-flags
 GENMD-EOF
 
 ## Comments in data
@@ -325,7 +325,7 @@ GENMD-EOF
 You can include comments within your data files, and either have them ignored, or passed directly through to the standard output as soon as they are encountered:
 
 GENMD-RUN-COMMAND
-mlr help comments-in-data
+mlr help comments-in-data-flags
 GENMD-EOF
 
 Examples:

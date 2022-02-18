@@ -48,7 +48,7 @@ much data as needed.  For example, the [`sort`](reference-verbs.md#sort) and
 before emitting any -- the last input record may well end up being the first
 one to be emitted.
 
-[`stats1`](reference-verbs.md#stats1) Other verbs, such as
+Other verbs, such as
 [`tail`](reference-verbs.md#tail) and [`top`](reference-verbs.md#top), need to
 retain only a fixed number of records -- 10, perhaps, even if the input data
 has a million records.

@@ -56,7 +56,7 @@ GENMD-EOF
 
 Iterate over data using DSL expressions:
 
-GENMD-CARDIFY-HIGHLIGHT-ONE
+GENMD-CARDIFY-HIGHLIGHT-ALL
 mlr --from estimates.tbl put '
   for (k,v in $*) {
     if (is_numeric(v) && k =~ "^[t-z].*$") {
