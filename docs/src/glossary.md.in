@@ -347,7 +347,7 @@ and the [Miller CSV section](file-formats.md#csvtsvasvusvetc).
 
 ## heterogeneity
 
-Referring to data where NOT all records have the same keys, in the same order.  See the
+Referring to data where not all records have the same keys, in the same order.  See the
 [record-heterogeneity page](record-heterogeneity.md#ragged-data).
 
 ## higher-order function
