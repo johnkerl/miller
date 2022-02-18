@@ -300,7 +300,7 @@ num_total=5,num_positive=3
 
 ## Local variables
 
-Local variables are similar to out-of-stream variables, except that their extent is limited to the expressions in which they appear (and their basenames can't be computed using square brackets). There are three kinds of local variables: **arguments** to functions/subroutines, **variables bound within for-loops**, and **locals** defined within control blocks. They may be untyped using `var`, or typed using `num`, `int`, `float`, `str`, `bool`, and `map`.
+Local variables are similar to out-of-stream variables, except that their extent is limited to the expressions in which they appear (and their basenames can't be computed using square brackets). There are three kinds of local variables: **arguments** to functions/subroutines, **variables bound within for-loops**, and **locals** defined within control blocks. They may be untyped using `var`, or typed using `num`, `int`, `float`, `str`, `bool`, `arr`, and `map`.
 
 For example:
 
@@ -351,7 +351,7 @@ Things which are completely unsurprising, resembling many other languages:
 
 Things which are perhaps surprising compared to other languages:
 
-* Type declarations using `var`, or typed using `num`, `int`, `float`, `str`, and `bool` are not necessary to declare local variables.  Function arguments and variables bound in for-loops over stream records and out-of-stream variables are *implicitly* declared using `var`. (Some examples are shown below.)
+* Type declarations using `var`, or typed using `num`, `int`, `float`, `str`, `arr`, and `bool` are not necessary to declare local variables.  Function arguments and variables bound in for-loops over stream records and out-of-stream variables are *implicitly* declared using `var`. (Some examples are shown below.)
 
 * Type-checking is done at assignment time. For example, `float f = 0` is an error (since `0` is an integer), as is `float f = 0.0; f = 1`. For this reason I prefer to use `num` over `float` in most contexts since `num` encompasses integer and floating-point values. More information is at [Type-checking](reference-dsl-variables.md#type-checking).
 
@@ -697,7 +697,7 @@ See [Data-cleaning Examples](data-cleaning-examples.md) for examples of how to u
 
 ### Type-declarations for local variables, function parameter, and function return values
 
-Local variables can be defined either untyped as in `x = 1`, or typed as in `int x = 1`. Types include **var** (explicitly untyped), **int**, **float**, **num** (int or float), **str**, **bool**, and **map**. These optional type declarations are enforced at the time values are assigned to variables: whether at the initial value assignment as in `int x = 1` or in any subsequent assignments to the same variable farther down in the scope.
+Local variables can be defined either untyped as in `x = 1`, or typed as in `int x = 1`. Types include **var** (explicitly untyped), **int**, **float**, **num** (int or float), **str**, **bool**, **arr**, and **map**. These optional type declarations are enforced at the time values are assigned to variables: whether at the initial value assignment as in `int x = 1` or in any subsequent assignments to the same variable farther down in the scope.
 
 The reason for `num` is that `int` and `float` typedecls are very precise:
 
@@ -936,8 +936,8 @@ in curly braces.
 dump: prints all currently defined out-of-stream variables immediately
 to stdout as JSON.
 
-With >, >>, or |, the data do not become part of the output record stream but
-are instead redirected.
+With >, >>, or |, the data do not go directly to stdout but are instead
+redirected.
 
 The > and >> are for write and append, as in the shell, but (as with awk) the
 file-overwrite for > is on first write, not per record. The | is for piping to
@@ -1232,4 +1232,3 @@ ORS: evaluates to the output record separator from the command line,
 or to LF or CRLF from the input data if in autodetect mode (which is
 the default).
 </pre>
-

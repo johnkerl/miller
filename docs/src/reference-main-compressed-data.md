@@ -98,7 +98,7 @@ allowed as they could be used for unexpected code execution. You can use
 
 Note that this feature is quite general and is not limited to decompression
 utilities. You can use it to apply per-file filters of your choice: e.g. `mlr
---prepipe head -n 10 ...`, if you like.
+--prepipe 'head -n 10' ...`, if you like.
 
 There is a `--prepipe` and a `--prepipex`:
 

@@ -94,7 +94,7 @@ a,b,c
 This example is still homogeneous, though: every row has the same keys, in the same order: `a,b,c`.
 Empty values don't make the data heterogeneous.
 
-Note however that we can use the [`fill-down`](reference-verbs.md#fill-empty) verb to make these
+Note however that we can use the [`fill-empty`](reference-verbs.md#fill-empty) verb to make these
 values non-empty, if we like:
 
 <pre class="pre-highlight-in-pair">
@@ -121,7 +121,7 @@ a,b,c
 7,8,9,10
 </pre>
 
-If you `mlr csv cat` this, you'll get an error message:
+If you `mlr --csv cat` this, you'll get an error message:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --csv cat data/het/ragged.csv</b>

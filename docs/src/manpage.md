@@ -2222,7 +2222,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=collections #args=1) Returns array of keys of map or array
 
    get_values
-        (class=collections #args=1) Returns array of keys of map or array -- in the latter case, returns a copy of the array
+        (class=collections #args=1) Returns array of values of map or array -- in the latter case, returns a copy of the array
 
    gmt2localtime
         (class=time #args=1,2) Convert from a GMT-time string to a local-time string. Consulting $TZ unless second argument is supplied.
@@ -2825,8 +2825,8 @@ KEYWORDS FOR PUT AND FILTER
        dump: prints all currently defined out-of-stream variables immediately
        to stdout as JSON.
 
-       With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
-       are instead redirected.
+       With &gt;, &gt;&gt;, or |, the data do not go directly to stdout but are instead
+       redirected.
 
        The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
        file-overwrite for &gt; is on first write, not per record. The | is for piping to
@@ -3181,5 +3181,5 @@ SEE ALSO
 
 
 
-                                  2022-02-15                         MILLER(1)
+                                  2022-02-18                         MILLER(1)
 </pre>

@@ -141,7 +141,7 @@ _delimiter_ can be used as a synonym for [_separator_](#separator).
 
 ## division
 
-Miller uses [pythonic division](http://127.0.0.1:8000/reference-main-arithmetic.md#pythonic-division)
+Miller uses [pythonic division](reference-main-arithmetic.md#pythonic-division)
 for quotients of integers, with the exception that integer divided by integer
 is integer (not float) if the quotient can be represented exactly as an
 integer.
@@ -212,7 +212,8 @@ See also the [emit-statements section](reference-dsl-output-statements.md#emit-s
 ## empty
 
 Refers to the string with zero characters. For example, in a CSV file with [header line](#header)
-`a,b,c` and data
+`a,b,c` and data `,,` the three fields are empty; with data `1,2,` the first two fields (`a` and `b`)
+are not empty and the third field `c` is empty.
 
 ## end
 
@@ -240,7 +241,7 @@ Same as [`printn`](#printn), except it prints to [stderr](#stderr) rather than [
 ## false
 
 A [keyword](#keyword) in the [Miller programming language](miller-programming-language.md) for the
-boolean literal; signified by `true` in Python; in some languages (such as C)
+boolean literal; signified by `False` in Python; in some languages (such as C)
 signified by the zero integer value.
 
 ## field
@@ -335,7 +336,7 @@ to write your own functions.
 
 ## function literal
 
-A function without a name, like `func(a,b) { return a + 2*b + 7}`, assigned to
+A function without a name, like `func(a,b) {return a + 2*b + 7}`, assigned to
 a local variable or passed to a [higher-order
 function](reference-dsl-higher-order-functions.md) like `apply` or `sort`.  See
 the [section on function literals](reference-dsl-user-defined-functions.md#function-literals).
@@ -343,7 +344,7 @@ the [section on function literals](reference-dsl-user-defined-functions.md#funct
 ## GZIP / .gz
 
 A [data-compression format supported by Miller](reference-main-compressed-data.md).
-Files compressed using GZIP compression normally end in`.gz`.
+Files compressed using GZIP compression normally end in `.gz`.
 
 ## hashmap
 
@@ -362,8 +363,8 @@ and the [Miller CSV section](file-formats.md#csvtsvasvusvetc).
 
 ## heterogeneity
 
-Referring to data where all records have the same keys, in the same order.  See the
-[record-heterogeneity page](record-heterogeneity.md#homogeneousrectangular-data).
+Referring to data where not all records have the same keys, in the same order.  See the
+[record-heterogeneity page](record-heterogeneity.md#ragged-data).
 
 ## higher-order function
 
@@ -371,6 +372,11 @@ A function which takes another function as an argument, such as
 [`select`](reference-dsl-builtin-functions.md#select) or
 [`apply`](reference-dsl-builtin-functions.md#apply). See the [page on
 higher-order functions](reference-dsl-higher-order-functions.md).
+
+## homogeneity
+
+Referring to data where all records have the same keys, in the same order.  See the
+[record-heterogeneity page](record-heterogeneity.md#homogeneousrectangular-data).
 
 ## if
 
@@ -647,7 +653,7 @@ See also the [Miller command structure page](reference-main-overview.md).
 ## rectangular
 
 Referring to data where all records have the same keys, in the same order. Synonymous
-with [heterogeneous](#heterogeneity).  See the
+with [homogeneous](#homogeneity).  See the
 [record-heterogeneity page](record-heterogeneity.md#homogeneousrectangular-data).
 
 ## REPL
@@ -694,14 +700,14 @@ page](record-heterogeneity.md#sparse-data).
 
 A [keyword](#keyword) in the
 [Miller programming language](miller-programming-language.md)
-for [print, dump, and tee statements](http://127.0.0.1:8000/reference-dsl-output-statements.md#tee-statements)
-indicating that data are to be sent to the [_standard output_](https://en.wikipedia.org/wiki/Standard_streams#Standard_output_(stderr)).
+for [print, dump, and tee statements](reference-dsl-output-statements.md#tee-statements)
+indicating that data are to be sent to the [_standard error_](https://en.wikipedia.org/wiki/Standard_streams#Standard_error_(stderr)).
 
 ## stdout
 
 A [keyword](#keyword) in the
 [Miller programming language](miller-programming-language.md)
-for [print, dump, and tee statements](http://127.0.0.1:8000/reference-dsl-output-statements.md#tee-statements)
+for [print, dump, and tee statements](reference-dsl-output-statements.md#tee-statements)
 indicating that data are to be sent to the [_standard output_](https://en.wikipedia.org/wiki/Standard_streams#Standard_output_(stdout)).
 
 ## str

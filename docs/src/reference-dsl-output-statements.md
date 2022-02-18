@@ -20,13 +20,13 @@ You can **output** variable-values or expressions in **five ways**:
 
 * **Assign** them to stream-record fields. For example, `$cumulative_sum = @sum`. For another example, `$nr = NR` adds a field named `nr` to each output record, containing the value of the built-in variable `NR` as of when that record was ingested.
 
+* Use **emit1**/**emit**/**emitp**/**emitf** to send out-of-stream variables' current values to the output record stream, e.g.  `@sum += $x; emit1 @sum` which produces an extra record such as `sum=3.1648382`. These records, just like records from input file(s), participate in downstream [then-chaining](reference-main-then-chaining.md) to other verbs.
+
 * Use the **print** or **eprint** keywords which immediately print an expression *directly to standard output or standard error*, respectively. Note that `dump`, `edump`, `print`, and `eprint` don't output records which participate in `then`-chaining; rather, they're just immediate prints to stdout/stderr. The `printn` and `eprintn` keywords are the same except that they don't print final newlines. Additionally, you can print to a specified file instead of stdout/stderr.
 
 * Use the **dump** or **edump** keywords, which *immediately print all out-of-stream variables as a JSON data structure to the standard output or standard error* (respectively).
 
 * Use **tee** which formats the current stream record (not just an arbitrary string as with **print**) to a specific file.
-
-* Use **emit1**/**emit**/**emitp**/**emitf** to send out-of-stream variables' current values to the output record stream, e.g.  `@sum += $x; emit1 @sum` which produces an extra record such as `sum=3.1648382`. These records, just like records from input file(s), participate in downstream [then-chaining](reference-main-then-chaining.md) to other verbs.
 
 For the first two options you are populating the output-records stream which feeds into the next verb in a `then`-chain (if any), or which otherwise is formatted for output using `--o...` flags.
 
@@ -167,8 +167,8 @@ print: prints expression immediately to stdout.
 dump: prints all currently defined out-of-stream variables immediately
 to stdout as JSON.
 
-With >, >>, or |, the data do not become part of the output record stream but
-are instead redirected.
+With >, >>, or |, the data do not go directly to stdout but are instead
+redirected.
 
 The > and >> are for write and append, as in the shell, but (as with awk) the
 file-overwrite for > is on first write, not per record. The | is for piping to
@@ -763,4 +763,3 @@ eks wye 0.381399 1
 wye wye 0.204603 1
 wye pan 0.573288 1
 </pre>
-

@@ -74,7 +74,6 @@ def dkvpline2map(line, ips, ifs):
 # ----------------------------------------------------------------
 # ops and ofs (output pair separator and output field separator) are nominally '=' and ','.
 def map2dkvpline(map , ops, ofs):
-	line = ''
 	pairs = []
 	for key in map:
 		pairs.append(str(key) + ops + str(map[key]))

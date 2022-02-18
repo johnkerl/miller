@@ -580,7 +580,7 @@ alpha,5;2;8;6;1;4;9;10;3;7
 </pre>
 
 In the following example we sort data in several ways -- the first two just
-recaptiulate (for reference) what `sort` with default flags already does; the third is novel:
+recapitulate (for reference) what `sort` with default flags already does; the third is novel:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson --from data/sortaf-example.csv put '</b>

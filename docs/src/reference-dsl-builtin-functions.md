@@ -408,7 +408,7 @@ get_keys  (class=collections #args=1) Returns array of keys of map or array
 
 ### get_values
 <pre class="pre-non-highlight-non-pair">
-get_values  (class=collections #args=1) Returns array of keys of map or array -- in the latter case, returns a copy of the array
+get_values  (class=collections #args=1) Returns array of values of map or array -- in the latter case, returns a copy of the array
 </pre>
 
 

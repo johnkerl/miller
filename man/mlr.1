@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2022-02-15
+.\"      Date: 2022-02-18
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2022-02-15" "\ \&" "\ \&"
+.TH "MILLER" "1" "2022-02-18" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3086,7 +3086,7 @@ format("{}:{}:{}", 1,2,3,4) gives "1:2:3".
 .RS 0
 .\}
 .nf
- (class=collections #args=1) Returns array of keys of map or array -- in the latter case, returns a copy of the array
+ (class=collections #args=1) Returns array of values of map or array -- in the latter case, returns a copy of the array
 .fi
 .if n \{\
 .RE
@@ -4645,8 +4645,8 @@ in curly braces.
 dump: prints all currently defined out-of-stream variables immediately
 to stdout as JSON.
 
-With >, >>, or |, the data do not become part of the output record stream but
-are instead redirected.
+With >, >>, or |, the data do not go directly to stdout but are instead
+redirected.
 
 The > and >> are for write and append, as in the shell, but (as with awk) the
 file-overwrite for > is on first write, not per record. The | is for piping to

@@ -72,17 +72,15 @@ Aggregate custom per-column statistics:
 
 Iterate over data using DSL expressions:
 
-<pre class="pre-highlight-in-pair">
+<pre class="pre-highlight-non-pair">
 <b>mlr --from estimates.tbl put '</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-  for (k,v in $*) {
-    if (is_numeric(v) && k =~ "^[t-z].*$") {
-      $sum += v; $count += 1
-    }
-  }
-  $mean = $sum / $count # no assignment if count unset
-'
+<b>  for (k,v in $*) {</b>
+<b>    if (is_numeric(v) && k =~ "^[t-z].*$") {</b>
+<b>      $sum += v; $count += 1</b>
+<b>    }</b>
+<b>  }</b>
+<b>  $mean = $sum / $count # no assignment if count unset</b>
+<b>'</b>
 </pre>
 
 Run DSL expressions from a script file:

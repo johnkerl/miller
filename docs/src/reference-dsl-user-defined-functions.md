@@ -131,7 +131,7 @@ the role of subroutine quite well.
 
 If you have a file with UDFs you use frequently, say `my-udfs.mlr`, you can use
 `--load` or `--mload` to define them for your Miller scripts. For example, in
-your shell, 
+your shell,
 
 <pre class="pre-highlight-non-pair">
 <b>alias mlr='mlr --load ~/my-functions.mlr'</b>
@@ -147,7 +147,7 @@ See the [miscellaneous-flags page](reference-main-flag-list.md#miscellaneous-fla
 
 ## Function literals
 
-You can define unmnamed functions and assign the to variables, or pass them to functions.
+You can define unnamed functions and assign them to variables, or pass them to functions.
 
 See also the [page on higher-order functions](reference-dsl-higher-order-functions.md)
 for more information on
