@@ -50,7 +50,7 @@ GENMD-EOF
 This example is still homogeneous, though: every row has the same keys, in the same order: `a,b,c`.
 Empty values don't make the data heterogeneous.
 
-Note however that we can use the [`fill-down`](reference-verbs.md#fill-empty) verb to make these
+Note however that we can use the [`fill-empty`](reference-verbs.md#fill-empty) verb to make these
 values non-empty, if we like:
 
 GENMD-RUN-COMMAND
@@ -65,7 +65,7 @@ GENMD-RUN-COMMAND
 cat data/het/ragged.csv
 GENMD-EOF
 
-If you `mlr csv cat` this, you'll get an error message:
+If you `mlr --csv cat` this, you'll get an error message:
 
 GENMD-RUN-COMMAND-TOLERATING-ERROR
 mlr --csv cat data/het/ragged.csv

@@ -182,8 +182,8 @@ func dumpKeywordUsage() {
 		`prints all currently defined out-of-stream variables immediately
 to stdout as JSON.
 
-With >, >>, or |, the data do not become part of the output record stream but
-are instead redirected.
+With >, >>, or |, the data do not go directly to stdout but are instead
+redirected.
 
 The > and >> are for write and append, as in the shell, but (as with awk) the
 file-overwrite for > is on first write, not per record. The | is for piping to

@@ -37,6 +37,10 @@ def main
         lines = read_until_genmd_eof(input_handle)
         write_card([], lines, output_handle)
 
+      elsif content_line =~ /^GENMD-CARDIFY-HIGHLIGHT-ALL$/
+        lines = read_until_genmd_eof(input_handle)
+        write_card(lines, [], output_handle)
+
       elsif content_line =~ /^GENMD-CARDIFY-HIGHLIGHT-ONE$/
         lines = read_until_genmd_eof(input_handle)
         line1 = lines.shift

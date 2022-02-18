@@ -35,8 +35,6 @@ Any of the output-format command-line flags (see mlr -h). Example: using
   mlr --icsv --opprint put '...' then tee --ojson ./mytap.dat then stats1 ...
 the input is CSV, the output is pretty-print tabular, but the tee-file output
 is written in JSON format.
-
--h|--help Show this message.
 `)
 	if doExit {
 		os.Exit(exitCode)

@@ -1666,7 +1666,7 @@ information.`,
 		{
 			name:      "get_values",
 			class:     FUNC_CLASS_COLLECTIONS,
-			help:      "Returns array of keys of map or array -- in the latter case, returns a copy of the array",
+			help:      "Returns array of values of map or array -- in the latter case, returns a copy of the array",
 			unaryFunc: bifs.BIF_get_values,
 		},
 

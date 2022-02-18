@@ -24,7 +24,7 @@ GENMD-EOF
 
 ## The format-values verb
 
-To separately specify formatting for string, int, and float fields, you can use
+To separately specify formatting for string, int and float fields, you can use
 the [`format-values`](reference-verbs.md#format-values) verb -- see that section for examples.
 
 ## The fmtnum and hexfmt functions

@@ -39,7 +39,7 @@ for information on how to examine operator precedence interactively.
 
 * The [`min`](reference-dsl-builtin-functions.md#min) and [`max`](reference-dsl-builtin-functions.md#max) functions are different from other multi-argument functions which return null if any of their inputs are null: for [`min`](reference-dsl-builtin-functions.md#min) and [`max`](reference-dsl-builtin-functions.md#max), by contrast, if one argument is absent-null, the other is returned. Empty-null loses min or max against numeric or boolean; empty-null is less than any other string.
 
-* Symmetrically with respect to the bitwise OR, XOR, and AND operators
+* Symmetrically with respect to the bitwise OR, AND and XOR operators
 [`|`](reference-dsl-builtin-functions.md#bitwise-or),
 [`&`](reference-dsl-builtin-functions.md#bitwise-and), and
 [`^`](reference-dsl-builtin-functions.md#bitwise-xor), Miller has logical operators

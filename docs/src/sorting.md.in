@@ -290,7 +290,7 @@ cat data/sortaf-example.csv
 GENMD-EOF
 
 In the following example we sort data in several ways -- the first two just
-recaptiulate (for reference) what `sort` with default flags already does; the third is novel:
+recapitulate (for reference) what `sort` with default flags already does; the third is novel:
 
 GENMD-RUN-COMMAND
 mlr --icsv --ojson --from data/sortaf-example.csv put '
