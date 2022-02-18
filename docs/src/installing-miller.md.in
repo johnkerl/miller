@@ -28,8 +28,10 @@ mlr --version
 mlr 6.0.0
 GENMD-EOF
 
-If your Miller version is not 6 or above, please see the [release docs
-page](release-docs.md) to find the documentation for your version.
+A note on documentation:
+
+* If you downloaded the Miller binary from a tagged release, or installed it using a package manager, you should see a version like `mlr 6.0.0` or `mlr 5.10.3` -- please see the [release docs page](release-docs.md) to find the documentation for your version.
+* If you installed from source or using a recent build artifact from GitHub Actions, you should see a version like `mlr 6.0.0-dev` -- [https://miller.readthedocs.io](https://miller.readthedocs.io) is the correct reference, since it contains information for the latest contributions to the [Miller repository](https://github.com/johnkerl/miller).
 
 As a second check, given [example.csv](./example.csv) you should be able to do
 
