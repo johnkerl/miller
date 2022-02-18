@@ -40,6 +40,7 @@
 
 ## Notes
 
+* Miller documents use the Oxford comma: not _red, yellow and green_, but rather _red, yellow, and green_.
 * CSS:
   * I used the Mkdocs "material" theme which I like a lot. I customized `docs/src/extra.css` for Miller coloring/branding.
 * Live code:

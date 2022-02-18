@@ -125,4 +125,4 @@ git push -u origin miller-6.1.0
 
 ## Misc. development notes
 
-I use terminal width 120 and tabwidth 4.
+I use terminal width 120 and tabwidth 4. Miller documents use the Oxford comma: not _red, yellow and green_, but rather _red, yellow, and green_.
