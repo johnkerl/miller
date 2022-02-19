@@ -11,8 +11,6 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/dsl/cst"
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
-	"github.com/johnkerl/miller/internal/pkg/parsing/lexer"
-	"github.com/johnkerl/miller/internal/pkg/parsing/parser"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
@@ -463,41 +461,6 @@ func NewTransformerPut(
 		suppressOutputRecord: suppressOutputRecord,
 		executedBeginBlocks:  false,
 	}, nil
-}
-
-func BuildASTFromStringWithMessage(dslString string) (*dsl.AST, error) {
-	astRootNode, err := BuildASTFromString(dslString)
-	if err != nil {
-		// Leave this out until we get better control over the error-messaging.
-		// At present it's overly parser-internal, and confusing. :(
-		// fmt.Fprintln(os.Stderr, err)
-		fmt.Fprintf(os.Stderr, "%s: cannot parse DSL expression.\n",
-			"mlr")
-		fmt.Fprintln(os.Stderr, err)
-		return nil, err
-	} else {
-		return astRootNode, nil
-	}
-}
-
-// xxx note (package cycle) why not a dsl.AST constructor :(
-// xxx maybe split out dsl into two packages ... and/or put the ast.go into miller/parsing -- ?
-//   depends on TBD split-out of AST and CST ...
-func BuildASTFromString(dslString string) (*dsl.AST, error) {
-
-	// xxx make method
-	if strings.HasPrefix(dslString, "'") && strings.HasSuffix(dslString, "'") {
-		dslString = dslString[1 : len(dslString)-1]
-	}
-
-	theLexer := lexer.NewLexer([]byte(dslString))
-	theParser := parser.NewParser()
-	interfaceAST, err := theParser.Parse(theLexer)
-	if err != nil {
-		return nil, err
-	}
-	astRootNode := interfaceAST.(*dsl.AST)
-	return astRootNode, nil
 }
 
 func (tr *TransformerPut) Transform(
