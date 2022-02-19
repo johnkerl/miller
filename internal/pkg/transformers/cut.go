@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/dsl/cst"
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
@@ -69,6 +70,7 @@ func transformerCutParseCLI(
 	doArgOrder := false
 	doComplement := false
 	doRegexes := false
+	doExtended := false // xxx temp/experimental
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
@@ -91,6 +93,9 @@ func transformerCutParseCLI(
 
 		} else if opt == "-x" {
 			doComplement = true
+
+		} else if opt == "-e" {
+			doExtended = true
 
 		} else if opt == "--complement" {
 			doComplement = true
@@ -117,6 +122,7 @@ func transformerCutParseCLI(
 		doArgOrder,
 		doComplement,
 		doRegexes,
+		doExtended,
 	)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -135,6 +141,9 @@ type TransformerCut struct {
 	regexes      []*regexp.Regexp
 
 	recordTransformerFunc RecordTransformerFunc
+
+	// xxx temp/experimental
+	verbFieldAccessors []*cst.VerbFieldAccessor
 }
 
 func NewTransformerCut(
@@ -142,11 +151,23 @@ func NewTransformerCut(
 	doArgOrder bool,
 	doComplement bool,
 	doRegexes bool,
+	doExtended bool,
 ) (*TransformerCut, error) {
 
 	tr := &TransformerCut{}
+	if doExtended {
+		// xxx temp/experimental
+		tr.verbFieldAccessors = make([]*cst.VerbFieldAccessor, len(fieldNames))
+		for i, fieldName := range fieldNames {
+			verbFieldAccessor, err := cst.NewVerbFieldAccessor(fieldName)
+			if err != nil {
+				return nil, err
+			}
+			tr.verbFieldAccessors[i] = verbFieldAccessor
+		}
+			tr.recordTransformerFunc = tr.extended
 
-	if !doRegexes {
+	} else if !doRegexes {
 		tr.fieldNameList = fieldNames
 		tr.fieldNameSet = lib.StringListToSet(fieldNames)
 		if !doComplement {
@@ -158,6 +179,7 @@ func NewTransformerCut(
 		} else {
 			tr.recordTransformerFunc = tr.exclude
 		}
+
 	} else {
 		tr.doComplement = doComplement
 		tr.regexes = make([]*regexp.Regexp, len(fieldNames))
@@ -286,6 +308,31 @@ func (tr *TransformerCut) processWithRegexes(
 			}
 		}
 		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+	} else {
+		outputRecordsAndContexts.PushBack(inrecAndContext)
+	}
+}
+
+// ----------------------------------------------------------------
+// mlr cut -x -f a,b,c
+func (tr *TransformerCut) extended(
+	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
+) {
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
+		outrec := mlrval.NewMlrmap()
+		for _, verbFieldAccessor := range tr.verbFieldAccessors {
+			value := verbFieldAccessor.Get(inrec)
+			if value != nil && !value.IsAbsent() {
+				// TODO: needs a Put too ...
+				outrec.PutReference("temp", value) // inrec will be GC'ed
+			}
+		}
+		outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+		outputRecordsAndContexts.PushBack(outrecAndContext)
 	} else {
 		outputRecordsAndContexts.PushBack(inrecAndContext)
 	}

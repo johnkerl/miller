@@ -1,5 +1,5 @@
-===============================================================
 RELEASES
+
 * plan 6.1.0
   o unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
   o mlr join --left-fields a,b,c

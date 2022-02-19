@@ -482,7 +482,7 @@ func handleSkipOrProcessUntil(repl *Repl, dslString string, processingNotSkippin
 		true, // isReplImmediate
 		repl.doWarnings,
 		false, // warningsAreFatal
-		func(dslString string, astNode *dsl.AST) {
+		func(dslString string, astNode *dsl.AST) error {
 			if repl.astPrintMode == ASTPrintParex {
 				astNode.PrintParex()
 			} else if repl.astPrintMode == ASTPrintParexOneLine {
@@ -490,6 +490,7 @@ func handleSkipOrProcessUntil(repl *Repl, dslString string, processingNotSkippin
 			} else if repl.astPrintMode == ASTPrintIndent {
 				astNode.Print()
 			}
+			return nil
 		},
 	)
 	if err != nil {

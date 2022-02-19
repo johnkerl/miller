@@ -402,7 +402,7 @@ func NewTransformerPut(
 		doWarnings,
 		warningsAreFatal,
 
-		func(dslString string, astNode *dsl.AST) {
+		func(dslString string, astNode *dsl.AST) error {
 
 			if echoDSLString {
 				fmt.Println("DSL EXPRESSION:")
@@ -423,6 +423,7 @@ func NewTransformerPut(
 				fmt.Println()
 			}
 
+			return nil
 		},
 	)
 

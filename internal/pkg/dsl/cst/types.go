@@ -32,6 +32,7 @@ const (
 	DSLInstanceTypePut = iota
 	DSLInstanceTypeFilter
 	DSLInstanceTypeREPL
+	DSLInstanceTypeVerbFieldAccessor
 )
 
 // ----------------------------------------------------------------

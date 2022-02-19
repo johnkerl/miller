@@ -57,7 +57,7 @@ func (root *RootNode) WithRedefinableUDFUDS() *RootNode {
 // ASTBuildVisitorFunc is a callback, used by RootNode's Build method, which
 // CST-builder callsites can use to visit parse-to-AST result of multi-string
 // DSL inputs. Nominal use: mlr put -v, mlr put -d, etc.
-type ASTBuildVisitorFunc func(dslString string, astNode *dsl.AST)
+type ASTBuildVisitorFunc func(dslString string, astNode *dsl.AST) error
 
 // Used by DSL -> AST -> CST callsites including mlr put, mlr filter, and mlr
 // repl. The RootNode must be separately instantiated (e.g. NewEmptyRoot())
@@ -81,7 +81,10 @@ func (root *RootNode) Build(
 
 		// E.g. mlr put -v -- let it print out what it needs to.
 		if astBuildVisitorFunc != nil {
-			astBuildVisitorFunc(dslString, astRootNode)
+			err := astBuildVisitorFunc(dslString, astRootNode)
+			if err != nil {
+				return err
+			}
 		}
 
 		err = root.IngestAST(

@@ -21,6 +21,7 @@ package cst
 import (
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval" // xxx temp
 	"github.com/johnkerl/miller/internal/pkg/runtime"
 )
 
@@ -59,6 +60,11 @@ func (node *BareBooleanStatementNode) Execute(state *runtime.State) (*BlockExitP
 		state.FilterExpression = result
 	}
 	return nil, nil
+}
+
+// xxx temp
+func (node *BareBooleanStatementNode) Evaluate(state *runtime.State) *mlrval.Mlrval {
+	return node.bareBooleanEvaluable.Evaluate(state)
 }
 
 // ----------------------------------------------------------------

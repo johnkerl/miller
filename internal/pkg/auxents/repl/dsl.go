@@ -53,7 +53,7 @@ func (repl *Repl) handleDSLStringAux(
 		isReplImmediate,
 		doWarnings,
 		false, // warningsAreFatal
-		func(dslString string, astNode *dsl.AST) {
+		func(dslString string, astNode *dsl.AST) error {
 			if repl.astPrintMode == ASTPrintParex {
 				astNode.PrintParex()
 			} else if repl.astPrintMode == ASTPrintParexOneLine {
@@ -61,6 +61,7 @@ func (repl *Repl) handleDSLStringAux(
 			} else if repl.astPrintMode == ASTPrintIndent {
 				astNode.Print()
 			}
+			return nil
 		},
 	)
 	if err != nil {
