@@ -1449,7 +1449,7 @@ Note that NaN has the property that NaN != NaN, so you need 'is_nan(x)' rather t
 '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'. This function recurses on array and map values.`,
 			binaryFunc: bifs.BIF_fmtnum,
 			examples: []string{
-				`$x = fmtifnum($x, "%.6f")`,
+				`$x = fmtnum($x, "%.6f")`,
 			},
 		},
 
@@ -1459,7 +1459,9 @@ Note that NaN has the property that NaN != NaN, so you need 'is_nan(x)' rather t
 			help:       `Identical to fmtnum, except returns the first argument as-is if the output would be an error.`,
 			binaryFunc: bifs.BIF_fmtifnum,
 			examples: []string{
-				`$* = fmtifnum($*, "%.6f")`,
+				`fmtifnum(3.4, "%.6f") gives 3.400000"`,
+				`fmtifnum("abc", "%.6f") gives abc"`,
+				`$* = fmtifnum($*, "%.6f") formats numeric fields in the current record, leaving non-numeric ones alone`,
 			},
 		},
 
