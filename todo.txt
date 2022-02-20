@@ -1,7 +1,9 @@
 =============================================================== RELEASES
 * plan 6.1.0
   o strptime/882
+    - UT-per-se cases
     m strptime/strftime tabulate options
+    - UT case for %% matching
     ? https://github.com/bykof/gostradamus
     ? https://golangrepo.com/repo/leekchan-timeutil-go-date-time
     ? port mlr5 c -> go?
