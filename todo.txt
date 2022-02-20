@@ -1,22 +1,19 @@
 =============================================================== RELEASES
 * plan 6.1.0
-  ? strptime/882
+  o strptime/882
     m strptime/strftime tabulate options
     ? https://github.com/bykof/gostradamus
     ? https://golangrepo.com/repo/leekchan-timeutil-go-date-time
     ? port mlr5 c -> go?
-  ? unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
-  ? mlr join --left-fields a,b,c
-  o fmtifnum, & recursive fmtnum/fmtifnum
-    k fmtifnum olh artifacts
-    k both: array/map code
-    k both: array/map olh artifacts
-    - fmtifnum UT cases
-    - both: array/map UT cases
-    - after UT: try a closure/curry on input2
-    - hexfmt also recursive
+  o unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
+
+  o mlr join --left-fields a,b,c
+
+  o several needs-doc issues
   o fmt/unfmt/regex doc
   o FAQ/examples reorg
+
+  k fmtifnum, & recursive fmtnum/fmtifnum
   k unicode string literals
   k natural sort order
   k IANA-TSV w/ \{X}
@@ -31,14 +28,58 @@
   k :rb
   k ?foo and ??foo @ repl help
   k doc-improves
+
 * plan 6.2.0
+  ! extended field accessors for #763 and #948 (positional & json.nested)
+  ! strict mode
+  ! awk-like exit
   ? datediff et al.
+  ? strmatch
   ? rank
   ? YAML
   ? #908 inferencing options
 
 ================================================================
 FEATURES
+
+----------------------------------------------------------------
+EXTENDED FIELD ACCESSORS
+
+* extract/simplify getter logic outside of full CST/runtime/etc
+* sketch out putter ...
+? what does 'cut -f a.b[3]' even mean?
+  o 'cut -xf a.b[3]' is easy enough ...
+  o field name '@graph' is an issue :(
+* maybe ......... not DSL per se but a separate "parser" here
+  o delimiters '[' ']' '.' '{' '}'
+  o $foo
+  o ${foo} -- in case the field name has a . in it or what have you
+  x $["foo"] -- don't support this
+  o $foo.bar -- treat this like $foo["bar"]
+  o $foo["bar"] or foo[1] -- contents just a string or an integer (no expressions supported)
+  o $[[2]] -- contents just an integer (no expressions supported)
+  o $[[[3]]] -- contents just an integer (no expressions supported)
+  o note $foo.bar[[[2]]][[3]] needs to work
+    $foo["bar"]={"a":1,"b":{"x":3},"c":4}
+    $foo["bar"][[[2]]][[1]]  is  "x"
+  o parse as walk-through (with {...} special) until . [] [[]] [[[]]]
+    - example $foo.bar[[[2]]][[3]]
+      L1: $* -> foo
+      L2: -> map-index ["bar"]
+      L3: positional value 2
+      L4: positional name 3
+  o maybe ... eval as simply composition of classes
+    - level 1 mlrmap -> mlrval -- $foo or $[[2]] or $[[[3]]]
+    - level 2+ mlrval -> mlrval -- [], [[]], [[[]]], or .
+* code-comment why special classes & not just DSL
+  o inside [] [[]] [[[]]] are just int/string (maybe slices?); no expressions
+  o no $[...] with strings
+  o no need for runtime.State
+  o move POC from $cst to $mlrval -- ? or maybe its own package?
+* note that '.' is quite fine in CSV files etc -- also maybe in JSON ........
+  ? so, maybe only enable this with mlr -e? also maybe extended/non-extended at each & every verb -- ?!?
+  ? maybe if extended/non-extended is unspecified, default it to on for json/jsonl input & off otherwise -- ?
+* maybe also 'raise' and 'raise_array' verbs (need better names though)
 
 ----------------------------------------------------------------
 TSV etc
