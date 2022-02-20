@@ -2191,13 +2191,15 @@ FUNCTIONS FOR FILTER/PUT
 
    fmtifnum
         (class=conversion #args=2) Identical to fmtnum, except returns the first argument as-is if the output would be an error.
-       Example:
-       $* = fmtifnum($*, "%.6f")
+       Examples:
+       fmtifnum(3.4, "%.6f") gives 3.400000"
+       fmtifnum("abc", "%.6f") gives abc"
+       $* = fmtifnum($*, "%.6f") formats numeric fields in the current record, leaving non-numeric ones alone
 
    fmtnum
         (class=conversion #args=2) Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'. This function recurses on array and map values.
        Example:
-       $x = fmtifnum($x, "%.6f")
+       $x = fmtnum($x, "%.6f")
 
    fold
         (class=higher-order-functions #args=3) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is taken from the third argument.
@@ -3181,5 +3183,5 @@ SEE ALSO
 
 
 
-                                  2022-02-18                         MILLER(1)
+                                  2022-02-20                         MILLER(1)
 </pre>
