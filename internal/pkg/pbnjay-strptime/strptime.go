@@ -98,12 +98,19 @@ func MustParse(value, format string) time.Time {
 }
 
 // Check verifies that format is a fully-supported strptime format string for this implementation.
+// Not used by Miller.
 func Check(format string) error {
 	format = expandShorthands(format)
 
 	parts := strings.Split(format, "%")
 	for _, ps := range parts {
-		// since we split on '%', this is the format code
+		// Since we split on '%', this is the format code
+
+		// This is for "%%"
+		if ps == "" {
+			continue
+		}
+
 		c := int(ps[0])
 		if c == '%' {
 			continue
@@ -156,7 +163,10 @@ func strptime_tz(
 	sii := 0
 
 	partsBetweenPercentSigns := strings.Split(strptime_format, "%")
-	for partsIndex, partBetweenPercentSigns := range partsBetweenPercentSigns {
+	nparts := len(partsBetweenPercentSigns)
+	for partsIndex := 0; partsIndex < nparts; /* increment in loop */ {
+		partBetweenPercentSigns := partsBetweenPercentSigns[partsIndex]
+
 		if _debug {
 			fmt.Printf("\n")
 			fmt.Printf("partsIndex %d:     \"%s\"\n", partsIndex, partBetweenPercentSigns)
@@ -174,20 +184,29 @@ func strptime_tz(
 				return time.Time{}, ErrFormatMismatch
 			}
 			sii += len(partBetweenPercentSigns)
+			partsIndex++
 			continue
 		}
 
 		// Handle %% straight off, as this is a special case.
 		if partBetweenPercentSigns == "" {
-			fmt.Printf("---- sii \"%s\"\n", strptime_input[sii:])
-			fmt.Printf("---- sii \"%s\"\n", strptime_input[sii:sii+1])
+			if _debug {
+				fmt.Printf("formatCode        '%c'\n", '%')
+			}
 			if strptime_input[sii:sii+1] != "%" {
 				if _debug {
 					fmt.Println("did not match %%")
 				}
 				return time.Time{}, ErrFormatMismatch
 			}
+
+			if _debug {
+				fmt.Printf("templateComponent \"%s\"\n", "%")
+				fmt.Printf("inputComponent    \"%s\"\n", "%")
+			}
+
 			sii += 1
+			partsIndex += 2 // TODO: TYPE ME UP
 			continue
 		}
 
@@ -226,7 +245,7 @@ func strptime_tz(
 			return time.Time{}, ErrFormatMismatch
 		}
 		if _debug {
-			fmt.Printf("sii:sii+sil       \"%s\"\n", strptime_input[sii:sii+sil])
+			fmt.Printf("inputComponent    \"%s\"\n", strptime_input[sii:sii+sil])
 		}
 
 		if supported {
@@ -263,6 +282,7 @@ func strptime_tz(
 		} else {
 			sii += (len(partBetweenPercentSigns) - 1) + sil
 		}
+		partsIndex++
 	}
 
 	if sii < len(strptime_input) {
