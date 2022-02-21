@@ -2086,9 +2086,9 @@ var CSVTSVOnlyFlagSection = FlagSection{
 	flags: []Flag{
 
 		{
-			name: "--no-implicit-csv-header",
+			name:     "--no-implicit-csv-header",
 			altNames: []string{"--no-implicit-tsv-header"},
-			help: "Opposite of `--implicit-csv-header`. This is the default anyway -- the main use is for the flags to `mlr join` if you have main file(s) which are headerless but you want to join in on a file which does have a CSV/TSV header. Then you could use `mlr --csv --implicit-csv-header join --no-implicit-csv-header -l your-join-in-with-header.csv ... your-headerless.csv`.",
+			help:     "Opposite of `--implicit-csv-header`. This is the default anyway -- the main use is for the flags to `mlr join` if you have main file(s) which are headerless but you want to join in on a file which does have a CSV/TSV header. Then you could use `mlr --csv --implicit-csv-header join --no-implicit-csv-header -l your-join-in-with-header.csv ... your-headerless.csv`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.UseImplicitCSVHeader = false
 				*pargi += 1
