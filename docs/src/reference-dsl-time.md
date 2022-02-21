@@ -243,7 +243,7 @@ Notes:
 
 * The names `strftime` and `strptime` far predate Miller; they were chosen for familiarity. The `f` is for _format_: from epoch-seconds to human-readable string. The `p` is for _parse_: for doing the reverse.
 * Even though Miller is written in Go as of Miller 6, it still largely preserves [C-like](https://en.wikipedia.org/wiki/C_date_and_time_functions#strftime) `strftime` and `strptime` semantics. As noted below, not all format strings used by the C library are recognized.
-  * For `strftime`, this is thanks to [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime).
+  * For `strftime`, this is thanks to [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime), with a Miller-specific modification for fractional seconds.
   * For `strftime`, this is thanks to [https://github.com/pbnjay/strptime](https://github.com/pbnjay/strptime), with Miller-specific modifications.
 
 Available format strings for `strftime`, taken directly from [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime):
