@@ -1,16 +1,27 @@
 =============================================================== RELEASES
 * plan 6.1.0
   o strptime/882
-    - UT-per-se cases
-    m strptime/strftime tabulate options
-    - UT case for %% matching
-    ? https://github.com/bykof/gostradamus
-    ? https://golangrepo.com/repo/leekchan-timeutil-go-date-time
-    ? port mlr5 c -> go?
+
+    - fix, and UT case for, %% matching
+    - strptime_test.go
+
+    - doc: strptime/strftime tabulate options
+      > dsl fcn olh? or webdoc only?
+      > https://miller.readthedocs.io/en/latest/reference-dsl-time
+    - doc: match Z with Z, not %Z (C lib too)
+    - doc: fmtnum and %f
+      > auto-fmtnum somehow -- ? mlrval::ReformatNumber -- ?
+    - olh: %f examples
+
+    - doc:
+      x no MST CST EST etc unless *in* them
+        > maybe some env-var-something as a wishlist feature -- ?
+      x -07:00 or -0700 w/ same %z -- desired? not supported by miller 5 / C library.
+      x Asia/Istanbul matching %Z -- desired? not supported by miller 5 / C library.
+      x UTC-8 matching %Z -- desired? not supported by miller 5 / C library.
+
   o unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
-
   o mlr join --left-fields a,b,c
-
   o several needs-doc issues
   o fmt/unfmt/regex doc
   o FAQ/examples reorg

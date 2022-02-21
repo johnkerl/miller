@@ -49,12 +49,15 @@ package strptime
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"strings"
 	"time"
 )
 
 const _ignoreUnsupported = false
+
+var _debug = os.Getenv("MLR_DEBUG_STRPTIME") != ""
 
 // Parse accepts a percent-encoded strptime format string, converts it for use with
 // time.Parse, and returns the resulting time.Time value. If non-date-related format
@@ -116,9 +119,18 @@ func Check(format string) error {
 func strptime_tz(
 	strptime_input, strptime_format string, ignoreUnsupported bool, useTZ bool, location *time.Location,
 ) (time.Time, error) {
+	if _debug {
+		fmt.Printf("================================================================ STRPTIME ENTER\n")
+		fmt.Printf("strptime_input    \"%s\"\n", strptime_input)
+		fmt.Printf("strptime_format   \"%s\"\n", strptime_format)
+		defer fmt.Printf("================================================================ STRPTIME EXIT\n")
+	}
 
 	// E.g. re-write "%F" to "%Y-%m-%d".
 	strptime_format = expandShorthands(strptime_format)
+	if _debug {
+		fmt.Printf("strptime_input    \"%s\"\n", strptime_input)
+	}
 
 	// The job of strptime is to map "format strings" like "%Y-%m-%d %H:%M:%S" to
 	// Go-library "templates" like "2006 01 02 15 04 05".
@@ -145,34 +157,55 @@ func strptime_tz(
 
 	partsBetweenPercentSigns := strings.Split(strptime_format, "%")
 	for partsIndex, partBetweenPercentSigns := range partsBetweenPercentSigns {
+		if _debug {
+			fmt.Printf("\n")
+			fmt.Printf("partsIndex %d:     \"%s\"\n", partsIndex, partBetweenPercentSigns)
+		}
 		if partsIndex == 0 {
 			// Check for prefix text. It must be an exact match, e.g. with input "foo 2021" and
 			// format "foo %Y", "foo " == "foo ". Or, if the format starts with a "%", we're
 			// checking "" == "".
 			if strptime_input[:len(partBetweenPercentSigns)] != partBetweenPercentSigns {
+				if _debug {
+					fmt.Printf("\"%s\" != \"%s\"\n",
+						strptime_input[:len(partBetweenPercentSigns)], partBetweenPercentSigns,
+					)
+				}
 				return time.Time{}, ErrFormatMismatch
 			}
 			sii += len(partBetweenPercentSigns)
+			continue
+		}
+
+		// Handle %% straight off, as this is a special case.
+		if partBetweenPercentSigns == "" {
+			fmt.Printf("---- sii \"%s\"\n", strptime_input[sii:])
+			fmt.Printf("---- sii \"%s\"\n", strptime_input[sii:sii+1])
+			if strptime_input[sii:sii+1] != "%" {
+				if _debug {
+					fmt.Println("did not match %%")
+				}
+				return time.Time{}, ErrFormatMismatch
+			}
+			sii += 1
 			continue
 		}
 
 		// Since we split on '%', this is the format code
 		formatCode := int(partBetweenPercentSigns[0])
 
-		// TODO: I don't think this is right. And, needs a unit-test case.
-		if formatCode == '%' { // Handle %% straight off, as this is just a text-match.
-			if partBetweenPercentSigns != strptime_input[sii:sii+len(partBetweenPercentSigns)] {
-				return time.Time{}, ErrFormatMismatch
-			}
-			sii += len(partBetweenPercentSigns)
-			continue
-		}
-
 		// Check if the format code is supported, and map the strptime-style format code to the
 		// Go-library (time.Parse) template component, e.g. 'Y' -> "2006".
 		templateComponent, supported := formatMap[formatCode]
 		if !supported && !ignoreUnsupported {
+			if _debug {
+				fmt.Printf("formatCode '%c' is unsupported\n", formatCode)
+			}
 			return time.Time{}, ErrFormatUnsupported
+		}
+		if _debug {
+			fmt.Printf("formatCode        '%c'\n", formatCode)
+			fmt.Printf("templateComponent \"%s\"\n", templateComponent)
 		}
 
 		// Check the intervening text between format strings, e.g. the ":" in "%Y:%m".  There may be
@@ -187,7 +220,13 @@ func strptime_tz(
 			sil = strings.Index(strptime_input[sii:], partBetweenPercentSigns[1:])
 		}
 		if sil == -1 {
+			if _debug {
+				fmt.Printf("format/template mismatch 1\n")
+			}
 			return time.Time{}, ErrFormatMismatch
+		}
+		if _debug {
+			fmt.Printf("sii:sii+sil       \"%s\"\n", strptime_input[sii:sii+sil])
 		}
 
 		if supported {
@@ -198,6 +237,9 @@ func strptime_tz(
 				} else {
 					sil = len(templateComponent)
 					if sil > len(strptime_input)-sii {
+						if _debug {
+							fmt.Printf("format/template mismatch 2\n")
+						}
 						return time.Time{}, ErrFormatMismatch
 					}
 				}
@@ -224,8 +266,15 @@ func strptime_tz(
 	}
 
 	if sii < len(strptime_input) {
-		// Extra text on end of strptime_input
+		if _debug {
+			fmt.Printf("Extra text on end of strptime_input\n")
+		}
 		return time.Time{}, ErrFormatMismatch
+	}
+
+	if _debug {
+		fmt.Printf("goLibInput        \"%s\"\n", strptime_input)
+		fmt.Printf("goLibTemplate     \"%s\"\n", strptime_format)
 	}
 
 	// Now call the Go time library with template and input formatted the way it wants.
