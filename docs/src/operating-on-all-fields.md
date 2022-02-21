@@ -75,6 +75,39 @@ a_b_c def  g_h_i
 9987  3312 4543
 </pre>
 
+## Bulk rename of fields with carriage returns
+
+The previous example isn't sufficient when there are carriage returns in the field names. Here we can use
+the [Miller programming language](miller-programming-language.md):
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/header-lf.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+"field 
+A",field B
+1,2
+3,3
+6,6
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv --from data/header-lf.csv put '</b>
+<b>  map inrec = $*;</b>
+<b>  $* = {};</b>
+<b>  for (oldkey, value in inrec) {</b>
+<b>    newkey = clean_whitespace(gsub(oldkey, "\n", " "));</b>
+<b>    $[newkey] = value;</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+field A,field B
+1,2
+3,3
+6,6
+</pre>
+
 ## Search-and-replace over all fields
 
 How to do `$name = gsub($name, "old", "new")` for all fields?

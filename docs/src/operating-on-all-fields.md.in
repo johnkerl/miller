@@ -28,6 +28,26 @@ GENMD-RUN-COMMAND
 mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv
 GENMD-EOF
 
+## Bulk rename of fields with carriage returns
+
+The previous example isn't sufficient when there are carriage returns in the field names. Here we can use
+the [Miller programming language](miller-programming-language.md):
+
+GENMD-RUN-COMMAND
+cat data/header-lf.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv --from data/header-lf.csv put '
+  map inrec = $*;
+  $* = {};
+  for (oldkey, value in inrec) {
+    newkey = clean_whitespace(gsub(oldkey, "\n", " "));
+    $[newkey] = value;
+  }
+'
+GENMD-EOF
+
 ## Search-and-replace over all fields
 
 How to do `$name = gsub($name, "old", "new")` for all fields?
