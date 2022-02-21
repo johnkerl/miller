@@ -7,6 +7,7 @@ RELEASES
     https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+label%3Aneeds-documentation
   o fmt/unfmt/regex doc
   o FAQ/examples reorg
+  ? ??? for doc-string contents search -- ? & mlr help namegoeshere foo ...
 
   k strptime/882
   k fmtifnum, & recursive fmtnum/fmtifnum
