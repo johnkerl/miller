@@ -2,9 +2,6 @@
 * plan 6.1.0
   o strptime/882
 
-    - fix, and UT case for, %% matching
-    - strptime_test.go
-
     - doc: strptime/strftime tabulate options
       > dsl fcn olh? or webdoc only?
       > https://miller.readthedocs.io/en/latest/reference-dsl-time

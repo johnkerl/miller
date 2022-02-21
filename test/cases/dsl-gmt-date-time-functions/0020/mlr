@@ -1,0 +1,12 @@
+end {
+  print strptime("1970-01-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ");
+  print strptime("1970-01-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ");
+  print strptime("1970-01-01 00:00:00 -0400", "%Y-%m-%d %H:%M:%S %z");
+  print strptime("1970-01-01%00:00:00Z", "%Y-%m-%d%%%H:%M:%SZ");
+  print strptime("1970-01-01T00:00:00Z", "%FT%TZ");
+  print strptime("1970:363", "%Y:%j");
+  print strptime("1970-01-01 10:20:30 PM", "%F %r");
+  print strptime("01/02/70 14:20", "%D %R");
+  print strptime("01/02/70 14:20", "%D %X"); # no such format code
+  print fmtnum(strptime("1971-01-01T00:00:00.123456Z", "%Y-%m-%dT%H:%M:%S.%fZ"), "%.6f");
+}
