@@ -165,4 +165,19 @@ b it is!
 c is it ...
 </pre>
 
-The `ssub` function exists precisely for this reason: so you don't have to escape anything.
+The [`ssub`](reference-dsl-builtin-functions.md#ssub) function exists precisely for this reason: so you don't have to escape anything.
+
+## How to apply math to regex output?
+
+* Use parentheses for capture groups
+* Use `\1`, `\2`, etc. to refer to the captures
+* The matched patterns are strings, so cast them to `int` or `float`
+
+See also the [page on regular expressions](reference-main-regular-expressions.md).
+
+<pre class="pre-highlight-in-pair">
+<b>echo "a=14°45'" | mlr put '$a =~"^([0-9]+)°([0-9]+)" {$degrees = float("\1") + float("\2") / 60}'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a=14°45',degrees=14.75
+</pre>
