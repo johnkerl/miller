@@ -1,20 +1,12 @@
 =============================================================== RELEASES
 * plan 6.1.0
-  o strptime/882
-    - UT-per-se cases
-    m strptime/strftime tabulate options
-    - UT case for %% matching
-    ? https://github.com/bykof/gostradamus
-    ? https://golangrepo.com/repo/leekchan-timeutil-go-date-time
-    ? port mlr5 c -> go?
   o unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
-
   o mlr join --left-fields a,b,c
-
   o several needs-doc issues
   o fmt/unfmt/regex doc
   o FAQ/examples reorg
 
+  k strptime/882
   k fmtifnum, & recursive fmtnum/fmtifnum
   k unicode string literals
   k natural sort order

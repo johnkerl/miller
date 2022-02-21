@@ -548,7 +548,10 @@ func (regtester *RegTester) executeSingleCmdFile(
 		}
 
 		// Write the .should-fail file
-		if actualExitCode != 0 {
+		if actualExitCode == 0 {
+			// Remove it, if it exists.
+			os.Remove(expectFailFileName)
+		} else {
 			err = regtester.storeFile(expectFailFileName, "")
 			if err != nil {
 				fmt.Printf("%s: %v\n", expectedStderrFileName, err)
@@ -558,7 +561,6 @@ func (regtester *RegTester) executeSingleCmdFile(
 					fmt.Printf("wrote %s\n", expectedStdoutFileName)
 				}
 			}
-
 		}
 
 		for pe := postCompareExpectedActualPairs.Front(); pe != nil; pe = pe.Next() {

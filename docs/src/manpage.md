@@ -2561,7 +2561,7 @@ FUNCTIONS FOR FILTER/PUT
        ssub("abc.def", ".", "X") gives "abcXdef"
 
    strftime
-        (class=time #args=2) Formats seconds since the epoch as timestamp. Format strings are as at https://pkg.go.dev/github.com/lestrrat-go/strftime, with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also "DSL datetime/timezone functions" at https://miller.readthedocs.io for more information on the differences from the C library ("man strftime" on your system). See also strftime_local.
+        (class=time #args=2) Formats seconds since the epoch as timestamp. Format strings are as at https://pkg.go.dev/github.com/lestrrat-go/strftime, with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also https://miller.readthedocs.io/en/latest/reference-dsl-time/ for more information on the differences from the C library ("man strftime" on your system). See also strftime_local.
        Examples:
        strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ")  = "2015-08-28T13:33:21Z"
        strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z"
@@ -2591,7 +2591,7 @@ FUNCTIONS FOR FILTER/PUT
        strptime("1970-01-01 00:00:00 EET",   "%Y-%m-%d %H:%M:%S %Z") = -7200
 
    strptime_local
-        (class=time #args=2,3) Like stpftime but consults the $TZ environment variable to get local time zone.
+        (class=time #args=2,3) Like strftime but consults the $TZ environment variable to get local time zone.
        Examples:
        strptime_local("2015-08-28T13:33:21Z",    "%Y-%m-%dT%H:%M:%SZ") = 1440758001     with TZ="Asia/Istanbul"
        strptime_local("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440758001.345 with TZ="Asia/Istanbul"
@@ -3183,5 +3183,5 @@ SEE ALSO
 
 
 
-                                  2022-02-20                         MILLER(1)
+                                  2022-02-21                         MILLER(1)
 </pre>
