@@ -3,11 +3,13 @@ RELEASES
 * plan 6.1.0
   o unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
   o mlr join --left-fields a,b,c
-  o several needs-doc issues
-    https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+label%3Aneeds-documentation
   o fmt/unfmt/regex doc
   o FAQ/examples reorg
   ? ??? for doc-string contents search -- ? & mlr help namegoeshere foo ...
+
+  o several needs-doc issues
+    https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+label%3Aneeds-documentation
+    echo "a=14°20" | mlr put '$out=sub($a,"^([0-9]+)°([0-9]+)$","\1\2")'
 
   k strptime/882
   k fmtifnum, & recursive fmtnum/fmtifnum
@@ -25,6 +27,9 @@ RELEASES
   k :rb
   k ?foo and ??foo @ repl help
   k doc-improves
+
+  d all-contribs check before release
+    > release notes in particular Poshi derekmahar aborruso
 
 * plan 6.2.0
   ! extended field accessors for #763 and #948 (positional & json.nested)
