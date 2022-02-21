@@ -91,7 +91,7 @@ var FLAG_TABLE = FlagTable{
 		&SeparatorFlagSection,
 		&FileFormatFlagSection,
 		&FormatConversionKeystrokeSaverFlagSection,
-		&CSVOnlyFlagSection,
+		&CSVTSVOnlyFlagSection,
 		&PPRINTOnlyFlagSection,
 		&CompressedDataFlagSection,
 		&CommentsInDataFlagSection,
@@ -2072,22 +2072,23 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 }
 
 // ================================================================
-// CSV FLAGS
+// CSV/TSV FLAGS
 
-func CSVOnlyPrintInfo() {
+func CSVTSVOnlyPrintInfo() {
 	fmt.Println("These are flags which are applicable to CSV format.")
 }
 
-func init() { CSVOnlyFlagSection.Sort() }
+func init() { CSVTSVOnlyFlagSection.Sort() }
 
-var CSVOnlyFlagSection = FlagSection{
-	name:        "CSV-only flags",
-	infoPrinter: CSVOnlyPrintInfo,
+var CSVTSVOnlyFlagSection = FlagSection{
+	name:        "CSV/TSV-only flags",
+	infoPrinter: CSVTSVOnlyPrintInfo,
 	flags: []Flag{
 
 		{
 			name: "--no-implicit-csv-header",
-			help: "Opposite of `--implicit-csv-header`. This is the default anyway -- the main use is for the flags to `mlr join` if you have main file(s) which are headerless but you want to join in on a file which does have a CSV header. Then you could use `mlr --csv --implicit-csv-header join --no-implicit-csv-header -l your-join-in-with-header.csv ... your-headerless.csv`.",
+			altNames: []string{"--no-implicit-tsv-header"},
+			help: "Opposite of `--implicit-csv-header`. This is the default anyway -- the main use is for the flags to `mlr join` if you have main file(s) which are headerless but you want to join in on a file which does have a CSV/TSV header. Then you could use `mlr --csv --implicit-csv-header join --no-implicit-csv-header -l your-join-in-with-header.csv ... your-headerless.csv`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.UseImplicitCSVHeader = false
 				*pargi += 1
@@ -2096,7 +2097,7 @@ var CSVOnlyFlagSection = FlagSection{
 
 		{
 			name:     "--allow-ragged-csv-input",
-			altNames: []string{"--ragged"},
+			altNames: []string{"--ragged", "--allow-ragged-tsv-input"},
 			help:     "If a data line has fewer fields than the header line, fill remaining keys with empty string. If a data line has more fields than the header line, use integer field labels as in the implicit-header case.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.AllowRaggedCSVInput = true
@@ -2106,7 +2107,7 @@ var CSVOnlyFlagSection = FlagSection{
 
 		{
 			name:     "--implicit-csv-header",
-			altNames: []string{"--headerless-csv-input", "--hi"},
+			altNames: []string{"--headerless-csv-input", "--hi", "--implicit-tsv-header"},
 			help:     "Use 1,2,3,... as field labels, rather than from line 1 of input files. Tip: combine with `label` to recreate missing headers.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.UseImplicitCSVHeader = true
@@ -2116,8 +2117,8 @@ var CSVOnlyFlagSection = FlagSection{
 
 		{
 			name:     "--headerless-csv-output",
-			altNames: []string{"--ho"},
-			help:     "Print only CSV data lines; do not print CSV header lines.",
+			altNames: []string{"--ho", "--headerless-tsv-output"},
+			help:     "Print only CSV/TSV data lines; do not print CSV/TSV header lines.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.HeaderlessCSVOutput = true
 				*pargi += 1
