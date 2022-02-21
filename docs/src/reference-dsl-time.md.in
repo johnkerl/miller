@@ -56,7 +56,7 @@ yellow circle   true  9  87    63.5058  8.3350 1634784588.045421
 purple square   false 10 91    72.3735  8.2430 1634784588.045422
 GENMD-EOF
 
-The [systimeint](reference-dsl-builtin-functions.md#systimeint) DSL functions
+The [systimeint](reference-dsl-builtin-functions.md#systimeint) DSL function
 is nothing more than a keystroke-saver for `int(systime())`.
 
 ## UTC times with standard format
