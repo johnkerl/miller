@@ -159,7 +159,7 @@ Flags:
   mlr help list-separator-regex-aliases
   mlr help comments-in-data-flags
   mlr help compressed-data-flags
-  mlr help csv-only-flags
+  mlr help csv/tsv-only-flags
   mlr help file-format-flags
   mlr help flatten-unflatten-flags
   mlr help format-conversion-keystroke-saver-flags
@@ -349,7 +349,7 @@ decisions that might have been made based on the file suffix. Likewise,
 .fi
 .if n \{\
 .RE
-.SH "CSV-ONLY FLAGS"
+.SH "CSV/TSV-ONLY FLAGS"
 .sp
 
 .if n \{\
@@ -358,27 +358,29 @@ decisions that might have been made based on the file suffix. Likewise,
 .nf
 These are flags which are applicable to CSV format.
 
---allow-ragged-csv-input or --ragged
+--allow-ragged-csv-input or --ragged or --allow-ragged-tsv-input
                          If a data line has fewer fields than the header line,
                          fill remaining keys with empty string. If a data line
                          has more fields than the header line, use integer
                          field labels as in the implicit-header case.
---headerless-csv-output or --ho
-                         Print only CSV data lines; do not print CSV header
-                         lines.
---implicit-csv-header or --headerless-csv-input or --hi
+--headerless-csv-output or --ho or --headerless-tsv-output
+                         Print only CSV/TSV data lines; do not print CSV/TSV
+                         header lines.
+--implicit-csv-header or --headerless-csv-input or --hi or --implicit-tsv-header
                          Use 1,2,3,... as field labels, rather than from line
                          1 of input files. Tip: combine with `label` to
                          recreate missing headers.
 --lazy-quotes            Accepts quotes appearing in unquoted fields, and
                          non-doubled quotes appearing in quoted fields.
---no-implicit-csv-header Opposite of `--implicit-csv-header`. This is the
+--no-implicit-csv-header or --no-implicit-tsv-header
+                         Opposite of `--implicit-csv-header`. This is the
                          default anyway -- the main use is for the flags to
                          `mlr join` if you have main file(s) which are
                          headerless but you want to join in on a file which
-                         does have a CSV header. Then you could use `mlr --csv
-                         --implicit-csv-header join --no-implicit-csv-header
-                         -l your-join-in-with-header.csv ...
+                         does have a CSV/TSV header. Then you could use `mlr
+                         --csv --implicit-csv-header join
+                         --no-implicit-csv-header -l
+                         your-join-in-with-header.csv ...
                          your-headerless.csv`.
 -N                       Keystroke-saver for `--implicit-csv-header
                          --headerless-csv-output`.
@@ -1597,7 +1599,9 @@ the main "mlr --help" for more information on syntax for these arguments:
   --ips {pair-separator character}
   --repifs
   --implicit-csv-header
+  --implicit-tsv-header
   --no-implicit-csv-header
+  --no-implicit-tsv-header
 For example, if you have 'mlr --csv ... join -l foo ... ' then the left-file format will
 be specified CSV as well unless you override with 'mlr --csv ... join --ijson -l foo' etc.
 Likewise, if you have 'mlr --csv --implicit-csv-header ...' then the join-in file will be

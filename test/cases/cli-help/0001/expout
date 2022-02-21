@@ -456,7 +456,9 @@ the main "mlr --help" for more information on syntax for these arguments:
   --ips {pair-separator character}
   --repifs
   --implicit-csv-header
+  --implicit-tsv-header
   --no-implicit-csv-header
+  --no-implicit-tsv-header
 For example, if you have 'mlr --csv ... join -l foo ... ' then the left-file format will
 be specified CSV as well unless you override with 'mlr --csv ... join --ijson -l foo' etc.
 Likewise, if you have 'mlr --csv --implicit-csv-header ...' then the join-in file will be
