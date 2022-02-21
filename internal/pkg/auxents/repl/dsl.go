@@ -84,16 +84,16 @@ func (repl *Repl) handleDSLStringAux(
 		// statement like 'true' or '$x > 0.5' etc. For the REPL, we re-use this for
 		// interactive expressions to be printed to the terminal. For the main DSL,
 		// the default is mlrval.FromTrue(); for the REPL, the default is
-		// mlrval.VOID.
+		// mlrval.NULL.
 		filterExpression := repl.runtimeState.FilterExpression
-		if filterExpression.IsVoid() {
+		if filterExpression.IsNull() {
 			// nothing to print
-		} else if filterExpression.IsString() {
+		} else if filterExpression.IsStringOrVoid() {
 			fmt.Printf("\"%s\"\n", filterExpression.String())
 		} else {
 			fmt.Println(filterExpression.String())
 		}
-		repl.runtimeState.FilterExpression = mlrval.VOID
+		repl.runtimeState.FilterExpression = mlrval.NULL
 	}
 
 	return nil
