@@ -383,6 +383,9 @@ o JIT neatens
 ================================================================
 INFO
 
+i @all-contributors please add @person for ideas
+i @all-contributors please add @person for documentation
+
 i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 
 i https://framework.frictionlessdata.io/docs/tutorials/working-with-cli/
