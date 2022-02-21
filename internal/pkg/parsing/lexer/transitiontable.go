@@ -241,6 +241,8 @@ var TransTab = TransitionTable{
 			return 57
 		case r == 126: // ['~','~']
 			return 57
+		case 160 <= r && r <= 255: // [\u00a0,\u00ff]
+			return 57
 		case 256 <= r && r <= 1114111: // [\u0100,\U0010ffff]
 			return 57
 		}
@@ -1211,6 +1213,8 @@ var TransTab = TransitionTable{
 		case r == 125: // ['}','}']
 			return 57
 		case r == 126: // ['~','~']
+			return 57
+		case 160 <= r && r <= 255: // [\u00a0,\u00ff]
 			return 57
 		case 256 <= r && r <= 1114111: // [\u0100,\U0010ffff]
 			return 57
@@ -2980,6 +2984,8 @@ var TransTab = TransitionTable{
 			return 57
 		case r == 126: // ['~','~']
 			return 57
+		case 160 <= r && r <= 255: // [\u00a0,\u00ff]
+			return 57
 		case 256 <= r && r <= 1114111: // [\u0100,\U0010ffff]
 			return 57
 		}
@@ -4409,6 +4415,8 @@ var TransTab = TransitionTable{
 		case r == 125: // ['}','}']
 			return 57
 		case r == 126: // ['~','~']
+			return 57
+		case 160 <= r && r <= 255: // [\u00a0,\u00ff]
 			return 57
 		case 256 <= r && r <= 1114111: // [\u0100,\U0010ffff]
 			return 57
