@@ -25,7 +25,7 @@ See also the [section on time-related
 functions](reference-dsl-builtin-functions.md#time-functions) for
 information auto-generated from Miller's online-help strings.
 
-# Epoch seconds
+## Epoch seconds
 
 [Seconds since the epoch](https://en.wikipedia.org/wiki/Unix_time), or _Unix
 Time_, is seconds (positive, zero, or negative) since midnight January 1 1970
@@ -81,7 +81,7 @@ purple square   false 10 91    72.3735  8.2430 1634784588.045422
 The [systimeint](reference-dsl-builtin-functions.md#systimeint) DSL functions
 is nothing more than a keystroke-saver for `int(systime())`.
 
-# UTC times with standard format
+## UTC times with standard format
 
 One way to make epoch-seconds human-readable, while maintaining some of their
 benefits such as being independent of timezone and daylight savings, is to use
@@ -115,7 +115,7 @@ We also have [sec2gmtdate](reference-dsl-builtin-functions.md#sec2gmtdate) DSL f
 1930-11-18
 </pre>
 
-# Local times with standard format; specifying timezones
+## Local times with standard format; specifying timezones
 
 You can use similar formatting for dates in your preferred timezone, not just UTC/GMT.
 We have the
@@ -231,23 +231,98 @@ We also have the
 1969-12-31T22:00:00Z
 </pre>
 
-# GMT and local times with custom formats
+## Custom formats: strptime and strftime
 
 The to-string and from-string functions we've seen so far are low-keystroking:
 with a little bit of typing you can convert datetimes to/from epoch seconds.
 The minus, however, is flexibility. This is where the
-[strftime](reference-dsl-builtin-functions.md#strftime),
+[strftime](reference-dsl-builtin-functions.md#strftime) and
 [strptime](reference-dsl-builtin-functions.md#strptime) functions come into play.
 
 Notes:
 
 * The names `strftime` and `strptime` far predate Miller; they were chosen for familiarity. The `f` is for _format_: from epoch-seconds to human-readable string. The `p` is for _parse_: for doing the reverse.
-* Even though Miller is written in Go as of Miller 6, it still preserves [C-like](https://en.wikipedia.org/wiki/C_date_and_time_functions#strftime) `strftime` and `strptime` semantics.
+* Even though Miller is written in Go as of Miller 6, it still largely preserves [C-like](https://en.wikipedia.org/wiki/C_date_and_time_functions#strftime) `strftime` and `strptime` semantics. As noted below, not all format strings used by the C library are recognized.
   * For `strftime`, this is thanks to [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime).
-  * For `stpftime`, this is thanks to [https://github.com/pbnjay/strptime](https://github.com/pbnjay/strptime).
-* See [https://devhints.io/strftime](https://devhints.io/strftime) for sample format strings you can use.
+  * For `strftime`, this is thanks to [https://github.com/pbnjay/strptime](https://github.com/pbnjay/strptime), with Miller-specific modifications.
 
-Some examples:
+Available format strings for `strftime`, taken directly from [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime):
+
+| Pattern | Description |
+|---------|-------------|
+| `%A` | national representation of the full weekday name |
+| `%a` | national representation of the abbreviated weekday |
+| `%B` | national representation of the full month name |
+| `%b` | national representation of the abbreviated month name |
+| `%C` | (year / 100) as decimal number; single digits are preceded by a zero |
+| `%c` | national representation of time and date |
+| `%D` | equivalent to `%m/%d/%y` |
+| `%d` | day of the month as a decimal number (01-31) |
+| `%e` | the day of the month as a decimal number (1-31); single digits are preceded by a blank |
+| `%F` | equivalent to `%Y-%m-%d` |
+| `%H` | the hour (24-hour clock) as a decimal number (00-23) |
+| `%h` | same as `%b` |
+| `%I` | the hour (12-hour clock) as a decimal number (01-12) |
+| `%j` | the day of the year as a decimal number (001-366) |
+| `%k` | the hour (24-hour clock) as a decimal number (0-23); single digits are preceded by a blank |
+| `%l` | the hour (12-hour clock) as a decimal number (1-12); single digits are preceded by a blank |
+| `%M` | the minute as a decimal number (00-59) |
+| `%m` | the month as a decimal number (01-12) |
+| `%n` | a newline |
+| `%p` | national representation of either "ante meridiem" (a.m.) or "post meridiem" (p.m.) as appropriate. |
+| `%R` | equivalent to `%H:%M` |
+| `%r` | equivalent to `%I:%M:%S %p` |
+| `%S` | the second as a decimal number (00-60) |
+| `%1S`, ..., `%9S` | the second as a decimal number (00-60) with 1..9 decimal places, respectively |
+| `%T` | equivalent to `%H:%M:%S` |
+| `%t` | a tab |
+| `%U` | the week number of the year (Sunday as the first day of the week) as a decimal number (00-53) |
+| `%u` | the weekday (Monday as the first day of the week) as a decimal number (1-7) |
+| `%V` | the week number of the year (Monday as the first day of the week) as a decimal number (01-53) |
+| `%v` | equivalent to `%e-%b-%Y` |
+| `%W` | the week number of the year (Monday as the first day of the week) as a decimal number (00-53) |
+| `%w` | the weekday (Sunday as the first day of the week) as a decimal number (0-6) |
+| `%X` | national representation of the time |
+| `%x` | national representation of the date |
+| `%Y` | the year with century as a decimal number |
+| `%y` | the year without century as a decimal number (00-99) |
+| `%Z` | the time zone name |
+| `%z` | the time zone offset from UTC |
+| `%%` | a `%` |
+
+Available format strings for `strptime`:
+
+| Pattern | Description |
+|---------|-------------|
+| `%%` |  A literal '%' character. |
+| `%b` |  Month as locale’s abbreviated name. |
+| `%B` |  Month as locale’s full name. |
+| `%d` |  Day of the month as a zero-padded decimal number. |
+| `%f` |  Microsecond as a decimal number, zero-padded on the left. |
+| `%H` |  Hour (24-hour clock) as a zero-padded decimal number. |
+| `%I` |  Hour (12-hour clock) as a zero-padded decimal number. |
+| `%j` |  Three-digit day of year, like 004 or 363. |
+| `%m` |  Month as a zero-padded decimal number. |
+| `%M` |  Minute as a zero-padded decimal number. |
+| `%p` |  Locale’s equivalent of either AM or PM. |
+| `%S` |  Second as a zero-padded decimal number. |
+| `%y` |  Year without century as a zero-padded decimal number. |
+| `%Y` |  Year with century as a decimal number. |
+| `%z` |  UTC offset in the form +HHMM or -HHMM. |
+| `%Z` |  Time zone name. UTC, EST, CST -- only if you're in that timezone. |
+
+Examples:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put 'end {</b>
+<b>  print strftime(0, "%Y-%m-%dT%H:%M:%SZ");</b>
+<b>  print strftime(0, "%FT%TZ");</b>
+<b>}'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+1970-01-01T00:00:00Z
+1970-01-01T00:00:00Z
+</pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put 'end {</b>
@@ -267,9 +342,43 @@ Thursday, January  1, 1970
 09:33 PM
 </pre>
 
-Unfortunately, names from `%A` and `%B` are only available in English, as an
-artifact of a design choice in the Go `time` library which Miller (and its
-`strftime` / `strptime` supporting packages as noted above) rely on.
+Unfortunately, names from `%A` and `%B` are only available in English, as an artifact of a design
+choice in the Go `time` library which Miller (and its `strftime` / `strptime` supporting packages as
+noted above) rely on.
+
+## A note on timezones
+
+A note on timezones for `strptime`:
+
+* Three-letter timezone names such as `CST` are recognized _only if you're in them_. (`UTC` is an exception.) This is because these aren't globally unique: `CST` can stand for `Central Standard Time`, `_Cuba Standard Time`, `_China Standard Time`, etc.
+* Timezone specifiers which _are_ globally unique are of the form `-0400` and `+0500`.
+* Specifiers like `-04:30`, `UTC-8`, and `Asia/Istanbul` were not supported in Miller 5 (which used the C `strptime` library), and are likewise not supported in Miller 6. See however the `TZ` environment-variable examples below.
+* If you wish to match a final `Z` in the input, use a final `Z` in the format string. For example (see [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)) you can match the timestamp `1970-01-01T00:00:00Z` using the format string `%FT%TZ`.
+
+## Fractional seconds
+
+For historical reasons, Miller's `strftime` and `strptime` use different format specifications for fractional seconds. Examples:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put 'end {</b>
+<b>  print strftime(123456.789, "%Y-%m-%d %H:%M:%S");</b>
+<b>  print strftime(123456.789, "%Y-%m-%d %H:%M:%1S");</b>
+<b>  print strftime(123456.789, "%Y-%m-%d %H:%M:%3S");</b>
+<b>  print strftime(123456.789, "%Y-%m-%d %H:%M:%6S");</b>
+<b>  print strptime("1970-01-02 10:17:36.789000", "%Y-%m-%d %H:%M:%S");</b>
+<b>  print strptime("1970-01-02 10:17:36.789000", "%Y-%m-%d %H:%M:%S.%f");</b>
+<b>}'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+1970-01-02 10:17:36
+1970-01-02 10:17:36.7
+1970-01-02 10:17:36.789
+1970-01-02 10:17:36.789000
+(error)
+123456.789
+</pre>
+
+## strptime_local and strftime_local
 
 We also have
 [strftimelocal](reference-dsl-builtin-functions.md#strftimelocal) and
@@ -327,7 +436,7 @@ Thursday, January  1, 1970
 1582992000
 </pre>
 
-# Relative times
+## Relative times
 
 You can get the seconds since the Miller process start using
 [uptime](reference-dsl-builtin-functions.md#uptime):
@@ -365,7 +474,7 @@ sec2dhms  (class=time #args=1) Formats integer seconds as in sec2dhms(500000) = 
 sec2hms  (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:23:20"
 </pre>
 
-# References
+## References
 
-* List of formatting characters for `strftime` and `strptime`: [https://devhints.io/strftime](https://devhints.io/strftime)
+* Non-Miller-specific list of formatting characters for `strftime` and `strptime`: [https://devhints.io/strftime](https://devhints.io/strftime)
 * List of valid timezone names: [https://en.wikipedia.org/wiki/List_of_tz_database_time_zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
