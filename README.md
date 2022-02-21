@@ -238,7 +238,7 @@ Thanks to all the fine people who help make Miller better ([emoji key](https://a
     <td align="center"><a href="https://github.com/ChCyrill"><img src="https://avatars.githubusercontent.com/u/2165604?v=4?s=50" width="50px;" alt=""/><br /><sub><b>ChCyrill</b></sub></a><br /><a href="#ideas-ChCyrill" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/jauderho"><img src="https://avatars.githubusercontent.com/u/13562?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Jauder Ho</b></sub></a><br /><a href="https://github.com/johnkerl/miller/commits?author=jauderho" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/psacawa"><img src="https://avatars.githubusercontent.com/u/21274063?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Paweł Sacawa</b></sub></a><br /><a href="https://github.com/johnkerl/miller/issues?q=author%3Apsacawa" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="https://github.com/Poshi"><img src="https://avatars.githubusercontent.com/u/1780510?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Jordi</b></sub></a><br /><a href="https://github.com/johnkerl/miller/commits?author=Poshi" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/Poshi"><img src="https://avatars.githubusercontent.com/u/1780510?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Jordi</b></sub></a><br /><a href="https://github.com/johnkerl/miller/commits?author=Poshi" title="Documentation">📖</a> <a href="#ideas-Poshi" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
