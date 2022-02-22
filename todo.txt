@@ -10,9 +10,6 @@ RELEASES
   o several needs-doc issues
     i https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+label%3Aneeds-documentation
     - 908
-      funct
-        https://miller.readthedocs.io/en/latest/reference-main-data-types/
-        https://miller.readthedocs.io/en/latest/reference-dsl-variables/#type-declarations-for-local-variables-function-parameter-and-function-return-values
       :context
       https://github.com/johnkerl/miller/issues/908#issuecomment-1032573038 NFR
 
