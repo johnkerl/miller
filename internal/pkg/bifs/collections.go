@@ -871,6 +871,7 @@ func MillerSliceAccess(
 	lowerIndexMlrval *mlrval.Mlrval,
 	upperIndexMlrval *mlrval.Mlrval,
 	n int,
+	isZeroUp bool, // false for array/string slices, and substr1; true for substr0
 ) (
 	sliceIsEmpty bool, // true if the output of the slice should empty string/array
 	absentOrError *mlrval.Mlrval, // non-nil if the output of the slice should be absent/error
@@ -893,6 +894,9 @@ func MillerSliceAccess(
 			return false, mlrval.ERROR, 0, 0
 		}
 	}
+	if isZeroUp && lowerIndex >= 0 {
+		lowerIndex += 1 // make it 1-up
+	}
 	upperIndex, ok := upperIndexMlrval.GetIntValue()
 	if !ok {
 		if upperIndexMlrval.IsVoid() {
@@ -900,6 +904,9 @@ func MillerSliceAccess(
 		} else {
 			return false, mlrval.ERROR, 0, 0
 		}
+	}
+	if isZeroUp && upperIndex >= 0 {
+		upperIndex += 1 // make it 1-up
 	}
 
 	// UnaliasArrayIndex returns a boolean second return value to indicate
