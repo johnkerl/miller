@@ -421,6 +421,41 @@ func f(map m, int i): bool {
 }
 GENMD-EOF
 
+The `funct` keyword, for _function type_, indicates that a variable, argument, or return value is a function -- either a [function literal](reference-dsl-user-defined-functions.md#function-literals) or a (named) [user-defined function](reference-dsl-user-defined-functions.md).
+
+GENMD-CARDIFY
+$ cat funct-example.mlr
+func makefunc(): funct {
+  return func(x,y) {
+    return 10*x + y
+  }
+}
+
+func callfunc(funct f, num x, num y): num {
+  return f(x, y)
+}
+GENMD-EOF
+
+GENMD-CARDIFY
+$ rlwrap mlr repl
+Miller 6.0.0-dev REPL for darwin/amd64/go1.17
+Docs: https://miller.readthedocs.io
+Type ':h' or ':help' for online help; ':q' or ':quit' to quit.
+
+[mlr] :load funct-example.mlr
+
+[mlr] f = makefunc()
+
+[mlr] f
+function-literal-000001
+
+[mlr] f(2,3)
+23
+
+[mlr] callfunc(f, 3, 5)
+35
+GENMD-EOF
+
 ## Aggregate variable assignments
 
 There are three remaining kinds of variable assignment using out-of-stream variables, the last two of which use the `$*` syntax:
