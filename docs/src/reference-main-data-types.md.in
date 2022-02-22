@@ -16,9 +16,13 @@ Miller's types are:
     * **absent-null**: Such as on reads of unset right-hand sides, or fall-through non-explicit return values from user-defined functions. See the [null-data page](reference-main-null-data.md).
     * **JSON-null**: For `null` in JSON files; also used in [gapped auto-extend of arrays](reference-main-arrays.md#auto-extend-and-null-gaps). See the [null-data page](reference-main-null-data.md).
     * **error** -- for various results which cannot be computed, often when the input to a [built-in function](reference-dsl-builtin-functions.md) is of the wrong type. For example, doing [strlen](reference-dsl-builtin-functions.md#strlen) or [substr](reference-dsl-builtin-functions.md#substr) on a non-string, [sec2gmt](reference-dsl-builtin-functions.md#sec2gmt) on a non-integer, etc.
+* Functions:
+    * As described in the [page on function literals](reference-dsl-user-defined-functions.md#function-literals), you can define unnamed functions and assign them to variables, or pass them to functions.
+    * These can also be (named) [user-defined functions](reference-dsl-user-defined-functions.md).
+    * Use-cases include [custom sorting](reference-dsl-builtin-functions.md#sort), along with higher-order-functions such as [`select`](reference-dsl-builtin-functions.md#select), [`apply`](reference-dsl-builtin-functions.md#apply), [`reduce`](reference-dsl-builtin-functions.md#reduce), and [`fold`](reference-dsl-builtin-functions.md#fold).
 
-See also the list of [type-checking
-functions](reference-dsl-builtin-functions.md#type-checkin -functions) for the
+See also the list of
+[type-checking functions](reference-dsl-builtin-functions.md#type-checkin -functions) for the
 [Miller programming language](miller-programming-language.md).
 
 See also [Differences from other programming languages](reference-dsl-differences.md).
