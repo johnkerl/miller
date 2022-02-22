@@ -122,9 +122,9 @@ bcd
 
 ## Out-of-bounds indexing
 
-Somewhat imitating Python, out-of-bounds index accesses are
-[errors](reference-main-data-types.md), but out-of-bounds slice accesses result
-in trimming the indices, resulting in a short string or even the empty string:
+Out-of-bounds index accesses are [errors](reference-main-data-types.md), but out-of-bounds slice
+accesses result in trimming the indices, resulting in a short string or even the empty string.
+(This behavior intentionally imitates Python.)
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put '</b>
@@ -132,7 +132,7 @@ in trimming the indices, resulting in a short string or even the empty string:
 <b>    x = "abcde";</b>
 <b>    print x[1];</b>
 <b>    print x[5];</b>
-<b>    print x[6]; # absent</b>
+<b>    print x[6];</b>
 <b>  }</b>
 <b>'</b>
 </pre>
@@ -146,16 +146,16 @@ e
 <b>mlr -n put '</b>
 <b>  end {</b>
 <b>    x = "abcde";</b>
-<b>    print x[1:2];</b>
-<b>    print x[1:6];</b>
-<b>    print x[10:20];</b>
+<b>    print "\"" . x[1:2] . "\"";</b>
+<b>    print "\"" . x[1:6] . "\"";</b>
+<b>    print "\"" . x[10:20] . "\"";</b>
 <b>  }</b>
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-ab
-abcde
-
+"ab"
+"abcde"
+""
 </pre>
 
 ## Escape sequences for string literals

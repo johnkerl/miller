@@ -139,9 +139,9 @@ x[4], x[5]]`.
 
 ## Out-of-bounds indexing
 
-Somewhat imitating Python, out-of-bounds index accesses are
-[absent](reference-main-null-data.md), but out-of-bounds slice accesses result
-in trimming the indices, resulting in a short array or even the empty array:
+Out-of-bounds index accesses are [absent](reference-main-null-data.md), but out-of-bounds slice
+accesses result in trimming the indices, resulting in a short array or even the empty array.  (This
+behavior intentionally imitates Python.)
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put '</b>

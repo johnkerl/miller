@@ -80,9 +80,9 @@ GENMD-EOF
 
 ## Out-of-bounds indexing
 
-Somewhat imitating Python, out-of-bounds index accesses are
-[errors](reference-main-data-types.md), but out-of-bounds slice accesses result
-in trimming the indices, resulting in a short string or even the empty string:
+Out-of-bounds index accesses are [errors](reference-main-data-types.md), but out-of-bounds slice
+accesses result in trimming the indices, resulting in a short string or even the empty string.
+(This behavior intentionally imitates Python.)
 
 GENMD-RUN-COMMAND
 mlr -n put '
@@ -90,7 +90,7 @@ mlr -n put '
     x = "abcde";
     print x[1];
     print x[5];
-    print x[6]; # absent
+    print x[6];
   }
 '
 GENMD-EOF
@@ -99,9 +99,9 @@ GENMD-RUN-COMMAND
 mlr -n put '
   end {
     x = "abcde";
-    print x[1:2];
-    print x[1:6];
-    print x[10:20];
+    print "\"" . x[1:2] . "\"";
+    print "\"" . x[1:6] . "\"";
+    print "\"" . x[10:20] . "\"";
   }
 '
 GENMD-EOF
