@@ -79,37 +79,19 @@ func BIF_substr_1_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	runes := []rune(sinput)
 	strlen := int(len(runes))
 
-	// For array slices like s[1:2], s[:2], s[1:], when the lower index is
-	// empty in the DSL expression it comes in here as a 1. But when the upper
-	// index is empty in the DSL expression it comes in here as "".
-	if !input2.IsInt() {
-		return mlrval.ERROR
-	}
-	lowerMindex := int(input2.AcquireIntValue())
+	sliceIsEmpty, absentOrError, lowerZindex, upperZindex := MillerSliceAccess(input2, input3, strlen, false)
 
-	upperMindex := strlen
-	if input3.IsVoid() {
-		// Keep strlen
-	} else if !input3.IsInt() {
-		return mlrval.ERROR
-	} else {
-		upperMindex = int(input3.AcquireIntValue())
-	}
-
-	// Convert from negative-aliased 1-up to positive-only 0-up
-	m, mok := unaliasArrayLengthIndex(strlen, lowerMindex)
-	n, nok := unaliasArrayLengthIndex(strlen, upperMindex)
-
-	if !mok || !nok {
+	if sliceIsEmpty {
 		return mlrval.VOID
-	} else if m > n {
-		return mlrval.VOID
-	} else {
-		// Note Golang slice indices are 0-up, and the 1st index is inclusive
-		// while the 2nd is exclusive. For Miller, indices are 1-up and both
-		// are inclusive.
-		return mlrval.FromString(string(runes[m : n+1]))
 	}
+	if absentOrError != nil {
+		return absentOrError
+	}
+
+	// Note Golang slice indices are 0-up, and the 1st index is inclusive
+	// while the 2nd is exclusive. For Miller, indices are 1-up and both
+	// are inclusive.
+	return mlrval.FromString(string(runes[lowerZindex : upperZindex+1]))
 }
 
 // ================================================================
@@ -129,45 +111,19 @@ func BIF_substr_0_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	runes := []rune(sinput)
 	strlen := int(len(runes))
 
-	// For array slices like s[1:2], s[:2], s[1:], when the lower index is
-	// empty in the DSL expression it comes in here as a 1. But when the upper
-	// index is empty in the DSL expression it comes in here as "".
-	if !input2.IsInt() {
-		return mlrval.ERROR
-	}
-	lowerMindex := int(input2.AcquireIntValue())
-	if lowerMindex >= 0 {
-		// Make 1-up
-		lowerMindex += 1
-	}
+	sliceIsEmpty, absentOrError, lowerZindex, upperZindex := MillerSliceAccess(input2, input3, strlen, true)
 
-	upperMindex := strlen
-	if input3.IsVoid() {
-		// Keep strlen
-	} else if !input3.IsInt() {
-		return mlrval.ERROR
-	} else {
-		upperMindex = int(input3.AcquireIntValue())
-		if upperMindex >= 0 {
-			// Make 1-up
-			upperMindex += 1
-		}
-	}
-
-	// Convert from negative-aliased 1-up to positive-only 0-up
-	m, mok := unaliasArrayLengthIndex(strlen, lowerMindex)
-	n, nok := unaliasArrayLengthIndex(strlen, upperMindex)
-
-	if !mok || !nok {
+	if sliceIsEmpty {
 		return mlrval.VOID
-	} else if m > n {
-		return mlrval.VOID
-	} else {
-		// Note Golang slice indices are 0-up, and the 1st index is inclusive
-		// while the 2nd is exclusive. For Miller, indices are 1-up and both
-		// are inclusive.
-		return mlrval.FromString(string(runes[m : n+1]))
 	}
+	if absentOrError != nil {
+		return absentOrError
+	}
+
+	// Note Golang slice indices are 0-up, and the 1st index is inclusive
+	// while the 2nd is exclusive. For Miller, indices are 1-up and both
+	// are inclusive.
+	return mlrval.FromString(string(runes[lowerZindex : upperZindex+1]))
 }
 
 // ================================================================

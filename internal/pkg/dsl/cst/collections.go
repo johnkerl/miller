@@ -174,7 +174,7 @@ func (node *ArraySliceAccessNode) Evaluate(
 	n := len(array)
 
 	sliceIsEmpty, absentOrError, lowerZindex, upperZindex :=
-		bifs.MillerSliceAccess(lowerIndexMlrval, upperIndexMlrval, n)
+		bifs.MillerSliceAccess(lowerIndexMlrval, upperIndexMlrval, n, false)
 
 	if sliceIsEmpty {
 		return mlrval.FromEmptyArray()
