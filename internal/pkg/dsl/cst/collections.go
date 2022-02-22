@@ -173,62 +173,14 @@ func (node *ArraySliceAccessNode) Evaluate(
 	}
 	n := len(array)
 
-	if lowerIndexMlrval.IsAbsent() {
-		return mlrval.ABSENT
-	}
-	if upperIndexMlrval.IsAbsent() {
-		return mlrval.ABSENT
-	}
+	sliceIsEmpty, absentOrError, lowerZindex, upperZindex :=
+		bifs.MillerSliceAccess(lowerIndexMlrval, upperIndexMlrval, n)
 
-	lowerIndex, ok := lowerIndexMlrval.GetIntValue()
-	if !ok {
-		if lowerIndexMlrval.IsVoid() {
-			lowerIndex = 1
-		} else {
-			return mlrval.ERROR
-		}
-	}
-	upperIndex, ok := upperIndexMlrval.GetIntValue()
-	if !ok {
-		if upperIndexMlrval.IsVoid() {
-			upperIndex = int64(n)
-		} else {
-			return mlrval.ERROR
-		}
-	}
-
-	// UnaliasArrayIndex returns a boolean second return value to indicate
-	// whether the index is in range. But here, for the slicing operation, we
-	// inspect the in-range-ness ourselves so we discard that 2nd return value.
-	lowerZindex, _ := mlrval.UnaliasArrayIndex(&array, int(lowerIndex))
-	upperZindex, _ := mlrval.UnaliasArrayIndex(&array, int(upperIndex))
-
-	if lowerZindex > upperZindex {
+	if sliceIsEmpty {
 		return mlrval.FromEmptyArray()
 	}
-
-	// Semantics: say x=[1,2,3,4,5]. Then x[3:10] is [3,4,5].
-	//
-	// Cases:
-	//      [* * * * *]              actual data
-	//  [o o]                        1. attempted indexing: lo, hi both out of bounds
-	//  [o o o o o o ]               2. attempted indexing: hi in bounds, lo out
-	//  [o o o o o o o o o o o o]    3. attempted indexing: lo, hi both out of bounds
-	//        [o o o]                4. attempted indexing: lo, hi in bounds
-	//        [o o o o o o ]         5. attempted indexing: lo in bounds, hi out
-	//                  [o o o o]    6. attempted indexing: lo, hi both out of bounds
-
-	if lowerZindex < 0 {
-		lowerZindex = 0
-		if lowerZindex > upperZindex {
-			return mlrval.FromEmptyArray()
-		}
-	}
-	if upperZindex > n-1 {
-		upperZindex = n - 1
-		if lowerZindex > upperZindex {
-			return mlrval.FromEmptyArray()
-		}
+	if absentOrError != nil {
+		return absentOrError
 	}
 
 	// Go     slices have inclusive lower bound, exclusive upper bound.

@@ -865,3 +865,76 @@ func unaliasArrayLengthIndex(n int, mindex int) (int, bool) {
 		return -1, false
 	}
 }
+
+// MillerSliceAccess is code shared by the string-slicer and the array-slicer.
+func MillerSliceAccess(
+	lowerIndexMlrval *mlrval.Mlrval,
+	upperIndexMlrval *mlrval.Mlrval,
+	n int,
+) (
+	sliceIsEmpty bool, // true if the output of the slice should empty string/array
+	absentOrError *mlrval.Mlrval, // non-nil if the output of the slice should be absent/error
+	lowerZindex int, // lower zindex if first two return values are false & nil
+	upperZindex int, // upper zindex if first two return values are false & nil
+) {
+
+	if lowerIndexMlrval.IsAbsent() {
+		return false, mlrval.ABSENT, 0, 0
+	}
+	if upperIndexMlrval.IsAbsent() {
+		return false, mlrval.ABSENT, 0, 0
+	}
+
+	lowerIndex, ok := lowerIndexMlrval.GetIntValue()
+	if !ok {
+		if lowerIndexMlrval.IsVoid() {
+			lowerIndex = 1
+		} else {
+			return false, mlrval.ERROR, 0, 0
+		}
+	}
+	upperIndex, ok := upperIndexMlrval.GetIntValue()
+	if !ok {
+		if upperIndexMlrval.IsVoid() {
+			upperIndex = int64(n)
+		} else {
+			return false, mlrval.ERROR, 0, 0
+		}
+	}
+
+	// UnaliasArrayIndex returns a boolean second return value to indicate
+	// whether the index is in range. But here, for the slicing operation, we
+	// inspect the in-range-ness ourselves so we discard that 2nd return value.
+	lowerZindex, _ = mlrval.UnaliasArrayLengthIndex(n, int(lowerIndex))
+	upperZindex, _ = mlrval.UnaliasArrayLengthIndex(n, int(upperIndex))
+
+	if lowerZindex > upperZindex {
+		return true, nil, 0, 0
+	}
+
+	// Semantics: say x=[1,2,3,4,5]. Then x[3:10] is [3,4,5].
+	//
+	// Cases:
+	//      [* * * * *]              actual data
+	//  [o o]                        1. attempted indexing: lo, hi both out of bounds
+	//  [o o o o o o ]               2. attempted indexing: hi in bounds, lo out
+	//  [o o o o o o o o o o o o]    3. attempted indexing: lo, hi both out of bounds
+	//        [o o o]                4. attempted indexing: lo, hi in bounds
+	//        [o o o o o o ]         5. attempted indexing: lo in bounds, hi out
+	//                  [o o o o]    6. attempted indexing: lo, hi both out of bounds
+
+	if lowerZindex < 0 {
+		lowerZindex = 0
+		if lowerZindex > upperZindex {
+			return true, nil, 0, 0
+		}
+	}
+	if upperZindex > n-1 {
+		upperZindex = n - 1
+		if lowerZindex > upperZindex {
+			return true, nil, 0, 0
+		}
+	}
+
+	return false, nil, lowerZindex, upperZindex
+}
