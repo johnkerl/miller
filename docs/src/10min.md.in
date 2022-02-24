@@ -129,7 +129,7 @@ GENMD-RUN-COMMAND
 mlr --c2p put '${Total KWh} = ${Total MWh} * 1000' spaces.csv
 GENMD-EOF
 
-See also the [section on field names](reference-dsl-variables.md/#field-names).
+See also the [section on field names](reference-dsl-variables.md#field-names).
 
 ## Multiple input files
 

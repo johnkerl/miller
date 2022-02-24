@@ -357,7 +357,7 @@ Zone Total MWh Total KWh
 30   50.5      50500
 </pre>
 
-See also the [section on field names](reference-dsl-variables.md/#field-names).
+See also the [section on field names](reference-dsl-variables.md#field-names).
 
 ## Multiple input files
 
