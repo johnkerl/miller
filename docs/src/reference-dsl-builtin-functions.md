@@ -557,7 +557,7 @@ splita("3,4,5", ",") = [3,4,5]
 <pre class="pre-non-highlight-non-pair">
 splitax  (class=conversion #args=2) Splits string into array without type inference. First argument is string to split; second is the separator to split on.
 Example:
-splita("3,4,5", ",") = ["3","4","5"]
+splitax("3,4,5", ",") = ["3","4","5"]
 </pre>
 
 
