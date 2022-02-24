@@ -5,13 +5,8 @@ RELEASES
   o mlr join --left-fields a,b,c
   o fmt/unfmt/regex doc
   o FAQ/examples reorg
-  ? ??? for doc-string contents search -- ? & mlr help namegoeshere foo ...
 
-  o several needs-doc issues
-    i https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+label%3Aneeds-documentation
-    - 908
-      :context
-      https://github.com/johnkerl/miller/issues/908#issuecomment-1032573038 NFR
+  o https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+label%3Aneeds-documentation
 
   k strptime/882
   k fmtifnum, & recursive fmtnum/fmtifnum
