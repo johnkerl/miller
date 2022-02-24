@@ -35,6 +35,7 @@ type tJoinOptions struct {
 	rightPrefix string
 
 	outputJoinFieldNames []string
+	leftKeepFieldNames   []string
 	leftJoinFieldNames   []string
 	rightJoinFieldNames  []string
 
@@ -57,6 +58,7 @@ func newJoinOptions() *tJoinOptions {
 		rightPrefix: "",
 
 		outputJoinFieldNames: nil,
+		leftKeepFieldNames:   nil,
 		leftJoinFieldNames:   nil,
 		rightJoinFieldNames:  nil,
 
@@ -89,6 +91,9 @@ func transformerJoinUsage(
 	fmt.Fprintf(o, "               defaults to -j values if omitted.\n")
 	fmt.Fprintf(o, "  -r {a,b,c}   Comma-separated join-field names for right input file(s);\n")
 	fmt.Fprintf(o, "               defaults to -j values if omitted.\n")
+	fmt.Fprintf(o, "  --lk|--left-keep-field-names {a,b,c} If supplied, this means keep only the specified field\n")
+	fmt.Fprintf(o, "               names from the left file. Automatically includes the join-field name(s). Helpful\n")
+	fmt.Fprintf(o, "               for when you only want a limited subset of information from the left file.\n")
 	fmt.Fprintf(o, "  --lp {text}  Additional prefix for non-join output field names from\n")
 	fmt.Fprintf(o, "               the left file\n")
 	fmt.Fprintf(o, "  --rp {text}  Additional prefix for non-join output field names from\n")
@@ -185,6 +190,9 @@ func transformerJoinParseCLI(
 		} else if opt == "-l" {
 			opts.leftJoinFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
+		} else if opt == "--lk" || opt == "--left-keep-field-names" {
+			opts.leftKeepFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+
 		} else if opt == "-r" {
 			opts.rightJoinFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
@@ -280,8 +288,9 @@ func transformerJoinParseCLI(
 type TransformerJoin struct {
 	opts *tJoinOptions
 
-	leftFieldNameSet  map[string]bool
-	rightFieldNameSet map[string]bool
+	leftFieldNameSet     map[string]bool
+	rightFieldNameSet    map[string]bool
+	leftKeepFieldNameSet map[string]bool
 
 	// For unsorted/half-streaming input
 	ingested                         bool
@@ -302,13 +311,22 @@ func NewTransformerJoin(
 	tr := &TransformerJoin{
 		opts: opts,
 
-		leftFieldNameSet:  lib.StringListToSet(opts.leftJoinFieldNames),
-		rightFieldNameSet: lib.StringListToSet(opts.rightJoinFieldNames),
+		leftFieldNameSet:     lib.StringListToSet(opts.leftJoinFieldNames),
+		rightFieldNameSet:    lib.StringListToSet(opts.rightJoinFieldNames),
+		leftKeepFieldNameSet: lib.StringListToSet(opts.leftKeepFieldNames),
 
 		ingested:                         false,
 		leftBucketsByJoinFieldValues:     nil,
 		leftUnpairableRecordsAndContexts: nil,
 		joinBucketKeeper:                 nil,
+	}
+	// Suppose left file has "id,foo,bar" and right has "id,baz,quux" and the join field name is
+	// "id".  If they ask for --lk id,foo we should keep only id,foo from the left file. But if
+	// they ask for --lk foo we should keep id *and* foo fromn the left file.
+	if tr.leftKeepFieldNameSet != nil {
+		for _, name := range opts.leftJoinFieldNames {
+			tr.leftKeepFieldNameSet[name] = true
+		}
 	}
 
 	if opts.allowUnsortedInput {
@@ -325,10 +343,11 @@ func NewTransformerJoin(
 		// too much RAM.
 
 		tr.joinBucketKeeper = utils.NewJoinBucketKeeper(
-			//		opts.prepipe,
+			// opts.prepipe,
 			opts.leftFileName,
 			&opts.joinFlagOptions.ReaderOptions,
 			opts.leftJoinFieldNames,
+			tr.leftKeepFieldNameSet,
 		)
 
 		tr.recordTransformerFunc = tr.transformDoublyStreaming
@@ -346,7 +365,8 @@ func (tr *TransformerJoin) Transform(
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts,
+		inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 // ----------------------------------------------------------------
@@ -500,6 +520,7 @@ func (tr *TransformerJoin) ingestLeftFile() {
 			// TODO: temp for batch-reader refactor
 			lib.InternalCodingErrorIf(leftrecsAndContexts.Len() != 1)
 			leftrecAndContext := leftrecsAndContexts.Front().Value.(*types.RecordAndContext)
+			leftrecAndContext.Record = utils.KeepLeftFieldNames(leftrecAndContext.Record, tr.leftKeepFieldNameSet)
 
 			if leftrecAndContext.EndOfStream {
 				done = true

@@ -1248,6 +1248,9 @@ VERBS
                       defaults to -j values if omitted.
          -r {a,b,c}   Comma-separated join-field names for right input file(s);
                       defaults to -j values if omitted.
+         --lk|--left-keep-field-names {a,b,c} If supplied, this means keep only the specified field
+                      names from the left file. Automatically includes the join-field name(s). Helpful
+                      for when you only want a limited subset of information from the left file.
          --lp {text}  Additional prefix for non-join output field names from
                       the left file
          --rp {text}  Additional prefix for non-join output field names from

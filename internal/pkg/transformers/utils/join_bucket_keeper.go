@@ -131,7 +131,8 @@ type JoinBucketKeeper struct {
 	// TODO: merge with leof flag
 	recordReaderDone bool
 
-	leftJoinFieldNames []string
+	leftJoinFieldNames   []string
+	leftKeepFieldNameSet map[string]bool
 
 	// Given a left-file of the following form (with left-join-field name "L"):
 	//   +-----+
@@ -163,6 +164,7 @@ func NewJoinBucketKeeper(
 	leftFileName string,
 	joinReaderOptions *cli.TReaderOptions,
 	leftJoinFieldNames []string,
+	leftKeepFieldNameSet map[string]bool,
 ) *JoinBucketKeeper {
 
 	// Instantiate the record-reader
@@ -194,7 +196,8 @@ func NewJoinBucketKeeper(
 		errorChannel:     errorChannel,
 		recordReaderDone: false,
 
-		leftJoinFieldNames: leftJoinFieldNames,
+		leftJoinFieldNames:   leftJoinFieldNames,
+		leftKeepFieldNameSet: leftKeepFieldNameSet,
 
 		JoinBucket:           NewJoinBucket(nil),
 		peekRecordAndContext: nil,
@@ -575,6 +578,7 @@ func (keeper *JoinBucketKeeper) readRecord() *types.RecordAndContext {
 		// TODO: temp
 		lib.InternalCodingErrorIf(leftrecsAndContexts.Len() != 1)
 		leftrecAndContext := leftrecsAndContexts.Front().Value.(*types.RecordAndContext)
+		leftrecAndContext.Record = KeepLeftFieldNames(leftrecAndContext.Record, keeper.leftKeepFieldNameSet)
 		if leftrecAndContext.EndOfStream { // end-of-stream marker
 			keeper.recordReaderDone = true
 			return nil
@@ -623,4 +627,27 @@ func compareLexically(
 		}
 	}
 	return 0
+}
+
+// KeepLeftFieldNames is for when the user wants only selected fields out of the left file.
+func KeepLeftFieldNames(
+	inrec *mlrval.Mlrmap,
+	leftKeepFieldNameSet map[string]bool,
+) *mlrval.Mlrmap {
+	if inrec == nil {
+		return inrec
+	} else if leftKeepFieldNameSet == nil {
+		// Normal case
+		return inrec
+	} else {
+		outrec := mlrval.NewMlrmap()
+		for pe := inrec.Head; pe != nil; pe = pe.Next {
+			if leftKeepFieldNameSet[pe.Key] {
+				// PutReference, not PutCopy, since the inrec will be freed and this
+				// is an ownership transfer.
+				outrec.PutReference(pe.Key, pe.Value)
+			}
+		}
+		return outrec
+	}
 }
