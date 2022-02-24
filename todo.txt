@@ -2,12 +2,12 @@
 RELEASES
 * plan 6.1.0
   o unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
-  o mlr join --left-fields a,b,c
   o fmt/unfmt/regex doc
   o FAQ/examples reorg
 
   o https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+label%3Aneeds-documentation
 
+  k mlr join --left-fields a,b,c
   k strptime/882
   k fmtifnum, & recursive fmtnum/fmtifnum
   k unicode string literals
