@@ -91,6 +91,9 @@ func transformerJoinUsage(
 	fmt.Fprintf(o, "               defaults to -j values if omitted.\n")
 	fmt.Fprintf(o, "  -r {a,b,c}   Comma-separated join-field names for right input file(s);\n")
 	fmt.Fprintf(o, "               defaults to -j values if omitted.\n")
+	fmt.Fprintf(o, "  --lk|--left-keep-field-names {a,b,c} If supplied, this means keep only the specified field\n")
+	fmt.Fprintf(o, "               names from the left file. Automatically includes the join-field name(s). Helpful\n")
+	fmt.Fprintf(o, "               for when you only want a limited subset of information from the left file.\n")
 	fmt.Fprintf(o, "  --lp {text}  Additional prefix for non-join output field names from\n")
 	fmt.Fprintf(o, "               the left file\n")
 	fmt.Fprintf(o, "  --rp {text}  Additional prefix for non-join output field names from\n")
@@ -187,7 +190,7 @@ func transformerJoinParseCLI(
 		} else if opt == "-l" {
 			opts.leftJoinFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if opt == "--lk" || opt == "--left-keep-fields" {
+		} else if opt == "--lk" || opt == "--left-keep-field-names" {
 			opts.leftKeepFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-r" {
