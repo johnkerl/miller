@@ -634,7 +634,7 @@ func KeepLeftFieldNames(
 	inrec *mlrval.Mlrmap,
 	leftKeepFieldNameSet map[string]bool,
 ) *mlrval.Mlrmap {
-	if inrec == nil  {
+	if inrec == nil {
 		return inrec
 	} else if leftKeepFieldNameSet == nil {
 		// Normal case
