@@ -1529,7 +1529,7 @@ second is the separator to split on.`,
 			help: `Splits string into array without type inference. First argument is string to split;
 second is the separator to split on.`,
 			examples: []string{
-				`splita("3,4,5", ",") = ["3","4","5"]`,
+				`splitax("3,4,5", ",") = ["3","4","5"]`,
 			},
 			binaryFunc: bifs.BIF_splitax,
 		},
