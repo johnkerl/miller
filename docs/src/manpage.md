@@ -2534,7 +2534,7 @@ FUNCTIONS FOR FILTER/PUT
    splitax
         (class=conversion #args=2) Splits string into array without type inference. First argument is string to split; second is the separator to split on.
        Example:
-       splita("3,4,5", ",") = ["3","4","5"]
+       splitax("3,4,5", ",") = ["3","4","5"]
 
    splitkv
         (class=conversion #args=3) Splits string by separators into map with type inference. First argument is string to split; second argument is pair separator; third argument is field separator.
@@ -3187,5 +3187,5 @@ SEE ALSO
 
 
 
-                                  2022-02-21                         MILLER(1)
+                                  2022-02-24                         MILLER(1)
 </pre>
