@@ -46,6 +46,8 @@ Miller's REPL isn't a source-level debugger which lets you execute one source-co
   "rate": 9.8870
 }
 
+[mlr] :context
+FILENAME="example.csv",FILENUM=1,NR=1,FNR=1
 </pre>
 
 ## Using Miller without the REPL

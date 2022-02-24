@@ -28,6 +28,8 @@ mlr repl
   "rate": 9.8870
 }
 
+[mlr] :context
+FILENAME="example.csv",FILENUM=1,NR=1,FNR=1
 GENMD-EOF
 
 ## Using Miller without the REPL
