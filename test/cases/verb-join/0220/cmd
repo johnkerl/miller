@@ -1,0 +1,1 @@
+mlr --csv join -s --lk a,b -j a -f test/input/join-left-keep test/input/join-right-keep
