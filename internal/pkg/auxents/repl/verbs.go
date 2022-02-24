@@ -1035,6 +1035,9 @@ to record-processing using the put/filter DSL (domain-specific language).`)
   or ':open'.
 * Specify filenames either on the command line or via ':open' at the Miller REPL.
 * Read records one at a time using ':read'.
+* The current record can be read via '$*'; also you can assign to it.
+* The current record's context -- 'FILENAME', 'FILENUM', 'NR', 'FNR' -- can be read
+  via ':context'. Unlike R*, this is read-only.
 * Write the current record (maybe after you've modified it with things like '$z = $x + $y')
   using ':write'. This goes to the terminal; you can use ':> {filename}' to make writes
   go to a file, or ':>> {filename}' to append.
