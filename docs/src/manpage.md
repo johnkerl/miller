@@ -2658,15 +2658,15 @@ FUNCTIONS FOR FILTER/PUT
    unformat
         (class=string #args=2) Using first argument as format string, unpacks second argument into an array of matches, with type-inference. On non-match, returns error -- use is_error() to check.
        Examples:
-       unformat("{}:{}:{}",  "1:2:3") gives [1, 2, 3]".
-       unformat("{}h{}m{}s", "3h47m22s") gives [3, 47, 22]".
+       unformat("{}:{}:{}",  "1:2:3") gives [1, 2, 3].
+       unformat("{}h{}m{}s", "3h47m22s") gives [3, 47, 22].
        is_error(unformat("{}h{}m{}s", "3:47:22")) gives true.
 
    unformatx
         (class=string #args=2) Same as unformat, but without type-inference.
        Examples:
-       unformatx("{}:{}:{}",  "1:2:3") gives ["1", "2", "3"]".
-       unformatx("{}h{}m{}s", "3h47m22s") gives ["3", "47", "22"]".
+       unformatx("{}:{}:{}",  "1:2:3") gives ["1", "2", "3"].
+       unformatx("{}h{}m{}s", "3h47m22s") gives ["3", "47", "22"].
        is_error(unformatx("{}h{}m{}s", "3:47:22")) gives true.
 
    uptime
@@ -2723,7 +2723,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=arithmetic #args=1,2) Subtraction as binary operator; unary negation operator.
 
    .
-        (class=string #args=2) String concatenation.
+        (class=string #args=2) String concatenation. Non-strings are coerced, so you can do '"ax".98' etc.
 
    .*
         (class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
