@@ -322,6 +322,13 @@ A [keyword](#keyword) used for defining a
 [user-defined functions](reference-dsl-user-defined-functions.md) in the
 [Miller programming language](miller-programming-language.md).
 
+## funct
+
+A type declaration used for local variables, function arguments, and function
+return values which are (named) [user-defined functions](#udf) or (unnamed) [function literals](#function-literal).
+
+See the [variables page](reference-dsl-variables.md#type-declarations-for-local-variables-function-parameter-and-function-return-values) for examples.
+
 ## function
 
 A bit of callable code in the
@@ -701,14 +708,16 @@ page](record-heterogeneity.md#sparse-data).
 A [keyword](#keyword) in the
 [Miller programming language](miller-programming-language.md)
 for [print, dump, and tee statements](reference-dsl-output-statements.md#tee-statements)
-indicating that data are to be sent to the [_standard error_](https://en.wikipedia.org/wiki/Standard_streams#Standard_error_(stderr)).
+indicating that data are to be sent to the
+[_standard error_](https://en.wikipedia.org/wiki/Standard_streams#Standard_error_(stderr)).
 
 ## stdout
 
 A [keyword](#keyword) in the
 [Miller programming language](miller-programming-language.md)
 for [print, dump, and tee statements](reference-dsl-output-statements.md#tee-statements)
-indicating that data are to be sent to the [_standard output_](https://en.wikipedia.org/wiki/Standard_streams#Standard_output_(stdout)).
+indicating that data are to be sent to the
+[_standard output_](https://en.wikipedia.org/wiki/Standard_streams#Standard_output_(stdout)).
 
 ## str
 
