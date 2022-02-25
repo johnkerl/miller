@@ -203,7 +203,7 @@ Things which are completely unsurprising, resembling many other languages:
 
 Things which are perhaps surprising compared to other languages:
 
-* Type declarations using `var`, or typed using `num`, `int`, `float`, `str`, `arr`, `bool`, and `funct` are not necessary to declare local variables.  Function arguments and variables bound in for-loops over stream records and out-of-stream variables are *implicitly* declared using `var`. (Some examples are shown below.)
+* Type declarations using `var`, or typed using `num`, `int`, `float`, `str`, `bool`, `arr`, `map`, `funct` are not necessary to declare local variables.  Function arguments and variables bound in for-loops over stream records and out-of-stream variables are *implicitly* declared using `var`. (Some examples are shown below.)
 
 * Type-checking is done at assignment time. For example, `float f = 0` is an error (since `0` is an integer), as is `float f = 0.0; f = 1`. For this reason I prefer to use `num` over `float` in most contexts since `num` encompasses integer and floating-point values. More information is at [Type-checking](reference-dsl-variables.md#type-checking).
 
