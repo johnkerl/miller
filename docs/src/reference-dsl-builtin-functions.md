@@ -118,126 +118,144 @@ pow  (class=arithmetic #args=2) Exponentiation. Same as **, but as a function.
 </pre>
 
 
-<a id=percent />
+<a id=percent> </a>
+
 ### %
 <pre class="pre-non-highlight-non-pair">
 %  (class=arithmetic #args=2) Remainder; never negative-valued (pythonic).
 </pre>
 
 
-<a id=bitwise-and />
+<a id=bitwise-and> </a>
+
 ### &
 <pre class="pre-non-highlight-non-pair">
 &  (class=arithmetic #args=2) Bitwise AND.
 </pre>
 
 
-<a id=times />
+<a id=times> </a>
+
 ### \*
 <pre class="pre-non-highlight-non-pair">
 *  (class=arithmetic #args=2) Multiplication, with integer*integer overflow to float.
 </pre>
 
 
-<a id=exponentiation />
+<a id=exponentiation> </a>
+
 ### \**
 <pre class="pre-non-highlight-non-pair">
 **  (class=arithmetic #args=2) Exponentiation. Same as pow, but as an infix operator.
 </pre>
 
 
-<a id=plus />
+<a id=plus> </a>
+
 ### \+
 <pre class="pre-non-highlight-non-pair">
 +  (class=arithmetic #args=1,2) Addition as binary operator; unary plus operator.
 </pre>
 
 
-<a id=minus />
+<a id=minus> </a>
+
 ### \-
 <pre class="pre-non-highlight-non-pair">
 -  (class=arithmetic #args=1,2) Subtraction as binary operator; unary negation operator.
 </pre>
 
 
-<a id=dot-times />
+<a id=dot-times> </a>
+
 ### \.\*
 <pre class="pre-non-highlight-non-pair">
 .*  (class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
 </pre>
 
 
-<a id=dot-plus />
+<a id=dot-plus> </a>
+
 ### \.\+
 <pre class="pre-non-highlight-non-pair">
 .+  (class=arithmetic #args=2) Addition, with integer-to-integer overflow.
 </pre>
 
 
-<a id=dot-minus />
+<a id=dot-minus> </a>
+
 ### \.\-
 <pre class="pre-non-highlight-non-pair">
 .-  (class=arithmetic #args=2) Subtraction, with integer-to-integer overflow.
 </pre>
 
 
-<a id=dot-slash />
+<a id=dot-slash> </a>
+
 ### \./
 <pre class="pre-non-highlight-non-pair">
 ./  (class=arithmetic #args=2) Integer division, rounding toward zero.
 </pre>
 
 
-<a id=slash />
+<a id=slash> </a>
+
 ### /
 <pre class="pre-non-highlight-non-pair">
 /  (class=arithmetic #args=2) Division. Integer / integer is integer when exact, else floating-point: e.g. 6/3 is 2 but 6/4 is 1.5.
 </pre>
 
 
-<a id=slash-slash />
+<a id=slash-slash> </a>
+
 ### //
 <pre class="pre-non-highlight-non-pair">
 //  (class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
 </pre>
 
 
-<a id=lsh />
+<a id=lsh> </a>
+
 ### <<
 <pre class="pre-non-highlight-non-pair">
 <<  (class=arithmetic #args=2) Bitwise left-shift.
 </pre>
 
 
-<a id=srsh />
+<a id=srsh> </a>
+
 ### >>
 <pre class="pre-non-highlight-non-pair">
 >>  (class=arithmetic #args=2) Bitwise signed right-shift.
 </pre>
 
 
-<a id=ursh />
+<a id=ursh> </a>
+
 ### >>>
 <pre class="pre-non-highlight-non-pair">
 >>>  (class=arithmetic #args=2) Bitwise unsigned right-shift.
 </pre>
 
 
-<a id=bitwise-xor />
+<a id=bitwise-xor> </a>
+
 ### ^
 <pre class="pre-non-highlight-non-pair">
 ^  (class=arithmetic #args=2) Bitwise XOR.
 </pre>
 
 
-<a id=bitwise-or />
+<a id=bitwise-or> </a>
+
 ### \|
 <pre class="pre-non-highlight-non-pair">
 |  (class=arithmetic #args=2) Bitwise OR.
 </pre>
 
 
-<a id=bitwise-not />
+<a id=bitwise-not> </a>
+
 ### ~
 <pre class="pre-non-highlight-non-pair">
 ~  (class=arithmetic #args=1) Bitwise NOT. Beware '$y=~$x' since =~ is the regex-match operator: try '$y = ~$x'.
@@ -246,42 +264,48 @@ pow  (class=arithmetic #args=2) Exponentiation. Same as **, but as a function.
 ## Boolean functions
 
 
-<a id=exclamation-point />
+<a id=exclamation-point> </a>
+
 ### \!
 <pre class="pre-non-highlight-non-pair">
 !  (class=boolean #args=1) Logical negation.
 </pre>
 
 
-<a id=exclamation-point-equals />
+<a id=exclamation-point-equals> </a>
+
 ### \!=
 <pre class="pre-non-highlight-non-pair">
 !=  (class=boolean #args=2) String/numeric inequality. Mixing number and string results in string compare.
 </pre>
 
 
-<a id=regnotmatch />
+<a id=regnotmatch> </a>
+
 ### !=~
 <pre class="pre-non-highlight-non-pair">
 !=~  (class=boolean #args=2) String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
 </pre>
 
 
-<a id=logical-and />
+<a id=logical-and> </a>
+
 ### &&
 <pre class="pre-non-highlight-non-pair">
 &&  (class=boolean #args=2) Logical AND.
 </pre>
 
 
-<a id=less-than />
+<a id=less-than> </a>
+
 ### <
 <pre class="pre-non-highlight-non-pair">
 <  (class=boolean #args=2) String/numeric less-than. Mixing number and string results in string compare.
 </pre>
 
 
-<a id=less-than-or-equals />
+<a id=less-than-or-equals> </a>
+
 ### <=
 <pre class="pre-non-highlight-non-pair">
 <=  (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
@@ -294,14 +318,16 @@ pow  (class=arithmetic #args=2) Exponentiation. Same as **, but as a function.
 </pre>
 
 
-<a id=double-equals />
+<a id=double-equals> </a>
+
 ### ==
 <pre class="pre-non-highlight-non-pair">
 ==  (class=boolean #args=2) String/numeric equality. Mixing number and string results in string compare.
 </pre>
 
 
-<a id=regmatch />
+<a id=regmatch> </a>
+
 ### =~
 <pre class="pre-non-highlight-non-pair">
 =~  (class=boolean #args=2) String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'. Capture groups \1 through \9 are matched from (...) in the right-hand side, and can be used within subsequent DSL statements. See also "Regular expressions" at https://miller.readthedocs.io.
@@ -311,49 +337,56 @@ Without if-statement: given $line = "index ab09 file", and $line =~ "([a-z][a-z]
 </pre>
 
 
-<a id=greater-than />
+<a id=greater-than> </a>
+
 ### >
 <pre class="pre-non-highlight-non-pair">
 >  (class=boolean #args=2) String/numeric greater-than. Mixing number and string results in string compare.
 </pre>
 
 
-<a id=greater-than-or-equals />
+<a id=greater-than-or-equals> </a>
+
 ### >=
 <pre class="pre-non-highlight-non-pair">
 >=  (class=boolean #args=2) String/numeric greater-than-or-equals. Mixing number and string results in string compare.
 </pre>
 
 
-<a id=question-mark-colon />
+<a id=question-mark-colon> </a>
+
 ### ?:
 <pre class="pre-non-highlight-non-pair">
 ?:  (class=boolean #args=3) Standard ternary operator.
 </pre>
 
 
-<a id=absent-coalesce />
+<a id=absent-coalesce> </a>
+
 ### ??
 <pre class="pre-non-highlight-non-pair">
 ??  (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record.
 </pre>
 
 
-<a id=absent-empty-coalesce />
+<a id=absent-empty-coalesce> </a>
+
 ### ???
 <pre class="pre-non-highlight-non-pair">
 ???  (class=boolean #args=2) Absent/empty-coalesce operator. $a ??? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
 </pre>
 
 
-<a id=logical-xor />
+<a id=logical-xor> </a>
+
 ### ^^
 <pre class="pre-non-highlight-non-pair">
 ^^  (class=boolean #args=2) Logical XOR.
 </pre>
 
 
-<a id=logical-or />
+<a id=logical-or> </a>
+
 ### \|\|
 <pre class="pre-non-highlight-non-pair">
 ||  (class=boolean #args=2) Logical OR.
@@ -1073,8 +1106,8 @@ truncate  (class=string #args=2) Truncates string first argument to max length o
 <pre class="pre-non-highlight-non-pair">
 unformat  (class=string #args=2) Using first argument as format string, unpacks second argument into an array of matches, with type-inference. On non-match, returns error -- use is_error() to check.
 Examples:
-unformat("{}:{}:{}",  "1:2:3") gives [1, 2, 3].
-unformat("{}h{}m{}s", "3h47m22s") gives [3, 47, 22].
+unformat("{}:{}:{}",  "1:2:3") gives [1, 2, 3]".
+unformat("{}h{}m{}s", "3h47m22s") gives [3, 47, 22]".
 is_error(unformat("{}h{}m{}s", "3:47:22")) gives true.
 </pre>
 
@@ -1083,16 +1116,17 @@ is_error(unformat("{}h{}m{}s", "3:47:22")) gives true.
 <pre class="pre-non-highlight-non-pair">
 unformatx  (class=string #args=2) Same as unformat, but without type-inference.
 Examples:
-unformatx("{}:{}:{}",  "1:2:3") gives ["1", "2", "3"].
-unformatx("{}h{}m{}s", "3h47m22s") gives ["3", "47", "22"].
+unformatx("{}:{}:{}",  "1:2:3") gives ["1", "2", "3"]".
+unformatx("{}h{}m{}s", "3h47m22s") gives ["3", "47", "22"]".
 is_error(unformatx("{}h{}m{}s", "3:47:22")) gives true.
 </pre>
 
 
-<a id=dot />
+<a id=dot> </a>
+
 ### \.
 <pre class="pre-non-highlight-non-pair">
-.  (class=string #args=2) String concatenation. Non-strings are coerced, so you can do '"ax".98' etc.
+.  (class=string #args=2) String concatenation.
 </pre>
 
 ## System functions

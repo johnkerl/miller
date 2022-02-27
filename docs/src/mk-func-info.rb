@@ -97,7 +97,8 @@ def make_func_details
 
       puts
       if display_name != link_name
-        puts "<a id=#{link_name} />"
+        puts "<a id=#{link_name}> </a>"
+        puts ""
       end
       puts "### #{display_name}"
 
