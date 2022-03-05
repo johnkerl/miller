@@ -37,6 +37,7 @@ RELEASES
   ? rank
   ? YAML
   ? #908 inferencing options
+  ? gogll
 
 ================================================================
 FEATURES
@@ -109,6 +110,16 @@ inference:
 * inf/nan (unquoted) -> DSL
   o webdocs as in #933 description
 * for data files: --symbol-true yes --symbol-false off --symbol-infinity inf --symbol-not-available N/A
+
+----------------------------------------------------------------
+strict-mode ideas
+* localvar:
+  o LHS: just require typedecl (even just var)
+  o RHS: like put -w, but with turning warnings into errors
+* oosvar:
+  o abend unless @?x -- ?
+* srec:
+  o abend unless $?x -- ?
 
 ----------------------------------------------------------------
 mlr join --left-fields a,b,c
@@ -226,6 +237,10 @@ UX
 
 ================================================================
 DOC
+
+* issue on gnu parallel -> link to scripting page
+
+* https://stackoverflow.com/questions/71011603/is-there-a-simple-way-to-convert-a-csv-with-0-indexed-paths-as-keys-to-json-with/71015190#71015190
 
 ! slwin / unformat narrative:
   o prototype in DSL
