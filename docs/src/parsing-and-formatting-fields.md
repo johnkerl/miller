@@ -301,7 +301,7 @@ If you prefer [regular expressions](reference-main-regular-expressions.md), thos
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint --from data/split2.csv put '</b>
-<b>  if ($stamp =~ "([0-9]+)-([0-9]+):([0-9]+):([0-9]+)") {</b>
+<b>  if ($stamp =~ "(\d+)-(\d+):(\d+):(\d+)") {</b>
 <b>    $description = "\1 day(s) \2 hour(s) \3 minute(s) \4 seconds(s)";</b>
 <b>  }</b>
 <b>'</b>
