@@ -2,11 +2,13 @@
 RELEASES
 * plan 6.1.0
   o unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
-    - \d etc to DSL :( -- & parsing-and-formatting-fields.md.in
   o mlr split -- needs an example page along with the tee DSL function
+  o 404 -- what broke?
+    https://github.com/johnkerl/miller/pull/757/files
 
   o https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+label%3Aneeds-documentation
 
+  k more regex patterns like \d
   k mlr join --left-fields a,b,c
   k strptime/882
   k fmtifnum, & recursive fmtnum/fmtifnum
