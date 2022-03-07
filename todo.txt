@@ -1,13 +1,10 @@
 ===============================================================
+* 404 -- what broke?
+  https://github.com/johnkerl/miller/pull/757/files
+* https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+label%3Aneeds-documentation
+
 RELEASES
 * plan 6.1.0
-  o unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
-  o mlr split -- needs an example page along with the tee DSL function
-  o 404 -- what broke?
-    https://github.com/johnkerl/miller/pull/757/files
-
-  o https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+label%3Aneeds-documentation
-
   k more regex patterns like \d
   k mlr join --left-fields a,b,c
   k strptime/882
@@ -34,6 +31,9 @@ RELEASES
   ! extended field accessors for #763 and #948 (positional & json.nested)
   ! strict mode
   ! awk-like exit
+  o unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
+  o mlr split -- needs an example page along with the tee DSL function
+    - some mlr merge somehow -- ? would need a verb-API refactor
   ? datediff et al.
   ? strmatch
   ? rank
