@@ -1,0 +1,190 @@
+# Parsing and formatting fields
+
+Miller offers several ways to split strings into pieces (parsing them), and to put things together
+into a string (formatting them).
+
+## Splitting and joining with the same separator
+
+One pattern we often have is items separated by the same separator, e.g. a field with value
+`1;2;3;4` -- with a `;` between every pair of items. There are several useful
+[DSL](miller-programming-language.md) [functions](reference-dsl-builtin-functions.md) for splitting
+a string into pieces, and joining pieces into a string.
+
+For example, suppose we have a CSV file like this:
+
+GENMD-RUN-COMMAND
+cat data/split1.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson cat data/split1.csv
+GENMD-EOF
+
+Then we can use the [`splita`](reference-dsl-builtin-functions.md#splita) function to split the
+`nicknames` string into an array of strings:
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson --from data/split1.csv put '$nicknames = splita($nicknames, ",")'
+GENMD-EOF
+
+Likewise we can split the `codes` field. Since these look like numbers, we can again use `splita`
+which tries to type-infer ints and floats when it finds them -- or, we can use
+[splitax](reference-dsl-builtin-functions.md#splitax) to ask for the string to be split up into
+substrings, with no type inference:
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson --from data/split1.csv put '$codes = splita($codes, ",")'
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson --from data/split1.csv put '$codes = splitax($codes, ",")'
+GENMD-EOF
+
+We can do operations on the array, then use [joinv](reference-dsl-builtin-functions.md#joinv) to put them
+back together:
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson --from data/split1.csv put '
+  $codes = splita($codes, ",");                       # split into array of integers
+  $codes = apply($codes, func(e) { return e * 100 }); # do math on the array of integers
+  $codes = joinv($codes, ",");                        # join the updated array back into a string
+'
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv --from data/split1.csv put '
+  $codes = splita($codes, ",");                       # split into array of integers
+  $codes = apply($codes, func(e) { return e * 100 }); # do math on the array of integers
+  $codes = joinv($codes, ",");                        # join the updated array back into a string
+'
+GENMD-EOF
+
+The full list of split functions includes
+[splita](reference-dsl-builtin-functions.md#splita),
+[splitax](reference-dsl-builtin-functions.md#splitax),
+[splitkv](reference-dsl-builtin-functions.md#splitkv),
+[splitkvx](reference-dsl-builtin-functions.md#splitkvx),
+[splitnv](reference-dsl-builtin-functions.md#splitnv), and
+[splitnx](reference-dsl-builtin-functions.md#splitx). The flavors have to to with what the output is
+-- arrays or maps -- and whether or not type-inference is done.
+
+The full list of join functions includes [joink](reference-dsl-builtin-functions.md#joink),
+[joinv](reference-dsl-builtin-functions.md#joinv), and
+[joinkv](reference-dsl-builtin-functions.md#joinkv). Here the flavors have to do with whether we put
+array/map keys, values, or both into the resulting string.
+
+## Example: shortening hostnames
+
+Suppose you want to just keep the first two components of the hostnames:
+
+GENMD-RUN-COMMAND
+cat data/hosts.csv
+GENMD-EOF
+
+Using the [`splita`](reference-dsl-builtin-functions.md#splita) and
+[`joinv`](reference-dsl-builtin-functions.md#joinv) functions, along with
+[array slicing](reference-main-arrays.md#slicing), we get
+
+GENMD-RUN-COMMAND
+mlr --csv --from data/hosts.csv put '$host = joinv(splita($host, ".")[1:2], ".")'
+GENMD-EOF
+
+## Flatten/unflatten: representing arrays in CSV
+
+In the above examples, when we split a string field into an array, we used JSON output. That's
+because JSON permits nested data structures. For CSV output, Miller uses, by default, a
+_flatten/unflatten strategy_: array-valued fields are turned into multiple CSV columns. For example:
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson --from data/split1.csv put '$codes = splitax($codes, ",")'
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv --from data/split1.csv put '$codes = splitax($codes, ",")'
+GENMD-EOF
+
+See the [flatten/unflatten: converting between JSON and tabular formats¶](flatten-unflatten.md)
+for more on this default behavior, including how to override it when you prefer.
+
+## Splitting and joining with different separators
+
+The above is well and good when a string contains pieces with multiple instances of the same
+separator.  However sometimes we have input like `5-18:53:20`. Here we can use the more flexible
+[unformat](reference-dsl-builtin-functions.md#unformat) and
+[format](reference-dsl-builtin-functions.md#format) DSL functions.  (As above, there's an
+[unformatx](reference-dsl-builtin-functions.md#unformatx) function if you want Miller to just split
+the string into string pieces without trying to type-infer them.)
+
+GENMD-RUN-COMMAND
+cat data/split2.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson --from data/split2.csv put '$pieces = unformat("{}-{}:{}:{}", $stamp)'
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint --from data/split2.csv put '
+  pieces = unformat("{}-{}:{}:{}", $stamp);
+  $description = format("{} day(s) {} hour(s) {} minute(s) {} seconds(s)", pieces[1], pieces[2], pieces[3], pieces[4]);
+'
+GENMD-EOF
+
+## Using regular expressions and capture groups
+
+If you prefer [regular expressions](reference-main-regular-expressions.md), those can be used in this context as well:
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint --from data/split2.csv put '
+  if ($stamp =~ "([0-9]+)-([0-9]+):([0-9]+):([0-9]+)") {
+    $description = "\1 day(s) \2 hour(s) \3 minute(s) \4 seconds(s)";
+  }
+'
+GENMD-EOF
+
+## Special case: timestamps
+
+Timestamps are complex enough to merit their own handling: see the
+[DSL datetime/timezone functions page](reference-dsl-time.md). in particular the
+[strptime](reference-dsl-builtin-functions.md#strptime)
+and
+[strftime](reference-dsl-builtin-functions.md#strftime)
+functions.
+
+## Special case: dhms and seconds
+
+For historical reasons, Miller has a way to represent seconds in a more human-readable format, using days,
+hours, minutes, and seconds. For example:
+
+GENMD-RUN-COMMAND
+mlr --c2p --from data/sec2dhms.csv put '$dhms = sec2dhms($sec)'
+GENMD-EOF
+
+Please see
+[sec2dhms](reference-dsl-builtin-functions.md#sec2dhms)
+and
+[dhms2sec](reference-dsl-builtin-functions.md#sec2dhms)
+
+## Special case: financial values
+
+One way to handle currencies is to sub out the currency marker (like `$`) as well as commas:
+
+GENMD-RUN-COMMAND
+echo 'd=$1234.56' | mlr put '$d = float(gsub(ssub($d, "$", ""), ",", ""))'
+GENMD-EOF
+
+## Nesting and unnesting fields
+
+Sometimes we want not to split strings into arrays, but rather, to use them to create multiple records.
+
+For example:
+
+GENMD-RUN-COMMAND
+mlr --c2p cat data/split1.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p nest --evar , -f nicknames data/split1.csv
+GENMD-EOF
+
+See [documentation on the nest verb](reference-verbs.md#nest) for general information on how to do this.

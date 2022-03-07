@@ -59,11 +59,6 @@ nav:
     - "Two-pass algorithms": "two-pass-algorithms.md"
     - "Programming-language examples": "programming-examples.md"
     - "Miscellaneous examples": "misc-examples.md"
-  - 'Background':
-    - "Why?": "why.md"
-    - "Why call it Miller?": "etymology.md"
-    - "How original is Miller?": "originality.md"
-    - "Performance": "performance.md"
   - 'Main reference':
     - "Miller command structure": "reference-main-overview.md"
     - "Then-chaining": "reference-main-then-chaining.md"
@@ -72,6 +67,7 @@ nav:
     - "In-place mode": "reference-main-in-place-processing.md"
     - "Number formatting": "reference-main-number-formatting.md"
     - "Separators": "reference-main-separators.md"
+    - "Parsing and formatting fields": "parsing-and-formatting-fields.md"
     - "Flatten/unflatten: converting between JSON and tabular formats": "flatten-unflatten.md"
     - "Sorting": "sorting.md"
     - "Streaming processing, and memory usage": "streaming-and-memory.md"
@@ -103,6 +99,11 @@ nav:
     - "DSL errors and transparency": "reference-dsl-errors.md"
     - "Differences from other programming languages": "reference-dsl-differences.md"
     - "A note on the complexity of Miller's expression language": "reference-dsl-complexity.md"
+  - 'Background':
+    - "Why?": "why.md"
+    - "Why call it Miller?": "etymology.md"
+    - "How original is Miller?": "originality.md"
+    - "Performance": "performance.md"
   - 'Misc. reference':
     - "Auxiliary commands": "reference-main-auxiliary-commands.md"
     - "Manual page": "manpage.md"
