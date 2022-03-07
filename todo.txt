@@ -2,8 +2,8 @@
 RELEASES
 * plan 6.1.0
   o unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
-  o fmt/unfmt/regex doc
-  o FAQ/examples reorg
+    - \d etc to DSL :( -- & parsing-and-formatting-fields.md.in
+  o mlr split -- needs an example page along with the tee DSL function
 
   o https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+label%3Aneeds-documentation
 
@@ -120,22 +120,6 @@ strict-mode ideas
   o abend unless @?x -- ?
 * srec:
   o abend unless $?x -- ?
-
-----------------------------------------------------------------
-mlr join --left-fields a,b,c
-
-----------------------------------------------------------------
-! Better functions for values manipulation, e.g. easier conversion of strings like "$1,234.56" into numeric values
-  o note on is_error(x) (or string(x) == "(error)")
-  ?  dhms w/ optional separgs -- ? what about fenceposting? ["d","h","m","s"] vs ["-",":",":",""] -- ?
-  o 'Ability to specify some formats that are fixed. Like we can process
-    "5d18h53m20s" format in *dhms* commands, but what about "5-18:53:20"? This is
-    a common format used by the SLURM resource manager.'
-  o linked-to faqent w/ -f -s etc ...
-
-----------------------------------------------------------------
-k better print-interpolate with {} etc
-  doc: mlr --csv --from example.csv  put -q 'print format("Index {} at quantity {} and rate {}", $index, $quantity, $rate)'
 
 ----------------------------------------------------------------
 ! sysdate, sysdate_local; datediff ...
