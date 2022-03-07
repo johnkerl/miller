@@ -4,30 +4,7 @@
 * https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+label%3Aneeds-documentation
 
 RELEASES
-* plan 6.1.0
-  k more regex patterns like \d
-  k mlr join --left-fields a,b,c
-  k strptime/882
-  k fmtifnum, & recursive fmtnum/fmtifnum
-  k unicode string literals
-  k natural sort order
-  k IANA-TSV w/ \{X}
-  k still need csv --lazy-quotes
-  k default colors; bold/underline/reverse
-  k array concat
-  k format/unformat
-  k split verb
-  k slwin & shift-lead
-  k 0o.. octal literals in the DSL
-  k codeql/codespell/goreleaseer binaries/zips
-  k :rb
-  k ?foo and ??foo @ repl help
-  k doc-improves
-
-  d all-contribs check before release
-    > release notes in particular Poshi derekmahar aborruso
-
-* plan 6.2.0
+* 6.2.0 plan:
   ! extended field accessors for #763 and #948 (positional & json.nested)
   ! strict mode
   ! awk-like exit
