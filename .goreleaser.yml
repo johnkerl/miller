@@ -74,7 +74,7 @@ archives:
       darwin: macos
     name_template: '{{ .ProjectName }}-{{ .Version }}-{{ .Os }}-{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     files:
-      - LICENSE
+      - LICENSE.txt
       - README.md
 
 nfpms:

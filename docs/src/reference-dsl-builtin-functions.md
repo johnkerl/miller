@@ -1106,8 +1106,8 @@ truncate  (class=string #args=2) Truncates string first argument to max length o
 <pre class="pre-non-highlight-non-pair">
 unformat  (class=string #args=2) Using first argument as format string, unpacks second argument into an array of matches, with type-inference. On non-match, returns error -- use is_error() to check.
 Examples:
-unformat("{}:{}:{}",  "1:2:3") gives [1, 2, 3]".
-unformat("{}h{}m{}s", "3h47m22s") gives [3, 47, 22]".
+unformat("{}:{}:{}",  "1:2:3") gives [1, 2, 3].
+unformat("{}h{}m{}s", "3h47m22s") gives [3, 47, 22].
 is_error(unformat("{}h{}m{}s", "3:47:22")) gives true.
 </pre>
 
@@ -1116,8 +1116,8 @@ is_error(unformat("{}h{}m{}s", "3:47:22")) gives true.
 <pre class="pre-non-highlight-non-pair">
 unformatx  (class=string #args=2) Same as unformat, but without type-inference.
 Examples:
-unformatx("{}:{}:{}",  "1:2:3") gives ["1", "2", "3"]".
-unformatx("{}h{}m{}s", "3h47m22s") gives ["3", "47", "22"]".
+unformatx("{}:{}:{}",  "1:2:3") gives ["1", "2", "3"].
+unformatx("{}h{}m{}s", "3h47m22s") gives ["3", "47", "22"].
 is_error(unformatx("{}h{}m{}s", "3:47:22")) gives true.
 </pre>
 
@@ -1126,7 +1126,7 @@ is_error(unformatx("{}h{}m{}s", "3:47:22")) gives true.
 
 ### \.
 <pre class="pre-non-highlight-non-pair">
-.  (class=string #args=2) String concatenation.
+.  (class=string #args=2) String concatenation. Non-strings are coerced, so you can do '"ax".98' etc.
 </pre>
 
 ## System functions
