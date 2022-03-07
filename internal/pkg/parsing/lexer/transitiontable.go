@@ -1234,6 +1234,8 @@ var TransTab = TransitionTable{
 		switch {
 		case r == 34: // ['"','"']
 			return 157
+		case r == 37: // ['%','%']
+			return 57
 		case r == 42: // ['*','*']
 			return 57
 		case r == 46: // ['.','.']
@@ -1258,7 +1260,39 @@ var TransTab = TransitionTable{
 			return 57
 		case r == 57: // ['9','9']
 			return 57
+		case r == 65: // ['A','A']
+			return 57
+		case r == 66: // ['B','B']
+			return 57
+		case r == 67: // ['C','C']
+			return 57
+		case r == 68: // ['D','D']
+			return 57
+		case r == 71: // ['G','G']
+			return 57
+		case r == 72: // ['H','H']
+			return 57
+		case r == 75: // ['K','K']
+			return 57
+		case r == 76: // ['L','L']
+			return 57
+		case r == 78: // ['N','N']
+			return 57
+		case r == 80: // ['P','P']
+			return 57
+		case r == 82: // ['R','R']
+			return 57
+		case r == 83: // ['S','S']
+			return 57
 		case r == 85: // ['U','U']
+			return 57
+		case r == 86: // ['V','V']
+			return 57
+		case r == 87: // ['W','W']
+			return 57
+		case r == 88: // ['X','X']
+			return 57
+		case r == 90: // ['Z','Z']
 			return 57
 		case r == 91: // ['[','[']
 			return 57
@@ -1270,11 +1304,27 @@ var TransTab = TransitionTable{
 			return 57
 		case r == 98: // ['b','b']
 			return 57
+		case r == 99: // ['c','c']
+			return 57
+		case r == 100: // ['d','d']
+			return 57
 		case r == 102: // ['f','f']
+			return 57
+		case r == 103: // ['g','g']
+			return 57
+		case r == 104: // ['h','h']
+			return 57
+		case r == 107: // ['k','k']
+			return 57
+		case r == 108: // ['l','l']
 			return 57
 		case r == 110: // ['n','n']
 			return 57
+		case r == 112: // ['p','p']
+			return 57
 		case r == 114: // ['r','r']
+			return 57
+		case r == 115: // ['s','s']
 			return 57
 		case r == 116: // ['t','t']
 			return 57
@@ -1282,7 +1332,11 @@ var TransTab = TransitionTable{
 			return 57
 		case r == 118: // ['v','v']
 			return 57
+		case r == 119: // ['w','w']
+			return 57
 		case r == 120: // ['x','x']
+			return 57
+		case r == 122: // ['z','z']
 			return 57
 		}
 		return NoState
