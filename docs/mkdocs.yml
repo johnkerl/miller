@@ -108,6 +108,7 @@ nav:
     - "Auxiliary commands": "reference-main-auxiliary-commands.md"
     - "Manual page": "manpage.md"
     - "Building from source": "build.md"
+    - "How to create a new release": "how-to-release.md"
     - "Documents for previous releases": "release-docs.md"
     - "Glossary": "glossary.md"
   - "What's new in Miller 6": "new-in-miller-6.md"
