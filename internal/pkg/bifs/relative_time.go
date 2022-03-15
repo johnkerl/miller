@@ -12,48 +12,56 @@ func BIF_dhms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
 		return mlrval.ERROR
 	}
-	var d, h, m, s int64
 
-	if strings.HasPrefix(input1.AcquireStringValue(), "-") {
-
-		n, err := fmt.Sscanf(input1.AcquireStringValue(), "-%dd%dh%dm%ds", &d, &h, &m, &s)
-		if n == 4 && err == nil {
-			return mlrval.FromInt(-(s + m*60 + h*60*60 + d*60*60*24))
-		}
-		n, err = fmt.Sscanf(input1.AcquireStringValue(), "-%dh%dm%ds", &h, &m, &s)
-		if n == 3 && err == nil {
-			return mlrval.FromInt(-(s + m*60 + h*60*60))
-		}
-		n, err = fmt.Sscanf(input1.AcquireStringValue(), "-%dm%ds", &m, &s)
-		if n == 2 && err == nil {
-			return mlrval.FromInt(-(s + m*60))
-		}
-		n, err = fmt.Sscanf(input1.AcquireStringValue(), "-%ds", &s)
-		if n == 1 && err == nil {
-			return mlrval.FromInt(-(s))
-		}
-
-	} else {
-
-		n, err := fmt.Sscanf(input1.AcquireStringValue(), "%dd%dh%dm%ds", &d, &h, &m, &s)
-		if n == 4 && err == nil {
-			return mlrval.FromInt(s + m*60 + h*60*60 + d*60*60*24)
-		}
-		n, err = fmt.Sscanf(input1.AcquireStringValue(), "%dh%dm%ds", &h, &m, &s)
-		if n == 3 && err == nil {
-			return mlrval.FromInt(s + m*60 + h*60*60)
-		}
-		n, err = fmt.Sscanf(input1.AcquireStringValue(), "%dm%ds", &m, &s)
-		if n == 2 && err == nil {
-			return mlrval.FromInt(s + m*60)
-		}
-		n, err = fmt.Sscanf(input1.AcquireStringValue(), "%ds", &s)
-		if n == 1 && err == nil {
-			return mlrval.FromInt(s)
-		}
-
+	input := input1.String()
+	if input == "" {
+		return mlrval.ERROR
 	}
-	return mlrval.ERROR
+
+	negate := false
+	if input[0] == '-' {
+		input = input[1:]
+		negate = true
+	}
+
+	remainingInput := input
+	var seconds int64
+
+	for {
+		if remainingInput == "" {
+			break
+		}
+		var n int64
+		var rest string
+
+		_, err := fmt.Sscanf(remainingInput, "%d%s", &n, &rest)
+		if err != nil {
+			return mlrval.ERROR
+		}
+		if len(rest) < 1 {
+			return mlrval.ERROR
+		}
+		unitPart := rest[0]
+		remainingInput = rest[1:]
+
+		switch unitPart {
+		case 'd':
+			seconds += n * 86400
+		case 'h':
+			seconds += n * 3600
+		case 'm':
+			seconds += n * 60
+		case 's':
+			seconds += n
+		default:
+			return mlrval.ERROR
+		}
+	}
+	if negate {
+		seconds = -seconds
+	}
+
+	return mlrval.FromInt(seconds)
 }
 
 func BIF_dhms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -61,49 +69,55 @@ func BIF_dhms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ERROR
 	}
 
-	var d, h, m int
-	var s float64
-
-	if strings.HasPrefix(input1.AcquireStringValue(), "-") {
-
-		n, err := fmt.Sscanf(input1.AcquireStringValue(), "-%dd%dh%dm%fs", &d, &h, &m, &s)
-		if n == 4 && err == nil {
-			return mlrval.FromFloat(-(s + float64(m*60+h*60*60+d*60*60*24)))
-		}
-		n, err = fmt.Sscanf(input1.AcquireStringValue(), "-%dh%dm%fs", &h, &m, &s)
-		if n == 3 && err == nil {
-			return mlrval.FromFloat(-(s + float64(m*60+h*60*60)))
-		}
-		n, err = fmt.Sscanf(input1.AcquireStringValue(), "-%dm%fs", &m, &s)
-		if n == 2 && err == nil {
-			return mlrval.FromFloat(-(s + float64(m*60)))
-		}
-		n, err = fmt.Sscanf(input1.AcquireStringValue(), "-%fs", &s)
-		if n == 1 && err == nil {
-			return mlrval.FromFloat(-(s))
-		}
-
-	} else {
-
-		n, err := fmt.Sscanf(input1.AcquireStringValue(), "%dd%dh%dm%fs", &d, &h, &m, &s)
-		if n == 4 && err == nil {
-			return mlrval.FromFloat(s + float64(m*60+h*60*60+d*60*60*24))
-		}
-		n, err = fmt.Sscanf(input1.AcquireStringValue(), "%dh%dm%fs", &h, &m, &s)
-		if n == 3 && err == nil {
-			return mlrval.FromFloat(s + float64(m*60+h*60*60))
-		}
-		n, err = fmt.Sscanf(input1.AcquireStringValue(), "%dm%fs", &m, &s)
-		if n == 2 && err == nil {
-			return mlrval.FromFloat(s + float64(m*60))
-		}
-		n, err = fmt.Sscanf(input1.AcquireStringValue(), "%fs", &s)
-		if n == 1 && err == nil {
-			return mlrval.FromFloat(s)
-		}
-
+	input := input1.String()
+	if input == "" {
+		return mlrval.ERROR
 	}
-	return mlrval.ERROR
+
+	negate := false
+	if input[0] == '-' {
+		input = input[1:]
+		negate = true
+	}
+
+	remainingInput := input
+	var seconds float64
+
+	for {
+		if remainingInput == "" {
+			break
+		}
+		var f float64
+		var rest string
+
+		_, err := fmt.Sscanf(remainingInput, "%f%s", &f, &rest)
+		if err != nil {
+			return mlrval.ERROR
+		}
+		if len(rest) < 1 {
+			return mlrval.ERROR
+		}
+		unitPart := rest[0]
+		remainingInput = rest[1:]
+
+		switch unitPart {
+		case 'd':
+			seconds += f * 86400.0
+		case 'h':
+			seconds += f * 3600.0
+		case 'm':
+			seconds += f * 60.0
+		case 's':
+			seconds += f
+		default:
+			return mlrval.ERROR
+		}
+	}
+	if negate {
+		seconds = -seconds
+	}
+
+	return mlrval.FromFloat(seconds)
 }
 
 func BIF_hms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
