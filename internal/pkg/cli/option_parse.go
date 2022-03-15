@@ -975,8 +975,9 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--tsv",
-			help: "Use TSV format for input and output data.",
+			name:     "--tsv",
+			help:     "Use TSV format for input and output data.",
+			altNames: []string{"-t"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "tsv"
@@ -985,12 +986,15 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name:     "--tsv",
-			help:     "Use TSV-lite format for input and output data.",
-			altNames: []string{"-t"},
+			name: "--tsvlite",
+			help: "Use TSV-lite format for input and output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "tsv"
-				options.WriterOptions.OutputFileFormat = "tsv"
+				options.ReaderOptions.InputFileFormat = "csvlite"
+				options.WriterOptions.OutputFileFormat = "csvlite"
+				options.ReaderOptions.IFS = "\t"
+				options.WriterOptions.OFS = "\t"
+				options.ReaderOptions.ifsWasSpecified = true
+				options.WriterOptions.ofsWasSpecified = true
 				*pargi += 1
 			},
 		},
@@ -1008,6 +1012,7 @@ var FileFormatFlagSection = FlagSection{
 				options.WriterOptions.ORS = ASV_RS
 				options.ReaderOptions.ifsWasSpecified = true
 
+				options.ReaderOptions.ifsWasSpecified = true
 				options.ReaderOptions.irsWasSpecified = true
 				options.WriterOptions.ofsWasSpecified = true
 				options.WriterOptions.orsWasSpecified = true
