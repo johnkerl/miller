@@ -1,0 +1,1 @@
+mlr --itsv --odkvp cat ${CASEDIR}/input.tsv
