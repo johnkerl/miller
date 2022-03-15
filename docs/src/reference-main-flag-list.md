@@ -177,8 +177,8 @@ are overridden in all cases by setting output format to `format2`.
 * `--ousv or --ousvlite`: Use USV format for output data.
 * `--oxtab`: Use XTAB format for output data.
 * `--pprint`: Use PPRINT format for input and output data.
-* `--tsv`: Use TSV format for input and output data.
-* `--tsv`: Use TSV format for input and output data.
+* `--tsv or -t`: Use TSV format for input and output data.
+* `--tsvlite`: Use TSV-lite format for input and output data.
 * `--usv or --usvlite`: Use USV format for input and output data.
 * `--xtab`: Use XTAB format for input and output data.
 * `-i {format name}`: Use format name for input data. For example: `-i csv` is the same as `--icsv`.

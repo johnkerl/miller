@@ -1,0 +1,1 @@
+mlr --tsvlite cat ${CASEDIR}/input.tsv

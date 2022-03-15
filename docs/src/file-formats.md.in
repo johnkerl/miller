@@ -38,6 +38,7 @@ Here are the differences between CSV and CSV-lite:
 * CSV does not allow heterogeneous data; CSV-lite does (see also [Record Heterogeneity](record-heterogeneity.md)).
 
 * TSV-lite is simply CSV-lite with field separator set to tab instead of comma.
+In particular, no encode/decode of  `\r`, `\n`, `\t`, or `\\` is done.
 
 * CSV-lite allows changing FS and/or RS to any values, perhaps multi-character.
 

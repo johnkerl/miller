@@ -2,9 +2,11 @@
 * 404 -- what broke?
   https://github.com/johnkerl/miller/pull/757/files
 * https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+label%3Aneeds-documentation
+* https://squidfunk.github.io/mkdocs-material/setup/setting-up-versioning/
 
 RELEASES
 * 6.2.0 plan:
+  ! #982 ., etc
   ! extended field accessors for #763 and #948 (positional & json.nested)
   ! strict mode
   ! awk-like exit
@@ -17,6 +19,8 @@ RELEASES
   ? YAML
   ? #908 inferencing options
   ? gogll
+
+  k --tsvlite
 
 ================================================================
 FEATURES
