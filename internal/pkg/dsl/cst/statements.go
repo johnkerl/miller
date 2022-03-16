@@ -66,6 +66,9 @@ func (root *RootNode) BuildStatementNode(
 	case dsl.NodeTypeEmitPStatement:
 		return root.BuildEmitPStatementNode(astNode)
 
+	case dsl.NodeTypeExitStatement:
+		return root.BuildExitStatementNode(astNode)
+
 	case dsl.NodeTypeBeginBlock:
 		return nil, fmt.Errorf("mlr: begin blocks may only be declared at top level.")
 	case dsl.NodeTypeEndBlock:

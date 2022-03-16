@@ -18,6 +18,7 @@ import (
 type State struct {
 	Inrec                    *mlrval.Mlrmap
 	Context                  *types.Context
+	ExitInfo                 *types.ExitInfo
 	Oosvars                  *mlrval.Mlrmap
 	FilterExpression         *mlrval.Mlrval
 	Stack                    *Stack
@@ -34,6 +35,7 @@ func NewEmptyState(options *cli.TOptions) *State {
 	return &State{
 		Inrec:            nil,
 		Context:          nil,
+		ExitInfo:         types.NewExitInfo(),
 		Oosvars:          oosvars,
 		FilterExpression: mlrval.TRUE,
 		Stack:            NewStack(),
