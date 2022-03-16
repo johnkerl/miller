@@ -78,6 +78,8 @@ const (
 	NodeTypePrintnStatement  TNodeType = "printn statement"
 	NodeTypeEprintnStatement TNodeType = "eprintn statement"
 
+	NodeTypeExitStatement TNodeType = "exit statement"
+
 	// For 'print > filename, "string"' et al.
 	NodeTypeRedirectWrite        TNodeType = "redirect write"
 	NodeTypeRedirectAppend       TNodeType = "redirect append"

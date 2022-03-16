@@ -267,6 +267,9 @@ func (node *ASTNode) Text() string {
 	case NodeTypeEprintnStatement:
 		return tokenText
 
+	case NodeTypeExitStatement:
+		return tokenText
+
 	case NodeTypeNoOp:
 		return "no-op"
 
