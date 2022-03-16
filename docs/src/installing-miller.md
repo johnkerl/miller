@@ -20,8 +20,8 @@ You can install Miller for various platforms as follows.
 
 Download a binary:
 
-* You can get 6.0.0 binaries for several platforms on the [6.0.0 release page](https://github.com/johnkerl/miller/releases/tag/v6.0.0).
-* You can get latest (head) Miller 6 builds for Linux, MacOS, and Windows by visiting [https://github.com/johnkerl/miller/actions](https://github.com/johnkerl/miller/actions), selecting the latest build, and clicking _Artifacts_. (These are retained for 5 days after each commit.)
+* You can get binaries for several platforms on the [releases page](https://github.com/johnkerl/miller/releases).
+* You can get latest (head) builds for Linux, MacOS, and Windows by visiting [https://github.com/johnkerl/miller/actions](https://github.com/johnkerl/miller/actions), selecting the latest build, and clicking _Artifacts_. (These are retained for 5 days after each commit.)
 * See also the [build page](build.md) if you prefer to build from source.
 
 Using a package manager:
@@ -36,6 +36,8 @@ See also:
 * [Conda](https://anaconda.org/conda-forge/miller).
 * [@jauderho](https://github.com/jauderho)'s [docker images](https://hub.docker.com/r/jauderho/miller/tags) as discussed in [GitHub Discussions](https://github.com/johnkerl/miller/discussions/851#discussioncomment-1943255)
     * Example invocation: `docker run --rm -i jauderho/miller:latest --csv sort -f shape < ./example.csv`
+
+Note that the [Miller releases page](https://github.com/johnkerl/miller/releases), `brew`, `macports`, `chocolatey`, and `conda` tend to have current versions; `yum` and `apt-get` may have outdate versions depending on your platform.
 
 As a first check, you should be able to run `mlr --version` at your system's command prompt and see something like the following:
 
