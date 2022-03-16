@@ -236,6 +236,7 @@ eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
 print    : 'p' 'r' 'i' 'n' 't' ;
 printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
 tee      : 't' 'e' 'e' ;
+exit     : 'e' 'x' 'i' 't' ;
 
 stdout   : 's' 't' 'd' 'o' 'u' 't' ;
 stderr   : 's' 't' 'd' 'e' 'r' 'r' ;
@@ -453,6 +454,8 @@ BracelessStatement
   | EmitStatement
   | EmitPStatement
   | EmitFStatement
+
+  | ExitStatement
 
   // Has braces but does not *end* in braces -- so it requires semicolon after.
   | DoWhileLoop
@@ -1071,6 +1074,18 @@ EmitKeys
       $2,
       $0,
     ) >>
+;
+
+// ----------------------------------------------------------------
+ExitStatement
+  : exit Rvalue
+    <<
+      dsl.NewASTNodeUnary(
+        $0, // exit
+        $1,
+        dsl.NodeTypeExitStatement,
+      )
+    >>
 ;
 
 // ----------------------------------------------------------------
