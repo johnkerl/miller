@@ -265,7 +265,10 @@ func (site *UDFCallsite) EvaluateWithArguments(
 			fmt.Fprint(os.Stderr, err)
 			os.Exit(1)
 		}
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(
+			state.StrictMode,
+			"function "+udf.signature.funcOrSubrName+" implicit return value",
+		)
 	}
 
 	// TODO: should be an internal coding error. This would be break or
@@ -277,7 +280,10 @@ func (site *UDFCallsite) EvaluateWithArguments(
 			fmt.Fprint(os.Stderr, err)
 			os.Exit(1)
 		}
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(
+			state.StrictMode,
+			"function "+udf.signature.funcOrSubrName+" abnormal exit",
+		)
 	}
 
 	// Definitely a Miller internal coding error if the user put 'return x' in
@@ -290,6 +296,12 @@ func (site *UDFCallsite) EvaluateWithArguments(
 		fmt.Fprint(os.Stderr, err)
 		os.Exit(1)
 	}
+
+	blockExitPayload.blockReturnValue.StrictModeCheck(
+		state.StrictMode,
+		"function "+udf.signature.funcOrSubrName+" return value",
+	)
+
 	return blockExitPayload.blockReturnValue.Copy()
 }
 

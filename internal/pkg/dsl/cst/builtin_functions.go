@@ -498,6 +498,7 @@ func (root *RootNode) BuildDotCallsiteNode(
 func (node *DotCallsiteNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
+	// For strict mode, absence should be detected on the node.evaluable1 evaluator.
 	value1 := node.evaluable1.Evaluate(state)
 
 	mapvalue1 := value1.GetMap()
@@ -506,7 +507,7 @@ func (node *DotCallsiteNode) Evaluate(
 		// Case 1: map.attribute as shorthand for map["attribute"]
 		value2 := mapvalue1.Get(node.string2)
 		if value2 == nil {
-			return mlrval.ABSENT
+			return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "map access [" + node.string2 + "]")
 		} else {
 			return value2
 		}

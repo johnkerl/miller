@@ -779,10 +779,19 @@ type LocalVariableLvalueNode struct {
 func (root *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeLocalVariable)
 
+	// TODO require type mask in strict mode
+
 	variableName := string(astNode.Token.Lit)
 	typeName := "any"
 	defineTypedAtScope := false
-	if astNode.Children != nil { // typed, like 'num x = 3'
+	if astNode.Children == nil { // untyped, like 'x = 3'
+		if root.strictMode {
+			return nil, fmt.Errorf(
+				"mlr: need typedecl such as \"var\", \"str\", \"num\", etc. for variable \"%s\" in strict mode",
+				variableName,
+			)
+		}
+	} else { // typed, like 'num x = 3'
 		typeNode := astNode.Children[0]
 		lib.InternalCodingErrorIf(typeNode.Type != dsl.NodeTypeTypedecl)
 		typeName = string(typeNode.Token.Lit)

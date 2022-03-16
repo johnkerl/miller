@@ -38,7 +38,7 @@ func (node *EnvironmentVariableNode) Evaluate(
 ) *mlrval.Mlrval {
 	name := node.nameEvaluable.Evaluate(state)
 	if name.IsAbsent() {
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "ENV[(absent)]")
 	}
 	if !name.IsString() {
 		return mlrval.ERROR
