@@ -1,6 +1,6 @@
 color,shape,flag,k,index,quantity,rate
-red,square,true,2,15,79.2778,0.0130
-red,square,false,4,48,77.5542,7.4670
-red,square,false,6,64,77.1991,9.5310
-yellow,circle,true,8,73,63.9785,4.2370
-purple,square,false,10,91,72.3735,8.2430
+red,square,true,2,15,79.27780000,0.01300000
+red,square,false,4,48,77.55420000,7.46700000
+red,square,false,6,64,77.19910000,9.53100000
+yellow,circle,true,8,73,63.97850000,4.23700000
+purple,square,false,10,91,72.37350000,8.24300000

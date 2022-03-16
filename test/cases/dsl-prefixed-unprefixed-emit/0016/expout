@@ -2,122 +2,122 @@
   "sum": {
     "cat": {
       "pan": {
-        "catpan": 42.327158262573356
+        "catpan": 42.32715826
       },
       "hat": {
-        "cathat": 43.18440957220826
+        "cathat": 43.18440957
       },
       "dog": {
-        "catdog": 39.2414728534826
+        "catdog": 39.24147285
       },
       "wye": {
-        "catwye": 45.19677452417291
+        "catwye": 45.19677452
       },
       "cat": {
-        "catcat": 37.89414847588904
+        "catcat": 37.89414848
       }
     },
     "pan": {
       "wye": {
-        "panwye": 40.135299712550946
+        "panwye": 40.13529971
       },
       "pan": {
-        "panpan": 36.2263342663248
+        "panpan": 36.22633427
       },
       "hat": {
-        "panhat": 35.115869257879424
+        "panhat": 35.11586926
       },
       "dog": {
-        "pandog": 37.81756018831723
+        "pandog": 37.81756019
       },
       "cat": {
-        "pancat": 42.23567663351311
+        "pancat": 42.23567663
       }
     },
     "wye": {
       "cat": {
-        "wyecat": 40.80572298410698
+        "wyecat": 40.80572298
       },
       "hat": {
-        "wyehat": 41.16669669994168
+        "wyehat": 41.16669670
       },
       "dog": {
-        "wyedog": 40.61954681601182
+        "wyedog": 40.61954682
       },
       "wye": {
-        "wyewye": 32.49097273832244
+        "wyewye": 32.49097274
       },
       "pan": {
-        "wyepan": 33.027195515326675
+        "wyepan": 33.02719552
       }
     },
     "dog": {
       "hat": {
-        "doghat": 43.515162210434674
+        "doghat": 43.51516221
       },
       "pan": {
-        "dogpan": 45.61401108323896
+        "dogpan": 45.61401108
       },
       "dog": {
-        "dogdog": 43.545955695964984
+        "dogdog": 43.54595570
       },
       "wye": {
-        "dogwye": 37.223794671791296
+        "dogwye": 37.22379467
       },
       "cat": {
-        "dogcat": 45.64259509789859
+        "dogcat": 45.64259510
       }
     },
     "hat": {
       "hat": {
-        "hathat": 48.05889741913474
+        "hathat": 48.05889742
       },
       "wye": {
-        "hatwye": 34.05426961857805
+        "hatwye": 34.05426962
       },
       "pan": {
-        "hatpan": 42.53875750027864
+        "hatpan": 42.53875750
       },
       "cat": {
-        "hatcat": 44.325654701613004
+        "hatcat": 44.32565470
       },
       "dog": {
-        "hatdog": 37.11424443327952
+        "hatdog": 37.11424443
       }
     }
   }
 }
 a          cat
-pan.catpan 42.327158262573356
-hat.cathat 43.18440957220826
-dog.catdog 39.2414728534826
-wye.catwye 45.19677452417291
-cat.catcat 37.89414847588904
+pan.catpan 42.32715826
+hat.cathat 43.18440957
+dog.catdog 39.24147285
+wye.catwye 45.19677452
+cat.catcat 37.89414848
 
 a          pan
-wye.panwye 40.135299712550946
-pan.panpan 36.2263342663248
-hat.panhat 35.115869257879424
-dog.pandog 37.81756018831723
-cat.pancat 42.23567663351311
+wye.panwye 40.13529971
+pan.panpan 36.22633427
+hat.panhat 35.11586926
+dog.pandog 37.81756019
+cat.pancat 42.23567663
 
 a          wye
-cat.wyecat 40.80572298410698
-hat.wyehat 41.16669669994168
-dog.wyedog 40.61954681601182
-wye.wyewye 32.49097273832244
-pan.wyepan 33.027195515326675
+cat.wyecat 40.80572298
+hat.wyehat 41.16669670
+dog.wyedog 40.61954682
+wye.wyewye 32.49097274
+pan.wyepan 33.02719552
 
 a          dog
-hat.doghat 43.515162210434674
-pan.dogpan 45.61401108323896
-dog.dogdog 43.545955695964984
-wye.dogwye 37.223794671791296
-cat.dogcat 45.64259509789859
+hat.doghat 43.51516221
+pan.dogpan 45.61401108
+dog.dogdog 43.54595570
+wye.dogwye 37.22379467
+cat.dogcat 45.64259510
 
 a          hat
-hat.hathat 48.05889741913474
-wye.hatwye 34.05426961857805
-pan.hatpan 42.53875750027864
-cat.hatcat 44.325654701613004
-dog.hatdog 37.11424443327952
+hat.hathat 48.05889742
+wye.hatwye 34.05426962
+pan.hatpan 42.53875750
+cat.hatcat 44.32565470
+dog.hatdog 37.11424443

@@ -5,8 +5,8 @@
   "flag": "true",
   "k": 1,
   "index": 11,
-  "quantity": 43.6498,
-  "rate": 9.8870
+  "quantity": 43.64980000,
+  "rate": 9.88700000
 },
 {
   "color": "red",
@@ -14,8 +14,8 @@
   "flag": "true",
   "k": 3,
   "index": 16,
-  "quantity": 13.8103,
-  "rate": 2.9010
+  "quantity": 13.81030000,
+  "rate": 2.90100000
 },
 {
   "color": "purple",
@@ -23,8 +23,8 @@
   "flag": "false",
   "k": 5,
   "index": 51,
-  "quantity": 81.2290,
-  "rate": 8.5910
+  "quantity": 81.22900000,
+  "rate": 8.59100000
 },
 {
   "color": "purple",
@@ -32,8 +32,8 @@
   "flag": "false",
   "k": 7,
   "index": 65,
-  "quantity": 80.1405,
-  "rate": 5.8240
+  "quantity": 80.14050000,
+  "rate": 5.82400000
 },
 {
   "color": "yellow",
@@ -41,7 +41,7 @@
   "flag": "true",
   "k": 9,
   "index": 87,
-  "quantity": 63.5058,
-  "rate": 8.3350
+  "quantity": 63.50580000,
+  "rate": 8.33500000
 }
 ]

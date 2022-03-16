@@ -1,6 +1,6 @@
-RCORN     = -2
-ICORN     = -2
-SIDE      = 4.0
+RCORN     = -2.00000000
+ICORN     = -2.00000000
+SIDE      = 4.00000000
 IHEIGHT   = 50
 IWIDTH    = 100
 MAXITS    = 100

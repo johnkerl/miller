@@ -2,11 +2,11 @@ x_min   1
 x_max   3
 x_sum   6
 x_count 3
-y_min   10.1
-y_max   10.3
-y_sum   30.599999999999998
+y_min   10.10000000
+y_max   10.30000000
+y_sum   30.60000000
 y_count 3
-z_min   20
-z_max   40.8
-z_sum   90.8
+z_min   20.00000000
+z_max   40.80000000
+z_sum   90.80000000
 z_count 3
