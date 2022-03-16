@@ -33,9 +33,9 @@ func NewExitInfo() *ExitInfo {
 }
 
 type RecordAndContext struct {
-	Record  *mlrval.Mlrmap
-	Context Context
-	// TODO: rmeove probably ExitInfo     ExitInfo
+	Record       *mlrval.Mlrmap
+	Context      Context
+	ExitInfo     ExitInfo
 	OutputString string
 	EndOfStream  bool
 }

@@ -490,6 +490,8 @@ func (tr *TransformerPut) Transform(
 
 		tr.runtimeState.Update(inrec, &context)
 
+		// TODO: check for exit statement; if so, don't process any records ...
+
 		// Execute the main block on the current input record
 		outrec, err := tr.cstRootNode.ExecuteMainBlock(tr.runtimeState)
 		if err != nil {
@@ -506,6 +508,12 @@ func (tr *TransformerPut) Transform(
 			if wantToEmit {
 				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &context))
 			}
+		}
+
+		// Check for exit statement
+		if tr.runtimeState.ExitInfo.HasExitCode {
+			inrecAndContext.ExitInfo.HasExitCode = true
+			inrecAndContext.ExitInfo.ExitCode = tr.runtimeState.ExitInfo.ExitCode
 		}
 
 	} else {

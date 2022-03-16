@@ -26,6 +26,12 @@ RELEASES
 FEATURES
 
 ----------------------------------------------------------------
+EXIT STATEMENT
+
+* handling in begin-blocks?
+* handling in the REPL?
+
+----------------------------------------------------------------
 EXTENDED FIELD ACCESSORS
 
 * extract/simplify getter logic outside of full CST/runtime/etc
