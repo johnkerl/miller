@@ -1,6 +1,6 @@
-/path/to/file,0.45,true
-/path/to/second/file,0.32,true
-/some/other/path,0.97,false
+/path/to/file,0.45000000,true
+/path/to/second/file,0.32000000,true
+/some/other/path,0.97000000,false
 
 100,/path/to/file
 150,/path/to/second/file

@@ -3,10 +3,10 @@ b        pan
 i_mean   1
 i_meaneb 
 i_stddev 
-x_mean   0.3467901443380824
+x_mean   0.34679014
 x_meaneb 
 x_stddev 
-y_mean   0.7268028627434533
+y_mean   0.72680286
 y_meaneb 
 y_stddev 
 
@@ -15,10 +15,10 @@ b        pan
 i_mean   2
 i_meaneb 
 i_stddev 
-x_mean   0.7586799647899636
+x_mean   0.75867996
 x_meaneb 
 x_stddev 
-y_mean   0.5221511083334797
+y_mean   0.52215111
 y_meaneb 
 y_stddev 
 
@@ -27,10 +27,10 @@ b        wye
 i_mean   3
 i_meaneb 
 i_stddev 
-x_mean   0.20460330576630303
+x_mean   0.20460331
 x_meaneb 
 x_stddev 
-y_mean   0.33831852551664776
+y_mean   0.33831853
 y_meaneb 
 y_stddev 
 
@@ -39,10 +39,10 @@ b        wye
 i_mean   4
 i_meaneb 
 i_stddev 
-x_mean   0.38139939387114097
+x_mean   0.38139939
 x_meaneb 
 x_stddev 
-y_mean   0.13418874328430463
+y_mean   0.13418874
 y_meaneb 
 y_stddev 
 
@@ -51,10 +51,10 @@ b        pan
 i_mean   5
 i_meaneb 
 i_stddev 
-x_mean   0.5732889198020006
+x_mean   0.57328892
 x_meaneb 
 x_stddev 
-y_mean   0.8636244699032729
+y_mean   0.86362447
 y_meaneb 
 y_stddev 
 
@@ -63,10 +63,10 @@ b        pan
 i_mean   6
 i_meaneb 
 i_stddev 
-x_mean   0.5271261600918548
+x_mean   0.52712616
 x_meaneb 
 x_stddev 
-y_mean   0.49322128674835697
+y_mean   0.49322129
 y_meaneb 
 y_stddev 
 
@@ -75,10 +75,10 @@ b        zee
 i_mean   7
 i_meaneb 
 i_stddev 
-x_mean   0.6117840605678454
+x_mean   0.61178406
 x_meaneb 
 x_stddev 
-y_mean   0.1878849191181694
+y_mean   0.18788492
 y_meaneb 
 y_stddev 
 
@@ -87,10 +87,10 @@ b        wye
 i_mean   8
 i_meaneb 
 i_stddev 
-x_mean   0.5985540091064224
+x_mean   0.59855401
 x_meaneb 
 x_stddev 
-y_mean   0.976181385699006
+y_mean   0.97618139
 y_meaneb 
 y_stddev 
 
@@ -99,10 +99,10 @@ b        wye
 i_mean   9
 i_meaneb 
 i_stddev 
-x_mean   0.03144187646093577
+x_mean   0.03144188
 x_meaneb 
 x_stddev 
-y_mean   0.7495507603507059
+y_mean   0.74955076
 y_meaneb 
 y_stddev 
 
@@ -111,9 +111,9 @@ b        wye
 i_mean   10
 i_meaneb 
 i_stddev 
-x_mean   0.5026260055412137
+x_mean   0.50262601
 x_meaneb 
 x_stddev 
-y_mean   0.9526183602969864
+y_mean   0.95261836
 y_meaneb 
 y_stddev 

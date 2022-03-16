@@ -1,19 +1,19 @@
 a        pan
-sums.pan 0.3467901443380824
-sums.wye 0.5026260055412137
+sums.pan 0.34679014
+sums.wye 0.50262601
 
 a        eks
-sums.pan 0.7586799647899636
-sums.wye 0.38139939387114097
-sums.zee 0.6117840605678454
+sums.pan 0.75867996
+sums.wye 0.38139939
+sums.zee 0.61178406
 
 a        wye
-sums.wye 0.20460330576630303
-sums.pan 0.5732889198020006
+sums.wye 0.20460331
+sums.pan 0.57328892
 
 a        zee
-sums.pan 0.5271261600918548
-sums.wye 0.5985540091064224
+sums.pan 0.52712616
+sums.wye 0.59855401
 
 a        hat
-sums.wye 0.03144187646093577
+sums.wye 0.03144188

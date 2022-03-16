@@ -1,28 +1,28 @@
 {
-  "asserting_present_x": 0.3467901443380824,
-  "asserting_not_empty_x": 0.3467901443380824,
-  "asserting_not_null_x": 0.3467901443380824,
-  "asserting_float_x": 0.3467901443380824,
+  "asserting_present_x": 0.34679014,
+  "asserting_not_empty_x": 0.34679014,
+  "asserting_not_null_x": 0.34679014,
+  "asserting_float_x": 0.34679014,
   "asserting_int_i": 1,
-  "asserting_numeric_x": 0.3467901443380824,
+  "asserting_numeric_x": 0.34679014,
   "asserting_numeric_i": 1,
   "asserting_string_b": "pan",
   "asserting_map_dollar_star": {
     "a": "pan",
     "b": "pan",
     "i": 1,
-    "x": 0.3467901443380824,
-    "y": 0.7268028627434533
+    "x": 0.34679014,
+    "y": 0.72680286
   },
-  "asserting_not_map_x": 0.3467901443380824,
+  "asserting_not_map_x": 0.34679014,
   "asserting_empty_map_curlies": {},
   "asserting_nonempty_map_dollar_star": {
     "a": "pan",
     "b": "pan",
     "i": 1,
-    "x": 0.3467901443380824,
-    "y": 0.7268028627434533
+    "x": 0.34679014,
+    "y": 0.72680286
   },
   "asserting_array_braces": [],
-  "asserting_not_array_x": 0.3467901443380824
+  "asserting_not_array_x": 0.34679014
 }

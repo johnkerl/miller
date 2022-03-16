@@ -161,6 +161,12 @@ func (regtester *RegTester) Execute(
 	// If there is an accessible .mlrrc file, we don't want it to be read for the regression test.
 	os.Setenv("MLRRC", "__none__")
 
+	// This is important for multi-platform regression testing, wherein default floating-point
+	// output format has varying numbers of decimal places between the platform where
+	// the expected results were generated, and the platform where the actual values are being
+	// computed. For regression-test we OFMT from an environment variable.
+	os.Setenv("MLR_OFMT", "%.8f")
+
 	regtester.resetCounts()
 
 	lib.InternalCodingErrorIf(len(casePaths) == 0)

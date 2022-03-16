@@ -1,15 +1,15 @@
 
 TZ        UTC
 intime    1970-01-01T00:00:00-0400
-parsed    14400
+parsed    14400.00000000
 formatted 1970-01-01T04:00:00+0000
 
 TZ        America/Sao_Paulo
 intime    1970-01-01T00:00:00-0400
-parsed    14400
+parsed    14400.00000000
 formatted 1970-01-01T04:00:00+0000
 
 TZ        Asia/Istanbul
 intime    1970-01-01T00:00:00-0400
-parsed    14400
+parsed    14400.00000000
 formatted 1970-01-01T04:00:00+0000

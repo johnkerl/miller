@@ -231,6 +231,16 @@ func parseCommandLinePassTwo(
 	// Options take in-code defaults, then overridden by .mlrrc (if any and if
 	// desired), then those in turn overridden by command-line flags.
 	options = cli.DefaultOptions()
+
+	// This is important for multi-platform regression testing, wherein default floating-point
+	// output format has varying numbers of decimal places between the platform where
+	// the expected results were generated, and the platform where the actual values are being
+	// computed. For regression-test we OFMT from an environment variable.
+	mlr_ofmt := os.Getenv("MLR_OFMT")
+	if mlr_ofmt != "" {
+		options.WriterOptions.FPOFMT = mlr_ofmt
+	}
+
 	recordTransformers = make([]transformers.IRecordTransformer, 0)
 	err = nil
 	ignoresInput := false
