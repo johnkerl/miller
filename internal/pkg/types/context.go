@@ -18,9 +18,24 @@ import (
 // statements and record-output to be in the same goroutine, for deterministic
 // output ordering.
 
+// TODO: move this
+// For the DSL exit statement
+type ExitInfo struct {
+	ExitCode    int
+	HasExitCode bool
+}
+
+func NewExitInfo() *ExitInfo {
+	return &ExitInfo{
+		ExitCode:    0,
+		HasExitCode: false,
+	}
+}
+
 type RecordAndContext struct {
-	Record       *mlrval.Mlrmap
-	Context      Context
+	Record  *mlrval.Mlrmap
+	Context Context
+	// TODO: rmeove probably ExitInfo     ExitInfo
 	OutputString string
 	EndOfStream  bool
 }
