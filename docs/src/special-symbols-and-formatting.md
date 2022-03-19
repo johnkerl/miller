@@ -165,7 +165,26 @@ b it is!
 c is it ...
 </pre>
 
-The [`ssub`](reference-dsl-builtin-functions.md#ssub) function exists precisely for this reason: so you don't have to escape anything.
+The
+[`ssub`](reference-dsl-builtin-functions.md#ssub) and
+[`gssub`](reference-dsl-builtin-functions.md#gssub)
+functions exist precisely for this reason: so you don't have to escape anything.
+
+The `ssub` and `gssub` functions are also handy for dealing with non-UTF-8 strings such as Latin 1, since Go's
+`regexp` library -- which Miller uses -- requires UTF-8 strings. For example:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put 'end {</b>
+<b>  name = "\xdeormundr og Ka\xf0l\xedn";</b>
+<b>  name = gssub(name, "\xde", "\u00de");</b>
+<b>  name = gssub(name, "\xf0", "\u00f0");</b>
+<b>  name = gssub(name, "\xed", "\u00ed");</b>
+<b>  print name;</b>
+<b>}'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Þormundr og Kaðlín
+</pre>
 
 ## How to apply math to regex output?
 
