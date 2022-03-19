@@ -50,7 +50,7 @@ DESCRIPTION
        insertion-ordered hash map.  This encompasses a variety of data
        formats, including but not limited to the familiar CSV, TSV, and JSON.
        (Miller can handle positionally-indexed data as a special case.) This
-       manpage documents mlr 6.1.0-dev.
+       manpage documents mlr 6.2.0.
 
 EXAMPLES
        mlr --icsv --opprint cat example.csv
