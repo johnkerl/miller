@@ -33,6 +33,32 @@ func BIF_ssub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	)
 }
 
+// BIF_gssub implements the gssub function -- no-frills string-replace, no
+// regexes, no escape sequences.
+func BIF_gssub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.IsErrorOrAbsent() {
+		return input1
+	}
+	if input2.IsErrorOrAbsent() {
+		return input2
+	}
+	if input3.IsErrorOrAbsent() {
+		return input3
+	}
+	if !input1.IsStringOrVoid() {
+		return mlrval.ERROR
+	}
+	if !input2.IsStringOrVoid() {
+		return mlrval.ERROR
+	}
+	if !input3.IsStringOrVoid() {
+		return mlrval.ERROR
+	}
+	return mlrval.FromString(
+		strings.ReplaceAll(input1.AcquireStringValue(), input2.AcquireStringValue(), input3.AcquireStringValue()),
+	)
+}
+
 // BIF_sub implements the sub function, with support for regexes and regex captures
 // of the form "\1" .. "\9".
 //

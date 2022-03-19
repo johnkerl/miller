@@ -473,6 +473,16 @@ argument) doesn't match the pattern (second argument).`,
 		},
 
 		{
+			name:        "gssub",
+			class:       FUNC_CLASS_STRING,
+			help:        `Like gsub but does no regexing. No characters are special.`,
+			ternaryFunc: bifs.BIF_gssub,
+			examples: []string{
+				`gssub("ab.d.fg", ".", "X") gives "abXdXfg"`,
+			},
+		},
+
+		{
 			name:  "sub",
 			class: FUNC_CLASS_STRING,
 			help: `'$name = sub($name, "old", "new")': replace once (first match, if there are multiple matches),
