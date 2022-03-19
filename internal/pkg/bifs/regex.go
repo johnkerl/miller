@@ -10,6 +10,17 @@ import (
 // BIF_ssub implements the ssub function -- no-frills string-replace, no
 // regexes, no escape sequences.
 func BIF_ssub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_ssub_gssub(input1, input2, input3, false)
+}
+
+// BIF_gssub implements the gssub function -- no-frills string-replace, no
+// regexes, no escape sequences.
+func BIF_gssub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_ssub_gssub(input1, input2, input3, true)
+}
+
+// bif_ssub_gssub is shared code for BIF_ssub and BIF_gssub.
+func bif_ssub_gssub(input1, input2, input3 *mlrval.Mlrval, doAll bool) *mlrval.Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
 	}
@@ -28,9 +39,15 @@ func BIF_ssub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input3.IsStringOrVoid() {
 		return mlrval.ERROR
 	}
-	return mlrval.FromString(
-		strings.Replace(input1.AcquireStringValue(), input2.AcquireStringValue(), input3.AcquireStringValue(), 1),
-	)
+	if doAll {
+		return mlrval.FromString(
+			strings.ReplaceAll(input1.AcquireStringValue(), input2.AcquireStringValue(), input3.AcquireStringValue()),
+		)
+	} else {
+		return mlrval.FromString(
+			strings.Replace(input1.AcquireStringValue(), input2.AcquireStringValue(), input3.AcquireStringValue(), 1),
+		)
+	}
 }
 
 // BIF_sub implements the sub function, with support for regexes and regex captures

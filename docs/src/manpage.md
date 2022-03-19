@@ -208,20 +208,20 @@ FUNCTION LIST
        capitalize cbrt ceil clean_whitespace collapse_whitespace concat cos cosh
        depth dhms2fsec dhms2sec erf erfc every exp expm1 flatten float floor fmtifnum
        fmtnum fold format fsec2dhms fsec2hms get_keys get_values gmt2localtime
-       gmt2sec gsub haskey hexfmt hms2fsec hms2sec hostname int invqnorm is_absent
-       is_array is_bool is_boolean is_empty is_empty_map is_error is_float is_int
-       is_map is_nan is_nonempty_map is_not_array is_not_empty is_not_map is_not_null
-       is_null is_numeric is_present is_string joink joinkv joinv json_parse
-       json_stringify leafcount length localtime2gmt localtime2sec log log10 log1p
-       logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5 mexp min mmul
-       msub os pow qnorm reduce regextract regextract_or_else round roundm rstrip
-       sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime select sgn
-       sha1 sha256 sha512 sin sinh sort splita splitax splitkv splitkvx splitnv
-       splitnvx sqrt ssub strftime strftime_local string strip strlen strptime
-       strptime_local sub substr substr0 substr1 system systime systimeint tan tanh
-       tolower toupper truncate typeof unflatten unformat unformatx uptime urand
-       urand32 urandelement urandint urandrange version ! != !=~ % & && * ** + - . .*
-       .+ .- ./ / // &lt; &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
+       gmt2sec gssub gsub haskey hexfmt hms2fsec hms2sec hostname int invqnorm
+       is_absent is_array is_bool is_boolean is_empty is_empty_map is_error is_float
+       is_int is_map is_nan is_nonempty_map is_not_array is_not_empty is_not_map
+       is_not_null is_null is_numeric is_present is_string joink joinkv joinv
+       json_parse json_stringify leafcount length localtime2gmt localtime2sec log
+       log10 log1p logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5
+       mexp min mmul msub os pow qnorm reduce regextract regextract_or_else round
+       roundm rstrip sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime
+       select sgn sha1 sha256 sha512 sin sinh sort splita splitax splitkv splitkvx
+       splitnv splitnvx sqrt ssub strftime strftime_local string strip strlen
+       strptime strptime_local sub substr substr0 substr1 system systime systimeint
+       tan tanh tolower toupper truncate typeof unflatten unformat unformatx uptime
+       urand urand32 urandelement urandint urandrange version ! != !=~ % & && * ** +
+       - . .* .+ .- ./ / // &lt; &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
 
 COMMENTS-IN-DATA FLAGS
        Miller lets you put comments in your data, such as
@@ -2244,6 +2244,11 @@ FUNCTIONS FOR FILTER/PUT
        Example:
        gmt2sec("2001-02-03T04:05:06Z") = 981173106
 
+   gssub
+        (class=string #args=3) Like gsub but does no regexing. No characters are special.
+       Example:
+       gssub("ab.d.fg", ".", "X") gives "abXdXfg"
+
    gsub
         (class=string #args=3) '$name = gsub($name, "old", "new")': replace all, with support for regular expressions. Capture groups \1 through \9 in the new part are matched from (...) in the old part, and must be used within the same call to gsub -- they don't persist for subsequent DSL statements. See also =~ and regextract. See also "Regular expressions" at https://miller.readthedocs.io.
        Examples:
@@ -3190,5 +3195,5 @@ SEE ALSO
 
 
 
-                                  2022-03-15                         MILLER(1)
+                                  2022-03-19                         MILLER(1)
 </pre>
