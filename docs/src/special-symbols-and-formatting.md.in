@@ -99,7 +99,7 @@ The `ssub` and `gssub` functions are also handy for dealing with non-UTF-8 strin
 
 GENMD-RUN-COMMAND
 mlr -n put 'end {
-  name = "\xdeormundr og Ka\xf0l\xedn";
+  name = "Ka\xf0l\xedn og \xdeormundr";
   name = gssub(name, "\xde", "\u00de");
   name = gssub(name, "\xf0", "\u00f0");
   name = gssub(name, "\xed", "\u00ed");

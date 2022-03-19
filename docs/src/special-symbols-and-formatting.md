@@ -175,7 +175,7 @@ The `ssub` and `gssub` functions are also handy for dealing with non-UTF-8 strin
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put 'end {</b>
-<b>  name = "\xdeormundr og Ka\xf0l\xedn";</b>
+<b>  name = "Ka\xf0l\xedn og \xdeormundr";</b>
 <b>  name = gssub(name, "\xde", "\u00de");</b>
 <b>  name = gssub(name, "\xf0", "\u00f0");</b>
 <b>  name = gssub(name, "\xed", "\u00ed");</b>
@@ -183,7 +183,7 @@ The `ssub` and `gssub` functions are also handy for dealing with non-UTF-8 strin
 <b>}'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-Þormundr og Kaðlín
+Kaðlín og Þormundr
 </pre>
 
 ## How to apply math to regex output?
