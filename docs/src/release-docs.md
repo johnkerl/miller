@@ -23,6 +23,7 @@ If your `mlr version` says something like `Miller v5.10.2` or `mlr 6.0.0`, witho
 
 | Release | Docs                                                                | Release notes |
 |---------|---------------------------------------------------------------------|---------------|
+6.2.0     | [Miller 6.2.0](https://johnkerl.org/miller-docs-by-release/6.2.0)  | [Restore --tsvlite; add gssub and expand dhms functions](https://github.com/johnkerl/miller/releases/tag/v6.2.0) |
 6.1.0     | [Miller 6.1.0](https://johnkerl.org/miller-docs-by-release/6.1.0)  | [Natural sort, true TSV, sliding-window averages, and more](https://github.com/johnkerl/miller/releases/tag/v6.1.0) |
 6.0.0     | [Miller 6.0.0](https://johnkerl.org/miller-docs-by-release/6.0.0)  | [Miller 6](https://github.com/johnkerl/miller/releases/tag/v6.0.0) |
 5.10.3    | [Miller 5.10.3](https://johnkerl.org/miller-docs-by-release/5.10.3) | [Address Conda-build issue](https://github.com/johnkerl/miller/releases/tag/v5.10.3) |
