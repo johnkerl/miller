@@ -5,7 +5,7 @@
 * https://squidfunk.github.io/mkdocs-material/setup/setting-up-versioning/
 
 RELEASES
-* 6.2.0 plan:
+* 6.3.0 plan:
   ! #982 ., etc
   ! extended field accessors for #763 and #948 (positional & json.nested)
   ! strict mode
