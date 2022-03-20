@@ -13,7 +13,7 @@ import (
 )
 
 // ----------------------------------------------------------------
-const verbNameLatin1ToUTF8 = "latin1_to_utf8"
+const verbNameLatin1ToUTF8 = "latin1-to-utf8"
 
 var Latin1ToUTF8Setup = TransformerSetup{
 	Verb:         verbNameLatin1ToUTF8,
@@ -29,7 +29,7 @@ func transformerLatin1ToUTF8Usage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s, with no options \n", "mlr", verbNameLatin1ToUTF8)
 	fmt.Fprintf(o, "Recursively converts record strings from Latin-1 to UTF-8.\n")
-	fmt.Fprintf(o, "For field-level control, please see the latin1_to_utf8 DSL function.\n")
+	fmt.Fprintf(o, "For field-level control, please see the latin1-to-utf8 DSL function.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 	if doExit {

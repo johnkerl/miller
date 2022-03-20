@@ -1,1 +1,1 @@
-mlr --xtab --from test/input/latin1.xtab latin1_to_utf8
+mlr --xtab --from test/input/latin1.xtab latin1-to-utf8
