@@ -50,7 +50,7 @@ DESCRIPTION
        insertion-ordered hash map.  This encompasses a variety of data
        formats, including but not limited to the familiar CSV, TSV, and JSON.
        (Miller can handle positionally-indexed data as a special case.) This
-       manpage documents mlr 6.2.0.
+       manpage documents mlr 6.2.0-dev.
 
 EXAMPLES
        mlr --icsv --opprint cat example.csv
@@ -212,16 +212,17 @@ FUNCTION LIST
        is_absent is_array is_bool is_boolean is_empty is_empty_map is_error is_float
        is_int is_map is_nan is_nonempty_map is_not_array is_not_empty is_not_map
        is_not_null is_null is_numeric is_present is_string joink joinkv joinv
-       json_parse json_stringify leafcount length localtime2gmt localtime2sec log
-       log10 log1p logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5
-       mexp min mmul msub os pow qnorm reduce regextract regextract_or_else round
-       roundm rstrip sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime
-       select sgn sha1 sha256 sha512 sin sinh sort splita splitax splitkv splitkvx
-       splitnv splitnvx sqrt ssub strftime strftime_local string strip strlen
-       strptime strptime_local sub substr substr0 substr1 system systime systimeint
-       tan tanh tolower toupper truncate typeof unflatten unformat unformatx uptime
-       urand urand32 urandelement urandint urandrange version ! != !=~ % & && * ** +
-       - . .* .+ .- ./ / // &lt; &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
+       json_parse json_stringify latin1_to_utf8 leafcount length localtime2gmt
+       localtime2sec log log10 log1p logifit lstrip madd mapdiff mapexcept mapselect
+       mapsum max md5 mexp min mmul msub os pow qnorm reduce regextract
+       regextract_or_else round roundm rstrip sec2dhms sec2gmt sec2gmtdate sec2hms
+       sec2localdate sec2localtime select sgn sha1 sha256 sha512 sin sinh sort splita
+       splitax splitkv splitkvx splitnv splitnvx sqrt ssub strftime strftime_local
+       string strip strlen strptime strptime_local sub substr substr0 substr1 system
+       systime systimeint tan tanh tolower toupper truncate typeof unflatten unformat
+       unformatx uptime urand urand32 urandelement urandint urandrange utf8_to_latin1
+       version ! != !=~ % & && * ** + - . .* .+ .- ./ / // &lt; &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt;
+       &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
 
 COMMENTS-IN-DATA FLAGS
        Miller lets you put comments in your data, such as
@@ -2363,6 +2364,9 @@ FUNCTIONS FOR FILTER/PUT
    json_stringify
         (class=collections #args=1,2) Converts value to JSON-formatted string. Default output is single-line. With optional second boolean argument set to true, produces multiline output.
 
+   latin1_to_utf8
+        (class=string #args=1) Tries to convert Latin-1-encoded string to UTF-8-encoded string. If argument is array or map, recurses into it.
+
    leafcount
         (class=collections #args=1) Counts total number of terminal values in map/array. For single-level map/array, same as length.
 
@@ -2693,6 +2697,9 @@ FUNCTIONS FOR FILTER/PUT
 
    urandrange
         (class=math #args=2) Floating-point numbers uniformly distributed on the interval [a, b).
+
+   utf8_to_latin1
+        (class=string #args=1) Tries to convert UTF-8-encoded string to Latin-1-encoded string. If argument is array or map, recurses into it.
 
    version
         (class=system #args=0) Returns the Miller version as a string.
@@ -3195,5 +3202,5 @@ SEE ALSO
 
 
 
-                                  2022-03-19                         MILLER(1)
+                                  2022-03-20                         MILLER(1)
 </pre>
