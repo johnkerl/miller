@@ -598,6 +598,30 @@ with type-inference. On non-match, returns error -- use is_error() to check.`,
 			binaryFunc: bifs.BIF_unformatx,
 		},
 
+		{
+			name:  "latin1_to_utf8",
+			class: FUNC_CLASS_STRING,
+			help: `Tries to convert Latin-1-encoded string to UTF-8-encoded string.
+If argument is array or map, recurses into it.`,
+			examples: []string{
+				`$y = latin1_to_utf8($x)`,
+				`$* = latin1_to_utf8($*)`,
+			},
+			unaryFunc: bifs.BIF_latin1_to_utf8,
+		},
+
+		{
+			name:  "utf8_to_latin1",
+			class: FUNC_CLASS_STRING,
+			help: `Tries to convert UTF-8-encoded string to Latin-1-encoded string.
+If argument is array or map, recurses into it.`,
+			examples: []string{
+				`$y = utf8_to_latin1($x)`,
+				`$* = utf8_to_latin1($*)`,
+			},
+			unaryFunc: bifs.BIF_utf8_to_latin1,
+		},
+
 		// ----------------------------------------------------------------
 		// FUNC_CLASS_HASHING
 

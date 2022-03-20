@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2022-03-19
+.\"      Date: 2022-03-20
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2022-03-19" "\ \&" "\ \&"
+.TH "MILLER" "1" "2022-03-20" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -47,7 +47,7 @@ on integer-indexed fields: if the natural data structure for the latter is the
 array, then Miller's natural data structure is the insertion-ordered hash map.
 This encompasses a variety of data formats, including but not limited to the
 familiar CSV, TSV, and JSON.  (Miller can handle positionally-indexed data as
-a special case.) This manpage documents mlr 6.2.0.
+a special case.) This manpage documents mlr 6.2.0-dev.
 .SH "EXAMPLES"
 .sp
 
@@ -212,11 +212,11 @@ for all things with "map" in their names.
 altkv bar bootstrap cat check clean-whitespace count-distinct count
 count-similar cut decimate fill-down fill-empty filter flatten format-values
 fraction gap grep group-by group-like having-fields head histogram json-parse
-json-stringify join label least-frequent merge-fields most-frequent nest
-nothing put regularize remove-empty-columns rename reorder repeat reshape
-sample sec2gmtdate sec2gmt seqgen shuffle skip-trivial-records sort
-sort-within-records split stats1 stats2 step tac tail tee template top
-unflatten uniq unsparsify
+json-stringify join label latin1-to-utf8 utf8-to-latin1 least-frequent
+merge-fields most-frequent nest nothing put regularize remove-empty-columns
+rename reorder repeat reshape sample sec2gmtdate sec2gmt seqgen shuffle
+skip-trivial-records sort sort-within-records split stats1 stats2 step tac
+tail tee template top unflatten uniq unsparsify
 .fi
 .if n \{\
 .RE
@@ -238,16 +238,17 @@ gmt2sec gssub gsub haskey hexfmt hms2fsec hms2sec hostname int invqnorm
 is_absent is_array is_bool is_boolean is_empty is_empty_map is_error is_float
 is_int is_map is_nan is_nonempty_map is_not_array is_not_empty is_not_map
 is_not_null is_null is_numeric is_present is_string joink joinkv joinv
-json_parse json_stringify leafcount length localtime2gmt localtime2sec log
-log10 log1p logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5
-mexp min mmul msub os pow qnorm reduce regextract regextract_or_else round
-roundm rstrip sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime
-select sgn sha1 sha256 sha512 sin sinh sort splita splitax splitkv splitkvx
-splitnv splitnvx sqrt ssub strftime strftime_local string strip strlen
-strptime strptime_local sub substr substr0 substr1 system systime systimeint
-tan tanh tolower toupper truncate typeof unflatten unformat unformatx uptime
-urand urand32 urandelement urandint urandrange version ! != !=~ % & && * ** +
-- . .* .+ .- ./ / // < << <= <=> == =~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
+json_parse json_stringify latin1_to_utf8 leafcount length localtime2gmt
+localtime2sec log log10 log1p logifit lstrip madd mapdiff mapexcept mapselect
+mapsum max md5 mexp min mmul msub os pow qnorm reduce regextract
+regextract_or_else round roundm rstrip sec2dhms sec2gmt sec2gmtdate sec2hms
+sec2localdate sec2localtime select sgn sha1 sha256 sha512 sin sinh sort splita
+splitax splitkv splitkvx splitnv splitnvx sqrt ssub strftime strftime_local
+string strip strlen strptime strptime_local sub substr substr0 substr1 system
+systime systimeint tan tanh tolower toupper truncate typeof unflatten unformat
+unformatx uptime urand urand32 urandelement urandint urandrange utf8_to_latin1
+version ! != !=~ % & && * ** + - . .* .+ .- ./ / // < << <= <=> == =~ > >= >>
+>>> ?: ?? ??? ^ ^^ | || ~
 .fi
 .if n \{\
 .RE
@@ -1626,6 +1627,32 @@ have the respective name. (Fields past the nth are left with their original
 names.) Particularly useful with --inidx or --implicit-csv-header, to give
 useful names to otherwise integer-indexed fields.
 
+Options:
+-h|--help Show this message.
+.fi
+.if n \{\
+.RE
+.SS "latin1-to-utf8"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr latin1-to-utf8, with no options.
+Recursively converts record strings from Latin-1 to UTF-8.
+For field-level control, please see the latin1_to_utf8 DSL function.
+Options:
+-h|--help Show this message.
+.fi
+.if n \{\
+.RE
+.SS "utf8-to-latin1"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr utf8-to-latin1, with no options.
+Recursively converts record strings from Latin-1 to UTF-8.
+For field-level control, please see the utf8_to_latin1 DSL function.
 Options:
 -h|--help Show this message.
 .fi
@@ -3445,6 +3472,18 @@ joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
 .fi
 .if n \{\
 .RE
+.SS "latin1_to_utf8"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=string #args=1) Tries to convert Latin-1-encoded string to UTF-8-encoded string. If argument is array or map, recurses into it.
+Examples:
+$y = latin1_to_utf8($x)
+$* = latin1_to_utf8($*)
+.fi
+.if n \{\
+.RE
 .SS "leafcount"
 .if n \{\
 .RS 0
@@ -4253,6 +4292,18 @@ Int-valued example: '$n=floor(20+urand()*11)'.
 .\}
 .nf
  (class=math #args=2) Floating-point numbers uniformly distributed on the interval [a, b).
+.fi
+.if n \{\
+.RE
+.SS "utf8_to_latin1"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=string #args=1) Tries to convert UTF-8-encoded string to Latin-1-encoded string. If argument is array or map, recurses into it.
+Examples:
+$y = utf8_to_latin1($x)
+$* = utf8_to_latin1($*)
 .fi
 .if n \{\
 .RE

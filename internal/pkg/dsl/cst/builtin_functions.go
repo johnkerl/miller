@@ -507,7 +507,7 @@ func (node *DotCallsiteNode) Evaluate(
 		// Case 1: map.attribute as shorthand for map["attribute"]
 		value2 := mapvalue1.Get(node.string2)
 		if value2 == nil {
-			return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "map access [" + node.string2 + "]")
+			return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "map access ["+node.string2+"]")
 		} else {
 			return value2
 		}

@@ -147,7 +147,7 @@ func (mv *Mlrval) AssertNumeric() {
 	_ = mv.GetNumericToFloatValueOrDie()
 }
 
-func (mv *Mlrval) StrictModeCheck(strictMode bool, description string) *Mlrval{
+func (mv *Mlrval) StrictModeCheck(strictMode bool, description string) *Mlrval {
 	if strictMode && mv.IsAbsent() {
 		fmt.Fprintf(os.Stderr, "mlr: %s is absent and strict mode was requested.\n", description)
 		os.Exit(1)
