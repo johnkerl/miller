@@ -1015,6 +1015,9 @@ gsub("prefix4529:suffix8567", "(....ix)([0-9]+)", "[\1 : \2]") gives "[prefix : 
 ### latin1_to_utf8
 <pre class="pre-non-highlight-non-pair">
 latin1_to_utf8  (class=string #args=1) Tries to convert Latin-1-encoded string to UTF-8-encoded string. If argument is array or map, recurses into it.
+Examples:
+$y = latin1_to_utf8($x)
+$* = latin1_to_utf8($*)
 </pre>
 
 
@@ -1139,6 +1142,9 @@ is_error(unformatx("{}h{}m{}s", "3:47:22")) gives true.
 ### utf8_to_latin1
 <pre class="pre-non-highlight-non-pair">
 utf8_to_latin1  (class=string #args=1) Tries to convert UTF-8-encoded string to Latin-1-encoded string. If argument is array or map, recurses into it.
+Examples:
+$y = utf8_to_latin1($x)
+$* = utf8_to_latin1($*)
 </pre>
 
 

@@ -39,6 +39,8 @@ var TRANSFORMER_LOOKUP_TABLE = []TransformerSetup{
 	JSONStringifySetup,
 	JoinSetup,
 	LabelSetup,
+	Latin1ToUTF8Setup,
+	UTF8ToLatin1Setup,
 	LeastFrequentSetup,
 	MergeFieldsSetup,
 	MostFrequentSetup,

@@ -3452,6 +3452,9 @@ joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
 .\}
 .nf
  (class=string #args=1) Tries to convert Latin-1-encoded string to UTF-8-encoded string. If argument is array or map, recurses into it.
+Examples:
+$y = latin1_to_utf8($x)
+$* = latin1_to_utf8($*)
 .fi
 .if n \{\
 .RE
@@ -4272,6 +4275,9 @@ Int-valued example: '$n=floor(20+urand()*11)'.
 .\}
 .nf
  (class=string #args=1) Tries to convert UTF-8-encoded string to Latin-1-encoded string. If argument is array or map, recurses into it.
+Examples:
+$y = utf8_to_latin1($x)
+$* = utf8_to_latin1($*)
 .fi
 .if n \{\
 .RE
