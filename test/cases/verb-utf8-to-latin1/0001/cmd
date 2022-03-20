@@ -1,0 +1,1 @@
+mlr --xtab --from test/input/utf8.xtab utf8_to_latin1

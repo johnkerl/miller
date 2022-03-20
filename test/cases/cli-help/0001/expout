@@ -482,6 +482,22 @@ Options:
 -h|--help Show this message.
 
 ================================================================
+latin1_to_utf8
+Usage: mlr latin1_to_utf8, with no options 
+Recursively converts record strings from Latin-1 to UTF-8.
+For field-level control, please see the latin1_to_utf8 DSL function.
+Options:
+-h|--help Show this message.
+
+================================================================
+utf8_to_latin1
+Usage: mlr utf8_to_latin1, with no options 
+Recursively converts record strings from Latin-1 to UTF-8.
+For field-level control, please see the utf8_to_latin1 DSL function.
+Options:
+-h|--help Show this message.
+
+================================================================
 least-frequent
 Usage: mlr least-frequent [options]
 Shows the least frequently occurring distinct values for specified field names.
