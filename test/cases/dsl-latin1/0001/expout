@@ -1,0 +1,15 @@
+x The quick brown fox jumped over the lazy dogs.
+y The quick brown fox jumped over the lazy dogs.
+z The quick brown fox jumped over the lazy dogs.
+
+x Victor jagt zwölf Boxkämpfer quer über den großen Sylter Deich.
+y Victor jagt zw�lf Boxk�mpfer quer �ber den gro�en Sylter Deich.
+z Victor jagt zwölf Boxkämpfer quer über den großen Sylter Deich.
+
+x Съешь же ещё этих мягких французских булок да выпей чаю.
+y (error)
+z (error)
+
+x This¹ is² it³.
+y This� is� it�.
+z This¹ is² it³.

@@ -1,0 +1,2 @@
+$y = utf8_to_latin1($x);
+$z = latin1_to_utf8($y);
