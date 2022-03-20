@@ -202,9 +202,33 @@ func _more(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(1)
 }
 
-// recuriseBinaryFuncOnInput1 is for fmtifnum and other functions which apply themselves recursively
+// recurseUnaryFuncOnInput1 is for BIF_latin1_to_utf8 and other functions which apply themselves
+// recursively on array/map inputs.
+func recurseUnaryFuncOnInput1(unaryFunc UnaryFunc, input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.IsArray() {
+		inputArray := input1.GetArray()
+		lib.InternalCodingErrorIf(inputArray == nil)
+		outputArray := make([]*mlrval.Mlrval, len(inputArray))
+		for i := range inputArray {
+			outputArray[i] = unaryFunc(inputArray[i])
+		}
+		return mlrval.FromArray(outputArray)
+	} else if input1.IsMap() {
+		inputMap := input1.GetMap()
+		lib.InternalCodingErrorIf(inputMap == nil)
+		outputMap := mlrval.NewMlrmap()
+		for pe := inputMap.Head; pe != nil; pe = pe.Next {
+			outputMap.PutReference(pe.Key, unaryFunc(pe.Value))
+		}
+		return mlrval.FromMap(outputMap)
+	} else {
+		return unaryFunc(input1)
+	}
+}
+
+// recurseBinaryFuncOnInput1 is for fmtifnum and other functions which apply themselves recursively
 // on array/map inputs.
-func recuriseBinaryFuncOnInput1(binaryFunc BinaryFunc, input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+func recurseBinaryFuncOnInput1(binaryFunc BinaryFunc, input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsArray() {
 		inputArray := input1.GetArray()
 		lib.InternalCodingErrorIf(inputArray == nil)
@@ -222,6 +246,6 @@ func recuriseBinaryFuncOnInput1(binaryFunc BinaryFunc, input1, input2 *mlrval.Ml
 		}
 		return mlrval.FromMap(outputMap)
 	} else {
-		return fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
+		return binaryFunc(input1, input2)
 	}
 }

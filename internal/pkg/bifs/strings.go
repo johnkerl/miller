@@ -418,7 +418,7 @@ var fmtnum_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 
 func BIF_fmtnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsArray() || input1.IsMap() {
-		return recuriseBinaryFuncOnInput1(BIF_fmtnum, input1, input2)
+		return recurseBinaryFuncOnInput1(BIF_fmtnum, input1, input2)
 	} else {
 		return fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
 	}
@@ -426,7 +426,7 @@ func BIF_fmtnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func BIF_fmtifnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsArray() || input1.IsMap() {
-		return recuriseBinaryFuncOnInput1(BIF_fmtifnum, input1, input2)
+		return recurseBinaryFuncOnInput1(BIF_fmtifnum, input1, input2)
 	} else {
 		output := fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
 		if output.IsError() {
@@ -434,5 +434,39 @@ func BIF_fmtifnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		} else {
 			return output
 		}
+	}
+}
+
+func BIF_latin1_to_utf8(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.IsArray() || input1.IsMap() {
+		return recurseUnaryFuncOnInput1(BIF_latin1_to_utf8, input1)
+	} else if input1.IsString() {
+		output, err := lib.TryLatin1ToUTF8(input1.String())
+		if err != nil {
+			// Somewhat arbitrary design decision
+			// return input1
+			return mlrval.ERROR
+		} else {
+			return mlrval.FromString(output)
+		}
+	} else {
+		return input1
+	}
+}
+
+func BIF_utf8_to_latin1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.IsArray() || input1.IsMap() {
+		return recurseUnaryFuncOnInput1(BIF_utf8_to_latin1, input1)
+	} else if input1.IsString() {
+		output, err := lib.TryUTF8ToLatin1(input1.String())
+		if err != nil {
+			// Somewhat arbitrary design decision
+			// return input1
+			return mlrval.ERROR
+		} else {
+			return mlrval.FromString(output)
+		}
+	} else {
+		return input1
 	}
 }

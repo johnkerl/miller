@@ -129,7 +129,7 @@ func (node *IndirectFieldValueNode) Evaluate(
 		os.Exit(1)
 	}
 	if value == nil {
-		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$[" + fieldName.String() + "]")
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$["+fieldName.String()+"]")
 	}
 	return value
 }
@@ -164,7 +164,7 @@ func (node *IndirectOosvarValueNode) Evaluate(
 
 	value := state.Oosvars.Get(oosvarName.String())
 	if value == nil {
-		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "@[" + oosvarName.String() + "]")
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "@["+oosvarName.String()+"]")
 	}
 
 	return value
