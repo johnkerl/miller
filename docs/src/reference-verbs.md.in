@@ -615,6 +615,25 @@ GENMD-RUN-COMMAND
 mlr --icsv --implicit-csv-header --opprint label name,age,status data/headerless.csv
 GENMD-EOF
 
+## latin1-to-utf8
+
+GENMD-RUN-COMMAND
+mlr latin1-to-utf8 -h
+GENMD-EOF
+
+![pix/latin1-to-utf8.png](pix/latin1-to-utf8.png)
+
+## utf8-to-latin1
+
+GENMD-RUN-COMMAND
+mlr utf8-to-latin1 -h
+GENMD-EOF
+
+In this example, the English and German pangrams are convertible from UTF-8 to Latin-1, but the
+Russian one is not:
+
+![pix/utf8-to-latin1.png](pix/utf8-to-latin1.png)
+
 ## least-frequent
 
 GENMD-RUN-COMMAND

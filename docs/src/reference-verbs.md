@@ -1873,6 +1873,39 @@ Alice 56  missing
 Carol 45  present
 </pre>
 
+## latin1-to-utf8
+
+<pre class="pre-highlight-in-pair">
+<b>mlr latin1-to-utf8 -h</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr latin1-to-utf8, with no options.
+Recursively converts record strings from Latin-1 to UTF-8.
+For field-level control, please see the latin1_to_utf8 DSL function.
+Options:
+-h|--help Show this message.
+</pre>
+
+![pix/latin1-to-utf8.png](pix/latin1-to-utf8.png)
+
+## utf8-to-latin1
+
+<pre class="pre-highlight-in-pair">
+<b>mlr utf8-to-latin1 -h</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr utf8-to-latin1, with no options.
+Recursively converts record strings from Latin-1 to UTF-8.
+For field-level control, please see the utf8_to_latin1 DSL function.
+Options:
+-h|--help Show this message.
+</pre>
+
+In this example, the English and German pangrams are convertible from UTF-8 to Latin-1, but the
+Russian one is not:
+
+![pix/utf8-to-latin1.png](pix/utf8-to-latin1.png)
+
 ## least-frequent
 
 <pre class="pre-highlight-in-pair">

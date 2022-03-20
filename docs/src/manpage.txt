@@ -171,11 +171,11 @@ VERB LIST
        altkv bar bootstrap cat check clean-whitespace count-distinct count
        count-similar cut decimate fill-down fill-empty filter flatten format-values
        fraction gap grep group-by group-like having-fields head histogram json-parse
-       json-stringify join label least-frequent merge-fields most-frequent nest
-       nothing put regularize remove-empty-columns rename reorder repeat reshape
-       sample sec2gmtdate sec2gmt seqgen shuffle skip-trivial-records sort
-       sort-within-records split stats1 stats2 step tac tail tee template top
-       unflatten uniq unsparsify
+       json-stringify join label latin1-to-utf8 utf8-to-latin1 least-frequent
+       merge-fields most-frequent nest nothing put regularize remove-empty-columns
+       rename reorder repeat reshape sample sec2gmtdate sec2gmt seqgen shuffle
+       skip-trivial-records sort sort-within-records split stats1 stats2 step tac
+       tail tee template top unflatten uniq unsparsify
 
 FUNCTION LIST
        abs acos acosh any append apply arrayify asin asinh asserting_absent
@@ -1296,6 +1296,20 @@ VERBS
        names.) Particularly useful with --inidx or --implicit-csv-header, to give
        useful names to otherwise integer-indexed fields.
 
+       Options:
+       -h|--help Show this message.
+
+   latin1-to-utf8
+       Usage: mlr latin1-to-utf8, with no options.
+       Recursively converts record strings from Latin-1 to UTF-8.
+       For field-level control, please see the latin1_to_utf8 DSL function.
+       Options:
+       -h|--help Show this message.
+
+   utf8-to-latin1
+       Usage: mlr utf8-to-latin1, with no options.
+       Recursively converts record strings from Latin-1 to UTF-8.
+       For field-level control, please see the utf8_to_latin1 DSL function.
        Options:
        -h|--help Show this message.
 
