@@ -10,6 +10,7 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
+	"github.com/johnkerl/miller/internal/pkg/parsing/token"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
 )
 
@@ -29,6 +30,7 @@ func NewIfChainNode(ifItems []*IfItem) *IfChainNode {
 // statement-block part {...}. For "else", the conditional is nil.
 type IfItem struct {
 	conditionNode      IEvaluable
+	conditionToken     *token.Token
 	statementBlockNode *StatementBlockNode
 }
 
@@ -92,6 +94,7 @@ func (root *RootNode) BuildIfChainNode(astNode *dsl.ASTNode) (*IfChainNode, erro
 			}
 			ifItem := &IfItem{
 				conditionNode:      conditionNode,
+				conditionToken:     astChild.Children[0].Token,
 				statementBlockNode: statementBlockNode,
 			}
 			ifItems = append(ifItems, ifItem)
@@ -127,7 +130,10 @@ func (node *IfChainNode) Execute(state *runtime.State) (*BlockExitPayload, error
 		boolValue, isBool := condition.GetBoolValue()
 		if !isBool {
 			// TODO: line-number/token info for the DSL expression.
-			return nil, fmt.Errorf("mlr: conditional expression did not evaluate to boolean.")
+			return nil, fmt.Errorf(
+				"mlr: conditional expression did not evaluate to boolean%s.",
+				dsl.TokenToLocationInfo(ifItem.conditionToken),
+			)
 		}
 		if boolValue == true {
 			blockExitPayload, err := ifItem.statementBlockNode.Execute(state)
