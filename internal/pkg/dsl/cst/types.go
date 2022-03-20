@@ -49,6 +49,7 @@ type RootNode struct {
 	outputHandlerManagers         *list.List
 	recordWriterOptions           *cli.TWriterOptions
 	dslInstanceType               DSLInstanceType // put, filter, repl
+	strictMode                    bool
 }
 
 // ----------------------------------------------------------------

@@ -88,6 +88,7 @@ func ReplMain(args []string) int {
 	showPrompts := true
 	astPrintMode := ASTPrintNone
 	doWarnings := false
+	strictMode := false
 	options := cli.DefaultOptions()
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -115,6 +116,10 @@ func ReplMain(args []string) int {
 			argi++
 		} else if args[argi] == "-w" {
 			doWarnings = true
+			argi++
+
+		} else if args[argi] == "-z" {
+			strictMode = true
 			argi++
 
 		} else if args[argi] == "--load" {
@@ -162,6 +167,7 @@ func ReplMain(args []string) int {
 		showPrompts,
 		astPrintMode,
 		doWarnings,
+		strictMode,
 		options,
 		recordOutputFileName,
 		recordOutputStream,

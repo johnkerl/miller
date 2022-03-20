@@ -182,7 +182,7 @@ func BIF_strip(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ----------------------------------------------------------------
 func BIF_collapse_whitespace(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return BIF_collapse_whitespace_regexp(input1, WhitespaceRegexp())
+	return BIF_collapse_whitespace_regexp(input1, _whitespace_regexp)
 }
 
 func BIF_collapse_whitespace_regexp(input1 *mlrval.Mlrval, whitespaceRegexp *regexp.Regexp) *mlrval.Mlrval {
@@ -193,9 +193,7 @@ func BIF_collapse_whitespace_regexp(input1 *mlrval.Mlrval, whitespaceRegexp *reg
 	}
 }
 
-func WhitespaceRegexp() *regexp.Regexp {
-	return regexp.MustCompile(`\s+`)
-}
+var _whitespace_regexp = regexp.MustCompile(`\s+`)
 
 // ================================================================
 func BIF_toupper(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -239,7 +237,7 @@ func BIF_capitalize(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_clean_whitespace(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return BIF_strip(
 		BIF_collapse_whitespace_regexp(
-			input1, WhitespaceRegexp(),
+			input1, _whitespace_regexp,
 		),
 	)
 }

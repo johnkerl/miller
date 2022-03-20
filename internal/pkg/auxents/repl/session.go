@@ -43,6 +43,7 @@ func NewRepl(
 	showPrompts bool,
 	astPrintMode ASTPrintMode,
 	doWarnings bool,
+	strictMode bool,
 	options *cli.TOptions,
 	recordOutputFileName string,
 	recordOutputStream *os.File,
@@ -63,7 +64,7 @@ func NewRepl(
 	// NR is 0, etc until/unless the user opens a file and reads records from it.
 	context := types.NewContext()
 
-	runtimeState := runtime.NewEmptyState(options)
+	runtimeState := runtime.NewEmptyState(options, strictMode)
 	runtimeState.Update(inrec, context)
 	// The filter expression for the main Miller DSL is any non-assignment
 	// statement like 'true' or '$x > 0.5' etc. For the REPL, we re-use this for
@@ -78,7 +79,9 @@ func NewRepl(
 	signal.Notify(sysToSignalHandlerChannel, os.Interrupt, syscall.SIGTERM)
 	go controlCHandler(sysToSignalHandlerChannel, appSignalNotificationChannel)
 
-	cstRootNode := cst.NewEmptyRoot(&options.WriterOptions, cst.DSLInstanceTypeREPL).WithRedefinableUDFUDS()
+	cstRootNode := cst.NewEmptyRoot(
+		&options.WriterOptions, cst.DSLInstanceTypeREPL,
+	).WithRedefinableUDFUDS().WithStrictMode(strictMode)
 
 	// TODO
 

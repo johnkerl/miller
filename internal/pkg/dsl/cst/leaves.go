@@ -102,11 +102,11 @@ func (node *DirectFieldRvalueNode) Evaluate(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$*")
 	}
 	value := state.Inrec.Get(node.fieldName)
 	if value == nil {
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$"+node.fieldName)
 	} else {
 		return value
 	}
@@ -128,7 +128,7 @@ func (node *FullSrecRvalueNode) Evaluate(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$*")
 	} else {
 		return mlrval.FromMap(state.Inrec)
 	}
@@ -149,7 +149,7 @@ func (node *DirectOosvarRvalueNode) Evaluate(
 ) *mlrval.Mlrval {
 	value := state.Oosvars.Get(node.variableName)
 	if value == nil {
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "@"+node.variableName)
 	} else {
 		return value
 	}
@@ -206,7 +206,7 @@ func (node *LocalVariableNode) Evaluate(
 	// prerequisite since UDFs and BIFs are managed in quite different
 	// structures.
 
-	return mlrval.ABSENT
+	return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "local variable "+node.stackVariable.GetName())
 }
 
 // ----------------------------------------------------------------

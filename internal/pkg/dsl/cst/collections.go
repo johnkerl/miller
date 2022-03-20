@@ -52,7 +52,7 @@ func (node *ArrayLiteralNode) Evaluate(
 }
 
 // ----------------------------------------------------------------
-type CollectionIndexAccessNode struct {
+type ArrayOrMapIndexAccessNode struct {
 	baseEvaluable  IEvaluable
 	indexEvaluable IEvaluable
 }
@@ -75,13 +75,13 @@ func (node *RootNode) BuildArrayOrMapIndexAccessNode(
 		return nil, err
 	}
 
-	return &CollectionIndexAccessNode{
+	return &ArrayOrMapIndexAccessNode{
 		baseEvaluable:  baseEvaluable,
 		indexEvaluable: indexEvaluable,
 	}, nil
 }
 
-func (node *CollectionIndexAccessNode) Evaluate(
+func (node *ArrayOrMapIndexAccessNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
 	baseMlrval := node.baseEvaluable.Evaluate(state)
@@ -109,6 +109,7 @@ func (node *CollectionIndexAccessNode) Evaluate(
 		return mlrval.FromString(string(runes[zindex]))
 
 	} else if baseMlrval.IsAbsent() {
+		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
 	} else {
 		return mlrval.ERROR
@@ -162,6 +163,7 @@ func (node *ArraySliceAccessNode) Evaluate(
 	upperIndexMlrval := node.upperIndexEvaluable.Evaluate(state)
 
 	if baseMlrval.IsAbsent() {
+		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
 	}
 	if baseMlrval.IsString() {
@@ -229,7 +231,7 @@ func (node *PositionalFieldNameNode) Evaluate(
 ) *mlrval.Mlrval {
 	indexMlrval := node.indexEvaluable.Evaluate(state)
 	if indexMlrval.IsAbsent() {
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$[[(absent)]]")
 	}
 
 	index, ok := indexMlrval.GetIntValue()
@@ -239,7 +241,7 @@ func (node *PositionalFieldNameNode) Evaluate(
 
 	name, ok := state.Inrec.GetNameAtPositionalIndex(index)
 	if !ok {
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$[["+indexMlrval.String()+"]]")
 	}
 
 	return mlrval.FromString(name)
@@ -275,7 +277,7 @@ func (node *PositionalFieldValueNode) Evaluate(
 ) *mlrval.Mlrval {
 	indexMlrval := node.indexEvaluable.Evaluate(state)
 	if indexMlrval.IsAbsent() {
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$[[[(absent)]]]")
 	}
 
 	index, ok := indexMlrval.GetIntValue()
@@ -285,7 +287,7 @@ func (node *PositionalFieldValueNode) Evaluate(
 
 	retval := state.Inrec.GetWithPositionalIndex(index)
 	if retval == nil {
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$[[["+indexMlrval.String()+"]]]")
 	}
 
 	return retval
@@ -330,6 +332,7 @@ func (node *ArrayOrMapPositionalNameAccessNode) Evaluate(
 	indexMlrval := node.indexEvaluable.Evaluate(state)
 
 	if indexMlrval.IsAbsent() {
+		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
 	}
 
@@ -356,6 +359,7 @@ func (node *ArrayOrMapPositionalNameAccessNode) Evaluate(
 		}
 
 	} else if baseMlrval.IsAbsent() {
+		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
 
 	} else {
@@ -402,6 +406,7 @@ func (node *ArrayOrMapPositionalValueAccessNode) Evaluate(
 	indexMlrval := node.indexEvaluable.Evaluate(state)
 
 	if indexMlrval.IsAbsent() {
+		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
 	}
 
@@ -418,12 +423,14 @@ func (node *ArrayOrMapPositionalValueAccessNode) Evaluate(
 	} else if baseMlrval.IsMap() {
 		value := baseMlrval.GetMap().GetWithPositionalIndex(index)
 		if value == nil {
+			// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 			return mlrval.ABSENT
 		}
 
 		return value
 
 	} else if baseMlrval.IsAbsent() {
+		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
 
 	} else {

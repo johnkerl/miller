@@ -109,7 +109,7 @@ func (node *IndirectFieldValueNode) Evaluate(
 ) *mlrval.Mlrval { // TODO: err
 	fieldName := node.fieldNameEvaluable.Evaluate(state)
 	if fieldName.IsAbsent() {
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$[(absent)]")
 	}
 
 	// For normal DSL use the CST validator will prohibit this from being
@@ -118,7 +118,7 @@ func (node *IndirectFieldValueNode) Evaluate(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$*")
 	}
 
 	value, err := state.Inrec.GetWithMlrvalIndex(fieldName)
@@ -129,7 +129,7 @@ func (node *IndirectFieldValueNode) Evaluate(
 		os.Exit(1)
 	}
 	if value == nil {
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$[" + fieldName.String() + "]")
 	}
 	return value
 }
@@ -159,12 +159,12 @@ func (node *IndirectOosvarValueNode) Evaluate(
 ) *mlrval.Mlrval { // TODO: err
 	oosvarName := node.oosvarNameEvaluable.Evaluate(state)
 	if oosvarName.IsAbsent() {
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "@[(absent)]")
 	}
 
 	value := state.Oosvars.Get(oosvarName.String())
 	if value == nil {
-		return mlrval.ABSENT
+		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "@[" + oosvarName.String() + "]")
 	}
 
 	return value

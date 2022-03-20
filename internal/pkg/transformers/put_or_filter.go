@@ -206,6 +206,7 @@ func transformerPutOrFilterParseCLI(
 	exitAfterParse := false
 	doWarnings := false
 	warningsAreFatal := false
+	strictMode := false
 	invertFilter := false
 	suppressOutputRecord := false
 	presets := make([]string, 0)
@@ -291,6 +292,11 @@ func transformerPutOrFilterParseCLI(
 		} else if opt == "-w" {
 			doWarnings = true
 			warningsAreFatal = false
+		} else if opt == "-z" {
+			// TODO: perhaps doWarnings and warningsAreFatal as well.
+			// But first I want to see what can be caught at runtime
+			// without static analysis.
+			strictMode = true
 		} else if opt == "-W" {
 			doWarnings = true
 			warningsAreFatal = true
@@ -355,6 +361,7 @@ func transformerPutOrFilterParseCLI(
 		exitAfterParse,
 		doWarnings,
 		warningsAreFatal,
+		strictMode,
 		invertFilter,
 		suppressOutputRecord,
 		options,
@@ -388,12 +395,13 @@ func NewTransformerPut(
 	exitAfterParse bool,
 	doWarnings bool,
 	warningsAreFatal bool,
+	strictMode bool,
 	invertFilter bool,
 	suppressOutputRecord bool,
 	options *cli.TOptions,
 ) (*TransformerPut, error) {
 
-	cstRootNode := cst.NewEmptyRoot(&options.WriterOptions, dslInstanceType)
+	cstRootNode := cst.NewEmptyRoot(&options.WriterOptions, dslInstanceType).WithStrictMode(strictMode)
 
 	err := cstRootNode.Build(
 		dslStrings,
@@ -434,7 +442,7 @@ func NewTransformerPut(
 		return nil, err
 	}
 
-	runtimeState := runtime.NewEmptyState(options)
+	runtimeState := runtime.NewEmptyState(options, strictMode)
 
 	// E.g.
 	//   mlr put -s sum=0

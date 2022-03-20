@@ -52,6 +52,12 @@ func (root *RootNode) WithRedefinableUDFUDS() *RootNode {
 	return root
 }
 
+// WithStrictMode allows for runtime handling of absent-reads and untyped assignments.
+func (root *RootNode) WithStrictMode(strictMode bool) *RootNode {
+	root.strictMode = strictMode
+	return root
+}
+
 // ----------------------------------------------------------------
 
 // ASTBuildVisitorFunc is a callback, used by RootNode's Build method, which

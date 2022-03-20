@@ -27,9 +27,12 @@ type State struct {
 	// '$x =~ "(..)_(...)"', and interpolated via things like '$y = "\2:\1"'.
 	RegexCaptures []string
 	Options       *cli.TOptions
+
+	// StrictMode allows for runtime handling of absent-reads and untyped assignments.
+	StrictMode bool
 }
 
-func NewEmptyState(options *cli.TOptions) *State {
+func NewEmptyState(options *cli.TOptions, strictMode bool) *State {
 	oosvars := mlrval.NewMlrmap()
 	return &State{
 		Inrec:            nil,
@@ -43,6 +46,8 @@ func NewEmptyState(options *cli.TOptions) *State {
 		// See lib.MakeEmptyRegexCaptures for context.
 		RegexCaptures: lib.MakeEmptyRegexCaptures(),
 		Options:       options,
+
+		StrictMode: strictMode,
 	}
 }
 
