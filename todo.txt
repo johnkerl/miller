@@ -22,13 +22,25 @@ RELEASES
 
   k --tsvlite
 
-================================================================
-FEATURES
+----------------------------------------------------------------
+GOGLL
+
+goals:
+
+* fix "[[" "]]" issue in the grammar
+* reduce executable size
+* reduce parser-generator time
+
+to figure out:
+
+* lexer syntax for miller lex
+* parser syntax for miller grammar
+* BSR -> AST conversion
 
 ----------------------------------------------------------------
 STRICT MODE
 
-? re silent zero-pass for-loops on non-collections:
+* no silent zero-pass for-loops on non-collections
 
 i theme is handling of 'absent'
 
@@ -108,6 +120,9 @@ TSV etc
 ? try out nidx single-line w/ \001, \002 FS/PS & \n or \n\n RS
   o make/publicize a shorthand for this -- ?
   o --words && --lines & --paragraphs -- ?
+
+================================================================
+FEATURES
 
 ----------------------------------------------------------------
 example pages as feature catch-up:
