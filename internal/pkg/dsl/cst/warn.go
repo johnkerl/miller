@@ -101,16 +101,11 @@ func warnOnASTAux(
 			variableNamesWrittenTo[variableName] = true
 		} else {
 			if !variableNamesWrittenTo[variableName] {
-				// TODO: this would be much more useful with line numbers. :(
-				// That would be a big of work with the parser.  Fortunately,
-				// Miller is designed around low-keystroke little expressions
-				// -- not thousands of lines of Miller-DSL source code -- so
-				// people can look at their few lines of Miller-DSL code and
-				// spot their error.
 				fmt.Fprintf(
 					os.Stderr,
-					"Variable name %s might not have been assigned yet.\n",
+					"Variable name %s might not have been assigned yet%s.\n",
 					variableName,
+					dsl.TokenToLocationInfo(astNode.Token),
 				)
 				ok = false
 			}

@@ -10,6 +10,7 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
+	"github.com/johnkerl/miller/internal/pkg/parsing/token"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
 )
 
@@ -705,17 +706,19 @@ func (node *ForLoopMultivariableNode) executeInner(
 
 // ================================================================
 type TripleForLoopNode struct {
-	startBlockNode             *StatementBlockNode
-	precontinuationAssignments []IExecutable
-	continuationExpressionNode IEvaluable
-	updateBlockNode            *StatementBlockNode
-	bodyBlockNode              *StatementBlockNode
+	startBlockNode              *StatementBlockNode
+	precontinuationAssignments  []IExecutable
+	continuationExpressionNode  IEvaluable
+	continuationExpressionToken *token.Token
+	updateBlockNode             *StatementBlockNode
+	bodyBlockNode               *StatementBlockNode
 }
 
 func NewTripleForLoopNode(
 	startBlockNode *StatementBlockNode,
 	precontinuationAssignments []IExecutable,
 	continuationExpressionNode IEvaluable,
+	continuationExpressionToken *token.Token,
 	updateBlockNode *StatementBlockNode,
 	bodyBlockNode *StatementBlockNode,
 ) *TripleForLoopNode {
@@ -723,6 +726,7 @@ func NewTripleForLoopNode(
 		startBlockNode,
 		precontinuationAssignments,
 		continuationExpressionNode,
+		continuationExpressionToken,
 		updateBlockNode,
 		bodyBlockNode,
 	}
@@ -793,6 +797,7 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 	// for (int i = 0; c += 1, i < 10; i += 1) { ... }
 	var precontinuationAssignments []IExecutable = nil
 	var continuationExpressionNode IEvaluable = nil
+	var continuationExpressionToken *token.Token = nil
 	if len(continuationExpressionASTNode.Children) > 0 { // empty is true
 		n := len(continuationExpressionASTNode.Children)
 		if n > 1 {
@@ -827,6 +832,7 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 		}
 		lib.InternalCodingErrorIf(len(bareBooleanASTNode.Children) != 1)
 		continuationExpressionNode, err = root.BuildEvaluableNode(bareBooleanASTNode.Children[0])
+		continuationExpressionToken = bareBooleanASTNode.Children[0].Token
 		if err != nil {
 			return nil, err
 		}
@@ -846,6 +852,7 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 		startBlockNode,
 		precontinuationAssignments,
 		continuationExpressionNode,
+		continuationExpressionToken,
 		updateBlockNode,
 		bodyBlockNode,
 	), nil
@@ -892,8 +899,10 @@ func (node *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload,
 			continuationValue := node.continuationExpressionNode.Evaluate(state)
 			boolValue, isBool := continuationValue.GetBoolValue()
 			if !isBool {
-				// TODO: propagate line-number context
-				return nil, fmt.Errorf("mlr: for-loop continuation did not evaluate to boolean.")
+				return nil, fmt.Errorf(
+					"mlr: for-loop continuation did not evaluate to boolean%s.",
+					dsl.TokenToLocationInfo(node.continuationExpressionToken),
+				)
 			}
 			if boolValue == false {
 				break

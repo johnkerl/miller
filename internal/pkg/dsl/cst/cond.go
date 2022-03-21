@@ -11,11 +11,13 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
+	"github.com/johnkerl/miller/internal/pkg/parsing/token"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
 )
 
 type CondBlockNode struct {
 	conditionNode      IEvaluable
+	conditionToken     *token.Token
 	statementBlockNode *StatementBlockNode
 }
 
@@ -30,12 +32,14 @@ func (root *RootNode) BuildCondBlockNode(astNode *dsl.ASTNode) (*CondBlockNode, 
 	if err != nil {
 		return nil, err
 	}
+	conditionToken := astNode.Children[0].Token
 	statementBlockNode, err := root.BuildStatementBlockNode(astNode.Children[1])
 	if err != nil {
 		return nil, err
 	}
 	condBlockNode := &CondBlockNode{
 		conditionNode:      conditionNode,
+		conditionToken:     conditionToken,
 		statementBlockNode: statementBlockNode,
 	}
 
@@ -56,8 +60,10 @@ func (node *CondBlockNode) Execute(
 	if condition.IsAbsent() {
 		boolValue = false
 	} else if !isBool {
-		// TODO: line-number/token info for the DSL expression.
-		return nil, fmt.Errorf("mlr: conditional expression did not evaluate to boolean.")
+		return nil, fmt.Errorf(
+			"mlr: conditional expression did not evaluate to boolean%s.",
+			dsl.TokenToLocationInfo(node.conditionToken),
+		)
 	}
 
 	if boolValue == true {
