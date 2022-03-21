@@ -26,16 +26,9 @@ RELEASES
 FEATURES
 
 ----------------------------------------------------------------
-RUNTIME LINE/COLUMN NUMBERS
-
-internal/pkg/dsl/cst/for.go
-895:				// TODO: propagate line-number context
-
-internal/pkg/dsl/cst/if.go
-132:			// TODO: line-number/token info for the DSL expression.
-
-----------------------------------------------------------------
 STRICT MODE
+
+? re silent zero-pass for-loops on non-collections:
 
 i theme is handling of 'absent'
 
@@ -211,7 +204,6 @@ inference:
 ================================================================
 UX
 
-* ?xyz and ??xyz in repl, for :help and :help find respectively
 ? NF?
 
 ! bnf fix for '[[' ']]' etc -- make it a nesting of singles. since otherwise no '[[3,4]]' literals :(
@@ -230,9 +222,6 @@ UX
 ? fmtnum(98, "%3d%%") -- ? workaround: fmtnum(98, "%3d") . "%"
 ? main-level (verb-level?) flag for "," -> X in verbs -- in case commas in field names
 ? trace-mode ?
-? re silent zero-pass for-loops on non-collections:
-  o intended as a heterogenity feature ...
-  o consider a --errors or --strict mode; something
 ? $0 as raw-record string -- ? would make mlr grep simpler and more natural ...
 
 ================================================================
