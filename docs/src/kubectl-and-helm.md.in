@@ -164,10 +164,9 @@ However, let's parse the timestamps and compute their ages from the present:
 GENMD-CARDIFY
 $ helm list \
   | mlr --itsv --opprint clean-whitespace \
-    then put '$UPDATED = ssub($UPDATED, " +0000 UTC", "")' \
-    then put 'AGESEC = int(systime() - strptime($UPDATED, "%Y-%m-%d %H:%M:%S.%f"))' \
+    then put 'AGESEC = int(systime() - strptime($UPDATED, "%Y-%m-%d %H:%M:%S.%f +0000 UTC"))' \
     then sort -n AGESEC \
-    then cut -x -f 'APP VERSION,UPDATED' \
+    then cut -x -f 'APP VERSION,UPDATED'
 NAME                     NAMESPACE   REVISION STATUS   CHART                    AGESEC
 appdev-sa-sc-1624-6dh711 service-xyz 1        deployed appdev-cloud-test-7.1.12 30874
 appdev-an-sc-1500-5mjwm4 service-xyz 797      deployed appdev-cloud-test-7.1.12 34955
