@@ -53,6 +53,7 @@ nav:
     - "Data-diving examples": "data-diving-examples.md"
     - "Log-processing examples": "log-processing-examples.md"
     - "SQL examples": "sql-examples.md"
+    - "Processing Kubectl and Helm output": "kubectl-and-helm.md"
     - "DKVP I/O examples": "dkvp-examples.md"
     - "Statistics examples": "statistics-examples.md"
     - "Randomizing examples": "randomizing-examples.md"
