@@ -15,7 +15,7 @@ import (
 // For flags with values, e.g. ["-n" "10"], while we're looking at the "-n" this let us see if the "10" slot exists.
 // The verb is nominally something from a ways earlier in args[]; the opt is nominally what's at args[argi-1].
 // So this function should be called with args[argi] pointing to the "10" slot.
-func verbCheckArgCount(verb string, opt string, args []string, argi int, argc int, n int) {
+func VerbCheckArgCount(verb string, opt string, args []string, argi int, argc int, n int) {
 	if (argc - argi) < n {
 		fmt.Fprintf(os.Stderr, "%s %s: option \"%s\" missing argument(s).\n",
 			"mlr", verb, opt,
@@ -26,7 +26,7 @@ func verbCheckArgCount(verb string, opt string, args []string, argi int, argc in
 
 // E.g. with ["-f", "a,b,c"], makes sure there is something in the "a,b,c" position, and returns it.
 func VerbGetStringArgOrDie(verb string, opt string, args []string, pargi *int, argc int) string {
-	verbCheckArgCount(verb, opt, args, *pargi, argc, 1)
+	VerbCheckArgCount(verb, opt, args, *pargi, argc, 1)
 	retval := args[*pargi]
 	*pargi += 1
 	return retval
