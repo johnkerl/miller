@@ -138,6 +138,7 @@ func transformerSortParseCLI(
 			// See comments over "-n" -- similar hack.
 			if args[argi] == "-r" {
 				// Treat like "-cr"
+				cli.VerbCheckArgCount(verb, args[argi], args, argi, argc, 1)
 				argi++
 				subList := cli.VerbGetStringArrayArgOrDie(verb, "-nr", args, &argi, argc)
 				for _, item := range subList {
@@ -155,8 +156,10 @@ func transformerSortParseCLI(
 
 		} else if opt == "-t" {
 			// See comments over "-n" -- similar hack.
+			cli.VerbCheckArgCount(verb, opt, args, argi, argc, 1)
 			if args[argi] == "-r" {
 				// Treat like "-tr"
+				cli.VerbCheckArgCount(verb, args[argi], args, argi, argc, 1)
 				argi++
 				subList := cli.VerbGetStringArrayArgOrDie(verb, "-tr", args, &argi, argc)
 				for _, item := range subList {
@@ -202,6 +205,7 @@ func transformerSortParseCLI(
 			// So here we special-case this: if "-n" is followed immediately by
 			// "-f", we treat it the same as "-nf". Likewise, "-n" followed by
 			// "-r" is treated like "-nr".
+			cli.VerbCheckArgCount(verb, opt, args, argi, argc, 1)
 
 			if args[argi] == "-f" {
 				// Treat like "-nf"
