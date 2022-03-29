@@ -64,7 +64,7 @@ Suppose we want to sort the information for non-completed pods by age. We can us
 [dhms2sec](reference-dsl-builtin-functions.md#dhms2sec) to turn the `AGE` into something sortable.
 
 <pre class="pre-non-highlight-non-pair">
-$ kubectl -n tiledb-rest get pods \
+$ kubectl -n service-xyz get pods \
   | mlr --pprint \
     filter '$STATUS != "Completed"' \
     then put '$AGESEC = dhms2sec($AGE)' \
@@ -196,7 +196,7 @@ appdev-wertzxyffa-gbwuwi service-xyz 1        deployed appdev-cloud-test-7.1.12 
 ## Extracting fields to be acted on
 
 Switching to [NIDX format](file-formats.md#nidx-index-numbered-toolkit-style) lets us extract fields and pass them onto other commands -- e.g. `helm uninstall`.
-We just need to switch the output format to `--onidx`, then cut out the `NAME` field.
+We just need to switch the output format to `--onidx`, then cut out the `NAME` field. (Maybe add `then filter $AGESEC > 86400` or somesuch.)
 
 <pre class="pre-non-highlight-non-pair">
 $ helm list \
