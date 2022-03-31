@@ -180,7 +180,7 @@ However, let's parse the timestamps and compute their ages from the present:
 <pre class="pre-non-highlight-non-pair">
 $ helm list \
   | mlr --itsv --opprint clean-whitespace \
-    then put 'AGESEC = int(systime() - strptime($UPDATED, "%Y-%m-%d %H:%M:%S.%f +0000 UTC"))' \
+    then put '$AGESEC = int(systime() - strptime($UPDATED, "%Y-%m-%d %H:%M:%S.%f +0000 UTC"))' \
     then sort -n AGESEC \
     then cut -x -f 'APP VERSION,UPDATED'
 NAME                     NAMESPACE   REVISION STATUS   CHART                    AGESEC
@@ -201,7 +201,7 @@ We just need to switch the output format to `--onidx`, then cut out the `NAME` f
 $ helm list \
   | mlr --itsv --onidx clean-whitespace \
     then put '$UPDATED = ssub($UPDATED, " +0000 UTC", "")' \
-    then put 'AGESEC = int(systime() - strptime($UPDATED, "%Y-%m-%d %H:%M:%S.%f"))' \
+    then put '$AGESEC = int(systime() - strptime($UPDATED, "%Y-%m-%d %H:%M:%S.%f"))' \
     then sort -n AGESEC \
     then cut -f NAME \
   | tee names.txt
