@@ -122,10 +122,14 @@ func NewASTNodeZary(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
 	return parent, nil
 }
 
-func NewASTNodeUnary(itok, childA interface{}, nodeType TNodeType) (*ASTNode, error) {
+func NewASTNodeUnaryNestable(itok, childA interface{}, nodeType TNodeType) *ASTNode {
 	parent := NewASTNodeNestable(itok, nodeType)
 	convertToUnary(parent, childA)
-	return parent, nil
+	return parent
+}
+
+func NewASTNodeUnary(itok, childA interface{}, nodeType TNodeType) (*ASTNode, error) {
+	return NewASTNodeUnaryNestable(itok, childA, nodeType), nil
 }
 
 // Signature: Token Node Node Type
