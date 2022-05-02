@@ -1489,7 +1489,37 @@ UnaryOpTerm
 ;
 
 PowTerm
-  : PrecedenceChainEnd "**" PowTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  : PrecedenceChainEnd "**"     PowTerm
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+
+  | PrecedenceChainEnd "**" "-" PowTerm
+    <<
+      dsl.NewASTNodeBinary(
+        $1,
+        $0,
+        dsl.NewASTNodeUnaryNestable(
+          $2,
+          $3,
+          dsl.NodeTypeOperator,
+        ),
+        dsl.NodeTypeOperator,
+      )
+    >>
+
+  | PrecedenceChainEnd "**" "+" PowTerm
+    <<
+      dsl.NewASTNodeBinary(
+        $1,
+        $0,
+        dsl.NewASTNodeUnaryNestable(
+          $2,
+          $3,
+          dsl.NodeTypeOperator,
+        ),
+        dsl.NodeTypeOperator,
+      )
+    >>
+
   | PrecedenceChainEnd
 ;
 
