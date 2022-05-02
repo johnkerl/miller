@@ -138,10 +138,13 @@ float_literal
   | _decdig { _decdig} '.' { _decdig }
   | _decdig { _decdig}                        _scinotE     _decdig { _decdig}
   | _decdig { _decdig}                        _scinotE '-' _decdig { _decdig}
+  | _decdig { _decdig}                        _scinotE '+' _decdig { _decdig}
   | _decdig { _decdig} '.'         { _decdig} _scinotE     _decdig { _decdig}
   | _decdig { _decdig} '.'         { _decdig} _scinotE '-' _decdig { _decdig}
+  | _decdig { _decdig} '.'         { _decdig} _scinotE '+' _decdig { _decdig}
   |         { _decdig} '.' _decdig { _decdig} _scinotE     _decdig { _decdig}
   |         { _decdig} '.' _decdig { _decdig} _scinotE '-' _decdig { _decdig}
+  |         { _decdig} '.' _decdig { _decdig} _scinotE '+' _decdig { _decdig}
 ;
 
 const_M_PI : 'M' '_' 'P' 'I' ;
