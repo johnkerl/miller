@@ -1492,18 +1492,16 @@ PowTerm
   : PrecedenceChainEnd "**"     PowTerm
     << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
 
-  | PrecedenceChainEnd "**" "-" PowTerm
-    <<
-      dsl.NewASTNodeBinary(
-        $1,
-        $0,
-        dsl.NewASTNodeUnaryNestable(
-          $2,
-          $3,
-          dsl.NodeTypeOperator,
-        ),
-        dsl.NodeTypeOperator,
-      )
+  // In the Miller-DSL grammar, the leading -/+ isn't part of the int/float token -- it's treated as
+  // a unary operator. (Making it part of the token leads to LR1 conflicts, and is also inelegant.)
+  // However, this means things like '2 ** -3' result in mashup of two operators next to one
+  // another. For '2 + -3' and '2 * -3', this happens fine down the precedence chain since
+  // AddsubdotTerm and MuldivTerm are above UnaryOpTerm. Since PowTerm is below UnaryOpTerm, though,
+  // we need to be explicit about '2 ** -3' in a way that we do not need to for '2 * -3'.  Also, we
+  // can't use 'PrecedenceChainEnd "**" UnaryOpTerm', as this also results in LR1 conflicts.
+
+  | PrecedenceChainEnd "**" "-" PowTerm << dsl.NewASTNodeBinary( $1, $0,
+  dsl.NewASTNodeUnaryNestable( $2, $3, dsl.NodeTypeOperator,), dsl.NodeTypeOperator,)
     >>
 
   | PrecedenceChainEnd "**" "+" PowTerm
