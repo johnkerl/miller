@@ -1,5 +1,5 @@
 DSL EXPRESSION:
-$x = 123. + 1e-2 / .2e3 + 1.e-3
+$x = 123. + 1e-2 / .2e3 + 1.e-3 + 2e+1
 
 
 AST:
@@ -8,9 +8,11 @@ AST:
         * direct field value "x"
         * operator "+"
             * operator "+"
-                * float literal "123."
-                * operator "/"
-                    * float literal "1e-2"
-                    * float literal ".2e3"
-            * float literal "1.e-3"
+                * operator "+"
+                    * float literal "123."
+                    * operator "/"
+                        * float literal "1e-2"
+                        * float literal ".2e3"
+                * float literal "1.e-3"
+            * float literal "2e+1"
 
