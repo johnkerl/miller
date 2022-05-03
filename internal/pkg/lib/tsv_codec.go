@@ -46,22 +46,21 @@ func TSVDecodeField(input string) string {
 // TSVEncodeField is for the TSV record-writer.
 func TSVEncodeField(input string) string {
 	var buffer bytes.Buffer
-	for i := range input {
-		c := input[i]
-		if c == '\\' {
+	for _, r := range input {
+		if r == '\\' {
 			buffer.WriteByte('\\')
 			buffer.WriteByte('\\')
-		} else if c == '\n' {
+		} else if r == '\n' {
 			buffer.WriteByte('\\')
 			buffer.WriteByte('n')
-		} else if c == '\r' {
+		} else if r == '\r' {
 			buffer.WriteByte('\\')
 			buffer.WriteByte('r')
-		} else if c == '\t' {
+		} else if r == '\t' {
 			buffer.WriteByte('\\')
 			buffer.WriteByte('t')
 		} else {
-			buffer.WriteByte(c)
+			buffer.WriteRune(r)
 		}
 	}
 	return buffer.String()
