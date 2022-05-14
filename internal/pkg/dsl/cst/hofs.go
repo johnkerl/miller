@@ -235,7 +235,7 @@ func selectArray(
 		if !ok {
 			fmt.Fprintf(
 				os.Stderr,
-				"mlr: select: selector function returned non-boolean \"%s\".\n",
+				"mlr: select: function returned non-boolean \"%s\".\n",
 				mret.String(),
 			)
 			os.Exit(1)
@@ -272,7 +272,7 @@ func selectMap(
 		if !ok {
 			fmt.Fprintf(
 				os.Stderr,
-				"mlr: select: selector function returned non-boolean \"%s\".\n",
+				"mlr: select: function returned non-boolean \"%s\".\n",
 				mret.String(),
 			)
 			os.Exit(1)
@@ -905,7 +905,7 @@ func anyArray(
 		if !ok {
 			fmt.Fprintf(
 				os.Stderr,
-				"mlr: any: anyor function returned non-boolean \"%s\".\n",
+				"mlr: any: function returned non-boolean \"%s\".\n",
 				mret.String(),
 			)
 			os.Exit(1)
@@ -943,7 +943,7 @@ func anyMap(
 		if !ok {
 			fmt.Fprintf(
 				os.Stderr,
-				"mlr: any: anyor function returned non-boolean \"%s\".\n",
+				"mlr: any: function returned non-boolean \"%s\".\n",
 				mret.String(),
 			)
 			os.Exit(1)
@@ -997,7 +997,7 @@ func everyArray(
 		if !ok {
 			fmt.Fprintf(
 				os.Stderr,
-				"mlr: every: everyor function returned non-boolean \"%s\".\n",
+				"mlr: every: function returned non-boolean \"%s\".\n",
 				mret.String(),
 			)
 			os.Exit(1)
@@ -1035,7 +1035,7 @@ func everyMap(
 		if !ok {
 			fmt.Fprintf(
 				os.Stderr,
-				"mlr: every: everyor function returned non-boolean \"%s\".\n",
+				"mlr: every: function returned non-boolean \"%s\".\n",
 				mret.String(),
 			)
 			os.Exit(1)
