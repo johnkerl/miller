@@ -234,6 +234,8 @@ emit1    : 'e' 'm' 'i' 't' '1' ;
 emit     : 'e' 'm' 'i' 't' ;
 emitp    : 'e' 'm' 'i' 't' 'p' ;
 emitf    : 'e' 'm' 'i' 't' 'f' ;
+emitv2   : 'e' 'm' 'i' 't' 'v' '2';
+emitpv2   : 'e' 'm' 'i' 't' 'p' 'v' '2';
 eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
 eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
 print    : 'p' 'r' 'i' 'n' 't' ;
@@ -921,6 +923,29 @@ EmitStatement
         dsl.NodeTypeEmitStatement,
       )
     >>
+
+  | emitv2 "(" Rvalue "," Rvalue ")"
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emit
+        $2, // emittables
+        $4, // keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+        dsl.NodeTypeEmitV2Statement,
+      )
+    >>
+
+  | emitv2 "(" Rvalue "," Rvalue ")" Redirector
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emit
+        $2, // emittables
+        $4, // keys
+        $6, // redirect
+        dsl.NodeTypeEmitV2Statement,
+      )
+    >>
+
 ;
 
 // ----------------------------------------------------------------
@@ -1012,6 +1037,29 @@ EmitPStatement
         dsl.NodeTypeEmitPStatement,
       )
     >>
+
+  | emitpv2 "(" Rvalue "," Rvalue ")"
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emit
+        $2, // emittables
+        $4, // keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+        dsl.NodeTypeEmitPV2Statement,
+      )
+    >>
+
+  | emitpv2 "(" Rvalue "," Rvalue ")" Redirector
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emit
+        $2, // emittables
+        $4, // keys
+        $6, // redirect
+        dsl.NodeTypeEmitPV2Statement,
+      )
+    >>
+
 ;
 
 // ----------------------------------------------------------------

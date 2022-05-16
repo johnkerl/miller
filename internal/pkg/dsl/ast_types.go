@@ -64,11 +64,15 @@ const (
 	NodeTypeBareBoolean     TNodeType = "bare boolean"
 	NodeTypeFilterStatement TNodeType = "filter statement"
 
-	NodeTypeTeeStatement     TNodeType = "tee statement"
-	NodeTypeEmit1Statement   TNodeType = "emit1 statement"
-	NodeTypeEmitStatement    TNodeType = "emit statement"
-	NodeTypeEmitPStatement   TNodeType = "emitp statement"
-	NodeTypeEmitFStatement   TNodeType = "emitf statement"
+	NodeTypeTeeStatement   TNodeType = "tee statement"
+	NodeTypeEmit1Statement TNodeType = "emit1 statement"
+	NodeTypeEmitStatement  TNodeType = "emit statement"
+	NodeTypeEmitPStatement TNodeType = "emitp statement"
+	NodeTypeEmitFStatement TNodeType = "emitf statement"
+
+	NodeTypeEmitV2Statement  TNodeType = "emitv2 statement"
+	NodeTypeEmitPV2Statement TNodeType = "emitpv2 statement"
+
 	NodeTypeEmittableList    TNodeType = "emittable list"
 	NodeTypeEmitKeys         TNodeType = "emit keys"
 	NodeTypeDumpStatement    TNodeType = "dump statement"
