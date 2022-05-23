@@ -40,7 +40,7 @@ jobs:
 
       # https://goreleaser.com/ci/actions/
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v2
+        uses: goreleaser/goreleaser-action@v3
         #if: startsWith(github.ref, 'refs/tags/v')
         with:
           version: latest
