@@ -170,6 +170,10 @@ func parseCommandLinePassOne(
 				oargi++
 				argi++
 			}
+			if argi >= argc {
+				fmt.Fprintln(os.Stderr, "mlr: 'then' must have a verb after it.")
+				os.Exit(1)
+			}
 			verb := args[argi]
 			onFirst = false
 
