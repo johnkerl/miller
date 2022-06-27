@@ -33,6 +33,10 @@ func Main() MainReturn {
 	// as-is.)
 	os.Args = platform.GetArgs()
 
+	// Enable ANSI escape sequence processing on the Windows pseudo terminal,
+	// otherwise, we only raw ANSI escape sequences like ←[0;30m  0←[0m ←[0;31m  1
+	platform.EnableAnsiEscapeSequences()
+
 	// Expand "-xyz" into "-x -y -z" while leaving "--xyz" intact. This is a
 	// keystroke-saver for the user.
 	//
