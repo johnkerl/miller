@@ -21,3 +21,5 @@ GENMD-INCLUDE-ESCAPED(data/then-chaining-performance.txt)
 There are two reasons to use then-chaining: one is for performance, although I don't expect this to be a win in all cases.  Using then-chaining avoids redundant string-parsing and string-formatting at each pipeline step: instead input records are parsed once, they are fed through each pipeline stage in memory, and then output records are formatted once.
 
 The other reason to use then-chaining is for simplicity: you don't have re-type formatting flags (e.g. `--csv --fs tab`) at every pipeline stage.
+
+As of Miller 6.3.0, `+` is an alias for `then`.
