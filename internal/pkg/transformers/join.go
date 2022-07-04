@@ -527,6 +527,10 @@ func (tr *TransformerJoin) ingestLeftFile() {
 				break // breaks the switch, not the for, in Golang
 			}
 			leftrec := leftrecAndContext.Record
+			if leftrec == nil {
+				// E.g. the only payload is OutputString or EndOfStream
+				continue
+			}
 
 			groupingKey, leftFieldValues, ok := leftrec.GetSelectedValuesAndJoined(
 				tr.opts.leftJoinFieldNames,
