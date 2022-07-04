@@ -17,11 +17,18 @@ import (
 func Getoptify(inargs []string) []string {
 	expandRegex := regexp.MustCompile("^-[a-zA-Z0-9]+$")
 	splitRegex := regexp.MustCompile("^--[^=]+=.+$")
+	numberRegex := regexp.MustCompile("^-[0-9]+$")
 	outargs := make([]string, 0)
 	for _, inarg := range inargs {
 		if expandRegex.MatchString(inarg) {
-			for _, c := range inarg[1:] {
-				outargs = append(outargs, "-"+string(c))
+			if numberRegex.MatchString(inarg) {
+				// Don't expand things like '-12345' which are (likely!) numeric arguments to verbs.
+				// Example: 'mlr unsparsify --fill-with -99999'.
+				outargs = append(outargs, inarg)
+			} else {
+				for _, c := range inarg[1:] {
+					outargs = append(outargs, "-"+string(c))
+				}
 			}
 		} else if splitRegex.MatchString(inarg) {
 			pair := strings.SplitN(inarg, "=", 2)
