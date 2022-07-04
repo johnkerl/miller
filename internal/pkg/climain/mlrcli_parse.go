@@ -162,10 +162,10 @@ func parseCommandLinePassOne(
 				os.Exit(1)
 			}
 
-		} else if onFirst || args[argi] == "then" {
+		} else if onFirst || args[argi] == "then" || args[argi] == "+" {
 			// The first verb in the then-chain can *optionally* be preceded by
 			// 'then'.  The others one *must* be.
-			if args[argi] == "then" {
+			if args[argi] == "then" || args[argi] == "+" {
 				cli.CheckArgCount(args, argi, argc, 1)
 				oargi++
 				argi++
