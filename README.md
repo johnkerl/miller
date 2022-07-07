@@ -33,6 +33,7 @@ key-value-pair data in a variety of data formats.
 * [MLR for CSV manipulation](https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html)
 * [Linux Magazine: Process structured text files with Miller](https://www.linux-magazine.com/Issues/2016/187/Miller)
 * [Miller: Command Line CSV File Processing](https://onepointzero.app/posts/miller-command-line-csv-file-processing/)
+* [Miller - A Swiss Army Chainsaw for CSV Data, Data Science and Data Munging](https://fuzzyblog.io/blog/data_science/2022/05/13/miller-a-swiss-army-chainsaw-for-csv-data-data-science-and-data-munging.html)
 
 # More documentation links
 
