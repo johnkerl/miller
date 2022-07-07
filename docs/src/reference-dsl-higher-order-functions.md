@@ -782,7 +782,7 @@ From other languages it's easy to accidentally write
 <b>mlr -n put 'end { print select([1,2,3,4,5], func (e) { e >= 3 })}'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-mlr: select: selector function returned non-boolean "(absent)".
+mlr: select: function returned non-boolean "(absent)".
 </pre>
 
 instead of
