@@ -38,8 +38,6 @@ To use Miller from within MSYS2/Cygwin, also make sure `mlr.exe` is within the `
 
 ## Differences
 
-[Output Colorization](output-colorization.md) doesn't work on Windows, outside of MSYS2.
-
 The Windows-support code within Miller makes effort to support Linux/Unix/MacOS-like command-line syntax including single-quoting of expressions for `mlr put` and `mlr filter` -- and in the examples above, this often works. However, there are still some cases where more complex expressions aren't successfully parsed from the Windows prompt, even though they are from MSYS2:
 
 ![pix/miller-windows-complex.png](pix/miller-windows-complex.png)

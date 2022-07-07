@@ -27,8 +27,7 @@ described below:
 
 ## Mechanisms for colorization
 
-* Miller uses ANSI escape sequences only. This does not work on Windows except on Cygwin.
-* Requires `TERM` environment variable to be set to non-empty string.
+* Miller uses ANSI escape sequences only.
 * Doesn't try to check to see whether the terminal is capable of 256-color ANSI vs 16-color ANSI. Note that if colors are in the range 0..15 then 16-color ANSI escapes are used, so this is in the user's control.
 
 ## How you can control colorization
@@ -38,11 +37,13 @@ described below:
     * `export MLR_NO_COLOR=true` means Miller won't color even when it normally would.
     * `export MLR_ALWAYS_COLOR=true` means Miller will color even when it normally would not. For example, you might want to use this when piping `mlr` output to `less -r`.
     * Command-line flags `--no-color` or `-M`, `--always-color` or `-C`.
+    * On Windows, replace `export` with `set`
 
 * Color choices can be specified by using environment variables or command-line flags, with values 0..255:
 
     * `export MLR_KEY_COLOR=208`
     * `export MLR_VALUE_COLOR=33`
+    * On Windows, replace `export` with `set`
     * Likewise for `MLR_PASS_COLOR`, `MLR_FAIL_COLOR`, `MLR_HELP_COLOR`, `MLR_REPL_PS1_COLOR`, and `MLR_REPL_PS2_COLOR`.
     * Command-line flags `--key-color 208`, `--value-color 33`, etc., and likewise for `--pass-color`, `--fail-color`, `--repl-ps1-color`, `--repl-ps2-color`, and `--help-color`.
     * This is particularly useful if your terminal's background color clashes with current settings.
