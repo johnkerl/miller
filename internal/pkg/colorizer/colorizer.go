@@ -247,10 +247,6 @@ func makeColorStringFromEnv(envName string) (string, bool) {
 }
 
 func getStdoutIsATTY() bool {
-	// Don't try ANSI color on Windows (except Cygwin)
-	if os.Getenv("TERM") == "" {
-		return false
-	}
 	if isatty.IsTerminal(os.Stdout.Fd()) {
 		return true
 	}
