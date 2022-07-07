@@ -118,12 +118,12 @@ and the verbs
 level; the latter, for all records (with less keystroking). (Latin 1 is also known as
 [ISO/IEC 8859-1](https://en.wikipedia.org/wiki/ISO/IEC_8859-1).)
 
-In this example, all the inputs are convertible from Latin-1 to UTF-8:
+In this example, all the inputs are convertible from Latin-1 to UTF-8, since Latin-1 already contains the German characters:
 
 ![pix/latin1-to-utf8.png](pix/latin1-to-utf8.png)
 
 In this example, the English and German pangrams are convertible from UTF-8 to Latin-1, but the
-Russian one is not:
+Russian one is not, since Latin-1 doesn't contain the Russian alphabet:
 
 ![pix/utf8-to-latin1.png](pix/utf8-to-latin1.png)
 
