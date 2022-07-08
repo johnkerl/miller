@@ -24,7 +24,7 @@
 //
 // * This is an odd choice in the broader programming-language context.
 //   There are a few languages such as Fortran, Julia, Matlab, and R which are
-//   1-up but the overal trend is decidedly toward 0-up. This means that
+//   1-up but the overall trend is decidedly toward 0-up. This means that
 //   if Miller does 1-up it should do so for a good reason.
 //
 // * Reasons: so many other things are already 1-up, mostly inherited
