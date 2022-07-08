@@ -91,14 +91,7 @@ func RunDiffCommandOnStrings(
 	// output is simply something (in addition to printing the actual &
 	// expected outputs) to help people debug, and hey, we tried.
 
-	// err := cmd.Run()
 	_ = cmd.Run()
-	//if err != nil {
-	//	fmt.Printf("Error executing %s:\n", strings.Join(diffRunArray, " "))
-	//	fmt.Println(err)
-	//	fmt.Println(stderrBuffer.String())
-	//	os.Exit(1)
-	//}
 
 	return stdoutBuffer.String()
 }
@@ -128,14 +121,7 @@ func RunDiffCommandOnFilenames(
 	// output is simply something (in addition to printing the actual &
 	// expected outputs) to help people debug, and hey, we tried.
 
-	// err := cmd.Run()
 	_ = cmd.Run()
-	//if err != nil {
-	//	fmt.Printf("Error executing %s:\n", strings.Join(diffRunArray, " "))
-	//	fmt.Println(err)
-	//	fmt.Println(stderrBuffer.String())
-	//	os.Exit(1)
-	//}
 
 	return stdoutBuffer.String()
 }
