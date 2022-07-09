@@ -47,12 +47,13 @@ func (repl *Repl) handleDSLStringAux(
 
 	repl.cstRootNode.ResetForREPL()
 
-	err := repl.cstRootNode.Build(
+	// Disregard the first hadWarnings return value since it's only used for fatal-on-warnings,
+	// which the REPL doesn't use.
+	_, err := repl.cstRootNode.Build(
 		[]string{dslString},
 		cst.DSLInstanceTypeREPL,
 		isReplImmediate,
 		doWarnings,
-		false, // warningsAreFatal
 		func(dslString string, astNode *dsl.AST) {
 			if repl.astPrintMode == ASTPrintParex {
 				astNode.PrintParex()

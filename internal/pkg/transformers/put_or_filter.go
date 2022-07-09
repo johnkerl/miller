@@ -395,12 +395,11 @@ func NewTransformerPut(
 
 	cstRootNode := cst.NewEmptyRoot(&options.WriterOptions, dslInstanceType).WithStrictMode(strictMode)
 
-	err := cstRootNode.Build(
+	hadWarnings, err := cstRootNode.Build(
 		dslStrings,
 		dslInstanceType,
 		false, // isReplImmediate
 		doWarnings,
-		warningsAreFatal,
 
 		func(dslString string, astNode *dsl.AST) {
 
@@ -425,6 +424,14 @@ func NewTransformerPut(
 
 		},
 	)
+
+	if warningsAreFatal && hadWarnings {
+		fmt.Printf(
+			"%s: Exiting due to warnings treated as fatal.\n",
+			"mlr",
+		)
+		os.Exit(1)
+	}
 
 	if exitAfterParse {
 		os.Exit(0)

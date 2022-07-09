@@ -476,12 +476,13 @@ func handleSkipOrProcessN(repl *Repl, n int64, processingNotSkipping bool) {
 
 func handleSkipOrProcessUntil(repl *Repl, dslString string, processingNotSkipping bool) {
 
-	err := repl.cstRootNode.Build(
+	// Disregard the first hadWarnings return value since it's only used for fatal-on-warnings,
+	// which the REPL doesn't use.
+	_, err := repl.cstRootNode.Build(
 		[]string{dslString},
 		cst.DSLInstanceTypeREPL,
 		true, // isReplImmediate
 		repl.doWarnings,
-		false, // warningsAreFatal
 		func(dslString string, astNode *dsl.AST) {
 			if repl.astPrintMode == ASTPrintParex {
 				astNode.PrintParex()
