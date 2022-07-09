@@ -58,9 +58,13 @@ func Main() MainReturn {
 	}
 
 	if !options.DoInPlace {
-		processToStdout(options, recordTransformers)
+		err = processToStdout(options, recordTransformers)
 	} else {
-		processInPlace(options)
+		err = processInPlace(options)
+	}
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "mlr: %v.\n", err)
+		os.Exit(1)
 	}
 
 	return MainReturn{
@@ -74,12 +78,8 @@ func Main() MainReturn {
 func processToStdout(
 	options *cli.TOptions,
 	recordTransformers []transformers.IRecordTransformer,
-) {
-	err := stream.Stream(options.FileNames, options, recordTransformers, os.Stdout, true)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v.\n", err)
-		os.Exit(1)
-	}
+) error {
+	return stream.Stream(options.FileNames, options, recordTransformers, os.Stdout, true)
 }
 
 // ----------------------------------------------------------------
@@ -97,7 +97,7 @@ func processToStdout(
 
 func processInPlace(
 	originalOptions *cli.TOptions,
-) {
+) error {
 	// This should have been already checked by the CLI parser when validating
 	// the -I flag.
 	lib.InternalCodingErrorIf(originalOptions.FileNames == nil)
@@ -112,8 +112,7 @@ func processInPlace(
 	for _, fileName := range fileNames {
 
 		if _, err := os.Stat(fileName); os.IsNotExist(err) {
-			fmt.Fprintf(os.Stderr, "%s: %v\n", "mlr", err)
-			os.Exit(1)
+			return err
 		}
 
 		// Reconstruct the transformers for each file name, and allocate
@@ -122,8 +121,7 @@ func processInPlace(
 		// each output file, and so on.
 		options, recordTransformers, err := climain.ParseCommandLine(os.Args)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
-			os.Exit(1)
+			return err
 		}
 
 		// We can't in-place update http://, https://, etc. Also, anything with
@@ -131,8 +129,7 @@ func processInPlace(
 		// command to produce re-compressed output.
 		err = lib.IsUpdateableInPlace(fileName, options.ReaderOptions.Prepipe)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		containingDirectory := path.Dir(fileName)
@@ -140,8 +137,7 @@ func processInPlace(
 		// as revealed by printing handle.Name().
 		handle, err := ioutil.TempFile(containingDirectory, "mlr-in-place-")
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 		tempFileName := handle.Name()
 
@@ -154,16 +150,14 @@ func processInPlace(
 		wrappedHandle, isNew, err := lib.WrapOutputHandle(handle, inputFileEncoding)
 		if err != nil {
 			os.Remove(tempFileName)
-			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		// Run the Miller processing stream from the input file to the temp-output file.
 		err = stream.Stream([]string{fileName}, options, recordTransformers, wrappedHandle, false)
 		if err != nil {
 			os.Remove(tempFileName)
-			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		// Close the recompressor handle, if any recompression is being applied.
@@ -171,8 +165,7 @@ func processInPlace(
 			err = wrappedHandle.Close()
 			if err != nil {
 				os.Remove(tempFileName)
-				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-				os.Exit(1)
+				return err
 			}
 		}
 
@@ -181,16 +174,15 @@ func processInPlace(
 		err = handle.Close()
 		if err != nil {
 			os.Remove(tempFileName)
-			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		// Rename the temp-output file on top of the input file.
 		err = os.Rename(tempFileName, fileName)
 		if err != nil {
 			os.Remove(tempFileName)
-			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 	}
+	return nil
 }
