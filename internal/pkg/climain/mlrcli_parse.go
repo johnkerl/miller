@@ -93,7 +93,10 @@ func ParseCommandLine(
 ) {
 	// mlr -s scriptfile {data-file names ...} means take the contents of
 	// scriptfile as if it were command-line items.
-	args = maybeInterpolateDashS(args)
+	args, err = maybeInterpolateDashS(args)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	// Pass one as described at the top of this file.
 	flagSequences, verbSequences, dataFileNames := parseCommandLinePassOne(args)
