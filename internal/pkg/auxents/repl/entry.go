@@ -182,9 +182,17 @@ func ReplMain(args []string) int {
 		repl.openFiles(filenames)
 	}
 
-	repl.handleSession(os.Stdin)
+	err = repl.handleSession(os.Stdin)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s %s: %v", repl.exeName, repl.replName, err)
+		os.Exit(1)
+	}
 
 	repl.bufferedRecordOutputStream.Flush()
-	repl.closeBufferedOutputStream()
+	err = repl.closeBufferedOutputStream()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s %s: %v", repl.exeName, repl.replName, err)
+		os.Exit(1)
+	}
 	return 0
 }

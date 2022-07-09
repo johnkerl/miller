@@ -148,7 +148,7 @@ func controlCHandler(sysToSignalHandlerChannel chan os.Signal, appSignalNotifica
 }
 
 // ----------------------------------------------------------------
-func (repl *Repl) handleSession(istream *os.File) {
+func (repl *Repl) handleSession(istream *os.File) error {
 	if repl.showStartupBanner {
 		repl.printStartupBanner()
 	}
@@ -167,8 +167,7 @@ func (repl *Repl) handleSession(istream *os.File) {
 		}
 
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s %s: %v", repl.exeName, repl.replName, err)
-			os.Exit(1)
+			return err
 		}
 
 		// Acknowledge any control-C's, even if typed at a ready prompt. We
@@ -191,9 +190,15 @@ func (repl *Repl) handleSession(istream *os.File) {
 		trimmedLine := strings.TrimSpace(line)
 
 		if trimmedLine == "<" {
-			repl.handleMultiLine(lineReader, ">", true) // multi-line immediate
+			err = repl.handleMultiLine(lineReader, ">", true) // multi-line immediate
+			if err != nil {
+				return err
+			}
 		} else if trimmedLine == "<<" {
-			repl.handleMultiLine(lineReader, ">>", false) // multi-line non-immediate
+			err = repl.handleMultiLine(lineReader, ">>", false) // multi-line non-immediate
+			if err != nil {
+				return err
+			}
 		} else if trimmedLine == ":quit" || trimmedLine == ":q" {
 			break
 		} else if repl.handleNonDSLLine(trimmedLine) {
@@ -206,6 +211,7 @@ func (repl *Repl) handleSession(istream *os.File) {
 			}
 		}
 	}
+	return nil
 }
 
 // ----------------------------------------------------------------
@@ -215,7 +221,7 @@ func (repl *Repl) handleMultiLine(
 	lineReader *bufio.Reader,
 	terminator string,
 	doImmediate bool,
-) {
+) error {
 	var buffer bytes.Buffer
 	for {
 		repl.printPrompt2()
@@ -226,8 +232,7 @@ func (repl *Repl) handleMultiLine(
 		}
 
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s %s: %v\n", repl.exeName, repl.replName, err)
-			os.Exit(1)
+			return err
 		}
 
 		if strings.TrimSpace(line) == terminator {
@@ -246,6 +251,8 @@ func (repl *Repl) handleMultiLine(
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
+
+	return nil
 }
 
 func (repl *Repl) setBufferedOutputStream(
@@ -257,13 +264,14 @@ func (repl *Repl) setBufferedOutputStream(
 	repl.bufferedRecordOutputStream = bufio.NewWriter(recordOutputStream)
 }
 
-func (repl *Repl) closeBufferedOutputStream() {
+func (repl *Repl) closeBufferedOutputStream() error {
 	if repl.recordOutputStream != os.Stdout {
 		err := repl.recordOutputStream.Close()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr repl: error on redirect close of %s: %v\n",
-				repl.recordOutputFileName, err)
-			os.Exit(1)
+			return fmt.Errorf("mlr repl: error on redirect close of %s: %v\n",
+				repl.recordOutputFileName, err,
+			)
 		}
 	}
+	return nil
 }
