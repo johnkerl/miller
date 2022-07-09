@@ -24,17 +24,11 @@ var RegularizeSetup = TransformerSetup{
 
 func transformerRegularizeUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameRegularize)
 	fmt.Fprintf(o, "Outputs records sorted lexically ascending by keys.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerRegularizeParseCLI(
@@ -60,10 +54,12 @@ func transformerRegularizeParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerRegularizeUsage(os.Stdout, true, 0)
+			transformerRegularizeUsage(os.Stdout)
+			os.Exit(0)
 
 		} else {
-			transformerRegularizeUsage(os.Stderr, true, 1)
+			transformerRegularizeUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

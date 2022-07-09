@@ -29,8 +29,6 @@ type RecordTransformerFunc func(
 
 type TransformerUsageFunc func(
 	ostream *os.File,
-	doExit bool,
-	exitCode int,
 )
 
 type TransformerParseCLIFunc func(

@@ -24,8 +24,6 @@ var RenameSetup = TransformerSetup{
 
 func transformerRenameUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	exeName := "mlr"
 	verb := verbNameRename
@@ -51,10 +49,6 @@ func transformerRenameUsage(
 	fmt.Fprintf(o, "%s %s -r '\"Date_[0-9]+\",Date' Same\n", exeName, verb)
 	fmt.Fprintf(o, "%s %s -r 'Date_([0-9]+).*,\\1' Rename all such fields to be of the form 20151015\n", exeName, verb)
 	fmt.Fprintf(o, "%s %s -r '\"name\"i,Name'       Rename \"name\", \"Name\", \"NAME\", etc. to \"Name\"\n", exeName, verb)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerRenameParseCLI(
@@ -83,7 +77,8 @@ func transformerRenameParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerRenameUsage(os.Stdout, true, 0)
+			transformerRenameUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-r" {
 			doRegexes = true
@@ -92,7 +87,8 @@ func transformerRenameParseCLI(
 			doGsub = true
 
 		} else {
-			transformerRenameUsage(os.Stderr, true, 1)
+			transformerRenameUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
@@ -102,11 +98,13 @@ func transformerRenameParseCLI(
 
 	// Get the rename field names from the command line
 	if argi >= argc {
-		transformerRenameUsage(os.Stderr, true, 1)
+		transformerRenameUsage(os.Stderr)
+		os.Exit(1)
 	}
 	names := lib.SplitString(args[argi], ",")
 	if len(names)%2 != 0 {
-		transformerRenameUsage(os.Stderr, true, 1)
+		transformerRenameUsage(os.Stderr)
+		os.Exit(1)
 	}
 	argi++
 

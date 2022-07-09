@@ -23,8 +23,6 @@ var GapSetup = TransformerSetup{
 
 func transformerGapUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameGap)
 	fmt.Fprint(o, "Emits an empty record every n records, or when certain values change.\n")
@@ -36,10 +34,6 @@ func transformerGapUsage(
 	fmt.Fprintf(o, "One of -f or -g is required.\n")
 	fmt.Fprintf(o, "-n is ignored if -g is present.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerGapParseCLI(
@@ -69,7 +63,8 @@ func transformerGapParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerGapUsage(os.Stdout, true, 0)
+			transformerGapUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-n" {
 			gapCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
@@ -78,12 +73,14 @@ func transformerGapParseCLI(
 			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerGapUsage(os.Stderr, true, 1)
+			transformerGapUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if gapCount == -1 && groupByFieldNames == nil {
-		transformerGapUsage(os.Stderr, true, 1)
+		transformerGapUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

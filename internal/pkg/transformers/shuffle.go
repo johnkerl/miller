@@ -23,8 +23,6 @@ var ShuffleSetup = TransformerSetup{
 
 func transformerShuffleUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameShuffle)
 	fmt.Fprintf(o, "Outputs records randomly permuted. No output records are produced until\n")
@@ -33,10 +31,6 @@ func transformerShuffleUsage(
 	)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerShuffleParseCLI(
@@ -62,10 +56,12 @@ func transformerShuffleParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerShuffleUsage(os.Stdout, true, 0)
+			transformerShuffleUsage(os.Stdout)
+			os.Exit(0)
 
 		} else {
-			transformerShuffleUsage(os.Stderr, true, 1)
+			transformerShuffleUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

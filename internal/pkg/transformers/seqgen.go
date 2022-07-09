@@ -24,8 +24,6 @@ var SeqgenSetup = TransformerSetup{
 
 func transformerSeqgenUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameSeqgen)
 	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
@@ -42,10 +40,6 @@ func transformerSeqgenUsage(
 	fmt.Fprintf(o, "Start, stop, and/or step may be floating-point. Output is integer if start,\n")
 	fmt.Fprintf(o, "stop, and step are all integers. Step may be negative. It may not be zero\n")
 	fmt.Fprintf(o, "unless start == stop.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerSeqgenParseCLI(
@@ -77,7 +71,8 @@ func transformerSeqgenParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerSeqgenUsage(os.Stdout, true, 0)
+			transformerSeqgenUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-f" {
 			fieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
@@ -92,7 +87,8 @@ func transformerSeqgenParseCLI(
 			stepString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerSeqgenUsage(os.Stderr, true, 1)
+			transformerSeqgenUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

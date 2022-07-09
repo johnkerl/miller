@@ -23,8 +23,6 @@ var FillDownSetup = TransformerSetup{
 
 func transformerFillDownUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameFillDown)
 	fmt.Fprintln(o, "If a given record has a missing value for a given field, fill that from")
@@ -40,10 +38,6 @@ func transformerFillDownUsage(
 	fmt.Fprintln(o, "     With -a, a field is 'missing' only if it is absent.")
 	fmt.Fprintln(o, " -f  Field names for fill-down.")
 	fmt.Fprintln(o, " -h|--help Show this message.")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerFillDownParseCLI(
@@ -74,7 +68,8 @@ func transformerFillDownParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerFillDownUsage(os.Stdout, true, 0)
+			transformerFillDownUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-f" {
 			fillDownFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -89,12 +84,14 @@ func transformerFillDownParseCLI(
 			onlyIfAbsent = true
 
 		} else {
-			transformerFillDownUsage(os.Stderr, true, 1)
+			transformerFillDownUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if fillDownFieldNames == nil && !doAll {
-		transformerFillDownUsage(os.Stderr, true, 1)
+		transformerFillDownUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

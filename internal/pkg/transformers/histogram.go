@@ -25,8 +25,6 @@ var HistogramSetup = TransformerSetup{
 
 func transformerHistogramUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	argv0 := "mlr"
 	verb := verbNameHistogram
@@ -40,10 +38,6 @@ func transformerHistogramUsage(
 	fmt.Fprintf(o, "              Holds all values in memory before producing any output.\n")
 	fmt.Fprintf(o, "-o {prefix}   Prefix for output field name. Default: no prefix.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerHistogramParseCLI(
@@ -78,7 +72,8 @@ func transformerHistogramParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerHistogramUsage(os.Stdout, true, 0)
+			transformerHistogramUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-f" {
 			valueFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -99,20 +94,24 @@ func transformerHistogramParseCLI(
 			outputPrefix = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerHistogramUsage(os.Stderr, true, 1)
+			transformerHistogramUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if valueFieldNames == nil {
-		transformerHistogramUsage(os.Stderr, true, 1)
+		transformerHistogramUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	if nbins <= 0 {
-		transformerHistogramUsage(os.Stderr, true, 1)
+		transformerHistogramUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	if lo == hi && !doAuto {
-		transformerHistogramUsage(os.Stderr, true, 1)
+		transformerHistogramUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

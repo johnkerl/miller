@@ -24,18 +24,12 @@ var FillEmptySetup = TransformerSetup{
 
 func transformerFillEmptyUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameFillEmpty)
 	fmt.Fprintf(o, "Fills empty-string fields with specified fill-value.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-v {string} Fill-value: defaults to \"%s\"\n", defaultFillEmptyString)
 	fmt.Fprintf(o, "-S          Don't infer type -- so '-v 0' would fill string 0 not int 0.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerFillEmptyParseCLI(
@@ -65,7 +59,8 @@ func transformerFillEmptyParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerFillEmptyUsage(os.Stdout, true, 0)
+			transformerFillEmptyUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-v" {
 			fillString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
@@ -74,7 +69,8 @@ func transformerFillEmptyParseCLI(
 			inferType = false
 
 		} else {
-			transformerFillEmptyUsage(os.Stderr, true, 1)
+			transformerFillEmptyUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

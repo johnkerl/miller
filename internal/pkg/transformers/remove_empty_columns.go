@@ -23,17 +23,11 @@ var RemoveEmptyColumnsSetup = TransformerSetup{
 
 func transformerRemoveEmptyColumnsUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameRemoveEmptyColumns)
 	fmt.Fprintf(o, "Omits fields which are empty on every input row. Non-streaming.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerRemoveEmptyColumnsParseCLI(
@@ -59,10 +53,12 @@ func transformerRemoveEmptyColumnsParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerRemoveEmptyColumnsUsage(os.Stdout, true, 0)
+			transformerRemoveEmptyColumnsUsage(os.Stdout)
+			os.Exit(0)
 
 		} else {
-			transformerRemoveEmptyColumnsUsage(os.Stderr, true, 1)
+			transformerRemoveEmptyColumnsUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

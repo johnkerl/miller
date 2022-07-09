@@ -23,8 +23,6 @@ var TailSetup = TransformerSetup{
 
 func transformerTailUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameTail)
 	fmt.Fprintln(o, "Passes through the last n records, optionally by category.")
@@ -33,10 +31,6 @@ func transformerTailUsage(
 	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.\n")
 	fmt.Fprintf(o, "-n {n} Head-count to print. Default 10.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerTailParseCLI(
@@ -66,7 +60,8 @@ func transformerTailParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerTailUsage(os.Stdout, true, 0)
+			transformerTailUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-n" {
 			tailCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
@@ -85,7 +80,8 @@ func transformerTailParseCLI(
 			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerTailUsage(os.Stderr, true, 1)
+			transformerTailUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

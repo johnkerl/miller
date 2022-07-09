@@ -66,8 +66,6 @@ var SortSetup = TransformerSetup{
 
 func transformerSortUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s {flags}\n", "mlr", verbNameSort)
 	fmt.Fprintf(o, "Sorts records primarily by the first specified field, secondarily by the second\n")
@@ -92,10 +90,6 @@ func transformerSortUsage(
 	fmt.Fprintf(o, "  %s %s -f a,b -nr x,y,z\n", "mlr", verbNameSort)
 	fmt.Fprintf(o, "which is the same as:\n")
 	fmt.Fprintf(o, "  %s %s -f a -f b -nr x -nr y -nr z\n", "mlr", verbNameSort)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerSortParseCLI(
@@ -125,7 +119,8 @@ func transformerSortParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerSortUsage(os.Stdout, true, 0)
+			transformerSortUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-f" {
 			subList := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -249,12 +244,14 @@ func transformerSortParseCLI(
 			}
 
 		} else {
-			transformerSortUsage(os.Stderr, true, 1)
+			transformerSortUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if len(groupByFieldNames) == 0 {
-		transformerSortUsage(os.Stderr, true, 1)
+		transformerSortUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

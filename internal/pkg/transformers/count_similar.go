@@ -24,8 +24,6 @@ var CountSimilarSetup = TransformerSetup{
 
 func transformerCountSimilarUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameCountSimilar)
 	fmt.Fprintf(o, "Ingests all records, then emits each record augmented by a count of\n")
@@ -34,10 +32,6 @@ func transformerCountSimilarUsage(
 	fmt.Fprintf(o, "-g {a,b,c} Group-by-field names for counts, e.g. a,b,c\n")
 	fmt.Fprintf(o, "-o {name} Field name for output-counts. Defaults to \"count\".\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerCountSimilarParseCLI(
@@ -67,7 +61,8 @@ func transformerCountSimilarParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerCountSimilarUsage(os.Stdout, true, 0)
+			transformerCountSimilarUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-g" {
 			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -76,12 +71,14 @@ func transformerCountSimilarParseCLI(
 			counterFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerCountSimilarUsage(os.Stderr, true, 1)
+			transformerCountSimilarUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if groupByFieldNames == nil {
-		transformerCountSimilarUsage(os.Stderr, true, 1)
+		transformerCountSimilarUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

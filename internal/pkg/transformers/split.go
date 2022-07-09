@@ -27,8 +27,6 @@ var SplitSetup = TransformerSetup{
 
 func transformerSplitUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {filename}\n", "mlr", verbNameSplit)
 	fmt.Fprintf(o,
@@ -70,9 +68,6 @@ then there will be split_yellow_triangle.csv, split_yellow_square.csv, etc.
 
 See also the "tee" DSL function which lets you do more ad-hoc customization.
 `)
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerSplitParseCLI(
@@ -116,7 +111,8 @@ func transformerSplitParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerSplitUsage(os.Stdout, true, 0)
+			transformerSplitUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-n" {
 			n = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
@@ -152,7 +148,8 @@ func transformerSplitParseCLI(
 				// Nothing else to handle here.
 				argi = largi
 			} else {
-				transformerSplitUsage(os.Stderr, true, 1)
+				transformerSplitUsage(os.Stderr)
+				os.Exit(1)
 			}
 		}
 	}

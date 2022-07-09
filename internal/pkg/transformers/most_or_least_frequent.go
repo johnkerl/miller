@@ -36,8 +36,6 @@ var LeastFrequentSetup = TransformerSetup{
 
 func transformerMostFrequentUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	argv0 := "mlr"
 	verb := verbNameMostFrequent
@@ -50,15 +48,10 @@ func transformerMostFrequentUsage(
 	fmt.Fprintf(o, "-b          Suppress counts; show only field values.\n")
 	fmt.Fprintf(o, "-o {name}   Field name for output count. Default \"%s\".\n", mostLeastFrequentDefaultOutputFieldName)
 	fmt.Fprintf(o, "See also \"%s %s\".\n", argv0, "least-frequent")
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerLeastFrequentUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	argv0 := "mlr"
 	verb := verbNameLeastFrequent
@@ -71,9 +64,6 @@ func transformerLeastFrequentUsage(
 	fmt.Fprintf(o, "-b          Suppress counts; show only field values.\n")
 	fmt.Fprintf(o, "-o {name}   Field name for output count. Default \"%s\".\n", mostLeastFrequentDefaultOutputFieldName)
 	fmt.Fprintf(o, "See also \"%s %s\".\n", argv0, "most-frequent")
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerMostFrequentParseCLI(
@@ -127,7 +117,8 @@ func transformerMostOrLeastFrequentParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			usageFunc(os.Stdout, true, 0)
+			usageFunc(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-f" {
 			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -142,12 +133,14 @@ func transformerMostOrLeastFrequentParseCLI(
 			outputFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			usageFunc(os.Stderr, true, 1)
+			usageFunc(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if groupByFieldNames == nil {
-		usageFunc(os.Stderr, true, 1)
+		usageFunc(os.Stderr)
+		os.Exit(1)
 		return nil
 	}
 

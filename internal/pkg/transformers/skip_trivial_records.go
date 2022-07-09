@@ -22,18 +22,12 @@ var SkipTrivialRecordsSetup = TransformerSetup{
 
 func transformerSkipTrivialRecordsUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameSkipTrivialRecords)
 	fmt.Fprintf(o, "Passes through all records except those with zero fields,\n")
 	fmt.Fprintf(o, "or those for which all fields have empty value.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerSkipTrivialRecordsParseCLI(
@@ -59,10 +53,12 @@ func transformerSkipTrivialRecordsParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerSkipTrivialRecordsUsage(os.Stdout, true, 0)
+			transformerSkipTrivialRecordsUsage(os.Stdout)
+			os.Exit(0)
 
 		} else {
-			transformerSkipTrivialRecordsUsage(os.Stderr, true, 1)
+			transformerSkipTrivialRecordsUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

@@ -23,8 +23,6 @@ var TeeSetup = TransformerSetup{
 
 func transformerTeeUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {filename}\n", "mlr", verbNameTee)
 	fmt.Fprintf(o, "Options:\n")
@@ -38,9 +36,6 @@ is written in JSON format.
 
 -h|--help Show this message.
 `)
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerTeeParseCLI(
@@ -78,7 +73,8 @@ func transformerTeeParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerTeeUsage(os.Stdout, true, 0)
+			transformerTeeUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-a" {
 			appending = true
@@ -98,7 +94,8 @@ func transformerTeeParseCLI(
 				// Nothing else to handle here.
 				argi = largi
 			} else {
-				transformerTeeUsage(os.Stderr, true, 1)
+				transformerTeeUsage(os.Stderr)
+				os.Exit(1)
 			}
 		}
 	}
@@ -107,7 +104,8 @@ func transformerTeeParseCLI(
 
 	// Get the filename/command from the command line, after the flags
 	if argi >= argc {
-		transformerTeeUsage(os.Stderr, true, 1)
+		transformerTeeUsage(os.Stderr)
+		os.Exit(1)
 	}
 	filenameOrCommand = args[argi]
 	argi++

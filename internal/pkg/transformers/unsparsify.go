@@ -24,8 +24,6 @@ var UnsparsifySetup = TransformerSetup{
 
 func transformerUnsparsifyUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameUnsparsify)
 	fmt.Fprint(o,
@@ -46,10 +44,6 @@ a value. This verb retains all input before producing any output.
 being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 'a=,b=3,c=4'.
 `)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerUnsparsifyParseCLI(
@@ -79,7 +73,8 @@ func transformerUnsparsifyParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerUnsparsifyUsage(os.Stdout, true, 0)
+			transformerUnsparsifyUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "--fill-with" {
 			fillerString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
@@ -88,7 +83,8 @@ func transformerUnsparsifyParseCLI(
 			specifiedFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerUnsparsifyUsage(os.Stderr, true, 1)
+			transformerUnsparsifyUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

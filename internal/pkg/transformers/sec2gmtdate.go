@@ -23,8 +23,6 @@ var Sec2GMTDateSetup = TransformerSetup{
 
 func transformerSec2GMTDateUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: ../c/mlr sec2gmtdate {comma-separated list of field names}\n")
 	fmt.Fprintf(o, "Replaces a numeric field representing seconds since the epoch with the\n")
@@ -33,10 +31,6 @@ func transformerSec2GMTDateUsage(
 	fmt.Fprintf(o, "  ../c/mlr sec2gmtdate time1,time2\n")
 	fmt.Fprintf(o, "is the same as\n")
 	fmt.Fprintf(o, "  ../c/mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerSec2GMTDateParseCLI(
@@ -62,15 +56,18 @@ func transformerSec2GMTDateParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerSec2GMTDateUsage(os.Stdout, true, 0)
+			transformerSec2GMTDateUsage(os.Stdout)
+			os.Exit(0)
 
 		} else {
-			transformerSec2GMTDateUsage(os.Stderr, true, 1)
+			transformerSec2GMTDateUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if argi >= argc {
-		transformerSec2GMTDateUsage(os.Stderr, true, 1)
+		transformerSec2GMTDateUsage(os.Stderr)
+		os.Exit(1)
 	}
 	fieldNames := args[argi]
 	argi++

@@ -23,8 +23,6 @@ var LabelSetup = TransformerSetup{
 
 func transformerLabelUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {new1,new2,new3,...}\n", "mlr", verbNameLabel)
 	fmt.Fprintf(o, "Given n comma-separated names, renames the first n fields of each record to\n")
@@ -34,10 +32,6 @@ func transformerLabelUsage(
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerLabelParseCLI(
@@ -63,16 +57,19 @@ func transformerLabelParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerLabelUsage(os.Stdout, true, 0)
+			transformerLabelUsage(os.Stdout)
+			os.Exit(0)
 
 		} else {
-			transformerLabelUsage(os.Stderr, true, 1)
+			transformerLabelUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	// Get the label field names from the command line
 	if argi >= argc {
-		transformerLabelUsage(os.Stderr, true, 1)
+		transformerLabelUsage(os.Stderr)
+		os.Exit(1)
 	}
 	newNames := lib.SplitString(args[argi], ",")
 	argi++

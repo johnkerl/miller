@@ -24,8 +24,6 @@ var CountSetup = TransformerSetup{
 
 func transformerCountUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameCount)
 	fmt.Fprint(o,
@@ -36,10 +34,6 @@ func transformerCountUsage(
 	fmt.Fprintf(o, "-n {n} Show only the number of distinct values. Not interesting without -g.\n")
 	fmt.Fprintf(o, "-o {name} Field name for output-count. Default \"count\".\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerCountParseCLI(
@@ -70,7 +64,8 @@ func transformerCountParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerCountUsage(os.Stdout, true, 0)
+			transformerCountUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-g" {
 			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -82,7 +77,8 @@ func transformerCountParseCLI(
 			outputFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerCountUsage(os.Stderr, true, 1)
+			transformerCountUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

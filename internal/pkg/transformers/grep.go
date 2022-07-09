@@ -23,8 +23,6 @@ var GrepSetup = TransformerSetup{
 
 func transformerGrepUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {regular expression}\n", "mlr", verbNameGrep)
 	fmt.Fprintf(o, "Passes through records which match the regular expression.\n")
@@ -46,10 +44,6 @@ and this command is intended to be merely a keystroke-saver. To get all the
 features of system grep, you can do
   "%s --odkvp ... | grep ... | %s --idkvp ..."
 `, "mlr", "mlr", "mlr", "mlr")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerGrepParseCLI(
@@ -79,7 +73,8 @@ func transformerGrepParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerGrepUsage(os.Stdout, true, 0)
+			transformerGrepUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-i" {
 			ignoreCase = true
@@ -88,13 +83,15 @@ func transformerGrepParseCLI(
 			invert = true
 
 		} else {
-			transformerGrepUsage(os.Stderr, true, 1)
+			transformerGrepUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	// Get the regex from the command line
 	if argi >= argc {
-		transformerGrepUsage(os.Stderr, true, 1)
+		transformerGrepUsage(os.Stderr)
+		os.Exit(1)
 	}
 	pattern := args[argi]
 	argi++

@@ -31,8 +31,6 @@ var BarSetup = TransformerSetup{
 
 func transformerBarUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameBar)
 	fmt.Fprintf(o, "Replaces a numeric field with a number of asterisks, allowing for cheesy\n")
@@ -50,10 +48,6 @@ func transformerBarUsage(
 	fmt.Fprintf(o, "Nominally the fill, out-of-bounds, and blank characters will be strings of length 1.\n")
 	fmt.Fprintf(o, "However you can make them all longer if you so desire.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerBarParseCLI(
@@ -90,7 +84,8 @@ func transformerBarParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerBarUsage(os.Stdout, true, 0)
+			transformerBarUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-f" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -113,12 +108,14 @@ func transformerBarParseCLI(
 			doAuto = true
 
 		} else {
-			transformerBarUsage(os.Stderr, true, 1)
+			transformerBarUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if fieldNames == nil {
-		transformerBarUsage(os.Stderr, true, 1)
+		transformerBarUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

@@ -23,8 +23,6 @@ var SampleSetup = TransformerSetup{
 
 func transformerSampleUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameSample)
 	fmt.Fprintf(o,
@@ -35,10 +33,6 @@ See also %s bootstrap and %s shuffle.
 	fmt.Fprintf(o, "-g {a,b,c} Optional: group-by-field names for samples, e.g. a,b,c.\n")
 	fmt.Fprintf(o, "-k {k} Required: number of records to output in total, or by group if using -g.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerSampleParseCLI(
@@ -68,7 +62,8 @@ func transformerSampleParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerSampleUsage(os.Stdout, true, 0)
+			transformerSampleUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-k" {
 			sampleCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
@@ -77,12 +72,14 @@ func transformerSampleParseCLI(
 			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerSampleUsage(os.Stderr, true, 1)
+			transformerSampleUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if sampleCount < 0 {
-		transformerSampleUsage(os.Stderr, true, 1)
+		transformerSampleUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

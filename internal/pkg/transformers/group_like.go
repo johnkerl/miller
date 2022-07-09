@@ -23,17 +23,11 @@ var GroupLikeSetup = TransformerSetup{
 
 func transformerGroupLikeUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameGroupLike)
 	fmt.Fprintln(o, "Outputs records in batches having identical field names.")
 	fmt.Fprintln(o, "Options:")
 	fmt.Fprintln(o, "-h|--help Show this message.")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerGroupLikeParseCLI(
@@ -59,10 +53,12 @@ func transformerGroupLikeParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerGroupLikeUsage(os.Stdout, true, 0)
+			transformerGroupLikeUsage(os.Stdout)
+			os.Exit(0)
 
 		} else {
-			transformerGroupLikeUsage(os.Stderr, true, 1)
+			transformerGroupLikeUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

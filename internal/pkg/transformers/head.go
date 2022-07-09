@@ -22,8 +22,6 @@ var HeadSetup = TransformerSetup{
 
 func transformerHeadUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameHead)
 	fmt.Fprintf(o, "Passes through the first n records, optionally by category.\n")
@@ -33,10 +31,6 @@ func transformerHeadUsage(
 	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.\n")
 	fmt.Fprintf(o, "-n {n} Head-count to print. Default 10.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerHeadParseCLI(
@@ -66,7 +60,8 @@ func transformerHeadParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerHeadUsage(os.Stdout, true, 0)
+			transformerHeadUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-n" {
 			headCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
@@ -85,7 +80,8 @@ func transformerHeadParseCLI(
 			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerHeadUsage(os.Stderr, true, 1)
+			transformerHeadUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

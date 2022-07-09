@@ -24,8 +24,6 @@ var CleanWhitespaceSetup = TransformerSetup{
 
 func transformerCleanWhitespaceUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameCleanWhitespace)
 	fmt.Fprintf(o, "For each record, for each field in the record, whitespace-cleans the keys and/or\n")
@@ -40,10 +38,6 @@ func transformerCleanWhitespaceUsage(
 	fmt.Fprintf(o, "It is an error to specify -k as well as -v -- to clean keys and values,\n")
 	fmt.Fprintf(o, "leave off -k as well as -v.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerCleanWhitespaceParseCLI(
@@ -72,7 +66,8 @@ func transformerCleanWhitespaceParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerCleanWhitespaceUsage(os.Stdout, true, 0)
+			transformerCleanWhitespaceUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-k" || opt == "--keys-only" {
 			doKeys = true
@@ -82,12 +77,14 @@ func transformerCleanWhitespaceParseCLI(
 			doValues = true
 
 		} else {
-			transformerCleanWhitespaceUsage(os.Stderr, true, 1)
+			transformerCleanWhitespaceUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if !doKeys && !doValues {
-		transformerCleanWhitespaceUsage(os.Stderr, true, 1)
+		transformerCleanWhitespaceUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

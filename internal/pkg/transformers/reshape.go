@@ -52,8 +52,6 @@ var ReshapeSetup = TransformerSetup{
 
 func transformerReshapeUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	argv0 := "mlr"
 	verb := verbNameReshape
@@ -114,10 +112,6 @@ func transformerReshapeUsage(
 	fmt.Fprintf(o, "    2009-01-02 -0.89248112 0.2154713\n")
 	fmt.Fprintf(o, "    2009-01-03 0.98012375  1.3179287\n")
 	fmt.Fprintf(o, "See also %s nest.\n", argv0)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerReshapeParseCLI(
@@ -150,7 +144,8 @@ func transformerReshapeParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerReshapeUsage(os.Stdout, true, 0)
+			transformerReshapeUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-i" {
 			inputFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -162,7 +157,8 @@ func transformerReshapeParseCLI(
 			splitOutFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerReshapeUsage(os.Stderr, true, 1)
+			transformerReshapeUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
@@ -174,21 +170,25 @@ func transformerReshapeParseCLI(
 	if splitOutFieldNames == nil {
 		// wide to long
 		if inputFieldNames == nil && inputFieldRegexStrings == nil {
-			transformerReshapeUsage(os.Stderr, true, 1)
+			transformerReshapeUsage(os.Stderr)
+			os.Exit(1)
 		}
 
 		if outputFieldNames == nil {
-			transformerReshapeUsage(os.Stderr, true, 1)
+			transformerReshapeUsage(os.Stderr)
+			os.Exit(1)
 		}
 		if len(outputFieldNames) != 2 {
-			transformerReshapeUsage(os.Stderr, true, 1)
+			transformerReshapeUsage(os.Stderr)
+			os.Exit(1)
 		}
 		outputKeyFieldName = outputFieldNames[0]
 		outputValueFieldName = outputFieldNames[1]
 	} else {
 		// long to wide
 		if len(splitOutFieldNames) != 2 {
-			transformerReshapeUsage(os.Stderr, true, 1)
+			transformerReshapeUsage(os.Stderr)
+			os.Exit(1)
 		}
 		splitOutKeyFieldName = splitOutFieldNames[0]
 		splitOutValueFieldName = splitOutFieldNames[1]

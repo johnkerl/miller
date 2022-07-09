@@ -31,8 +31,6 @@ var RepeatSetup = TransformerSetup{
 
 func transformerRepeatUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameRepeat)
 	fmt.Fprintf(o, "Copies input records to output records multiple times.\n")
@@ -59,10 +57,6 @@ func transformerRepeatUsage(
 	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
 	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
 	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerRepeatParseCLI(
@@ -93,7 +87,8 @@ func transformerRepeatParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerRepeatUsage(os.Stdout, true, 0)
+			transformerRepeatUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-n" {
 			repeatCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
@@ -104,12 +99,14 @@ func transformerRepeatParseCLI(
 			repeatCountSource = repeatCountFromFieldName
 
 		} else {
-			transformerRepeatUsage(os.Stderr, true, 1)
+			transformerRepeatUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if repeatCountSource == repeatCountSourceUnspecified {
-		transformerRepeatUsage(os.Stderr, true, 1)
+		transformerRepeatUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

@@ -37,8 +37,6 @@ var HavingFieldsSetup = TransformerSetup{
 
 func transformerHavingFieldsUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	exeName := "mlr"
 	verb := verbNameHavingFields
@@ -57,10 +55,6 @@ func transformerHavingFieldsUsage(
 	fmt.Fprintf(o, "  %s %s --any-matching 'sda[0-9]'\n", exeName, verb)
 	fmt.Fprintf(o, "  %s %s --any-matching '\"sda[0-9]\"'\n", exeName, verb)
 	fmt.Fprintf(o, "  %s %s --any-matching '\"sda[0-9]\"i' (this is case-insensitive)\n", exeName, verb)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerHavingFieldsParseCLI(
@@ -91,7 +85,8 @@ func transformerHavingFieldsParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerHavingFieldsUsage(os.Stdout, true, 0)
+			transformerHavingFieldsUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "--at-least" {
 			havingFieldsCriterion = havingFieldsAtLeast
@@ -124,15 +119,18 @@ func transformerHavingFieldsParseCLI(
 			fieldNames = nil
 
 		} else {
-			transformerHavingFieldsUsage(os.Stderr, true, 1)
+			transformerHavingFieldsUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if havingFieldsCriterion == havingFieldsCriterionUnspecified {
-		transformerHavingFieldsUsage(os.Stderr, true, 1)
+		transformerHavingFieldsUsage(os.Stderr)
+		os.Exit(1)
 	}
 	if fieldNames == nil && regexString == "" {
-		transformerHavingFieldsUsage(os.Stderr, true, 1)
+		transformerHavingFieldsUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

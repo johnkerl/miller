@@ -24,8 +24,6 @@ var TemplateSetup = TransformerSetup{
 
 func transformerTemplateUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameTemplate)
 	fmt.Fprintf(o, "Places input-record fields in the order specified by list of column names.\n")
@@ -40,10 +38,6 @@ func transformerTemplateUsage(
 	fmt.Fprintf(o, "* Specified fields are a,b,c.\n")
 	fmt.Fprintf(o, "* Input record is c=3,a=1,f=6.\n")
 	fmt.Fprintf(o, "* Output record is a=1,b=,c=3.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerTemplateParseCLI(
@@ -73,7 +67,8 @@ func transformerTemplateParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerTemplateUsage(os.Stdout, true, 0)
+			transformerTemplateUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-f" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -91,12 +86,14 @@ func transformerTemplateParseCLI(
 			fillWith = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerTemplateUsage(os.Stderr, true, 1)
+			transformerTemplateUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if fieldNames == nil {
-		transformerTemplateUsage(os.Stderr, true, 1)
+		transformerTemplateUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

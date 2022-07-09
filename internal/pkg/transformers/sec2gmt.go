@@ -23,8 +23,6 @@ var Sec2GMTSetup = TransformerSetup{
 
 func transformerSec2GMTUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {comma-separated list of field names}\n", "mlr", verbNameSec2GMT)
 	fmt.Fprintf(o, "Replaces a numeric field representing seconds since the epoch with the\n")
@@ -39,10 +37,6 @@ func transformerSec2GMTUsage(
 	fmt.Fprintf(o, "--micros Input numbers are treated as microseconds since the epoch.\n")
 	fmt.Fprintf(o, "--nanos  Input numbers are treated as nanoseconds since the epoch.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerSec2GMTParseCLI(
@@ -71,7 +65,8 @@ func transformerSec2GMTParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerSec2GMTUsage(os.Stdout, true, 0)
+			transformerSec2GMTUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-1" {
 			numDecimalPlaces = 1
@@ -100,12 +95,14 @@ func transformerSec2GMTParseCLI(
 			preDivide = 1.0e9
 
 		} else {
-			transformerSec2GMTUsage(os.Stderr, true, 1)
+			transformerSec2GMTUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if argi >= argc {
-		transformerSec2GMTUsage(os.Stderr, true, 1)
+		transformerSec2GMTUsage(os.Stderr)
+		os.Exit(1)
 	}
 	fieldNames := args[argi]
 	argi++

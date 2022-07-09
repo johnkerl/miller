@@ -27,8 +27,6 @@ var NestSetup = TransformerSetup{
 
 func transformerNestUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	argv0 := "mlr"
 	verb := verbNameNest
@@ -87,10 +85,6 @@ func transformerNestUsage(
 	fmt.Fprintf(o, "* It's up to you to ensure that the nested-fs is distinct from your data's IFS:\n")
 	fmt.Fprintf(o, "  e.g. by default the former is semicolon and the latter is comma.\n")
 	fmt.Fprintf(o, "See also %s reshape.\n", argv0)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerNestParseCLI(
@@ -130,7 +124,8 @@ func transformerNestParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerNestUsage(os.Stdout, true, 0)
+			transformerNestUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-f" {
 			fieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
@@ -180,7 +175,8 @@ func transformerNestParseCLI(
 			doAcrossFieldsSpecified = true
 
 		} else {
-			transformerNestUsage(os.Stderr, true, 1)
+			transformerNestUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
@@ -198,19 +194,24 @@ func transformerNestParseCLI(
 	}
 
 	if fieldName == "" {
-		transformerNestUsage(os.Stderr, true, 1)
+		transformerNestUsage(os.Stderr)
+		os.Exit(1)
 	}
 	if !doExplodeSpecified {
-		transformerNestUsage(os.Stderr, true, 1)
+		transformerNestUsage(os.Stderr)
+		os.Exit(1)
 	}
 	if !doPairsSpecified {
-		transformerNestUsage(os.Stderr, true, 1)
+		transformerNestUsage(os.Stderr)
+		os.Exit(1)
 	}
 	if !doAcrossFieldsSpecified {
-		transformerNestUsage(os.Stderr, true, 1)
+		transformerNestUsage(os.Stderr)
+		os.Exit(1)
 	}
 	if doPairs && !doExplode {
-		transformerNestUsage(os.Stderr, true, 1)
+		transformerNestUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

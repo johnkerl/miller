@@ -23,8 +23,6 @@ var CatSetup = TransformerSetup{
 
 func transformerCatUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameCat)
 	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
@@ -33,10 +31,6 @@ func transformerCatUsage(
 	fmt.Fprintf(o, "-N {name}  Prepend field {name} to each record with record-counter starting at 1.\n")
 	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerCatParseCLI(
@@ -68,7 +62,8 @@ func transformerCatParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerCatUsage(os.Stdout, true, 0)
+			transformerCatUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-n" {
 			counterFieldName = "n"
@@ -80,7 +75,8 @@ func transformerCatParseCLI(
 			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerCatUsage(os.Stderr, true, 1)
+			transformerCatUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

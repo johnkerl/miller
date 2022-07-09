@@ -23,8 +23,6 @@ var BootstrapSetup = TransformerSetup{
 
 func transformerBootstrapUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameBootstrap)
 	fmt.Fprintf(o,
@@ -37,10 +35,6 @@ See also %s sample and %s shuffle.
     Must be non-negative.
 `)
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerBootstrapParseCLI(
@@ -69,13 +63,15 @@ func transformerBootstrapParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerBootstrapUsage(os.Stdout, true, 0)
+			transformerBootstrapUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-n" {
 			nout = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerBootstrapUsage(os.Stderr, true, 1)
+			transformerBootstrapUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

@@ -22,18 +22,12 @@ var SortWithinRecordsSetup = TransformerSetup{
 
 func transformerSortWithinRecordsUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameSortWithinRecords)
 	fmt.Fprintln(o, "Outputs records sorted lexically ascending by keys.")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-r        Recursively sort subobjects/submaps, e.g. for JSON input.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerSortWithinRecordsParseCLI(
@@ -60,13 +54,15 @@ func transformerSortWithinRecordsParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerSortWithinRecordsUsage(os.Stdout, true, 0)
+			transformerSortWithinRecordsUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-r" {
 			doRecurse = true
 
 		} else {
-			transformerSortWithinRecordsUsage(os.Stderr, true, 1)
+			transformerSortWithinRecordsUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

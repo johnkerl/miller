@@ -28,8 +28,6 @@ var FormatValuesSetup = TransformerSetup{
 // ----------------------------------------------------------------
 func transformerFormatValuesUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameFormatValues)
 	fmt.Fprintf(o, "Applies format strings to all field values, depending on autodetected type.\n")
@@ -60,10 +58,6 @@ func transformerFormatValuesUsage(
 	fmt.Fprintf(o, "                    with s in them. Undefined behavior results otherwise.\n")
 	fmt.Fprintf(o, "-n                  Coerce field values autodetected as int to float, and then\n")
 	fmt.Fprintf(o, "                    apply the float format.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerFormatValuesParseCLI(
@@ -95,7 +89,8 @@ func transformerFormatValuesParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerFormatValuesUsage(os.Stdout, true, 0)
+			transformerFormatValuesUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-s" {
 			stringFormat = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
@@ -107,7 +102,8 @@ func transformerFormatValuesParseCLI(
 			coerceIntToFloat = true
 
 		} else {
-			transformerFormatValuesUsage(os.Stderr, true, 1)
+			transformerFormatValuesUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

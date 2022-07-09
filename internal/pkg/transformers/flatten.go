@@ -23,8 +23,6 @@ var FlattenSetup = TransformerSetup{
 
 func transformerFlattenUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameFlatten)
 	fmt.Fprint(o,
@@ -35,10 +33,6 @@ and value '{"b": { "c": 4 }}' becomes name 'a.b.c' and value 4.
 	fmt.Fprint(o, "-f Comma-separated list of field names to flatten (default all).\n")
 	fmt.Fprintf(o, "-s Separator, defaulting to %s --flatsep value.\n", "mlr")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerFlattenParseCLI(
@@ -68,7 +62,8 @@ func transformerFlattenParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerFlattenUsage(os.Stdout, true, 0)
+			transformerFlattenUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-s" {
 			oFlatSep = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
@@ -77,7 +72,8 @@ func transformerFlattenParseCLI(
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerFlattenUsage(os.Stderr, true, 1)
+			transformerFlattenUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

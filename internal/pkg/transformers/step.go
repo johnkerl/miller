@@ -96,8 +96,6 @@ var StepSetup = TransformerSetup{
 
 func transformerStepUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: mlr %s [options]\n", verbNameStep)
 	fmt.Fprintf(o, "Computes values dependent on earlier/later records, optionally grouped by category.\n")
@@ -141,10 +139,6 @@ func transformerStepUsage(
 	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or\n")
 	fmt.Fprintf(o, "https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average\n")
 	fmt.Fprintf(o, "for more information on EWMA.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerStepParseCLI(
@@ -177,7 +171,8 @@ func transformerStepParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerStepUsage(os.Stdout, true, 0)
+			transformerStepUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-a" {
 			// Let them do '-a delta -a rsum' or '-a delta,rsum'
@@ -214,7 +209,8 @@ func transformerStepParseCLI(
 			// as a no-op for backward compatibility with Miller 5 and below.
 
 		} else {
-			transformerStepUsage(os.Stderr, true, 1)
+			transformerStepUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

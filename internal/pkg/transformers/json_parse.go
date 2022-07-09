@@ -23,8 +23,6 @@ var JSONParseSetup = TransformerSetup{
 
 func transformerJSONParseUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameJSONParse)
 	fmt.Fprintln(
@@ -34,10 +32,6 @@ func transformerJSONParseUsage(
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {...} Comma-separated list of field names to json-parse (default all).\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerJSONParseParseCLI(
@@ -66,13 +60,15 @@ func transformerJSONParseParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerJSONParseUsage(os.Stdout, true, 0)
+			transformerJSONParseUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-f" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerJSONParseUsage(os.Stderr, true, 1)
+			transformerJSONParseUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

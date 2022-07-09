@@ -25,8 +25,6 @@ var FractionSetup = TransformerSetup{
 
 func transformerFractionUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	argv0 := "mlr"
 	verb := verbNameFraction
@@ -50,10 +48,6 @@ func transformerFractionUsage(
 	fmt.Fprintf(o, "              E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records\n")
 	fmt.Fprintf(o, "              x=1,x_cumulative_fraction=0.1  x=2,x_cumulative_fraction=0.3\n")
 	fmt.Fprintf(o, "              x=3,x_cumulative_fraction=0.6  and  x=4,x_cumulative_fraction=1.0\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerFractionParseCLI(
@@ -86,7 +80,8 @@ func transformerFractionParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerFractionUsage(os.Stdout, true, 0)
+			transformerFractionUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-f" {
 			fractionFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -101,12 +96,14 @@ func transformerFractionParseCLI(
 			doCumu = true
 
 		} else {
-			transformerFractionUsage(os.Stderr, true, 1)
+			transformerFractionUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if fractionFieldNames == nil {
-		transformerFractionUsage(os.Stderr, true, 1)
+		transformerFractionUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

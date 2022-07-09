@@ -26,8 +26,6 @@ var TopSetup = TransformerSetup{
 
 func transformerTopUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	argv0 := "mlr"
 	verb := verbNameTop
@@ -48,10 +46,6 @@ func transformerTopUsage(
 	fmt.Fprintf(o, "with the same fields as they appeared in the input. Without -a, only fields\n")
 	fmt.Fprintf(o, "from -f, fields from -g, and the top-index field are emitted. For more information\n")
 	fmt.Fprintf(o, "please see https://miller.readthedocs.io/en/latest/reference-verbs#top\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerTopParseCLI(
@@ -86,7 +80,8 @@ func transformerTopParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerTopUsage(os.Stdout, true, 0)
+			transformerTopUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-n" {
 			topCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
@@ -106,15 +101,18 @@ func transformerTopParseCLI(
 			outputFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerTopUsage(os.Stderr, true, 1)
+			transformerTopUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if valueFieldNames == nil {
-		transformerTopUsage(os.Stderr, true, 1)
+		transformerTopUsage(os.Stderr)
+		os.Exit(1)
 	}
 	if len(valueFieldNames) > 1 && showFullRecords {
-		transformerTopUsage(os.Stderr, true, 1)
+		transformerTopUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

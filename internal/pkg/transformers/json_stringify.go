@@ -24,8 +24,6 @@ var JSONStringifySetup = TransformerSetup{
 
 func transformerJSONStringifyUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameJSONStringify)
 	fmt.Fprint(o,
@@ -36,10 +34,6 @@ func transformerJSONStringifyUsage(
 	fmt.Fprintf(o, "--jvstack Produce multi-line JSON output.\n")
 	fmt.Fprintf(o, "--no-jvstack Produce single-line JSON output per record (default).\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerJSONStringifyParseCLI(
@@ -69,7 +63,8 @@ func transformerJSONStringifyParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerJSONStringifyUsage(os.Stdout, true, 0)
+			transformerJSONStringifyUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-f" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -81,7 +76,8 @@ func transformerJSONStringifyParseCLI(
 			jvStack = false
 
 		} else {
-			transformerJSONStringifyUsage(os.Stderr, true, 1)
+			transformerJSONStringifyUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

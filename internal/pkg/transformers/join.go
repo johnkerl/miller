@@ -76,8 +76,6 @@ func newJoinOptions() *tJoinOptions {
 // ----------------------------------------------------------------
 func transformerJoinUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameJoin)
 	fmt.Fprintf(o, "Joins records from specified left file name with records from all file names\n")
@@ -132,10 +130,6 @@ func transformerJoinUsage(
 		"mlr")
 	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information\n")
 	fmt.Fprintf(o, "including examples.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------
@@ -171,7 +165,8 @@ func transformerJoinParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerJoinUsage(os.Stdout, true, 0)
+			transformerJoinUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "--prepipe" {
 			opts.prepipe = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
@@ -227,7 +222,8 @@ func transformerJoinParseCLI(
 				// Nothing else to handle here.
 				argi = largi
 			} else {
-				transformerJoinUsage(os.Stderr, true, 1)
+				transformerJoinUsage(os.Stderr)
+				os.Exit(1)
 			}
 		}
 	}
@@ -236,20 +232,23 @@ func transformerJoinParseCLI(
 
 	if opts.leftFileName == "" {
 		fmt.Fprintf(os.Stderr, "%s %s: need left file name\n", "mlr", verb)
-		transformerJoinUsage(os.Stderr, true, 1)
+		transformerJoinUsage(os.Stderr)
+		os.Exit(1)
 		return nil
 	}
 
 	if !opts.emitPairables && !opts.emitLeftUnpairables && !opts.emitRightUnpairables {
 		fmt.Fprintf(os.Stderr, "%s %s: all emit flags are unset; no output is possible.\n",
 			"mlr", verb)
-		transformerJoinUsage(os.Stderr, true, 1)
+		transformerJoinUsage(os.Stderr)
+		os.Exit(1)
 		return nil
 	}
 
 	if opts.outputJoinFieldNames == nil {
 		fmt.Fprintf(os.Stderr, "%s %s: need output field names\n", "mlr", verb)
-		transformerJoinUsage(os.Stderr, true, 1)
+		transformerJoinUsage(os.Stderr)
+		os.Exit(1)
 		return nil
 	}
 

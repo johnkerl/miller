@@ -24,16 +24,11 @@ var AltkvSetup = TransformerSetup{
 
 func transformerAltkvUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameAltkv)
 	fmt.Fprintf(o, "Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerAltkvParseCLI(
@@ -59,10 +54,12 @@ func transformerAltkvParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerAltkvUsage(os.Stdout, true, 0)
+			transformerAltkvUsage(os.Stdout)
+			os.Exit(0)
 
 		} else {
-			transformerAltkvUsage(os.Stderr, true, 1)
+			transformerAltkvUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
