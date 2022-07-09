@@ -281,7 +281,10 @@ func parseCommandLinePassTwo(
 	}
 
 	// Check now to avoid confusing timezone-library behavior later on
-	lib.SetTZFromEnv()
+	err = lib.SetTZFromEnv()
+	if err != nil {
+		return nil, nil, err
+	}
 
 	cli.FinalizeReaderOptions(&options.ReaderOptions)
 	cli.FinalizeWriterOptions(&options.WriterOptions)
