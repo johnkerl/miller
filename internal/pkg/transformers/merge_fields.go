@@ -34,8 +34,6 @@ const (
 
 func transformerMergeFieldsUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	argv0 := "mlr"
 	verb := verbNameMergeFields
@@ -71,10 +69,6 @@ func transformerMergeFieldsUsage(
 	fmt.Fprintf(o, "  produces \"a_x_sum=3,a_x_count=2,b_y_sum=4,b_y_count=1,b_x_sum=8,b_x_count=1\"\n")
 	fmt.Fprintf(o, "  since \"a_in_x\" and \"a_out_x\" both collapse to \"a_x\", \"b_in_y\" collapses to\n")
 	fmt.Fprintf(o, "  \"b_y\", and \"b_out_x\" collapses to \"b_x\".\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerMergeFieldsParseCLI(
@@ -108,7 +102,8 @@ func transformerMergeFieldsParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerMergeFieldsUsage(os.Stdout, true, 0)
+			transformerMergeFieldsUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-a" {
 			accumulatorNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -141,7 +136,8 @@ func transformerMergeFieldsParseCLI(
 			// No-op pass-through for backward compatibility with Miller 5
 
 		} else {
-			transformerMergeFieldsUsage(os.Stderr, true, 1)
+			transformerMergeFieldsUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
@@ -158,7 +154,8 @@ func transformerMergeFieldsParseCLI(
 	}
 	if outputFieldBasename == "" {
 		if doWhich == e_MERGE_BY_NAME_LIST || doWhich == e_MERGE_BY_NAME_REGEX {
-			transformerMergeFieldsUsage(os.Stderr, true, 1)
+			transformerMergeFieldsUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

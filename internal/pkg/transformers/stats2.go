@@ -29,8 +29,6 @@ var Stats2Setup = TransformerSetup{
 
 func transformerStats2Usage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	argv0 := "mlr"
 	verb := verbNameStats2
@@ -57,10 +55,6 @@ func transformerStats2Usage(
 	fmt.Fprintf(o, "Example: %s %s -a linreg-pca -f x,y\n", argv0, verb)
 	fmt.Fprintf(o, "Example: %s %s -a linreg-ols,r2 -f x,y -g size,shape\n", argv0, verb)
 	fmt.Fprintf(o, "Example: %s %s -a corr -f x,y\n", argv0, verb)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------
@@ -97,7 +91,8 @@ func transformerStats2ParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerStats2Usage(os.Stdout, true, 0)
+			transformerStats2Usage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-a" {
 			accumulatorNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -127,12 +122,14 @@ func transformerStats2ParseCLI(
 			// for all applicable stats2 accumulators (i.e. none of them).
 
 		} else {
-			transformerStats2Usage(os.Stderr, true, 1)
+			transformerStats2Usage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if doIterativeStats && doHoldAndFit {
-		transformerStats2Usage(os.Stderr, true, 1)
+		transformerStats2Usage(os.Stderr)
+		os.Exit(1)
 	}
 	if accumulatorNameList == nil {
 		fmt.Fprintf(os.Stderr, "%s %s: -a option is required.\n", argv0, verb)

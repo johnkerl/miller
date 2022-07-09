@@ -22,8 +22,6 @@ var DecimateSetup = TransformerSetup{
 
 func transformerDecimateUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameDecimate)
 	fmt.Fprintf(o, "Passes through one of every n records, optionally by category.\n")
@@ -33,10 +31,6 @@ func transformerDecimateUsage(
 	fmt.Fprintf(o, " -g {a,b,c} Optional group-by-field names for decimate counts, e.g. a,b,c.\n")
 	fmt.Fprintf(o, " -n {n} Decimation factor (default 10).\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerDecimateParseCLI(
@@ -68,12 +62,14 @@ func transformerDecimateParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerDecimateUsage(os.Stdout, true, 0)
+			transformerDecimateUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-n" {
 			decimateCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 			if decimateCount <= 0 {
-				transformerDecimateUsage(os.Stderr, true, 1)
+				transformerDecimateUsage(os.Stderr)
+				os.Exit(1)
 			}
 
 		} else if opt == "-b" {
@@ -86,7 +82,8 @@ func transformerDecimateParseCLI(
 			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
-			transformerDecimateUsage(os.Stderr, true, 1)
+			transformerDecimateUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

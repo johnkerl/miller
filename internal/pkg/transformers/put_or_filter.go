@@ -37,24 +37,18 @@ var FilterSetup = TransformerSetup{
 // ----------------------------------------------------------------
 func transformerPutUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
-	transformerPutOrFilterUsage(o, doExit, exitCode, "put")
+	transformerPutOrFilterUsage(o, "put")
 }
 
 func transformerFilterUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
-	transformerPutOrFilterUsage(o, doExit, exitCode, "filter")
+	transformerPutOrFilterUsage(o, "filter")
 }
 
 func transformerPutOrFilterUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 	verb string,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {DSL expression}\n", "mlr", verb)
@@ -177,10 +171,6 @@ More example filter expressions:
 
 	fmt.Fprintln(o)
 	fmt.Fprintf(o, "See also %s/reference-dsl for more context.\n", lib.DOC_URL)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------
@@ -243,7 +233,8 @@ func transformerPutOrFilterParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerPutOrFilterUsage(os.Stdout, true, 0, verb)
+			transformerPutOrFilterUsage(os.Stdout, verb)
+			os.Exit(0)
 
 		} else if opt == "-f" {
 			// Get a DSL string from the user-specified filename
@@ -319,7 +310,8 @@ func transformerPutOrFilterParseCLI(
 				// Nothing else to handle here.
 				argi = largi
 			} else {
-				transformerPutOrFilterUsage(os.Stderr, true, 1, verb)
+				transformerPutOrFilterUsage(os.Stderr, verb)
+				os.Exit(1)
 			}
 		}
 	}
@@ -403,12 +395,11 @@ func NewTransformerPut(
 
 	cstRootNode := cst.NewEmptyRoot(&options.WriterOptions, dslInstanceType).WithStrictMode(strictMode)
 
-	err := cstRootNode.Build(
+	hadWarnings, err := cstRootNode.Build(
 		dslStrings,
 		dslInstanceType,
 		false, // isReplImmediate
 		doWarnings,
-		warningsAreFatal,
 
 		func(dslString string, astNode *dsl.AST) {
 
@@ -433,6 +424,14 @@ func NewTransformerPut(
 
 		},
 	)
+
+	if warningsAreFatal && hadWarnings {
+		fmt.Printf(
+			"%s: Exiting due to warnings treated as fatal.\n",
+			"mlr",
+		)
+		os.Exit(1)
+	}
 
 	if exitAfterParse {
 		os.Exit(0)

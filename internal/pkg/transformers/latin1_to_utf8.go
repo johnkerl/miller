@@ -24,17 +24,12 @@ var Latin1ToUTF8Setup = TransformerSetup{
 
 func transformerLatin1ToUTF8Usage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s, with no options.\n", "mlr", verbNameLatin1ToUTF8)
 	fmt.Fprintf(o, "Recursively converts record strings from Latin-1 to UTF-8.\n")
 	fmt.Fprintf(o, "For field-level control, please see the latin1_to_utf8 DSL function.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerLatin1ToUTF8ParseCLI(
@@ -60,10 +55,12 @@ func transformerLatin1ToUTF8ParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerLatin1ToUTF8Usage(os.Stdout, true, 0)
+			transformerLatin1ToUTF8Usage(os.Stdout)
+			os.Exit(0)
 
 		} else {
-			transformerLatin1ToUTF8Usage(os.Stderr, true, 1)
+			transformerLatin1ToUTF8Usage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

@@ -34,8 +34,6 @@ var UniqSetup = TransformerSetup{
 // ----------------------------------------------------------------
 func transformerCountDistinctUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	argv0 := "mlr"
 	verb := verbNameCountDistinct
@@ -53,10 +51,6 @@ func transformerCountDistinctUsage(
 	fmt.Fprintf(o, "              and b field values. With -f a,b and with -u, computes counts\n")
 	fmt.Fprintf(o, "              for distinct a field values and counts for distinct b field\n")
 	fmt.Fprintf(o, "              values separately.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerCountDistinctParseCLI(
@@ -89,7 +83,8 @@ func transformerCountDistinctParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerCountDistinctUsage(os.Stdout, true, 0)
+			transformerCountDistinctUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-g" || opt == "-f" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -104,15 +99,18 @@ func transformerCountDistinctParseCLI(
 			doLashed = false
 
 		} else {
-			transformerCountDistinctUsage(os.Stderr, true, 1)
+			transformerCountDistinctUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if fieldNames == nil {
-		transformerCountDistinctUsage(os.Stderr, true, 1)
+		transformerCountDistinctUsage(os.Stderr)
+		os.Exit(1)
 	}
 	if !doLashed && showNumDistinctOnly {
-		transformerCountDistinctUsage(os.Stderr, true, 1)
+		transformerCountDistinctUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	showCounts := true
@@ -142,8 +140,6 @@ func transformerCountDistinctParseCLI(
 // ----------------------------------------------------------------
 func transformerUniqUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	argv0 := "mlr"
 	verb := verbNameUniq
@@ -160,10 +156,6 @@ func transformerUniqUsage(
 	fmt.Fprintf(o, "              With -c, produces unique records, with repeat counts for each.\n")
 	fmt.Fprintf(o, "              With -n, produces only one record which is the unique-record count.\n")
 	fmt.Fprintf(o, "              With neither -c nor -n, produces unique records.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerUniqParseCLI(
@@ -197,7 +189,8 @@ func transformerUniqParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerUniqUsage(os.Stdout, true, 0)
+			transformerUniqUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-g" || opt == "-f" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -215,20 +208,24 @@ func transformerUniqParseCLI(
 			uniqifyEntireRecords = true
 
 		} else {
-			transformerUniqUsage(os.Stderr, true, 1)
+			transformerUniqUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if uniqifyEntireRecords {
 		if fieldNames != nil {
-			transformerUniqUsage(os.Stderr, true, 1)
+			transformerUniqUsage(os.Stderr)
+			os.Exit(1)
 		}
 		if showCounts && showNumDistinctOnly {
-			transformerUniqUsage(os.Stderr, true, 1)
+			transformerUniqUsage(os.Stderr)
+			os.Exit(1)
 		}
 	} else {
 		if fieldNames == nil {
-			transformerUniqUsage(os.Stderr, true, 1)
+			transformerUniqUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

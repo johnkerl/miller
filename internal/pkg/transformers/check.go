@@ -22,18 +22,12 @@ var CheckSetup = TransformerSetup{
 
 func transformerCheckUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameCheck)
 	fmt.Fprintf(o, "Consumes records without printing any output.\n")
 	fmt.Fprintf(o, "Useful for doing a well-formatted check on input data.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerCheckParseCLI(
@@ -59,10 +53,12 @@ func transformerCheckParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerCheckUsage(os.Stdout, true, 0)
+			transformerCheckUsage(os.Stdout)
+			os.Exit(0)
 
 		} else {
-			transformerCheckUsage(os.Stderr, true, 1)
+			transformerCheckUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

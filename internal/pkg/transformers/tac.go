@@ -22,17 +22,11 @@ var TacSetup = TransformerSetup{
 
 func transformerTacUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameTac)
 	fmt.Fprintf(o, "Prints records in reverse order from the order in which they were encountered.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerTacParseCLI(
@@ -58,10 +52,12 @@ func transformerTacParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerTacUsage(os.Stdout, true, 0)
+			transformerTacUsage(os.Stdout)
+			os.Exit(0)
 
 		} else {
-			transformerTacUsage(os.Stderr, true, 1)
+			transformerTacUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 

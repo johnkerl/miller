@@ -25,8 +25,6 @@ var CutSetup = TransformerSetup{
 
 func transformerCutUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameCut)
 	fmt.Fprintf(o, "Passes through input records with specified fields included/excluded.\n")
@@ -46,10 +44,6 @@ func transformerCutUsage(
 	fmt.Fprintf(o, "  %s %s -r -f '^status$,sda[0-9]'\n", "mlr", verbNameCut)
 	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"'\n", "mlr", verbNameCut)
 	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"i' (this is case-insensitive)\n", "mlr", verbNameCut)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerCutParseCLI(
@@ -81,7 +75,8 @@ func transformerCutParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerCutUsage(os.Stdout, true, 0)
+			transformerCutUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-f" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -99,12 +94,14 @@ func transformerCutParseCLI(
 			doRegexes = true
 
 		} else {
-			transformerCutUsage(os.Stderr, true, 1)
+			transformerCutUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if fieldNames == nil {
-		transformerCutUsage(os.Stderr, true, 1)
+		transformerCutUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

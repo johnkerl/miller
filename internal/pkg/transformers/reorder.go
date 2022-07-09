@@ -24,8 +24,6 @@ var ReorderSetup = TransformerSetup{
 
 func transformerReorderUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	argv0 := "mlr"
 	verb := verbNameReorder
@@ -47,10 +45,6 @@ func transformerReorderUsage(
 	fmt.Fprintf(o, "Examples:\n")
 	fmt.Fprintf(o, "%s %s    -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"a=1,b=2,d=4,c=3\".\n", argv0, verb)
 	fmt.Fprintf(o, "%s %s -e -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"d=4,c=3,a=1,b=2\".\n", argv0, verb)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerReorderParseCLI(
@@ -82,7 +76,8 @@ func transformerReorderParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerReorderUsage(os.Stdout, true, 0)
+			transformerReorderUsage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-f" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -103,12 +98,14 @@ func transformerReorderParseCLI(
 			afterFieldName = ""
 
 		} else {
-			transformerReorderUsage(os.Stderr, true, 1)
+			transformerReorderUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	if fieldNames == nil {
-		transformerReorderUsage(os.Stderr, true, 1)
+		transformerReorderUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

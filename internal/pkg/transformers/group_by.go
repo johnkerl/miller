@@ -23,17 +23,11 @@ var GroupBySetup = TransformerSetup{
 
 func transformerGroupByUsage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {comma-separated field names}\n", "mlr", verbNameGroupBy)
 	fmt.Fprint(o, "Outputs records in batches having identical values at specified field names.")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerGroupByParseCLI(
@@ -59,16 +53,19 @@ func transformerGroupByParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerGroupByUsage(os.Stdout, true, 0)
+			transformerGroupByUsage(os.Stdout)
+			os.Exit(0)
 
 		} else {
-			transformerGroupByUsage(os.Stderr, true, 1)
+			transformerGroupByUsage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
 	// Get the group-by field names from the command line
 	if argi >= argc {
-		transformerGroupByUsage(os.Stderr, true, 1)
+		transformerGroupByUsage(os.Stderr)
+		os.Exit(1)
 	}
 	groupByFieldNames := lib.SplitString(args[argi], ",")
 	argi++

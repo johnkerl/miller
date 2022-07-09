@@ -74,15 +74,16 @@ func (root *RootNode) Build(
 	dslInstanceType DSLInstanceType,
 	isReplImmediate bool,
 	doWarnings bool,
-	warningsAreFatal bool,
 	astBuildVisitorFunc ASTBuildVisitorFunc,
-) error {
+) (hadWarnings bool, err error) {
+	hadWarnings = false
+	err = nil
 
 	for _, dslString := range dslStrings {
 		astRootNode, err := buildASTFromStringWithMessage(dslString)
 		if err != nil {
 			// Error message already printed out
-			return err
+			return hadWarnings, err
 		}
 
 		// E.g. mlr put -v -- let it print out what it needs to.
@@ -90,23 +91,22 @@ func (root *RootNode) Build(
 			astBuildVisitorFunc(dslString, astRootNode)
 		}
 
-		err = root.IngestAST(
+		hadWarnings, err = root.IngestAST(
 			astRootNode,
 			isReplImmediate,
 			doWarnings,
-			warningsAreFatal,
 		)
 		if err != nil {
-			return err
+			return hadWarnings, err
 		}
 	}
 
-	err := root.Resolve()
+	err = root.Resolve()
 	if err != nil {
-		return err
+		return hadWarnings, err
 	}
 
-	return err
+	return hadWarnings, err
 }
 
 func buildASTFromStringWithMessage(dslString string) (*dsl.AST, error) {
@@ -150,31 +150,26 @@ func (root *RootNode) IngestAST(
 	// (immediately) but not retained.
 	isReplImmediate bool,
 	doWarnings bool,
-	warningsAreFatal bool,
-) error {
+) (hadWarnings bool, err error) {
+	hadWarnings = false
+	err = nil
+
 	if ast.RootNode == nil {
-		return fmt.Errorf("cannot build CST from nil AST root")
+		return hadWarnings, fmt.Errorf("cannot build CST from nil AST root")
 	}
 
 	// Check for things that are syntax errors but not done in the AST for
 	// pragmatic reasons. For example, $anything in begin/end blocks;
 	// begin/end/func not at top level; etc.
-	err := ValidateAST(ast, root.dslInstanceType)
+	err = ValidateAST(ast, root.dslInstanceType)
 	if err != nil {
-		return err
+		return hadWarnings, err
 	}
 
 	if doWarnings {
 		ok := WarnOnAST(ast)
 		if !ok {
-			// Messages already printed out
-			if warningsAreFatal {
-				fmt.Printf(
-					"%s: Exiting due to warnings treated as fatal.\n",
-					"mlr",
-				)
-				os.Exit(1)
-			}
+			hadWarnings = true
 		}
 	}
 
@@ -187,10 +182,10 @@ func (root *RootNode) IngestAST(
 
 	err = root.buildMainPass(ast, isReplImmediate)
 	if err != nil {
-		return err
+		return hadWarnings, err
 	}
 
-	return nil
+	return hadWarnings, nil
 }
 
 // Resolve is called after IngestAST has been called one or more times.

@@ -15,13 +15,13 @@ import (
 // simply *ignored* -- we want to surface that error to the user.  (3) On any
 // platform this is necessary for *changing* TZ mid-process: e.g.  if a DSL
 // statement does 'ENV["TZ"] = Asia/Istanbul'.
-func SetTZFromEnv() {
+func SetTZFromEnv() error {
 	location, err := time.LoadLocation(os.Getenv("TZ"))
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return err
 	}
 	time.Local = location
+	return nil
 }
 
 func Sec2GMT(epochSeconds float64, numDecimalPlaces int) string {

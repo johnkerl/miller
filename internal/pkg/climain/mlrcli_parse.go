@@ -93,7 +93,10 @@ func ParseCommandLine(
 ) {
 	// mlr -s scriptfile {data-file names ...} means take the contents of
 	// scriptfile as if it were command-line items.
-	args = maybeInterpolateDashS(args)
+	args, err = maybeInterpolateDashS(args)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	// Pass one as described at the top of this file.
 	flagSequences, verbSequences, dataFileNames := parseCommandLinePassOne(args)
@@ -281,7 +284,10 @@ func parseCommandLinePassTwo(
 	}
 
 	// Check now to avoid confusing timezone-library behavior later on
-	lib.SetTZFromEnv()
+	err = lib.SetTZFromEnv()
+	if err != nil {
+		return nil, nil, err
+	}
 
 	cli.FinalizeReaderOptions(&options.ReaderOptions)
 	cli.FinalizeWriterOptions(&options.WriterOptions)

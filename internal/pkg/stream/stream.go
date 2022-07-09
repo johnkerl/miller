@@ -3,9 +3,7 @@ package stream
 import (
 	"bufio"
 	"container/list"
-	"fmt"
 	"io"
-	"os"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/input"
@@ -93,8 +91,7 @@ func Stream(
 	for !done {
 		select {
 		case err := <-errorChannel:
-			fmt.Fprintln(os.Stderr, "mlr", ": ", err)
-			os.Exit(1)
+			return err
 		case _ = <-doneWritingChannel:
 			done = true
 			break

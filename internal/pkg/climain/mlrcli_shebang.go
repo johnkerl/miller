@@ -3,7 +3,6 @@ package climain
 import (
 	"fmt"
 	"io/ioutil"
-	"os"
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
@@ -21,16 +20,15 @@ import (
 // two reasons:
 // * This is how shebang lines work
 // * There are Miller verbs with -s flags and we don't want to disrupt their behavior.
-func maybeInterpolateDashS(args []string) []string {
+func maybeInterpolateDashS(args []string) ([]string, error) {
 	if len(args) < 2 {
-		return args
+		return args, nil
 	}
 	if args[1] != "-s" { // Normal case
-		return args
+		return args, nil
 	}
 	if len(args) < 3 {
-		fmt.Fprintf(os.Stderr, "mlr: -s flag requires a filename after it.\n")
-		os.Exit(1)
+		return nil, fmt.Errorf("mlr: -s flag requires a filename after it.")
 	}
 
 	// mlr -s scriptfile input1.csv input2.csv
@@ -42,8 +40,7 @@ func maybeInterpolateDashS(args []string) []string {
 	// Read the bytes in the filename given after -s.
 	byteContents, rerr := ioutil.ReadFile(filename)
 	if rerr != nil {
-		fmt.Fprintf(os.Stderr, "mlr: cannot read %s: %v\n", filename, rerr)
-		os.Exit(1)
+		return nil, fmt.Errorf("mlr: cannot read %s: %v", filename, rerr)
 	}
 	contents := string(byteContents)
 
@@ -67,8 +64,7 @@ func maybeInterpolateDashS(args []string) []string {
 	contents = strings.Join(lines, "\n")
 	argsFromFile, err := shellquote.Split(contents)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: cannot parse %s: %v\n", filename, err)
-		os.Exit(1)
+		return nil, fmt.Errorf("mlr: cannot parse %s: %v", filename, err)
 	}
 
 	// Join "mlr", the args from the script-file contents, and all the remaining arguments
@@ -81,5 +77,5 @@ func maybeInterpolateDashS(args []string) []string {
 	newArgs = append(newArgs, "--")
 	newArgs = append(newArgs, remainingArgs...)
 
-	return newArgs
+	return newArgs, nil
 }

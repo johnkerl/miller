@@ -27,8 +27,6 @@ var Stats1Setup = TransformerSetup{
 
 func transformerStats1Usage(
 	o *os.File,
-	doExit bool,
-	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameStats1)
 	fmt.Fprint(o,
@@ -87,10 +85,6 @@ Options:
   In particular, 1 and 1.0 are distinct text for count and mode.
 * When there are mode ties, the first-encountered datum wins.
 `)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 func transformerStats1ParseCLI(
@@ -129,7 +123,8 @@ func transformerStats1ParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerStats1Usage(os.Stdout, true, 0)
+			transformerStats1Usage(os.Stdout)
+			os.Exit(0)
 
 		} else if opt == "-a" {
 			accumulatorNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -176,7 +171,8 @@ func transformerStats1ParseCLI(
 			// No-op pass-through for backward compatibility with Miller 5
 
 		} else {
-			transformerStats1Usage(os.Stderr, true, 1)
+			transformerStats1Usage(os.Stderr)
+			os.Exit(1)
 		}
 	}
 
