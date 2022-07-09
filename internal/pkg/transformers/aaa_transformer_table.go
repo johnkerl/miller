@@ -136,5 +136,4 @@ func UsageVerbs() {
 		transformerSetup.UsageFunc(os.Stdout, false, 0)
 	}
 	fmt.Printf("%s\n", separator)
-	os.Exit(0)
 }
