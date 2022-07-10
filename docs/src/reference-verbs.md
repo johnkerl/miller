@@ -3511,6 +3511,69 @@ $ each 10 uptime | mlr -p step -a delta -f 11
 
 </pre>
 
+## summary
+
+<pre class="pre-highlight-in-pair">
+<b>mlr summary --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr summary [options]
+Show summary statistics about the input data:
+  field_name field_type
+  min        p25            median   p75   max
+  count      mean           stddev
+  null_count distinct_count mode
+
+Notes:
+* Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
+* If the mode is not unique in the input data, the first-encountered value is reported as the mode.
+
+Options:
+-h|--help Show this message.
+</pre>
+
+Show all summary columns:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ofmt %.3f --from data/medium --opprint summary</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+field_name field_type count min   p25   median p75   max   mean     stddev   null_count distinct_count mode
+a          string     10000 eks   hat   pan    wye   zee   -        -        0          1              string
+b          string     10000 eks   hat   pan    wye   zee   -        -        0          1              string
+i          int        10000 1     2501  5001   7501  10000 5000.500 2886.896 0          1              int
+x          float      10000 0.000 0.247 0.501  0.748 1.000 0.499    0.290    0          1              float
+y          float      10000 0.000 0.252 0.506  0.764 1.000 0.506    0.291    0          1              float
+</pre>
+
+Omit undesired summary columns:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ofmt %.3f --from data/medium --opprint summary then cut -xf min,p25,median,p75,max</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+field_name field_type count mean     stddev   null_count distinct_count mode
+a          string     10000 -        -        0          1              string
+b          string     10000 -        -        0          1              string
+i          int        10000 5000.500 2886.896 0          1              int
+x          float      10000 0.499    0.290    0          1              float
+y          float      10000 0.506    0.291    0          1              float
+</pre>
+
+Show only desired summary columns:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ofmt %.3f --from data/medium --opprint summary then cut -of field_name,field_type,count,mean,median,mode</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+field_name field_type count mean     median mode
+a          string     10000 -        pan    string
+b          string     10000 -        pan    string
+i          int        10000 5000.500 5001   int
+x          float      10000 0.499    0.501  float
+y          float      10000 0.506    0.506  float
+</pre>
+
 ## tac
 
 <pre class="pre-highlight-in-pair">
