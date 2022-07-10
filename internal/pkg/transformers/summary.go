@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
@@ -93,8 +94,9 @@ type tFieldSummary struct {
 	// Needs lib.OrderedMap, not map[string]int64, for deterministic regression-test output.
 	// This is a map (a set really) rather than a single value in case of heterogeneous data.
 	fieldTypesMap *lib.OrderedMap
-	count         int64
 
+	countAccumulator  utils.IStats1Accumulator
+	sumAccumulator    utils.IStats1Accumulator
 	meanAccumulator   utils.IStats1Accumulator
 	stddevAccumulator utils.IStats1Accumulator
 
@@ -109,12 +111,14 @@ type tFieldSummary struct {
 func newFieldSummary() *tFieldSummary {
 	return &tFieldSummary{
 		fieldTypesMap: lib.NewOrderedMap(),
-		count:         0,
 
-		// Interpolated percentiles don't play well with string-valued input data
-		percentileKeeper:  utils.NewPercentileKeeper(false),
+		countAccumulator:  utils.NewStats1CountAccumulator(),
+		sumAccumulator:    utils.NewStats1SumAccumulator(),
 		meanAccumulator:   utils.NewStats1MeanAccumulator(),
 		stddevAccumulator: utils.NewStats1StddevAccumulator(),
+
+		// Interpolated percentiles don't play well with string-valued input data
+		percentileKeeper: utils.NewPercentileKeeper(false),
 
 		nullCount: 0,
 		distincts: lib.NewOrderedMap(),
@@ -166,10 +170,11 @@ func (tr *TransformerSummary) Transform(
 			} else {
 				fieldSummary.fieldTypesMap.Put(typeName, iValue.(int64)+1)
 			}
-			fieldSummary.count++
 
 			fieldSummary.percentileKeeper.Ingest(pe.Value)
 			if pe.Value.IsNumeric() {
+				fieldSummary.countAccumulator.Ingest(pe.Value)
+				fieldSummary.sumAccumulator.Ingest(pe.Value)
 				fieldSummary.meanAccumulator.Ingest(pe.Value)
 				fieldSummary.stddevAccumulator.Ingest(pe.Value)
 			}
@@ -205,20 +210,52 @@ func (tr *TransformerSummary) Transform(
 			}
 			newrec.PutCopy("field_type", mlrval.FromString(strings.Join(fieldTypesList, "-")))
 
-			newrec.PutCopy("count", mlrval.FromInt(fieldSummary.count))
-			newrec.PutCopy("min", fieldSummary.percentileKeeper.Emit(0.0))
-			newrec.PutCopy("p25", fieldSummary.percentileKeeper.Emit(25.0))
-			newrec.PutCopy("median", fieldSummary.percentileKeeper.Emit(50.0))
-			newrec.PutCopy("p75", fieldSummary.percentileKeeper.Emit(75.0))
-			newrec.PutCopy("max", fieldSummary.percentileKeeper.Emit(100.0))
-
+			newrec.PutCopy("count", fieldSummary.countAccumulator.Emit())
+			newrec.PutCopy("sum", fieldSummary.sumAccumulator.Emit())
 			newrec.PutCopy("mean", fieldSummary.meanAccumulator.Emit())
 			newrec.PutCopy("stddev", fieldSummary.stddevAccumulator.Emit())
+			// variance
+			// skewness
+
+			// minlen/maxlen
+
+			min := fieldSummary.percentileKeeper.Emit(0.0)
+			q1 := fieldSummary.percentileKeeper.Emit(25.0)
+			median := fieldSummary.percentileKeeper.Emit(50.0)
+			q3 := fieldSummary.percentileKeeper.Emit(75.0)
+			max := fieldSummary.percentileKeeper.Emit(100.0)
+
+			iqr := bifs.BIF_minus_binary(q3, q1)
+			inner_k := mlrval.FromFloat(1.5)
+			outer_k := mlrval.FromFloat(3.0)
+
+			lof := bifs.BIF_minus_binary(q1, bifs.BIF_times(outer_k, iqr))
+			lif := bifs.BIF_minus_binary(q1, bifs.BIF_times(inner_k, iqr))
+			uif := bifs.BIF_plus_binary(q3, bifs.BIF_times(inner_k, iqr))
+			uof := bifs.BIF_plus_binary(q3, bifs.BIF_times(outer_k, iqr))
+
+			newrec.PutCopy("min", min)
+			newrec.PutCopy("p25", q1)
+			newrec.PutCopy("median", median)
+			newrec.PutCopy("p75", q3)
+			newrec.PutCopy("max", max)
+
+			// TODO: leave "" if float-count is zero ...
+			newrec.PutCopy("iqr", iqr)
+			newrec.PutCopy("lof", lof)
+			newrec.PutCopy("lif", lif)
+			newrec.PutCopy("uif", uif)
+			newrec.PutCopy("uof", uof)
+
+			// iqr = q3 - q1
+			// lof/lif
+			// q1 - k*iqr, q3 + k*iqr k=1.5
+			// q1 - k*iqr, q3 + k*iqr k=3.0
 
 			newrec.PutCopy("null_count", mlrval.FromInt(fieldSummary.nullCount))
 			newrec.PutCopy("distinct_count", mlrval.FromInt(fieldSummary.distincts.FieldCount))
 
-			// The mode is the most-occurringe value for this column. In case of ties, use the first
+			// The mode is the most-occurring value for this column. In case of ties, use the first
 			// found. We need OrderedMap so regression-test outputs are deterministic in case of
 			// ties.
 			mode := ""
