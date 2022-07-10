@@ -490,14 +490,6 @@ Options:
 -h|--help Show this message.
 
 ================================================================
-utf8-to-latin1
-Usage: mlr utf8-to-latin1, with no options.
-Recursively converts record strings from Latin-1 to UTF-8.
-For field-level control, please see the utf8_to_latin1 DSL function.
-Options:
--h|--help Show this message.
-
-================================================================
 least-frequent
 Usage: mlr least-frequent [options]
 Shows the least frequently occurring distinct values for specified field names.
@@ -1127,6 +1119,22 @@ https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
 for more information on EWMA.
 
 ================================================================
+summary
+Usage: mlr summary [options]
+Show summary statistics about the input data:
+  field_name field_type
+  min        p25            median   p75   max
+  count      mean           stddev
+  null_count distinct_count mode
+
+Notes:
+* Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
+* If the mode is not unique in the input data, the first-encountered value is reported as the mode.
+
+Options:
+-h|--help Show this message.
+
+================================================================
 tac
 Usage: mlr tac [options]
 Prints records in reverse order from the order in which they were encountered.
@@ -1189,6 +1197,14 @@ optionally by category. If -a is given, then the top records are emitted
 with the same fields as they appeared in the input. Without -a, only fields
 from -f, fields from -g, and the top-index field are emitted. For more information
 please see https://miller.readthedocs.io/en/latest/reference-verbs#top
+
+================================================================
+utf8-to-latin1
+Usage: mlr utf8-to-latin1, with no options.
+Recursively converts record strings from Latin-1 to UTF-8.
+For field-level control, please see the utf8_to_latin1 DSL function.
+Options:
+-h|--help Show this message.
 
 ================================================================
 unflatten
