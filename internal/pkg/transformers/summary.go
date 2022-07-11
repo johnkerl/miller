@@ -17,6 +17,72 @@ import (
 // ----------------------------------------------------------------
 const verbNameSummary = "summary"
 
+type tSummarizerInfo struct {
+	name string
+	help string
+}
+
+var summaryAllAccumulatorInfos = []tSummarizerInfo{
+	{"field_type", "string, int, etc. -- if a column has mixed types, all encountered types are printed"},
+	{"count", "+1 for every instance of the field across all records in the input record stream"},
+	{"sum", "sum of field values"},
+	{"mean", "mean of the field values"},
+	{"stddev", "standard deviation of the field values"},
+	{"var", "variance of the field values"},
+	{"skewness", "skewness of the field values"},
+	{"min", "minimum field value"},
+	{"p25", "first-quartile field value"},
+	{"median", "median field value"},
+	{"p75", "third-quartile field value"},
+	{"max", "maximum field value"},
+	{"iqr", "interquartile range: p75 - p25"},
+	{"lof", "lower outer fence: p25 - 3.0 * iqr"},
+	{"lif", "lower inner fence: p25 - 1.5 * iqr"},
+	{"uif", "upper inner fence: p75 + 1.5 * iqr"},
+	{"uof", "upper outer fence: p75 + 3.0 * iqr"},
+	{"null_count", "count of field values either empty string or JSON null"},
+	{"distinct_count", "count of distinct values for the field"},
+	{"mode", "most-frequently-occurring value for the field"},
+	{"minlen", "length of shortest string representation for the field"},
+	{"maxlen", "length of longest string representation for the field"},
+}
+
+var summaryAllAccumulatorNames = []string{
+	"field_type",
+	"count",
+	"sum",
+	"mean",
+	"stddev",
+	"var",
+	"skewness",
+	"min",
+	"p25",
+	"median",
+	"p75",
+	"max",
+	"iqr",
+	"lof",
+	"lif",
+	"uif",
+	"uof",
+	"null_count",
+	"distinct_count",
+	"mode",
+	"minlen",
+	"maxlen",
+}
+
+var summaryDefaultAccumulatorNames = []string{
+	"field_type",
+	"count",
+	"mean",
+	"min",
+	"median",
+	"max",
+	"null_count",
+	"distinct_count",
+}
+
 var SummarySetup = TransformerSetup{
 	Verb:         verbNameSummary,
 	UsageFunc:    transformerSummaryUsage,
@@ -28,22 +94,33 @@ func transformerSummaryUsage(
 	o *os.File,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameSummary)
-	fmt.Fprintf(o, `Show summary statistics about the input data:
-  field_name field_type
-  min        p25            median   p75   max
-  count      mean           stddev
-  null_count distinct_count mode
+	fmt.Fprintf(o, "Show summary statistics about the input data.\n")
 
-  TODO: defaults
-  TODO: -a foo,bar
-  TODO: --all
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "All summarizers:\n")
+	for _, info := range summaryAllAccumulatorInfos {
+		fmt.Fprintf(o, "  %-14s  %s\n", info.name, info.help)
+	}
 
-Notes:
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Default summarizers:\n")
+	fmt.Fprintf(o, " ")
+	for _, accumulatorName := range summaryDefaultAccumulatorNames {
+		fmt.Fprintf(o, " %s", accumulatorName)
+	}
+	fmt.Fprintf(o, "\n")
+
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, `Notes:
+* min, p25, median, p75, and max work for strings as well as numbers
 * Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
 * If the mode is not unique in the input data, the first-encountered value is reported as the mode.
 `)
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-a {mean,sum,etc.} Use only the specified summarizers.\n")
+	fmt.Fprintf(o, "-x {mean,sum,etc.} Use all summarizers, except the specified ones.\n")
+	fmt.Fprintf(o, "--all              Use all available summarizers.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 }
 
@@ -60,16 +137,11 @@ func transformerSummaryParseCLI(
 	verb := args[argi]
 	argi++
 
-	// defaults
-	accumulatorNames := []string{
-		"field_type",
-		"count",
-		"mean",
-		"min",
-		"median",
-		"max",
-		"null_count",
-		"distinct_count",
+	accumulatorNames := summaryDefaultAccumulatorNames
+
+	allAccumulatorNamesSet := make(map[string]bool)
+	for _, accumulatorName := range summaryAllAccumulatorNames {
+		allAccumulatorNamesSet[accumulatorName] = true
 	}
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -87,31 +159,41 @@ func transformerSummaryParseCLI(
 			os.Exit(0)
 
 		} else if opt == "--all" {
-			// XXX to top
-			accumulatorNames = []string{
-				"field_type",
-				"count",
-				"sum",
-				"mean",
-				"stddev",
-				"min",
-				"p25",
-				"median",
-				"p75",
-				"max",
-				"iqr",
-				"lof",
-				"lif",
-				"uif",
-				"uof",
-				"null_count",
-				"distinct_count",
-				"mode",
-			}
+			accumulatorNames = summaryAllAccumulatorNames
 
 		} else if opt == "-a" {
 			accumulatorNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
-			// xxx: abend if not contained in all-list
+			for _, accumulatorName := range accumulatorNames {
+				if !allAccumulatorNamesSet[accumulatorName] {
+					fmt.Fprintf(os.Stderr, "mlr %s: unrecognized accumulator name %s\n",
+						verb, accumulatorName,
+					)
+					os.Exit(1)
+				}
+			}
+
+		} else if opt == "-x" {
+			excludeAccumulatorNames := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			for _, excludeAccumulatorName := range excludeAccumulatorNames {
+				if !allAccumulatorNamesSet[excludeAccumulatorName] {
+					fmt.Fprintf(os.Stderr, "mlr %s: unrecognized accumulator name %s\n",
+						verb, excludeAccumulatorName,
+					)
+					os.Exit(1)
+				}
+			}
+
+			excludeAccumulatorNamesSet := make(map[string]bool)
+			for _, excludeAccumulatorName := range excludeAccumulatorNames {
+				excludeAccumulatorNamesSet[excludeAccumulatorName] = true
+			}
+
+			accumulatorNames = make([]string, 0)
+			for _, accumulatorName := range summaryAllAccumulatorNames {
+				if !excludeAccumulatorNamesSet[accumulatorName] {
+					accumulatorNames = append(accumulatorNames, accumulatorName)
+				}
+			}
 
 		} else {
 			transformerSummaryUsage(os.Stderr)
@@ -139,33 +221,43 @@ type tFieldSummary struct {
 	// This is a map (a set really) rather than a single value in case of heterogeneous data.
 	fieldTypesMap *lib.OrderedMap
 
-	countAccumulator  utils.IStats1Accumulator
-	sumAccumulator    utils.IStats1Accumulator
-	meanAccumulator   utils.IStats1Accumulator
-	stddevAccumulator utils.IStats1Accumulator
+	countAccumulator    utils.IStats1Accumulator
+	sumAccumulator      utils.IStats1Accumulator
+	meanAccumulator     utils.IStats1Accumulator
+	stddevAccumulator   utils.IStats1Accumulator
+	varAccumulator      utils.IStats1Accumulator
+	skewnessAccumulator utils.IStats1Accumulator
 
 	percentileKeeper *utils.PercentileKeeper
 
-	nullCount int64
+	nullCountAccumulator utils.IStats1Accumulator
 	// Needs lib.OrderedMap, not map[string]int64, for deterministic regression-test output.
 	// This is used for distinct_count (map length) as well as mode (max value in the map).
 	distincts *lib.OrderedMap
+
+	minlenAccumulator utils.IStats1Accumulator
+	maxlenAccumulator utils.IStats1Accumulator
 }
 
 func newFieldSummary() *tFieldSummary {
 	return &tFieldSummary{
 		fieldTypesMap: lib.NewOrderedMap(),
 
-		countAccumulator:  utils.NewStats1CountAccumulator(),
-		sumAccumulator:    utils.NewStats1SumAccumulator(),
-		meanAccumulator:   utils.NewStats1MeanAccumulator(),
-		stddevAccumulator: utils.NewStats1StddevAccumulator(),
+		countAccumulator:    utils.NewStats1CountAccumulator(),
+		sumAccumulator:      utils.NewStats1SumAccumulator(),
+		meanAccumulator:     utils.NewStats1MeanAccumulator(),
+		stddevAccumulator:   utils.NewStats1StddevAccumulator(),
+		varAccumulator:      utils.NewStats1VarAccumulator(),
+		skewnessAccumulator: utils.NewStats1SkewnessAccumulator(),
 
 		// Interpolated percentiles don't play well with string-valued input data
 		percentileKeeper: utils.NewPercentileKeeper(false),
 
-		nullCount: 0,
-		distincts: lib.NewOrderedMap(),
+		nullCountAccumulator: utils.NewStats1CountAccumulator(),
+		distincts:            lib.NewOrderedMap(),
+
+		minlenAccumulator: utils.NewStats1MinAccumulator(),
+		maxlenAccumulator: utils.NewStats1MaxAccumulator(),
 	}
 }
 
@@ -185,10 +277,12 @@ func NewTransformerSummary(
 		accumulatorNamesToEmit:   make(map[string]bool),
 	}
 
-	// xxx
+	// The accumulators we ingest are mostly the same as the ones we emit, except for dependencies.
+	// If they asked for iqr but not p25 or p75, we still need to *ingest* p25 and p75 in order to
+	// be able to *emit* iqr.
 	for _, accumulatorName := range accumulatorNames {
 		tr.accumulatorNamesToIngest[accumulatorName] = true
-		// Dependencies:
+
 		if accumulatorName == "iqr" {
 			tr.accumulatorNamesToIngest["p25"] = true
 			tr.accumulatorNamesToIngest["p75"] = true
@@ -257,11 +351,17 @@ func (tr *TransformerSummary) Transform(
 				if tr.accumulatorNamesToIngest["stddev"] {
 					fieldSummary.stddevAccumulator.Ingest(pe.Value)
 				}
+				if tr.accumulatorNamesToIngest["var"] {
+					fieldSummary.varAccumulator.Ingest(pe.Value)
+				}
+				if tr.accumulatorNamesToIngest["skewness"] {
+					fieldSummary.skewnessAccumulator.Ingest(pe.Value)
+				}
 			}
 
 			if tr.accumulatorNamesToIngest["null_count"] {
 				if pe.Value.IsNull() || pe.Value.IsVoid() {
-					fieldSummary.nullCount++
+					fieldSummary.nullCountAccumulator.Ingest(pe.Value)
 				}
 			}
 
@@ -273,6 +373,13 @@ func (tr *TransformerSummary) Transform(
 				} else {
 					fieldSummary.distincts.Put(valueString, iValue.(int64)+1)
 				}
+			}
+
+			if tr.accumulatorNamesToIngest["minlen"] {
+				fieldSummary.minlenAccumulator.Ingest(bifs.BIF_strlen(mlrval.FromString(pe.Value.OriginalString())))
+			}
+			if tr.accumulatorNamesToIngest["maxlen"] {
+				fieldSummary.maxlenAccumulator.Ingest(bifs.BIF_strlen(mlrval.FromString(pe.Value.OriginalString())))
 			}
 		}
 
@@ -309,10 +416,12 @@ func (tr *TransformerSummary) Transform(
 			if tr.accumulatorNamesToEmit["stddev"] {
 				newrec.PutCopy("stddev", fieldSummary.stddevAccumulator.Emit())
 			}
-			// TODO: variance
-			// TODO: skewness
-
-			// minlen/maxlen
+			if tr.accumulatorNamesToEmit["var"] {
+				newrec.PutCopy("var", fieldSummary.varAccumulator.Emit())
+			}
+			if tr.accumulatorNamesToEmit["skewness"] {
+				newrec.PutCopy("skewness", fieldSummary.skewnessAccumulator.Emit())
+			}
 
 			q1 := fieldSummary.percentileKeeper.Emit(25.0)
 			median := fieldSummary.percentileKeeper.Emit(50.0)
@@ -341,8 +450,6 @@ func (tr *TransformerSummary) Transform(
 				newrec.PutCopy("max", max)
 			}
 
-			// TODO: leave "" if float-count is zero ...
-
 			if tr.accumulatorNamesToEmit["iqr"] {
 				newrec.PutCopy("iqr", iqr)
 			}
@@ -351,7 +458,6 @@ func (tr *TransformerSummary) Transform(
 				newrec.PutCopy("lof", lof)
 			}
 			if tr.accumulatorNamesToEmit["lif"] {
-
 				lif := bifs.BIF_minus_binary(q1, bifs.BIF_times(inner_k, iqr))
 				newrec.PutCopy("lif", lif)
 			}
@@ -363,15 +469,8 @@ func (tr *TransformerSummary) Transform(
 				uof := bifs.BIF_plus_binary(q3, bifs.BIF_times(outer_k, iqr))
 				newrec.PutCopy("uof", uof)
 			}
-
-			// TODO: MOVE COMMENT
-			// iqr = q3 - q1
-			// lof/lif
-			// q1 - k*iqr, q3 + k*iqr k=1.5
-			// q1 - k*iqr, q3 + k*iqr k=3.0
-
 			if tr.accumulatorNamesToEmit["null_count"] {
-				newrec.PutCopy("null_count", mlrval.FromInt(fieldSummary.nullCount))
+				newrec.PutCopy("null_count", fieldSummary.nullCountAccumulator.Emit())
 			}
 			if tr.accumulatorNamesToEmit["distinct_count"] {
 				newrec.PutCopy("distinct_count", mlrval.FromInt(fieldSummary.distincts.FieldCount))
@@ -394,63 +493,18 @@ func (tr *TransformerSummary) Transform(
 				newrec.PutCopy("mode", mlrval.FromString(mode))
 			}
 
+			if tr.accumulatorNamesToEmit["minlen"] {
+				newrec.PutCopy("minlen", fieldSummary.minlenAccumulator.Emit())
+			}
+			if tr.accumulatorNamesToEmit["maxlen"] {
+				newrec.PutCopy("maxlen", fieldSummary.maxlenAccumulator.Emit())
+			}
+
 			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 		}
+
+		// TODO: xout ?
 
 		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
 }
-
-// field_name     a       b       i          x        y
-// field_type     string  string  int        float    float
-
-// count          0       0       10000      10000    10000
-// sum            0       0       50005000   4986.020 5062.057
-// mean           -       -       5000.500   0.499    0.506
-// stddev         -       -       2886.896   0.290    0.291
-// min            eks     eks     1          0.000    0.000
-// p25            hat     hat     2501       0.247    0.252
-// median         pan     pan     5001       0.501    0.506
-// p75            wye     wye     7501       0.748    0.764
-// max            zee     zee     10000      1.000    1.000
-// iqr            (error) (error) 5000       0.502    0.512
-// lof            (error) (error) -12499.000 -1.258   -1.283
-// lif            (error) (error) -4999.000  -0.506   -0.516
-// uif            (error) (error) 15001.000  1.500    1.532
-// uof            (error) (error) 22501.000  2.253    2.300
-// null_count     0       0       0          0        0
-// distinct_count 1       1       1          1        1
-// mode           string  string  int        float    float
-
-// defaults:
-
-// field_name
-// field_type
-// count
-// mean
-// min
-// median
-// max
-// null_count
-// distinct_count
-
-// all:
-// d field_name
-// d field_type
-// d count
-//   sum
-// d mean
-//   stddev
-// d min
-//   p25
-// d median
-//   p75
-// d max
-//   iqr -- needs p25 p75
-//   lof -- needs p25 p75 iqr
-//   lif -- needs p25 p75 iqr
-//   uif -- needs p25 p75 iqr
-//   uof -- needs p25 p75 iqr
-// d null_count
-// d distinct_count -- needs distincts
-//   mode -- needs distincts

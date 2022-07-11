@@ -1,6 +1,6 @@
-field_name field_type count min    p25    median p75    max    mean   stddev null_count distinct_count mode
-a          string     10    eks    eks    pan    wye    zee    -      -      0          1              string
-b          string     10    pan    pan    wye    wye    zee    -      -      0          1              string
-i          int        10    1      3      6      8      10     5.5000 3.0277 0          1              int
-x          float      10    0.0314 0.3468 0.5271 0.5986 0.7587 0.4536 0.2155 0          1              float
-y          float      10    0.1342 0.3383 0.7268 0.8636 0.9762 0.5945 0.3066 0          1              float
+field_name field_type count mean   min    median max    null_count distinct_count
+a          string     0     -      eks    pan    zee    0          5
+b          string     0     -      pan    wye    zee    0          3
+i          int        10    5.5000 1      6      10     0          10
+x          float      10    0.4536 0.0314 0.5271 0.7587 0          10
+y          float      10    0.5945 0.1342 0.7268 0.9762 0          10

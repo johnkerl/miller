@@ -22,6 +22,10 @@ RELEASES
 
   k --tsvlite
 
+mlr summary:
+o try xout
+o many more UTs
+
 $ mlr --from data/small --oxtab stats1 -f a -a stddev
 Internal coding error detected at file stats.go line 31
 

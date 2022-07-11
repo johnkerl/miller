@@ -1121,17 +1121,44 @@ for more information on EWMA.
 ================================================================
 summary
 Usage: mlr summary [options]
-Show summary statistics about the input data:
-  field_name field_type
-  min        p25            median   p75   max
-  count      mean           stddev
-  null_count distinct_count mode
+Show summary statistics about the input data.
+
+All summarizers:
+  field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed
+  count           +1 for every instance of the field across all records in the input record stream
+  sum             sum of field values
+  mean            mean of the field values
+  stddev          standard deviation of the field values
+  var             variance of the field values
+  skewness        skewness of the field values
+  min             minimum field value
+  p25             first-quartile field value
+  median          median field value
+  p75             third-quartile field value
+  max             maximum field value
+  iqr             interquartile range: p75 - p25
+  lof             lower outer fence: p25 - 3.0 * iqr
+  lif             lower inner fence: p25 - 1.5 * iqr
+  uif             upper inner fence: p75 + 1.5 * iqr
+  uof             upper outer fence: p75 + 3.0 * iqr
+  null_count      count of field values either empty string or JSON null
+  distinct_count  count of distinct values for the field
+  mode            most-frequently-occurring value for the field
+  minlen          length of shortest string representation for the field
+  maxlen          length of longest string representation for the field
+
+Default summarizers:
+  field_type count mean min median max null_count distinct_count
 
 Notes:
+* min, p25, median, p75, and max work for strings as well as numbers
 * Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
 * If the mode is not unique in the input data, the first-encountered value is reported as the mode.
 
 Options:
+-a {mean,sum,etc.} Use only the specified summarizers.
+-x {mean,sum,etc.} Use all summarizers, except the specified ones.
+--all              Use all available summarizers.
 -h|--help Show this message.
 
 ================================================================
