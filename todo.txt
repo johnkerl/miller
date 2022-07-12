@@ -5,26 +5,28 @@
 * https://squidfunk.github.io/mkdocs-material/setup/setting-up-versioning/
 
 RELEASES
-* 6.4.0 plan:
-  ! #982 ., etc
-  ! extended field accessors for #763 and #948 (positional & json.nested)
-  ! strict mode
-  ! awk-like exit
+* 6.4.0 ideas:
+  o emitv2
+  o pprint '-' on read
+  o csv check for empty field names
+  o mrpl exits ...
+  o opt-in type-infers for inf, true, etc
+  o #982 '.' ',' etc
+  o extended field accessors for #763 and #948 (positional & json.nested)
+  o strict mode
+  o awk-like exit
   o unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
   o mlr split -- needs an example page along with the tee DSL function
     - some mlr merge somehow -- ? would need a verb-API refactor
+  ? zlen csv?
   ? datediff et al.
   ? strmatch
   ? rank
   ? YAML
   ? #908 inferencing options
   ? gogll
+  ? transposed output
 
-  k --tsvlite
-
-mlr summary:
-o many more UTs
-o more doc examples
 
 ================================================================
 FEATURES
