@@ -6,9 +6,13 @@
 
 RELEASES
 * 6.4.0 ideas:
-  o emitv2
-  o pprint '-' on read
-  o csv check for empty field names
+
+  ! emitv2
+  ! pprint '-' on read
+  ! csv check for empty field names
+  ! strmatch
+  ! transposed output
+
   o mrpl exits ...
   o opt-in type-infers for inf, true, etc
   o #982 '.' ',' etc
@@ -18,14 +22,13 @@ RELEASES
   o unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
   o mlr split -- needs an example page along with the tee DSL function
     - some mlr merge somehow -- ? would need a verb-API refactor
+
   ? zlen csv?
   ? datediff et al.
-  ? strmatch
   ? rank
   ? YAML
   ? #908 inferencing options
   ? gogll
-  ? transposed output
 
 
 ================================================================
