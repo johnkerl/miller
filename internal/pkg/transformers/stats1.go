@@ -500,7 +500,9 @@ func (tr *TransformerStats1) ingestWithoutValueFieldRegexes(
 				// The accumulator has been initialized with default values;
 				// continue here. (If we were to continue outside of this loop
 				// we would be failing to construct the accumulator.)
-				continue
+				if accumulatorName != "null_count" {
+					continue
+				}
 			}
 			namedAccumulator.(*utils.Stats1NamedAccumulator).Ingest(valueFieldValue)
 		}

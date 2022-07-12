@@ -1,0 +1,1 @@
+mlr --c2x stats1 -a null_count,distinct_count -f a,b,c,d,e test/input/null-fields.csv

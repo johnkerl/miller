@@ -1,0 +1,10 @@
+a_null_count     2
+a_distinct_count 3
+b_null_count     3
+b_distinct_count 2
+c_null_count     4
+c_distinct_count 1
+d_null_count     3
+d_distinct_count 2
+e_null_count     2
+e_distinct_count 3
