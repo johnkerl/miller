@@ -39,6 +39,18 @@ var stats1AccumulatorInfos []stats1AccumulatorInfo = []stats1AccumulatorInfo{
 	},
 
 	{
+		"null_count",
+		"Count number of empty-string/JSON-null instances per field",
+		NewStats1NullCountAccumulator,
+	},
+
+	{
+		"distinct_count",
+		"Count number of distinct values per field",
+		NewStats1DistinctCountAccumulator,
+	},
+
+	{
 		"mode",
 		"Find most-frequently-occurring values for fields; first-found wins tie",
 		NewStats1ModeAccumulator,
@@ -96,6 +108,17 @@ var stats1AccumulatorInfos []stats1AccumulatorInfo = []stats1AccumulatorInfo{
 		"max",
 		"Compute maximum values of specified fields",
 		NewStats1MaxAccumulator,
+	},
+
+	{
+		"minlen",
+		"Compute minimum string-lengths of specified fields",
+		NewStats1MinLenAccumulator,
+	},
+	{
+		"maxlen",
+		"Compute maximum string-lengths of specified fields",
+		NewStats1MaxLenAccumulator,
 	},
 }
 
@@ -296,6 +319,57 @@ func (acc *Stats1CountAccumulator) Reset() {
 	acc.count = 0
 }
 
+// ================================================================
+type Stats1NullCountAccumulator struct {
+	count int64
+}
+
+func NewStats1NullCountAccumulator() IStats1Accumulator {
+	return &Stats1NullCountAccumulator{
+		count: 0,
+	}
+}
+func (acc *Stats1NullCountAccumulator) Ingest(value *mlrval.Mlrval) {
+	if value.IsVoid() || value.IsNull() {
+		acc.count++
+	}
+}
+func (acc *Stats1NullCountAccumulator) Emit() *mlrval.Mlrval {
+	return mlrval.FromInt(acc.count)
+}
+func (acc *Stats1NullCountAccumulator) Reset() {
+	acc.count = 0
+}
+
+// ================================================================
+// Stats1DistinctCountAccumulator determines distinctness by string values.
+// Here, 4.1 and 4.10 are counted as distinct values.
+type Stats1DistinctCountAccumulator struct {
+	// Needs lib.OrderedMap, not map[string]int64, for deterministic output.
+	distincts *lib.OrderedMap
+}
+
+func NewStats1DistinctCountAccumulator() IStats1Accumulator {
+	return &Stats1DistinctCountAccumulator{
+		distincts: lib.NewOrderedMap(),
+	}
+}
+func (acc *Stats1DistinctCountAccumulator) Ingest(value *mlrval.Mlrval) {
+	valueString := value.OriginalString()
+	iValue := acc.distincts.Get(valueString)
+	if iValue == nil {
+		acc.distincts.Put(valueString, int64(1))
+	} else {
+		acc.distincts.Put(valueString, iValue.(int64)+1)
+	}
+}
+func (acc *Stats1DistinctCountAccumulator) Emit() *mlrval.Mlrval {
+	return mlrval.FromInt(acc.distincts.FieldCount)
+}
+func (acc *Stats1DistinctCountAccumulator) Reset() {
+	acc.distincts = lib.NewOrderedMap()
+}
+
 // ----------------------------------------------------------------
 type Stats1ModeAccumulator struct {
 	// Needs to be an ordered map to guarantee Miller's semantics that
@@ -389,7 +463,9 @@ func NewStats1SumAccumulator() IStats1Accumulator {
 	}
 }
 func (acc *Stats1SumAccumulator) Ingest(value *mlrval.Mlrval) {
-	acc.sum = bifs.BIF_plus_binary(acc.sum, value)
+	if value.IsNumeric() {
+		acc.sum = bifs.BIF_plus_binary(acc.sum, value)
+	}
 }
 func (acc *Stats1SumAccumulator) Emit() *mlrval.Mlrval {
 	return acc.sum.Copy()
@@ -411,8 +487,10 @@ func NewStats1MeanAccumulator() IStats1Accumulator {
 	}
 }
 func (acc *Stats1MeanAccumulator) Ingest(value *mlrval.Mlrval) {
-	acc.sum = bifs.BIF_plus_binary(acc.sum, value)
-	acc.count++
+	if value.IsNumeric() {
+		acc.sum = bifs.BIF_plus_binary(acc.sum, value)
+		acc.count++
+	}
 }
 func (acc *Stats1MeanAccumulator) Emit() *mlrval.Mlrval {
 	if acc.count == 0 {
@@ -475,6 +553,46 @@ func (acc *Stats1MaxAccumulator) Reset() {
 }
 
 // ----------------------------------------------------------------
+type Stats1MinLenAccumulator struct {
+	minacc IStats1Accumulator
+}
+
+func NewStats1MinLenAccumulator() IStats1Accumulator {
+	return &Stats1MinLenAccumulator{
+		minacc: NewStats1MinAccumulator(),
+	}
+}
+func (acc *Stats1MinLenAccumulator) Ingest(value *mlrval.Mlrval) {
+	acc.minacc.Ingest(mlrval.FromInt(lib.UTF8Strlen(value.OriginalString())))
+}
+func (acc *Stats1MinLenAccumulator) Emit() *mlrval.Mlrval {
+	return acc.minacc.Emit()
+}
+func (acc *Stats1MinLenAccumulator) Reset() {
+	acc.minacc = NewStats1MinAccumulator()
+}
+
+// ----------------------------------------------------------------
+type Stats1MaxLenAccumulator struct {
+	maxacc IStats1Accumulator
+}
+
+func NewStats1MaxLenAccumulator() IStats1Accumulator {
+	return &Stats1MaxLenAccumulator{
+		maxacc: NewStats1MaxAccumulator(),
+	}
+}
+func (acc *Stats1MaxLenAccumulator) Ingest(value *mlrval.Mlrval) {
+	acc.maxacc.Ingest(mlrval.FromInt(lib.UTF8Strlen(value.OriginalString())))
+}
+func (acc *Stats1MaxLenAccumulator) Emit() *mlrval.Mlrval {
+	return acc.maxacc.Emit()
+}
+func (acc *Stats1MaxLenAccumulator) Reset() {
+	acc.maxacc = NewStats1MaxAccumulator()
+}
+
+// ----------------------------------------------------------------
 type Stats1VarAccumulator struct {
 	count int64
 	sum   *mlrval.Mlrval
@@ -489,10 +607,12 @@ func NewStats1VarAccumulator() IStats1Accumulator {
 	}
 }
 func (acc *Stats1VarAccumulator) Ingest(value *mlrval.Mlrval) {
-	value2 := bifs.BIF_times(value, value)
-	acc.count++
-	acc.sum = bifs.BIF_plus_binary(acc.sum, value)
-	acc.sum2 = bifs.BIF_plus_binary(acc.sum2, value2)
+	if value.IsNumeric() {
+		value2 := bifs.BIF_times(value, value)
+		acc.count++
+		acc.sum = bifs.BIF_plus_binary(acc.sum, value)
+		acc.sum2 = bifs.BIF_plus_binary(acc.sum2, value2)
+	}
 }
 func (acc *Stats1VarAccumulator) Emit() *mlrval.Mlrval {
 	return bifs.BIF_get_var(mlrval.FromInt(acc.count), acc.sum, acc.sum2)
@@ -518,10 +638,12 @@ func NewStats1StddevAccumulator() IStats1Accumulator {
 	}
 }
 func (acc *Stats1StddevAccumulator) Ingest(value *mlrval.Mlrval) {
-	value2 := bifs.BIF_times(value, value)
-	acc.count++
-	acc.sum = bifs.BIF_plus_binary(acc.sum, value)
-	acc.sum2 = bifs.BIF_plus_binary(acc.sum2, value2)
+	if value.IsNumeric() {
+		value2 := bifs.BIF_times(value, value)
+		acc.count++
+		acc.sum = bifs.BIF_plus_binary(acc.sum, value)
+		acc.sum2 = bifs.BIF_plus_binary(acc.sum2, value2)
+	}
 }
 func (acc *Stats1StddevAccumulator) Emit() *mlrval.Mlrval {
 	return bifs.BIF_get_stddev(mlrval.FromInt(acc.count), acc.sum, acc.sum2)
@@ -547,10 +669,12 @@ func NewStats1MeanEBAccumulator() IStats1Accumulator {
 	}
 }
 func (acc *Stats1MeanEBAccumulator) Ingest(value *mlrval.Mlrval) {
-	value2 := bifs.BIF_times(value, value)
-	acc.count++
-	acc.sum = bifs.BIF_plus_binary(acc.sum, value)
-	acc.sum2 = bifs.BIF_plus_binary(acc.sum2, value2)
+	if value.IsNumeric() {
+		value2 := bifs.BIF_times(value, value)
+		acc.count++
+		acc.sum = bifs.BIF_plus_binary(acc.sum, value)
+		acc.sum2 = bifs.BIF_plus_binary(acc.sum2, value2)
+	}
 }
 func (acc *Stats1MeanEBAccumulator) Emit() *mlrval.Mlrval {
 	mcount := mlrval.FromInt(acc.count)
@@ -579,12 +703,14 @@ func NewStats1SkewnessAccumulator() IStats1Accumulator {
 	}
 }
 func (acc *Stats1SkewnessAccumulator) Ingest(value *mlrval.Mlrval) {
-	value2 := bifs.BIF_times(value, value)
-	value3 := bifs.BIF_times(value, value2)
-	acc.count++
-	acc.sum = bifs.BIF_plus_binary(acc.sum, value)
-	acc.sum2 = bifs.BIF_plus_binary(acc.sum2, value2)
-	acc.sum3 = bifs.BIF_plus_binary(acc.sum3, value3)
+	if value.IsNumeric() {
+		value2 := bifs.BIF_times(value, value)
+		value3 := bifs.BIF_times(value, value2)
+		acc.count++
+		acc.sum = bifs.BIF_plus_binary(acc.sum, value)
+		acc.sum2 = bifs.BIF_plus_binary(acc.sum2, value2)
+		acc.sum3 = bifs.BIF_plus_binary(acc.sum3, value3)
+	}
 }
 func (acc *Stats1SkewnessAccumulator) Emit() *mlrval.Mlrval {
 	mcount := mlrval.FromInt(acc.count)
@@ -616,14 +742,16 @@ func NewStats1KurtosisAccumulator() IStats1Accumulator {
 	}
 }
 func (acc *Stats1KurtosisAccumulator) Ingest(value *mlrval.Mlrval) {
-	value2 := bifs.BIF_times(value, value)
-	value3 := bifs.BIF_times(value, value2)
-	value4 := bifs.BIF_times(value, value3)
-	acc.count++
-	acc.sum = bifs.BIF_plus_binary(acc.sum, value)
-	acc.sum2 = bifs.BIF_plus_binary(acc.sum2, value2)
-	acc.sum3 = bifs.BIF_plus_binary(acc.sum3, value3)
-	acc.sum4 = bifs.BIF_plus_binary(acc.sum4, value4)
+	if value.IsNumeric() {
+		value2 := bifs.BIF_times(value, value)
+		value3 := bifs.BIF_times(value, value2)
+		value4 := bifs.BIF_times(value, value3)
+		acc.count++
+		acc.sum = bifs.BIF_plus_binary(acc.sum, value)
+		acc.sum2 = bifs.BIF_plus_binary(acc.sum2, value2)
+		acc.sum3 = bifs.BIF_plus_binary(acc.sum3, value3)
+		acc.sum4 = bifs.BIF_plus_binary(acc.sum4, value4)
+	}
 }
 func (acc *Stats1KurtosisAccumulator) Emit() *mlrval.Mlrval {
 	mcount := mlrval.FromInt(acc.count)

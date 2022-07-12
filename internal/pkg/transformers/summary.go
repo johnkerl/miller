@@ -6,7 +6,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
@@ -17,62 +16,50 @@ import (
 // ----------------------------------------------------------------
 const verbNameSummary = "summary"
 
+type tSummarizerType int
+
+const (
+	stFieldType = iota
+	stAccumulator
+	stPercentile
+)
+
 type tSummarizerInfo struct {
-	name string
-	help string
+	name  string
+	help  string
+	stype tSummarizerType
 }
 
-var summaryAllAccumulatorInfos = []tSummarizerInfo{
-	{"field_type", "string, int, etc. -- if a column has mixed types, all encountered types are printed"},
-	{"count", "+1 for every instance of the field across all records in the input record stream"},
-	{"sum", "sum of field values"},
-	{"mean", "mean of the field values"},
-	{"stddev", "standard deviation of the field values"},
-	{"var", "variance of the field values"},
-	{"skewness", "skewness of the field values"},
-	{"min", "minimum field value"},
-	{"p25", "first-quartile field value"},
-	{"median", "median field value"},
-	{"p75", "third-quartile field value"},
-	{"max", "maximum field value"},
-	{"iqr", "interquartile range: p75 - p25"},
-	{"lof", "lower outer fence: p25 - 3.0 * iqr"},
-	{"lif", "lower inner fence: p25 - 1.5 * iqr"},
-	{"uif", "upper inner fence: p75 + 1.5 * iqr"},
-	{"uof", "upper outer fence: p75 + 3.0 * iqr"},
-	{"null_count", "count of field values either empty string or JSON null"},
-	{"distinct_count", "count of distinct values for the field"},
-	{"mode", "most-frequently-occurring value for the field"},
-	{"minlen", "length of shortest string representation for the field"},
-	{"maxlen", "length of longest string representation for the field"},
+var allSummarizerInfos = []tSummarizerInfo{
+	{"field_type", "string, int, etc. -- if a column has mixed types, all encountered types are printed", stFieldType},
+
+	{"count", "+1 for every instance of the field across all records in the input record stream", stAccumulator},
+	{"null_count", "count of field values either empty string or JSON null", stAccumulator},
+	{"distinct_count", "count of distinct values for the field", stAccumulator},
+	{"mode", "most-frequently-occurring value for the field", stAccumulator},
+
+	{"sum", "sum of field values", stAccumulator},
+	{"mean", "mean of the field values", stAccumulator},
+	{"stddev", "standard deviation of the field values", stAccumulator},
+	{"var", "variance of the field values", stAccumulator},
+	{"skewness", "skewness of the field values", stAccumulator},
+
+	{"minlen", "length of shortest string representation for the field", stAccumulator},
+	{"maxlen", "length of longest string representation for the field", stAccumulator},
+
+	{"min", "minimum field value", stPercentile},
+	{"p25", "first-quartile field value", stPercentile},
+	{"median", "median field value", stPercentile},
+	{"p75", "third-quartile field value", stPercentile},
+	{"max", "maximum field value", stPercentile},
+	{"iqr", "interquartile range: p75 - p25", stPercentile},
+	{"lof", "lower outer fence: p25 - 3.0 * iqr", stPercentile},
+	{"lif", "lower inner fence: p25 - 1.5 * iqr", stPercentile},
+	{"uif", "upper inner fence: p75 + 1.5 * iqr", stPercentile},
+	{"uof", "upper outer fence: p75 + 3.0 * iqr", stPercentile},
 }
 
-var summaryAllAccumulatorNames = []string{
-	"field_type",
-	"count",
-	"sum",
-	"mean",
-	"stddev",
-	"var",
-	"skewness",
-	"min",
-	"p25",
-	"median",
-	"p75",
-	"max",
-	"iqr",
-	"lof",
-	"lif",
-	"uif",
-	"uof",
-	"null_count",
-	"distinct_count",
-	"mode",
-	"minlen",
-	"maxlen",
-}
-
-var summaryDefaultAccumulatorNames = []string{
+var summaryDefaultSummarizerNames = []string{
 	"field_type",
 	"count",
 	"mean",
@@ -98,24 +85,23 @@ func transformerSummaryUsage(
 
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "All summarizers:\n")
-	for _, info := range summaryAllAccumulatorInfos {
+	for _, info := range allSummarizerInfos {
 		fmt.Fprintf(o, "  %-14s  %s\n", info.name, info.help)
 	}
 
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Default summarizers:\n")
 	fmt.Fprintf(o, " ")
-	for _, accumulatorName := range summaryDefaultAccumulatorNames {
-		fmt.Fprintf(o, " %s", accumulatorName)
+	for _, summarizerName := range summaryDefaultSummarizerNames {
+		fmt.Fprintf(o, " %s", summarizerName)
 	}
 	fmt.Fprintf(o, "\n")
 
 	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, `Notes:
-* min, p25, median, p75, and max work for strings as well as numbers
-* Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
-* If the mode is not unique in the input data, the first-encountered value is reported as the mode.
-`)
+	fmt.Fprintf(o, "Notes:\n")
+	fmt.Fprintf(o, "* min, p25, median, p75, and max work for strings as well as numbers\n")
+	fmt.Fprintf(o, "* Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.\n")
+	fmt.Fprintf(o, "* If the mode is not unique in the input data, the first-encountered value is reported as the mode.\n")
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-a {mean,sum,etc.} Use only the specified summarizers.\n")
@@ -137,12 +123,19 @@ func transformerSummaryParseCLI(
 	verb := args[argi]
 	argi++
 
-	accumulatorNames := summaryDefaultAccumulatorNames
+	summarizerNames := summaryDefaultSummarizerNames
 
-	allAccumulatorNamesSet := make(map[string]bool)
-	for _, accumulatorName := range summaryAllAccumulatorNames {
-		allAccumulatorNamesSet[accumulatorName] = true
+	allSummarizerNamesList := make([]string, len(allSummarizerInfos))
+	for i, info := range allSummarizerInfos {
+		allSummarizerNamesList[i] = info.name
 	}
+
+	allSummarizerNamesSet := make(map[string]bool)
+	for _, summarizerName := range allSummarizerNamesList {
+		allSummarizerNamesSet[summarizerName] = true
+	}
+
+	transposeOutput := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
@@ -159,41 +152,44 @@ func transformerSummaryParseCLI(
 			os.Exit(0)
 
 		} else if opt == "--all" {
-			accumulatorNames = summaryAllAccumulatorNames
+			summarizerNames = allSummarizerNamesList
 
 		} else if opt == "-a" {
-			accumulatorNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
-			for _, accumulatorName := range accumulatorNames {
-				if !allAccumulatorNamesSet[accumulatorName] {
-					fmt.Fprintf(os.Stderr, "mlr %s: unrecognized accumulator name %s\n",
-						verb, accumulatorName,
+			summarizerNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			for _, summarizerName := range summarizerNames {
+				if !allSummarizerNamesSet[summarizerName] {
+					fmt.Fprintf(os.Stderr, "mlr %s: unrecognized summarizer name %s\n",
+						verb, summarizerName,
 					)
 					os.Exit(1)
 				}
 			}
 
 		} else if opt == "-x" {
-			excludeAccumulatorNames := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
-			for _, excludeAccumulatorName := range excludeAccumulatorNames {
-				if !allAccumulatorNamesSet[excludeAccumulatorName] {
-					fmt.Fprintf(os.Stderr, "mlr %s: unrecognized accumulator name %s\n",
-						verb, excludeAccumulatorName,
+			excludeSummarizerNames := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			for _, excludeSummarizerName := range excludeSummarizerNames {
+				if !allSummarizerNamesSet[excludeSummarizerName] {
+					fmt.Fprintf(os.Stderr, "mlr %s: unrecognized Summarizer name %s\n",
+						verb, excludeSummarizerName,
 					)
 					os.Exit(1)
 				}
 			}
 
-			excludeAccumulatorNamesSet := make(map[string]bool)
-			for _, excludeAccumulatorName := range excludeAccumulatorNames {
-				excludeAccumulatorNamesSet[excludeAccumulatorName] = true
+			excludeSummarizerNamesSet := make(map[string]bool)
+			for _, excludeSummarizerName := range excludeSummarizerNames {
+				excludeSummarizerNamesSet[excludeSummarizerName] = true
 			}
 
-			accumulatorNames = make([]string, 0)
-			for _, accumulatorName := range summaryAllAccumulatorNames {
-				if !excludeAccumulatorNamesSet[accumulatorName] {
-					accumulatorNames = append(accumulatorNames, accumulatorName)
+			summarizerNames = make([]string, 0)
+			for _, summarizerName := range allSummarizerNamesList {
+				if !excludeSummarizerNamesSet[summarizerName] {
+					summarizerNames = append(summarizerNames, summarizerName)
 				}
 			}
+
+		} else if opt == "--transpose" {
+			transposeOutput = true
 
 		} else {
 			transformerSummaryUsage(os.Stderr)
@@ -206,7 +202,7 @@ func transformerSummaryParseCLI(
 		return nil
 	}
 
-	transformer, err := NewTransformerSummary(accumulatorNames)
+	transformer, err := NewTransformerSummary(summarizerNames, transposeOutput)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -221,78 +217,69 @@ type tFieldSummary struct {
 	// This is a map (a set really) rather than a single value in case of heterogeneous data.
 	fieldTypesMap *lib.OrderedMap
 
-	countAccumulator    utils.IStats1Accumulator
-	sumAccumulator      utils.IStats1Accumulator
-	meanAccumulator     utils.IStats1Accumulator
-	stddevAccumulator   utils.IStats1Accumulator
-	varAccumulator      utils.IStats1Accumulator
-	skewnessAccumulator utils.IStats1Accumulator
+	accumulators map[string]utils.IStats1Accumulator
 
 	percentileKeeper *utils.PercentileKeeper
-
-	nullCountAccumulator utils.IStats1Accumulator
-	// Needs lib.OrderedMap, not map[string]int64, for deterministic regression-test output.
-	// This is used for distinct_count (map length) as well as mode (max value in the map).
-	distincts *lib.OrderedMap
-
-	minlenAccumulator utils.IStats1Accumulator
-	maxlenAccumulator utils.IStats1Accumulator
 }
 
 func newFieldSummary() *tFieldSummary {
-	return &tFieldSummary{
+	fieldSummary := &tFieldSummary{
 		fieldTypesMap: lib.NewOrderedMap(),
 
-		countAccumulator:    utils.NewStats1CountAccumulator(),
-		sumAccumulator:      utils.NewStats1SumAccumulator(),
-		meanAccumulator:     utils.NewStats1MeanAccumulator(),
-		stddevAccumulator:   utils.NewStats1StddevAccumulator(),
-		varAccumulator:      utils.NewStats1VarAccumulator(),
-		skewnessAccumulator: utils.NewStats1SkewnessAccumulator(),
+		accumulators: make(map[string]utils.IStats1Accumulator),
 
 		// Interpolated percentiles don't play well with string-valued input data
 		percentileKeeper: utils.NewPercentileKeeper(false),
-
-		nullCountAccumulator: utils.NewStats1CountAccumulator(),
-		distincts:            lib.NewOrderedMap(),
-
-		minlenAccumulator: utils.NewStats1MinAccumulator(),
-		maxlenAccumulator: utils.NewStats1MaxAccumulator(),
 	}
+
+	fieldSummary.accumulators["count"] = utils.NewStats1CountAccumulator()
+	fieldSummary.accumulators["null_count"] = utils.NewStats1NullCountAccumulator()
+	fieldSummary.accumulators["distinct_count"] = utils.NewStats1DistinctCountAccumulator()
+	fieldSummary.accumulators["mode"] = utils.NewStats1ModeAccumulator()
+
+	fieldSummary.accumulators["sum"] = utils.NewStats1SumAccumulator()
+	fieldSummary.accumulators["mean"] = utils.NewStats1MeanAccumulator()
+	fieldSummary.accumulators["stddev"] = utils.NewStats1StddevAccumulator()
+	fieldSummary.accumulators["var"] = utils.NewStats1VarAccumulator()
+	fieldSummary.accumulators["skewness"] = utils.NewStats1SkewnessAccumulator()
+
+	fieldSummary.accumulators["minlen"] = utils.NewStats1MinLenAccumulator()
+	fieldSummary.accumulators["maxlen"] = utils.NewStats1MaxLenAccumulator()
+
+	return fieldSummary
 }
 
 type TransformerSummary struct {
-	fieldSummaries           *lib.OrderedMap
-	accumulatorNamesToIngest map[string]bool
-	accumulatorNamesToEmit   map[string]bool
+	fieldSummaries    *lib.OrderedMap
+	summarizerNames   map[string]bool
+	hasAnyPercentiles bool
+	transposeOutput   bool
 }
 
 func NewTransformerSummary(
-	accumulatorNames []string,
+	summarizerNames []string,
+	transposeOutput bool,
 ) (*TransformerSummary, error) {
 
 	tr := &TransformerSummary{
-		fieldSummaries:           lib.NewOrderedMap(),
-		accumulatorNamesToIngest: make(map[string]bool),
-		accumulatorNamesToEmit:   make(map[string]bool),
+		fieldSummaries:  lib.NewOrderedMap(),
+		summarizerNames: make(map[string]bool),
+		transposeOutput: transposeOutput,
 	}
 
-	// The accumulators we ingest are mostly the same as the ones we emit, except for dependencies.
-	// If they asked for iqr but not p25 or p75, we still need to *ingest* p25 and p75 in order to
-	// be able to *emit* iqr.
-	for _, accumulatorName := range accumulatorNames {
-		tr.accumulatorNamesToIngest[accumulatorName] = true
+	for _, summarizerName := range summarizerNames {
+		tr.summarizerNames[summarizerName] = true
+	}
 
-		if accumulatorName == "iqr" {
-			tr.accumulatorNamesToIngest["p25"] = true
-			tr.accumulatorNamesToIngest["p75"] = true
-		} else if accumulatorName == "lof" || accumulatorName == "lif" || accumulatorName == "uif" || accumulatorName == "uof" {
-			tr.accumulatorNamesToIngest["p25"] = true
-			tr.accumulatorNamesToIngest["p75"] = true
-			tr.accumulatorNamesToIngest["iqr"] = true
+	// Different percentile summarizers share the same data structure.
+	// If no percentile summarizers are requested, don't ingest percentiles.
+	// This is to help running out of memory for large input data files.
+	tr.hasAnyPercentiles = false
+	for _, info := range allSummarizerInfos {
+		if info.stype == stPercentile && tr.summarizerNames[info.name] {
+			tr.hasAnyPercentiles = true
+			break
 		}
-
-		tr.accumulatorNamesToEmit[accumulatorName] = true
 	}
 
 	return tr, nil
@@ -307,204 +294,169 @@ func (tr *TransformerSummary) Transform(
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-
 	if !inrecAndContext.EndOfStream {
-		// Ingest another record
-		inrec := inrecAndContext.Record
+		tr.ingest(inrecAndContext)
+	} else {
+		if tr.transposeOutput {
+			tr.emitTransposed(inrecAndContext, outputRecordsAndContexts)
+		} else {
+			tr.emit(inrecAndContext, outputRecordsAndContexts)
+		}
+	}
+}
 
-		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			fieldName := pe.Key
+func (tr *TransformerSummary) ingest(
+	inrecAndContext *types.RecordAndContext,
+) {
+	inrec := inrecAndContext.Record
 
-			iFieldSummary := tr.fieldSummaries.Get(fieldName)
-			var fieldSummary *tFieldSummary
-			if iFieldSummary == nil {
-				fieldSummary = newFieldSummary()
-				tr.fieldSummaries.Put(fieldName, fieldSummary)
-			} else {
-				fieldSummary = iFieldSummary.(*tFieldSummary)
-			}
+	for pe := inrec.Head; pe != nil; pe = pe.Next {
+		fieldName := pe.Key
 
+		iFieldSummary := tr.fieldSummaries.Get(fieldName)
+		var fieldSummary *tFieldSummary
+		if iFieldSummary == nil {
+			fieldSummary = newFieldSummary()
+			tr.fieldSummaries.Put(fieldName, fieldSummary)
+		} else {
+			fieldSummary = iFieldSummary.(*tFieldSummary)
+		}
+
+		if tr.summarizerNames["field_type"] {
 			// Go generics would be grand to put into lib.OrderedMap, but not all platforms
 			// are on recent enough Go compiler versions.
-			if tr.accumulatorNamesToIngest["field_type"] {
-				typeName := pe.Value.GetTypeName()
-				iValue := fieldSummary.fieldTypesMap.Get(typeName)
-				if iValue == nil {
-					fieldSummary.fieldTypesMap.Put(typeName, int64(1))
-				} else {
-					fieldSummary.fieldTypesMap.Put(typeName, iValue.(int64)+1)
-				}
+			typeName := pe.Value.GetTypeName()
+			iValue := fieldSummary.fieldTypesMap.Get(typeName)
+			if iValue == nil {
+				fieldSummary.fieldTypesMap.Put(typeName, int64(1))
+			} else {
+				fieldSummary.fieldTypesMap.Put(typeName, iValue.(int64)+1)
 			}
+		}
 
+		for _, info := range allSummarizerInfos {
+			if info.stype == stAccumulator && tr.summarizerNames[info.name] {
+				fieldSummary.accumulators[info.name].Ingest(pe.Value)
+			}
+		}
+
+		if tr.hasAnyPercentiles {
 			fieldSummary.percentileKeeper.Ingest(pe.Value)
+		}
+	}
+}
 
-			if pe.Value.IsNumeric() {
-				if tr.accumulatorNamesToIngest["count"] {
-					fieldSummary.countAccumulator.Ingest(pe.Value)
-				}
-				if tr.accumulatorNamesToIngest["sum"] {
-					fieldSummary.sumAccumulator.Ingest(pe.Value)
-				}
-				if tr.accumulatorNamesToIngest["mean"] {
-					fieldSummary.meanAccumulator.Ingest(pe.Value)
-				}
-				if tr.accumulatorNamesToIngest["stddev"] {
-					fieldSummary.stddevAccumulator.Ingest(pe.Value)
-				}
-				if tr.accumulatorNamesToIngest["var"] {
-					fieldSummary.varAccumulator.Ingest(pe.Value)
-				}
-				if tr.accumulatorNamesToIngest["skewness"] {
-					fieldSummary.skewnessAccumulator.Ingest(pe.Value)
-				}
-			}
+func (tr *TransformerSummary) emit(
+	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+) {
 
-			if tr.accumulatorNamesToIngest["null_count"] {
-				if pe.Value.IsNull() || pe.Value.IsVoid() {
-					fieldSummary.nullCountAccumulator.Ingest(pe.Value)
-				}
-			}
+	for pe := tr.fieldSummaries.Head; pe != nil; pe = pe.Next {
+		newrec := mlrval.NewMlrmapAsRecord()
+		fieldName := pe.Key
+		fieldSummary := pe.Value.(*tFieldSummary)
 
-			if tr.accumulatorNamesToIngest["distinct_count"] || tr.accumulatorNamesToIngest["mode"] {
-				valueString := pe.Value.String()
-				iValue := fieldSummary.distincts.Get(valueString)
-				if iValue == nil {
-					fieldSummary.distincts.Put(valueString, int64(1))
-				} else {
-					fieldSummary.distincts.Put(valueString, iValue.(int64)+1)
-				}
-			}
+		newrec.PutCopy("field_name", mlrval.FromString(fieldName))
 
-			if tr.accumulatorNamesToIngest["minlen"] {
-				fieldSummary.minlenAccumulator.Ingest(bifs.BIF_strlen(mlrval.FromString(pe.Value.OriginalString())))
+		// Display field type(s) for this column as a list of string, hyphen-joined into a single string.
+		if tr.summarizerNames["field_type"] {
+			fieldTypesList := make([]string, fieldSummary.fieldTypesMap.FieldCount)
+			i := 0
+			for pf := fieldSummary.fieldTypesMap.Head; pf != nil; pf = pf.Next {
+				fieldType := pf.Key
+				fieldTypesList[i] = fieldType
+				i++
 			}
-			if tr.accumulatorNamesToIngest["maxlen"] {
-				fieldSummary.maxlenAccumulator.Ingest(bifs.BIF_strlen(mlrval.FromString(pe.Value.OriginalString())))
+			newrec.PutCopy("field_type", mlrval.FromString(strings.Join(fieldTypesList, "-")))
+		}
+
+		for _, info := range allSummarizerInfos {
+			if info.stype == stAccumulator {
+				if tr.summarizerNames[info.name] {
+					newrec.PutCopy(info.name, fieldSummary.accumulators[info.name].Emit())
+				}
+			} else if info.stype == stPercentile {
+				if tr.summarizerNames[info.name] {
+					newrec.PutCopy(info.name, fieldSummary.percentileKeeper.EmitNamed(info.name))
+				}
 			}
 		}
 
-	} else {
-		// Emit results at end of record stream
+		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+	}
+
+	outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+}
+
+func (tr *TransformerSummary) emitTransposed(
+	inrecAndContext *types.RecordAndContext,
+	oracs *list.List, // list of *types.RecordAndContext
+) {
+	octx := &inrecAndContext.Context
+
+	// Display field type(s) for this column as a list of string, hyphen-joined into a single string.
+	if tr.summarizerNames["field_type"] {
+		newrec := mlrval.NewMlrmapAsRecord()
+		newrec.PutCopy("field_name", mlrval.FromString("field_type"))
 		for pe := tr.fieldSummaries.Head; pe != nil; pe = pe.Next {
-			newrec := mlrval.NewMlrmapAsRecord()
-			fieldName := pe.Key
 			fieldSummary := pe.Value.(*tFieldSummary)
-
-			newrec.PutCopy("field_name", mlrval.FromString(fieldName))
-
-			// Display field type(s) for this column as a list of string, hyphen-joined into a single string.
-			if tr.accumulatorNamesToEmit["field_type"] {
-				fieldTypesList := make([]string, fieldSummary.fieldTypesMap.FieldCount)
-				i := 0
-				for pf := fieldSummary.fieldTypesMap.Head; pf != nil; pf = pf.Next {
-					fieldType := pf.Key
-					fieldTypesList[i] = fieldType
-					i++
-				}
-				newrec.PutCopy("field_type", mlrval.FromString(strings.Join(fieldTypesList, "-")))
+			fieldTypesList := make([]string, fieldSummary.fieldTypesMap.FieldCount)
+			i := 0
+			for pf := fieldSummary.fieldTypesMap.Head; pf != nil; pf = pf.Next {
+				fieldType := pf.Key
+				fieldTypesList[i] = fieldType
+				i++
 			}
-
-			if tr.accumulatorNamesToEmit["count"] {
-				newrec.PutCopy("count", fieldSummary.countAccumulator.Emit())
-			}
-			if tr.accumulatorNamesToEmit["sum"] {
-				newrec.PutCopy("sum", fieldSummary.sumAccumulator.Emit())
-			}
-			if tr.accumulatorNamesToEmit["mean"] {
-				newrec.PutCopy("mean", fieldSummary.meanAccumulator.Emit())
-			}
-			if tr.accumulatorNamesToEmit["stddev"] {
-				newrec.PutCopy("stddev", fieldSummary.stddevAccumulator.Emit())
-			}
-			if tr.accumulatorNamesToEmit["var"] {
-				newrec.PutCopy("var", fieldSummary.varAccumulator.Emit())
-			}
-			if tr.accumulatorNamesToEmit["skewness"] {
-				newrec.PutCopy("skewness", fieldSummary.skewnessAccumulator.Emit())
-			}
-
-			q1 := fieldSummary.percentileKeeper.Emit(25.0)
-			median := fieldSummary.percentileKeeper.Emit(50.0)
-			q3 := fieldSummary.percentileKeeper.Emit(75.0)
-			max := fieldSummary.percentileKeeper.Emit(100.0)
-
-			iqr := bifs.BIF_minus_binary(q3, q1)
-			inner_k := mlrval.FromFloat(1.5)
-			outer_k := mlrval.FromFloat(3.0)
-
-			if tr.accumulatorNamesToEmit["min"] {
-				min := fieldSummary.percentileKeeper.Emit(0.0)
-				newrec.PutCopy("min", min)
-			}
-
-			if tr.accumulatorNamesToEmit["p25"] {
-				newrec.PutCopy("p25", q1)
-			}
-			if tr.accumulatorNamesToEmit["median"] {
-				newrec.PutCopy("median", median)
-			}
-			if tr.accumulatorNamesToEmit["p75"] {
-				newrec.PutCopy("p75", q3)
-			}
-			if tr.accumulatorNamesToEmit["max"] {
-				newrec.PutCopy("max", max)
-			}
-
-			if tr.accumulatorNamesToEmit["iqr"] {
-				newrec.PutCopy("iqr", iqr)
-			}
-			if tr.accumulatorNamesToEmit["lof"] {
-				lof := bifs.BIF_minus_binary(q1, bifs.BIF_times(outer_k, iqr))
-				newrec.PutCopy("lof", lof)
-			}
-			if tr.accumulatorNamesToEmit["lif"] {
-				lif := bifs.BIF_minus_binary(q1, bifs.BIF_times(inner_k, iqr))
-				newrec.PutCopy("lif", lif)
-			}
-			if tr.accumulatorNamesToEmit["uif"] {
-				uif := bifs.BIF_plus_binary(q3, bifs.BIF_times(inner_k, iqr))
-				newrec.PutCopy("uif", uif)
-			}
-			if tr.accumulatorNamesToEmit["uof"] {
-				uof := bifs.BIF_plus_binary(q3, bifs.BIF_times(outer_k, iqr))
-				newrec.PutCopy("uof", uof)
-			}
-			if tr.accumulatorNamesToEmit["null_count"] {
-				newrec.PutCopy("null_count", fieldSummary.nullCountAccumulator.Emit())
-			}
-			if tr.accumulatorNamesToEmit["distinct_count"] {
-				newrec.PutCopy("distinct_count", mlrval.FromInt(fieldSummary.distincts.FieldCount))
-			}
-
-			// The mode is the most-occurring value for this column. In case of ties, use the first
-			// found. We need OrderedMap so regression-test outputs are deterministic in case of
-			// ties.
-			if tr.accumulatorNamesToEmit["mode"] {
-				mode := ""
-				var maxCount int64 = 0
-				for pf := fieldSummary.distincts.Head; pf != nil; pf = pf.Next {
-					distinctValue := pf.Key
-					distinctCount := pf.Value.(int64)
-					if distinctCount > maxCount {
-						maxCount = distinctCount
-						mode = distinctValue
-					}
-				}
-				newrec.PutCopy("mode", mlrval.FromString(mode))
-			}
-
-			if tr.accumulatorNamesToEmit["minlen"] {
-				newrec.PutCopy("minlen", fieldSummary.minlenAccumulator.Emit())
-			}
-			if tr.accumulatorNamesToEmit["maxlen"] {
-				newrec.PutCopy("maxlen", fieldSummary.maxlenAccumulator.Emit())
-			}
-
-			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+			newrec.PutCopy(pe.Key, mlrval.FromString(strings.Join(fieldTypesList, "-")))
 		}
+		oracs.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+	}
 
-		// TODO: xout ?
+	for _, info := range allSummarizerInfos {
+		if info.stype == stAccumulator {
+			tr.maybeEmitAccumulatorTransposed(oracs, octx, info.name)
+		} else if info.stype == stPercentile {
+			tr.maybeEmitPercentileNameTransposed(oracs, octx, info.name)
+		}
+	}
 
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+	oracs.PushBack(inrecAndContext) // end-of-stream marker
+}
+
+// ----------------------------------------------------------------
+
+// maybeEmitPercentileNameTransposed is a helper method for emitTransposed,
+// for "count", "sum", "mean", etc.
+func (tr *TransformerSummary) maybeEmitAccumulatorTransposed(
+	oracs *list.List, // list of *types.RecordAndContext
+	octx *types.Context,
+	summarizerName string,
+) {
+	if tr.summarizerNames[summarizerName] {
+		newrec := mlrval.NewMlrmapAsRecord()
+		newrec.PutCopy("field_name", mlrval.FromString(summarizerName))
+		for pe := tr.fieldSummaries.Head; pe != nil; pe = pe.Next {
+			fieldSummary := pe.Value.(*tFieldSummary)
+			newrec.PutCopy(pe.Key, fieldSummary.accumulators[summarizerName].Emit())
+		}
+		oracs.PushBack(types.NewRecordAndContext(newrec, octx))
+	}
+}
+
+// maybeEmitPercentileNameTransposed is a helper method for emitTransposed,
+// for "median", "iqr", "uof", etc.
+func (tr *TransformerSummary) maybeEmitPercentileNameTransposed(
+	oracs *list.List, // list of *types.RecordAndContext
+	octx *types.Context,
+	summarizerName string,
+) {
+	if tr.summarizerNames[summarizerName] {
+		newrec := mlrval.NewMlrmapAsRecord()
+		newrec.PutCopy("field_name", mlrval.FromString(summarizerName))
+		for pe := tr.fieldSummaries.Head; pe != nil; pe = pe.Next {
+			fieldSummary := pe.Value.(*tFieldSummary)
+			newrec.PutCopy(pe.Key, fieldSummary.percentileKeeper.EmitNamed(summarizerName))
+		}
+		oracs.PushBack(types.NewRecordAndContext(newrec, octx))
 	}
 }

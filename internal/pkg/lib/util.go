@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
 func BooleanXOR(a, b bool) bool {
@@ -200,4 +201,8 @@ func StripEmpties(input []string) []string {
 		}
 	}
 	return output
+}
+
+func UTF8Strlen(s string) int64 {
+	return int64(utf8.RuneCountInString(s))
 }

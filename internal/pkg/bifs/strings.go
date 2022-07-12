@@ -5,7 +5,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"unicode/utf8"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
@@ -16,7 +15,7 @@ func BIF_strlen(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
 		return mlrval.ERROR
 	} else {
-		return mlrval.FromInt(int64(utf8.RuneCountInString(input1.AcquireStringValue())))
+		return mlrval.FromInt(lib.UTF8Strlen(input1.AcquireStringValue()))
 	}
 }
 

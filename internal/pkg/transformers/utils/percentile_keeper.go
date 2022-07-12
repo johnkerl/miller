@@ -19,6 +19,10 @@ type PercentileKeeper struct {
 	doInterpolatedPercentiles bool
 }
 
+// Lower outer fence, lower inner fence, upper inner fence, upper outer fence.
+var fenceInnerK = mlrval.FromFloat(1.5)
+var fenceOuterK = mlrval.FromFloat(3.0)
+
 // ----------------------------------------------------------------
 func NewPercentileKeeper(
 	doInterpolatedPercentiles bool,
@@ -288,6 +292,70 @@ func (keeper *PercentileKeeper) EmitLinearlyInterpolated(percentile float64) *ml
 	keeper.sortIfNecessary()
 	output := getPercentileLinearlyInterpolated(keeper.data, int(len(keeper.data)), percentile)
 	return output.Copy()
+}
+
+// ----------------------------------------------------------------
+// TODO: COMMENT
+func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
+	if name == "min" {
+		return keeper.EmitNonInterpolated(0.0)
+	} else if name == "p25" {
+		return keeper.EmitNonInterpolated(25.0)
+	} else if name == "median" {
+		return keeper.EmitNonInterpolated(50.0)
+	} else if name == "p75" {
+		return keeper.EmitNonInterpolated(75.0)
+	} else if name == "max" {
+		return keeper.EmitNonInterpolated(100.0)
+
+	} else if name == "iqr" {
+		p25 := keeper.EmitNonInterpolated(25.0)
+		p75 := keeper.EmitNonInterpolated(75.0)
+		if p25.IsNumeric() && p75.IsNumeric() {
+			return bifs.BIF_minus_binary(p75, p25)
+		} else {
+			return mlrval.VOID
+		}
+
+	} else if name == "lof" {
+		p25 := keeper.EmitNonInterpolated(25.0)
+		iqr := keeper.EmitNamed("iqr")
+		if p25.IsNumeric() && iqr.IsNumeric() {
+			return bifs.BIF_minus_binary(p25, bifs.BIF_times(fenceOuterK, iqr))
+		} else {
+			return mlrval.VOID
+		}
+
+	} else if name == "lif" {
+		p25 := keeper.EmitNonInterpolated(25.0)
+		iqr := keeper.EmitNamed("iqr")
+		if p25.IsNumeric() && iqr.IsNumeric() {
+			return bifs.BIF_minus_binary(p25, bifs.BIF_times(fenceInnerK, iqr))
+		} else {
+			return mlrval.VOID
+		}
+
+	} else if name == "uif" {
+		p75 := keeper.EmitNonInterpolated(25.0)
+		iqr := keeper.EmitNamed("iqr")
+		if p75.IsNumeric() && iqr.IsNumeric() {
+			return bifs.BIF_plus_binary(p75, bifs.BIF_times(fenceInnerK, iqr))
+		} else {
+			return mlrval.VOID
+		}
+
+	} else if name == "uof" {
+		p75 := keeper.EmitNonInterpolated(25.0)
+		iqr := keeper.EmitNamed("iqr")
+		if p75.IsNumeric() && iqr.IsNumeric() {
+			return bifs.BIF_plus_binary(p75, bifs.BIF_times(fenceOuterK, iqr))
+		} else {
+			return mlrval.VOID
+		}
+
+	} else {
+		return mlrval.ERROR
+	}
 }
 
 // ----------------------------------------------------------------
