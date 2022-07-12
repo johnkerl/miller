@@ -1,6 +1,6 @@
 # See also
 
-* [https://github.com/johnkerl/miller/blob/readme-profiling/README-go-port.md#performance-optimizations](https://github.com/johnkerl/miller/blob/readme-profiling/README-go-port.md#performance-optimizations)
+* [https://github.com/johnkerl/miller/blob/readme-profiling/README-dev.md#performance-optimizations](https://github.com/johnkerl/miller/blob/readme-profiling/README-dev.md#performance-optimizations)
 * [https://miller.readthedocs.io/en/latest/new-in-miller-6/#performance-benchmarks](https://miller.readthedocs.io/en/latest/new-in-miller-6/#performance-benchmarks).
 * `make bench` to run Go benchmarks for Miller
 

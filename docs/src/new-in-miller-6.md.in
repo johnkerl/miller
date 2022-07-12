@@ -294,7 +294,7 @@ for more information.
 
 ## Developer-specific aspects
 
-* Miller has been ported from C to Go. Developer notes: [https://github.com/johnkerl/miller/blob/main/README-go-port.md](https://github.com/johnkerl/miller/blob/main/README-go-port.md).
+* Miller has been ported from C to Go. Developer notes: [https://github.com/johnkerl/miller/blob/main/README-dev.md](https://github.com/johnkerl/miller/blob/main/README-dev.md).
 * Regression testing has been completely reworked, including regression-testing now running fully on Windows (alongside Linux and Mac) [on each GitHub commit](https://github.com/johnkerl/miller/actions).
 
 ## Performance benchmarks

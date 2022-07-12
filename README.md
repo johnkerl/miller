@@ -107,7 +107,12 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
   * To run tests: `go test github.com/johnkerl/miller/internal/pkg/...` and `mlr regtest`.
   * To install: `go install github.com/johnkerl/miller/cmd/mlr` will install to _GOPATH_`/bin/mlr`.
 * See also the doc page on [building from source](https://miller.readthedocs.io/en/latest/build).
-* For more developer information please see [README-go-port.md](./README-go-port.md).
+* For more developer information please see [README-dev.md](./README-dev.md).
+
+# For developers
+
+* [README-dev.md](README-dev.md)
+* [How to contribute](https://miller.readthedocs.io/en/latest/contributing/)
 
 # License
 

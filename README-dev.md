@@ -1,10 +1,14 @@
-# Scope
-
-This note is for a developer point of view. For a user point of view, please see [https://miller.readthedocs.io/en/latest/new-in-miller-6](https://miller.readthedocs.io/en/latest/new-in-miller-6).
-
 # Quickstart for developers
 
-See `makefile` in the repo base directory.
+* `make`, `make check`, `make docs`, etc: see [Makefile](Makefile) in the repo base directory.
+* Software-testing methodology: see [./test/README.md](./test/README.md).
+* Source-code indexing: please see [https://sourcegraph.com/github.com/johnkerl/miller](https://sourcegraph.com/github.com/johnkerl/miller)
+* Godoc As of September 2021, `godoc` support is minimal: package-level synopses exist; most `func`/`const`/etc content lacks `godoc`-style comments.  To view doc material, you can:
+  * `go get golang.org/x/tools/cmd/godoc`
+  * `cd go`
+  * `godoc -http=:6060 -goroot .`
+  * Browse to `http://localhost:6060`
+  * Note: control-C and restart the server, then reload in the browser, to pick up edits to source files
 
 # Continuous integration
 
@@ -180,24 +184,3 @@ In summary:
 * #779 was a bit more involved, and reveals that Go's elegant goroutine/channel processing model comes with the caveat that channelized data should not be organized in many, small pieces.
 * #809 was also bit more involved, and reveals that library functions are convenient, but profiling and analysis can sometimes reveal an opportunity for an impact, custom solution.
 * #786 was a massive refactor involving about 10KLOC -- in hindsight it would have been best to do this work at the start of the Go port, not at the end.
-
-## Software-testing methodology
-
-See [./test/README.md](./test/README.md).
-
-## Godoc
-
-As of September 2021, `godoc` support is minimal: package-level synopses exist;
-most `func`/`const`/etc content lacks `godoc`-style comments.
-
-To view doc material, you can:
-
-* `go get golang.org/x/tools/cmd/godoc`
-* `cd go`
-* `godoc -http=:6060 -goroot .`
-* Browse to `http://localhost:6060`
-* Note: control-C and restart the server, then reload in the browser, to pick up edits to source files
-
-## Source-code indexing
-
-Please see https://sourcegraph.com/github.com/johnkerl/miller
