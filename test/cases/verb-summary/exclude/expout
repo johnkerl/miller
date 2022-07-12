@@ -1,0 +1,6 @@
+field_name field_type count null_count distinct_count sum    stddev var    skewness minlen maxlen min    p25    p75    max    iqr    lof      lif     uif     uof
+a          string     10    0          5              0      -      -      -        3      3      eks    eks    wye    zee    -      -        -       -       -
+b          string     10    0          3              0      -      -      -        3      3      pan    pan    wye    zee    -      -        -       -       -
+i          int        10    0          10             55     3.0277 9.1667 0.0000   1      2      1      3      8      10     5      -12.0000 -4.5000 10.5000 18.0000
+x          float      10    0          10             4.5363 0.2155 0.0465 -0.5461  18     19     0.0314 0.3468 0.5986 0.7587 0.2518 -0.4085  -0.0309 0.7244  1.1021
+y          float      10    0          10             5.9445 0.3066 0.0940 -0.1936  17     19     0.1342 0.3383 0.8636 0.9762 0.5253 -1.2376  -0.4496 1.1263  1.9142

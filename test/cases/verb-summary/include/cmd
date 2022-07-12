@@ -1,0 +1,1 @@
+mlr --ofmt %.4f --from test/input/abixy --opprint summary -a mean,median,mode

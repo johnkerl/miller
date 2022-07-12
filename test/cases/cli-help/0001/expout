@@ -490,14 +490,6 @@ Options:
 -h|--help Show this message.
 
 ================================================================
-utf8-to-latin1
-Usage: mlr utf8-to-latin1, with no options.
-Recursively converts record strings from Latin-1 to UTF-8.
-For field-level control, please see the utf8_to_latin1 DSL function.
-Options:
--h|--help Show this message.
-
-================================================================
 least-frequent
 Usage: mlr least-frequent [options]
 Shows the least frequently occurring distinct values for specified field names.
@@ -517,6 +509,8 @@ specified fields.
 Options:
 -a {sum,count,...}  Names of accumulators. One or more of:
   count    Count instances of fields
+  null_count Count number of empty-string/JSON-null instances per field
+  distinct_count Count number of distinct values per field
   mode     Find most-frequently-occurring values for fields; first-found wins tie
   antimode Find least-frequently-occurring values for fields; first-found wins tie
   sum      Compute sums of specified fields
@@ -528,6 +522,8 @@ Options:
   kurtosis Compute sample kurtosis of specified fields
   min      Compute minimum values of specified fields
   max      Compute maximum values of specified fields
+  minlen   Compute minimum string-lengths of specified fields
+  maxlen   Compute maximum string-lengths of specified fields
 -f {a,b,c}  Value-field names on which to compute statistics. Requires -o.
 -r {a,b,c}  Regular expressions for value-field names on which to compute
             statistics. Requires -o.
@@ -1003,6 +999,8 @@ Options:
   median   This is the same as p50
   p10 p25.2 p50 p98 p100 etc.
   count    Count instances of fields
+  null_count Count number of empty-string/JSON-null instances per field
+  distinct_count Count number of distinct values per field
   mode     Find most-frequently-occurring values for fields; first-found wins tie
   antimode Find least-frequently-occurring values for fields; first-found wins tie
   sum      Compute sums of specified fields
@@ -1014,6 +1012,8 @@ Options:
   kurtosis Compute sample kurtosis of specified fields
   min      Compute minimum values of specified fields
   max      Compute maximum values of specified fields
+  minlen   Compute minimum string-lengths of specified fields
+  maxlen   Compute maximum string-lengths of specified fields
 
 -f {a,b,c}     Value-field names on which to compute statistics
 --fr {regex}   Regex for value-field names on which to compute statistics
@@ -1127,6 +1127,49 @@ https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
 for more information on EWMA.
 
 ================================================================
+summary
+Usage: mlr summary [options]
+Show summary statistics about the input data.
+
+All summarizers:
+  field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed
+  count           +1 for every instance of the field across all records in the input record stream
+  null_count      count of field values either empty string or JSON null
+  distinct_count  count of distinct values for the field
+  mode            most-frequently-occurring value for the field
+  sum             sum of field values
+  mean            mean of the field values
+  stddev          standard deviation of the field values
+  var             variance of the field values
+  skewness        skewness of the field values
+  minlen          length of shortest string representation for the field
+  maxlen          length of longest string representation for the field
+  min             minimum field value
+  p25             first-quartile field value
+  median          median field value
+  p75             third-quartile field value
+  max             maximum field value
+  iqr             interquartile range: p75 - p25
+  lof             lower outer fence: p25 - 3.0 * iqr
+  lif             lower inner fence: p25 - 1.5 * iqr
+  uif             upper inner fence: p75 + 1.5 * iqr
+  uof             upper outer fence: p75 + 3.0 * iqr
+
+Default summarizers:
+  field_type count mean min median max null_count distinct_count
+
+Notes:
+* min, p25, median, p75, and max work for strings as well as numbers
+* Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
+* If the mode is not unique in the input data, the first-encountered value is reported as the mode.
+
+Options:
+-a {mean,sum,etc.} Use only the specified summarizers.
+-x {mean,sum,etc.} Use all summarizers, except the specified ones.
+--all              Use all available summarizers.
+-h|--help Show this message.
+
+================================================================
 tac
 Usage: mlr tac [options]
 Prints records in reverse order from the order in which they were encountered.
@@ -1189,6 +1232,14 @@ optionally by category. If -a is given, then the top records are emitted
 with the same fields as they appeared in the input. Without -a, only fields
 from -f, fields from -g, and the top-index field are emitted. For more information
 please see https://miller.readthedocs.io/en/latest/reference-verbs#top
+
+================================================================
+utf8-to-latin1
+Usage: mlr utf8-to-latin1, with no options.
+Recursively converts record strings from Latin-1 to UTF-8.
+For field-level control, please see the utf8_to_latin1 DSL function.
+Options:
+-h|--help Show this message.
 
 ================================================================
 unflatten

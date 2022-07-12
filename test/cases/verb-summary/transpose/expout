@@ -1,0 +1,9 @@
+field_name     a      b      i      x      y
+field_type     string string int    float  float
+count          10     10     10     10     10
+null_count     0      0      0      0      0
+distinct_count 5      3      10     10     10
+mean           -      -      5.5000 0.4536 0.5945
+min            eks    pan    1      0.0314 0.1342
+median         pan    wye    6      0.5271 0.7268
+max            zee    zee    10     0.7587 0.9762

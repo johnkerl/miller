@@ -32,6 +32,17 @@ func (mv *Mlrval) String() string {
 	return mv.printrep
 }
 
+// OriginalString gets the field value as a string regardless of --ofmt specification.
+// E.g if the ofmt is "%.4f" and input is 3.1415926535, OriginalString() will return
+// "3.1415926535" while String() will return "3.1416".
+func (mv *Mlrval) OriginalString() string {
+	if mv.printrepValid {
+		return mv.printrep
+	} else {
+		return mv.String()
+	}
+}
+
 // See mlrval.go for more about JIT-formatting of string backings
 func (mv *Mlrval) setPrintRep() {
 	if !mv.printrepValid {

@@ -1983,6 +1983,8 @@ specified fields.
 Options:
 -a {sum,count,...}  Names of accumulators. One or more of:
   count    Count instances of fields
+  null_count Count number of empty-string/JSON-null instances per field
+  distinct_count Count number of distinct values per field
   mode     Find most-frequently-occurring values for fields; first-found wins tie
   antimode Find least-frequently-occurring values for fields; first-found wins tie
   sum      Compute sums of specified fields
@@ -1994,6 +1996,8 @@ Options:
   kurtosis Compute sample kurtosis of specified fields
   min      Compute minimum values of specified fields
   max      Compute maximum values of specified fields
+  minlen   Compute minimum string-lengths of specified fields
+  maxlen   Compute maximum string-lengths of specified fields
 -f {a,b,c}  Value-field names on which to compute statistics. Requires -o.
 -r {a,b,c}  Regular expressions for value-field names on which to compute
             statistics. Requires -o.
@@ -3078,6 +3082,8 @@ Options:
   median   This is the same as p50
   p10 p25.2 p50 p98 p100 etc.
   count    Count instances of fields
+  null_count Count number of empty-string/JSON-null instances per field
+  distinct_count Count number of distinct values per field
   mode     Find most-frequently-occurring values for fields; first-found wins tie
   antimode Find least-frequently-occurring values for fields; first-found wins tie
   sum      Compute sums of specified fields
@@ -3089,6 +3095,8 @@ Options:
   kurtosis Compute sample kurtosis of specified fields
   min      Compute minimum values of specified fields
   max      Compute maximum values of specified fields
+  minlen   Compute minimum string-lengths of specified fields
+  maxlen   Compute maximum string-lengths of specified fields
 
 -f {a,b,c}     Value-field names on which to compute statistics
 --fr {regex}   Regex for value-field names on which to compute statistics
@@ -3509,6 +3517,105 @@ $ each 10 uptime | mlr -p step -a delta -f 11
 20:08 up 36 days, 10:39, 8 users, load averages: 2.79 1.92 1.83 0.070000
 20:08 up 36 days, 10:39, 4 users, load averages: 2.64 1.90 1.83 -0.020000
 
+</pre>
+
+## summary
+
+<pre class="pre-highlight-in-pair">
+<b>mlr summary --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr summary [options]
+Show summary statistics about the input data.
+
+All summarizers:
+  field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed
+  count           +1 for every instance of the field across all records in the input record stream
+  null_count      count of field values either empty string or JSON null
+  distinct_count  count of distinct values for the field
+  mode            most-frequently-occurring value for the field
+  sum             sum of field values
+  mean            mean of the field values
+  stddev          standard deviation of the field values
+  var             variance of the field values
+  skewness        skewness of the field values
+  minlen          length of shortest string representation for the field
+  maxlen          length of longest string representation for the field
+  min             minimum field value
+  p25             first-quartile field value
+  median          median field value
+  p75             third-quartile field value
+  max             maximum field value
+  iqr             interquartile range: p75 - p25
+  lof             lower outer fence: p25 - 3.0 * iqr
+  lif             lower inner fence: p25 - 1.5 * iqr
+  uif             upper inner fence: p75 + 1.5 * iqr
+  uof             upper outer fence: p75 + 3.0 * iqr
+
+Default summarizers:
+  field_type count mean min median max null_count distinct_count
+
+Notes:
+* min, p25, median, p75, and max work for strings as well as numbers
+* Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
+* If the mode is not unique in the input data, the first-encountered value is reported as the mode.
+
+Options:
+-a {mean,sum,etc.} Use only the specified summarizers.
+-x {mean,sum,etc.} Use all summarizers, except the specified ones.
+--all              Use all available summarizers.
+-h|--help Show this message.
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ofmt %.3f --from data/medium --opprint summary</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+field_name field_type count null_count distinct_count mean     min   median max
+a          string     10000 0          5              -        eks   pan    zee
+b          string     10000 0          5              -        eks   pan    zee
+i          int        10000 0          10000          5000.500 1     5001   10000
+x          float      10000 0          10000          0.499    0.000 0.501  1.000
+y          float      10000 0          10000          0.506    0.000 0.506  1.000
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --from data/medium --opprint summary --transpose --all</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+field_name     a      b      i                  x                      y
+field_type     string string int                float                  float
+count          10000  10000  10000              10000                  10000
+null_count     0      0      0                  0                      0
+distinct_count 5      5      10000              10000                  10000
+mode           pan    wye    1                  0.3467901443380824     0.7268028627434533
+sum            0      0      50005000           4986.019681679581      5062.057444929905
+mean           -      -      5000.5             0.49860196816795804    0.5062057444929905
+stddev         -      -      2886.8956799071675 0.2902925151144007     0.290880086426933
+var            -      -      8334166.666666667  0.08426974433144456    0.08461122467974003
+skewness       -      -      0                  -0.0006899591185521965 -0.017849760120133784
+minlen         3      3      1                  15                     13
+maxlen         3      3      5                  22                     22
+min            eks    eks    1                  4.509679127584487e-05  8.818962627266114e-05
+p25            hat    hat    2501               0.24667037823231752    0.25213670524015686
+median         pan    pan    5001               0.5011592202840128     0.5060212582772865
+p75            wye    wye    7501               0.7481860062358446     0.7640028449996572
+max            zee    zee    10000              0.999952670371898      0.9999648102177897
+iqr            -      -      5000               0.5015156280035271     0.5118661397595003
+lof            -      -      -12499             -1.2578765057782637    -1.2834617140383442
+lif            -      -      -4999              -0.5056030637729731    -0.5156625043990937
+uif            -      -      10001              0.9989438202376082     1.0199359148794074
+uof            -      -      17501              1.751217262242899      1.787735124518658
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --from data/medium --opprint summary --transpose -a mean,median,mode</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+field_name a   b   i      x                   y
+mode       pan wye 1      0.3467901443380824  0.7268028627434533
+mean       -   -   5000.5 0.49860196816795804 0.5062057444929905
+median     pan pan 5001   0.5011592202840128  0.5060212582772865
 </pre>
 
 ## tac

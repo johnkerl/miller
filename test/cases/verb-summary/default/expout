@@ -1,0 +1,6 @@
+field_name field_type count null_count distinct_count mean   min    median max
+a          string     10    0          5              -      eks    pan    zee
+b          string     10    0          3              -      pan    wye    zee
+i          int        10    0          10             5.5000 1      6      10
+x          float      10    0          10             0.4536 0.0314 0.5271 0.7587
+y          float      10    0          10             0.5945 0.1342 0.7268 0.9762

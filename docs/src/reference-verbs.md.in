@@ -1069,6 +1069,24 @@ Example deriving uptime-delta from system uptime:
 
 GENMD-INCLUDE-ESCAPED(data/ping-delta-example.txt)
 
+## summary
+
+GENMD-RUN-COMMAND
+mlr summary --help
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --ofmt %.3f --from data/medium --opprint summary
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --from data/medium --opprint summary --transpose --all
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --from data/medium --opprint summary --transpose -a mean,median,mode
+GENMD-EOF
+
 ## tac
 
 GENMD-RUN-COMMAND
