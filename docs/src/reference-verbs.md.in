@@ -1075,22 +1075,16 @@ GENMD-RUN-COMMAND
 mlr summary --help
 GENMD-EOF
 
-Show all summary columns:
-
 GENMD-RUN-COMMAND
 mlr --ofmt %.3f --from data/medium --opprint summary
 GENMD-EOF
 
-Omit undesired summary columns:
-
 GENMD-RUN-COMMAND
-mlr --ofmt %.3f --from data/medium --opprint summary then cut -xf min,p25,median,p75,max
+mlr --from data/medium --opprint summary --transpose --all
 GENMD-EOF
 
-Show only desired summary columns:
-
 GENMD-RUN-COMMAND
-mlr --ofmt %.3f --from data/medium --opprint summary then cut -of field_name,field_type,count,mean,median,mode
+mlr --from data/medium --opprint summary --transpose -a mean,median,mode
 GENMD-EOF
 
 ## tac
