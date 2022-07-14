@@ -27,7 +27,13 @@ Graphical mode:
 go tool pprof -http=:8080 cpu.pprof
 ```
 
-and let it pop open a browser window.
+and let it pop open a browser window. Then navigate there -- I personally find _View_ -> _Flame Graph_ most useful:
+
+![flame-graph](./docs/src/profiling/flame1.png)
+
+Note that you can drill into subcomponents of the flame graph:
+
+![flame-graph](./docs/src/profiling/flame2.png)
 
 # Benchmark scripts
 
