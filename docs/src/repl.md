@@ -282,6 +282,43 @@ etc. depending on your platform.
 
 Suggestion: `alias mrpl='rlwrap mlr repl'` in your shell's startup file.
 
+## Customization
+
+In your shell environment you can set the `MLR_REPL_PS1` and `MLR_REPL_PS2` environment variables if you like:
+
+<pre class="pre-non-highlight-non-pair">
+$ mlr repl -q
+> 1+2
+3
+> <
+... func f(x) {
+...   return x**2
+... }
+... >
+> f(99)
+9801
+</pre>
+
+<pre class="pre-non-highlight-non-pair">
+$ export MLR_REPL_PS1='\nMLR REPL> '
+$ export MLR_REPL_PS2='  '
+$ mlr repl -q
+
+MLR REPL> 1+2
+3
+
+MLR REPL> <
+  func f(x) {
+    return x**2
+  }
+  >
+
+MLR REPL> f(99)
+9801
+</pre>
+
+See also `MLR_REPL_PS1_COLOR` on the [output-colorization page](output-colorization.md).
+
 ## Online help
 
 After `mlr repl`, type `:help` to see more about your options. In particular, `:help examples`.

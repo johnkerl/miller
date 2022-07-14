@@ -37,6 +37,7 @@ func getPrompt1() string {
 	if prompt1 == "" {
 		prompt1 = DEFAULT_PRIMARY_PROMPT
 	}
+	prompt1 = lib.UnbackslashStringLiteral(prompt1) // In case they want a "\n" in there
 	return colorizer.MaybeColorizeREPLPS1(prompt1, true)
 }
 
@@ -45,6 +46,7 @@ func getPrompt2() string {
 	if prompt2 == "" {
 		prompt2 = DEFAULT_SECONDARY_PROMPT
 	}
+	prompt2 = lib.UnbackslashStringLiteral(prompt2) // In case they want a "\n" in there
 	return colorizer.MaybeColorizeREPLPS2(prompt2, true)
 }
 
