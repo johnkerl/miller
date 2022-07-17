@@ -53,6 +53,9 @@ type RecordReaderCSVLite struct {
 
 	inputLineNumber int64
 	headerStrings   []string
+
+	useVoidRep bool
+	voidRep    string // For pprint output, empty strings are mapped to "-"; this is for reading them back in
 }
 
 func NewRecordReaderCSVLite(
@@ -63,6 +66,9 @@ func NewRecordReaderCSVLite(
 		readerOptions:   readerOptions,
 		recordsPerBatch: recordsPerBatch,
 		fieldSplitter:   newFieldSplitter(readerOptions),
+
+		useVoidRep: false,
+		voidRep:    "",
 	}
 	if reader.readerOptions.UseImplicitCSVHeader {
 		reader.recordBatchGetter = getRecordBatchImplicitCSVHeader
@@ -80,6 +86,9 @@ func NewRecordReaderPPRINT(
 		readerOptions:   readerOptions,
 		recordsPerBatch: recordsPerBatch,
 		fieldSplitter:   newFieldSplitter(readerOptions),
+
+		useVoidRep: true,
+		voidRep:    "-",
 	}
 	if reader.readerOptions.UseImplicitCSVHeader {
 		reader.recordBatchGetter = getRecordBatchImplicitCSVHeader
@@ -239,6 +248,9 @@ func getRecordBatchExplicitCSVHeader(
 			record := mlrval.NewMlrmapAsRecord()
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				for i, field := range fields {
+					if reader.useVoidRep && field == reader.voidRep {
+						field = ""
+					}
 					value := mlrval.FromDeferredType(field)
 					_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
 					if err != nil {
@@ -252,7 +264,11 @@ func getRecordBatchExplicitCSVHeader(
 				n := lib.IntMin2(nh, nd)
 				var i int64
 				for i = 0; i < n; i++ {
-					value := mlrval.FromDeferredType(fields[i])
+					field := fields[i]
+					if reader.useVoidRep && field == reader.voidRep {
+						field = ""
+					}
+					value := mlrval.FromDeferredType(field)
 					_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
 					if err != nil {
 						errorChannel <- err
@@ -358,6 +374,9 @@ func getRecordBatchImplicitCSVHeader(
 		record := mlrval.NewMlrmapAsRecord()
 		if !reader.readerOptions.AllowRaggedCSVInput {
 			for i, field := range fields {
+				if reader.useVoidRep && field == reader.voidRep {
+					field = ""
+				}
 				value := mlrval.FromDeferredType(field)
 				_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
 				if err != nil {
@@ -371,7 +390,11 @@ func getRecordBatchImplicitCSVHeader(
 			n := lib.IntMin2(nh, nd)
 			var i int64
 			for i = 0; i < n; i++ {
-				value := mlrval.FromDeferredType(fields[i])
+				field := fields[i]
+				if reader.useVoidRep && field == reader.voidRep {
+					field = ""
+				}
+				value := mlrval.FromDeferredType(field)
 				_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
 				if err != nil {
 					errorChannel <- err
