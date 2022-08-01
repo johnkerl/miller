@@ -1095,6 +1095,15 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name: "--xvright",
+			help: "Right-justify values for XTAB format.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.RightAlignedXTABOutput = true
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--pprint",
 			help: "Use PPRINT format for input and output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
@@ -2569,15 +2578,6 @@ var FlattenUnflattenFlagSection = FlagSection{
 				CheckArgCount(args, *pargi, argc, 2)
 				options.WriterOptions.FLATSEP = SeparatorFromArg(args[*pargi+1])
 				*pargi += 2
-			},
-		},
-
-		{
-			name: "--xvright",
-			help: "Right-justify values for XTAB format.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.RightAlignedXTABOutput = true
-				*pargi += 1
 			},
 		},
 
