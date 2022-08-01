@@ -394,6 +394,7 @@ FILE-FORMAT FLAGS
        --tsvlite                Use TSV-lite format for input and output data.
        --usv or --usvlite       Use USV format for input and output data.
        --xtab                   Use XTAB format for input and output data.
+       --xvright                Right-justify values for XTAB format.
        -i {format name}         Use format name for input data. For example: `-i csv`
                                 is the same as `--icsv`.
        -o {format name}         Use format name for output data. For example: `-o
@@ -419,7 +420,6 @@ FLATTEN-UNFLATTEN FLAGS
                                 `$y=[7,8,9]`. flattens to `y.1=7,y.2=8,y.3=9. With
                                 `--no-auto-flatten`, instead we get
                                 `${y.1}=7,${y.2}=8,${y.3}=9`.
-       --xvright                Right-justify values for XTAB format.
 
 FORMAT-CONVERSION KEYSTROKE-SAVER FLAGS
        As keystroke-savers for format-conversion you may use the following.

@@ -181,6 +181,7 @@ are overridden in all cases by setting output format to `format2`.
 * `--tsvlite`: Use TSV-lite format for input and output data.
 * `--usv or --usvlite`: Use USV format for input and output data.
 * `--xtab`: Use XTAB format for input and output data.
+* `--xvright`: Right-justify values for XTAB format.
 * `-i {format name}`: Use format name for input data. For example: `-i csv` is the same as `--icsv`.
 * `-o {format name}`: Use format name for output data.  For example: `-o csv` is the same as `--ocsv`.
 
@@ -196,7 +197,6 @@ See the Flatten/unflatten doc page for more information.
 * `--flatsep or --jflatsep {string}`: Separator for flattening multi-level JSON keys, e.g. `{"a":{"b":3}}` becomes `a:b => 3` for non-JSON formats. Defaults to `.`.
 * `--no-auto-flatten`: When output is non-JSON, suppress the default auto-flatten behavior. Default: if `$y = [7,8,9]` then this flattens to `y.1=7,y.2=8,y.3=9, and similarly for maps. With `--no-auto-flatten`, instead we get `$y=[1, 2, 3]`.
 * `--no-auto-unflatten`: When input non-JSON and output is JSON, suppress the default auto-unflatten behavior. Default: if the input has `y.1=7,y.2=8,y.3=9` then this unflattens to `$y=[7,8,9]`.  flattens to `y.1=7,y.2=8,y.3=9. With `--no-auto-flatten`, instead we get `${y.1}=7,${y.2}=8,${y.3}=9`.
-* `--xvright`: Right-justify values for XTAB format.
 
 ## Format-conversion keystroke-saver flags
 

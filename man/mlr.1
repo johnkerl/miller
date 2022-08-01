@@ -452,6 +452,7 @@ are overridden in all cases by setting output format to `format2`.
 --tsvlite                Use TSV-lite format for input and output data.
 --usv or --usvlite       Use USV format for input and output data.
 --xtab                   Use XTAB format for input and output data.
+--xvright                Right-justify values for XTAB format.
 -i {format name}         Use format name for input data. For example: `-i csv`
                          is the same as `--icsv`.
 -o {format name}         Use format name for output data. For example: `-o
@@ -485,7 +486,6 @@ See the Flatten/unflatten doc page for more information.
                          `$y=[7,8,9]`. flattens to `y.1=7,y.2=8,y.3=9. With
                          `--no-auto-flatten`, instead we get
                          `${y.1}=7,${y.2}=8,${y.3}=9`.
---xvright                Right-justify values for XTAB format.
 .fi
 .if n \{\
 .RE
