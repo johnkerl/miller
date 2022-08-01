@@ -136,7 +136,7 @@ Regardless, if you specify an invalid timezone, you'll be clearly notified:
 <b>mlr --from example.csv --tz This/Is/A/Typo cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-mlr: unknown time zone This/Is/A/Typo
+mlr :  unknown time zone This/Is/A/Typo
 </pre>
 
 <pre class="pre-highlight-in-pair">

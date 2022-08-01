@@ -29,7 +29,7 @@ DESCRIPTION
        insertion-ordered hash map.  This encompasses a variety of data
        formats, including but not limited to the familiar CSV, TSV, and JSON.
        (Miller can handle positionally-indexed data as a special case.) This
-       manpage documents mlr 6.3.0.
+       manpage documents mlr 6.3.0-dev.
 
 EXAMPLES
        mlr --icsv --opprint cat example.csv
@@ -171,11 +171,11 @@ VERB LIST
        altkv bar bootstrap cat check clean-whitespace count-distinct count
        count-similar cut decimate fill-down fill-empty filter flatten format-values
        fraction gap grep group-by group-like having-fields head histogram json-parse
-       json-stringify join label latin1-to-utf8 utf8-to-latin1 least-frequent
-       merge-fields most-frequent nest nothing put regularize remove-empty-columns
-       rename reorder repeat reshape sample sec2gmtdate sec2gmt seqgen shuffle
-       skip-trivial-records sort sort-within-records split stats1 stats2 step tac
-       tail tee template top unflatten uniq unsparsify
+       json-stringify join label latin1-to-utf8 least-frequent merge-fields
+       most-frequent nest nothing put regularize remove-empty-columns rename reorder
+       repeat reshape sample sec2gmtdate sec2gmt seqgen shuffle skip-trivial-records
+       sort sort-within-records split stats1 stats2 step summary tac tail tee
+       template top utf8-to-latin1 unflatten uniq unsparsify
 
 FUNCTION LIST
        abs acos acosh any append apply arrayify asin asinh asserting_absent
@@ -1306,13 +1306,6 @@ VERBS
        Options:
        -h|--help Show this message.
 
-   utf8-to-latin1
-       Usage: mlr utf8-to-latin1, with no options.
-       Recursively converts record strings from Latin-1 to UTF-8.
-       For field-level control, please see the utf8_to_latin1 DSL function.
-       Options:
-       -h|--help Show this message.
-
    least-frequent
        Usage: mlr least-frequent [options]
        Shows the least frequently occurring distinct values for specified field names.
@@ -1331,6 +1324,8 @@ VERBS
        Options:
        -a {sum,count,...}  Names of accumulators. One or more of:
          count    Count instances of fields
+         null_count Count number of empty-string/JSON-null instances per field
+         distinct_count Count number of distinct values per field
          mode     Find most-frequently-occurring values for fields; first-found wins tie
          antimode Find least-frequently-occurring values for fields; first-found wins tie
          sum      Compute sums of specified fields
@@ -1342,6 +1337,8 @@ VERBS
          kurtosis Compute sample kurtosis of specified fields
          min      Compute minimum values of specified fields
          max      Compute maximum values of specified fields
+         minlen   Compute minimum string-lengths of specified fields
+         maxlen   Compute maximum string-lengths of specified fields
        -f {a,b,c}  Value-field names on which to compute statistics. Requires -o.
        -r {a,b,c}  Regular expressions for value-field names on which to compute
                    statistics. Requires -o.
@@ -1797,6 +1794,8 @@ VERBS
          median   This is the same as p50
          p10 p25.2 p50 p98 p100 etc.
          count    Count instances of fields
+         null_count Count number of empty-string/JSON-null instances per field
+         distinct_count Count number of distinct values per field
          mode     Find most-frequently-occurring values for fields; first-found wins tie
          antimode Find least-frequently-occurring values for fields; first-found wins tie
          sum      Compute sums of specified fields
@@ -1808,6 +1807,8 @@ VERBS
          kurtosis Compute sample kurtosis of specified fields
          min      Compute minimum values of specified fields
          max      Compute maximum values of specified fields
+         minlen   Compute minimum string-lengths of specified fields
+         maxlen   Compute maximum string-lengths of specified fields
 
        -f {a,b,c}     Value-field names on which to compute statistics
        --fr {regex}   Regex for value-field names on which to compute statistics
@@ -1918,6 +1919,48 @@ VERBS
        https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
        for more information on EWMA.
 
+   summary
+       Usage: mlr summary [options]
+       Show summary statistics about the input data.
+
+       All summarizers:
+         field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed
+         count           +1 for every instance of the field across all records in the input record stream
+         null_count      count of field values either empty string or JSON null
+         distinct_count  count of distinct values for the field
+         mode            most-frequently-occurring value for the field
+         sum             sum of field values
+         mean            mean of the field values
+         stddev          standard deviation of the field values
+         var             variance of the field values
+         skewness        skewness of the field values
+         minlen          length of shortest string representation for the field
+         maxlen          length of longest string representation for the field
+         min             minimum field value
+         p25             first-quartile field value
+         median          median field value
+         p75             third-quartile field value
+         max             maximum field value
+         iqr             interquartile range: p75 - p25
+         lof             lower outer fence: p25 - 3.0 * iqr
+         lif             lower inner fence: p25 - 1.5 * iqr
+         uif             upper inner fence: p75 + 1.5 * iqr
+         uof             upper outer fence: p75 + 3.0 * iqr
+
+       Default summarizers:
+         field_type count mean min median max null_count distinct_count
+
+       Notes:
+       * min, p25, median, p75, and max work for strings as well as numbers
+       * Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
+       * If the mode is not unique in the input data, the first-encountered value is reported as the mode.
+
+       Options:
+       -a {mean,sum,etc.} Use only the specified summarizers.
+       -x {mean,sum,etc.} Use all summarizers, except the specified ones.
+       --all              Use all available summarizers.
+       -h|--help Show this message.
+
    tac
        Usage: mlr tac [options]
        Prints records in reverse order from the order in which they were encountered.
@@ -1976,6 +2019,13 @@ VERBS
        with the same fields as they appeared in the input. Without -a, only fields
        from -f, fields from -g, and the top-index field are emitted. For more information
        please see https://miller.readthedocs.io/en/latest/reference-verbs#top
+
+   utf8-to-latin1
+       Usage: mlr utf8-to-latin1, with no options.
+       Recursively converts record strings from Latin-1 to UTF-8.
+       For field-level control, please see the utf8_to_latin1 DSL function.
+       Options:
+       -h|--help Show this message.
 
    unflatten
        Usage: mlr unflatten [options]
@@ -3201,4 +3251,4 @@ SEE ALSO
 
 
 
-                                  2022-07-07                         MILLER(1)
+                                  2022-08-01                         MILLER(1)
