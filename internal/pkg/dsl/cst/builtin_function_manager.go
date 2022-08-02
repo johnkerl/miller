@@ -1924,6 +1924,24 @@ either case it should return a boolean.`,
 		},
 
 		{
+			name:      "exec",
+			class:     FUNC_CLASS_SYSTEM,
+			help:      `'$output = exec(
+	"command",
+	["arg1", "arg2"],
+	{"env": ["ENV_VAR=ENV_VALUE"],
+	"dir": "/tmp/run_command_here",
+	"stdin_string": "this is input fed to program",
+	"combined_output": true
+)'
+Run a command via executable, path, args and environment, yielding its stdout minus final carriage return.`,
+			examples: []string{
+				`exec("echo", ["Hello", "$YOUR_NAME"], {"env": "YOUR_NAME=World"}) outputs "Hello World"`,
+			},
+			variadicFunc: bifs.BIF_exec,
+		},
+
+		{
 			name:     "version",
 			class:    FUNC_CLASS_SYSTEM,
 			help:     `Returns the Miller version as a string.`,
