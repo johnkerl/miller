@@ -1848,12 +1848,14 @@ key and value, and map-element key and value; it should return the updated accum
 			name:  "sort",
 			class: FUNC_CLASS_HOFS,
 			help: `Given a map or array as first argument and string flags or function as optional second argument,
-returns a sorted copy of the input. With one argument, sorts array elements with numbers first numerically and
-then strings lexically, and map elements likewise by map keys.  If the second argument is a string, it can
-contain any of "f" for lexical ("n" is for the above default), "c" for case-folded lexical, or "t" for natural
-sort order. An additional "r" in that string is for reverse.  If the second argument is a function, then for
-arrays it should take two arguments a and b, returning < 0, 0, or > 0 as a < b, a == b, or a > b respectively;
-for maps the function should take four arguments ak, av, bk, and bv, again returning < 0, 0, or
+returns a sorted copy of the input. With one argument, sorts array elements with numbers first
+numerically and then strings lexically, and map elements likewise by map keys.  If the second
+argument is a string, it can contain any of "f" for lexical ("n" is for the above default), "c" for
+case-folded lexical, or "t" for natural sort order. An additional "r" in that string is for reverse.
+An additional "v" in that string means sort maps by value, rather than by key. If the second
+argument is a function, then for arrays it should take two arguments a and b, returning < 0, 0, or >
+0 as a < b, a == b, or a > b respectively; for maps the function should take four arguments ak, av,
+bk, and bv, again returning < 0, 0, or
 > 0, using a and b's keys and values.`,
 			examples: []string{
 				`Default sorting: sort([3,"A",1,"B",22]) returns [1, 3, 20, "A", "B"].`,
@@ -1865,6 +1867,9 @@ for maps the function should take four arguments ak, av, bk, and bv, again retur
 				`Natural sorting: sort(["a1","a10","a100","a2","a20","a200"], "t") returns ["a1", "a2", "a10", "a20", "a100", "a200"].`,
 				`Array with function: sort([5,2,3,1,4], func(a,b) {return b <=> a}) returns [5,4,3,2,1].`,
 				`Map with function: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) {return bv <=> av}) returns {"a":3,"c":2,"b":1}.`,
+				`Map without function: sort({"c":2,"a":3,"b":1}) returns {"a":3,"b":1,"c":2}.`,
+				`Map without function: sort({"c":2,"a":3,"b":1}, "v") returns {"b":1,"c":2,"a":3}.`,
+				`Map without function: sort({"c":2,"a":3,"b":1}, "vnr") returns {"a":3,"c":2,"b":1}.`,
 			},
 			variadicFuncWithState: SortHOF,
 			minimumVariadicArity:  1,

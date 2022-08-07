@@ -302,11 +302,18 @@ a b c
 <b>mlr -n put '</b>
 <b>  end {</b>
 <b>    # Sort map with custom function: default ordering on values</b>
-<b>    print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv){return av <=> bv});</b>
+<b>    print sort({"c":2, "a": 3, "b": 1}, "v");</b>
+<b>    # Same:</b>
+<b>    print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv) {return av <=> bv});</b>
 <b>  }</b>
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+{
+  "b": 1,
+  "c": 2,
+  "a": 3
+}
 {
   "b": 1,
   "c": 2,
@@ -318,11 +325,18 @@ a b c
 <b>mlr -n put '</b>
 <b>  end {</b>
 <b>    # Sort map with custom function: reverse-default ordering on values</b>
+<b>    print sort({"c":2, "a": 3, "b": 1}, "vr");</b>
+<b>    # Same:</b>
 <b>    print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv){return bv <=> av});</b>
 <b>  }</b>
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+{
+  "a": 3,
+  "c": 2,
+  "b": 1
+}
 {
   "a": 3,
   "c": 2,

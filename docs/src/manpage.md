@@ -2593,7 +2593,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) Hyperbolic sine.
 
    sort
-        (class=higher-order-functions #args=1-2) Given a map or array as first argument and string flags or function as optional second argument, returns a sorted copy of the input. With one argument, sorts array elements with numbers first numerically and then strings lexically, and map elements likewise by map keys. If the second argument is a string, it can contain any of "f" for lexical ("n" is for the above default), "c" for case-folded lexical, or "t" for natural sort order. An additional "r" in that string is for reverse. If the second argument is a function, then for arrays it should take two arguments a and b, returning &lt; 0, 0, or &gt; 0 as a &lt; b, a == b, or a &gt; b respectively; for maps the function should take four arguments ak, av, bk, and bv, again returning &lt; 0, 0, or &gt; 0, using a and b's keys and values.
+        (class=higher-order-functions #args=1-2) Given a map or array as first argument and string flags or function as optional second argument, returns a sorted copy of the input. With one argument, sorts array elements with numbers first numerically and then strings lexically, and map elements likewise by map keys. If the second argument is a string, it can contain any of "f" for lexical ("n" is for the above default), "c" for case-folded lexical, or "t" for natural sort order. An additional "r" in that string is for reverse. An additional "v" in that string means sort maps by value, rather than by key. If the second argument is a function, then for arrays it should take two arguments a and b, returning &lt; 0, 0, or &gt; 0 as a &lt; b, a == b, or a &gt; b respectively; for maps the function should take four arguments ak, av, bk, and bv, again returning &lt; 0, 0, or &gt; 0, using a and b's keys and values.
        Examples:
        Default sorting: sort([3,"A",1,"B",22]) returns [1, 3, 20, "A", "B"].
          Note that this is numbers before strings.
@@ -2604,6 +2604,9 @@ FUNCTIONS FOR FILTER/PUT
        Natural sorting: sort(["a1","a10","a100","a2","a20","a200"], "t") returns ["a1", "a2", "a10", "a20", "a100", "a200"].
        Array with function: sort([5,2,3,1,4], func(a,b) {return b &lt;=&gt; a}) returns [5,4,3,2,1].
        Map with function: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) {return bv &lt;=&gt; av}) returns {"a":3,"c":2,"b":1}.
+       Map without function: sort({"c":2,"a":3,"b":1}) returns {"a":3,"b":1,"c":2}.
+       Map without function: sort({"c":2,"a":3,"b":1}, "v") returns {"b":1,"c":2,"a":3}.
+       Map without function: sort({"c":2,"a":3,"b":1}, "vnr") returns {"a":3,"c":2,"b":1}.
 
    splita
         (class=conversion #args=2) Splits string into array with type inference. First argument is string to split; second is the separator to split on.

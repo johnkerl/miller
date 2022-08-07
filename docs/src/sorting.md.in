@@ -128,7 +128,9 @@ GENMD-RUN-COMMAND
 mlr -n put '
   end {
     # Sort map with custom function: default ordering on values
-    print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv){return av <=> bv});
+    print sort({"c":2, "a": 3, "b": 1}, "v");
+    # Same:
+    print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv) {return av <=> bv});
   }
 '
 GENMD-EOF
@@ -137,6 +139,8 @@ GENMD-RUN-COMMAND
 mlr -n put '
   end {
     # Sort map with custom function: reverse-default ordering on values
+    print sort({"c":2, "a": 3, "b": 1}, "vr");
+    # Same:
     print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv){return bv <=> av});
   }
 '
