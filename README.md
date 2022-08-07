@@ -34,6 +34,7 @@ key-value-pair data in a variety of data formats.
 * [Linux Magazine: Process structured text files with Miller](https://www.linux-magazine.com/Issues/2016/187/Miller)
 * [Miller: Command Line CSV File Processing](https://onepointzero.app/posts/miller-command-line-csv-file-processing/)
 * [Miller - A Swiss Army Chainsaw for CSV Data, Data Science and Data Munging](https://fuzzyblog.io/blog/data_science/2022/05/13/miller-a-swiss-army-chainsaw-for-csv-data-data-science-and-data-munging.html)
+* [Pandas Killer: mlr, the Scientist](https://xvzftube.xyz/posts/pandas_killers/#mlr%3A-the-scientist)
 
 # More documentation links
 
