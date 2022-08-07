@@ -741,6 +741,15 @@ func sortMNumerical(array []mlrval.MlrmapEntryForArray, reverse bool, byMapValue
 			})
 		}
 	} else {
+		if !reverse {
+			sort.Slice(array, func(i, j int) bool {
+				return mlrval.LessThan(array[i].Value, array[j].Value)
+			})
+		} else {
+			sort.Slice(array, func(i, j int) bool {
+				return mlrval.LessThan(array[j].Value, array[i].Value)
+			})
+		}
 	}
 }
 
@@ -757,6 +766,15 @@ func sortMLexical(array []mlrval.MlrmapEntryForArray, reverse bool, byMapValue b
 			})
 		}
 	} else {
+		if !reverse {
+			sort.Slice(array, func(i, j int) bool {
+				return array[i].Value.String() < array[j].Value.String()
+			})
+		} else {
+			sort.Slice(array, func(i, j int) bool {
+				return array[i].Value.String() > array[j].Value.String()
+			})
+		}
 	}
 }
 
@@ -772,6 +790,15 @@ func sortMCaseFold(array []mlrval.MlrmapEntryForArray, reverse bool, byMapValue 
 			})
 		}
 	} else {
+		if !reverse {
+			sort.Slice(array, func(i, j int) bool {
+				return strings.ToLower(array[i].Value.String()) < strings.ToLower(array[j].Value.String())
+			})
+		} else {
+			sort.Slice(array, func(i, j int) bool {
+				return strings.ToLower(array[i].Value.String()) > strings.ToLower(array[j].Value.String())
+			})
+		}
 	}
 }
 
@@ -787,6 +814,21 @@ func sortMNatural(array []mlrval.MlrmapEntryForArray, reverse bool, byMapValue b
 			})
 		}
 	} else {
+		if !reverse {
+			sort.Slice(array, func(i, j int) bool {
+				return natsort.Compare(
+					strings.ToLower(array[i].Value.String()),
+					strings.ToLower(array[j].Value.String()),
+				)
+			})
+		} else {
+			sort.Slice(array, func(i, j int) bool {
+				return natsort.Compare(
+					strings.ToLower(array[j].Value.String()),
+					strings.ToLower(array[i].Value.String()),
+				)
+			})
+		}
 	}
 }
 

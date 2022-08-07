@@ -1,0 +1,8 @@
+$default  = sort($map);
+$reverse  = sort($map,  "vr");
+$numup    = sort($map,  "vn");
+$numdown  = sort($map,  "vnr");
+$lexup    = sort($map,  "vf");
+$lexdown  = sort($map,  "vfr");
+$foldup   = sort($map,  "vc");
+$folddown = sort($map,  "vcr");
