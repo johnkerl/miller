@@ -44,3 +44,61 @@ func BIF_system(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 	return mlrval.FromString(outputString)
 }
+
+func BIF_exec(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
+
+	if len(mlrvals) == 0 {
+		return mlrval.ERROR
+	}
+
+	cmd := exec.Command(mlrvals[0].AcquireStringValue())
+	combinedOutput := false
+
+	args := []string { mlrvals[0].AcquireStringValue() }
+	if len(mlrvals) > 1 {
+		for _, val := range mlrvals[1].GetArray()[0:] {
+			args = append(args, val.AcquireStringValue())
+		}
+	}
+	cmd.Args = args
+
+	if len(mlrvals) > 2 {
+
+		for pe := mlrvals[2].AcquireMapValue().Head; pe != nil; pe = pe.Next {
+			if pe.Key == "env" {
+				env := []string {}
+				for _, val := range pe.Value.GetArray()[0:] {
+					env = append(env, val.AcquireStringValue())
+				}
+				cmd.Env = env
+			}
+			if pe.Key == "dir" {
+				cmd.Dir = pe.Value.AcquireStringValue()
+			}
+			if pe.Key == "combined_output" {
+				combinedOutput = pe.Value.AcquireBoolValue()
+			}
+
+			if pe.Key == "stdin_string" {
+				cmd.Stdin = strings.NewReader(pe.Value.AcquireStringValue())
+			}
+		}
+
+	}
+
+	outputBytes := []byte(nil)
+	err := error(nil)
+
+	if combinedOutput {
+		outputBytes, err = cmd.CombinedOutput()
+	} else {
+		outputBytes, err = cmd.Output()
+	}
+
+	if err != nil {
+		return mlrval.ERROR
+	}
+
+	outputString := strings.TrimRight(string(outputBytes), "\n")
+	return mlrval.FromString(outputString)
+}
