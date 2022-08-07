@@ -83,6 +83,13 @@ type MlrmapEntry struct {
 	Next  *MlrmapEntry
 }
 
+// MlrmapEntryForArray is for use by sorting routines where the Prev/Next pointers
+// are irrelevant as well as ephemeral
+type MlrmapEntryForArray struct {
+	Key   string
+	Value *Mlrval
+}
+
 // Only used for sorting, map-to-pairs-array and pairs-array-to-map contexts.
 type MlrmapPair struct {
 	Key   string

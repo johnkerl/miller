@@ -526,7 +526,7 @@ func SortHOF(
 		if inputs[0].IsArray() {
 			return sortA(inputs[0], "")
 		} else if inputs[0].IsMap() {
-			return sortMK(inputs[0], "")
+			return sortM(inputs[0], "")
 		} else {
 			return mlrval.ERROR
 		}
@@ -535,7 +535,7 @@ func SortHOF(
 		if inputs[0].IsArray() {
 			return sortA(inputs[0], inputs[1].String())
 		} else if inputs[0].IsMap() {
-			return sortMK(inputs[0], inputs[1].String())
+			return sortM(inputs[0], inputs[1].String())
 		} else {
 			return mlrval.ERROR
 		}
@@ -572,9 +572,10 @@ const (
 
 // decodeSortFlags maps strings like "cr" in the second argument to sort
 // into sortType=sortTypeCaseFold and reverse=true, etc.
-func decodeSortFlags(flags string) (tSortType, bool) {
-	var sortType tSortType = sortTypeNumerical
-	reverse := false
+func decodeSortFlags(flags string) (sortType tSortType, reverse bool, byMapValue bool) {
+	sortType = sortTypeNumerical
+	reverse = false
+	byMapValue = false
 	for _, c := range flags {
 		switch c {
 		case 'n':
@@ -587,9 +588,11 @@ func decodeSortFlags(flags string) (tSortType, bool) {
 			sortType = sortTypeNatural
 		case 'r':
 			reverse = true
+		case 'v':
+			byMapValue = true
 		}
 	}
-	return sortType, reverse
+	return sortType, reverse, byMapValue
 }
 
 // sortA implements sort on array, with string flags rather than callback UDF.
@@ -603,7 +606,8 @@ func sortA(
 
 	output := input1.Copy()
 
-	sortType, reverse := decodeSortFlags(flags)
+	// byMapValue is ignored for sorting arrays
+	sortType, reverse, _ := decodeSortFlags(flags)
 
 	a := output.GetArray()
 	switch sortType {
@@ -668,8 +672,8 @@ func sortANatural(array []*mlrval.Mlrval, reverse bool) {
 	}
 }
 
-// sortA implements sort on map, with string flags rather than callback UDF.
-func sortMK(
+// sortM implements sort on map, with string flags rather than callback UDF.
+func sortM(
 	input1 *mlrval.Mlrval,
 	flags string,
 ) *mlrval.Mlrval {
@@ -678,99 +682,111 @@ func sortMK(
 		return mlrval.ERROR
 	}
 
-	// Copy the keys to an array for sorting.
-	// TODO: make a helper function and share with BIF_get_keys
+	// Get sort-flags, if provided
+	sortType, reverse, byMapValue := decodeSortFlags(flags)
+
+	// Copy the entries to an array for sorting.
 	n := inmap.FieldCount
-	keys := make([]string, n)
+	entries := make([]mlrval.MlrmapEntryForArray, n)
 	i := 0
 	for pe := inmap.Head; pe != nil; pe = pe.Next {
-		keys[i] = pe.Key
+		entries[i].Key = pe.Key
+		entries[i].Value = pe.Value // pointer alias for now until new map at end of this function
 		i++
 	}
-
-	// Get sort-flags, if provided
-	sortType, reverse := decodeSortFlags(flags)
 
 	// Do the key-sort
 	switch sortType {
 	case sortTypeNumerical:
-		sortMKNumerical(keys, reverse)
+		sortMNumerical(entries, reverse, byMapValue)
 	case sortTypeLexical:
-		sortMKLexical(keys, reverse)
+		sortMLexical(entries, reverse, byMapValue)
 	case sortTypeCaseFold:
-		sortMKCaseFold(keys, reverse)
+		sortMCaseFold(entries, reverse, byMapValue)
 	case sortTypeNatural:
-		sortMKNatural(keys, reverse)
+		sortMNatural(entries, reverse, byMapValue)
 	}
 
-	// Make a new map with keys in the new sort order.
+	// Make a new map with entries in the new sort order.
 	outmap := mlrval.NewMlrmap()
 	for i := int64(0); i < n; i++ {
-		key := keys[i]
-		outmap.PutCopy(key, inmap.Get(key))
+		entry := entries[i]
+		outmap.PutCopy(entry.Key, entry.Value)
 	}
 
 	return mlrval.FromMap(outmap)
 }
 
-func sortMKNumerical(array []string, reverse bool) {
-	if !reverse {
-		sort.Slice(array, func(i, j int) bool {
-			na, erra := strconv.ParseFloat(array[i], 64)
-			nb, errb := strconv.ParseFloat(array[j], 64)
-			if erra == nil && errb == nil {
-				return na < nb
-			} else {
-				return array[i] < array[j]
-			}
-		})
+func sortMNumerical(array []mlrval.MlrmapEntryForArray, reverse bool, byMapValue bool) {
+	if !byMapValue {
+		if !reverse {
+			sort.Slice(array, func(i, j int) bool {
+				na, erra := strconv.ParseFloat(array[i].Key, 64)
+				nb, errb := strconv.ParseFloat(array[j].Key, 64)
+				if erra == nil && errb == nil {
+					return na < nb
+				} else {
+					return array[i].Key < array[j].Key
+				}
+			})
+		} else {
+			sort.Slice(array, func(i, j int) bool {
+				na, erra := strconv.ParseFloat(array[i].Key, 64)
+				nb, errb := strconv.ParseFloat(array[j].Key, 64)
+				if erra == nil && errb == nil {
+					return na > nb
+				} else {
+					return array[i].Key > array[j].Key
+				}
+			})
+		}
 	} else {
-		sort.Slice(array, func(i, j int) bool {
-			na, erra := strconv.ParseFloat(array[i], 64)
-			nb, errb := strconv.ParseFloat(array[j], 64)
-			if erra == nil && errb == nil {
-				return na > nb
-			} else {
-				return array[i] > array[j]
-			}
-		})
 	}
 }
 
-func sortMKLexical(array []string, reverse bool) {
-	if !reverse {
-		// Or sort.Strings(keys) would work here as well.
-		sort.Slice(array, func(i, j int) bool {
-			return array[i] < array[j]
-		})
+func sortMLexical(array []mlrval.MlrmapEntryForArray, reverse bool, byMapValue bool) {
+	if !byMapValue {
+		if !reverse {
+			// Or sort.Strings(keys) would work here as well.
+			sort.Slice(array, func(i, j int) bool {
+				return array[i].Key < array[j].Key
+			})
+		} else {
+			sort.Slice(array, func(i, j int) bool {
+				return array[i].Key > array[j].Key
+			})
+		}
 	} else {
-		sort.Slice(array, func(i, j int) bool {
-			return array[i] > array[j]
-		})
 	}
 }
 
-func sortMKCaseFold(array []string, reverse bool) {
-	if !reverse {
-		sort.Slice(array, func(i, j int) bool {
-			return strings.ToLower(array[i]) < strings.ToLower(array[j])
-		})
+func sortMCaseFold(array []mlrval.MlrmapEntryForArray, reverse bool, byMapValue bool) {
+	if !byMapValue {
+		if !reverse {
+			sort.Slice(array, func(i, j int) bool {
+				return strings.ToLower(array[i].Key) < strings.ToLower(array[j].Key)
+			})
+		} else {
+			sort.Slice(array, func(i, j int) bool {
+				return strings.ToLower(array[i].Key) > strings.ToLower(array[j].Key)
+			})
+		}
 	} else {
-		sort.Slice(array, func(i, j int) bool {
-			return strings.ToLower(array[i]) > strings.ToLower(array[j])
-		})
 	}
 }
 
-func sortMKNatural(array []string, reverse bool) {
-	if !reverse {
-		sort.Slice(array, func(i, j int) bool {
-			return natsort.Compare(strings.ToLower(array[i]), strings.ToLower(array[j]))
-		})
+func sortMNatural(array []mlrval.MlrmapEntryForArray, reverse bool, byMapValue bool) {
+	if !byMapValue {
+		if !reverse {
+			sort.Slice(array, func(i, j int) bool {
+				return natsort.Compare(strings.ToLower(array[i].Key), strings.ToLower(array[j].Key))
+			})
+		} else {
+			sort.Slice(array, func(i, j int) bool {
+				return natsort.Compare(strings.ToLower(array[j].Key), strings.ToLower(array[i].Key))
+			})
+		}
 	} else {
-		sort.Slice(array, func(i, j int) bool {
-			return natsort.Compare(strings.ToLower(array[j]), strings.ToLower(array[i]))
-		})
 	}
 }
 
