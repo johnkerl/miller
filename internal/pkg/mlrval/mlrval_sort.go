@@ -80,7 +80,17 @@ func NaturalAscendingComparator(input1, input2 *Mlrval) int {
 	sb := input2.String()
 	if sa == sb {
 		return 0
-	} else if natsort.Compare(input1.String(), input2.String()) {
+	}
+
+	// natsort.Compare puts empty strings in random places
+	if sa == "" {
+		return 1
+	}
+	if sb == "" {
+		return -1
+	}
+
+	if natsort.Compare(input1.String(), input2.String()) {
 		return 1
 	} else {
 		return -1
