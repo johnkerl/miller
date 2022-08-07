@@ -1929,9 +1929,9 @@ either case it should return a boolean.`,
 		},
 
 		{
-			name:      "exec",
-			class:     FUNC_CLASS_SYSTEM,
-			help:      `'$output = exec(
+			name:  "exec",
+			class: FUNC_CLASS_SYSTEM,
+			help: `'$output = exec(
 	"command",
 	["arg1", "arg2"],
 	{"env": ["ENV_VAR=ENV_VALUE"],

@@ -185,13 +185,13 @@ FUNCTION LIST
        asserting_not_map asserting_not_null asserting_null asserting_numeric
        asserting_present asserting_string atan atan2 atanh bitcount boolean
        capitalize cbrt ceil clean_whitespace collapse_whitespace concat cos cosh
-       depth dhms2fsec dhms2sec erf erfc every exp expm1 flatten float floor fmtifnum
-       fmtnum fold format fsec2dhms fsec2hms get_keys get_values gmt2localtime
-       gmt2sec gssub gsub haskey hexfmt hms2fsec hms2sec hostname int invqnorm
-       is_absent is_array is_bool is_boolean is_empty is_empty_map is_error is_float
-       is_int is_map is_nan is_nonempty_map is_not_array is_not_empty is_not_map
-       is_not_null is_null is_numeric is_present is_string joink joinkv joinv
-       json_parse json_stringify latin1_to_utf8 leafcount length localtime2gmt
+       depth dhms2fsec dhms2sec erf erfc every exec exp expm1 flatten float floor
+       fmtifnum fmtnum fold format fsec2dhms fsec2hms get_keys get_values
+       gmt2localtime gmt2sec gssub gsub haskey hexfmt hms2fsec hms2sec hostname int
+       invqnorm is_absent is_array is_bool is_boolean is_empty is_empty_map is_error
+       is_float is_int is_map is_nan is_nonempty_map is_not_array is_not_empty
+       is_not_map is_not_null is_null is_numeric is_present is_string joink joinkv
+       joinv json_parse json_stringify latin1_to_utf8 leafcount length localtime2gmt
        localtime2sec log log10 log1p logifit lstrip madd mapdiff mapexcept mapselect
        mapsum max md5 mexp min mmul msub os pow qnorm reduce regextract
        regextract_or_else round roundm rstrip sec2dhms sec2gmt sec2gmtdate sec2hms
@@ -2220,6 +2220,11 @@ FUNCTIONS FOR FILTER/PUT
        Examples:
        Array example: every(["a", "b", "c"], func(e) {return $[e] >= 0})
        Map example: every({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
+
+   exec
+        (class=system #args=variadic) '$output = exec( "command", ["arg1", "arg2"], {"env": ["ENV_VAR=ENV_VALUE"], "dir": "/tmp/run_command_here", "stdin_string": "this is input fed to program", "combined_output": true )' Run a command via executable, path, args and environment, yielding its stdout minus final carriage return.
+       Example:
+       exec("echo", ["Hello", "$YOUR_NAME"], {"env": "YOUR_NAME=World"}) outputs "Hello World"
 
    exp
         (class=math #args=1) Exponential function e**x.

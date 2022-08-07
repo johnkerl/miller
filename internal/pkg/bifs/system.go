@@ -54,7 +54,7 @@ func BIF_exec(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	cmd := exec.Command(mlrvals[0].AcquireStringValue())
 	combinedOutput := false
 
-	args := []string { mlrvals[0].AcquireStringValue() }
+	args := []string{mlrvals[0].AcquireStringValue()}
 	if len(mlrvals) > 1 {
 		for _, val := range mlrvals[1].GetArray()[0:] {
 			args = append(args, val.AcquireStringValue())
@@ -66,7 +66,7 @@ func BIF_exec(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 
 		for pe := mlrvals[2].AcquireMapValue().Head; pe != nil; pe = pe.Next {
 			if pe.Key == "env" {
-				env := []string {}
+				env := []string{}
 				for _, val := range pe.Value.GetArray()[0:] {
 					env = append(env, val.AcquireStringValue())
 				}
