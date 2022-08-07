@@ -1751,7 +1751,7 @@ VERBS
        -nf {comma-separated field names}  Same as -n
        -nr {comma-separated field names}  Numerical descending; nulls sort first
        -t  {comma-separated field names}  Natural ascending
-       -tr {comma-separated field names}  Natural descending
+       -tr|-rt {comma-separated field names}  Natural descending
        -h|--help Show this message.
 
        Example:
@@ -3272,5 +3272,5 @@ SEE ALSO
 
 
 
-                                  2022-08-01                         MILLER(1)
+                                  2022-08-07                         MILLER(1)
 </pre>
