@@ -531,7 +531,7 @@ func SortHOF(
 			return mlrval.ERROR
 		}
 
-	} else if inputs[1].IsString() {
+	} else if inputs[1].IsStringOrVoid() {
 		if inputs[0].IsArray() {
 			return sortA(inputs[0], inputs[1].String())
 		} else if inputs[0].IsMap() {
