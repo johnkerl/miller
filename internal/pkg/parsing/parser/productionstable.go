@@ -2708,31 +2708,15 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `PowTerm : PrecedenceChainEnd "**" "-" PowTerm	<< dsl.NewASTNodeBinary(
-        X[1],
-        X[0],
-        dsl.NewASTNodeUnaryNestable(
-          X[2],
-          X[3],
-          dsl.NodeTypeOperator,
-        ),
-        dsl.NodeTypeOperator,
-      ) >>`,
+		String: `PowTerm : PrecedenceChainEnd "**" "-" PowTerm	<< dsl.NewASTNodeBinary( X[1], X[0],
+  dsl.NewASTNodeUnaryNestable( X[2], X[3], dsl.NodeTypeOperator,), dsl.NodeTypeOperator,) >>`,
 		Id:         "PowTerm",
 		NTType:     60,
 		Index:      205,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[1],
-				X[0],
-				dsl.NewASTNodeUnaryNestable(
-					X[2],
-					X[3],
-					dsl.NodeTypeOperator,
-				),
-				dsl.NodeTypeOperator,
-			)
+			return dsl.NewASTNodeBinary(X[1], X[0],
+				dsl.NewASTNodeUnaryNestable(X[2], X[3], dsl.NodeTypeOperator), dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
