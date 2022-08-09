@@ -1934,14 +1934,14 @@ either case it should return a boolean.`,
 			help: `'$output = exec(
 	"command",
 	["arg1", "arg2"],
-	{"env": ["ENV_VAR=ENV_VALUE"],
+	{"env": ["ENV_VAR=ENV_VALUE", "ENV_VAR2=ENV_VALUE2"],
 	"dir": "/tmp/run_command_here",
 	"stdin_string": "this is input fed to program",
 	"combined_output": true
 )'
 Run a command via executable, path, args and environment, yielding its stdout minus final carriage return.`,
 			examples: []string{
-				`exec("echo", ["Hello", "$YOUR_NAME"], {"env": "YOUR_NAME=World"}) outputs "Hello World"`,
+				`exec("echo", ["I don't do", "$SHELL things"], {"env": "SHELL=sh"}) outputs "I don't do $SHELL things"`,
 			},
 			variadicFunc: bifs.BIF_exec,
 		},
