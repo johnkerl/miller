@@ -2437,7 +2437,6 @@ var OutputColorizationFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				colorizer.ListColorCodes()
 				os.Exit(0)
-				*pargi += 1
 			},
 		},
 
@@ -2447,7 +2446,6 @@ var OutputColorizationFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				colorizer.ListColorNames()
 				os.Exit(0)
-				*pargi += 1
 			},
 		},
 
