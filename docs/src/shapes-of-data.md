@@ -36,7 +36,7 @@ Use the `file` command to see if there are CR/LF terminators (in this case, ther
 <b>file data/colours.csv </b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-data/colours.csv: UTF-8 Unicode text
+data/colours.csv: Unicode text, UTF-8 text
 </pre>
 
 Look at the file to find names of fields:
@@ -45,18 +45,15 @@ Look at the file to find names of fields:
 <b>cat data/colours.csv </b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR
-masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Witter;Biały;Alb;Beyaz
+KEY;DE;EN;ES;FI;FR;IT;NL;PL;TO;TR
+masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
 masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
 </pre>
 
 Extract a few fields:
 
-<pre class="pre-highlight-in-pair">
-<b>mlr --csv cut -f KEY,PL,RO data/colours.csv </b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-(only blank lines appear)
+<pre class="pre-highlight-non-pair">
+<b>mlr --csv cut -f KEY,PL,TO data/colours.csv </b>
 </pre>
 
 Use XTAB output format to get a sharper picture of where records/fields are being split:
@@ -65,12 +62,12 @@ Use XTAB output format to get a sharper picture of where records/fields are bein
 <b>mlr --icsv --oxtab cat data/colours.csv </b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Witter;Biały;Alb;Beyaz
+KEY;DE;EN;ES;FI;FR;IT;NL;PL;TO;TR masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
 
-KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
+KEY;DE;EN;ES;FI;FR;IT;NL;PL;TO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
 </pre>
 
-Using XTAB output format makes it clearer that `KEY;DE;...;RO;TR` is being treated as a single field name in the CSV header, and likewise each subsequent line is being treated as a single field value. This is because the default field separator is a comma but we have semicolons here.  Use XTAB again with different field separator (`--fs semicolon`):
+Using XTAB output format makes it clearer that `KEY;DE;...;TR` is being treated as a single field name in the CSV header, and likewise each subsequent line is being treated as a single field value. This is because the default field separator is a comma but we have semicolons here.  Use XTAB again with different field separator (`--fs semicolon`):
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ifs semicolon --oxtab cat data/colours.csv </b>
@@ -83,9 +80,9 @@ ES  Blanco
 FI  Valkoinen
 FR  Blanc
 IT  Bianco
-NL  Witter
+NL  Wit
 PL  Biały
-RO  Alb
+TO  Alb
 TR  Beyaz
 
 KEY masterdata_colourcode_2
@@ -97,17 +94,17 @@ FR  Noir
 IT  Nero
 NL  Zwart
 PL  Czarny
-RO  Negru
+TO  Negru
 TR  Siyah
 </pre>
 
 Using the new field-separator, retry the cut:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --csv --fs semicolon cut -f KEY,PL,RO data/colours.csv </b>
+<b>mlr --csv --fs semicolon cut -f KEY,PL,TO data/colours.csv </b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-KEY;PL;RO
+KEY;PL;TO
 masterdata_colourcode_1;Biały;Alb
 masterdata_colourcode_2;Czarny;Negru
 </pre>

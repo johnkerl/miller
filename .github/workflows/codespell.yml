@@ -33,7 +33,4 @@ jobs:
         with:
           check_filenames: true
           ignore_words_file: .codespellignore
-          # ignore_words_list: denom,inout,iput,nd,nin,numer,te,wee
-          # There is a word "RO" in docs/src/shapes-of-data.md.in and docs/src/shapes-of-data.md
-          # which is listed in .codespellignore but which codespell refuses to ignore. Not sure why.
           skip: "*.csv,*.dkvp,*.txt,*.js,*.html,*.map,./tags,./test/cases,./docs/src/shapes-of-data.md.in,./docs/src/shapes-of-data.md"
