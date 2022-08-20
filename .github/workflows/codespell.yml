@@ -33,5 +33,5 @@ jobs:
         with:
           check_filenames: true
           ignore_words_file: .codespellignore
-          # ignore_words_list: denom,inout,iput,nd,nin,numer,te,wee
+          # ignore_words_list: denom,inout,iput,nd,nin,numer,te,wee,RO,falsy
           skip: "*.csv,*.dkvp,*.txt,*.js,*.html,*.map,./tags,./test/cases"
