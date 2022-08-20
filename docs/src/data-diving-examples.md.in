@@ -93,7 +93,7 @@ GENMD-RUN-COMMAND
 mlr --opprint histogram -f flag,u,v --lo -0.1 --hi 1.1 --nbins 12 data/colored-shapes.dkvp
 GENMD-EOF
 
-Look at univariate stats by color and shape. In particular, color-dependent flag probabilities pop out, aligning with their original Bernoulli probablities from the data-generator script:
+Look at univariate stats by color and shape. In particular, color-dependent flag probabilities pop out, aligning with their original Bernoulli probabilities from the data-generator script:
 
 GENMD-RUN-COMMAND
 mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color \

@@ -905,6 +905,8 @@ VERBS
        -n         Prepend field "n" to each record with record-counter starting at 1.
        -N {name}  Prepend field {name} to each record with record-counter starting at 1.
        -g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c
+       --filename Prepend current filename to each record.
+       --filenum  Prepend current filenum (1-up) to each record.
        -h|--help Show this message.
 
    check
@@ -3280,5 +3282,5 @@ SEE ALSO
 
 
 
-                                  2022-08-14                         MILLER(1)
+                                  2022-08-20                         MILLER(1)
 </pre>
