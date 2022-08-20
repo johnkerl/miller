@@ -1,0 +1,10 @@
+filenum=1,filename=test/input/abixy,a=pan,b=pan,i=1,x=0.34679014,y=0.72680286
+filenum=1,filename=test/input/abixy,a=eks,b=pan,i=2,x=0.75867996,y=0.52215111
+filenum=1,filename=test/input/abixy,a=wye,b=wye,i=3,x=0.20460331,y=0.33831853
+filenum=1,filename=test/input/abixy,a=eks,b=wye,i=4,x=0.38139939,y=0.13418874
+filenum=1,filename=test/input/abixy,a=wye,b=pan,i=5,x=0.57328892,y=0.86362447
+filenum=1,filename=test/input/abixy,a=zee,b=pan,i=6,x=0.52712616,y=0.49322129
+filenum=1,filename=test/input/abixy,a=eks,b=zee,i=7,x=0.61178406,y=0.18788492
+filenum=1,filename=test/input/abixy,a=zee,b=wye,i=8,x=0.59855401,y=0.97618139
+filenum=1,filename=test/input/abixy,a=hat,b=wye,i=9,x=0.03144188,y=0.74955076
+filenum=1,filename=test/input/abixy,a=pan,b=wye,i=10,x=0.50262601,y=0.95261836
