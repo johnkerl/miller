@@ -286,7 +286,7 @@ bin_lo                bin_hi              flag_count u_count v_count
 1.0900000000000003    1.1900000000000002  0          0       25
 </pre>
 
-Look at univariate stats by color and shape. In particular, color-dependent flag probabilities pop out, aligning with their original Bernoulli probablities from the data-generator script:
+Look at univariate stats by color and shape. In particular, color-dependent flag probabilities pop out, aligning with their original Bernoulli probabilities from the data-generator script:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color \</b>

@@ -153,7 +153,7 @@ JSON vs. tabular formats](flatten-unflatten.md) for more information.
 The reason for this is part historical and part technical. As we'll see below,
 you can do lots of syntactical things with `emit`, `emitp`, and `emitf`,
 including printing them side-by-side, index them, redirect the output to files,
-etc. What this means syntatically is that Miller's parser needs to handle all
+etc. What this means syntactically is that Miller's parser needs to handle all
 sorts of commas, parentheses, and so on:
 
 GENMD-CARDIFY

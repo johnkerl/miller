@@ -84,7 +84,7 @@ For `mlr put` and `mlr filter`, parse-error messages now include location inform
 
 <pre class="pre-non-highlight-non-pair">
 mlr: cannot parse DSL expression.
-Parse error on token ">" at line 63 columnn 7.
+Parse error on token ">" at line 63 column 7.
 </pre>
 
 ### Scripting
