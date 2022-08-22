@@ -103,3 +103,22 @@ func (mv *Mlrval) setPrintRep() {
 		mv.printrepValid = true
 	}
 }
+
+// StringifyValuesRecursively is nominally for the `--jvquoteall` flag.
+func (mv *Mlrval) StringifyValuesRecursively() {
+	switch mv.mvtype {
+
+	case MT_ARRAY:
+		for i, _ := range mv.arrayval {
+			mv.arrayval[i].StringifyValuesRecursively()
+		}
+
+	case MT_MAP:
+		for pe := mv.mapval.Head; pe != nil; pe = pe.Next {
+			pe.Value.StringifyValuesRecursively()
+		}
+
+	default:
+		mv.SetFromString(mv.String())
+	}
+}

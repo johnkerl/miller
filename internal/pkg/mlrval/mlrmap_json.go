@@ -168,3 +168,10 @@ func (entry *MlrmapEntry) JSONParseInPlace() {
 		entry.Value = ERROR
 	}
 }
+
+// StringifyValuesRecursively is nominally for the `--jvquoteall` flag.
+func (mlrmap *Mlrmap) StringifyValuesRecursively() {
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
+		pe.Value.StringifyValuesRecursively()
+	}
+}

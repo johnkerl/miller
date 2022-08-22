@@ -92,6 +92,7 @@ var FLAG_TABLE = FlagTable{
 		&FileFormatFlagSection,
 		&FormatConversionKeystrokeSaverFlagSection,
 		&CSVTSVOnlyFlagSection,
+		&JSONOnlyFlagSection,
 		&PPRINTOnlyFlagSection,
 		&CompressedDataFlagSection,
 		&CommentsInDataFlagSection,
@@ -406,10 +407,72 @@ var SeparatorFlagSection = FlagSection{
 }
 
 // ================================================================
+// JSON-ONLY FLAGS
+
+func JSONOnlyPrintInfo() {
+	fmt.Println("These are flags which are applicable to JSON output format.")
+}
+
+func init() { JSONOnlyFlagSection.Sort() }
+
+var JSONOnlyFlagSection = FlagSection{
+	name:        "JSON-only flags",
+	infoPrinter: JSONOnlyPrintInfo,
+	flags: []Flag{
+
+		{
+			name: "--jvstack",
+			help: "Put one key-value pair per line for JSON output (multi-line output). This is the default for JSON output format.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.JSONOutputMultiline = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--no-jvstack",
+			help: "Put objects/arrays all on one line for JSON output. This is the default for JSON Lines output format.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.JSONOutputMultiline = false
+				*pargi += 1
+			},
+		},
+
+		{
+			name:     "--jlistwrap",
+			altNames: []string{"--jl"},
+			help:     "Wrap JSON output in outermost `[ ]`. This is the default for JSON output format.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--no-jlistwrap",
+			help: "Wrap JSON output in outermost `[ ]`. This is the default for JSON Lines output format.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.WrapJSONOutputInOuterList = false
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--jvquoteall",
+			help: "Force all JSON values -- recursively into lists and object -- to string.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.JVQuoteAll = true
+				*pargi += 1
+			},
+		},
+	},
+}
+
+// ================================================================
 // PPRINT-ONLY FLAGS
 
 func PPRINTOnlyPrintInfo() {
-	fmt.Println("These are flags which are applicable to PPRINT output format.")
+	fmt.Println("These are flags which are applicable to PPRINT format.")
 }
 
 func init() { PPRINTOnlyFlagSection.Sort() }
@@ -490,12 +553,6 @@ var LegacyFlagSection = FlagSection{
 		},
 
 		{
-			name:   "--jvquoteall",
-			help:   "Type information from JSON input files is now preserved throughout the processing stream.",
-			parser: NoOpParse1,
-		},
-
-		{
 			name:   "--json-fatal-arrays-on-input",
 			help:   "Miller now supports arrays as of version 6.",
 			parser: NoOpParse1,
@@ -543,43 +600,6 @@ var LegacyFlagSection = FlagSection{
 			name:   "--quote-original",
 			help:   "Ignored as of version 6. Types are inferred/retained through the processing flow now.",
 			parser: NoOpParse1,
-		},
-
-		{
-			name: "--jvstack",
-			help: "Put one key-value pair per line for JSON output (multi-line output). This is the default for JSON output format.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.JSONOutputMultiline = true
-				*pargi += 1
-			},
-		},
-
-		{
-			name: "--no-jvstack",
-			help: "Put objects/arrays all on one line for JSON output. This is the default for JSON Lines output format.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.JSONOutputMultiline = false
-				*pargi += 1
-			},
-		},
-
-		{
-			name:     "--jlistwrap",
-			altNames: []string{"--jl"},
-			help:     "Wrap JSON output in outermost `[ ]`. This is the default for JSON output format.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.WrapJSONOutputInOuterList = true
-				*pargi += 1
-			},
-		},
-
-		{
-			name: "--no-jlistwrap",
-			help: "Wrap JSON output in outermost `[ ]`. This is the default for JSON Lines output format.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.WrapJSONOutputInOuterList = false
-				*pargi += 1
-			},
 		},
 	},
 }
