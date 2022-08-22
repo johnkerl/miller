@@ -57,6 +57,7 @@ Flags:
   mlr help file-format-flags
   mlr help flatten-unflatten-flags
   mlr help format-conversion-keystroke-saver-flags
+  mlr help json-only-flags
   mlr help legacy-flags
   mlr help miscellaneous-flags
   mlr help output-colorization-flags
