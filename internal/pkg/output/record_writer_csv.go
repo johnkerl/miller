@@ -18,8 +18,6 @@ type RecordWriterCSV struct {
 	lastJoinedHeader *string
 	// Only write one blank line for schema changes / blank input lines
 	justWroteEmptyLine bool
-	// For double-quote around all fields
-	quoteAll bool
 }
 
 func NewRecordWriterCSV(writerOptions *cli.TWriterOptions) (*RecordWriterCSV, error) {
@@ -34,7 +32,6 @@ func NewRecordWriterCSV(writerOptions *cli.TWriterOptions) (*RecordWriterCSV, er
 		csvWriter:          nil, // will be set on first Write() wherein we have the output stream
 		lastJoinedHeader:   nil,
 		justWroteEmptyLine: false,
-		quoteAll:           writerOptions.CSVQuoteAll,
 	}, nil
 }
 
@@ -84,7 +81,7 @@ func (writer *RecordWriterCSV) Write(
 			i++
 		}
 		//////writer.csvWriter.Write(fields)
-		writer.WriteCSVRecordMaybeColorized(fields, bufferedOutputStream, outputIsStdout, true, writer.quoteAll)
+		writer.WriteCSVRecordMaybeColorized(fields, bufferedOutputStream, outputIsStdout, true)
 	}
 
 	fields := make([]string, outrec.FieldCount)
@@ -93,6 +90,6 @@ func (writer *RecordWriterCSV) Write(
 		fields[i] = pe.Value.String()
 		i++
 	}
-	writer.WriteCSVRecordMaybeColorized(fields, bufferedOutputStream, outputIsStdout, false, writer.quoteAll)
+	writer.WriteCSVRecordMaybeColorized(fields, bufferedOutputStream, outputIsStdout, false)
 	writer.justWroteEmptyLine = false
 }

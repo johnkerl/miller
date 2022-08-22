@@ -50,7 +50,7 @@ DESCRIPTION
        insertion-ordered hash map.  This encompasses a variety of data
        formats, including but not limited to the familiar CSV, TSV, and JSON.
        (Miller can handle positionally-indexed data as a special case.) This
-       manpage documents mlr 6.4.0-dev.
+       manpage documents mlr 6.4.0.
 
 EXAMPLES
        mlr --icsv --opprint cat example.csv
@@ -333,7 +333,6 @@ CSV/TSV-ONLY FLAGS
                                 --no-implicit-csv-header -l
                                 your-join-in-with-header.csv ...
                                 your-headerless.csv`.
-       --quote-all              Force double-quoting of CSV fields.
        -N                       Keystroke-saver for `--implicit-csv-header
                                 --headerless-csv-output`.
 
@@ -473,6 +472,8 @@ LEGACY FLAGS
        --no-mmap                Miller no longer uses memory-mapping to access data
                                 files.
        --ojsonx                 The `--jvstack` flag is now default true in Miller 6.
+       --quote-all              Ignored as of version 6. Types are inferred/retained
+                                through the processing flow now.
        --quote-minimal          Ignored as of version 6. Types are inferred/retained
                                 through the processing flow now.
        --quote-none             Ignored as of version 6. Types are inferred/retained
@@ -3281,5 +3282,5 @@ SEE ALSO
 
 
 
-                                  2022-08-22                         MILLER(1)
+                                  2022-08-20                         MILLER(1)
 </pre>
