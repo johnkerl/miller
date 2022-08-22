@@ -14,6 +14,7 @@ type RecordWriterJSON struct {
 	// Parameters:
 	writerOptions  *cli.TWriterOptions
 	jsonFormatting mlrval.TJSONFormatting
+	jvQuoteAll     bool
 
 	// State:
 	onFirst bool
@@ -28,6 +29,7 @@ func NewRecordWriterJSON(writerOptions *cli.TWriterOptions) (*RecordWriterJSON, 
 	return &RecordWriterJSON{
 		writerOptions:  writerOptions,
 		jsonFormatting: jsonFormatting,
+		jvQuoteAll:     writerOptions.JVQuoteAll,
 		onFirst:        true,
 	}, nil
 }
@@ -38,6 +40,10 @@ func (writer *RecordWriterJSON) Write(
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
+	if outrec != nil && writer.jvQuoteAll {
+		outrec.StringifyValuesRecursively()
+	}
+
 	if writer.writerOptions.WrapJSONOutputInOuterList {
 		writer.writeWithListWrap(outrec, bufferedOutputStream, outputIsStdout)
 	} else {

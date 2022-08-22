@@ -181,6 +181,7 @@ JSON support is improved:
 * Streamable JSON parsing: Miller's internal record-processing pipeline starts as soon as the first record is read (which was already the case for other file formats). This means that, unless records are wrapped with outermost `[...]`, Miller now handles JSON / JSON Lines in `tail -f` contexts like it does for other file formats.
 * Flatten/unflatten -- conversion of JSON nested data structures (arrays and/or maps in record values) to/from non-JSON formats is a powerful new feature, discussed in the page [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md).
 * Since types are better handled now, the workaround flags `--jvquoteall` and `--jknquoteint` no longer have meaning -- although they're accepted as no-ops at the command line for backward compatibility.
+  * Update: `--jvquoteall` was restored shortly after 6he 6.4.0 release.
 
 JSON vs JSON Lines:
 

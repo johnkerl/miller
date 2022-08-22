@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2022-08-20
+.\"      Date: 2022-08-22
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2022-08-20" "\ \&" "\ \&"
+.TH "MILLER" "1" "2022-08-22" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -163,6 +163,7 @@ Flags:
   mlr help file-format-flags
   mlr help flatten-unflatten-flags
   mlr help format-conversion-keystroke-saver-flags
+  mlr help json-only-flags
   mlr help legacy-flags
   mlr help miscellaneous-flags
   mlr help output-colorization-flags
@@ -517,6 +518,29 @@ format is available for output only.
 .fi
 .if n \{\
 .RE
+.SH "JSON-ONLY FLAGS"
+.sp
+
+.if n \{\
+.RS 0
+.\}
+.nf
+These are flags which are applicable to JSON output format.
+
+--jlistwrap or --jl      Wrap JSON output in outermost `[ ]`. This is the
+                         default for JSON output format.
+--jvquoteall             Force all JSON values -- recursively into lists and
+                         object -- to string.
+--jvstack                Put one key-value pair per line for JSON output
+                         (multi-line output). This is the default for JSON
+                         output format.
+--no-jlistwrap           Wrap JSON output in outermost `[ ]`. This is the
+                         default for JSON Lines output format.
+--no-jvstack             Put objects/arrays all on one line for JSON output.
+                         This is the default for JSON Lines output format.
+.fi
+.if n \{\
+.RE
 .SH "LEGACY FLAGS"
 .sp
 
@@ -529,8 +553,6 @@ They are accepted as no-op flags in order to keep old scripts from breaking.
 
 --jknquoteint            Type information from JSON input files is now
                          preserved throughout the processing stream.
---jlistwrap or --jl      Wrap JSON output in outermost `[ ]`. This is the
-                         default for JSON output format.
 --jquoteall              Type information from JSON input files is now
                          preserved throughout the processing stream.
 --json-fatal-arrays-on-input
@@ -540,17 +562,8 @@ They are accepted as no-op flags in order to keep old scripts from breaking.
 --json-skip-arrays-on-input
                          Miller now supports arrays as of version 6.
 --jsonx                  The `--jvstack` flag is now default true in Miller 6.
---jvquoteall             Type information from JSON input files is now
-                         preserved throughout the processing stream.
---jvstack                Put one key-value pair per line for JSON output
-                         (multi-line output). This is the default for JSON
-                         output format.
 --mmap                   Miller no longer uses memory-mapping to access data
                          files.
---no-jlistwrap           Wrap JSON output in outermost `[ ]`. This is the
-                         default for JSON Lines output format.
---no-jvstack             Put objects/arrays all on one line for JSON output.
-                         This is the default for JSON Lines output format.
 --no-mmap                Miller no longer uses memory-mapping to access data
                          files.
 --ojsonx                 The `--jvstack` flag is now default true in Miller 6.
@@ -764,7 +777,7 @@ those can be joined with a "-", like "red-bold", "bold-170", "bold-underline", e
 .RS 0
 .\}
 .nf
-These are flags which are applicable to PPRINT output format.
+These are flags which are applicable to PPRINT format.
 
 --barred                 Prints a border around PPRINT output (not available
                          for input).
