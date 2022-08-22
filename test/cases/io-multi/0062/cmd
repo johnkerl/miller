@@ -1,0 +1,1 @@
+mlr --csv --quote-all cat test/input/quote-all.csv
