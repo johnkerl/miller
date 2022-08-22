@@ -58,6 +58,7 @@ func (writer *RecordWriterCSV) WriteCSVRecordMaybeColorized(
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 	isKey bool,
+	quoteAll bool,
 ) error {
 	comma := writer.csvWriter.Comma
 
@@ -82,7 +83,8 @@ func (writer *RecordWriterCSV) WriteCSVRecordMaybeColorized(
 
 		// If we don't have to have a quoted field then just
 		// write out the field and continue to the next field.
-		if !fieldNeedsQuotes(field, comma) {
+		needsQuotes := quoteAll || fieldNeedsQuotes(field, comma)
+		if !needsQuotes {
 			if _, err := bufferedOutputStream.WriteString(prefix); err != nil {
 				return err
 			}
