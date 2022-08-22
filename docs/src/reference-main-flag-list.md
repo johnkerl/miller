@@ -121,6 +121,7 @@ These are flags which are applicable to CSV format.
 * `--implicit-csv-header or --headerless-csv-input or --hi or --implicit-tsv-header`: Use 1,2,3,... as field labels, rather than from line 1 of input files. Tip: combine with `label` to recreate missing headers.
 * `--lazy-quotes`: Accepts quotes appearing in unquoted fields, and non-doubled quotes appearing in quoted fields.
 * `--no-implicit-csv-header or --no-implicit-tsv-header`: Opposite of `--implicit-csv-header`. This is the default anyway -- the main use is for the flags to `mlr join` if you have main file(s) which are headerless but you want to join in on a file which does have a CSV/TSV header. Then you could use `mlr --csv --implicit-csv-header join --no-implicit-csv-header -l your-join-in-with-header.csv ... your-headerless.csv`.
+* `--quote-all`: Force double-quoting of CSV fields.
 * `-N`: Keystroke-saver for `--implicit-csv-header --headerless-csv-output`.
 
 ## File-format flags
@@ -249,7 +250,6 @@ They are accepted as no-op flags in order to keep old scripts from breaking.
 * `--mmap`: Miller no longer uses memory-mapping to access data files.
 * `--no-mmap`: Miller no longer uses memory-mapping to access data files.
 * `--ojsonx`: The `--jvstack` flag is now default true in Miller 6.
-* `--quote-all`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
 * `--quote-minimal`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
 * `--quote-none`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
 * `--quote-numeric`: Ignored as of version 6. Types are inferred/retained through the processing flow now.

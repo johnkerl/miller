@@ -577,11 +577,6 @@ var LegacyFlagSection = FlagSection{
 		},
 
 		{
-			name:   "--quote-all",
-			help:   "Ignored as of version 6. Types are inferred/retained through the processing flow now.",
-			parser: NoOpParse1,
-		},
-		{
 			name:   "--quote-none",
 			help:   "Ignored as of version 6. Types are inferred/retained through the processing flow now.",
 			parser: NoOpParse1,
@@ -2174,6 +2169,15 @@ var CSVTSVOnlyFlagSection = FlagSection{
 			help: "Accepts quotes appearing in unquoted fields, and non-doubled quotes appearing in quoted fields.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.CSVLazyQuotes = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--quote-all",
+			help: "Force double-quoting of CSV fields.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.CSVQuoteAll = true
 				*pargi += 1
 			},
 		},

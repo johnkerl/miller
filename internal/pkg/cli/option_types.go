@@ -106,6 +106,8 @@ type TWriterOptions struct {
 	JVQuoteAll                bool // --jvquoteall
 	// Not using miller/types enum to avoid package cycle
 
+	CSVQuoteAll bool // --quote-all
+
 	// When we read things like
 	//
 	//   x:a=1,x:b=2
