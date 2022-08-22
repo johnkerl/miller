@@ -312,6 +312,7 @@ CSV/TSV-ONLY FLAGS
                                 --no-implicit-csv-header -l
                                 your-join-in-with-header.csv ...
                                 your-headerless.csv`.
+       --quote-all              Force double-quoting of CSV fields.
        -N                       Keystroke-saver for `--implicit-csv-header
                                 --headerless-csv-output`.
 
@@ -451,8 +452,6 @@ LEGACY FLAGS
        --no-mmap                Miller no longer uses memory-mapping to access data
                                 files.
        --ojsonx                 The `--jvstack` flag is now default true in Miller 6.
-       --quote-all              Ignored as of version 6. Types are inferred/retained
-                                through the processing flow now.
        --quote-minimal          Ignored as of version 6. Types are inferred/retained
                                 through the processing flow now.
        --quote-none             Ignored as of version 6. Types are inferred/retained
@@ -3261,4 +3260,4 @@ SEE ALSO
 
 
 
-                                  2022-08-20                         MILLER(1)
+                                  2022-08-22                         MILLER(1)
