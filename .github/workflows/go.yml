@@ -28,6 +28,11 @@ jobs:
     - name: Test
       run: make check
 
+    - name: Regression tests
+      # We run these with a convoluted path to ensure the tests don't
+      # rely on a specific invocation
+      run: test/../mlr regtest -S
+
     - name: PrepareArtifactNonWindows
       if: matrix.os != 'windows-latest'
       run: mkdir -p bin/${{matrix.os}} && cp mlr bin/${{matrix.os}}
