@@ -1,0 +1,1 @@
+mlr --icsv --opprint histogram --nbins 9 --auto -f x test/input/histo2.csv
