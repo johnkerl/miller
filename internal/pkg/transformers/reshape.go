@@ -60,9 +60,11 @@ func transformerReshapeUsage(
 
 	fmt.Fprintf(o, "Wide-to-long options:\n")
 	fmt.Fprintf(o, "  -i {input field names}   -o {key-field name,value-field name}\n")
-	fmt.Fprintf(o, "  -r {input field regexes} -o {key-field name,value-field name}\n")
+	fmt.Fprintf(o, "  -r {input field regex} -o {key-field name,value-field name}\n")
 	fmt.Fprintf(o, "  These pivot/reshape the input data such that the input fields are removed\n")
 	fmt.Fprintf(o, "  and separate records are emitted for each key/value pair.\n")
+	fmt.Fprintf(o, "  Note: if you have multiplep regexes, please specify them using multiple -r,\n")
+	fmt.Fprintf(o, "  since regexes can contain commas within them.\n")
 	fmt.Fprintf(o, "  Note: this works with tail -f and produces output records for each input\n")
 	fmt.Fprintf(o, "  record seen.\n")
 	fmt.Fprintf(o, "Long-to-wide options:\n")
@@ -150,7 +152,11 @@ func transformerReshapeParseCLI(
 		} else if opt == "-i" {
 			inputFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "-r" {
-			inputFieldRegexStrings = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			inputFieldRegexString := cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			if inputFieldRegexStrings == nil {
+				inputFieldRegexStrings = make([]string, 0)
+			}
+			inputFieldRegexStrings = append(inputFieldRegexStrings, inputFieldRegexString)
 		} else if opt == "-o" {
 			outputFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "-s" {

@@ -1,0 +1,11 @@
+unit,hlth_pb,wstatus,sex,time	BE 	BG 	CZ 	DK 	DE 	EE 	IE 	EL 	ES 	FR 	HR 	IT 	CY 	LV 	LT 	LU 	HU 	MT 	NL 	AT 	PL 	PT 	TO 	SI 	SK 	FI 	SE 	IS 	CH 	UK 	TR 
+PC,PB1040,EMP,F,2011	: u	: u	: u	: u	: u	: u	: u	: u	51.1 u	: u	: u	: u	: u	: u	: u	: u	: u	: u	15.3 u	: u	: u	: u	: u	: u	: u	: u	: u	: u	: u	11.6 	62.0 
+PC,PB1040,EMP,M,2011	36.6 u	: u	: u	: u	: u	: u	: u	: u	60.7 u	: u	: u	: u	: u	: u	: u	: u	: u	: u	25.3 u	: u	: u	: u	: u	: u	: u	30 u	: u	: u	18.2 u	15.7 	63.4 
+PC,PB1040,EMP,T,2011	32.4 u	: u	: u	: u	: u	: u	: u	: u	55.5 	: u	: u	: u	: u	: u	: u	: u	: u	: u	20 u	: u	: u	: u	: u	: u	: u	19.9 u	10.7 u	38.4 	9.6 	13.3 	62.9 
+PC,PB1040,NEMP,F,2011	: u	: u	29.2 u	: u	: u	: u	32.1 	: u	33.2 u	: u	: u	33.8 	: u	: u	: u	: u	64.1 u	: u	24.4 u	: u	30 u	: u	57.3 u	: u	: u	: u	: u	: u	29.7 u	37.2 	64.1 
+PC,PB1040,NEMP,M,2011	28.2 u	: u	44.9 u	: u	: u	: u	34.9 	: u	40.3 	: u	: u	46.5 	: u	: u	: u	: u	44.4 u	: u	39.6 u	: u	31.5 u	: u	62.1 	: u	: u	21.4 u	: u	: u	: u	33.6 	57.8 
+PC,PB1040,NEMP,T,2011	19.8 u	70.4 u	37.2 u	19.3 u	: u	: u	33.6 	43.1 u	37.2 	26 u	: u	41.0 	27.7 u	: u	: u	: u	50.8 	: u	31.3 u	28.4 u	30.9 	35.2 	60.0 	: u	: u	18.2 u	10.9 u	: u	27.2 u	35.4 	61.4 
+PC,PB1040,POP,F,2011	: u	: u	21.4 u	: u	: u	: u	26.4 	: u	39.9 	: u	: u	28.8 	: u	: u	: u	: u	54.4 u	: u	20.1 u	19.8 u	26 u	: u	55.3 u	: u	: u	11.8 u	8.2 u	40.2 	9.1 u	24.4 	63.5 
+PC,PB1040,POP,M,2011	31.2 u	: u	34 u	24.8 u	: u	: u	28.8 	47 u	46.2 	: u	: u	45.6 	29.7 u	: u	: u	: u	42.7 u	: u	32.7 u	17.8 u	28.3 u	39.5 	62.5 	: u	: u	25.2 	14.9 u	: u	19.1 	26.3 	60.3 
+PC,PB1040,POP,T,2011	23.9 	61.1 u	27.7 u	16.9 u	19.2 	: u	27.7 	39.2 u	43.2 	21.4 u	: u	38.4 	27.9 u	: u	44.2 u	: u	46.8 	: u	25.8 u	18.8 u	27.4 	35.5 	59.5 	: u	26.8 u	18.9 	10.8 	39.4 	13.5 	25.3 	61.9 
+PC,PB1041,EMP,F,2011	6.4 u	8.2 u	3.5 u	5.5 	6.3 	: u	5.1 	13.4 u	30.9 	8.7 u	: u	19.8 	13.0 	: u	: u	: u	9.3 	20.4 u	5.8 u	5.7 u	3.2 u	29.1 	25.2 	: u	: u	7.5 	3 u	11.2 	5.4 	9.3 	44.8 

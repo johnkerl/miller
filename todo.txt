@@ -7,6 +7,8 @@
 RELEASES
 * 6.4.0 ideas:
 
+  ! reshape -r
+    also rename, merge-fields, cut
   ! emitv2
   ! pprint '-' on read
   ! csv check for empty field names
