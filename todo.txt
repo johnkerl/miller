@@ -7,8 +7,9 @@
 RELEASES
 * 6.4.0 ideas:
 
+  ! -r splits for rename, merge-fields, cut
+  ! summing up empty data
   ! emitv2
-  ! pprint '-' on read
   ! csv check for empty field names
   ! strmatch
   ! transposed output
