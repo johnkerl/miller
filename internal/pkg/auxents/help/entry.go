@@ -743,7 +743,7 @@ func helpForKeyword(args []string) {
 // ----------------------------------------------------------------
 // flagTableNilCheckflagTableNilCheck is invoked by an internal-only
 // command-handler. It's intended to be invoked from a regression-test context.
-// It makes sure (at build time) that the flags-table isn't missing help strigs
+// It makes sure (at build time) that the flags-table isn't missing help strings
 // for any flags, etc.
 func flagTableNilCheck() {
 	cli.FLAG_TABLE.NilCheck()
