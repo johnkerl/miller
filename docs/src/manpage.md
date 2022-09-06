@@ -1624,9 +1624,11 @@ VERBS
        Usage: mlr reshape [options]
        Wide-to-long options:
          -i {input field names}   -o {key-field name,value-field name}
-         -r {input field regexes} -o {key-field name,value-field name}
+         -r {input field regex} -o {key-field name,value-field name}
          These pivot/reshape the input data such that the input fields are removed
          and separate records are emitted for each key/value pair.
+         Note: if you have multiplep regexes, please specify them using multiple -r,
+         since regexes can contain commas within them.
          Note: this works with tail -f and produces output records for each input
          record seen.
        Long-to-wide options:
@@ -3286,5 +3288,5 @@ SEE ALSO
 
 
 
-                                  2022-08-22                         MILLER(1)
+                                  2022-09-05                         MILLER(1)
 </pre>
