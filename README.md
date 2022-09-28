@@ -98,6 +98,10 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 
 # Building from source
 
+* First:
+  * `cd /where/you/want/to/put/the/source`
+  * `git clone https://github.com/johnkerl/miller`
+  * `cd miller`
 * With `make`:
   * To build: `make`. This takes just a few seconds and produces the Miller executable, which is `./mlr` (or `.\mlr.exe` on Windows).
   * To run tests: `make check`.
