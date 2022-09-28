@@ -2722,6 +2722,10 @@ var MiscFlagSection = FlagSection{
 					options.FileNames = append(options.FileNames, args[*pargi])
 					*pargi += 1
 				}
+				if *pargi >= argc {
+					fmt.Fprintf(os.Stderr, "mlr: \"--mfrom\" must be terminated by \"--\".\n")
+					os.Exit(1)
+				}
 				if args[*pargi] == "--" {
 					*pargi += 1
 				}
