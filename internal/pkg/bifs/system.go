@@ -51,13 +51,13 @@ func BIF_exec(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ERROR
 	}
 
-	cmd := exec.Command(mlrvals[0].AcquireStringValue())
+	cmd := exec.Command(mlrvals[0].String())
 	combinedOutput := false
 
-	args := []string{mlrvals[0].AcquireStringValue()}
+	args := []string{mlrvals[0].String()}
 	if len(mlrvals) > 1 {
 		for _, val := range mlrvals[1].GetArray()[0:] {
-			args = append(args, val.AcquireStringValue())
+			args = append(args, val.String())
 		}
 	}
 	cmd.Args = args
@@ -68,19 +68,19 @@ func BIF_exec(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 			if pe.Key == "env" {
 				env := []string{}
 				for _, val := range pe.Value.GetArray()[0:] {
-					env = append(env, val.AcquireStringValue())
+					env = append(env, val.String())
 				}
 				cmd.Env = env
 			}
 			if pe.Key == "dir" {
-				cmd.Dir = pe.Value.AcquireStringValue()
+				cmd.Dir = pe.Value.String()
 			}
 			if pe.Key == "combined_output" {
 				combinedOutput = pe.Value.AcquireBoolValue()
 			}
 
 			if pe.Key == "stdin_string" {
-				cmd.Stdin = strings.NewReader(pe.Value.AcquireStringValue())
+				cmd.Stdin = strings.NewReader(pe.Value.String())
 			}
 		}
 
