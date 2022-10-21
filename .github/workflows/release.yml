@@ -29,7 +29,7 @@ jobs:
 
       # https://github.com/marketplace/actions/cache
       - name: Cache Go modules
-        uses: actions/cache@1c73980b09e7aea7201f325a7aa3ad00beddcdda
+        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7
         with:
           path: |
             ~/.cache/go-build
