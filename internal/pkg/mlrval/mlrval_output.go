@@ -3,6 +3,7 @@ package mlrval
 import (
 	"fmt"
 	"os"
+	"reflect"
 	"strconv"
 )
 
@@ -120,5 +121,21 @@ func (mv *Mlrval) StringifyValuesRecursively() {
 
 	default:
 		mv.SetFromString(mv.String())
+	}
+}
+
+func (mv *Mlrval) ShowSizes() {
+	fmt.Printf("TOTAL            %p %d\n", mv, reflect.TypeOf(*mv).Size())
+	fmt.Printf("mv.intval        %p %d\n", &mv.intval, reflect.TypeOf(mv.intval).Size())
+	fmt.Printf("mv.floatval      %p %d\n", &mv.floatval, reflect.TypeOf(mv.floatval).Size())
+	fmt.Printf("mv.printrep      %p %d\n", &mv.printrep, reflect.TypeOf(mv.printrep).Size())
+	fmt.Printf("mv.printrepValid %p %d\n", &mv.printrepValid, reflect.TypeOf(mv.printrepValid).Size())
+	fmt.Printf("mv.boolval       %p %d\n", &mv.boolval, reflect.TypeOf(mv.boolval).Size())
+	fmt.Printf("mv.mvtype        %p %d\n", &mv.mvtype, reflect.TypeOf(mv.mvtype).Size())
+
+	fmt.Printf("mv.arrayval      %p %d\n", &mv.arrayval, reflect.TypeOf(mv.arrayval).Size())
+	fmt.Printf("mv.mapval        %p %d\n", &mv.mapval, reflect.TypeOf(mv.mapval).Size())
+	if mv.funcval != nil {
+		fmt.Printf("mv.funcval       %p %d\n", &mv.funcval, reflect.TypeOf(mv.funcval).Size())
 	}
 }

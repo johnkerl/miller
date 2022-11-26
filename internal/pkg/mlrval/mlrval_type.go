@@ -54,16 +54,15 @@
 package mlrval
 
 type Mlrval struct {
+	intval        int64
+	floatval      float64
+	printrep      string
+	printrepValid bool
+	boolval       bool
 
 	// Enumeration for string / int / float / boolean / etc.
 	// I would call this "type" not "mvtype" but "type" is a keyword in Go.
 	mvtype MVType
-
-	printrep      string
-	printrepValid bool
-	intval        int64
-	floatval      float64
-	boolval       bool
 
 	arrayval []*Mlrval
 	mapval   *Mlrmap
@@ -84,7 +83,7 @@ const ABSENT_PRINTREP = "(absent)"
 // JavaScript, similarly, there are undefined and null, respectively --
 // Miller's absent is more like JavaScript's undefined.)
 
-type MVType int
+type MVType int8
 
 // Important: the values of these enums are used to index into disposition
 // matrices. If they are changed, it will break the disposition matrices, or
