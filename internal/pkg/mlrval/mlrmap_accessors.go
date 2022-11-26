@@ -208,12 +208,12 @@ func (mlrmap *Mlrmap) findEntry(key string) *MlrmapEntry {
 // findEntryByPositionalIndex is for '$[1]' etc. in the DSL.
 //
 // Notes:
-// * This is a linear search.
-// * Indices are 1-up not 0-up
-// * Indices -n..-1 are aliases for 1..n. In particular, it will be faster to
-//   get the -1st field than the nth.
-// * Returns 0 on invalid index: 0, or < -n, or > n where n is the number of
-//   fields.
+//   - This is a linear search.
+//   - Indices are 1-up not 0-up
+//   - Indices -n..-1 are aliases for 1..n. In particular, it will be faster to
+//     get the -1st field than the nth.
+//   - Returns 0 on invalid index: 0, or < -n, or > n where n is the number of
+//     fields.
 func (mlrmap *Mlrmap) findEntryByPositionalIndex(position int64) *MlrmapEntry {
 	if position > mlrmap.FieldCount || position < -mlrmap.FieldCount || position == 0 {
 		return nil

@@ -19,14 +19,14 @@ import (
 )
 
 // FinalizeReaderOptions does a few things.
-// * If a file format was specified but one or more separators were not, a
-//   default specific to that file format is applied.
-// * Computing regexes for IPS and IFS, and unbackslashing IRS.  This is
-//   because the '\n' at the command line which is Go "\\n" (a backslash and an
-//   n) needs to become the single newline character, and likewise for "\t", etc.
-// * IFS/IPS can have escapes like "\x1f" which aren't valid regex literals
-//   so we unhex them. For example, from "\x1f" -- the four bytes '\', 'x', '1', 'f'
-//   -- to the single byte with hex code 0x1f.
+//   - If a file format was specified but one or more separators were not, a
+//     default specific to that file format is applied.
+//   - Computing regexes for IPS and IFS, and unbackslashing IRS.  This is
+//     because the '\n' at the command line which is Go "\\n" (a backslash and an
+//     n) needs to become the single newline character, and likewise for "\t", etc.
+//   - IFS/IPS can have escapes like "\x1f" which aren't valid regex literals
+//     so we unhex them. For example, from "\x1f" -- the four bytes '\', 'x', '1', 'f'
+//     -- to the single byte with hex code 0x1f.
 func FinalizeReaderOptions(readerOptions *TReaderOptions) {
 
 	readerOptions.IFS = lib.UnhexStringLiteral(readerOptions.IFS)

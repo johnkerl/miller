@@ -10,12 +10,16 @@ import (
 )
 
 // maybeInterpolateDashS supports Miller scripts with shebang lines like
-//   #!/usr/bin/env mlr -s
-//   --csv tac then filter '
-//     NR % 2 == 1
-//   '
+//
+//	#!/usr/bin/env mlr -s
+//	--csv tac then filter '
+//	  NR % 2 == 1
+//	'
+//
 // invoked as
-//   scriptfile input1.csv input2.csv
+//
+//	scriptfile input1.csv input2.csv
+//
 // The "-s" flag must be the very first command-line argument after "mlr" for
 // two reasons:
 // * This is how shebang lines work

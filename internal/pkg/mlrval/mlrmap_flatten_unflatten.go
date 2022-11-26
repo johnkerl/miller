@@ -112,14 +112,14 @@ func (mlrmap *Mlrmap) isFlattenable() bool {
 //
 // Examples:
 //
-// * The three fields x.a = 7, x.b = 8, x.c = 9  become
-//   the single field x = {"a": 7, "b": 8, "c": 9}.
+//   - The three fields x.a = 7, x.b = 8, x.c = 9  become
+//     the single field x = {"a": 7, "b": 8, "c": 9}.
 //
-// * The three fields x.1 = 7, x.2 = 8, x.3 = 9 become
-//   the single field x = [7,8,9].
+//   - The three fields x.1 = 7, x.2 = 8, x.3 = 9 become
+//     the single field x = [7,8,9].
 //
-// * The two fields x.1 = 7, x.3 = 9 become
-//   the single field x = {"1": 7, "3": 9}
+//   - The two fields x.1 = 7, x.3 = 9 become
+//     the single field x = {"1": 7, "3": 9}
 func (mlrmap *Mlrmap) Unflatten(
 	separator string,
 ) {

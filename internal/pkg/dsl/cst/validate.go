@@ -272,13 +272,13 @@ func validateForLoopTwoVariableUniqueNames(astNode *dsl.ASTNode) error {
 // Check against 'for ((a,a), b in $*)' or 'for ((a,b), a in $*)' -- repeated 'a'.
 // AST:
 // * statement block
-//   * multi-variable for-loop "for"
-//     * parameter list
-//       * local variable "a"
-//       * local variable "b"
-//     * local variable "a"
-//     * full record "$*"
-//     * statement block
+//   - multi-variable for-loop "for"
+//   - parameter list
+//   - local variable "a"
+//   - local variable "b"
+//   - local variable "a"
+//   - full record "$*"
+//   - statement block
 func validateForLoopMultivariableUniqueNames(astNode *dsl.ASTNode) error {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopMultivariable)
 	keyVarsNode := astNode.Children[0]

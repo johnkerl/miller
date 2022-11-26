@@ -9,7 +9,8 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//
 // string_cmp implements the spaceship operator for strings.
 func string_cmp(a, b string) int64 {
 	if a < b {
@@ -43,7 +44,7 @@ func float_cmp(a, b float64) int64 {
 	return 0
 }
 
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.AcquireStringValue() == input2.AcquireStringValue())
 }
@@ -66,7 +67,7 @@ func cmp_b_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(int64(string_cmp(input1.AcquireStringValue(), input2.AcquireStringValue())))
 }
 
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_xs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.String() == input2.AcquireStringValue())
 }
@@ -89,7 +90,7 @@ func cmp_b_xs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(int64(string_cmp(input1.String(), input2.AcquireStringValue())))
 }
 
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_sx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.AcquireStringValue() == input2.String())
 }
@@ -112,7 +113,7 @@ func cmp_b_sx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(string_cmp(input1.AcquireStringValue(), input2.String()))
 }
 
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.AcquireIntValue() == input2.AcquireIntValue())
 }
@@ -135,7 +136,7 @@ func cmp_b_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(int_cmp(input1.AcquireIntValue(), input2.AcquireIntValue()))
 }
 
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(float64(input1.AcquireIntValue()) == input2.AcquireFloatValue())
 }
@@ -158,7 +159,7 @@ func cmp_b_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(float_cmp(float64(input1.AcquireIntValue()), input2.AcquireFloatValue()))
 }
 
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.AcquireFloatValue() == float64(input2.AcquireIntValue()))
 }
@@ -181,7 +182,7 @@ func cmp_b_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(float_cmp(input1.AcquireFloatValue(), float64(input2.AcquireIntValue())))
 }
 
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.AcquireFloatValue() == input2.AcquireFloatValue())
 }
@@ -204,7 +205,7 @@ func cmp_b_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(float_cmp(input1.AcquireFloatValue(), input2.AcquireFloatValue()))
 }
 
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.AcquireBoolValue() == input2.AcquireBoolValue())
 }
@@ -231,7 +232,7 @@ func cmp_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(int_cmp(lib.BoolToInt(input1.AcquireBoolValue()), lib.BoolToInt(input2.AcquireBoolValue())))
 }
 
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_aa(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	a := input1.AcquireArrayValue()
 	b := input2.AcquireArrayValue()
@@ -257,7 +258,7 @@ func ne_b_aa(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(!output.AcquireBoolValue())
 }
 
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_mm(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.AcquireMapValue().Equals(input2.AcquireMapValue()))
 }

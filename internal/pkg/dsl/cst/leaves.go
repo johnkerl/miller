@@ -244,10 +244,10 @@ type StringLiteralNode struct {
 // "\9" in it.  As of the original design of Miller, submatches are captured
 // in one place and interpolated in another. For example:
 //
-//   if ($x =~ "(..)_(...)" {
-//     ... other lines of code ...
-//     $y = "\2:\1";
-//   }
+//	if ($x =~ "(..)_(...)" {
+//	  ... other lines of code ...
+//	  $y = "\2:\1";
+//	}
 //
 // This node type is for things like "\2:\1". They can occur quite far from the
 // =~ callsite so we need to check all string literals to see if they have "\0"
@@ -287,10 +287,10 @@ func (node *StringLiteralNode) Evaluate(
 
 // As noted above, in things like
 //
-//   if ($x =~ "(..)_(...)" {
-//     ... other lines of code ...
-//     $y = "\2:\1";
-//   }
+//	if ($x =~ "(..)_(...)" {
+//	  ... other lines of code ...
+//	  $y = "\2:\1";
+//	}
 //
 // the captures can be set (by =~ or !=~) quite far from where they are used.
 // This is why we consult the state.RegexCaptures here, to see if they've been

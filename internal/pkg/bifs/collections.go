@@ -867,17 +867,17 @@ func unaliasArrayLengthIndex(n int, mindex int) (int, bool) {
 }
 
 // MillerSliceAccess is code shared by the string-slicer and the array-slicer.
-// * Miller indices are 1-up, 1..n where n is the length of the array/string.
-//   They are also aliased -n..-1. These are called "mindex" (if int) or "index mlrval"
-//   (if mlrval).
-// * Go indices are 0-up, with no aliasing. These are called "zindex".
-// * The job of this routine is to map a pair of index-mlrval to a pair of zindex,
-//   with possible outcomes that the slice access should result in an empty array/string,
-//   or Mlrval of type absent, or Mlrval of type error.
-// * Callsites include the DSL array-slicer (e.g. [1,2,3,4,5][2:3]), the DSL string-slicer
-//   (e.g. "abcde"[2:3]), the substr1 function (e.g. substr1("abcde", 2, 3), and the substr0
-//   function (e.g. substr0("abcde", 1, 2)).
-// * The isZeroUp argument is in support of substr0.
+//   - Miller indices are 1-up, 1..n where n is the length of the array/string.
+//     They are also aliased -n..-1. These are called "mindex" (if int) or "index mlrval"
+//     (if mlrval).
+//   - Go indices are 0-up, with no aliasing. These are called "zindex".
+//   - The job of this routine is to map a pair of index-mlrval to a pair of zindex,
+//     with possible outcomes that the slice access should result in an empty array/string,
+//     or Mlrval of type absent, or Mlrval of type error.
+//   - Callsites include the DSL array-slicer (e.g. [1,2,3,4,5][2:3]), the DSL string-slicer
+//     (e.g. "abcde"[2:3]), the substr1 function (e.g. substr1("abcde", 2, 3), and the substr0
+//     function (e.g. substr0("abcde", 1, 2)).
+//   - The isZeroUp argument is in support of substr0.
 func MillerSliceAccess(
 	lowerIndexMlrval *mlrval.Mlrval,
 	upperIndexMlrval *mlrval.Mlrval,

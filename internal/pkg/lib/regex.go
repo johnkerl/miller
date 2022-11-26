@@ -145,16 +145,16 @@ func RegexReplacementHasCaptures(
 // RegexMatches implements the =~ DSL operator. The captures are stored in DSL
 // state and may be used by a DSL statement after the =~. For example, in
 //
-//   sub($a, "(..)_(...)", "\1:\2")
+//	sub($a, "(..)_(...)", "\1:\2")
 //
 // the replacement string is an argument to sub and therefore the captures are
 // confined to the implementation of the sub function.  Similarly for gsub. But
 // for the match operator, people can do
 //
-//   if ($x =~ "(..)_(...)") {
-//     ... other lines of code ...
-//     $y = "\2:\1"
-//   }
+//	if ($x =~ "(..)_(...)") {
+//	  ... other lines of code ...
+//	  $y = "\2:\1"
+//	}
 //
 // and the =~ callsite doesn't know if captures will be used or not. So,
 // RegexMatches always returns the captures array. It is stored within the CST
@@ -229,18 +229,18 @@ func RegexMatchesCompiled(
 }
 
 // InterpolateCaptures example:
-// * Input $x is "ab_cde"
-// * DSL expression
+//   - Input $x is "ab_cde"
+//   - DSL expression
 //     if ($x =~ "(..)_(...)") {
-//       ... other lines of code ...
-//       $y = "\2:\1";
+//     ... other lines of code ...
+//     $y = "\2:\1";
 //     }
-// * InterpolateCaptures is used on the evaluation of "\2:\1"
-// * replacementString is "\2:\1"
-// * replacementMatrix contains precomputed/cached offsets for the "\2" and
-//   "\1" substrings within "\2:\1"
-// * captures has slot 0 being "ab_cde" (for "\0"), slot 1 being "ab" (for "\1"),
-//   slot 2 being "cde" (for "\2"), and slots 3-9 being "".
+//   - InterpolateCaptures is used on the evaluation of "\2:\1"
+//   - replacementString is "\2:\1"
+//   - replacementMatrix contains precomputed/cached offsets for the "\2" and
+//     "\1" substrings within "\2:\1"
+//   - captures has slot 0 being "ab_cde" (for "\0"), slot 1 being "ab" (for "\1"),
+//     slot 2 being "cde" (for "\2"), and slots 3-9 being "".
 func InterpolateCaptures(
 	replacementString string,
 	replacementMatrix [][]int,

@@ -385,21 +385,21 @@ func (node *TernaryFunctionWithStateCallsiteNode) Evaluate(
 //
 // Note the use of "capture" is ambiguous:
 //
-// * There is the regex-match part which captures submatches out
-//   of a full match expression, and saves them.
+//   - There is the regex-match part which captures submatches out
+//     of a full match expression, and saves them.
 //
 // * Then there is the part which inserts these captures into another string.
 //
-// * For sub/gsub, the former and latter are both within the sub/gsub routine.
-//   E.g. with
+//   - For sub/gsub, the former and latter are both within the sub/gsub routine.
+//     E.g. with
 //     $y = sub($x, "(..)_(...)", "\2:\1"
-//   and $x being "ab_cde", $y will be "cde:ab".
+//     and $x being "ab_cde", $y will be "cde:ab".
 //
-// * For =~ and !=~, the former are right there, but the latter can be several
-//   lines later. E.g.
+//   - For =~ and !=~, the former are right there, but the latter can be several
+//     lines later. E.g.
 //     if ($x =~ "(..)_(...)") {
-//       ... other lines of code ...
-//       $y = "\2:\1";
+//     ... other lines of code ...
+//     $y = "\2:\1";
 //     }
 //
 // So: this RegexCaptureBinaryFunctionCallsiteNode only refers to the =~ and

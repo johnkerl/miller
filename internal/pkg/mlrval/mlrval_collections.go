@@ -640,12 +640,12 @@ func BsearchMlrvalArrayForAscendingInsert(
 
 // NewMlrvalForAutoDeepen is for auto-deepen of nested maps in things like
 //
-//   $foo[1]["a"][2]["b"] = 3
+//	$foo[1]["a"][2]["b"] = 3
 //
 // Autocreated levels are maps.  Array levels can be explicitly created e.g.
 //
-//   $foo[1]["a"] ??= []
-//   $foo[1]["a"][2]["b"] = 3
+//	$foo[1]["a"] ??= []
+//	$foo[1]["a"][2]["b"] = 3
 func NewMlrvalForAutoDeepen(mvtype MVType) (*Mlrval, error) {
 	if mvtype == MT_STRING || mvtype == MT_INT {
 		empty := FromEmptyMap()

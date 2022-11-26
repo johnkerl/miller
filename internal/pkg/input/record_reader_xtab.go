@@ -124,13 +124,13 @@ func (reader *RecordReaderXTAB) processHandle(
 
 // Given input like
 //
-//   a 1
-//   b 2
-//   c 3
+//	a 1
+//	b 2
+//	c 3
 //
-//   a 4
-//   b 5
-//   c 6
+//	a 4
+//	b 5
+//	c 6
 //
 // this function reads the input stream a line at a time, then produces
 // string-lists one per stanza where a stanza is delimited by blank line, or
