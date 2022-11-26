@@ -47,11 +47,11 @@ var allSummarizerInfos = []tSummarizerInfo{
 	{"minlen", "length of shortest string representation for the field", stAccumulator},
 	{"maxlen", "length of longest string representation for the field", stAccumulator},
 
-	{"min", "minimum field value", stPercentile},
+	{"min", "minimum field value", stAccumulator},
 	{"p25", "first-quartile field value", stPercentile},
 	{"median", "median field value", stPercentile},
 	{"p75", "third-quartile field value", stPercentile},
-	{"max", "maximum field value", stPercentile},
+	{"max", "maximum field value", stAccumulator},
 	{"iqr", "interquartile range: p75 - p25", stPercentile},
 	{"lof", "lower outer fence: p25 - 3.0 * iqr", stPercentile},
 	{"lif", "lower inner fence: p25 - 1.5 * iqr", stPercentile},
@@ -64,7 +64,6 @@ var summaryDefaultSummarizerNames = []string{
 	"count",
 	"mean",
 	"min",
-	"median",
 	"max",
 	"null_count",
 	"distinct_count",
@@ -236,6 +235,9 @@ func newFieldSummary() *tFieldSummary {
 	fieldSummary.accumulators["null_count"] = utils.NewStats1NullCountAccumulator()
 	fieldSummary.accumulators["distinct_count"] = utils.NewStats1DistinctCountAccumulator()
 	fieldSummary.accumulators["mode"] = utils.NewStats1ModeAccumulator()
+
+	fieldSummary.accumulators["min"] = utils.NewStats1MinAccumulator()
+	fieldSummary.accumulators["max"] = utils.NewStats1MaxAccumulator()
 
 	fieldSummary.accumulators["sum"] = utils.NewStats1SumAccumulator()
 	fieldSummary.accumulators["mean"] = utils.NewStats1MeanAccumulator()

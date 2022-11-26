@@ -1160,7 +1160,7 @@ All summarizers:
   uof             upper outer fence: p75 + 3.0 * iqr
 
 Default summarizers:
-  field_type count mean min median max null_count distinct_count
+  field_type count mean min max null_count distinct_count
 
 Notes:
 * min, p25, median, p75, and max work for strings as well as numbers
