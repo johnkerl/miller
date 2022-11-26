@@ -4,9 +4,17 @@ package mlrval
 func (mv *Mlrval) Copy() *Mlrval {
 	other := *mv
 	if mv.mvtype == MT_MAP {
-		other.mapval = mv.mapval.Copy()
+		other.x = &mlrvalExtended{
+			mapval: mv.x.mapval.Copy(),
+		}
 	} else if mv.mvtype == MT_ARRAY {
-		other.arrayval = CopyMlrvalArray(mv.arrayval)
+		other.x = &mlrvalExtended{
+			arrayval: CopyMlrvalArray(mv.x.arrayval),
+		}
+	} else if mv.mvtype == MT_FUNC {
+		other.x = &mlrvalExtended{
+			funcval: mv.x.funcval,
+		}
 	}
 	return &other
 }

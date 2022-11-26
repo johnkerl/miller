@@ -86,7 +86,7 @@ func (mv *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 	if !mindex.IsInt() {
 		return *ERROR
 	}
-	value := arrayGetAliased(&mv.arrayval, int(mindex.intval))
+	value := arrayGetAliased(&mv.x.arrayval, int(mindex.intval))
 	if value == nil {
 		return *ABSENT
 	} else {
@@ -116,12 +116,12 @@ func (mv *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
 		os.Exit(1)
 	}
 
-	ok := arrayPutAliased(&mv.arrayval, int(mindex.intval), value)
+	ok := arrayPutAliased(&mv.x.arrayval, int(mindex.intval), value)
 	if !ok {
 		fmt.Fprintf(
 			os.Stderr,
 			"mlr: array index %d out of bounds %d..%d\n",
-			mindex.intval, 1, len(mv.arrayval),
+			mindex.intval, 1, len(mv.x.arrayval),
 		)
 		os.Exit(1)
 	}
@@ -213,7 +213,7 @@ func (mv *Mlrval) ArrayAppend(value *Mlrval) {
 		// Silent no-ops are not good UX ...
 		return
 	}
-	mv.arrayval = append(mv.arrayval, value)
+	mv.x.arrayval = append(mv.x.arrayval, value)
 }
 
 // ================================================================
@@ -222,7 +222,7 @@ func (mv *Mlrval) MapGet(key *Mlrval) Mlrval {
 		return *ERROR
 	}
 
-	mval, err := mv.mapval.GetWithMlrvalIndex(key)
+	mval, err := mv.x.mapval.GetWithMlrvalIndex(key)
 	if err != nil { // xxx maybe error-return in the API
 		return *ERROR
 	}
@@ -243,9 +243,9 @@ func (mv *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
 	}
 
 	if key.IsString() {
-		mv.mapval.PutCopy(key.printrep, value)
+		mv.x.mapval.PutCopy(key.printrep, value)
 	} else if key.IsInt() {
-		mv.mapval.PutCopy(key.String(), value)
+		mv.x.mapval.PutCopy(key.String(), value)
 	}
 	// TODO: need to be careful about semantics here.
 	// Silent no-ops are not good UX ...
@@ -291,19 +291,19 @@ func (mv *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 	lib.InternalCodingErrorIf(len(indices) < 1)
 
 	if mv.IsMap() {
-		return putIndexedOnMap(mv.mapval, indices, rvalue)
+		return putIndexedOnMap(mv.x.mapval, indices, rvalue)
 
 	} else if mv.IsArray() {
-		return putIndexedOnArray(&mv.arrayval, indices, rvalue)
+		return putIndexedOnArray(&mv.x.arrayval, indices, rvalue)
 
 	} else {
 		baseIndex := indices[0]
 		if baseIndex.IsString() {
 			*mv = *FromEmptyMap()
-			return putIndexedOnMap(mv.mapval, indices, rvalue)
+			return putIndexedOnMap(mv.x.mapval, indices, rvalue)
 		} else if baseIndex.IsInt() {
 			*mv = *FromEmptyArray()
-			return putIndexedOnArray(&mv.arrayval, indices, rvalue)
+			return putIndexedOnArray(&mv.x.arrayval, indices, rvalue)
 		} else {
 			return errors.New(
 				"mlr: only maps and arrays are indexable; got " + mv.GetTypeName(),
@@ -326,7 +326,7 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 					".",
 			)
 		}
-		*baseMap = *rvalue.mapval.Copy()
+		*baseMap = *rvalue.x.mapval.Copy()
 		return nil
 	}
 
@@ -438,10 +438,10 @@ func (mv *Mlrval) RemoveIndexed(indices []*Mlrval) error {
 	lib.InternalCodingErrorIf(len(indices) < 1)
 
 	if mv.IsMap() {
-		return removeIndexedOnMap(mv.mapval, indices)
+		return removeIndexedOnMap(mv.x.mapval, indices)
 
 	} else if mv.IsArray() {
-		return removeIndexedOnArray(&mv.arrayval, indices)
+		return removeIndexedOnArray(&mv.x.arrayval, indices)
 
 	} else {
 		return errors.New(
@@ -659,13 +659,13 @@ func NewMlrvalForAutoDeepen(mvtype MVType) (*Mlrval, error) {
 
 func (mv *Mlrval) Arrayify() *Mlrval {
 	if mv.IsMap() {
-		if mv.mapval.IsEmpty() {
+		if mv.x.mapval.IsEmpty() {
 			return mv
 		}
 
 		convertible := true
 		i := 0
-		for pe := mv.mapval.Head; pe != nil; pe = pe.Next {
+		for pe := mv.x.mapval.Head; pe != nil; pe = pe.Next {
 			sval := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 			i++
 			if pe.Key != sval {
@@ -675,9 +675,9 @@ func (mv *Mlrval) Arrayify() *Mlrval {
 		}
 
 		if convertible {
-			arrayval := make([]*Mlrval, mv.mapval.FieldCount)
+			arrayval := make([]*Mlrval, mv.x.mapval.FieldCount)
 			i := 0
-			for pe := mv.mapval.Head; pe != nil; pe = pe.Next {
+			for pe := mv.x.mapval.Head; pe != nil; pe = pe.Next {
 				arrayval[i] = pe.Value.Copy()
 				i++
 			}
@@ -690,8 +690,8 @@ func (mv *Mlrval) Arrayify() *Mlrval {
 	} else if mv.IsArray() {
 		// TODO: comment (or rethink) that this modifies its inputs!!
 		output := mv.Copy()
-		for i := range mv.arrayval {
-			output.arrayval[i] = output.arrayval[i].Arrayify()
+		for i := range mv.x.arrayval {
+			output.x.arrayval[i] = output.x.arrayval[i].Arrayify()
 		}
 		return output
 

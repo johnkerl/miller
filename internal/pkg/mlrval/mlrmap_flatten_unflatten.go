@@ -137,13 +137,13 @@ func (mlrmap *Mlrmap) CopyUnflattened(
 		// Is the field name something dot something?
 		if strings.Contains(pe.Key, separator) {
 			arrayOfIndices := SplitAXHelper(pe.Key, separator)
-			lib.InternalCodingErrorIf(len(arrayOfIndices.arrayval) < 1)
+			lib.InternalCodingErrorIf(len(arrayOfIndices.x.arrayval) < 1)
 			// If the input field name was "x.a" then remember the "x".
-			baseIndex := arrayOfIndices.arrayval[0].String()
+			baseIndex := arrayOfIndices.x.arrayval[0].String()
 			affectedBaseIndices[baseIndex] = true
 			// Use PutIndexed to assign $x["a"] = 7, or $x["b"] = 8, etc.
 			other.PutIndexed(
-				CopyMlrvalArray(arrayOfIndices.arrayval),
+				CopyMlrvalArray(arrayOfIndices.x.arrayval),
 				unflattenTerminal(pe.Value).Copy(),
 			)
 		} else {
@@ -187,13 +187,13 @@ func (mlrmap *Mlrmap) CopyUnflattenFields(
 		// Is the field name something dot something?
 		if strings.Contains(pe.Key, separator) {
 			arrayOfIndices := SplitAXHelper(pe.Key, separator)
-			lib.InternalCodingErrorIf(len(arrayOfIndices.arrayval) < 1)
+			lib.InternalCodingErrorIf(len(arrayOfIndices.x.arrayval) < 1)
 			// If the input field name was "x.a" then remember the "x".
-			baseIndex := arrayOfIndices.arrayval[0].String()
+			baseIndex := arrayOfIndices.x.arrayval[0].String()
 			if fieldNameSet[baseIndex] {
 				// Use PutIndexed to assign $x["a"] = 7, or $x["b"] = 8, etc.
 				other.PutIndexed(
-					CopyMlrvalArray(arrayOfIndices.arrayval),
+					CopyMlrvalArray(arrayOfIndices.x.arrayval),
 					unflattenTerminal(pe.Value).Copy(),
 				)
 				affectedBaseIndices[baseIndex] = true
@@ -247,7 +247,7 @@ func SplitAXHelper(input string, separator string) *Mlrval {
 	output := FromArray(make([]*Mlrval, len(fields)))
 
 	for i, field := range fields {
-		output.arrayval[i] = FromString(field)
+		output.x.arrayval[i] = FromString(field)
 	}
 
 	return output
