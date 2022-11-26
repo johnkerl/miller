@@ -8,7 +8,7 @@ import (
 
 func (mv *Mlrval) GetArrayLength() (int, bool) {
 	if mv.IsArray() {
-		return len(mv.arrayval), true
+		return len(mv.x.arrayval), true
 	} else {
 		return -999, false
 	}
@@ -35,13 +35,13 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 	if mv.IsMap() {
 		// Without this, the for-loop below is zero-pass and fields with "{}"
 		// values would disappear entirely in a JSON-to-CSV conversion.
-		if mv.mapval.IsEmpty() {
+		if mv.x.mapval.IsEmpty() {
 			if prefix != "" {
 				retval.PutCopy(prefix, FromString("{}"))
 			}
 		}
 
-		for pe := mv.mapval.Head; pe != nil; pe = pe.Next {
+		for pe := mv.x.mapval.Head; pe != nil; pe = pe.Next {
 			nextPrefix := pe.Key
 			if prefix != "" {
 				nextPrefix = prefix + delimiter + nextPrefix
@@ -49,7 +49,7 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 			if pe.Value.IsMap() || pe.Value.IsArray() {
 				nextResult := pe.Value.FlattenToMap(nextPrefix, delimiter)
 				lib.InternalCodingErrorIf(nextResult.mvtype != MT_MAP)
-				for pf := nextResult.mapval.Head; pf != nil; pf = pf.Next {
+				for pf := nextResult.x.mapval.Head; pf != nil; pf = pf.Next {
 					retval.PutCopy(pf.Key, pf.Value.Copy())
 				}
 			} else {
@@ -60,13 +60,13 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 	} else if mv.IsArray() {
 		// Without this, the for-loop below is zero-pass and fields with "[]"
 		// values would disappear entirely in a JSON-to-CSV conversion.
-		if len(mv.arrayval) == 0 {
+		if len(mv.x.arrayval) == 0 {
 			if prefix != "" {
 				retval.PutCopy(prefix, FromString("[]"))
 			}
 		}
 
-		for zindex, value := range mv.arrayval {
+		for zindex, value := range mv.x.arrayval {
 			nextPrefix := strconv.Itoa(zindex + 1) // Miller user-space indices are 1-up
 			if prefix != "" {
 				nextPrefix = prefix + delimiter + nextPrefix
@@ -74,7 +74,7 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 			if value.IsMap() || value.IsArray() {
 				nextResult := value.FlattenToMap(nextPrefix, delimiter)
 				lib.InternalCodingErrorIf(nextResult.mvtype != MT_MAP)
-				for pf := nextResult.mapval.Head; pf != nil; pf = pf.Next {
+				for pf := nextResult.x.mapval.Head; pf != nil; pf = pf.Next {
 					retval.PutCopy(pf.Key, pf.Value.Copy())
 				}
 			} else {

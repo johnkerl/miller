@@ -7,6 +7,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
@@ -15,5 +17,6 @@ func main() {
 	mvs[0] = *mlrval.FromString("hello")
 	mvs[1] = *mlrval.FromString("world")
 	mvs[0].ShowSizes()
+	fmt.Println()
 	mvs[1].ShowSizes()
 }

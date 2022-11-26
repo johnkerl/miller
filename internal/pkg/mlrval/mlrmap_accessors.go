@@ -339,7 +339,7 @@ func (mlrmap *Mlrmap) getWithMlrvalArrayIndex(index *Mlrval) (*Mlrval, error) {
 	current := mlrmap
 	var retval *Mlrval = nil
 	lib.InternalCodingErrorIf(!index.IsArray())
-	array := index.arrayval
+	array := index.x.arrayval
 	n := len(array)
 	for i, piece := range array {
 		next, err := current.GetWithMlrvalIndex(piece)
@@ -350,7 +350,7 @@ func (mlrmap *Mlrmap) getWithMlrvalArrayIndex(index *Mlrval) (*Mlrval, error) {
 			if !next.IsMap() {
 				return nil, fmt.Errorf("mlr: cannot multi-index non-map.")
 			}
-			current = next.mapval
+			current = next.x.mapval
 		} else {
 			retval = next.Copy()
 		}
@@ -784,7 +784,7 @@ func (mlrmap *Mlrmap) SortByKeyRecursively() {
 		// Old record will be GC'ed: just move pointers
 		value := mlrmap.Get(key)
 		if value.IsMap() {
-			value.mapval.SortByKeyRecursively()
+			value.x.mapval.SortByKeyRecursively()
 		}
 		other.PutReference(key, value)
 	}

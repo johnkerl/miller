@@ -54,16 +54,23 @@
 package mlrval
 
 type Mlrval struct {
-	intval        int64
-	floatval      float64
-	printrep      string
+	intval   int64
+	floatval float64
+	printrep string
+
+	x *mlrvalExtended
+
 	printrepValid bool
 	boolval       bool
 
 	// Enumeration for string / int / float / boolean / etc.
 	// I would call this "type" not "mvtype" but "type" is a keyword in Go.
 	mvtype MVType
+}
 
+// The Mlrval type is a (non-union) compound type where arrayval, mapval, and funcval are (a)
+// largish, and (b) not usually used.
+type mlrvalExtended struct {
 	arrayval []*Mlrval
 	mapval   *Mlrmap
 	// First-class-function literals from internal/pkg/dsl/cst.
