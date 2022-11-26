@@ -30,6 +30,9 @@ shape    count count_fraction
 triangle 3     0.3
 square   4     0.4
 circle   3     0.3
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Typing this out can get a bit old, if the only thing that changes for you is the filename. Some options include:
@@ -72,6 +75,9 @@ shape    count count_fraction
 triangle 3     0.3
 square   4     0.4
 circle   3     0.3
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -82,6 +88,9 @@ shape    count count_fraction
 triangle 3     0.3
 square   4     0.4
 circle   3     0.3
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -105,6 +114,9 @@ circle   3     0.3
   "count_fraction": 0.3
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -123,6 +135,9 @@ circle   3     0.3
   "count_fraction": 0.3
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 etc.
@@ -160,6 +175,9 @@ shape    count count_fraction
 triangle 3     0.3
 square   4     0.4
 circle   3     0.3
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -170,6 +188,9 @@ shape    count count_fraction
 triangle 3     0.3
 square   4     0.4
 circle   3     0.3
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -193,6 +214,9 @@ circle   3     0.3
   "count_fraction": 0.3
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -211,6 +235,9 @@ circle   3     0.3
   "count_fraction": 0.3
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Miller scripts on Windows
@@ -247,6 +274,9 @@ shape    count count_fraction
 triangle 3     0.3
 square   4     0.4
 circle   3     0.3
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -270,6 +300,9 @@ circle   3     0.3
   "count_fraction": 0.3
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -288,6 +321,9 @@ circle   3     0.3
   "count_fraction": 0.3
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 and so on. See also [Miller on Windows](miller-on-windows.md).

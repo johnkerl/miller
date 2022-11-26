@@ -35,6 +35,9 @@ i j  k
 7 8  15
 8 9  17
 9 10 19
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Newlines within the expression are ignored, which can help increase legibility of complex expressions:
@@ -60,6 +63,9 @@ wye eks 10000 0.734806020620654365 0.884788571337605134 5  7  2   2       data/s
 pan wye 10001 0.870530722602517626 0.009854780514656930 5  8  3   2       data/small2
 hat wye 10002 0.321507044286237609 0.568893318795083758 5  9  4   2       data/small2
 pan zee 10003 0.272054845593895200 0.425789896597056627 5  10 5   2       data/small2
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -70,6 +76,9 @@ pan zee 10003 0.272054845593895200 0.425789896597056627 5  10 5   2       data/s
 <pre class="pre-non-highlight-in-pair">
 x_y_corr
 -0.7479940285189345
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Expressions from files
@@ -85,6 +94,9 @@ a=eks,b=pan,i=2,x=0.758679,y=0.522151,xy=0.9209970096813562
 a=wye,b=wye,i=3,x=0.204603,y=0.338318,xy=0.3953750836016352
 a=eks,b=wye,i=4,x=0.381399,y=0.134188,xy=0.40431623334340655
 a=wye,b=pan,i=5,x=0.573288,y=0.863624,xy=1.036583592538489
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -96,6 +108,9 @@ a=eks,b=pan,i=2,x=0.758679,y=0.522151,xy=0.9209970096813562
 a=wye,b=wye,i=3,x=0.204603,y=0.338318,xy=0.3953750836016352
 a=eks,b=wye,i=4,x=0.381399,y=0.134188,xy=0.40431623334340655
 a=wye,b=pan,i=5,x=0.573288,y=0.863624,xy=1.036583592538489
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 You may, though, find it convenient to put expressions into files for reuse, and read them
@@ -120,6 +135,9 @@ a=eks,b=pan,i=2,x=0.758679,y=0.522151,xy=0.9209970096813562
 a=wye,b=wye,i=3,x=0.204603,y=0.338318,xy=0.3953750836016352
 a=eks,b=wye,i=4,x=0.381399,y=0.134188,xy=0.40431623334340655
 a=wye,b=pan,i=5,x=0.573288,y=0.863624,xy=1.036583592538489
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 If you have some of the logic in a file and you want to write the rest on the command line, you can **use the -f and -e options together**:
@@ -142,6 +160,9 @@ a=eks,b=pan,i=2,x=0.758679,y=0.522151,xy=0.9209970096813562
 a=wye,b=wye,i=3,x=0.204603,y=0.338318,xy=0.3953750836016352
 a=eks,b=wye,i=4,x=0.381399,y=0.134188,xy=0.40431623334340655
 a=wye,b=pan,i=5,x=0.573288,y=0.863624,xy=1.036583592538489
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 A suggested use-case here is defining functions in files, and calling them from command-line expressions.
@@ -168,6 +189,9 @@ Semicolons are optional after closing curly braces (which close conditionals and
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -175,6 +199,9 @@ x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Semicolons are required between statements even if those statements are on separate lines.  **Newlines** are for your convenience but have no syntactic meaning: line endings do not terminate statements. For example, adjacent assignment statements must be separated by semicolons even if those statements are on separate lines:
@@ -216,6 +243,9 @@ mlr put '
 s,t,u,v
 3,-1,5,1
 9,-1,41,2
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Bodies for all compound statements must be enclosed in **curly braces**, even if the body is a single statement:

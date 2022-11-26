@@ -36,8 +36,13 @@ If field names have **special characters** such as `.` then you can use braces, 
 
 You may also use a **computed field name** in square brackets, e.g.
 
-<pre class="pre-highlight-non-pair">
+<pre class="pre-highlight-in-pair">
 <b>echo a=3,b=4 | mlr filter '$["x"] < 0.5'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -45,6 +50,9 @@ You may also use a **computed field name** in square brackets, e.g.
 </pre>
 <pre class="pre-non-highlight-in-pair">
 s=green,t=blue,a=3,b=4,green_blue=12
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Notes:
@@ -74,6 +82,9 @@ a=eks,b=pan,i=2,x=0.758679,y=0.522151
 a=wye,b=wye,i=3,x=0.204603,y=0.338318
 a=eks,b=wye,i=4,x=0.381399,y=0.134188
 a=wye,b=pan,i=5,x=0.573288,y=0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -85,6 +96,9 @@ a=eks,b=pan,NEW=2,x=0.758679,y=0.522151
 a=wye,b=wye,NEW=3,x=0.204603,y=0.338318
 a=eks,b=wye,NEW=4,x=0.381399,y=0.134188
 a=wye,b=pan,NEW=5,x=0.573288,y=0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -96,6 +110,9 @@ a=eks,b=pan,i=NEW,x=0.758679,y=0.522151
 a=wye,b=wye,i=NEW,x=0.204603,y=0.338318
 a=eks,b=wye,i=NEW,x=0.381399,y=0.134188
 a=wye,b=pan,i=NEW,x=0.573288,y=0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -107,6 +124,9 @@ a=eks,b=pan,i=2,x=0.758679,y=0.522151,NEW=b
 a=wye,b=wye,i=3,x=0.204603,y=0.338318,NEW=i
 a=eks,b=wye,i=4,x=0.381399,y=0.134188,NEW=x
 a=wye,b=pan,i=5,x=0.573288,y=0.863624,NEW=y
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -118,6 +138,9 @@ a=eks,b=pan,i=2,x=0.758679,y=0.522151,NEW=pan
 a=wye,b=wye,i=3,x=0.204603,y=0.338318,NEW=3
 a=eks,b=wye,i=4,x=0.381399,y=0.134188,NEW=0.381399
 a=wye,b=pan,i=5,x=0.573288,y=0.863624,NEW=0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -129,6 +152,9 @@ a=eks,b=NEW,i=2,x=0.758679,y=0.522151
 a=wye,b=wye,i=NEW,x=0.204603,y=0.338318
 a=eks,b=wye,i=4,x=NEW,y=0.134188
 a=wye,b=pan,i=5,x=0.573288,y=NEW
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Right-hand side accesses to non-existent fields -- i.e. with index less than 1 or greater than `NF` -- return an absent value. Likewise, left-hand side accesses only refer to fields which already exist. For example, if a field has 5 records then assigning the name or value of the 6th (or 600th) field results in a no-op.
@@ -142,6 +168,9 @@ a=eks,b=pan,i=2,x=0.758679,y=0.522151
 a=wye,b=wye,i=3,x=0.204603,y=0.338318
 a=eks,b=wye,i=4,x=0.381399,y=0.134188
 a=wye,b=pan,i=5,x=0.573288,y=0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -153,6 +182,9 @@ a=eks,b=pan,i=2,x=0.758679,y=0.522151
 a=wye,b=wye,i=3,x=0.204603,y=0.338318
 a=eks,b=wye,i=4,x=0.381399,y=0.134188
 a=wye,b=pan,i=5,x=0.573288,y=0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Out-of-stream variables
@@ -170,6 +202,9 @@ You may use a **computed key** in square brackets, e.g.
 </pre>
 <pre class="pre-non-highlight-in-pair">
 green_blue=12
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Out-of-stream variables are **scoped** to the `put` command in which they appear.  In particular, if you have two or more `put` commands separated by `then`, each put will have its own set of out-of-stream variables:
@@ -192,6 +227,9 @@ a=10,b=2,c=3
 a=40,b=5,c=6
 sum=5
 sum=50
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Out-of-stream variables' **extent** is from the start to the end of the record stream, i.e. every time the `put` or `filter` statement referring to them is executed.
@@ -219,6 +257,9 @@ a=wye,x_count=2
 a=pan,x_sum=0.346791
 a=eks,x_sum=1.140078
 a=wye,x_sum=0.777891
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -228,6 +269,9 @@ a=wye,x_sum=0.777891
 a=pan,x_count=1,x_sum=0.346791
 a=eks,x_count=2,x_sum=1.140078
 a=wye,x_count=2,x_sum=0.777891
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Indices can be arbitrarily deep -- here there are two or more of them:
@@ -267,6 +311,9 @@ a=hat,b=zee,x_count=385,x_sum=196.3494502965293
 a=hat,b=eks,x_count=389,x_sum=189.0067933716193
 a=hat,b=hat,x_count=381,x_sum=182.8535323148762
 a=hat,b=pan,x_count=363,x_sum=168.5538067327806
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 The idea is that `stats1`, and other Miller verbs, encapsulate frequently-used patterns with a minimum of keystroking (and run a little faster), whereas using out-of-stream variables you have more flexibility and control in what you do.
@@ -296,6 +343,9 @@ x=1,y=0,z=0
 x=2,y=0.3010299956639812,z=0.5486620049392715
 x=3,y=0.4771212547196624,z=0.6907396432228734
 num_total=5,num_positive=3
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Local variables
@@ -333,6 +383,9 @@ i=7,o=13.966128063060479
 i=8,o=13.99248245928659
 i=9,o=15.784270485515197
 i=10,o=15.37686787628025
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Things which are completely unsurprising, resembling many other languages:
@@ -424,6 +477,9 @@ inner_d 70
 outer_a 10
 outer_b 50
 outer_c 60
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 And this example demonstrates the type-declaration rules:
@@ -494,6 +550,9 @@ a i   y
 3 wye 3.3831800000000003
 4 eks 1.34188
 5 wye 8.636239999999999
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Likewise, you can assign map literals to out-of-stream variables or local variables; pass them as arguments to user-defined functions, return them from functions, and so on:
@@ -513,6 +572,9 @@ a=eks,x=151.7358
 a=wye,x=40.9206
 a=eks,x=76.2798
 a=wye,x=114.6576
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Like out-of-stream and local variables, map literals can be multi-level:
@@ -546,6 +608,9 @@ Like out-of-stream and local variables, map literals can be multi-level:
     "non-numeric": 10
   }
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 See also the [Maps page](reference-main-maps.md).
@@ -573,6 +638,9 @@ read/write access to environment variables, e.g.  `ENV["HOME"]` or
 a=eks,b=pan,i=2,x=0.758679,y=0.522151
 1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533
 a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -595,6 +663,9 @@ a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134,fnr=2
 a=pan,b=wye,i=10001,x=0.870530722602517626,y=0.009854780514656930,fnr=3
 a=hat,b=wye,i=10002,x=0.321507044286237609,y=0.568893318795083758,fnr=4
 a=pan,b=zee,i=10003,x=0.272054845593895200,y=0.425789896597056627,fnr=5
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Their values of `NF`, `NR`, `FNR`, `FILENUM`, and `FILENAME` change from one
@@ -613,6 +684,9 @@ Their **scope is global**: you can refer to them in any `filter` or `put` statem
 a,b,c,nr
 1,2,3,1
 4,5,6,2
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -626,6 +700,9 @@ a,b,c,nr
 4,5,6,2
 4,5,6,2
 4,5,6,2
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 The **extent** is for the duration of the put/filter: in a `begin` statement (which executes before the first input record is consumed) you will find `NR=1` and in an `end` statement (which is executed after the last input record is consumed) you will find `NR` to be the total number of records ingested.
@@ -839,6 +916,9 @@ Example recursive copy of out-of-stream variables:
     "count": 5
   }
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Example of out-of-stream variable assigned to full stream record, where the 2nd record is stashed, and the 4th record is overwritten with that:
@@ -852,6 +932,9 @@ a=eks,b=pan,i=2,x=0.758679,y=0.522151
 a=wye,b=wye,i=3,x=0.204603,y=0.338318
 a=eks,b=pan,i=2,x=0.758679,y=0.522151
 a=wye,b=pan,i=5,x=0.573288,y=0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Example of full stream record assigned to an out-of-stream variable, finding the record for which the `x` field has the largest value in the input stream:
@@ -876,6 +959,9 @@ a=wye,b=pan,i=5,x=0.573288,y=0.863624
 <pre class="pre-non-highlight-in-pair">
 a   b   i x        y
 eks pan 2 0.758679 0.522151
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Keywords for filter and put

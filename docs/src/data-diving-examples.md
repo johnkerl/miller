@@ -70,6 +70,9 @@ point_longitude    -81.707664
 line               Residential
 construction       Masonry
 point_granularity  3
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 A few simple queries:
@@ -88,6 +91,9 @@ BAKER COUNTY        70
 BRADFORD COUNTY     31
 HAMILTON COUNTY     35
 UNION COUNTY        15
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -97,6 +103,9 @@ UNION COUNTY        15
 line        count
 Residential 30838
 Commercial  5796
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Categorization of total insured value:
@@ -108,6 +117,9 @@ Categorization of total insured value:
 tiv_2012_min  73.37
 tiv_2012_mean 2571004.0973420837
 tiv_2012_max  1701000000
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -121,6 +133,9 @@ Wood                Residential 73.37        113493.01704925536 649046.12
 Reinforced Concrete Commercial  6416016.01   20212428.681839883 60570000
 Reinforced Masonry  Commercial  1287817.34   4621372.981117158  16650000
 Steel Frame         Commercial  29790000     133492500          1701000000
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -135,6 +150,9 @@ hu_site_deductible_p90  76.5
 hu_site_deductible_p95  6829.2
 hu_site_deductible_p99  126270
 hu_site_deductible_p100 7380000
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -153,6 +171,7 @@ BROWARD COUNTY      0                      148500                 3258900
 CALHOUN COUNTY      0                      33339.6                33339.6
 CHARLOTTE COUNTY    5400                   52650                  250994.7
 CITRUS COUNTY       1332.9                 79974.9                483785.1
+Memory profile started.
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -165,6 +184,9 @@ tiv_2011_tiv_2012_ols_m 0.9835583980337723
 tiv_2011_tiv_2012_ols_b 433854.6428968317
 tiv_2011_tiv_2012_ols_n 36634
 tiv_2011_tiv_2012_r2    0.9468258417320189
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -207,6 +229,9 @@ tiv_2011_tiv_2012_ols_m 1.2301
 tiv_2011_tiv_2012_ols_b -596.6239
 tiv_2011_tiv_2012_ols_n 657
 tiv_2011_tiv_2012_r2    0.9335
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Color/shape data
@@ -241,6 +266,9 @@ red    circle   1    84  0.209017 0.290052 0.138103 5.065034
 red    square   0    243 0.956274 0.746720 0.775542 7.117831
 purple triangle 0    257 0.435535 0.859129 0.812290 5.753095
 red    square   0    322 0.201551 0.953110 0.771991 5.612050
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Look at uncategorized stats (using [creach](https://github.com/johnkerl/scripts/blob/master/fundam/creach) for spacing).
@@ -263,6 +291,9 @@ v_min     -0.092709
 v_mean    0.49778696586624427
 v_max     1.0725
 
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 The histogram shows the different distribution of 0/1 flags:
@@ -284,6 +315,9 @@ bin_lo                bin_hi              flag_count u_count v_count
 0.8900000000000002    0.9900000000000002  0          995     993
 0.9900000000000002    1.0900000000000003  4020       1013    939
 1.0900000000000003    1.1900000000000002  0          0       25
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Look at univariate stats by color and shape. In particular, color-dependent flag probabilities pop out, aligning with their original Bernoulli probabilities from the data-generator script:
@@ -301,6 +335,9 @@ orange 0        0.5214521452145214  1        0.001235 0.49053241584158375 0.9988
 purple 0        0.09019264448336252 1        0.000266 0.49400496322241666 0.999647 0.000364  0.4970507127845888  0.999975
 red    0        0.3031674208144796  1        0.000671 0.49255964641241273 0.999882 -0.092709 0.4965350941607402  1.0725
 yellow 0        0.8924274593064402  1        0.0013   0.4971291160651098  0.999923 0.000711  0.5106265987261144  0.999919
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -313,6 +350,9 @@ shape    flag_min flag_mean           flag_max u_min    u_mean              u_ma
 circle   0        0.3998456194519491  1        0.000044 0.498554505982246   0.999923 -0.092709 0.49552416171362396 1.0725
 square   0        0.39611178614823817 1        0.000188 0.4993854558930749  0.999969 0.000089  0.49653825929526124 0.999975
 triangle 0        0.4015421115065243  1        0.000881 0.49685854240806604 0.999661 0.000717  0.5010495260972719  0.999995
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Look at bivariate stats by color and shape. In particular, `u,v` pairwise correlation for red circles pops out:
@@ -323,6 +363,9 @@ Look at bivariate stats by color and shape. In particular, `u,v` pairwise correl
 <pre class="pre-non-highlight-in-pair">
           u_v_corr              w_x_corr
 0.1334180491027861 -0.011319841199866178
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -350,4 +393,7 @@ orange triangle -0.030456661186085785    -0.1318699981926352
 yellow   circle  -0.06477331572781474    0.07369449819706045
   blue   circle  -0.10234761901929677  -0.030528539069837757
  green triangle  -0.10901825107358765   -0.04848782060162929
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>

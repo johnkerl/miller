@@ -177,8 +177,13 @@ And, suppose you want to compute the differences in the counters between adjacen
 
 First, rename counter columns to make them distinct:
 
-<pre class="pre-highlight-non-pair">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv rename count,previous_count data/previous_counters.csv > data/prevtemp.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -192,8 +197,13 @@ orange,694
 purple,12
 </pre>
 
-<pre class="pre-highlight-non-pair">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv rename count,current_count data/current_counters.csv > data/currtemp.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -223,6 +233,9 @@ orange 694            670           -24
 yellow 0              27            (error)
 blue   6838           6944          106
 purple 12             0             (error)
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 See also the [record-heterogeneity page](record-heterogeneity.md).

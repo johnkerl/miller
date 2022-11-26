@@ -102,10 +102,18 @@ purple,triangle,false,7,65,80.1405,5.8240
 yellow,circle,true,8,73,63.9785,4.2370
 yellow,circle,true,9,87,63.5058,8.3350
 purple,square,false,10,91,72.3735,8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
-<pre class="pre-highlight-non-pair">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -116,6 +124,9 @@ color,shape,flag,k,index,quantity,rate
 red,circle,true,3,16,13.8103,2.9010
 yellow,circle,true,8,73,63.9785,4.2370
 yellow,circle,true,9,87,63.5058,8.3350
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -127,6 +138,9 @@ red,square,true,2,15,79.2778,0.0130
 red,square,false,4,48,77.5542,7.4670
 red,square,false,6,64,77.1991,9.5310
 purple,square,false,10,91,72.3735,8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -137,6 +151,9 @@ color,shape,flag,k,index,quantity,rate
 yellow,triangle,true,1,11,43.6498,9.8870
 purple,triangle,false,5,51,81.2290,8.5910
 purple,triangle,false,7,65,80.1405,5.8240
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
@@ -384,6 +401,9 @@ id color  shape    flag  k  index quantity rate
 8  yellow circle   true  8  73    63.9785  4.2370
 9  yellow circle   true  9  87    63.5058  8.3350
 10 purple square   false 10 91    72.3735  8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 And if you want indexing, redirects, etc., just assign to a temporary variable and use one of the other emit variants:
@@ -406,6 +426,9 @@ id color  shape    flag  k  index quantity rate
 8  yellow circle   true  8  73    63.9785  4.2370
 9  yellow circle   true  9  87    63.5058  8.3350
 10 purple square   false 10 91    72.3735  8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Emitf statements
@@ -422,6 +445,9 @@ Use **emitf** to output several out-of-stream variables side-by-side in the same
 </pre>
 <pre class="pre-non-highlight-in-pair">
 count=5,x_sum=2.26476,y_sum=2.585083
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Emit statements
@@ -446,6 +472,9 @@ a=wye,b=pan,i=5,x=0.573288,y=0.863624
 {
   "sum": 2.26476
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -453,6 +482,9 @@ a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 <pre class="pre-non-highlight-in-pair">
 sum=2.26476
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 If it's indexed then use as many names after `emit` as there are indices:
@@ -468,6 +500,9 @@ If it's indexed then use as many names after `emit` as there are indices:
     "wye": 0.777891
   }
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -477,6 +512,9 @@ If it's indexed then use as many names after `emit` as there are indices:
 a=pan,sum=0.346791
 a=eks,sum=1.140078
 a=wye,sum=0.777891
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -498,6 +536,9 @@ a=wye,sum=0.777891
     }
   }
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -509,6 +550,9 @@ a=eks,b=pan,sum=0.758679
 a=eks,b=wye,sum=0.381399
 a=wye,b=wye,sum=0.204603
 a=wye,b=pan,sum=0.573288
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -540,6 +584,9 @@ a=wye,b=pan,sum=0.573288
     }
   }
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -554,6 +601,9 @@ a=eks,b=pan,i=2,sum=0.758679
 a=eks,b=wye,i=4,sum=0.381399
 a=wye,b=wye,i=3,sum=0.204603
 a=wye,b=pan,i=5,sum=0.573288
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Now for **emitp**: if you have as many names following `emit` as there are levels in the out-of-stream variable's map, then `emit` and `emitp` do the same thing. Where they differ is when you don't specify as many names as there are map levels. In this case, Miller needs to flatten multiple map indices down to output-record keys: `emitp` includes full prefixing (hence the `p` in `emitp`) while `emit` takes the deepest map key as the output-record key:
@@ -577,6 +627,9 @@ Now for **emitp**: if you have as many names following `emit` as there are level
     }
   }
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -586,6 +639,9 @@ Now for **emitp**: if you have as many names following `emit` as there are level
 a=pan,pan=0.346791
 a=eks,pan=0.758679,wye=0.381399
 a=wye,wye=0.204603,pan=0.573288
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -595,6 +651,9 @@ a=wye,wye=0.204603,pan=0.573288
 pan=0.346791
 pan=0.758679,wye=0.381399
 wye=0.204603,pan=0.573288
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -604,6 +663,9 @@ wye=0.204603,pan=0.573288
 a=pan,sum.pan=0.346791
 a=eks,sum.pan=0.758679,sum.wye=0.381399
 a=wye,sum.wye=0.204603,sum.pan=0.573288
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -611,6 +673,9 @@ a=wye,sum.wye=0.204603,sum.pan=0.573288
 </pre>
 <pre class="pre-non-highlight-in-pair">
 sum.pan.pan=0.346791,sum.eks.pan=0.758679,sum.eks.wye=0.381399,sum.wye.wye=0.204603,sum.wye.pan=0.573288
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -622,6 +687,9 @@ sum.eks.pan 0.758679
 sum.eks.wye 0.381399
 sum.wye.wye 0.204603
 sum.wye.pan 0.573288
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Use **--flatsep** to specify the character which joins multilevel
@@ -634,6 +702,9 @@ keys for `emitp` (it defaults to a colon):
 a=pan,sum/pan=0.346791
 a=eks,sum/pan=0.758679,sum/wye=0.381399
 a=wye,sum/wye=0.204603,sum/pan=0.573288
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -641,6 +712,9 @@ a=wye,sum/wye=0.204603,sum/pan=0.573288
 </pre>
 <pre class="pre-non-highlight-in-pair">
 sum/pan/pan=0.346791,sum/eks/pan=0.758679,sum/eks/wye=0.381399,sum/wye/wye=0.204603,sum/wye/pan=0.573288
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -655,6 +729,9 @@ sum/eks/pan 0.758679
 sum/eks/wye 0.381399
 sum/wye/wye 0.204603
 sum/wye/pan 0.573288
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Multi-emit statements
@@ -701,6 +778,9 @@ hat zee 196.3494502965293  385     0.5099985721987774
 hat eks 189.0067933716193  389     0.48587864619953547
 hat hat 182.8535323148762  381     0.47993053101017374
 hat pan 168.5538067327806  363     0.4643355557376876
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 What this does is walk through the first out-of-stream variable (`@x_sum` in this example) as usual, then for each keylist found (e.g. `pan,wye`), include the values for the remaining out-of-stream variables (here, `@x_count` and `@x_mean`). You should use this when all out-of-stream variables in the emit statement have **the same shape and the same keylists**.
@@ -723,6 +803,9 @@ eks pan 0.758679 1
 eks wye 0.381399 1
 wye wye 0.204603 1
 wye pan 0.573288 1
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -746,6 +829,9 @@ eks pan 1
 eks wye 1
 wye wye 1
 wye pan 1
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -762,4 +848,7 @@ eks pan 0.758679 1
 eks wye 0.381399 1
 wye wye 0.204603 1
 wye pan 0.573288 1
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>

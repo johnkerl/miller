@@ -111,6 +111,9 @@ bar.baz
 bar.baz
 [
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 This also works on the left-hand sides of assignment statements:
@@ -144,6 +147,9 @@ This also works on the left-hand sides of assignment statements:
   }
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 A few caveats:
@@ -159,6 +165,9 @@ A few caveats:
 6989
 [
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 * However (awkwardly), if you want to use `.` for map-traversal as well as string-concatenation in the same statement, you'll need to insert parentheses, as the default associativity is left-to-right:
@@ -172,6 +181,9 @@ A few caveats:
 (error)
 [
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -183,4 +195,7 @@ A few caveats:
 GET -- api/check
 [
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>

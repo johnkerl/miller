@@ -19,8 +19,8 @@
   * Running `make` within the `docs` directory handles both of those steps.
   * TL;DR just `make docs` from the Miller base directory
 * Quick-editing loop:
-  * In one terminal, cd to this directory and leave `mkdocs serve` running.
-  * In another terminal, cd to the `src` subdirectory of `docs` and edit `*.md.in`.
+  * In one terminal, cd to the `docs` directory and leave `mkdocs serve` running.
+  * In another terminal, cd to the `docs/src` subdirectory and edit `*.md.in`.
   * Run `genmds` to re-create all the `*.md` files, or `genmds foo.md.in` to just re-create the `foo.md.in` file you just edited, or (simplest) just `make` within the `docs/src` subdirectory.
   * In your browser, visit http://127.0.0.1:8000
   * This doesn't write HTML in `docs/site`; HTML is served up directly in the browser -- this is nice for previewing interactive edits.

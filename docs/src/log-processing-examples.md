@@ -86,6 +86,9 @@ type hit_mean
 A1   0.8571428571428571
 A4   0.7142857142857143
 A9   0.09090909090909091
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -102,6 +105,9 @@ time                 batch_size num_filtered time_delta num_filtered_delta
 2016-09-02T12:35:20Z 100        554          7          61
 2016-09-02T12:35:36Z 100        612          16         58
 2016-09-02T12:35:42Z 100        728          6          116
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Alternatively, we can simply group the similar data for a better look:
@@ -158,6 +164,9 @@ time       batch_size num_filtered
 1472819720 100        554
 1472819736 100        612
 1472819742 100        728
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -212,6 +221,9 @@ time                 batch_size num_filtered
 2016-09-02T12:35:20Z 100        554
 2016-09-02T12:35:36Z 100        612
 2016-09-02T12:35:42Z 100        728
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Parsing log-file output

@@ -76,6 +76,9 @@ Examples:
 a,b,c
 1.2,3,true
 4,5.6,buongiorno
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -123,6 +126,9 @@ f  8.9
 tf float
 g  15.9
 tg float
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 On input, string values representable as boolean  (e.g. `"true"`, `"false"`)
@@ -153,6 +159,9 @@ or the
 id,blob
 100,"{""a"":1,""b"":[2,3,4]}"
 105,"{""a"":6,""b"":[7,8,9]}"
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -169,6 +178,9 @@ id,blob
   "blob": "{\"a\":6,\"b\":[7,8,9]}"
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -191,6 +203,9 @@ id,blob
   }
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -213,6 +228,9 @@ id,blob
   }
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 These have their respective operations to convert back to string: the

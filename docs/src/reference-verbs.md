@@ -28,6 +28,9 @@ yellow triangle true  1 11    43.6498  9.8870
 red    square   true  2 15    79.2778  0.0130
 red    circle   true  3 16    13.8103  2.9010
 red    square   false 4 48    77.5542  7.4670
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 the `sort` and `head` bits are _verbs_.  See the [Miller command
@@ -79,6 +82,9 @@ Options:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a=b,c=d,e=f
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -86,6 +92,9 @@ a=b,c=d,e=f
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a=b,c=d,e=f,4=g
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## bar
@@ -124,6 +133,9 @@ eks pan 2 0.758679 0.522151
 wye wye 3 0.204603 0.338318
 eks wye 4 0.381399 0.134188
 wye pan 5 0.573288 0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -136,6 +148,9 @@ eks pan 2 ******************************.......... ********************.........
 wye wye 3 ********................................ *************...........................
 eks wye 4 ***************......................... *****...................................
 wye pan 5 **********************.................. **********************************......
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -148,6 +163,9 @@ eks pan 2 ***************************************# ************************.....
 wye wye 3 #....................................... #.......................................
 eks wye 4 #....................................... #.......................................
 wye pan 5 **********************************...... ***************************************#
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -160,6 +178,9 @@ eks pan 2 [0.204603]*******************#[0.758679] [0.134188]**********.........
 wye wye 3 [0.204603]#...................[0.758679] [0.134188]*****...............[0.863624]
 eks wye 4 [0.204603]******..............[0.758679] [0.134188]#...................[0.863624]
 wye pan 5 [0.204603]*************.......[0.758679] [0.134188]*******************#[0.863624]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## bootstrap
@@ -277,6 +298,9 @@ a,b,c
 1,2,3
 4,5,6
 7,8,9
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -294,6 +318,9 @@ c 6
 a 7
 b 8
 c 9
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -304,6 +331,9 @@ n,a,b,c
 1,1,2,3
 2,4,5,6
 3,7,8,9
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -316,6 +346,9 @@ eks pan 2 0.758679 0.522151
 wye wye 3 0.204603 0.338318
 eks wye 4 0.381399 0.134188
 wye pan 5 0.573288 0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -328,6 +361,9 @@ n a   b   i x        y
 1 wye wye 3 0.204603 0.338318
 2 eks wye 4 0.381399 0.134188
 2 wye pan 5 0.573288 0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## check
@@ -382,6 +418,9 @@ leave off -k as well as -v.
   " Preference  ": "    yellow"
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -402,6 +441,9 @@ leave off -k as well as -v.
   "Preference": "    yellow"
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -422,6 +464,9 @@ leave off -k as well as -v.
   " Preference  ": "yellow"
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -442,6 +487,9 @@ leave off -k as well as -v.
   "Preference": "yellow"
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Function links:
@@ -472,6 +520,9 @@ Options:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 count=10000
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -483,6 +534,9 @@ a=eks,count=1965
 a=wye,count=1966
 a=zee,count=2047
 a=hat,count=1941
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -490,6 +544,9 @@ a=hat,count=1941
 </pre>
 <pre class="pre-non-highlight-in-pair">
 count=5
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -501,6 +558,9 @@ b=wye,count=2057
 b=zee,count=1943
 b=eks,count=2008
 b=hat,count=2050
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -508,6 +568,9 @@ b=hat,count=2050
 </pre>
 <pre class="pre-non-highlight-in-pair">
 count=5
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -539,6 +602,9 @@ a=zee,b=hat,count=409
 a=wye,b=zee,count=385
 a=eks,b=hat,count=417
 a=wye,b=eks,count=386
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## count-distinct
@@ -592,6 +658,9 @@ a=wye,b=wye,count=377
 a=eks,b=pan,count=371
 a=hat,b=pan,count=363
 a=eks,b=zee,count=357
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -608,6 +677,9 @@ field=b,value=wye,count=2057
 field=b,value=zee,count=1943
 field=b,value=eks,count=2008
 field=b,value=hat,count=2050
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -639,6 +711,9 @@ a=wye,b=wye,someothername=377
 a=eks,b=pan,someothername=371
 a=hat,b=pan,someothername=363
 a=eks,b=zee,someothername=357
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -646,6 +721,9 @@ a=eks,b=zee,someothername=357
 </pre>
 <pre class="pre-non-highlight-in-pair">
 count=25
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## count-similar
@@ -688,6 +766,9 @@ zee eks 17 0.29081949506712723 0.054478717073354166
 hat zee 18 0.05727869223575699 0.13343527626645157
 zee pan 19 0.43144132839222604 0.8442204830496998
 eks wye 20 0.38245149780530685 0.4730652428100751
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -715,6 +796,9 @@ zee eks 17 0.29081949506712723 0.054478717073354166 5
 zee pan 19 0.43144132839222604 0.8442204830496998   5
 hat wye 9  0.03144187646093577 0.7495507603507059   2
 hat zee 18 0.05727869223575699 0.13343527626645157  2
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -742,6 +826,9 @@ zee wye 8  0.5985540091064224  0.976181385699006    5
 zee pan 12 0.3676141320555616  0.23614420670296965  5
 zee eks 17 0.29081949506712723 0.054478717073354166 5
 zee pan 19 0.43144132839222604 0.8442204830496998   5
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## cut
@@ -780,6 +867,9 @@ eks pan 2 0.758679 0.522151
 wye wye 3 0.204603 0.338318
 eks wye 4 0.381399 0.134188
 wye pan 5 0.573288 0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -792,6 +882,9 @@ i x        y
 3 0.204603 0.338318
 4 0.381399 0.134188
 5 0.573288 0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -799,6 +892,9 @@ i x        y
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a=1,b=2,c=3
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -806,6 +902,9 @@ a=1,b=2,c=3
 </pre>
 <pre class="pre-non-highlight-in-pair">
 b=2,c=3,a=1
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## decimate
@@ -864,6 +963,9 @@ a,b,c
 1,,3
 4,5,6
 7,5,9
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -874,6 +976,9 @@ a,b,c
 1,,3
 4,5,6
 7,,9
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## fill-empty
@@ -907,6 +1012,9 @@ a,b,c
 1,N/A,3
 4,5,6
 7,N/A,9
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -917,6 +1025,9 @@ a,b,c
 1,something,3
 4,5,6
 7,something,9
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## filter
@@ -1076,6 +1187,9 @@ eks pan 2 0.758679 0.522151
 wye wye 3 0.204603 0.338318
 eks wye 4 0.381399 0.134188
 wye pan 5 0.573288 0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1088,6 +1202,9 @@ eks pan 2.000000 0.758679 0.522151
 wye wye 3.000000 0.204603 0.338318
 eks wye 4.000000 0.381399 0.134188
 wye pan 5.000000 0.573288 0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1100,6 +1217,9 @@ XeksX XpanX 00000002 7.586790e-01 5.221510e-01
 XwyeX XwyeX 00000003 2.046030e-01 3.383180e-01
 XeksX XwyeX 00000004 3.813990e-01 1.341880e-01
 XwyeX XpanX 00000005 5.732880e-01 8.636240e-01
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1112,6 +1232,9 @@ XeksX XpanX 2.000000e+00 7.586790e-01 5.221510e-01
 XwyeX XwyeX 3.000000e+00 2.046030e-01 3.383180e-01
 XeksX XwyeX 4.000000e+00 3.813990e-01 1.341880e-01
 XwyeX XpanX 5.000000e+00 5.732880e-01 8.636240e-01
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## fraction
@@ -1178,6 +1301,9 @@ male   blue   2034 0.270083654229186
 male   purple 12   0.0015934138892577346
 male   yellow 1192 0.15827911299960165
 male   orange 448  0.0594874518656221
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Using `-g` we can split those out by gender, or by color:
@@ -1199,6 +1325,9 @@ male   blue   2034 0.5014792899408284
 male   purple 12   0.0029585798816568047
 male   yellow 1192 0.2938856015779093
 male   orange 448  0.11045364891518737
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1218,6 +1347,9 @@ male   blue   2034 0.8578658793757908
 male   purple 12   0.025
 male   yellow 1192 0.9974895397489539
 male   orange 448  0.9634408602150538
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 We can see, for example, that 70.9% of females have red (on the left) while 94.5% of reds are for females.
@@ -1241,6 +1373,9 @@ male   blue   2034 27.0083654229186
 male   purple 12   0.15934138892577346
 male   yellow 1192 15.827911299960165
 male   orange 448  5.94874518656221
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Another often-used idiom is to convert from a point distribution to a cumulative distribution, also known as "running sums". Here, you can use `-c`:
@@ -1262,6 +1397,9 @@ male   blue   2034 78.06400212455186
 male   purple 12   78.22334351347763
 male   yellow 1192 94.0512548134378
 male   orange 448  100
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1281,6 +1419,9 @@ male   blue   2034 59.27021696252466
 male   purple 12   59.56607495069034
 male   yellow 1192 88.95463510848126
 male   orange 448  100
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## gap
@@ -1348,6 +1489,9 @@ eks wye 4 0.381399 0.134188
 pan pan 1 0.346791 0.726802
 wye wye 3 0.204603 0.338318
 wye pan 5 0.573288 0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1360,6 +1504,9 @@ eks pan 2 0.758679 0.522151
 eks wye 4 0.381399 0.134188
 wye wye 3 0.204603 0.338318
 wye pan 5 0.573288 0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 In this example, since the sort is on field `a`, the first step is to group together all records having the same value for field `a`; the second step is to sort the distinct `a`-field values `pan`, `eks`, and `wye` into `eks`, `pan`, and `wye`; the third step is to print out the record-list for `a=eks`, then the record-list for `a=pan`, then the record-list for `a=wye`.  The group-by operation omits the middle sort and just puts like records together, for those times when a sort isn't desired. In particular, the ordering of group-by fields for group-by is the order in which they were encountered in the data stream, which in some cases may be more interesting to you.
@@ -1387,6 +1534,9 @@ record_count=100,resource=/path/to/file
 resource=/path/to/second/file,loadsec=0.32,ok=true
 record_count=150,resource=/path/to/second/file
 resource=/some/other/path,loadsec=0.97,ok=false
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1401,6 +1551,9 @@ resource             loadsec ok
 record_count resource
 100          /path/to/file
 150          /path/to/second/file
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## having-fields
@@ -1436,6 +1589,9 @@ record_count=100,resource=/path/to/file
 resource=/path/to/second/file,loadsec=0.32,ok=true
 record_count=150,resource=/path/to/second/file
 resource=/some/other/path,loadsec=0.97,ok=false
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1447,6 +1603,9 @@ record_count=100,resource=/path/to/file
 resource=/path/to/second/file,loadsec=0.32,ok=true
 record_count=150,resource=/path/to/second/file
 resource=/some/other/path,loadsec=0.97,ok=false
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1456,6 +1615,9 @@ resource=/some/other/path,loadsec=0.97,ok=false
 resource=/path/to/file,loadsec=0.45,ok=true
 resource=/path/to/second/file,loadsec=0.32,ok=true
 resource=/some/other/path,loadsec=0.97,ok=false
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## head
@@ -1484,6 +1646,9 @@ pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1496,6 +1661,9 @@ wye wye 3  0.20460330576630303 0.33831852551664776
 eks zee 7  0.6117840605678454  0.1878849191181694
 zee eks 17 0.29081949506712723 0.054478717073354166
 wye hat 24 0.7286126830627567  0.19441962592638418
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## histogram
@@ -1535,6 +1703,9 @@ bin_lo bin_hi x_count x2_count x3_count
 0.7    0.8    1007    560      420
 0.8    0.9    986     571      383
 0.9    1      1013    507      341
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1554,6 +1725,9 @@ my_bin_lo my_bin_hi my_x_count my_x2_count my_x3_count
 0.7       0.8       1007       560         420
 0.8       0.9       986        571         383
 0.9       1         1013       507         341
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## join
@@ -1629,6 +1803,9 @@ id  name
 300 carol
 400 david
 500 edgar
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1656,6 +1833,9 @@ present 200
 present 200
 present 400
 present 300
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1684,6 +1864,9 @@ id  name  status
 200 bob   present
 400 david present
 300 carol present
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Same, but with sorting the input first:
@@ -1714,6 +1897,9 @@ id  name  status
 400 david present
 400 david missing
 400 david present
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Same, but showing only unpaired records:
@@ -1729,6 +1915,9 @@ missing 600
 
 id  name
 500 edgar
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Use prefixing options to disambiguate between otherwise identical non-join field names:
@@ -1742,6 +1931,9 @@ a b c
 1 4 5
 1 2 3
 1 4 5
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1753,6 +1945,9 @@ a left_b left_c right_b right_c
 1 4      5      2       3
 1 2      3      4       5
 1 4      5      4       5
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Use zero join columns:
@@ -1766,6 +1961,9 @@ left_a left_b left_c right_a right_b right_c
 1      4      5      1       2       3
 1      2      3      1       4       5
 1      4      5      1       4       5
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## json-parse
@@ -1851,6 +2049,9 @@ John,23,present
 Fred,34,present
 Alice,56,missing
 Carol,45,present
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1862,6 +2063,9 @@ John,23,present
 Fred,34,present
 Alice,56,missing
 Carol,45,present
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1873,6 +2077,9 @@ John  23  present
 Fred  34  present
 Alice 56  missing
 Carol 45  present
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## latin1-to-utf8
@@ -1933,6 +2140,9 @@ shape    count
 circle   2591
 triangle 3372
 square   4115
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1945,6 +2155,9 @@ triangle orange 107
 square   orange 128
 circle   green  287
 circle   purple 289
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1957,6 +2170,9 @@ triangle orange 107
 square   orange 128
 circle   green  287
 circle   purple 289
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -1969,6 +2185,9 @@ triangle orange
 square   orange
 circle   green
 circle   purple
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 See also [most-frequent](reference-verbs.md#most-frequent).
@@ -2040,6 +2259,9 @@ a_in a_out b_in b_out
 436  490   446  195
 526  320   963  780
 220  888   705  831
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -2050,6 +2272,9 @@ a_min a_max a_sum b_min b_max b_sum
 436   490   926   195   446   641
 320   526   846   780   963   1743
 220   888   1108  705   831   1536
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -2060,6 +2285,9 @@ a_in a_out b_in b_out a_sum b_sum
 436  490   446  195   926   641
 526  320   963  780   846   1743
 220  888   705  831   1108  1536
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## most-frequent
@@ -2087,6 +2315,9 @@ shape    count
 square   4115
 triangle 3372
 circle   2591
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -2097,8 +2328,11 @@ shape    color  count
 square   red    1874
 triangle red    1560
 circle   red    1207
-square   yellow 589
 square   blue   589
+square   yellow 589
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -2109,8 +2343,11 @@ shape    color  someothername
 square   red    1874
 triangle red    1560
 circle   red    1207
-square   yellow 589
 square   blue   589
+square   yellow 589
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -2121,8 +2358,11 @@ shape    color
 square   red
 triangle red
 circle   red
-square   yellow
 square   blue
+square   yellow
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 See also [least-frequent](reference-verbs.md#least-frequent).
@@ -2331,6 +2571,12 @@ a,c,e
 1,3,5
 2,4,5
 3,5,7
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-remove-empty-columns
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Since this verb needs to read all records to see if any of them has a non-empty value for a given field name, it is non-streaming: it will ingest all records before writing any.
@@ -2374,6 +2620,9 @@ eks pan 2 0.758679 0.522151
 wye wye 3 0.204603 0.338318
 eks wye 4 0.381399 0.134188
 wye pan 5 0.573288 0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -2386,6 +2635,9 @@ eks pan     2     0.758679 0.522151
 wye wye     3     0.204603 0.338318
 eks wye     4     0.381399 0.134188
 wye pan     5     0.573288 0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 As discussed in [Performance](performance.md), `sed` is significantly faster than Miller at doing this. However, Miller is format-aware, so it knows to do renames only within specified field keys and not any others, nor in field values which may happen to contain the same pattern. Example:
@@ -2410,6 +2662,9 @@ a=eks,b=pan,i=2,x=0.758679,COLUMN5=0.522151
 a=wye,b=wye,i=3,x=0.204603,COLUMN5=0.338318
 a=eks,b=wye,i=4,x=0.381399,COLUMN5=0.134188
 a=wye,b=pan,i=5,x=0.573288,COLUMN5=0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 See also [label](reference-verbs.md#label).
@@ -2452,6 +2707,9 @@ eks pan 2 0.758679 0.522151
 wye wye 3 0.204603 0.338318
 eks wye 4 0.381399 0.134188
 wye pan 5 0.573288 0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -2464,6 +2722,9 @@ i b   a   x        y
 3 wye wye 0.204603 0.338318
 4 wye eks 0.381399 0.134188
 5 pan wye 0.573288 0.863624
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -2476,6 +2737,9 @@ eks 0.758679 0.522151 2 pan
 wye 0.204603 0.338318 3 wye
 eks 0.381399 0.134188 4 wye
 wye 0.573288 0.863624 5 pan
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## repeat
@@ -2540,6 +2804,9 @@ color=red
 color=green
 color=green
 color=green
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 After expansion with `repeat`, such data can then be sent on to
@@ -2755,6 +3022,9 @@ i=7
 i=8
 i=9
 i=10
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -2767,6 +3037,9 @@ i=28
 i=32
 i=36
 i=40
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -2779,6 +3052,9 @@ i=32
 i=28
 i=24
 i=20
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## shuffle
@@ -2826,6 +3102,9 @@ a,b,c
 1,2,3
 4,,6
 ,8,9
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## sort
@@ -2871,6 +3150,9 @@ eks wye 4 0.381399 0.134188
 pan pan 1 0.346791 0.726802
 wye pan 5 0.573288 0.863624
 wye wye 3 0.204603 0.338318
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Here's an example filtering log data: suppose multiple threads (labeled here by color) are all logging progress counts to a single log file. The log file is (by nature) chronological, so the progress of various threads is interleaved:
@@ -2920,6 +3202,9 @@ upsec              color  count
 1.587              red    3782
 1.601              red    3755
 1.832              red    3717
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Any records not having all specified sort keys will appear at the end of the output, in the order they
@@ -2933,6 +3218,9 @@ x=1
 x=2
 x=4
 a=3
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -2943,6 +3231,9 @@ x=4
 x=2
 x=1
 a=3
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## sort-within-records
@@ -2991,6 +3282,9 @@ b a c
 
 c b a
 7 8 9
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3014,6 +3308,9 @@ c b a
   "c": 7
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3024,6 +3321,9 @@ a b c
 1 2 3
 5 4 6
 9 8 7
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## split
@@ -3165,6 +3465,9 @@ y_p50   0.5060212582772865
 y_mean  0.5062057444929905
 y_p90   0.9053657573378745
 y_max   0.9999648102177897
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3177,6 +3480,9 @@ hat 0.4878988625336502 0.5131176341556505
 pan 0.4973036405471583 0.49959885012092725
 wye 0.4975928392133964 0.5045964890907357
 zee 0.5042419022900586 0.5029967546798116
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3192,6 +3498,9 @@ purple 0.501319 0.988893 0.504571 0.988287 1.9725823278192132 1.9586678584381585
 green  0.502015 0.990764 0.505359 0.990175 1.9735744947860123 1.9593496900223406
 blue   0.525226 0.992655 0.485170 0.993873 1.8899578467174132 2.048504647855391
 orange 0.483548 0.993635 0.480913 0.989102 2.054883899840347  2.056717119312641
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3202,6 +3511,9 @@ shape    count
 square   4115
 triangle 3372
 circle   2591
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3212,6 +3524,9 @@ shape    color_mode
 triangle red
 square   red
 circle   red
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## stats2
@@ -3265,6 +3580,9 @@ x2_xy_cov  0.04188382281779374
 x2_xy_corr 0.630174342037994
 x2_y2_cov  -0.00030953725962542085
 x2_y2_corr -0.0034249088761121966
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3279,6 +3597,9 @@ eks 0.0407804923685586    0.48140207967651016 1965      0.0016461239223448587   
 wye -0.03915349075204814  0.5255096523974456  1966      0.0015051268704373607   1         0         1966      1      0.8538317334220835 0.1267454301662969  1966        0.38991721818599295
 zee 0.0027812364960399147 0.5043070448033061  2047      0.000007751652858786137 1         0         2047      1      0.8524439912011013 0.12401684308018937 2047        0.39356598090006495
 hat -0.018620577041095078 0.5179005397264935  1941      0.0003520036646055585   1         0         1941      1      0.8412305086345014 0.13557328318623216 1941        0.3687944261732265
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Here's an example simple line-fit. The `x` and `y`
@@ -3369,6 +3690,9 @@ upsec_count_pca_b       979.9883413064914
 upsec_count_pca_n       21
 upsec_count_pca_quality 0.9999908956206317
 donesec                 25.10852919630297
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## step
@@ -3557,7 +3881,7 @@ All summarizers:
   uof             upper outer fence: p75 + 3.0 * iqr
 
 Default summarizers:
-  field_type count mean min median max null_count distinct_count
+  field_type count mean min max null_count distinct_count
 
 Notes:
 * min, p25, median, p75, and max work for strings as well as numbers
@@ -3575,12 +3899,18 @@ Options:
 <b>mlr --ofmt %.3f --from data/medium --opprint summary</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-field_name field_type count null_count distinct_count mean     min   median max
-a          string     10000 0          5              -        eks   pan    zee
-b          string     10000 0          5              -        eks   pan    zee
-i          int        10000 0          10000          5000.500 1     5001   10000
-x          float      10000 0          10000          0.499    0.000 0.501  1.000
-y          float      10000 0          10000          0.506    0.000 0.506  1.000
+field_name field_type count null_count distinct_count mean     min   max
+a          string     10000 0          5              -        eks   zee
+b          string     10000 0          5              -        eks   zee
+i          int        10000 0          10000          5000.500 1     10000
+x          float      10000 0          10000          0.499    0.000 1.000
+y          float      10000 0          10000          0.506    0.000 1.000
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-summary
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3600,7 +3930,7 @@ var            -      -      8334166.666666667  0.08426974433144456    0.0846112
 skewness       -      -      0                  -0.0006899591185521965 -0.017849760120133784
 minlen         3      3      1                  15                     13
 maxlen         3      3      5                  22                     22
-min            eks    eks    1                  4.509679127584487e-05  8.818962627266114e-05
+min            eks    eks    1                  0.00004509679127584487 0.00008818962627266114
 p25            hat    hat    2501               0.24667037823231752    0.25213670524015686
 median         pan    pan    5001               0.5011592202840128     0.5060212582772865
 p75            wye    wye    7501               0.7481860062358446     0.7640028449996572
@@ -3610,6 +3940,12 @@ lof            -      -      -12499             -1.2578765057782637    -1.283461
 lif            -      -      -4999              -0.5056030637729731    -0.5156625043990937
 uif            -      -      10001              0.9989438202376082     1.0199359148794074
 uof            -      -      17501              1.751217262242899      1.787735124518658
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-summary
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3620,6 +3956,12 @@ field_name a   b   i      x                   y
 mode       pan wye 1      0.3467901443380824  0.7268028627434533
 mean       -   -   5000.5 0.49860196816795804 0.5062057444929905
 median     pan pan 5001   0.5011592202840128  0.5060212582772865
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-summary
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## tac
@@ -3643,6 +3985,9 @@ Prints the records in the input stream in reverse order. Note: this requires Mil
 a b c
 1 2 3
 4 5 6
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3651,6 +3996,9 @@ a b c
 <pre class="pre-non-highlight-in-pair">
 a b c
 7 8 9
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3661,6 +4009,9 @@ a b c
 7 8 9
 4 5 6
 1 2 3
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3671,6 +4022,9 @@ a b c filename
 7 8 9 data/b.csv
 4 5 6 data/a.csv
 1 2 3 data/a.csv
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## tail
@@ -3698,6 +4052,9 @@ blue   square   1    499872 0.618906 0.263796 0.531147 6.210738
 blue   triangle 0    499880 0.008111 0.826727 0.473296 6.146957
 yellow triangle 0    499955 0.383942 0.559529 0.511376 4.307974
 yellow circle   1    499974 0.764951 0.252842 0.499699 5.013810
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3708,6 +4065,9 @@ color  shape    flag i      u        v        w        x
 yellow triangle 0    499955 0.383942 0.559529 0.511376 4.307974
 blue   square   1    499872 0.618906 0.263796 0.531147 6.210738
 yellow circle   1    499974 0.764951 0.252842 0.499699 5.013810
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## tee
@@ -3790,6 +4150,9 @@ purple triangle false 7  65    80.1405  5.8240
 yellow circle   true  8  73    63.9785  4.2370
 yellow circle   true  9  87    63.5058  8.3350
 purple square   false 10 91    72.3735  8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3798,6 +4161,9 @@ purple square   false 10 91    72.3735  8.2430
 <pre class="pre-non-highlight-in-pair">
 top_idx quantity_top
 1       81.2290
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3808,6 +4174,9 @@ shape    top_idx quantity_top
 triangle 1       81.2290
 square   1       79.2778
 circle   1       63.9785
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3818,6 +4187,9 @@ shape    someothername quantity_top
 triangle 1             81.2290
 square   1             79.2778
 circle   1             63.9785
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3828,6 +4200,9 @@ color  shape    flag  k index quantity rate
 purple triangle false 5 51    81.2290  8.5910
 red    square   true  2 15    79.2778  0.0130
 yellow circle   true  8 73    63.9785  4.2370
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3838,6 +4213,9 @@ color  shape    flag  k index quantity rate
 yellow circle   true  8 73    63.9785  4.2370
 red    square   true  2 15    79.2778  0.0130
 purple triangle false 5 51    81.2290  8.5910
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## unflatten
@@ -3908,6 +4286,9 @@ green,circle
 orange,triangle
 orange,square
 orange,circle
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3933,6 +4314,9 @@ red    triangle 1560
 yellow circle   356
 yellow square   589
 yellow triangle 468
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3960,6 +4344,9 @@ green  circle   287
 orange square   128
 orange triangle 107
 orange circle   68
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -3968,6 +4355,9 @@ orange circle   68
 <pre class="pre-non-highlight-in-pair">
 count
 18
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 The second main way to use `mlr uniq` is without group-by columns, using `-a` instead:
@@ -4054,6 +4444,9 @@ red    circle   1
 purple square   0
 red    square   1
 yellow triangle 1
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -4062,6 +4455,9 @@ yellow triangle 1
 <pre class="pre-non-highlight-in-pair">
 count
 7
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -4076,6 +4472,9 @@ count color  shape    flag
 7     purple square   0
 3     red    square   1
 2     yellow triangle 1
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## unsparsify
@@ -4149,6 +4548,9 @@ Examples:
   "w": 2
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -4160,6 +4562,9 @@ a b v u x w
 - 2 - 1 - -
 1 - 2 - 3 -
 - - 1 - - 2
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -4171,6 +4576,9 @@ a       b       v       u       x       w
 missing 2       missing 1       missing missing
 1       missing 2       missing 3       missing
 missing missing 1       missing missing 2
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -4188,6 +4596,9 @@ a v x b u
 
 v w a b u
 1 2 - - -
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -4199,5 +4610,8 @@ a b v u w x
 - 2 - 1 - -
 1 - 2 - - 3
 - - 1 - 2 -
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 

@@ -46,6 +46,9 @@ Array literals are written in square brackets braces with integer indices. Array
   99,
   true
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 As with maps and argument-lists, trailing commas are supported:
@@ -64,6 +67,9 @@ As with maps and argument-lists, trailing commas are supported:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 ["a", "b", "c"]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Also note that several [built-in functions](reference-dsl-builtin-functions.md) operate on arrays and/or return arrays.
@@ -108,6 +114,9 @@ while positive indices read forward from the start. If an array has length `n` t
 50
 [10, 20]
 [40, 50]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Slicing
@@ -135,6 +144,9 @@ x[4], x[5]]`.
 [30, 40, 50]
 [10, 20, 30, 40, 50]
 [20, 30, 40]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Out-of-bounds indexing
@@ -157,6 +169,9 @@ behavior intentionally imitates Python.)
 10
 50
 
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -173,6 +188,9 @@ behavior intentionally imitates Python.)
 [10, 20]
 [10, 20, 30, 40, 50]
 []
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Auto-create results in maps
@@ -197,6 +215,9 @@ as-yet-assigned local variable or out-of-stream variable results in
   "square": 8.2430,
   "circle": 8.3350
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 *This also means that auto-create results in maps, not arrays, even if keys are integers.*
@@ -224,6 +245,9 @@ If you want to auto-extend an [array](reference-main-arrays.md), initialize it e
     "4": 7.4670
   }
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Auto-extend and null-gaps
@@ -262,6 +286,9 @@ are called **null-gaps**.
 <pre class="pre-non-highlight-in-pair">
 ["a", "b"]
 ["a", null, null, null, "e"]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Unset as shift
@@ -281,6 +308,9 @@ Unsetting an array index results in shifting all higher-index elements down by o
 <pre class="pre-non-highlight-in-pair">
 ["a", "b", "c", "d", "e"]
 ["a", "c", "d", "e"]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 More generally, you can get shift and pop operations by unsetting indices 1 and -1:

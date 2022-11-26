@@ -48,6 +48,9 @@ _Map literals_ are written in curly braces with string keys any [Miller data typ
 }
 true
 true
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 As with arrays and argument-lists, trailing commas are supported:
@@ -70,6 +73,9 @@ As with arrays and argument-lists, trailing commas are supported:
   "b": 2,
   "c": 3
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 The current record, accessible using `$*`, is a map.
@@ -101,6 +107,9 @@ Color is yellow
   "rate": 0.0130
 }
 Color is red
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 The collection of all [out-of-stream variables](reference-dsl-variables.md#out-of-stream0variables), `@*`, is a map.
@@ -126,6 +135,9 @@ The collection of all [out-of-stream variables](reference-dsl-variables.md#out-o
   },
   "last_color": "purple"
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Also note that several [built-in functions](reference-dsl-builtin-functions.md) operate on maps and/or return maps.
@@ -165,6 +177,9 @@ in **auto-create** of that variable as a map variable:
   "square": 8.2430,
   "circle": 8.3350
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 *This also means that auto-create results in maps, not arrays, even if keys are integers.*
@@ -192,6 +207,9 @@ If you want to auto-extend an [array](reference-main-arrays.md), initialize it e
     "4": 7.4670
   }
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Auto-deepen
@@ -217,6 +235,9 @@ red    square   17.011
 red    circle   2.9010
 purple triangle 14.415
 purple square   8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Looping

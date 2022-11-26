@@ -76,6 +76,7 @@ nav:
     - "CPU/multicore usage": "cpu.md"
     - "Scripting with Miller": "scripting.md"
     - "Miller environment variables": "reference-main-env-vars.md"
+    - "Performance": "performance.md"
   - 'Types reference':
     - "Data types": "reference-main-data-types.md"
     - "Strings": "reference-main-strings.md"
@@ -104,7 +105,6 @@ nav:
     - "Why?": "why.md"
     - "Why call it Miller?": "etymology.md"
     - "How original is Miller?": "originality.md"
-    - "Performance": "performance.md"
   - 'Misc. reference':
     - "Auxiliary commands": "reference-main-auxiliary-commands.md"
     - "Manual page": "manpage.md"

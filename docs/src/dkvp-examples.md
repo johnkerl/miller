@@ -147,6 +147,9 @@ eks pan 2 0.522151 ekspan 2.522151 str str int float str float
 wye wye 3 0.338318 wyewye 3.338318 str str int float str float
 eks wye 4 0.134188 ekswye 4.134188 str str int float str float
 wye pan 5 0.863624 wyepan 5.863624 str str int float str float
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## DKVP I/O in Ruby
@@ -265,4 +268,7 @@ eks pan 2 0.522151 ekspan 2.522151 String String Integer Float String Float
 wye wye 3 0.338318 wyewye 3.338318 String String Integer Float String Float
 eks wye 4 0.134188 ekswye 4.134188 String String Integer Float String Float
 wye pan 5 0.863624 wyepan 5.863624 String String Integer Float String Float
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>

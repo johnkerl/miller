@@ -53,6 +53,9 @@ Robert,"Bob,Bobby,Biker","2,4,6"
   "codes": "2,4,6"
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Then we can use the [`splita`](reference-dsl-builtin-functions.md#splita) function to split the
@@ -74,6 +77,9 @@ Then we can use the [`splita`](reference-dsl-builtin-functions.md#splita) functi
   "codes": "2,4,6"
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Likewise we can split the `codes` field. Since these look like numbers, we can again use `splita`
@@ -97,6 +103,9 @@ substrings, with no type inference:
   "codes": [2, 4, 6]
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -115,6 +124,9 @@ substrings, with no type inference:
   "codes": ["2", "4", "6"]
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 We can do operations on the array, then use [joinv](reference-dsl-builtin-functions.md#joinv) to put them
@@ -140,6 +152,9 @@ back together:
   "codes": "200,400,600"
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -153,6 +168,9 @@ back together:
 name,nicknames,codes
 Alice,"Allie,Skater","100,300,500"
 Robert,"Bob,Bobby,Biker","200,400,600"
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 The full list of split functions includes
@@ -195,6 +213,9 @@ host,status
 xy01.east,up
 ab02.west,down
 ac91.west,up
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Flatten/unflatten: representing arrays in CSV
@@ -219,6 +240,9 @@ _flatten/unflatten strategy_: array-valued fields are turned into multiple CSV c
   "codes": ["2", "4", "6"]
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -228,6 +252,9 @@ _flatten/unflatten strategy_: array-valued fields are turned into multiple CSV c
 name,nicknames,codes.1,codes.2,codes.3
 Alice,"Allie,Skater",1,3,5
 Robert,"Bob,Bobby,Biker",2,4,6
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 See the [flatten/unflatten: converting between JSON and tabular formats¶](flatten-unflatten.md)
@@ -279,6 +306,9 @@ stamp,event
   "pieces": [5, 19, "07", 56]
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -293,6 +323,9 @@ stamp      event description
 5-18:53:22 close 5 day(s) 18 hour(s) 53 minute(s) 22 seconds(s)
 5-19:07:34 open  5 day(s) 19 hour(s) 07 minute(s) 34 seconds(s)
 5-19:07:56 close 5 day(s) 19 hour(s) 07 minute(s) 56 seconds(s)
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Using regular expressions and capture groups
@@ -312,6 +345,9 @@ stamp      event description
 5-18:53:22 close 5 day(s) 18 hour(s) 53 minute(s) 22 seconds(s)
 5-19:07:34 open  5 day(s) 19 hour(s) 07 minute(s) 34 seconds(s)
 5-19:07:56 close 5 day(s) 19 hour(s) 07 minute(s) 56 seconds(s)
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Special case: timestamps
@@ -337,6 +373,9 @@ sec     dhms
 100     1m40s
 10000   2h46m40s
 1000000 11d13h46m40s
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Please see
@@ -353,6 +392,9 @@ One way to handle currencies is to sub out the currency marker (like `$`) as wel
 </pre>
 <pre class="pre-non-highlight-in-pair">
 d=1234.56
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Nesting and unnesting fields
@@ -368,6 +410,9 @@ For example:
 name   nicknames       codes
 Alice  Allie,Skater    1,3,5
 Robert Bob,Bobby,Biker 2,4,6
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -380,6 +425,9 @@ Alice  Skater    1,3,5
 Robert Bob       2,4,6
 Robert Bobby     2,4,6
 Robert Biker     2,4,6
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 See [documentation on the nest verb](reference-verbs.md#nest) for general information on how to do this.

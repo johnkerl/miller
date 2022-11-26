@@ -41,6 +41,9 @@ purple triangle false 7  65    80.1405  5.8240 purple:triangle
 yellow circle   true  8  73    63.9785  4.2370 yellow:circle
 yellow circle   true  9  87    63.5058  8.3350 yellow:circle
 purple square   false 10 91    72.3735  8.2430 purple:square
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Also see the [list of string-related built-in functions](reference-dsl-builtin-functions.md#string-functions).
@@ -92,6 +95,9 @@ a
 e
 ab
 de
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Slicing
@@ -118,6 +124,9 @@ ab
 cde
 abcde
 bcd
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Out-of-bounds indexing
@@ -140,6 +149,9 @@ accesses result in trimming the indices, resulting in a short string or even the
 a
 e
 (error)
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -156,6 +168,9 @@ e
 "ab"
 "abcde"
 ""
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Escape sequences for string literals

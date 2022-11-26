@@ -118,6 +118,9 @@ Miller records are ordered lists of key-value pairs. For NIDX format, DKVP forma
 </pre>
 <pre class="pre-non-highlight-in-pair">
 1=x,2=y,3=z
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -125,6 +128,9 @@ Miller records are ordered lists of key-value pairs. For NIDX format, DKVP forma
 </pre>
 <pre class="pre-non-highlight-in-pair">
 1=x,2=y,3=z,6=a,4=b,55=cde
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -132,6 +138,9 @@ Miller records are ordered lists of key-value pairs. For NIDX format, DKVP forma
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x,y,z
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -140,6 +149,9 @@ x,y,z
 <pre class="pre-non-highlight-in-pair">
 1,2,3
 x,y,z
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -147,6 +159,9 @@ x,y,z
 </pre>
 <pre class="pre-non-highlight-in-pair">
 1=x,999=y,3=z
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -154,6 +169,9 @@ x,y,z
 </pre>
 <pre class="pre-non-highlight-in-pair">
 1=x,newname=y,3=z
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -162,6 +180,9 @@ x,y,z
 <pre class="pre-non-highlight-in-pair">
 3,1,2
 z,x,y
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Why doesn't mlr cut put fields in the order I want?
@@ -200,6 +221,9 @@ triangle,false,5.8240
 circle,true,4.2370
 circle,true,8.3350
 square,false,8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 The issue is that Miller's `cut`, by default, outputs cut fields in the order they appear in the input data. This design decision was made intentionally to parallel the Unix/Linux system `cut` command, which has the same semantics.
@@ -221,6 +245,9 @@ rate,shape,flag
 4.2370,circle,true
 8.3350,circle,true
 8.2430,square,false
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Numbering and renumbering records
@@ -259,6 +286,9 @@ purple,triangle,false,7,65,80.1405,5.8240,7
 yellow,circle,true,8,73,63.9785,4.2370,8
 yellow,circle,true,9,87,63.5058,8.3350,9
 purple,square,false,10,91,72.3735,8.2430,10
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 However, this is the record number within the original input stream -- not after any filtering you may have done:
@@ -271,6 +301,9 @@ color,shape,flag,k,index,quantity,rate,nr
 yellow,triangle,true,1,11,43.6498,9.8870,1
 yellow,circle,true,8,73,63.9785,4.2370,8
 yellow,circle,true,9,87,63.5058,8.3350,9
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 There are two good options here. One is to use the `cat` verb with `-n`:
@@ -283,6 +316,9 @@ n,color,shape,flag,k,index,quantity,rate
 1,yellow,triangle,true,1,11,43.6498,9.8870
 2,yellow,circle,true,8,73,63.9785,4.2370
 3,yellow,circle,true,9,87,63.5058,8.3350
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 The other is to keep your own counter within the `put` DSL:
@@ -295,6 +331,9 @@ color,shape,flag,k,index,quantity,rate,n
 yellow,triangle,true,1,11,43.6498,9.8870,1
 yellow,circle,true,8,73,63.9785,4.2370,2
 yellow,circle,true,9,87,63.5058,8.3350,3
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 The difference is a matter of taste (although `mlr cat -n` puts the counter first).
@@ -383,6 +422,9 @@ outer=2,middle=21,inner1=210,inner2=211
 outer=3,middle=30,inner1=300,inner2=301
 outer=3,middle=31,inner1=312,inner2=301
 outer=3,middle=31,inner1=313,inner2=314
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 See also the [record-heterogeneity page](record-heterogeneity.md); see in

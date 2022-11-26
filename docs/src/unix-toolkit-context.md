@@ -47,6 +47,9 @@ a,b,c
 1,2,3
 4,5,6
 7,8,9
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -57,6 +60,9 @@ a,b,c
 7,8,9
 4,5,6
 1,2,3
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Likewise with `mlr sort`, `mlr tac`, and so on.

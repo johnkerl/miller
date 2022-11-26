@@ -45,6 +45,9 @@ eks pan 2 0.758679 0.522151 3.6808304227112796 2
 wye wye 3 0.204603 0.338318 1.7412477437471126 6
 eks wye 4 0.381399 0.134188 18.588317372151177 24
 wye pan 5 0.573288 0.863624 211.38663947090302 120
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Properties of user-defined functions:
@@ -99,6 +102,9 @@ NR=4
 numcalls=10
 NR=5
 numcalls=15
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Properties of user-defined subroutines:
@@ -179,6 +185,9 @@ purple triangle false 7  65    80.1405  5.8240 purple:triangle
 yellow circle   true  8  73    63.9785  4.2370 yellow:circle
 yellow circle   true  9  87    63.5058  8.3350 yellow:circle
 purple square   false 10 91    72.3735  8.2430 purple:square
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -205,6 +214,9 @@ purple triangle false 7  65    80.1405  5.8240 purple:triangle above
 yellow circle   true  8  73    63.9785  4.2370 yellow:circle above
 yellow circle   true  9  87    63.5058  8.3350 yellow:circle above
 purple square   false 10 91    72.3735  8.2430 purple:square above
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Note that you need a semicolon after the closing curly brace of the function literal.
@@ -238,6 +250,9 @@ purple triangle false 7  65    80.1405  5.8240 purple:triangle above
 yellow circle   true  8  73    63.9785  4.2370 yellow:circle above
 yellow circle   true  9  87    63.5058  8.3350 yellow:circle above
 purple square   false 10 91    72.3735  8.2430 purple:square above
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 See the [page on higher-order functions](reference-dsl-higher-order-functions.md) for more.

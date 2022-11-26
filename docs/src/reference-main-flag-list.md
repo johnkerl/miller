@@ -33,6 +33,9 @@ Here are flags you can use when invoking Miller.  For example, when you type
   "rate": 9.8870
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 the `--icsv` and `--ojson` bits are _flags_.  See the [Miller command
@@ -373,6 +376,7 @@ These are flags for profiling Miller performance.
 **Flags:**
 
 * `--cpuprofile {CPU-profile file name}`: Create a CPU-profile file for performance analysis. Instructions will be printed to stderr. This flag must be the very first thing after 'mlr' on the command line.
+* `--memprofile {Memory-profile file name}`: Create a memory-profile file for performance analysis. Instructions will be printed to stderr. This flag must be the very first thing after 'mlr' on the command line.
 * `--time`: Print elapsed execution time in seconds to stderr at the end of the execution of the program.
 * `--traceprofile`: Create a trace-profile file for performance analysis. Instructions will be printed to stderr. This flag must be the very first thing after 'mlr' on the command line.
 

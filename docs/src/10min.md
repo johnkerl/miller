@@ -39,6 +39,9 @@ purple,triangle,false,7,65,80.1405,5.8240
 yellow,circle,true,8,73,63.9785,4.2370
 yellow,circle,true,9,87,63.5058,8.3350
 purple,square,false,10,91,72.3735,8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 But `mlr cat` can also do format conversion -- for example, you can pretty-print in tabular format:
@@ -58,6 +61,9 @@ purple triangle false 7  65    80.1405  5.8240
 yellow circle   true  8  73    63.9785  4.2370
 yellow circle   true  9  87    63.5058  8.3350
 purple square   false 10 91    72.3735  8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 `mlr head` and `mlr tail` count records rather than lines. Whether you're getting the first few records or the last few, the CSV header is included either way:
@@ -71,6 +77,9 @@ yellow,triangle,true,1,11,43.6498,9.8870
 red,square,true,2,15,79.2778,0.0130
 red,circle,true,3,16,13.8103,2.9010
 red,square,false,4,48,77.5542,7.4670
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -82,6 +91,9 @@ purple,triangle,false,7,65,80.1405,5.8240
 yellow,circle,true,8,73,63.9785,4.2370
 yellow,circle,true,9,87,63.5058,8.3350
 purple,square,false,10,91,72.3735,8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -108,6 +120,9 @@ purple,square,false,10,91,72.3735,8.2430
   "rate": 8.2430
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 You can sort on a single field:
@@ -127,6 +142,9 @@ purple square   false 10 91    72.3735  8.2430
 yellow triangle true  1  11    43.6498  9.8870
 purple triangle false 5  51    81.2290  8.5910
 purple triangle false 7  65    80.1405  5.8240
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Or, you can sort primarily alphabetically on one field, then secondarily numerically descending on another field, and so on:
@@ -146,6 +164,9 @@ red    square   true  2  15    79.2778  0.0130
 purple triangle false 7  65    80.1405  5.8240
 purple triangle false 5  51    81.2290  8.5910
 yellow triangle true  1  11    43.6498  9.8870
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 If there are fields you don't want to see in your data, you can use `cut` to keep only the ones you want, in the same order they appeared in the input data:
@@ -165,6 +186,9 @@ triangle false
 circle   true
 circle   true
 square   false
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 You can also use `cut -o` to keep specified fields, but in your preferred order:
@@ -184,6 +208,9 @@ false triangle
 true  circle
 true  circle
 false square
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 You can use `cut -x` to omit fields you don't care about:
@@ -203,6 +230,9 @@ purple 7  65    80.1405  5.8240
 yellow 8  73    63.9785  4.2370
 yellow 9  87    63.5058  8.3350
 purple 10 91    72.3735  8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Even though Miller's main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index. Use `$[[3]]` to access the name of field 3 or `$[[[3]]]` to access the value of field 3:
@@ -222,6 +252,9 @@ purple triangle false 7  65    80.1405  5.8240
 yellow circle   true  8  73    63.9785  4.2370
 yellow circle   true  9  87    63.5058  8.3350
 purple square   false 10 91    72.3735  8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -239,6 +272,9 @@ purple triangle NEW  7  65    80.1405  5.8240
 yellow circle   NEW  8  73    63.9785  4.2370
 yellow circle   NEW  9  87    63.5058  8.3350
 purple square   NEW  10 91    72.3735  8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 You can find the full list of verbs at the [Verbs Reference](reference-verbs.md) page.
@@ -256,6 +292,9 @@ red   square true  2 15    79.2778  0.0130
 red   circle true  3 16    13.8103  2.9010
 red   square false 4 48    77.5542  7.4670
 red   square false 6 64    77.1991  9.5310
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -265,6 +304,9 @@ red   square false 6 64    77.1991  9.5310
 color shape  flag k index quantity rate
 red   square true 2 15    79.2778  0.0130
 red   circle true 3 16    13.8103  2.9010
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Computing new fields
@@ -289,6 +331,9 @@ purple triangle false 7  65    80.1405  5.8240 13.760388049450551 purple_triangl
 yellow circle   true  8  73    63.9785  4.2370 15.09995279679018  yellow_circle
 yellow circle   true  9  87    63.5058  8.3350 7.619172165566886  yellow_circle
 purple square   false 10 91    72.3735  8.2430 8.779995147397793  purple_square
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 When you create a new field, it can immediately be used in subsequent statements:
@@ -311,6 +356,9 @@ purple triangle false 7  65    80.1405  5.8240 66 4363
 yellow circle   true  8  73    63.9785  4.2370 74 5484
 yellow circle   true  9  87    63.5058  8.3350 88 7753
 purple square   false 10 91    72.3735  8.2430 92 8474
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 For `put` and `filter` we were able to type out expressions using a programming-language syntax.
@@ -331,6 +379,9 @@ Zone,Total MWh
 17,39.8
 24,7.4
 30,50.5
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -342,6 +393,9 @@ Zone Total MWh
 17   39.8
 14   27.2
 24   7.4
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 For `put` and `filter` expressions, use `${...}`:
@@ -355,6 +409,9 @@ Zone Total MWh Total KWh
 17   39.8      39800
 24   7.4       7400
 30   50.5      50500
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 See also the [section on field names](reference-dsl-variables.md#field-names).
@@ -401,6 +458,9 @@ a,b,c
 1,2,3
 4,5,6
 7,8,9
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Chaining verbs together
@@ -415,6 +475,12 @@ color  shape  flag  k  index quantity rate
 purple square false 10 91    72.3735  8.2430
 yellow circle true  9  87    63.5058  8.3350
 yellow circle true  8  73    63.9785  4.2370
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 This works fine -- but Miller also lets you chain verbs together using the word `then`. Think of this as a Miller-internal pipe that lets you use fewer keystrokes:
@@ -427,6 +493,9 @@ color  shape  flag  k  index quantity rate
 purple square false 10 91    72.3735  8.2430
 yellow circle true  9  87    63.5058  8.3350
 yellow circle true  8  73    63.9785  4.2370
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 As another convenience, you can put the filename first using `--from`. When you're interacting with your data at the command line, this makes it easier to up-arrow and append to the previous command:
@@ -439,6 +508,9 @@ color  shape  flag  k  index quantity rate
 purple square false 10 91    72.3735  8.2430
 yellow circle true  9  87    63.5058  8.3350
 yellow circle true  8  73    63.9785  4.2370
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -452,6 +524,9 @@ shape  quantity
 square 72.3735
 circle 63.5058
 circle 63.9785
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Sorts and stats
@@ -468,6 +543,9 @@ color  shape  flag  k  index quantity rate
 purple square false 10 91    72.3735  8.2430
 yellow circle true  9  87    63.5058  8.3350
 yellow circle true  8  73    63.9785  4.2370
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Lots of Miller commands take a `-g` option for group-by: here, `head -n 1 -g shape` outputs the first record for each distinct value of the `shape` field. This means we're finding the record with highest `index` field for each distinct `shape` field:
@@ -480,6 +558,9 @@ color  shape    flag  k  index quantity rate
 yellow circle   true  9  87    63.5058  8.3350
 purple square   false 10 91    72.3735  8.2430
 purple triangle false 7  65    80.1405  5.8240
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Statistics can be computed with or without group-by field(s):
@@ -493,6 +574,9 @@ shape    quantity_count quantity_min quantity_mean     quantity_max
 triangle 3              43.6498      68.33976666666666 81.229
 square   4              72.3735      76.60114999999999 79.2778
 circle   3              13.8103      47.0982           63.9785
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -507,6 +591,9 @@ circle   red    1              13.8103      13.8103            13.8103
 triangle purple 2              80.1405      80.68475000000001  81.229
 circle   yellow 2              63.5058      63.742149999999995 63.9785
 square   purple 1              72.3735      72.3735            72.3735
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 If your output has a lot of columns, you can use XTAB format to line things up vertically for you instead:
@@ -524,6 +611,9 @@ rate_p75  8.5910
 rate_p90  9.8870
 rate_p99  9.8870
 rate_p100 9.8870
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Unicode and internationalization
@@ -556,6 +646,9 @@ UTF-8 data. For example:
 κόκκινο κύκλος αληθινό 3 16      13.8103  2.9010
 κίτρινο κύκλος αληθινό 8 73      63.9785  4.2370
 κίτρινο κύκλος αληθινό 9 87      63.5058  8.3350
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -573,6 +666,9 @@ UTF-8 data. For example:
 κόκκινο τετράγωνο ψευδές  6  64      77.1991  9.5310
 μοβ     τρίγωνο   ψευδές  7  65      80.1405  5.8240
 μοβ     τετράγωνο ψευδές  10 91      72.3735  8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -590,6 +686,9 @@ UTF-8 data. For example:
 желтый     КРУГ        истина 8  73     63.9785    4.2370   6
 желтый     КРУГ        истина 9  87     63.5058    8.3350   6
 фиолетовый КВАДРАТ     ложь   10 91     72.3735    8.2430   10
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## File formats and format conversion
@@ -689,6 +788,9 @@ a matter of specifying input-format and output-format flags:
   "rate": 0.0130
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -698,6 +800,9 @@ a matter of specifying input-format and output-format flags:
 color,shape,flag,k,index,quantity,rate
 yellow,triangle,true,1,11,43.6498,9.8870
 red,square,true,2,15,79.2778,0.0130
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 However, if JSON data has map-valued or array-valued fields, Miller gives you choices on how to
@@ -738,6 +843,9 @@ We can convert this to CSV, or other tabular formats:
 <pre class="pre-non-highlight-in-pair">
 hostname,pid,req.id,req.method,req.path,req.host,req.headers.host,req.headers.user-agent,res.status_code,res.header.content-type,res.header.content-encoding
 localhost,12345,6789,GET,api/check,foo.bar,bar.baz,browser,200,text,plain
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -755,6 +863,9 @@ req.headers.user-agent      browser
 res.status_code             200
 res.header.content-type     text
 res.header.content-encoding plain
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 These transformations are reversible:
@@ -786,6 +897,12 @@ These transformations are reversible:
   }
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 See the [flatten/unflatten page](flatten-unflatten.md) for more information.
@@ -875,8 +992,13 @@ If you like, you can first copy off your original data somewhere else, before do
 
 Lastly, using `tee` within `put`, you can split your input data into separate files per one or more field names:
 
-<pre class="pre-highlight-non-pair">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">

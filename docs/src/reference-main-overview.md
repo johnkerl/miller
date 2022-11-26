@@ -34,6 +34,9 @@ For example, reading from a file:
 color  shape    flag k index quantity rate
 red    square   true 2 15    79.2778  0.0130
 yellow triangle true 1 11    43.6498  9.8870
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -43,6 +46,9 @@ yellow triangle true 1 11    43.6498  9.8870
 color  shape    flag k index quantity rate
 red    square   true 2 15    79.2778  0.0130
 yellow triangle true 1 11    43.6498  9.8870
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Reading from standard input:
@@ -54,6 +60,9 @@ Reading from standard input:
 color  shape    flag k index quantity rate
 red    square   true 2 15    79.2778  0.0130
 yellow triangle true 1 11    43.6498  9.8870
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 The rest of this reference section gives you full information on each of these parts of the command line.
@@ -79,6 +88,9 @@ Example of using a verb for data processing:
 a=pan,x_sum=0.346791
 a=eks,x_sum=1.140078
 a=wye,x_sum=0.777891
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 * Verbs are coded in Go
@@ -96,6 +108,9 @@ Example of doing the same thing using a DSL expression:
 a=pan,x_sum=0.346791
 a=eks,x_sum=1.140078
 a=wye,x_sum=0.777891
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 * You get to write your own expressions in Miller's programming language

@@ -86,6 +86,9 @@ after all the input is read.
   "sum": 119
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 And if all we want is the final output and not the input data, we can use `put
@@ -111,6 +114,9 @@ And if all we want is the final output and not the input data, we can use `put
   "sum": 119
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 As discussed a bit more on the page on [streaming processing and memory
@@ -173,6 +179,9 @@ cat,54
   "sum": 119
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 The downside to this, of course, is that this retains all records (plus data-structure overhead) in memory, so you're limited to processing files that fit in your computer's memory. The upside, though, is that you can do random access over the records using things like
@@ -232,6 +241,9 @@ The third option is to retain records in an [array](reference-main-arrays.md), t
   "sum": 119
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Just as with the retain-as-map approach, the downside is the overhead of
@@ -276,6 +288,9 @@ array will have [null-gaps](reference-main-arrays.md) in it:
 ]
 [
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 You can index `@records` by `@count` rather than `NR` to get a contiguous array:
@@ -319,6 +334,9 @@ You can index `@records` by `@count` rather than `NR` to get a contiguous array:
   "sum": 91
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 If you use a map to retain records, then this is a non-issue: maps can retain whatever values you like:
@@ -360,6 +378,9 @@ If you use a map to retain records, then this is a non-issue: maps can retain wh
   "sum": 91
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Do note that Miller [maps](reference-main-maps.md) preserve insertion order, so
@@ -404,6 +425,9 @@ interested in:
   "sum": 91
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Sorting

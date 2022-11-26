@@ -16,6 +16,8 @@ Quick links:
 </div>
 # Performance
 
+See also the [performance-benchmarks section](new-in-miller-6.md#performance-benchmarks).
+
 ## Disclaimer
 
 In a previous version of this page, I compared Miller to some items in the Unix toolkit in terms of run time. But such comparisons are very much not apples-to-apples:

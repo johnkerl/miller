@@ -103,6 +103,9 @@ Flattened to CSV format:
 a,b.x,b.y
 1,2,3
 4,5,6
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Flattened to pretty-print format:
@@ -114,6 +117,9 @@ Flattened to pretty-print format:
 a b.x b.y
 1 2   3
 4 5   6
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Using flatten-separator `:` instead of the default `.`:
@@ -125,6 +131,9 @@ Using flatten-separator `:` instead of the default `.`:
 a b:x b:y
 1 2   3
 4 5   6
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 If the maps are more deeply nested, each level of map keys is joined in:
@@ -150,6 +159,9 @@ If the maps are more deeply nested, each level of map keys is joined in:
 a b.s.w b.s.x b.t.y b.t.z
 1 2     3     4     5
 6 7     8     9     10
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 **Unflattening** is simply the reverse -- from non-JSON back to JSON:
@@ -175,6 +187,9 @@ a b.s.w b.s.x b.t.y b.t.z
 a,b.x,b.y
 1,2,3
 4,5,6
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -197,6 +212,12 @@ a,b.x,b.y
   }
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Converting arrays between JSON and non-JSON
@@ -226,6 +247,9 @@ If the input data contains arrays, these are also flattened similarly: the
 a b.1 b.2
 1 2   3
 4 5   6
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 If the arrays are more deeply nested, each level of arrays keys is joined in:
@@ -251,6 +275,9 @@ If the arrays are more deeply nested, each level of arrays keys is joined in:
 a b.1.1 b.1.2 b.2.1 b.2.2
 1 2     3     4     5
 6 7     8     9     10
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 In the nested-data examples shown here, nested map values are shown containing
@@ -280,6 +307,9 @@ though not shown here) nested map values can contain arrays, and vice versa.
 a,b.1,b.2
 1,2,3
 4,5,6
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -296,6 +326,12 @@ a,b.1,b.2
   "b": [5, 6]
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Auto-inferencing of arrays on unflatten
@@ -323,6 +359,9 @@ a.1,a.2,a.3
   "a": [4, 5, 6]
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -346,6 +385,9 @@ a.1,a.3,a.5
   }
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Manual control
@@ -393,6 +435,9 @@ Using JSON output, we can see that `splita` has produced an array-valued field n
   "components": ["nadir", "west", "our", "org"]
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Using CSV output, with default auto-flatten, we get `components.1` through `components.4`:
@@ -404,6 +449,9 @@ Using CSV output, with default auto-flatten, we get `components.1` through `comp
 host,status,components.1,components.2,components.3,components.4
 apoapsis.east.our.org,up,apoapsis,east,our,org
 nadir.west.our.org,down,nadir,west,our,org
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Using CSV output, without default auto-flatten, we get a JSON-stringified encoding of the `components` field:
@@ -415,6 +463,9 @@ Using CSV output, without default auto-flatten, we get a JSON-stringified encodi
 host,status,components
 apoapsis.east.our.org,up,"[""apoapsis"", ""east"", ""our"", ""org""]"
 nadir.west.our.org,down,"[""nadir"", ""west"", ""our"", ""org""]"
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Now suppose we ran this
@@ -435,6 +486,9 @@ host   nadir.west.our.org
 status down
 a      ["nadir", "west", "our", "org"]
 b      ["nadir", "west", "our", "org"]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 into a file [data/hostnames.xtab](./data/hostnames.xtab):
@@ -476,6 +530,9 @@ leave `b` JSON-stringified:
   "b": "[\"nadir\", \"west\", \"our\", \"org\"]"
 }
 ]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 See also the

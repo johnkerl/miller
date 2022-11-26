@@ -78,6 +78,9 @@ Evens:
 Odds:
 [9, 3, 1, 5, 7]
 
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Map examples:
@@ -119,6 +122,9 @@ Values with last digit >= 5:
   "apple": 199,
   "bottle": 107
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## apply
@@ -169,6 +175,9 @@ Cubes:
 
 Sorted cubes:
 [1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -228,6 +237,9 @@ Same, with upcased keys:
   "DALE": 2197,
   "EMBER": 6967871
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## reduce
@@ -292,6 +304,9 @@ Product of values:
 
 Concatenation of values:
 2,9,10,3,1,4,5,8,7,6
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -366,6 +381,9 @@ String-join of values:
 {
   "joined": "823,13,199,191,107"
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## fold
@@ -409,6 +427,9 @@ Sum with fold and 0 initial value:
 
 Sum with fold and 1000000 initial value:
 1000055
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -465,6 +486,9 @@ Sum of values with fold and 1000000 initial value:
 {
   "sum": 1001333
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## sort
@@ -519,6 +543,9 @@ Ascending:
 Descending:
 [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
 [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Map examples:
@@ -610,6 +637,9 @@ Descending by value:
   "bottle": 107,
   "dale": 13
 }
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 Please see the [sorting page](sorting.md) for more examples.
@@ -633,6 +663,9 @@ purple triangle false 7  65    80.1405  5.8240
 yellow circle   true  8  73    63.9785  4.2370
 yellow circle   true  9  87    63.5058  8.3350
 purple square   false 10 91    72.3735  8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -645,6 +678,9 @@ red    circle true  3  16    13.8103  2.9010
 red    square false 4  48    77.5542  7.4670
 red    square false 6  64    77.1991  9.5310
 purple square false 10 91    72.3735  8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -655,6 +691,9 @@ color shape  flag  k index quantity rate
 red   square true  2 15    79.2778  0.0130
 red   square false 4 48    77.5542  7.4670
 red   square false 6 64    77.1991  9.5310
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -672,6 +711,9 @@ purple triangle false 7  65    80.1405  5.8240 false
 yellow circle   true  8  73    63.9785  4.2370 false
 yellow circle   true  9  87    63.5058  8.3350 false
 purple square   false 10 91    72.3735  8.2430 false
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -682,6 +724,9 @@ color  shape    flag  k index quantity rate
 red    circle   true  3 16    13.8103  2.9010
 purple triangle false 5 51    81.2290  8.5910
 red    square   false 6 64    77.1991  9.5310
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 This last example could also be done using a map:
@@ -699,6 +744,9 @@ color  shape    flag  k index quantity rate
 red    circle   true  3 16    13.8103  2.9010
 purple triangle false 5 51    81.2290  8.5910
 red    square   false 6 64    77.1991  9.5310
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Combined examples
@@ -722,6 +770,9 @@ purple triangle false 7  65    80.1405  5.8240
 yellow circle   true  8  73    63.9785  4.2370
 yellow circle   true  9  87    63.5058  8.3350
 purple square   false 10 91    72.3735  8.2430
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -770,6 +821,9 @@ Sorted, then cubed:
 
 Sorted, then cubed, then summed:
 2589905
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Caveats
@@ -792,6 +846,9 @@ instead of
 </pre>
 <pre class="pre-non-highlight-in-pair">
 [3, 4, 5]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ### No IIFEs
@@ -831,6 +888,9 @@ but this does:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 2187
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
 
 ### Built-in functions currently unsupported as arguments
@@ -871,4 +931,7 @@ but this does:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 [1, 0.9238795325112867, 0.7071067811865476, 0.38268343236508984]
+Memory profile started.
+Memory profile finished.
+go tool pprof -http=:8080 foo-stream
 </pre>
