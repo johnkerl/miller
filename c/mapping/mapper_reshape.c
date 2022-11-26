@@ -294,18 +294,16 @@ static void mapper_reshape_free(mapper_t* pmapper, context_t* _) {
 static sllv_t* mapper_reshape_wide_to_long_no_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL) // End of input stream
 		return sllv_single(NULL);
+
 	mapper_reshape_state_t* pstate = (mapper_reshape_state_t*)pvstate;
 
 	sllv_t* poutrecs = sllv_alloc();
 	lhmss_t* pairs = lhmss_alloc();
-	char* pfree_flags = NULL;
 	for (sllse_t* pe = pstate->input_field_names->phead; pe != NULL; pe = pe->pnext) {
 		char* key = pe->value;
-		char* value = lrec_get_pff(pinrec, key, &pfree_flags);
+		char* value = lrec_get(pinrec, key);
 		if (value != NULL) {
-			// Ownership-transfer of the about-to-be-freed key-value pairs from lrec to lhmss
-			lhmss_put(pairs, key, value, *pfree_flags);
-			*pfree_flags = NO_FREE;
+			lhmss_put(pairs, mlr_strdup_or_die(key), mlr_strdup_or_die(value), FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
 		}
 	}
 
