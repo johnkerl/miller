@@ -1,6 +1,6 @@
 Summary: Name-indexed data processing tool
 Name: miller
-Version: 5.10.3
+Version: 5.10.4
 Release: 1%{?dist}
 License: BSD
 Source: https://github.com/johnkerl/miller/releases/download/%{version}/miller-%{version}.tar.gz
@@ -35,6 +35,9 @@ make check
 %{_mandir}/man1/mlr.1*
 
 %changelog
+* Sun Nov 28 2022 John Kerl <kerl.john.r@gmail.com> - 5.10.4-1
+- 5.10.4 release
+
 * Tue Nov 16 2021 John Kerl <kerl.john.r@gmail.com> - 5.10.3-1
 - 5.10.3 release
 
