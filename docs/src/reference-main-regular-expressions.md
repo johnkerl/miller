@@ -59,9 +59,6 @@ name=bull,regex=^b[ou]ll$
 <pre class="pre-non-highlight-in-pair">
 name=jane,regex=^j.*e$
 name=bull,regex=^b[ou]ll$
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Regex captures

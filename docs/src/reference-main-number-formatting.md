@@ -35,9 +35,6 @@ pipe the output to something else, particularly CSV. I use Miller's pretty-print
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=   3.100,y=   4.300
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -45,9 +42,6 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=3.10000000e+00,y=4.30000000e+00
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## The format-values verb
@@ -66,9 +60,6 @@ put`. For example:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=3.1,y=4.3,z=13.330000
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -76,9 +67,6 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=0xffff,y=0xff,z=00feff01
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Input conversion from hexadecimal is done automatically on fields handled by `mlr put` and `mlr filter` as long as the field value begins with `0x`.  To apply output conversion to hexadecimal on a single column, you may use `fmtnum`, or the keystroke-saving [`hexfmt`](reference-dsl-builtin-functions.md#hexfmt) function. Example:
@@ -88,9 +76,6 @@ Input conversion from hexadecimal is done automatically on fields handled by `ml
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=0xffff,y=0xff,z=16711425
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -98,7 +83,4 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=0xffff,y=0xff,z=0xfeff01
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>

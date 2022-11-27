@@ -49,9 +49,6 @@ purple triangle false 7  65    80.1405  5.8240
 yellow circle   true  8  73    63.9785  4.2370
 yellow circle   true  9  87    63.5058  8.3350
 purple square   false 10 91    72.3735  8.2430
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Sorted numerically ascending by rate:
@@ -71,9 +68,6 @@ yellow circle   true  9  87    63.5058  8.3350
 purple triangle false 5  51    81.2290  8.5910
 red    square   false 6  64    77.1991  9.5310
 yellow triangle true  1  11    43.6498  9.8870
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Sorted lexically ascending by color; then, within each color, numerically descending by quantity:
@@ -93,9 +87,6 @@ red    circle   true  3  16    13.8103  2.9010
 yellow circle   true  8  73    63.9785  4.2370
 yellow circle   true  9  87    63.5058  8.3350
 yellow triangle true  1  11    43.6498  9.8870
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Example of natural sort, adapted from [https://github.com/facette/natsort](https://github.com/facette/natsort):
@@ -132,9 +123,6 @@ n  name
 25 Xiph Xlater 40
 26 Allegia 6R Clasteron
 27 Callisto Morphamax 5000
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -169,9 +157,6 @@ n  name
 3  Xiph Xlater 58
 21 Xiph Xlater 300
 14 Xiph Xlater 500
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Sorting fields within records: the sort-within-records verb
@@ -215,9 +200,6 @@ b a c
 
 c b a
 7 8 9
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -228,9 +210,6 @@ a b c
 1 2 3
 5 4 6
 9 8 7
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## The sort function by example
@@ -249,9 +228,6 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 [1, 2, 3, 4, 5]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -264,9 +240,6 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 [5, 4, 3, 2, 1]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -279,9 +252,6 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 [1, 2, 3, 4, 5]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -294,9 +264,6 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 [5, 4, 3, 2, 1]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -313,9 +280,6 @@ go tool pprof -http=:8080 foo-stream
   "b": 1,
   "c": 2
 }
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -332,9 +296,6 @@ go tool pprof -http=:8080 foo-stream
   "b": 1,
   "a": 3
 }
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -358,9 +319,6 @@ go tool pprof -http=:8080 foo-stream
   "c": 2,
   "a": 3
 }
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -384,9 +342,6 @@ go tool pprof -http=:8080 foo-stream
   "c": 2,
   "b": 1
 }
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -399,9 +354,6 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 ["a1", "a2", "a10", "a20", "a100", "a200"]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 In the rest of this page we'll look more closely at these variants.
@@ -445,9 +397,6 @@ key   values
 alpha 1;4;5;6
 beta  7;8;9;9
 gamma 1;2;11;12
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Use the `"r"` flag for reverse, which is numerical descending:
@@ -464,9 +413,6 @@ key   values
 alpha 6;5;4;1
 beta  9;9;8;7
 gamma 12;11;2;1
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Use the `"f"` flag for lexical ascending sort (and `"fr"` would lexical descending):
@@ -483,9 +429,6 @@ key   values
 alpha 1;4;5;6
 beta  7;8;9;9
 gamma 1;11;12;2
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Without and with case-folding:
@@ -514,9 +457,6 @@ alpha,cat;bat;Australia;Bavaria;apple;Colombia
 key   values
 alpha Australia;Bavaria;Colombia;apple;bat;cat
 alpha apple;Australia;bat;Bavaria;cat;Colombia
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Simple sorting of maps within records
@@ -588,9 +528,6 @@ Also note that, unlike the `sort-within-record` verb with its `-r` flag,
   }
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Simple sorting of maps across records
@@ -633,9 +570,6 @@ red    square   false 6  64    77.1991  9.5310 6
 purple triangle false 7  65    80.1405  5.8240 7
 yellow circle   true  8  73    63.9785  4.2370 8
 yellow circle   true  9  87    63.5058  8.3350 9
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Custom sorting of arrays within records
@@ -704,9 +638,6 @@ recapitulate (for reference) what `sort` with default flags already does; the th
   "even_then_odd": [2, 4, 6, 8, 10, 1, 3, 5, 7, 9]
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Custom sorting of arrays across records
@@ -760,9 +691,6 @@ red    square   true  2  15    79.2778  0.0130
 purple triangle false 7  65    80.1405  5.8240
 purple triangle false 5  51    81.2290  8.5910
 yellow triangle true  1  11    43.6498  9.8870
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Custom sorting of maps within records
@@ -826,9 +754,6 @@ For example, we can sort ascending or descending by map key or map value:
   "b": 2,
   "c": 1
 }
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Custom sorting of maps across records
@@ -871,7 +796,4 @@ red    square   false 4  48    77.5542  7.4670
 red    circle   true  3  16    13.8103  2.9010
 red    square   true  2  15    79.2778  0.0130
 yellow triangle true  1  11    43.6498  9.8870
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>

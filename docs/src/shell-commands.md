@@ -30,9 +30,6 @@ eks pan 2 0.758679 0.522151 hello world
 wye wye 3 0.204603 0.338318 hello world
 eks wye 4 0.381399 0.134188 hello world
 wye pan 5 0.573288 0.863624 hello world
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -45,9 +42,6 @@ eks pan 2 0.758679 0.522151 {2}
 wye wye 3 0.204603 0.338318 {3}
 eks wye 4 0.381399 0.134188 {4}
 wye pan 5 0.573288 0.863624 {5}
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -60,9 +54,6 @@ eks pan 2 0.758679 0.522151 585d25a8ff04840f77779eeff61167dc
 wye wye 3 0.204603 0.338318 fb6361a373147c163e65ada94719fa16
 eks wye 4 0.381399 0.134188 585d25a8ff04840f77779eeff61167dc
 wye pan 5 0.573288 0.863624 fb6361a373147c163e65ada94719fa16
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Note that running a subprocess on every record takes a non-trivial amount of time. Comparing asking the system `date` command for the current time in nanoseconds versus computing it in process:

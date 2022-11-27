@@ -56,9 +56,6 @@ treating epoch-milliseconds as epoch-seconds.
 <pre class="pre-non-highlight-in-pair">
 2017-07-14T02:40:00Z
 49503-02-10T02:40:00Z
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 You can get the current system time, as epoch-seconds, using the
@@ -116,9 +113,6 @@ We also have [sec2gmtdate](reference-dsl-builtin-functions.md#sec2gmtdate) DSL f
 1970-01-01
 2009-02-13
 1930-11-18
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Local times with standard format; specifying timezones
@@ -151,9 +145,6 @@ mlr :  unknown time zone This/Is/A/Typo
 </pre>
 <pre class="pre-non-highlight-in-pair">
 1970-01-01 02:00:00
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -161,9 +152,6 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 1969-12-31 21:00:00
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -187,9 +175,6 @@ go tool pprof -http=:8080 foo-stream
 1969-12-31 21:00:00
 1969-12-31
 946789445
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -211,9 +196,6 @@ go tool pprof -http=:8080 foo-stream
 1969-12-31 21:00:00
 1969-12-31
 946789445
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Note that for local times, Miller omits the `T` and the `Z` you see in GMT times.
@@ -232,9 +214,6 @@ We also have the
 <pre class="pre-non-highlight-in-pair">
 1970-01-01 02:00:00
 1969-12-31T22:00:00Z
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -250,9 +229,6 @@ go tool pprof -http=:8080 foo-stream
 1970-01-01 02:00:00
 1970-01-01T03:00:00Z
 1969-12-31T22:00:00Z
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Custom formats: strptime and strftime
@@ -346,9 +322,6 @@ Examples:
 <pre class="pre-non-highlight-in-pair">
 1970-01-01T00:00:00Z
 1970-01-01T00:00:00Z
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -367,9 +340,6 @@ go tool pprof -http=:8080 foo-stream
 1970-01-01 00:00:00 +0000
 Thursday, January  1, 1970
 09:33 PM
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Unfortunately, names from `%A` and `%B` are only available in English, as an artifact of a design
@@ -406,9 +376,6 @@ For historical reasons, Miller's `strftime` and `strptime` use different format 
 1970-01-02 10:17:36.789000
 (error)
 123456.789
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## strptime_local and strftime_local
@@ -442,9 +409,6 @@ Wednesday, December 31, 1969
 1970-01-01 08:00:00 +0800
 Thursday, January  1, 1970
 1582992000
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -470,9 +434,6 @@ Wednesday, December 31, 1969
 1970-01-01 08:00:00 +0800
 Thursday, January  1, 1970
 1582992000
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Relative times

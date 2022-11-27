@@ -91,9 +91,6 @@ HELLO
 }GOODBYE
 
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Using Miller with the REPL

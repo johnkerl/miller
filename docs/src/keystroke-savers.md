@@ -27,9 +27,6 @@ In our examples so far we've often made use of `mlr --icsv --opprint` or `mlr --
 color  shape    flag k index quantity rate
 yellow triangle true 1 11    43.6498  9.8870
 red    square   true 2 15    79.2778  0.0130
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -56,9 +53,6 @@ go tool pprof -http=:8080 foo-stream
   "rate": 0.0130
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 You can get the full list [here](file-formats.md#data-conversion-keystroke-savers).
@@ -75,9 +69,6 @@ color  shape  flag  k  index quantity rate
 purple square false 10 91    72.3735  8.2430
 yellow circle true  9  87    63.5058  8.3350
 yellow circle true  8  73    63.9785  4.2370
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -88,9 +79,6 @@ shape  quantity
 square 72.3735
 circle 63.5058
 circle 63.9785
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 If there's more than one input file, you can use `--mfrom`, then however many file names, then `--` to indicate the end of your input-file-name list:

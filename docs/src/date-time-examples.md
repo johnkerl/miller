@@ -40,9 +40,6 @@ we can use [strptime](reference-verbs.md#strptime) to parse the date field into 
 <pre class="pre-non-highlight-in-pair">
 date,event
 2018-03-07,discovery
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Caveat: localtime-handling in timezones with DST is still a work in progress; see [https://github.com/johnkerl/miller/issues/170](https://github.com/johnkerl/miller/issues/170) . See also [https://github.com/johnkerl/miller/issues/208](https://github.com/johnkerl/miller/issues/208) -- thanks @aborruso!
@@ -108,9 +105,6 @@ Then, filter for adjacent difference not being 86400 (the number of seconds in a
 <pre class="pre-non-highlight-in-pair">
 n=774,date=2014-04-19,qoh=130140,datestamp=1397865600,datestamp_delta=259200
 n=1119,date=2015-03-31,qoh=181625,datestamp=1427760000,datestamp_delta=172800
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Given this, it's now easy to see where the gaps are:
@@ -130,9 +124,6 @@ n=777,1=2014-04-21,2=130368
 n=778,1=2014-04-22,2=130368
 n=779,1=2014-04-23,2=130849
 n=780,1=2014-04-24,2=131026
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -150,7 +141,4 @@ n=1122,1=2015-04-02,2=181718
 n=1123,1=2015-04-03,2=181835
 n=1124,1=2015-04-04,2=182104
 n=1125,1=2015-04-05,2=182528
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>

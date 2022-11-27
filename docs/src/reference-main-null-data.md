@@ -69,9 +69,6 @@ a=1,b=8
 a=,b=4
 x=9,b=10
 a=5,b=7
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -83,9 +80,6 @@ a=3,b=2
 a=5,b=7
 a=,b=4
 x=9,b=10
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -97,9 +91,6 @@ a=5,b=7
 a=3,b=2
 a=1,b=8
 x=9,b=10
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 * Functions/operators which have one or more *empty* arguments produce empty output: e.g.
@@ -109,9 +100,6 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=2,y=3,a=5
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -119,9 +107,6 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=,y=3,a=
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -129,9 +114,6 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=,y=3,a=,b=1.0986122886681096
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 with the exception that the `min` and `max` functions are special: if one argument is non-null, it wins:
@@ -141,9 +123,6 @@ with the exception that the `min` and `max` functions are special: if one argume
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=,y=3,a=3,b=
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 * Functions of *absent* variables (e.g. `mlr put '$y = log10($nonesuch)'`) evaluate to absent, and arithmetic/bitwise/boolean operators with both operands being absent evaluate to absent. Arithmetic operators with one absent operand return the other operand. More specifically, absent values act like zero for addition/subtraction, and one for multiplication: Furthermore, **any expression which evaluates to absent is not stored in the left-hand side of an assignment statement**:
@@ -153,9 +132,6 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=2,y=3,b=3,c=5
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -163,9 +139,6 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=2,y=3,a=2,b=3
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 * Likewise, for assignment to maps, **absent-valued keys or values result in a skipped assignment**.
@@ -193,9 +166,6 @@ record_count=100,resource=/path/to/file
 resource=/path/to/second/file,loadsec=0.32,ok=true
 record_count=150,resource=/path/to/second/file
 resource=/some/other/path,loadsec=0.97,ok=false
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -207,9 +177,6 @@ record_count=100,resource=/path/to/file
 resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320
 record_count=150,resource=/path/to/second/file
 resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -221,9 +188,6 @@ record_count=100,resource=/path/to/file,loadmillis=0
 resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320
 record_count=150,resource=/path/to/second/file,loadmillis=0
 resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Arithmetic rules

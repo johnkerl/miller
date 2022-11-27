@@ -45,9 +45,6 @@ Likewise [JSON](file-formats.md#json):
   "Role": "tester"
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 For Miller's [XTAB](file-formats.md#xtab-vertical-tabular) there is no escaping for carriage returns, but commas work fine:
@@ -61,9 +58,6 @@ Role administrator
 
 Name Khavari, Darius
 Role tester
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 But for [key-value-pairs](file-formats.md#dkvp-key-value-pairs) and [index-numbered](file-formats.md#nidx-index-numbered-toolkit-style) formats, commas are the default field separator. And -- as of Miller 5.4.0 anyway -- there is no CSV-style double-quote-handling like there is for CSV. So commas within the data look like delimiters:
@@ -74,9 +68,6 @@ But for [key-value-pairs](file-formats.md#dkvp-key-value-pairs) and [index-numbe
 <pre class="pre-non-highlight-in-pair">
 Name=Xiao, Lin,Role=administrator
 Name=Khavari, Darius,Role=tester
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 One solution is to use a different delimiter, such as a pipe character:
@@ -87,9 +78,6 @@ One solution is to use a different delimiter, such as a pipe character:
 <pre class="pre-non-highlight-in-pair">
 Name=Xiao, Lin|Role=administrator
 Name=Khavari, Darius|Role=tester
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 To be extra-sure to avoid data/delimiter clashes, you can also use control
@@ -101,9 +89,6 @@ characters as delimiters -- here, control-A:
 <pre class="pre-non-highlight-in-pair">
 Name=Xiao, Lin^ARole=administrator
 Name=Khavari, Darius^ARole=tester
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## How can I handle field names with special symbols in them?
@@ -115,9 +100,6 @@ Simply surround the field names with curly braces:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x.a=3,y:b=4,z/c=5,product.all=60
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## How can I put single quotes into strings?
@@ -133,9 +115,6 @@ $a = "It's OK, I said, then 'for now'."
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a=It's OK, I said, then 'for now'.
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 So: Miller's DSL uses double quotes for strings, and you can put single quotes (or backslash-escaped double-quotes) inside strings, no problem.
@@ -147,9 +126,6 @@ Without putting the update expression in a file, it's messier:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a=It's OK, I said, 'for now'.
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 The idea is that the outermost single-quotes are to protect the `put` expression from the shell, and the double quotes within them are for Miller. To get a single quote in the middle there, you need to actually put it *outside* the single-quoting for the shell. The pieces are the following, all concatenated together:
@@ -179,9 +155,6 @@ a=is it?,b=it is!
 a is it?
 b it is!
 c is it ...
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-highlight-in-pair">
 <b>mlr --oxtab put '$c = ssub($a, "?"," ...")' data/question.dat</b>
@@ -190,9 +163,6 @@ go tool pprof -http=:8080 foo-stream
 a is it?
 b it is!
 c is it ...
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 The
@@ -216,9 +186,6 @@ The `ssub` and `gssub` functions are also handy for dealing with non-UTF-8 strin
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Kaðlín og Þormundr
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 More generally, though, we have the DSL functions
@@ -252,7 +219,4 @@ See also the [page on regular expressions](reference-main-regular-expressions.md
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a=14°45',degrees=14.75
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>

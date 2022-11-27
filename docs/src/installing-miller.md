@@ -70,9 +70,6 @@ purple,triangle,false,7,65,80.1405,5.8240
 yellow,circle,true,8,73,63.9785,4.2370
 yellow,circle,true,9,87,63.5058,8.3350
 purple,square,false,10,91,72.3735,8.2430
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -90,9 +87,6 @@ purple triangle false 7  65    80.1405  5.8240
 yellow circle   true  8  73    63.9785  4.2370
 yellow circle   true  9  87    63.5058  8.3350
 purple square   false 10 91    72.3735  8.2430
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 If you run into issues on these checks, please check out the resources on the [community page](community.md) for help.

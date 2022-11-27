@@ -40,9 +40,6 @@ barney false
 betty  true
 fred   true
 wilma  true
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -54,9 +51,6 @@ barney 0
 betty  1
 fred   1
 wilma  1
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 A second option is to flag badly formatted data within the output stream:
@@ -70,9 +64,6 @@ barney false     true
 betty  true      true
 fred   true      true
 wilma  1         false
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Or perhaps to flag badly formatted data outside the output stream:
@@ -89,9 +80,6 @@ betty  true
 fred   true
 wilma  1
 Malformed at NR=4
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 A third way is to abort the process on first instance of bad data:

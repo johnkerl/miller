@@ -38,9 +38,6 @@ b=pan,i=2,y=0.522151
 b=wye,i=3,y=0.338318
 b=wye,i=4,y=0.134188
 b=pan,i=5,y=0.863624
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 This can also be done, of course, using `mlr cut -x`. You can also clear out-of-stream or local variables, at the base name level, or at an indexed sublevel:
@@ -65,9 +62,6 @@ This can also be done, of course, using `mlr cut -x`. You can also clear out-of-
   }
 }
 {}
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -100,9 +94,6 @@ go tool pprof -http=:8080 foo-stream
     }
   }
 }
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 If you use `unset all` (or `unset @*` which is synonymous), that will unset all out-of-stream variables which have been assigned up to that point.
