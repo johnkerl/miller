@@ -2,7 +2,9 @@
 // Experiments for type-inference performance optimization
 // ================================================================
 
-// go build github.com/johnkerl/miller/cmd/sizes
+/*
+go build github.com/johnkerl/miller/cmd/sizes
+*/
 
 package main
 

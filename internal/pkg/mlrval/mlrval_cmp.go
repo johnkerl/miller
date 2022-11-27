@@ -107,13 +107,13 @@ func cmp_b_ss(input1, input2 *Mlrval) int {
 	return string_cmp(input1.printrep, input2.printrep)
 }
 func cmp_b_ii(input1, input2 *Mlrval) int {
-	return int_cmp(input1.intval, input2.intval)
+	return int_cmp(input1.intf.(int64), input2.intf.(int64))
 }
 func cmp_b_if(input1, input2 *Mlrval) int {
-	return float_cmp(float64(input1.intval), input2.intf.(float64))
+	return float_cmp(float64(input1.intf.(int64)), input2.intf.(float64))
 }
 func cmp_b_fi(input1, input2 *Mlrval) int {
-	return float_cmp(input1.intf.(float64), float64(input2.intval))
+	return float_cmp(input1.intf.(float64), float64(input2.intf.(int64)))
 }
 func cmp_b_ff(input1, input2 *Mlrval) int {
 	return float_cmp(input1.intf.(float64), input2.intf.(float64))

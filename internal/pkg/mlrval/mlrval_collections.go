@@ -87,7 +87,7 @@ func (mv *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 		return *ERROR
 	}
 	arrayval := mv.intf.([]*Mlrval)
-	value := arrayGetAliased(&arrayval, int(mindex.intval))
+	value := arrayGetAliased(&arrayval, int(mindex.intf.(int64)))
 	if value == nil {
 		return *ABSENT
 	} else {
@@ -118,12 +118,12 @@ func (mv *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
 	}
 
 	arrayval := mv.intf.([]*Mlrval)
-	ok := arrayPutAliased(&arrayval, int(mindex.intval), value)
+	ok := arrayPutAliased(&arrayval, int(mindex.intf.(int64)), value)
 	if !ok {
 		fmt.Fprintf(
 			os.Stderr,
 			"mlr: array index %d out of bounds %d..%d\n",
-			mindex.intval, 1, len(arrayval),
+			mindex.intf.(int64), 1, len(arrayval),
 		)
 		os.Exit(1)
 	}
@@ -389,21 +389,21 @@ func putIndexedOnArray(
 				".",
 		)
 	}
-	zindex, inBounds := UnaliasArrayIndex(baseArray, int(mindex.intval))
+	zindex, inBounds := UnaliasArrayIndex(baseArray, int(mindex.intf.(int64)))
 
 	if numIndices == 1 {
 		// If last index, then assign.
 		if inBounds {
 			(*baseArray)[zindex] = rvalue.Copy()
-		} else if mindex.intval == 0 {
+		} else if mindex.intf.(int64) == 0 {
 			return errors.New("mlr: zero indices are not supported. Indices are 1-up.")
-		} else if mindex.intval < 0 {
+		} else if mindex.intf.(int64) < 0 {
 			return errors.New("mlr: Cannot use negative indices to auto-lengthen arrays.")
 		} else {
 			// Array is [a,b,c] with mindices 1,2,3. Length is 3. Zindices are 0,1,2.
 			// Given mindex is 4.
-			LengthenMlrvalArray(baseArray, int(mindex.intval))
-			zindex := mindex.intval - 1
+			LengthenMlrvalArray(baseArray, int(mindex.intf.(int64)))
+			zindex := mindex.intf.(int64) - 1
 			(*baseArray)[zindex] = rvalue.Copy()
 		}
 		return nil
@@ -430,14 +430,14 @@ func putIndexedOnArray(
 
 			return (*baseArray)[zindex].PutIndexed(indices[1:], rvalue)
 
-		} else if mindex.intval == 0 {
+		} else if mindex.intf.(int64) == 0 {
 			return errors.New("mlr: zero indices are not supported. Indices are 1-up.")
-		} else if mindex.intval < 0 {
+		} else if mindex.intf.(int64) < 0 {
 			return errors.New("mlr: Cannot use negative indices to auto-lengthen arrays.")
 		} else {
 			// Already allocated but needs to be longer
-			LengthenMlrvalArray(baseArray, int(mindex.intval))
-			zindex := mindex.intval - 1
+			LengthenMlrvalArray(baseArray, int(mindex.intf.(int64)))
+			zindex := mindex.intf.(int64) - 1
 			return (*baseArray)[zindex].PutIndexed(indices[1:], rvalue)
 		}
 	}
@@ -518,7 +518,7 @@ func removeIndexedOnArray(
 				".",
 		)
 	}
-	zindex, inBounds := UnaliasArrayIndex(baseArray, int(mindex.intval))
+	zindex, inBounds := UnaliasArrayIndex(baseArray, int(mindex.intf.(int64)))
 
 	// If last index, then unset.
 	if numIndices == 1 {
@@ -526,7 +526,7 @@ func removeIndexedOnArray(
 			leftSlice := (*baseArray)[0:zindex]
 			rightSlice := (*baseArray)[zindex+1 : len((*baseArray))]
 			*baseArray = append(leftSlice, rightSlice...)
-		} else if mindex.intval == 0 {
+		} else if mindex.intf.(int64) == 0 {
 			return errors.New("mlr: zero indices are not supported. Indices are 1-up.")
 		} else {
 			// TODO: improve wording
@@ -536,7 +536,7 @@ func removeIndexedOnArray(
 		// More indices remain; recurse
 		if inBounds {
 			return (*baseArray)[zindex].RemoveIndexed(indices[1:])
-		} else if mindex.intval == 0 {
+		} else if mindex.intf.(int64) == 0 {
 			return errors.New("mlr: zero indices are not supported. Indices are 1-up.")
 		} else {
 			// TODO: improve wording

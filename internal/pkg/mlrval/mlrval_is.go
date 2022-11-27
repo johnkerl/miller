@@ -96,7 +96,7 @@ func (mv *Mlrval) IsNumeric() bool {
 }
 
 func (mv *Mlrval) IsIntZero() bool {
-	return mv.Type() == MT_INT && mv.intval == 0
+	return mv.Type() == MT_INT && mv.intf.(int64) == 0
 }
 
 func (mv *Mlrval) IsBool() bool {

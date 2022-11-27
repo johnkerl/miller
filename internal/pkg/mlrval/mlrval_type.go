@@ -54,13 +54,9 @@
 package mlrval
 
 type Mlrval struct {
-	intf interface{}
-
-	intval   int64
-	printrep string
-
+	printrep      string
+	intf          interface{}
 	printrepValid bool
-
 	// Enumeration for string / int / float / boolean / etc.
 	// I would call this "type" not "mvtype" but "type" is a keyword in Go.
 	mvtype MVType
@@ -96,10 +92,13 @@ const (
 	// optimization.
 	MT_PENDING MVType = -1
 
+	// intf is int64
 	MT_INT MVType = 0
 
+	// intf is float64
 	MT_FLOAT MVType = 1
 
+	// intf is bool
 	MT_BOOL MVType = 2
 
 	// Key present in input record with empty value, e.g. input data '$x=,$y=2'
@@ -107,10 +106,13 @@ const (
 
 	MT_STRING MVType = 4
 
+	// intf is []*Mlrval
 	MT_ARRAY MVType = 5
 
+	// intf is *Mlrmap
 	MT_MAP MVType = 6
 
+	// intf is interface{} -- resolved in the cst package to avoid circular dependencies
 	MT_FUNC MVType = 7
 
 	// E.g. error encountered in one eval & it propagates up the AST at

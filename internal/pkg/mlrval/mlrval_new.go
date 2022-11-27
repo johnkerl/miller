@@ -83,7 +83,7 @@ func FromInt(input int64) *Mlrval {
 	return &Mlrval{
 		mvtype:        MT_INT,
 		printrepValid: false,
-		intval:        input,
+		intf:          input,
 	}
 }
 
@@ -112,7 +112,7 @@ func TryFromIntString(input string) *Mlrval {
 func (mv *Mlrval) SetFromPrevalidatedIntString(input string, intval int64) *Mlrval {
 	mv.printrep = input
 	mv.printrepValid = true
-	mv.intval = intval
+	mv.intf = intval
 	mv.mvtype = MT_INT
 	return mv
 }
@@ -128,7 +128,7 @@ func FromFloat(input float64) *Mlrval {
 	return &Mlrval{
 		mvtype:        MT_FLOAT,
 		printrepValid: false,
-		intf:      input,
+		intf:          input,
 	}
 }
 

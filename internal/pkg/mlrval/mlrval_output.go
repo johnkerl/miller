@@ -3,6 +3,7 @@ package mlrval
 import (
 	"fmt"
 	"os"
+	"reflect"
 	"strconv"
 )
 
@@ -70,7 +71,7 @@ func (mv *Mlrval) setPrintRep() {
 			break
 
 		case MT_INT:
-			mv.printrep = strconv.FormatInt(mv.intval, 10)
+			mv.printrep = strconv.FormatInt(mv.intf.(int64), 10)
 
 		case MT_FLOAT:
 			mv.printrep = strconv.FormatFloat(mv.intf.(float64), 'f', -1, 64)
@@ -121,4 +122,12 @@ func (mv *Mlrval) StringifyValuesRecursively() {
 	default:
 		mv.SetFromString(mv.String())
 	}
+}
+
+func (mv *Mlrval) ShowSizes() {
+	fmt.Printf("TOTAL            %p %d\n", mv, reflect.TypeOf(*mv).Size())
+	//fmt.Printf("mv.intf          %p %d\n", &mv.intf, reflect.TypeOf(mv.intf).Size())
+	fmt.Printf("mv.printrep      %p %d\n", &mv.printrep, reflect.TypeOf(mv.printrep).Size())
+	fmt.Printf("mv.printrepValid %p %d\n", &mv.printrepValid, reflect.TypeOf(mv.printrepValid).Size())
+	fmt.Printf("mv.mvtype        %p %d\n", &mv.mvtype, reflect.TypeOf(mv.mvtype).Size())
 }
