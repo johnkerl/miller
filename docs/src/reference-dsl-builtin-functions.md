@@ -37,9 +37,6 @@ PURPLE tr**ngl* false 7  65    80.1405  5.8240
 YELLOW c*rcl*   true  8  73    63.9785  4.2370
 YELLOW c*rcl*   true  9  87    63.5058  8.3350
 PURPLE sq**r*   false 10 91    72.3735  8.2430
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 the `toupper` and `gsub` bits are _functions_.

@@ -30,9 +30,6 @@ hostname              ipaddr
 nadir.east.our.org    10.3.1.18
 zenith.west.our.org   10.3.1.27
 apoapsis.east.our.org 10.4.5.94
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -49,9 +46,6 @@ ipaddr    timestamp  bytes
 10.3.1.27 1448762599 0
 10.3.1.18 1448762598 73425
 10.4.5.94 1448762599 12200
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -63,9 +57,6 @@ ipaddr    hostname              timestamp  bytes
 10.4.5.94 apoapsis.east.our.org 1448762579 17445
 10.4.5.94 apoapsis.east.our.org 1448762589 8899
 10.4.5.94 apoapsis.east.our.org 1448762599 12200
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 The issue is that Miller's `join`, by default (before 5.1.0), took input sorted (lexically ascending) by the sort keys on both the left and right files.  This design decision was made intentionally to parallel the Unix/Linux system `join` command, which has the same semantics. The benefit of this default is that the joiner program can stream through the left and right files, needing to load neither entirely into memory. The drawback, of course, is that is requires sorted input.
@@ -86,9 +77,6 @@ ipaddr    hostname              timestamp  bytes
 10.3.1.27 zenith.west.our.org   1448762599 0
 10.3.1.18 nadir.east.our.org    1448762598 73425
 10.4.5.94 apoapsis.east.our.org 1448762599 12200
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 General advice is to make sure the left-file is relatively small, e.g. containing name-to-number mappings, while saving large amounts of data for the right file.
@@ -119,9 +107,6 @@ Joining on color the results are as expected:
 id,code,color
 4,ff0000,red
 2,00ff00,green
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 However, if we ask for left-unpaireds, since there's no `color` column, we get a row not having the same column names as the other:
@@ -136,9 +121,6 @@ id,code,color
 
 id,code
 3,0000ff
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 To fix this, we can use **unsparsify**:
@@ -153,9 +135,6 @@ id,code,color
 4,ff0000,red
 2,00ff00,green
 3,0000ff,
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Thanks to @aborruso for the tip!
@@ -220,7 +199,4 @@ id status   name  task
 20 idle     Carol mix
 10 idle     Bob   knead
 30 occupied Alice clean
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>

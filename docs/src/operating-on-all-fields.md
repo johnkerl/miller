@@ -40,9 +40,6 @@ a_b_c,def,g_h_i
 123,4567,890
 2468,1357,3579
 9987,3312,4543
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -53,9 +50,6 @@ a_b_c def  g_h_i
 123   4567 890
 2468  1357 3579
 9987  3312 4543
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 You can also do this with a for-loop:
@@ -79,9 +73,6 @@ a_b_c def  g_h_i
 123   4567 890
 2468  1357 3579
 9987  3312 4543
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Bulk rename of fields with carriage returns
@@ -115,9 +106,6 @@ field A,field B
 1,2
 3,3
 6,6
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Search-and-replace over all fields
@@ -149,9 +137,6 @@ for (k in $*) {
 a,b,c
 thX quick,brown fox,jumpXd
 ovXr,thX,lazy dogs
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Full field renames and reassigns
@@ -192,7 +177,4 @@ z=0.758679,KEYFIELD=eks,i=3,b=pan,y=0.758679,x=0.522151
 z=0.204603,KEYFIELD=wye,i=6,b=wye,y=0.204603,x=0.338318
 z=0.381399,KEYFIELD=eks,i=10,b=wye,y=0.381399,x=0.134188
 z=0.573288,KEYFIELD=wye,i=15,b=pan,y=0.573288,x=0.863624
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>

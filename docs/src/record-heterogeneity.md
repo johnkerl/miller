@@ -41,9 +41,6 @@ a,b,c
 1,2,3
 4,5,6
 7,8,9
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 It has three records (written here using JSON Lines formatting):
@@ -55,9 +52,6 @@ It has three records (written here using JSON Lines formatting):
 {"a": 1, "b": 2, "c": 3}
 {"a": 4, "b": 5, "c": 6}
 {"a": 7, "b": 8, "c": 9}
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Here every row has the same keys, in the same order: `a,b,c`.
@@ -72,9 +66,6 @@ a b c
 1 2 3
 4 5 6
 7 8 9
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ### Fillable data
@@ -89,9 +80,6 @@ a,b,c
 1,2,3
 4,,6
 ,8,9
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -101,9 +89,6 @@ go tool pprof -http=:8080 foo-stream
 {"a": 1, "b": 2, "c": 3}
 {"a": 4, "b": "", "c": 6}
 {"a": "", "b": 8, "c": 9}
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 This example is still homogeneous, though: every row has the same keys, in the same order: `a,b,c`.
@@ -120,9 +105,6 @@ a      b      c
 1      2      3
 4      filler 6
 filler 8      9
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ### Ragged data
@@ -180,9 +162,6 @@ with 1) for too-long rows:
   "4": 10
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ### Irregular data
@@ -220,9 +199,6 @@ the keys:
 {"a": 1, "b": 2, "c": 3}
 {"a": 4, "b": 5, "c": 6}
 {"a": 7, "b": 8, "c": 9}
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 The `regularize` verb tries to re-order subsequent rows to look like the first
@@ -256,9 +232,6 @@ data for items which are present, but won't log data for items which aren't.
   "reimaged": true
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 This data is called **sparse** (from the [data-storage term](https://en.wikipedia.org/wiki/Sparse_matrix)).
@@ -293,9 +266,6 @@ every record has the same keys:
   "reimaged": true
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Since this data is now homogeneous (rectangular), it pretty-prints nicely:
@@ -308,9 +278,6 @@ host      status  volume    purpose  reimaged
 xy01.east running /dev/sda1 -        -
 xy92.west running -         -        -
 xy55.east -       /dev/sda1 failover true
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Reading and writing heterogeneous data
@@ -350,9 +317,6 @@ For these formats, record-heterogeneity comes naturally:
 xy01.east running /dev/sda1
 xy92.west running
 failover xy55.east /dev/sda1 true
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -370,9 +334,6 @@ purpose  failover
 host     xy55.east
 volume   /dev/sda1
 reimaged true
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -382,9 +343,6 @@ go tool pprof -http=:8080 foo-stream
 host=xy01.east,status=running,volume=/dev/sda1
 host=xy92.west,status=running
 purpose=failover,host=xy55.east,volume=/dev/sda1,reimaged=true
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Even then, we may wish to put like with like, using the [`group-like`](reference-verbs.md#group-like) verb:
@@ -398,9 +356,6 @@ record_count=100,resource=/path/to/file
 resource=/path/to/second/file,loadsec=0.32,ok=true
 record_count=150,resource=/path/to/second/file
 resource=/some/other/path,loadsec=0.97,ok=false
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -412,9 +367,6 @@ resource=/path/to/second/file,loadsec=0.32,ok=true
 resource=/some/other/path,loadsec=0.97,ok=false
 record_count=100,resource=/path/to/file
 record_count=150,resource=/path/to/second/file
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ### Rectangular file formats: CSV and pretty-print
@@ -477,9 +429,6 @@ record_count resource
 
 resource         loadsec ok
 /some/other/path 0.97    false
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -494,9 +443,6 @@ resource             loadsec ok
 record_count resource
 100          /path/to/file
 150          /path/to/second/file
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes (no intervening blank line and new header line) as seen above -- you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`).
@@ -511,9 +457,6 @@ a,b,c
 
 a,b,c,4
 7,8,9,10
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Processing heterogeneous data
@@ -550,7 +493,4 @@ count=300,color=blue
 count=450
 count=500,color=green
 count=600
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>

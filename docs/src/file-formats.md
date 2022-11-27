@@ -172,9 +172,6 @@ An **array of single-level objects** is, quite simply, **a table**:
   "shape": "square"
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -193,9 +190,6 @@ go tool pprof -http=:8080 foo-stream
   "v": 0.001257
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Single-level JSON data goes back and forth between JSON and tabular formats
@@ -208,9 +202,6 @@ in the direct way:
 color  u        v
 yellow 0.632170 0.988721
 red    0.219668 0.001257
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -228,9 +219,6 @@ purple triangle 0    65 0.684281 0.582372 0.801405 5.805148
 yellow circle   1    73 0.603365 0.423708 0.639785 7.006414
 yellow circle   1    87 0.285656 0.833516 0.635058 6.350036
 purple square   0    91 0.259926 0.824322 0.723735 6.854221
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ### Nested JSON objects
@@ -272,9 +260,6 @@ input as well as output in JSON format, JSON structure is preserved throughout t
   }
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 But if the input format is JSON and the output format is not (or vice versa) then key-concatenation applies:
@@ -288,9 +273,6 @@ flag i  attributes.color attributes.shape values.u values.v values.w values.x
 1    15 red              square           0.219668 0.001257 0.792778 2.944117
 1    16 red              circle           0.209017 0.290052 0.138103 5.065034
 0    48 red              square           0.956274 0.746720 0.775542 7.117831
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 This is discussed in more detail on the page [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md).
@@ -337,9 +319,6 @@ Miller handles this:
   "rate": 0.0130
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -348,9 +327,6 @@ go tool pprof -http=:8080 foo-stream
 <pre class="pre-non-highlight-in-pair">
 {"color": "yellow", "shape": "triangle", "flag": "true", "k": 1, "index": 11, "quantity": 43.6498, "rate": 9.8870}
 {"color": "red", "shape": "square", "flag": "true", "k": 2, "index": 15, "quantity": 79.2778, "rate": 0.0130}
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Note that for _input_ data, either is acceptable: whether you use `--ijson` or `--ijsonl`, Miller
@@ -372,9 +348,6 @@ eks,pan,2,0.758679,0.522151
 wye,wye,3,0.204603,0.338318
 eks,wye,4,0.381399,0.134188
 wye,pan,5,0.573288,0.863624
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -387,9 +360,6 @@ eks pan 2 0.758679 0.522151
 wye wye 3 0.204603 0.338318
 eks wye 4 0.381399 0.134188
 wye pan 5 0.573288 0.863624
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Note that while Miller is a line-at-a-time processor and retains input lines in memory only where necessary (e.g. for sort), pretty-print output requires it to accumulate all input lines (so that it can compute maximum column widths) before producing any output. This has two consequences: (a) pretty-print output won't work on `tail -f` contexts, where Miller will be waiting for an end-of-file marker which never arrives; (b) pretty-print output for large files is constrained by available machine memory.
@@ -411,9 +381,6 @@ For output only (this isn't supported in the input-scanner as of 5.0.0) you can 
 | eks | wye | 4 | 0.381399 | 0.134188 |
 | wye | pan | 5 | 0.573288 | 0.863624 |
 +-----+-----+---+----------+----------+
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Markdown tabular
@@ -431,9 +398,6 @@ Markdown format looks like this:
 | wye | wye | 3 | 0.204603 | 0.338318 |
 | eks | wye | 4 | 0.381399 | 0.134188 |
 | wye | pan | 5 | 0.573288 | 0.863624 |
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 which renders like this when dropped into various web tools (e.g. github comments):
@@ -522,9 +486,6 @@ a=eks,b=pan,i=2,x=0.758679,y=0.522151
 a=wye,b=wye,i=3,x=0.204603,y=0.338318
 a=eks,b=wye,i=4,x=0.381399,y=0.134188
 a=wye,b=pan,i=5,x=0.573288,y=0.863624
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Such data are easy to generate, e.g. in Ruby with
@@ -590,9 +551,6 @@ eks pan 2 0.758679 0.522151
 wye wye 3 0.204603 0.338318
 eks wye 4 0.381399 0.134188
 wye pan 5 0.573288 0.863624
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Example with index-numbered input:
@@ -613,9 +571,6 @@ early light
 1=oh,2=say,3=can,4=you,5=see
 1=by,2=the,3=dawn's
 1=early,2=light
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Example with index-numbered input and output:
@@ -636,9 +591,6 @@ early light
 say can
 the dawn's
 light
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Data-conversion keystroke-savers
@@ -729,9 +681,6 @@ type   quantity
 green  678.12
 purple 456.78
 orange 123.45
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -743,7 +692,4 @@ type   quantity
 green  678.12
 purple 456.78
 orange 123.45
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>

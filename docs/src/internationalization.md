@@ -50,9 +50,6 @@ Support for internationalization includes:
 κόκκινο κύκλος αληθινό 3 16      13.8103  2.9010
 κίτρινο κύκλος αληθινό 8 73      63.9785  4.2370
 κίτρινο κύκλος αληθινό 9 87      63.5058  8.3350
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -70,9 +67,6 @@ go tool pprof -http=:8080 foo-stream
 κόκκινο τετράγωνο ψευδές  6  64      77.1991  9.5310
 μοβ     τρίγωνο   ψευδές  7  65      80.1405  5.8240
 μοβ     τετράγωνο ψευδές  10 91      72.3735  8.2430
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -90,7 +84,4 @@ go tool pprof -http=:8080 foo-stream
 желтый     КРУГ        истина 8  73     63.9785    4.2370   6
 желтый     КРУГ        истина 9  87     63.5058    8.3350   6
 фиолетовый КВАДРАТ     ложь   10 91     72.3735    8.2430   10
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>

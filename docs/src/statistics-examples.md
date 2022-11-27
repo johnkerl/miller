@@ -29,9 +29,6 @@ For one or more specified field names, simply compute p25 and p75, then write th
 x_p25 0.24667037823231752
 x_p75 0.7481860062358446
 x_iqr 0.5015156280035271
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 For wildcarded field names, first compute p25 and p75, then loop over field names with `p25` in them:
@@ -55,9 +52,6 @@ y_p75 0.7640028449996572
 i_iqr 5000
 x_iqr 0.5015156280035271
 y_iqr 0.5118661397595003
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Computing weighted means
@@ -96,7 +90,4 @@ a=eks,wmean=4890.3815931472145,mean=4956.2900763358775
 a=wye,wmean=4946.987746229947,mean=4920.001017293998
 a=zee,wmean=5164.719684856538,mean=5123.092330239375
 a=hat,wmean=4925.533162478552,mean=4967.743946419371
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>

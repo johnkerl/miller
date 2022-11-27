@@ -41,9 +41,6 @@ purple triangle false 7  65    80.1405  5.8240 466.738272
 yellow circle   true  8  73    63.9785  4.2370 271.0769045
 yellow circle   true  9  87    63.5058  8.3350 529.3208430000001
 purple square   false 10 91    72.3735  8.2430 596.5747605000001
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 When we type that, a few things are happening:
@@ -72,9 +69,6 @@ purple triangle false 7  6500  80.1405  5.8240 466.738272
 yellow circle   true  8  7300  63.9785  4.2370 271.0769045
 yellow circle   true  9  8700  63.5058  8.3350 529.3208430000001
 purple square   false 10 9100  72.3735  8.2430 596.5747605000001
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -95,9 +89,6 @@ purple triangle false 7  6500  80.1405  5.8240 466.738272
 yellow circle   true  8  7300  63.9785  4.2370 271.0769045
 yellow circle   true  9  8700  63.5058  8.3350 529.3208430000001
 purple square   false 10 9100  72.3735  8.2430 596.5747605000001
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 One of Miller's key features is the ability to express data-transformation right there at the keyboard, interactively. But if you find yourself using expressions repeatedly, you can put everything between the single quotes into a file and refer to that using `put -f`:
@@ -125,9 +116,6 @@ purple triangle false 7  6500  80.1405  5.8240 466.738272
 yellow circle   true  8  7300  63.9785  4.2370 271.0769045
 yellow circle   true  9  8700  63.5058  8.3350 529.3208430000001
 purple square   false 10 9100  72.3735  8.2430 596.5747605000001
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 This becomes particularly important on Windows. Quite a bit of effort was put into making Miller on Windows be able to handle the kinds of single-quoted expressions we're showing here, but if you get syntax-error messages on Windows using examples in this documentation, you can put the parts between single quotes into a file and refer to that using `mlr put -f` -- or, use the triple-double-quote trick as described in the [Miller on Windows page](miller-on-windows.md).
@@ -158,9 +146,6 @@ purple square   false 10 91    72.3735  8.2430
 
 sum
 652.7185
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 If you want the end-block output to be the only output, and not include the records from the input data, you can use `mlr put -q`:
@@ -171,9 +156,6 @@ If you want the end-block output to be the only output, and not include the reco
 <pre class="pre-non-highlight-in-pair">
 sum
 652.7185
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -185,9 +167,6 @@ go tool pprof -http=:8080 foo-stream
   "sum": 652.7185
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -205,9 +184,6 @@ go tool pprof -http=:8080 foo-stream
   "sum": 652.7185
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 We'll see in the documentation for [stats1](reference-verbs.md#stats1) that there's a lower-keystroking way to get counts and sums of things:
@@ -222,9 +198,6 @@ We'll see in the documentation for [stats1](reference-verbs.md#stats1) that ther
   "quantity_count": 10
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 So, take this sum/count example as an indication of the kinds of things you can do using Miller's programming language.
@@ -276,9 +249,6 @@ a b c nf nr fnr filename   filenum newnf
 1 2 3 3  1  1   data/a.csv 1       8
 4 5 6 3  2  2   data/a.csv 1       8
 7 8 9 3  3  1   data/b.csv 2       8
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Functions and local variables
@@ -313,9 +283,6 @@ purple triangle false 7  65    80.1405  5.8240 5040
 yellow circle   true  8  73    63.9785  4.2370 40320
 yellow circle   true  9  87    63.5058  8.3350 362880
 purple square   false 10 91    72.3735  8.2430 3628800
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Note that here we used the `-f` flag to `put` to load our function
@@ -353,9 +320,6 @@ end {
 <pre class="pre-non-highlight-in-pair">
 count_of_red sum_of_red
 4            247.84139999999996
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Miller's else-if is spelled `elif`.
@@ -386,9 +350,6 @@ print
 a,b,c
 1,2,3
 4,5,6
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -403,9 +364,6 @@ KEY IS a VALUE IS 4
 KEY IS b VALUE IS 5
 KEY IS c VALUE IS 6
 
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Here we used the local variables `k` and `v`. Now we've seen four kinds of variables:
@@ -458,9 +416,6 @@ For example, you can sum up all the `$a` values across records without having to
   "b": 5
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -483,7 +438,4 @@ go tool pprof -http=:8080 foo-stream
   "sum_of_a": 5
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
