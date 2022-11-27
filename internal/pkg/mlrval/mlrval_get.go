@@ -25,7 +25,7 @@ func (mv *Mlrval) GetStringValue() (stringValue string, isString bool) {
 
 func (mv *Mlrval) GetIntValue() (intValue int64, isInt bool) {
 	if mv.Type() == MT_INT {
-		return mv.intval, true
+		return mv.intf.(int64), true
 	} else {
 		return -999, false
 	}
@@ -33,7 +33,7 @@ func (mv *Mlrval) GetIntValue() (intValue int64, isInt bool) {
 
 func (mv *Mlrval) GetFloatValue() (floatValue float64, isFloat bool) {
 	if mv.Type() == MT_FLOAT {
-		return mv.floatval, true
+		return mv.intf.(float64), true
 	} else {
 		return -777.0, false
 	}
@@ -41,9 +41,9 @@ func (mv *Mlrval) GetFloatValue() (floatValue float64, isFloat bool) {
 
 func (mv *Mlrval) GetNumericToFloatValue() (floatValue float64, isFloat bool) {
 	if mv.Type() == MT_FLOAT {
-		return mv.floatval, true
+		return mv.intf.(float64), true
 	} else if mv.Type() == MT_INT {
-		return float64(mv.intval), true
+		return float64(mv.intf.(int64)), true
 	} else {
 		return -888.0, false
 	}
@@ -57,7 +57,7 @@ func (mv *Mlrval) GetNumericNegativeorDie() bool {
 
 func (mv *Mlrval) GetBoolValue() (boolValue bool, isBool bool) {
 	if mv.Type() == MT_BOOL {
-		return mv.boolval, true
+		return mv.intf.(bool), true
 	} else {
 		return false, false
 	}
@@ -65,7 +65,7 @@ func (mv *Mlrval) GetBoolValue() (boolValue bool, isBool bool) {
 
 func (mv *Mlrval) GetArray() []*Mlrval {
 	if mv.IsArray() {
-		return mv.x.arrayval
+		return mv.intf.([]*Mlrval)
 	} else {
 		return nil
 	}
@@ -73,7 +73,7 @@ func (mv *Mlrval) GetArray() []*Mlrval {
 
 func (mv *Mlrval) GetMap() *Mlrmap {
 	if mv.IsMap() {
-		return mv.x.mapval
+		return mv.intf.(*Mlrmap)
 	} else {
 		return nil
 	}
@@ -81,7 +81,7 @@ func (mv *Mlrval) GetMap() *Mlrmap {
 
 func (mv *Mlrval) GetFunction() interface{} {
 	if mv.Type() == MT_FUNC {
-		return mv.x.funcval
+		return mv.intf
 	} else {
 		return nil
 	}
@@ -107,27 +107,27 @@ func (mv *Mlrval) AcquireStringValue() string {
 
 func (mv *Mlrval) AcquireIntValue() int64 {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_INT)
-	return mv.intval
+	return mv.intf.(int64)
 }
 
 func (mv *Mlrval) AcquireFloatValue() float64 {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_FLOAT)
-	return mv.floatval
+	return mv.intf.(float64)
 }
 
 func (mv *Mlrval) AcquireBoolValue() bool {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_BOOL)
-	return mv.boolval
+	return mv.intf.(bool)
 }
 
 func (mv *Mlrval) AcquireArrayValue() []*Mlrval {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_ARRAY)
-	return mv.x.arrayval
+	return mv.intf.([]*Mlrval)
 }
 
 func (mv *Mlrval) AcquireMapValue() *Mlrmap {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_MAP)
-	return mv.x.mapval
+	return mv.intf.(*Mlrmap)
 }
 
 func (mv *Mlrval) GetNumericToFloatValueOrDie() (floatValue float64) {

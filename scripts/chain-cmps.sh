@@ -1,5 +1,7 @@
-mlrs="mlr5 ~/tmp/miller/mlr ./mlr"
-#mlrs="mlr5 ./mlr"
+mlrs="mlr"
+if [ $# -ge 1 ]; then
+    mlrs="$@"
+fi
 
 #reps="1"
 reps="1 2 3"

@@ -83,7 +83,7 @@ func FromInt(input int64) *Mlrval {
 	return &Mlrval{
 		mvtype:        MT_INT,
 		printrepValid: false,
-		intval:        input,
+		intf:          input,
 	}
 }
 
@@ -112,7 +112,7 @@ func TryFromIntString(input string) *Mlrval {
 func (mv *Mlrval) SetFromPrevalidatedIntString(input string, intval int64) *Mlrval {
 	mv.printrep = input
 	mv.printrepValid = true
-	mv.intval = intval
+	mv.intf = intval
 	mv.mvtype = MT_INT
 	return mv
 }
@@ -128,7 +128,7 @@ func FromFloat(input float64) *Mlrval {
 	return &Mlrval{
 		mvtype:        MT_FLOAT,
 		printrepValid: false,
-		floatval:      input,
+		intf:          input,
 	}
 }
 
@@ -157,7 +157,7 @@ func TryFromFloatString(input string) *Mlrval {
 func (mv *Mlrval) SetFromPrevalidatedFloatString(input string, floatval float64) *Mlrval {
 	mv.printrep = input
 	mv.printrepValid = true
-	mv.floatval = floatval
+	mv.intf = floatval
 	mv.mvtype = MT_FLOAT
 	return mv
 }
@@ -192,7 +192,7 @@ func FromBoolString(input string) *Mlrval {
 func (mv *Mlrval) SetFromPrevalidatedBoolString(input string, boolval bool) *Mlrval {
 	mv.printrep = input
 	mv.printrepValid = true
-	mv.boolval = boolval
+	mv.intf = boolval
 	mv.mvtype = MT_BOOL
 	return mv
 }
@@ -209,9 +209,7 @@ func FromFunction(funcval interface{}, name string) *Mlrval {
 		mvtype:        MT_FUNC,
 		printrep:      name,
 		printrepValid: true,
-		x: &mlrvalExtended{
-			funcval: funcval,
-		},
+		intf:          funcval,
 	}
 }
 
@@ -220,9 +218,7 @@ func FromArray(arrayval []*Mlrval) *Mlrval {
 		mvtype:        MT_ARRAY,
 		printrep:      "(bug-if-you-see-this:case-4)", // INVALID_PRINTREP,
 		printrepValid: false,
-		x: &mlrvalExtended{
-			arrayval: CopyMlrvalArray(arrayval),
-		},
+		intf:          CopyMlrvalArray(arrayval),
 	}
 }
 
@@ -235,9 +231,7 @@ func FromMap(mapval *Mlrmap) *Mlrval {
 		mvtype:        MT_MAP,
 		printrep:      "(bug-if-you-see-this:case-5)", // INVALID_PRINTREP,
 		printrepValid: false,
-		x: &mlrvalExtended{
-			mapval: mapval.Copy(),
-		},
+		intf:          mapval.Copy(),
 	}
 }
 

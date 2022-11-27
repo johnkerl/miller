@@ -19,7 +19,7 @@ func (mv *Mlrval) String() string {
 	//if floatOutputFormatter != nil && (mv.mvtype == MT_FLOAT || mv.mvtype == MT_PENDING) {
 	if floatOutputFormatter != nil && mv.Type() == MT_FLOAT {
 		// Use the format string from global --ofmt, if supplied
-		return floatOutputFormatter.FormatFloat(mv.floatval)
+		return floatOutputFormatter.FormatFloat(mv.intf.(float64))
 	}
 
 	// TODO: track dirty-flag checking / somesuch.
@@ -71,13 +71,13 @@ func (mv *Mlrval) setPrintRep() {
 			break
 
 		case MT_INT:
-			mv.printrep = strconv.FormatInt(mv.intval, 10)
+			mv.printrep = strconv.FormatInt(mv.intf.(int64), 10)
 
 		case MT_FLOAT:
-			mv.printrep = strconv.FormatFloat(mv.floatval, 'f', -1, 64)
+			mv.printrep = strconv.FormatFloat(mv.intf.(float64), 'f', -1, 64)
 
 		case MT_BOOL:
-			if mv.boolval == true {
+			if mv.intf.(bool) == true {
 				mv.printrep = "true"
 			} else {
 				mv.printrep = "false"
@@ -110,12 +110,12 @@ func (mv *Mlrval) StringifyValuesRecursively() {
 	switch mv.mvtype {
 
 	case MT_ARRAY:
-		for i, _ := range mv.x.arrayval {
-			mv.x.arrayval[i].StringifyValuesRecursively()
+		for i, _ := range mv.intf.([]*Mlrval) {
+			mv.intf.([]*Mlrval)[i].StringifyValuesRecursively()
 		}
 
 	case MT_MAP:
-		for pe := mv.x.mapval.Head; pe != nil; pe = pe.Next {
+		for pe := mv.intf.(*Mlrmap).Head; pe != nil; pe = pe.Next {
 			pe.Value.StringifyValuesRecursively()
 		}
 
@@ -126,20 +126,8 @@ func (mv *Mlrval) StringifyValuesRecursively() {
 
 func (mv *Mlrval) ShowSizes() {
 	fmt.Printf("TOTAL            %p %d\n", mv, reflect.TypeOf(*mv).Size())
-	fmt.Printf("mv.intval        %p %d\n", &mv.intval, reflect.TypeOf(mv.intval).Size())
-	fmt.Printf("mv.floatval      %p %d\n", &mv.floatval, reflect.TypeOf(mv.floatval).Size())
+	//fmt.Printf("mv.intf          %p %d\n", &mv.intf, reflect.TypeOf(mv.intf).Size())
 	fmt.Printf("mv.printrep      %p %d\n", &mv.printrep, reflect.TypeOf(mv.printrep).Size())
-
-	fmt.Printf("mv.x             %p %d\n", &mv.mvtype, reflect.TypeOf(mv.x).Size())
-	if mv.x != nil {
-		fmt.Printf("mv.x.arrayval    %p %d\n", &mv.x.arrayval, reflect.TypeOf(mv.x.arrayval).Size())
-		fmt.Printf("mv.x.mapval      %p %d\n", &mv.x.mapval, reflect.TypeOf(mv.x.mapval).Size())
-		if mv.x.funcval != nil {
-			fmt.Printf("mv.x.funcval     %p %d\n", &mv.x.funcval, reflect.TypeOf(mv.x.funcval).Size())
-		}
-	}
-
 	fmt.Printf("mv.printrepValid %p %d\n", &mv.printrepValid, reflect.TypeOf(mv.printrepValid).Size())
-	fmt.Printf("mv.boolval       %p %d\n", &mv.boolval, reflect.TypeOf(mv.boolval).Size())
 	fmt.Printf("mv.mvtype        %p %d\n", &mv.mvtype, reflect.TypeOf(mv.mvtype).Size())
 }

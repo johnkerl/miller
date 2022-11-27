@@ -8,7 +8,7 @@ import (
 
 func (mv *Mlrval) GetArrayLength() (int, bool) {
 	if mv.IsArray() {
-		return len(mv.x.arrayval), true
+		return len(mv.intf.([]*Mlrval)), true
 	} else {
 		return -999, false
 	}
@@ -35,13 +35,13 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 	if mv.IsMap() {
 		// Without this, the for-loop below is zero-pass and fields with "{}"
 		// values would disappear entirely in a JSON-to-CSV conversion.
-		if mv.x.mapval.IsEmpty() {
+		if mv.intf.(*Mlrmap).IsEmpty() {
 			if prefix != "" {
 				retval.PutCopy(prefix, FromString("{}"))
 			}
 		}
 
-		for pe := mv.x.mapval.Head; pe != nil; pe = pe.Next {
+		for pe := mv.intf.(*Mlrmap).Head; pe != nil; pe = pe.Next {
 			nextPrefix := pe.Key
 			if prefix != "" {
 				nextPrefix = prefix + delimiter + nextPrefix
@@ -49,7 +49,7 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 			if pe.Value.IsMap() || pe.Value.IsArray() {
 				nextResult := pe.Value.FlattenToMap(nextPrefix, delimiter)
 				lib.InternalCodingErrorIf(nextResult.mvtype != MT_MAP)
-				for pf := nextResult.x.mapval.Head; pf != nil; pf = pf.Next {
+				for pf := nextResult.intf.(*Mlrmap).Head; pf != nil; pf = pf.Next {
 					retval.PutCopy(pf.Key, pf.Value.Copy())
 				}
 			} else {
@@ -60,13 +60,13 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 	} else if mv.IsArray() {
 		// Without this, the for-loop below is zero-pass and fields with "[]"
 		// values would disappear entirely in a JSON-to-CSV conversion.
-		if len(mv.x.arrayval) == 0 {
+		if len(mv.intf.([]*Mlrval)) == 0 {
 			if prefix != "" {
 				retval.PutCopy(prefix, FromString("[]"))
 			}
 		}
 
-		for zindex, value := range mv.x.arrayval {
+		for zindex, value := range mv.intf.([]*Mlrval) {
 			nextPrefix := strconv.Itoa(zindex + 1) // Miller user-space indices are 1-up
 			if prefix != "" {
 				nextPrefix = prefix + delimiter + nextPrefix
@@ -74,7 +74,7 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 			if value.IsMap() || value.IsArray() {
 				nextResult := value.FlattenToMap(nextPrefix, delimiter)
 				lib.InternalCodingErrorIf(nextResult.mvtype != MT_MAP)
-				for pf := nextResult.x.mapval.Head; pf != nil; pf = pf.Next {
+				for pf := nextResult.intf.(*Mlrmap).Head; pf != nil; pf = pf.Next {
 					retval.PutCopy(pf.Key, pf.Value.Copy())
 				}
 			} else {
@@ -92,8 +92,8 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 // Increment is used by stats1.
 func (mv *Mlrval) Increment() {
 	if mv.mvtype == MT_INT {
-		mv.intval++
+		mv.intf = mv.intf.(int64) + 1
 	} else if mv.mvtype == MT_FLOAT {
-		mv.floatval++
+		mv.intf = mv.intf.(float64) + 1.0
 	}
 }

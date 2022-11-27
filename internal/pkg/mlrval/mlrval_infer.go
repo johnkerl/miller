@@ -61,7 +61,7 @@ func inferWithOctalAsInt(mv *Mlrval) *Mlrval {
 func inferWithIntAsFloat(mv *Mlrval) *Mlrval {
 	inferNormally(mv)
 	if mv.Type() == MT_INT {
-		mv.floatval = float64(mv.intval)
+		mv.intf = float64(mv.intf.(int64))
 		mv.mvtype = MT_FLOAT
 	}
 	return mv

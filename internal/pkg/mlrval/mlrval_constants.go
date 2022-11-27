@@ -25,13 +25,14 @@ var TRUE = &Mlrval{
 	mvtype:        MT_BOOL,
 	printrep:      "true",
 	printrepValid: true,
-	boolval:       true,
+	intf:          true,
 }
 
 var FALSE = &Mlrval{
 	mvtype:        MT_BOOL,
 	printrep:      "false",
 	printrepValid: true,
+	intf:          false,
 }
 
 var VOID = &Mlrval{
@@ -63,19 +64,19 @@ var MINUS_ONE = &Mlrval{
 	mvtype:        MT_INT,
 	printrep:      "-1",
 	printrepValid: true,
-	intval:        -1,
+	intf:          int64(-1),
 }
 
 var ZERO = &Mlrval{
 	mvtype:        MT_INT,
 	printrep:      "0",
 	printrepValid: true,
-	intval:        0,
+	intf:          int64(0),
 }
 
 var ONE = &Mlrval{
 	mvtype:        MT_INT,
 	printrep:      "1",
 	printrepValid: true,
-	intval:        1,
+	intf:          int64(1),
 }
