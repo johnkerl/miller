@@ -76,7 +76,7 @@ func (mv *Mlrval) setPrintRep() {
 			mv.printrep = strconv.FormatFloat(mv.floatval, 'f', -1, 64)
 
 		case MT_BOOL:
-			if mv.boolval == true {
+			if mv.intf.(bool) == true {
 				mv.printrep = "true"
 			} else {
 				mv.printrep = "false"

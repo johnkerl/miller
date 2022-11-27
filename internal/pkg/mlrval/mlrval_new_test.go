@@ -43,7 +43,7 @@ func TestFromInferredType(t *testing.T) {
 	assert.Equal(t, MT_BOOL, mv.mvtype)
 	assert.Equal(t, "true", mv.printrep)
 	assert.True(t, mv.printrepValid)
-	assert.Equal(t, mv.boolval, true)
+	assert.Equal(t, mv.intf.(bool), true)
 
 	mv = FromInferredType("abc")
 	assert.Equal(t, MT_STRING, mv.mvtype)

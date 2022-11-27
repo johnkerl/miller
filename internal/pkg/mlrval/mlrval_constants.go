@@ -25,13 +25,14 @@ var TRUE = &Mlrval{
 	mvtype:        MT_BOOL,
 	printrep:      "true",
 	printrepValid: true,
-	boolval:       true,
+	intf:          true,
 }
 
 var FALSE = &Mlrval{
 	mvtype:        MT_BOOL,
 	printrep:      "false",
 	printrepValid: true,
+	intf:          false,
 }
 
 var VOID = &Mlrval{

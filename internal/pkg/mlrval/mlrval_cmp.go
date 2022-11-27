@@ -119,7 +119,7 @@ func cmp_b_ff(input1, input2 *Mlrval) int {
 	return float_cmp(input1.floatval, input2.floatval)
 }
 func cmp_b_bb(input1, input2 *Mlrval) int {
-	return int_cmp(int64(lib.BoolToInt(input1.boolval)), int64(lib.BoolToInt(input2.boolval)))
+	return int_cmp(int64(lib.BoolToInt(input1.intf.(bool))), int64(lib.BoolToInt(input2.intf.(bool))))
 }
 
 // TODO: cmp on array & map

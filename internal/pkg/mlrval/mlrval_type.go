@@ -61,7 +61,6 @@ type Mlrval struct {
 	printrep string
 
 	printrepValid bool
-	boolval       bool
 
 	// Enumeration for string / int / float / boolean / etc.
 	// I would call this "type" not "mvtype" but "type" is a keyword in Go.

@@ -192,7 +192,7 @@ func FromBoolString(input string) *Mlrval {
 func (mv *Mlrval) SetFromPrevalidatedBoolString(input string, boolval bool) *Mlrval {
 	mv.printrep = input
 	mv.printrepValid = true
-	mv.boolval = boolval
+	mv.intf = boolval
 	mv.mvtype = MT_BOOL
 	return mv
 }

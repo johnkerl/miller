@@ -57,7 +57,7 @@ func (mv *Mlrval) GetNumericNegativeorDie() bool {
 
 func (mv *Mlrval) GetBoolValue() (boolValue bool, isBool bool) {
 	if mv.Type() == MT_BOOL {
-		return mv.boolval, true
+		return mv.intf.(bool), true
 	} else {
 		return false, false
 	}
@@ -117,7 +117,7 @@ func (mv *Mlrval) AcquireFloatValue() float64 {
 
 func (mv *Mlrval) AcquireBoolValue() bool {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_BOOL)
-	return mv.boolval
+	return mv.intf.(bool)
 }
 
 func (mv *Mlrval) AcquireArrayValue() []*Mlrval {
