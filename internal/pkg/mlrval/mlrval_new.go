@@ -128,7 +128,7 @@ func FromFloat(input float64) *Mlrval {
 	return &Mlrval{
 		mvtype:        MT_FLOAT,
 		printrepValid: false,
-		floatval:      input,
+		intf:      input,
 	}
 }
 
@@ -157,7 +157,7 @@ func TryFromFloatString(input string) *Mlrval {
 func (mv *Mlrval) SetFromPrevalidatedFloatString(input string, floatval float64) *Mlrval {
 	mv.printrep = input
 	mv.printrepValid = true
-	mv.floatval = floatval
+	mv.intf = floatval
 	mv.mvtype = MT_FLOAT
 	return mv
 }

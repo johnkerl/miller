@@ -18,7 +18,7 @@ func (mv *Mlrval) String() string {
 	//if floatOutputFormatter != nil && (mv.mvtype == MT_FLOAT || mv.mvtype == MT_PENDING) {
 	if floatOutputFormatter != nil && mv.Type() == MT_FLOAT {
 		// Use the format string from global --ofmt, if supplied
-		return floatOutputFormatter.FormatFloat(mv.floatval)
+		return floatOutputFormatter.FormatFloat(mv.intf.(float64))
 	}
 
 	// TODO: track dirty-flag checking / somesuch.
@@ -73,7 +73,7 @@ func (mv *Mlrval) setPrintRep() {
 			mv.printrep = strconv.FormatInt(mv.intval, 10)
 
 		case MT_FLOAT:
-			mv.printrep = strconv.FormatFloat(mv.floatval, 'f', -1, 64)
+			mv.printrep = strconv.FormatFloat(mv.intf.(float64), 'f', -1, 64)
 
 		case MT_BOOL:
 			if mv.intf.(bool) == true {

@@ -94,6 +94,6 @@ func (mv *Mlrval) Increment() {
 	if mv.mvtype == MT_INT {
 		mv.intval++
 	} else if mv.mvtype == MT_FLOAT {
-		mv.floatval++
+		mv.intf = mv.intf.(float64) + 1.0
 	}
 }

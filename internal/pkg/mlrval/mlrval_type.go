@@ -57,7 +57,6 @@ type Mlrval struct {
 	intf interface{}
 
 	intval   int64
-	floatval float64
 	printrep string
 
 	printrepValid bool

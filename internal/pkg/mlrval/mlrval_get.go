@@ -33,7 +33,7 @@ func (mv *Mlrval) GetIntValue() (intValue int64, isInt bool) {
 
 func (mv *Mlrval) GetFloatValue() (floatValue float64, isFloat bool) {
 	if mv.Type() == MT_FLOAT {
-		return mv.floatval, true
+		return mv.intf.(float64), true
 	} else {
 		return -777.0, false
 	}
@@ -41,7 +41,7 @@ func (mv *Mlrval) GetFloatValue() (floatValue float64, isFloat bool) {
 
 func (mv *Mlrval) GetNumericToFloatValue() (floatValue float64, isFloat bool) {
 	if mv.Type() == MT_FLOAT {
-		return mv.floatval, true
+		return mv.intf.(float64), true
 	} else if mv.Type() == MT_INT {
 		return float64(mv.intval), true
 	} else {
@@ -112,7 +112,7 @@ func (mv *Mlrval) AcquireIntValue() int64 {
 
 func (mv *Mlrval) AcquireFloatValue() float64 {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_FLOAT)
-	return mv.floatval
+	return mv.intf.(float64)
 }
 
 func (mv *Mlrval) AcquireBoolValue() bool {
