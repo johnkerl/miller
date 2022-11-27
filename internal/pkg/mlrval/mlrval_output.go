@@ -3,7 +3,6 @@ package mlrval
 import (
 	"fmt"
 	"os"
-	"reflect"
 	"strconv"
 )
 
@@ -110,36 +109,16 @@ func (mv *Mlrval) StringifyValuesRecursively() {
 	switch mv.mvtype {
 
 	case MT_ARRAY:
-		for i, _ := range mv.x.arrayval {
-			mv.x.arrayval[i].StringifyValuesRecursively()
+		for i, _ := range mv.intf.([]*Mlrval) {
+			mv.intf.([]*Mlrval)[i].StringifyValuesRecursively()
 		}
 
 	case MT_MAP:
-		for pe := mv.x.mapval.Head; pe != nil; pe = pe.Next {
+		for pe := mv.intf.(*Mlrmap).Head; pe != nil; pe = pe.Next {
 			pe.Value.StringifyValuesRecursively()
 		}
 
 	default:
 		mv.SetFromString(mv.String())
 	}
-}
-
-func (mv *Mlrval) ShowSizes() {
-	fmt.Printf("TOTAL            %p %d\n", mv, reflect.TypeOf(*mv).Size())
-	fmt.Printf("mv.intval        %p %d\n", &mv.intval, reflect.TypeOf(mv.intval).Size())
-	fmt.Printf("mv.floatval      %p %d\n", &mv.floatval, reflect.TypeOf(mv.floatval).Size())
-	fmt.Printf("mv.printrep      %p %d\n", &mv.printrep, reflect.TypeOf(mv.printrep).Size())
-
-	fmt.Printf("mv.x             %p %d\n", &mv.mvtype, reflect.TypeOf(mv.x).Size())
-	if mv.x != nil {
-		fmt.Printf("mv.x.arrayval    %p %d\n", &mv.x.arrayval, reflect.TypeOf(mv.x.arrayval).Size())
-		fmt.Printf("mv.x.mapval      %p %d\n", &mv.x.mapval, reflect.TypeOf(mv.x.mapval).Size())
-		if mv.x.funcval != nil {
-			fmt.Printf("mv.x.funcval     %p %d\n", &mv.x.funcval, reflect.TypeOf(mv.x.funcval).Size())
-		}
-	}
-
-	fmt.Printf("mv.printrepValid %p %d\n", &mv.printrepValid, reflect.TypeOf(mv.printrepValid).Size())
-	fmt.Printf("mv.boolval       %p %d\n", &mv.boolval, reflect.TypeOf(mv.boolval).Size())
-	fmt.Printf("mv.mvtype        %p %d\n", &mv.mvtype, reflect.TypeOf(mv.mvtype).Size())
 }

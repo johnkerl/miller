@@ -209,9 +209,7 @@ func FromFunction(funcval interface{}, name string) *Mlrval {
 		mvtype:        MT_FUNC,
 		printrep:      name,
 		printrepValid: true,
-		x: &mlrvalExtended{
-			funcval: funcval,
-		},
+		intf:          funcval,
 	}
 }
 
@@ -220,9 +218,7 @@ func FromArray(arrayval []*Mlrval) *Mlrval {
 		mvtype:        MT_ARRAY,
 		printrep:      "(bug-if-you-see-this:case-4)", // INVALID_PRINTREP,
 		printrepValid: false,
-		x: &mlrvalExtended{
-			arrayval: CopyMlrvalArray(arrayval),
-		},
+		intf:          CopyMlrvalArray(arrayval),
 	}
 }
 
@@ -235,9 +231,7 @@ func FromMap(mapval *Mlrmap) *Mlrval {
 		mvtype:        MT_MAP,
 		printrep:      "(bug-if-you-see-this:case-5)", // INVALID_PRINTREP,
 		printrepValid: false,
-		x: &mlrvalExtended{
-			mapval: mapval.Copy(),
-		},
+		intf:          mapval.Copy(),
 	}
 }
 

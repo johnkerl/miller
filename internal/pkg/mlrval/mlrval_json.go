@@ -411,7 +411,7 @@ func (mv *Mlrval) marshalJSONArray(
 
 	// TODO: libify
 	allTerminal := true
-	for _, element := range mv.x.arrayval {
+	for _, element := range mv.intf.([]*Mlrval) {
 		if element.IsArrayOrMap() {
 			allTerminal = false
 			break
@@ -429,11 +429,11 @@ func (mv *Mlrval) marshalJSONArraySingleLine(
 	elementNestingDepth int,
 	outputIsStdout bool,
 ) (string, error) {
-	n := len(mv.x.arrayval)
+	n := len(mv.intf.([]*Mlrval))
 	var buffer bytes.Buffer
 	buffer.WriteByte('[')
 
-	for i, element := range mv.x.arrayval {
+	for i, element := range mv.intf.([]*Mlrval) {
 		elementString, err := element.marshalJSONAux(JSON_SINGLE_LINE, elementNestingDepth+1, outputIsStdout)
 		if err != nil {
 			return "", err
@@ -466,7 +466,7 @@ func (mv *Mlrval) marshalJSONArrayMultipleLines(
 	elementNestingDepth int,
 	outputIsStdout bool,
 ) (string, error) {
-	n := len(mv.x.arrayval)
+	n := len(mv.intf.([]*Mlrval))
 	var buffer bytes.Buffer
 
 	// Write empty array as '[]'
@@ -475,7 +475,7 @@ func (mv *Mlrval) marshalJSONArrayMultipleLines(
 		buffer.WriteByte('\n')
 	}
 
-	for i, element := range mv.x.arrayval {
+	for i, element := range mv.intf.([]*Mlrval) {
 		elementString, err := element.marshalJSONAux(jsonFormatting, elementNestingDepth+1, outputIsStdout)
 		if err != nil {
 			return "", err
@@ -508,7 +508,7 @@ func (mv *Mlrval) marshalJSONMap(
 	outputIsStdout bool,
 ) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_MAP)
-	s, err := mv.x.mapval.marshalJSONAux(jsonFormatting, elementNestingDepth, outputIsStdout)
+	s, err := mv.intf.(*Mlrmap).marshalJSONAux(jsonFormatting, elementNestingDepth, outputIsStdout)
 	if err != nil {
 		return "", err
 	}
