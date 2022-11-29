@@ -116,7 +116,7 @@ func transformerStepUsage(
 	fmt.Fprintf(o, "             as a no-op for backward compatibility with Miller 5 and below.\n")
 
 	fmt.Fprintf(o, "-d {x,y,z}   Weights for EWMA. 1 means current sample gets all weight (no\n")
-	fmt.Fprintf(o, "             smoothing), near under under 1 is light smoothing, near over 0 is\n")
+	fmt.Fprintf(o, "             smoothing), near under 1 is light smoothing, near over 0 is\n")
 	fmt.Fprintf(o, "             heavy smoothing. Multiple weights may be specified, e.g.\n")
 	fmt.Fprintf(o, "             \"mlr %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", verbNameStep)
 	fmt.Fprintf(o, "             is \"-d %s\".\n", DEFAULT_STRING_ALPHA)

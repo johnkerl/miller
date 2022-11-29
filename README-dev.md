@@ -57,7 +57,7 @@ During the coding of Miller, I've been guided by the following:
   * If you want to fix a bug, you should be able to quickly and confidently find out where and how.
   * If you want to learn something about Go channels, or lexing/parsing in Go -- especially if you don't already know much about them -- the comments should help you learn what you want to.
   * If you're the kind of person who reads other people's code for fun, well, the code should be fun, as well as readable.
-  * `README.md` files throughout the directory tree are intended to give you a sense of what is where, what to read first and and what doesn't need reading right away, and so on -- so you spend a minimum of time being confused or frustrated.
+  * `README.md` files throughout the directory tree are intended to give you a sense of what is where, what to read first and what doesn't need reading right away, and so on -- so you spend a minimum of time being confused or frustrated.
   * Names of files, variables, functions, etc. should be fully spelled out (e.g. `NewEvaluableLeafNode`), except for a small number of most-used names where a longer name would cause unnecessary line-wraps (e.g. `Mlrval` instead of `MillerValue` since this appears very very often).
   * Code should not be too clever. This includes some reasonable amounts of code duplication from time to time, to keep things inline, rather than lasagna code.
   * Things should be transparent.  For example, the `-v` in `mlr -n put -v '$y = 3 + 0.1 * $x'` shows you the abstract syntax tree derived from the DSL expression.

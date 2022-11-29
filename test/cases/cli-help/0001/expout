@@ -797,7 +797,7 @@ Wide-to-long options:
   -r {input field regex} -o {key-field name,value-field name}
   These pivot/reshape the input data such that the input fields are removed
   and separate records are emitted for each key/value pair.
-  Note: if you have multiplep regexes, please specify them using multiple -r,
+  Note: if you have multiple regexes, please specify them using multiple -r,
   since regexes can contain commas within them.
   Note: this works with tail -f and produces output records for each input
   record seen.
@@ -1109,7 +1109,7 @@ Options:
              As of Miller 6 this happens automatically, but the flag is accepted
              as a no-op for backward compatibility with Miller 5 and below.
 -d {x,y,z}   Weights for EWMA. 1 means current sample gets all weight (no
-             smoothing), near under under 1 is light smoothing, near over 0 is
+             smoothing), near under 1 is light smoothing, near over 0 is
              heavy smoothing. Multiple weights may be specified, e.g.
              "mlr step -a ewma -f sys_load -d 0.01,0.1,0.9". Default if omitted
              is "-d 0.5".
