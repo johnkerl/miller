@@ -45,9 +45,6 @@ paid    cash         2
 pending debit        1
 pending credit       1
 paid    debit        1
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 After that, run it with the next `then` step included:
@@ -62,9 +59,6 @@ paid    cash         2
 pending debit        1
 pending credit       1
 paid    debit        1
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Now if you use `then` to include another verb after that, the columns `Status`, `Payment_Type`, and `count` will be the input to that verb.
@@ -81,12 +75,6 @@ paid    cash         2
 pending debit        1
 pending credit       1
 paid    debit        1
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## NR is not consecutive after then-chaining
@@ -112,9 +100,6 @@ why don't I see `NR=1` and `NR=2` here??
 <pre class="pre-non-highlight-in-pair">
 a=eks,b=pan,i=2,x=0.758679,y=0.522151,NR=2
 a=wye,b=pan,i=5,x=0.573288,y=0.863624,NR=5
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 The reason is that `NR` is computed for the original input records and isn't dynamically updated. By contrast, `NF` is dynamically updated: it's the number of fields in the current record, and if you add/remove a field, the value of `NF` will change:
@@ -124,9 +109,6 @@ The reason is that `NR` is computed for the original input records and isn't dyn
 </pre>
 <pre class="pre-non-highlight-in-pair">
 nf1=3,u=4,nf2=5,nf3=3
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 `NR`, by contrast (and `FNR` as well), retains the value from the original input stream, and records may be dropped by a `filter` within a `then`-chain. To recover consecutive record numbers, you can use out-of-stream variables as follows:
@@ -148,9 +130,6 @@ go tool pprof -http=:8080 foo-stream
 a   b   i x        y        nr1 nr2
 eks pan 2 0.758679 0.522151 2   1
 wye pan 5 0.573288 0.863624 5   2
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Or, simply use `mlr cat -n`:
@@ -161,7 +140,4 @@ Or, simply use `mlr cat -n`:
 <pre class="pre-non-highlight-in-pair">
 n=1,a=eks,b=pan,i=2,x=0.758679,y=0.522151
 n=2,a=wye,b=pan,i=5,x=0.573288,y=0.863624
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>

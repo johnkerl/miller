@@ -117,9 +117,6 @@ bin_lo bin_hi u_count                        s_count
 1.88   1.92   [64]#...................[9554] [326]#...................[3703]
 1.92   1.96   [64]#...................[9554] [326]#...................[3703]
 1.96   2      [64]#...................[9554] [326]#...................[3703]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Randomly selecting words from a list

@@ -165,9 +165,6 @@ purple,square,false,10,91,72.3735,8.2430
 yellow,triangle,true,1,11,43.6498,9.8870
 purple,triangle,false,5,51,81.2290,8.5910
 purple,triangle,false,7,65,80.1405,5.8240
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Data processing
@@ -229,9 +226,6 @@ For example (see [https://github.com/johnkerl/miller/issues/178](https://github.
   "a": "0123"
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -244,9 +238,6 @@ go tool pprof -http=:8080 foo-stream
   "y": 1.230000000
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ### Deduping of repeated field names
@@ -348,9 +339,6 @@ This works in Miller 6 (and worked in Miller 5 as well) and is supported:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 input=1
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Please see the [section on emit statements](reference-dsl-output-statements.md#emit1-and-emitemitpemitf)

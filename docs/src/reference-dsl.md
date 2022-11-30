@@ -39,9 +39,6 @@ Example:
 a=pan,x_sum=0.346791
 a=eks,x_sum=1.140078
 a=wye,x_sum=0.777891
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 * Verbs are coded in Go
@@ -59,9 +56,6 @@ Example:
 a=pan,x_sum=0.346791
 a=eks,x_sum=1.140078
 a=wye,x_sum=0.777891
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 * You get to write your own DSL expressions
@@ -126,9 +120,6 @@ apple,37,1
 ball,28,2
 cat,54,3
 end
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 The `print` statements for `begin` and `end` went out before the first record
@@ -168,9 +159,6 @@ you might retain only the records whose `a` field has value `eks`:
 <pre class="pre-non-highlight-in-pair">
 a=eks,b=pan,i=2,x=0.758679,y=0.522151
 a=eks,b=wye,i=4,x=0.381399,y=0.134188
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 or you might add a new field which is a function of existing fields:
@@ -184,9 +172,6 @@ a=eks,b=pan,i=2,x=0.758679,y=0.522151,ab=eks_pan
 a=wye,b=wye,i=3,x=0.204603,y=0.338318,ab=wye_wye
 a=eks,b=wye,i=4,x=0.381399,y=0.134188,ab=eks_wye
 a=wye,b=pan,i=5,x=0.573288,y=0.863624,ab=wye_pan
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Differences between put and filter
@@ -221,9 +206,6 @@ purple triangle false 5  51    81.2290  8.5910 high rate
 red    square   false 6  64    77.1991  9.5310 high rate
 purple triangle false 7  65    80.1405  5.8240 low rate
 purple square   false 10 91    72.3735  8.2430 high rate
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -245,9 +227,6 @@ red    square false 6  64    77.1991  9.5310 squ  are
 yellow circle true  8  73    63.9785  4.2370 cir  cle
 yellow circle true  9  87    63.5058  8.3350 cir  cle
 purple square false 10 91    72.3735  8.2430 squ  are
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 

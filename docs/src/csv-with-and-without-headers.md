@@ -41,9 +41,6 @@ John,23,present
 Fred,34,present
 Alice,56,missing
 Carol,45,present
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Following that, you can rename the positionally indexed labels to names with meaning for your context.  For example:
@@ -57,9 +54,6 @@ John,23,present
 Fred,34,present
 Alice,56,missing
 Carol,45,present
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Likewise, if you need to produce CSV which is lacking its header, you can pipe Miller's output to the system command `sed 1d`, or you can use Miller's `--headerless-csv-output` option:
@@ -74,9 +68,6 @@ red,square,1,80,0.219668,0.001257,0.792778,2.944117
 red,circle,1,84,0.209017,0.290052,0.138103,5.065034
 red,square,0,243,0.956274,0.746720,0.775542,7.117831
 purple,triangle,0,257,0.435535,0.859129,0.812290,5.753095
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -88,9 +79,6 @@ red,square,1,80,0.219668,0.001257,0.792778,2.944117
 red,circle,1,84,0.209017,0.290052,0.138103,5.065034
 red,square,0,243,0.956274,0.746720,0.775542,7.117831
 purple,triangle,0,257,0.435535,0.859129,0.812290,5.753095
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Lastly, often we say "CSV" or "TSV" when we have positionally indexed data in columns which are separated by commas or tabs, respectively. In this case it's perhaps simpler to **just use NIDX format** which was designed for this purpose. (See also [File Formats](file-formats.md).) For example:
@@ -110,9 +98,6 @@ Lastly, often we say "CSV" or "TSV" when we have positionally indexed data in co
 
 1 Carol
 3 present
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Headerless CSV with duplicate field values
@@ -149,9 +134,6 @@ see something happened:
 -331268.59231736,4537221.43295653,22,1,13.1,1,0.978,0.978,0.962
 -330341.96688431,4537221.43295653,23,1,13.1,1,0.978,0.978,0.962
 -326635.46515209,4537221.43295653,27,1,13.1,2,0.978,0.972,0.958
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 What happened?
@@ -180,9 +162,6 @@ One solution is to use `--implicit-csv-header`, or its shorter alias `--hi`:
 -331268.59231736,4537221.43295653,22,1,13.1,1,0.978,0.978,0.962
 -330341.96688431,4537221.43295653,23,1,13.1,1,0.978,0.978,0.962
 -326635.46515209,4537221.43295653,27,1,13.1,2,0.978,0.972,0.958
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Another solution is to use [NIDX format](file-formats.md#nidx-index-numbered-toolkit-style):
@@ -199,9 +178,6 @@ Another solution is to use [NIDX format](file-formats.md#nidx-index-numbered-too
 -331268.59231736,4537221.43295653,22,1,13.1,1,0.978,0.978,0.962
 -330341.96688431,4537221.43295653,23,1,13.1,1,0.978,0.978,0.962
 -326635.46515209,4537221.43295653,27,1,13.1,2,0.978,0.972,0.958
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Either way, since there is no explicit header, fields are named `1` through `9`. We can use the
@@ -219,9 +195,6 @@ xsn,ysn,x,y,t,a,e29,e31,e32
 -331268.59231736,4537221.43295653,22,1,13.1,1,0.978,0.978,0.962
 -330341.96688431,4537221.43295653,23,1,13.1,1,0.978,0.978,0.962
 -326635.46515209,4537221.43295653,27,1,13.1,2,0.978,0.972,0.958
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -236,9 +209,6 @@ xsn,ysn,x,y,t,a,e29,e31,e32
 -331268.59231736,4537221.43295653,22,1,13.1,1,0.978,0.978,0.962
 -330341.96688431,4537221.43295653,23,1,13.1,1,0.978,0.978,0.962
 -326635.46515209,4537221.43295653,27,1,13.1,2,0.978,0.972,0.958
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Regularizing ragged CSV
@@ -270,9 +240,6 @@ a,b,c
 1,2,3
 4,5,
 6,7,8,9
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 or, more simply,
@@ -290,9 +257,6 @@ a,b,c
 1,2,3
 4,5,
 6,7,8,9
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 See also the [record-heterogeneity page](record-heterogeneity.md).

@@ -44,18 +44,13 @@ semicolon where one is needed . The parser tries to remind you about semicolons
 whenever there's a chance a missing semicolon might be involved in a parse
 error.
 
-<pre class="pre-highlight-in-pair">
+<pre class="pre-highlight-non-pair">
 <b>mlr --csv --from example.csv put -q '</b>
 <b>  begin {</b>
 <b>    @count = 0 # No semicolon required -- before closing curly brace</b>
 <b>  }</b>
 <b>  $x=1         # No semicolon required -- at end of expression</b>
 <b>'</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -176,9 +171,6 @@ avoid this, use the dot operator for string-concatenation instead.
 <pre class="pre-non-highlight-in-pair">
 [ a b c ]
 [abc]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Similarly, a final newline is printed for you; use [`printn`](reference-dsl-output-statements.md#print-statements) to avoid this.
@@ -230,9 +222,6 @@ word,value
 apple,37
 ball,28
 cat,54
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -249,9 +238,6 @@ go tool pprof -http=:8080 foo-stream
 Record 1 has word apple
 Record 2 has word ball
 Record 3 has word cat
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Also, slices for arrays and strings are _doubly inclusive_: `x[3:5]` gets you

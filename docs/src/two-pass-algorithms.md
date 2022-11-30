@@ -50,9 +50,6 @@ you can simply do
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x_sum 4986.019681679581
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 or
@@ -67,9 +64,6 @@ wye 1023.5484702619565
 zee 979.7420161495838
 eks 1016.7728571314786
 hat 1000.192668193983
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 rather than the more tedious
@@ -84,9 +78,6 @@ rather than the more tedious
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x_sum 4986.019681679581
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 or
@@ -106,9 +97,6 @@ wye 1023.5484702619565
 zee 979.7420161495838
 eks 1016.7728571314786
 hat 1000.192668193983
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 The former (`mlr stats1` et al.) has the advantages of being easier to type, being less error-prone to type, and running faster.
@@ -155,9 +143,6 @@ NR x        x_pct
 3  0.204603 0
 4  0.381399 31.90825807289974
 5  0.573288 66.54051068806446
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Line-number ratios
@@ -185,9 +170,6 @@ I N PCT a   b   i x        y
 3 5 60  wye wye 3 0.204603 0.338318
 4 5 80  eks wye 4 0.381399 0.134188
 5 5 100 wye pan 5 0.573288 0.863624
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Records having max value
@@ -230,9 +212,6 @@ blue   purple 2 0.208785
 purple purple 1 0.455077
 red    purple 4 0.477187
 blue   red    4 0.007487
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Of course, the largest value of `n` isn't known until after all data have been read. Using an [out-of-stream variable](reference-dsl-variables.md#out-of-stream-variables) we can [retain all records as they are read](operating-on-all-records.md), then filter them at the end:
@@ -272,9 +251,6 @@ purple red    5 0.454779
 orange blue   5 0.705700
 purple red    5 0.072936
 green  purple 5 0.203577
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Feature-counting
@@ -373,9 +349,6 @@ Then
   "key_fraction": 0.08333333333333333
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -400,9 +373,6 @@ latency 0.5833333333333334
 name    0.3333333333333333
 uid     0.25
 uid2    0.08333333333333333
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Unsparsing
@@ -495,9 +465,6 @@ end {
   "w": 2
 }
 ]
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -509,9 +476,6 @@ a,b,v,u,x,w
 ,2,,1,,
 1,,2,,3,
 ,,1,,,2
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -523,9 +487,6 @@ a b v u x w
 - 2 - 1 - -
 1 - 2 - 3 -
 - - 1 - - 2
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Mean without/with oosvars
@@ -536,9 +497,6 @@ go tool pprof -http=:8080 foo-stream
 <pre class="pre-non-highlight-in-pair">
 x_mean
 0.49860196816795804
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -554,9 +512,6 @@ go tool pprof -http=:8080 foo-stream
 <pre class="pre-non-highlight-in-pair">
 x_mean
 0.49860196816795804
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Keyed mean without/with oosvars
@@ -591,9 +546,6 @@ zee hat 0.46772617655014515
 wye zee 0.5059066170573692
 eks hat 0.5006790659966355
 wye eks 0.5306035254809106
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -635,9 +587,6 @@ hat zee 0.5099985721987774
 hat eks 0.48587864619953547
 hat hat 0.47993053101017374
 hat pan 0.4643355557376876
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Variance and standard deviation without/with oosvars
@@ -651,9 +600,6 @@ x_sum    4986.019681679581
 x_mean   0.49860196816795804
 x_var    0.08426974433144456
 x_stddev 0.2902925151144007
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -681,9 +627,6 @@ sumx2  3328.652400179729
 mean   0.49860196816795804
 var    0.08426974433144456
 stddev 0.2902925151144007
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 You can also do this keyed, of course, imitating the keyed-mean example above.
@@ -696,9 +639,6 @@ You can also do this keyed, of course, imitating the keyed-mean example above.
 <pre class="pre-non-highlight-in-pair">
 x_min 0.00004509679127584487
 x_max 0.999952670371898
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -711,9 +651,6 @@ go tool pprof -http=:8080 foo-stream
 <pre class="pre-non-highlight-in-pair">
 x_min 0.00004509679127584487
 x_max 0.999952670371898
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Keyed min/max without/with oosvars
@@ -728,9 +665,6 @@ eks 0.0006917972627396018  0.9988110946859143
 wye 0.0001874794831505655  0.9998228522652893
 zee 0.0005486114815762555  0.9994904324789629
 hat 0.00004509679127584487 0.999952670371898
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -749,9 +683,6 @@ eks 0.0006917972627396018  0.9988110946859143
 wye 0.0001874794831505655  0.9998228522652893
 zee 0.0005486114815762555  0.9994904324789629
 hat 0.00004509679127584487 0.999952670371898
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Delta without/with oosvars
@@ -766,9 +697,6 @@ eks pan 2 0.758679 0.522151 0.411888
 wye wye 3 0.204603 0.338318 -0.554076
 eks wye 4 0.381399 0.134188 0.17679599999999998
 wye pan 5 0.573288 0.863624 0.19188900000000003
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -784,9 +712,6 @@ eks pan 2 0.758679 0.522151 0.411888
 wye wye 3 0.204603 0.338318 -0.554076
 eks wye 4 0.381399 0.134188 0.17679599999999998
 wye pan 5 0.573288 0.863624 0.19188900000000003
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Keyed delta without/with oosvars
@@ -801,9 +726,6 @@ eks pan 2 0.758679 0.522151 0
 wye wye 3 0.204603 0.338318 0
 eks wye 4 0.381399 0.134188 -0.37728
 wye pan 5 0.573288 0.863624 0.36868500000000004
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -819,9 +741,6 @@ eks pan 2 0.758679 0.522151 0
 wye wye 3 0.204603 0.338318 0
 eks wye 4 0.381399 0.134188 -0.37728
 wye pan 5 0.573288 0.863624 0.36868500000000004
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Exponentially weighted moving averages without/with oosvars
@@ -836,9 +755,6 @@ eks pan 2 0.758679 0.522151 0.3879798
 wye wye 3 0.204603 0.338318 0.36964211999999996
 eks wye 4 0.381399 0.134188 0.37081780799999997
 wye pan 5 0.573288 0.863624 0.3910648272
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -855,7 +771,4 @@ eks pan 2 0.758679 0.522151 0.3879798
 wye wye 3 0.204603 0.338318 0.36964211999999996
 eks wye 4 0.381399 0.134188 0.37081780799999997
 wye pan 5 0.573288 0.863624 0.3910648272
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>

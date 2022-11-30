@@ -29,9 +29,6 @@ x=0
 x=1
 x=2
 x=3
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -43,9 +40,6 @@ x=0
 x=1,y=0,z=0
 x=2,y=0.3010299956639812,z=0.5486620049392715
 x=3,y=0.4771212547196624,z=0.6907396432228734
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -55,9 +49,6 @@ go tool pprof -http=:8080 foo-stream
 a=abc_123
 a=some other name
 a=xyz_789
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -71,9 +62,6 @@ go tool pprof -http=:8080 foo-stream
 a=abc_123,b=left_abc,c=right_123
 a=some other name
 a=xyz_789,b=left_xyz,c=right_789
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 This produces heteregenous output which Miller, of course, has no problems with (see [Record Heterogeneity](record-heterogeneity.md)).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes `put` to evaluate the boolean expression (along with any side effects, namely, regex-captures `\1`, `\2`, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally:
@@ -90,9 +78,6 @@ a               b        c
 abc_123         left_abc right_123
 some other name left_    right_
 xyz_789         left_xyz right_789
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Note that pattern-action blocks are just a syntactic variation of if-statements. The following do the same thing:
@@ -151,9 +136,6 @@ Miller's `while` and `do-while` are unsurprising in comparison to various langua
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -169,9 +151,6 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=1,y=2,3=,4=,5=,foo=bar
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 A `break` or `continue` within nested conditional blocks or if-statements will,
@@ -240,9 +219,6 @@ NR = 5
   key: i value: 5
   key: x value: 0.573288
   key: y value: 0.863624
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -258,9 +234,6 @@ go tool pprof -http=:8080 foo-stream
 <pre class="pre-non-highlight-in-pair">
 key: a valuetype: int
 key: b valuetype: map
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Note that the value corresponding to a given key may be gotten as through a **computed field name** using square brackets as in `$[e]` for stream records, or by indexing the looped-over variable using square brackets.
@@ -283,9 +256,6 @@ value: 20 valuetype: string
 value: {} valuetype: map
 value: four valuetype: string
 value: true valuetype: bool
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ### Key-value for-loops
@@ -324,9 +294,6 @@ label1 label2 f1  f2  f3  sum1 sum2 sum3
 blue   green  100 240 350 690  690  690
 red    green  120 11  195 326  326  326
 yellow blue   140 0   240 380  380  380
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -339,9 +306,6 @@ eks pan 2 0.758679 0.522151 string string int    float  float
 wye wye 3 0.204603 0.338318 string string int    float  float
 eks wye 4 0.381399 0.134188 string string int    float  float
 wye pan 5 0.573288 0.863624 string string int    float  float
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Note that the value of the current field in the for-loop can be gotten either using the bound variable `value`, or through a **computed field name** using square brackets as in `$[key]`.
@@ -367,9 +331,6 @@ eks pan 2 0.758679 0.522151 3.28083            13.12332
 wye wye 3 0.204603 0.338318 3.542921           14.171684
 eks wye 4 0.381399 0.134188 4.515587           18.062348
 wye pan 5 0.573288 0.863624 6.4369119999999995 25.747647999999998
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 It can be confusing to modify the stream record while iterating over a copy of it, so instead you might find it simpler to use a local variable in the loop and only update the stream record after the loop:
@@ -392,9 +353,6 @@ eks pan 2 0.758679 0.522151 3.28083
 wye wye 3 0.204603 0.338318 3.542921
 eks wye 4 0.381399 0.134188 4.515587
 wye pan 5 0.573288 0.863624 6.4369119999999995
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 You can also start iterating on sub-maps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-map as it was before the loop started.  The sub-map is specified by square-bracketed indices after `in`, and additional deeper indices are bound to loop key-variables. The terminal values are bound to the loop value-variable whenever the keys are not too shallow. The value-variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:
@@ -438,9 +396,6 @@ That's confusing in the abstract, so a concrete example is in order. Suppose the
     }
   }
 }
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Then we can get at various values as follows:
@@ -467,9 +422,6 @@ Then we can get at various values as follows:
 key=1,valuetype=int
 key=3,valuetype=map
 key=6,valuetype=map
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -494,9 +446,6 @@ go tool pprof -http=:8080 foo-stream
 <pre class="pre-non-highlight-in-pair">
 key1=3,key2=4,valuetype=int
 key1=6,key2=7,valuetype=map
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -520,9 +469,6 @@ go tool pprof -http=:8080 foo-stream
 </pre>
 <pre class="pre-non-highlight-in-pair">
 key1=7,key2=8,valuetype=int
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ### C-style triple-for loops
@@ -545,9 +491,6 @@ eks pan 2 0.758679 0.522151 3
 wye wye 3 0.204603 0.338318 6
 eks wye 4 0.381399 0.134188 10
 wye pan 5 0.573288 0.863624 15
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -569,9 +512,6 @@ eks pan 2 0.758679 0.522151 3    3
 wye wye 3 0.204603 0.338318 6    7
 eks wye 4 0.381399 0.134188 10   15
 wye pan 5 0.573288 0.863624 15   31
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Notes:
@@ -604,9 +544,6 @@ a=wye,b=wye,i=3,x=0.204603,y=0.338318
 a=eks,b=wye,i=4,x=0.381399,y=0.134188
 a=wye,b=pan,i=5,x=0.573288,y=0.863624
 x_sum=2.26476
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Since uninitialized out-of-stream variables default to 0 for addition/subtraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in `awk`, where they'd default to 0 either way), the above can be written more succinctly as
@@ -624,9 +561,6 @@ a=wye,b=wye,i=3,x=0.204603,y=0.338318
 a=eks,b=wye,i=4,x=0.381399,y=0.134188
 a=wye,b=pan,i=5,x=0.573288,y=0.863624
 x_sum=2.26476
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 The **put -q** option suppresses printing of each output record, with only `emit` statements being output. So to get only summary outputs, you could write
@@ -639,9 +573,6 @@ The **put -q** option suppresses printing of each output record, with only `emit
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x_sum=2.26476
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 We can do similarly with multiple out-of-stream variables:
@@ -659,9 +590,6 @@ We can do similarly with multiple out-of-stream variables:
 <pre class="pre-non-highlight-in-pair">
 x_count=5
 x_sum=2.26476
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 This is of course (see also [here](reference-dsl.md#verbs-compared-to-dsl)) not much different than
@@ -671,9 +599,6 @@ This is of course (see also [here](reference-dsl.md#verbs-compared-to-dsl)) not 
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x_count=5,x_sum=2.26476
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 Note that it's a syntax error for begin/end blocks to refer to field names (beginning with `$`), since begin/end blocks execute outside the context of input records.

@@ -7,10 +7,13 @@ If your `mlr version` says something like `Miller v5.10.2` or `mlr 6.0.0`, witho
 
 | Release | Docs                                                                | Release notes |
 |---------|---------------------------------------------------------------------|---------------|
+6.5.0     | [Miller 6.5.0](https://johnkerl.org/miller-docs-by-release/6.5.0)  | [Bugfixes and memory-reduction optimizations](https://github.com/johnkerl/miller/releases/tag/v6.5.0) |
+6.4.0     | [Miller 6.4.0](https://johnkerl.org/miller-docs-by-release/6.4.0)  | [ mlr summary verb, exec() function, mlr cat --filename, multiline string literals, and more](https://github.com/johnkerl/miller/releases/tag/v6.4.0) |
 6.3.0     | [Miller 6.3.0](https://johnkerl.org/miller-docs-by-release/6.3.0)  | [Windows terminal colors, Latin-1, and more](https://github.com/johnkerl/miller/releases/tag/v6.3.0) |
 6.2.0     | [Miller 6.2.0](https://johnkerl.org/miller-docs-by-release/6.2.0)  | [Restore --tsvlite; add gssub and expand dhms functions](https://github.com/johnkerl/miller/releases/tag/v6.2.0) |
 6.1.0     | [Miller 6.1.0](https://johnkerl.org/miller-docs-by-release/6.1.0)  | [Natural sort, true TSV, sliding-window averages, and more](https://github.com/johnkerl/miller/releases/tag/v6.1.0) |
 6.0.0     | [Miller 6.0.0](https://johnkerl.org/miller-docs-by-release/6.0.0)  | [Miller 6](https://github.com/johnkerl/miller/releases/tag/v6.0.0) |
+5.10.4    | [Miller 5.10.4](https://johnkerl.org/miller-docs-by-release/5.10.4) | [5.10 bugfix for issue #1108](https://github.com/johnkerl/miller/releases/tag/v5.10.4) |
 5.10.3    | [Miller 5.10.3](https://johnkerl.org/miller-docs-by-release/5.10.3) | [Address Conda-build issue](https://github.com/johnkerl/miller/releases/tag/v5.10.3) |
 5.10.2    | [Miller 5.10.2](https://johnkerl.org/miller-docs-by-release/5.10.2) | [Restore mlr manpage to distro file](https://github.com/johnkerl/miller/releases/tag/v5.10.2) |
 5.10.1    |                                                                     | [Bugfixes](https://github.com/johnkerl/miller/releases/tag/v5.10.1) |

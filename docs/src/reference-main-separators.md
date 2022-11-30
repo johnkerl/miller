@@ -74,9 +74,6 @@ a=4,b=5,c=6
 <pre class="pre-non-highlight-in-pair">
 c:3;a:1;b:2
 c:6;a:4;b:5
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -86,9 +83,6 @@ go tool pprof -http=:8080 foo-stream
 color,shape,flag,k,index,quantity,rate
 yellow,triangle,true,1,11,43.6498,9.8870
 red,square,true,2,15,79.2778,0.0130
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -98,9 +92,6 @@ go tool pprof -http=:8080 foo-stream
 color|shape|flag|k|index|quantity|rate
 yellow|triangle|true|1|11|43.6498|9.8870
 red|square|true|2|15|79.2778|0.0130
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 If your data has non-default separators and you don't want to change those
@@ -121,9 +112,6 @@ a:4;b:5;c:6
 <pre class="pre-non-highlight-in-pair">
 c:3;a:1;b:2
 c:6;a:4;b:5
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Multi-character separators
@@ -138,9 +126,6 @@ restrictions), IRS must be `\n` and IFS must be a single character.
 <pre class="pre-non-highlight-in-pair">
 c:=3;;;a:=1;;;b:=2
 c:=6;;;a:=4;;;b:=5
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 If your data has field separators which are one or more consecutive spaces, you
@@ -181,9 +166,6 @@ early light what so
 2 light
 3 what
 4 so
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Regular-expression separators
@@ -273,9 +255,6 @@ their values indicate what you specified at the command line -- so their use is 
 <pre class="pre-non-highlight-in-pair">
 a:1;b:2;c:3;d:>>>,|||;<<<
 a:4;b:5;c:6;d:>>>,|||;<<<
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 ## Which separators apply to which file formats

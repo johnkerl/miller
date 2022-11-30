@@ -46,9 +46,6 @@ red,square,false,6,64,77.1991,9.5310
 yellow,triangle,true,1,11,43.6498,9.8870
 yellow,circle,true,8,73,63.9785,4.2370
 yellow,circle,true,9,87,63.5058,8.3350
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 This will decompress the input data on the fly, while leaving the disk file unmodified. This helps you save disk space, at the cost of some additional runtime CPU usage to decompress the data.
@@ -84,9 +81,6 @@ red,square,false,6,64,77.1991,9.5310
 yellow,triangle,true,1,11,43.6498,9.8870
 yellow,circle,true,8,73,63.9785,4.2370
 yellow,circle,true,9,87,63.5058,8.3350
-Memory profile started.
-Memory profile finished.
-go tool pprof -http=:8080 foo-stream
 </pre>
 
 The benefit of `--prepipe` is that Miller will run the specified program once per
