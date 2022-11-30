@@ -104,7 +104,7 @@ If you know the name of the thing you're looking for, use `mlr help`:
 <b>mlr help map</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-map: declares an map-valued local variable in the current curly-braced scope.
+map: declares a map-valued local variable in the current curly-braced scope.
 Type-checking happens at assignment: 'map b = 0' is an error. map b = {} is
 always OK. map b = a is OK or not depending on whether a is a map.
 </pre>

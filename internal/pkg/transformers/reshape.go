@@ -63,7 +63,7 @@ func transformerReshapeUsage(
 	fmt.Fprintf(o, "  -r {input field regex} -o {key-field name,value-field name}\n")
 	fmt.Fprintf(o, "  These pivot/reshape the input data such that the input fields are removed\n")
 	fmt.Fprintf(o, "  and separate records are emitted for each key/value pair.\n")
-	fmt.Fprintf(o, "  Note: if you have multiplep regexes, please specify them using multiple -r,\n")
+	fmt.Fprintf(o, "  Note: if you have multiple regexes, please specify them using multiple -r,\n")
 	fmt.Fprintf(o, "  since regexes can contain commas within them.\n")
 	fmt.Fprintf(o, "  Note: this works with tail -f and produces output records for each input\n")
 	fmt.Fprintf(o, "  record seen.\n")

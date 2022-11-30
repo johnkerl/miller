@@ -428,7 +428,7 @@ Type-checking happens at assignment: 'int x = 0.0' is an error.`)
 
 func mapKeywordUsage() {
 	fmt.Println(
-		`declares an map-valued local variable in the current curly-braced scope.
+		`declares a map-valued local variable in the current curly-braced scope.
 Type-checking happens at assignment: 'map b = 0' is an error. map b = {} is
 always OK. map b = a is OK or not depending on whether a is a map.`)
 }

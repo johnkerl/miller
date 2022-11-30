@@ -1729,7 +1729,7 @@ Options:
 -g {d,e,f} Optional group-by-field names
 -F         Computes integerable things (e.g. counter) in floating point.
 -d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no
-           smoothing), near under under 1 is light smoothing, near over 0 is
+           smoothing), near under 1 is light smoothing, near over 0 is
            heavy smoothing. Multiple weights may be specified, e.g.
            "mlr step -a ewma -f sys_load -d 0.01,0.1,0.9". Default if omitted
            is "-d 0.5".
@@ -3805,7 +3805,7 @@ Type-checking happens at assignment: 'int x = 0.0' is an error.
 .RS 0
 .\}
 .nf
-map: declares an map-valued local variable in the current curly-braced scope.
+map: declares a map-valued local variable in the current curly-braced scope.
 Type-checking happens at assignment: 'map b = 0' is an error. map b = {} is
 always OK. map b = a is OK or not depending on whether a is a map.
 .fi

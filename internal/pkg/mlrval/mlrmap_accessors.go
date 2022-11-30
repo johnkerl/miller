@@ -8,7 +8,7 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
-// IsEmpty determines if an map is empty.
+// IsEmpty determines if a map is empty.
 func (mlrmap *Mlrmap) IsEmpty() bool {
 	return mlrmap.Head == nil
 }
