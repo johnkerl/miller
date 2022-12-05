@@ -1519,7 +1519,7 @@ MILLER(1)                                                            MILLER(1)
        More example put expressions:
          If-statements:
            'if ($flag == true) { $quantity *= 10}'
-           'if ($x &gt; 0.0 { $y=log10($x); $z=sqrt($y) } else {$y = 0.0; $z = 0.0}'
+           'if ($x &gt; 0.0) { $y=log10($x); $z=sqrt($y) } else {$y = 0.0; $z = 0.0}'
          Newly created fields can be read after being written:
            '$new_field = $index**2; $qn = $quantity * $new_field'
          Regex-replacement:
@@ -3288,5 +3288,5 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2022-11-27                         MILLER(1)
+                                  2022-12-05                         MILLER(1)
 </pre>

@@ -2259,7 +2259,7 @@ Examples:
 More example put expressions:
   If-statements:
     'if ($flag == true) { $quantity *= 10}'
-    'if ($x > 0.0 { $y=log10($x); $z=sqrt($y) } else {$y = 0.0; $z = 0.0}'
+    'if ($x > 0.0) { $y=log10($x); $z=sqrt($y) } else {$y = 0.0; $z = 0.0}'
   Newly created fields can be read after being written:
     '$new_field = $index**2; $qn = $quantity * $new_field'
   Regex-replacement:
