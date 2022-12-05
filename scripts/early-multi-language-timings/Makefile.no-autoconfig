@@ -1,4 +1,5 @@
-all: catc catc0 catm catrust catgo catnim cutgo cutnim
+#all: catc catc0 catm catrust catrust2 catgo catnim cutgo cutnim
+all: catc catc0 catm catrust catgo cutgo
 # catd cutd
 allc: catc catc0 catm
 
@@ -12,6 +13,8 @@ catm: catm.c
 #	dmd -O catd.d
 catrust: catrust.rs
 	rustc catrust.rs
+catrust2: catrust2.rs
+	rustc catrust2.rs
 catgo: catgo.go
 	go build catgo.go
 catnim: catnim.nim
