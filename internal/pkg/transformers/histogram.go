@@ -261,11 +261,11 @@ func (tr *TransformerHistogram) emitNonAuto(
 
 		outrec.PutReference(
 			tr.outputPrefix+"bin_lo",
-			mlrval.FromFloat((tr.lo+float64(i))/tr.mul),
+			mlrval.FromFloat(tr.lo+float64(i)/tr.mul),
 		)
 		outrec.PutReference(
 			tr.outputPrefix+"bin_hi",
-			mlrval.FromFloat((tr.lo+float64(i+1))/tr.mul),
+			mlrval.FromFloat(tr.lo+float64(i+1)/tr.mul),
 		)
 
 		for _, valueFieldName := range tr.valueFieldNames {
