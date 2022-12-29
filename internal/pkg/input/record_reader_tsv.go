@@ -178,12 +178,6 @@ func getRecordBatchExplicitTSVHeader(
 			}
 		}
 
-		if line == "" {
-			// Reset to new schema
-			reader.headerStrings = nil
-			continue
-		}
-
 		fields := reader.fieldSplitter.Split(line)
 
 		if reader.headerStrings == nil {
