@@ -73,6 +73,7 @@ var TRANSFORMER_LOOKUP_TABLE = []TransformerSetup{
 	UTF8ToLatin1Setup,
 	UnflattenSetup,
 	UniqSetup,
+	UnspaceSetup,
 	UnsparsifySetup,
 }
 
