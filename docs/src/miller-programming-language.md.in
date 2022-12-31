@@ -31,10 +31,12 @@ GENMD-EOF
 
 GENMD-RUN-COMMAND
 mlr --c2p put '
-  $cost = $quantity * $rate;
+  $cost = $quantity * $rate; # Here is how to make a comment
   $index *= 100
 ' example.csv
 GENMD-EOF
+
+Anything from a `#` character to end of line is a code comment.
 
 One of Miller's key features is the ability to express data-transformation right there at the keyboard, interactively. But if you find yourself using expressions repeatedly, you can put everything between the single quotes into a file and refer to that using `put -f`:
 

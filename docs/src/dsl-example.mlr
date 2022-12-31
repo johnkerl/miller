@@ -1,2 +1,2 @@
-$cost = $quantity * $rate;
+$cost = $quantity * $rate; # Here is how to make a comment
 $index *= 100

@@ -73,7 +73,7 @@ purple square   false 10 9100  72.3735  8.2430 596.5747605000001
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --c2p put '</b>
-<b>  $cost = $quantity * $rate;</b>
+<b>  $cost = $quantity * $rate; # Here is how to make a comment</b>
 <b>  $index *= 100</b>
 <b>' example.csv</b>
 </pre>
@@ -91,13 +91,15 @@ yellow circle   true  9  8700  63.5058  8.3350 529.3208430000001
 purple square   false 10 9100  72.3735  8.2430 596.5747605000001
 </pre>
 
+Anything from a `#` character to end of line is a code comment.
+
 One of Miller's key features is the ability to express data-transformation right there at the keyboard, interactively. But if you find yourself using expressions repeatedly, you can put everything between the single quotes into a file and refer to that using `put -f`:
 
 <pre class="pre-highlight-in-pair">
 <b>cat dsl-example.mlr</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-$cost = $quantity * $rate;
+$cost = $quantity * $rate; # Here is how to make a comment
 $index *= 100
 </pre>
 
