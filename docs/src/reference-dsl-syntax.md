@@ -41,6 +41,7 @@ Newlines within the expression are ignored, which can help increase legibility o
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint put '</b>
+<b>  # Here is how to make a comment</b>
 <b>  $nf       = NF;</b>
 <b>  $nr       = NR;</b>
 <b>  $fnr      = FNR;</b>
@@ -61,6 +62,8 @@ pan wye 10001 0.870530722602517626 0.009854780514656930 5  8  3   2       data/s
 hat wye 10002 0.321507044286237609 0.568893318795083758 5  9  4   2       data/small2
 pan zee 10003 0.272054845593895200 0.425789896597056627 5  10 5   2       data/small2
 </pre>
+
+Anything from a `#` character to end of line is a code comment.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' \</b>

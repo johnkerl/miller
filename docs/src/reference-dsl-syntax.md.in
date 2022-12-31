@@ -12,6 +12,7 @@ Newlines within the expression are ignored, which can help increase legibility o
 
 GENMD-RUN-COMMAND
 mlr --opprint put '
+  # Here is how to make a comment
   $nf       = NF;
   $nr       = NR;
   $fnr      = FNR;
@@ -19,6 +20,8 @@ mlr --opprint put '
   $filename = FILENAME
 ' data/small data/small2
 GENMD-EOF
+
+Anything from a `#` character to end of line is a code comment.
 
 GENMD-RUN-COMMAND
 mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' \
