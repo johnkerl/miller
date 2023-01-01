@@ -2,9 +2,10 @@ package output
 
 import (
 	"bufio"
-	"encoding/csv"
 	"fmt"
 	"strings"
+
+	csv "github.com/johnkerl/miller/internal/pkg/go-csv"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
