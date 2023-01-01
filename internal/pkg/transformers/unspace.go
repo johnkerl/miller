@@ -142,7 +142,7 @@ func (tr *TransformerUnspace) transformKeysOnly(
 	newrec := mlrval.NewMlrmapAsRecord()
 	for pe := inrec.Head; pe != nil; pe = pe.Next {
 		newkey := tr.unspace(pe.Key)
-		// Reference not copy since this is ownership transer of the value from the now-abandoned inrec
+		// Reference not copy since this is ownership transfer of the value from the now-abandoned inrec
 		newrec.PutReference(newkey, pe.Value)
 	}
 	outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
