@@ -47,7 +47,7 @@ In this example I am using version 6.2.0 to 6.3.0; of course that will change fo
 
 * Check the release-specific docs:
 
-    * Look at [https://miller.readthedocs.io](https://miller.readthedocs.io) for new-version docs, after a few minutes' propagation time. Note this won't work until Miller 6 is released.
+    * Look at [https://miller.readthedocs.io](https://miller.readthedocs.io) for new-version docs, after a few minutes' propagation time.
 
 * Notify:
 
@@ -56,8 +56,9 @@ In this example I am using version 6.2.0 to 6.3.0; of course that will change fo
     * See also [README-versions.md](https://github.com/johnkerl/miller/blob/main/README-versions.md) -- distros usually catch up over time but some contacts/pings never hurt to kick-start processes after owners move on from a project they started.
     * Social-media updates.
     * Brew notes:
-      * [How to submit a version upgrade](https://github.com/Homebrew/homebrew-core/blob/HEAD/CONTRIBUTING.md#to-submit-a-version-upgrade-for-the-foo-formula)
-      * `brew bump-formula-pr --force --strict miller --url https://github.com/johnkerl/miller/releases/download/v6.2.0/miller-6.2.0.tar.gz --sha256 xxx` with `xxx` from `shasum -a 256 miller-6.2.0.tar.gz`.
+
+        * [How to submit a version upgrade](https://github.com/Homebrew/homebrew-core/blob/HEAD/CONTRIBUTING.md#to-submit-a-version-upgrade-for-the-foo-formula)
+        * `brew bump-formula-pr --force --strict miller --url https://github.com/johnkerl/miller/releases/download/v6.2.0/miller-6.2.0.tar.gz --sha256 xxx` with `xxx` from `shasum -a 256 miller-6.2.0.tar.gz`.
 
 * Afterwork:
 
