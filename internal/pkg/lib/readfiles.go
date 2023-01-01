@@ -6,10 +6,11 @@
 package lib
 
 import (
-	"encoding/csv"
 	"io/ioutil"
 	"os"
 	"strings"
+
+	csv "github.com/johnkerl/miller/internal/pkg/go-csv"
 )
 
 // LoadStringsFromFileOrDir calls LoadStringFromFile if path exists and is a

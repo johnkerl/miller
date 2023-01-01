@@ -3,11 +3,12 @@ package input
 import (
 	"bytes"
 	"container/list"
-	"encoding/csv"
 	"fmt"
 	"io"
 	"strconv"
 	"strings"
+
+	csv "github.com/johnkerl/miller/internal/pkg/go-csv"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
