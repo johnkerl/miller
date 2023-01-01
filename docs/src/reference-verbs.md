@@ -4099,7 +4099,7 @@ The primary use-case is for PPRINT output, which is space-delimited. For example
 <b>cat data/spaces.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-column 1, column 2, column 3
+column 1,column 2,column 3
 apple,ball,cat
 dale egg,fish,gale
 </pre>
@@ -4108,40 +4108,40 @@ dale egg,fish,gale
 <b>mlr --icsv --opprint cat data/spaces.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-column 1  column 2  column 3
-apple    ball      cat
-dale egg fish      gale
+column 1 column 2 column 3
+apple    ball     cat
+dale egg fish     gale
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint cat data/spaces.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-column 1  column 2  column 3
-apple    ball      cat
-dale egg fish      gale
+column 1 column 2 column 3
+apple    ball     cat
+dale egg fish     gale
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint unspace data/spaces.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-column_1 _column_2 _column_3
-apple    ball      cat
-dale_egg fish      gale
+column_1 column_2 column_3
+apple    ball     cat
+dale_egg fish     gale
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint unspace data/spaces.csv | mlr --ipprint --oxtab cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-column_1  apple
-_column_2 ball
-_column_3 cat
+column_1 apple
+column_2 ball
+column_3 cat
 
-column_1  dale_egg
-_column_2 fish
-_column_3 gale
+column_1 dale_egg
+column_2 fish
+column_3 gale
 </pre>
 
 ## unsparsify
