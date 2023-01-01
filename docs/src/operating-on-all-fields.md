@@ -24,10 +24,9 @@ Suppose you want to replace spaces with underscores in your column names:
 <b>cat data/spaces.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a b c,def,g h i
-123,4567,890
-2468,1357,3579
-9987,3312,4543
+column 1,column 2,column 3
+apple,ball,cat
+dale egg,fish,gale
 </pre>
 
 The simplest way is to use `mlr rename` with `-g` (for global replace, not just first occurrence of space within each field) and `-r` for pattern-matching (rather than explicit single-column renames):
@@ -36,20 +35,18 @@ The simplest way is to use `mlr rename` with `-g` (for global replace, not just 
 <b>mlr --csv rename -g -r ' ,_'  data/spaces.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a_b_c,def,g_h_i
-123,4567,890
-2468,1357,3579
-9987,3312,4543
+column_1,column_2,column_3
+apple,ball,cat
+dale egg,fish,gale
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --csv --opprint rename -g -r ' ,_'  data/spaces.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a_b_c def  g_h_i
-123   4567 890
-2468  1357 3579
-9987  3312 4543
+column_1 column_2 column_3
+apple    ball     cat
+dale egg fish     gale
 </pre>
 
 You can also do this with a for-loop:
@@ -69,10 +66,9 @@ $* = newrec
 <b>mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a_b_c def  g_h_i
-123   4567 890
-2468  1357 3579
-9987  3312 4543
+column_1 column_2 column_3
+apple    ball     cat
+dale egg fish     gale
 </pre>
 
 ## Bulk rename of fields with carriage returns

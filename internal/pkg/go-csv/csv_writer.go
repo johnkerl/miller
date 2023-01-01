@@ -179,4 +179,3 @@ func (w *Writer) fieldNeedsQuotes(field string) bool {
 	r1, _ := utf8.DecodeRuneInString(field)
 	return unicode.IsSpace(r1)
 }
-
