@@ -1,1 +1,1 @@
-mlr --c2p unspace -k $mlb/test/input/spaces.csv
+mlr --c2p unspace -k test/input/spaces.csv

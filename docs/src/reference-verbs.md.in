@@ -1229,6 +1229,34 @@ GENMD-RUN-COMMAND
 mlr --opprint uniq -a -c data/repeats.dkvp
 GENMD-EOF
 
+## unspace
+
+GENMD-RUN-COMMAND
+mlr unspace --help
+GENMD-EOF
+
+The primary use-case is for PPRINT output, which is space-delimited. For example:
+
+GENMD-RUN-COMMAND
+cat data/spaces.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint cat data/spaces.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint cat data/spaces.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint unspace data/spaces.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint unspace data/spaces.csv | mlr --ipprint --oxtab cat
+GENMD-EOF
+
 ## unsparsify
 
 GENMD-RUN-COMMAND

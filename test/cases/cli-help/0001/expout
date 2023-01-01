@@ -1272,6 +1272,16 @@ Options:
               With neither -c nor -n, produces unique records.
 
 ================================================================
+unspace
+Usage: mlr unspace [options]
+Replaces spaces in record keys and/or values with _. This is helpful for PPRINT output.
+Options:
+-f {x}    Replace spaces with specified filler character.
+-k        Unspace only keys, not keys and values.
+-v        Unspace only values, not keys and values.
+-h|--help Show this message.
+
+================================================================
 unsparsify
 Usage: mlr unsparsify [options]
 Prints records with the union of field names over all input records.

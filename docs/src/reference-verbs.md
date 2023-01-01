@@ -4078,6 +4078,72 @@ count color  shape    flag
 2     yellow triangle 1
 </pre>
 
+## unspace
+
+<pre class="pre-highlight-in-pair">
+<b>mlr unspace --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr unspace [options]
+Replaces spaces in record keys and/or values with _. This is helpful for PPRINT output.
+Options:
+-f {x}    Replace spaces with specified filler character.
+-k        Unspace only keys, not keys and values.
+-v        Unspace only values, not keys and values.
+-h|--help Show this message.
+</pre>
+
+The primary use-case is for PPRINT output, which is space-delimited. For example:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/spaces.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+column 1, column 2, column 3
+apple,ball,cat
+dale egg,fish,gale
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint cat data/spaces.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+column 1  column 2  column 3
+apple    ball      cat
+dale egg fish      gale
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint cat data/spaces.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+column 1  column 2  column 3
+apple    ball      cat
+dale egg fish      gale
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint unspace data/spaces.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+column_1 _column_2 _column_3
+apple    ball      cat
+dale_egg fish      gale
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint unspace data/spaces.csv | mlr --ipprint --oxtab cat</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+column_1  apple
+_column_2 ball
+_column_3 cat
+
+column_1  dale_egg
+_column_2 fish
+_column_3 gale
+</pre>
+
 ## unsparsify
 
 <pre class="pre-highlight-in-pair">
