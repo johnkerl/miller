@@ -23,6 +23,7 @@ If your `mlr version` says something like `Miller v5.10.2` or `mlr 6.0.0`, witho
 
 | Release | Docs                                                                | Release notes |
 |---------|---------------------------------------------------------------------|---------------|
+6.6.0     | [Miller 6.6.0](https://johnkerl.org/miller-docs-by-release/6.6.0)  | [Bugfixes and unspace verb](https://github.com/johnkerl/miller/releases/tag/v6.6.0) |
 6.5.0     | [Miller 6.5.0](https://johnkerl.org/miller-docs-by-release/6.5.0)  | [Bugfixes and memory-reduction optimizations](https://github.com/johnkerl/miller/releases/tag/v6.5.0) |
 6.4.0     | [Miller 6.4.0](https://johnkerl.org/miller-docs-by-release/6.4.0)  | [ mlr summary verb, exec() function, mlr cat --filename, multiline string literals, and more](https://github.com/johnkerl/miller/releases/tag/v6.4.0) |
 6.3.0     | [Miller 6.3.0](https://johnkerl.org/miller-docs-by-release/6.3.0)  | [Windows terminal colors, Latin-1, and more](https://github.com/johnkerl/miller/releases/tag/v6.3.0) |
