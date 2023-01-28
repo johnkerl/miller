@@ -1525,7 +1525,7 @@ MILLER(1)                                                            MILLER(1)
          Regex-replacement:
            '$name = sub($name, "http.*com"i, "")'
          Regex-capture:
-           'if ($a =~ "([a-z]+)_([0-9]+)) { $b = "left_\1"; $c = "right_\2" }'
+            'if ($a =~ "([a-z]+)_([0-9]+)") { $b = "left_\1"; $c = "right_\2" }'
          Built-in variables:
            '$filename = FILENAME'
          Aggregations (use mlr put -q):
@@ -3297,5 +3297,5 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-01-01                         MILLER(1)
+                                  2023-01-28                         MILLER(1)
 </pre>
