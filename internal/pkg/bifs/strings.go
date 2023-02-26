@@ -155,6 +155,73 @@ func BIF_truncate(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // ================================================================
+func BIF_leftpad(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.IsErrorOrAbsent() {
+		return input1
+	}
+	if input2.IsErrorOrAbsent() {
+		return input2
+	}
+	if input3.IsErrorOrAbsent() {
+		return input3
+	}
+
+	if !input2.IsInt() {
+		return mlrval.ERROR
+	}
+
+	inputString := input1.String()
+	padString := input3.String()
+
+	inputLength := lib.UTF8Strlen(inputString)
+	padLength := lib.UTF8Strlen(padString)
+	targetLength := input2.AcquireIntValue()
+	outputLength := inputLength
+
+	var buffer bytes.Buffer
+	for outputLength+padLength <= targetLength {
+		buffer.WriteString(padString)
+		outputLength += padLength
+	}
+	buffer.WriteString(inputString)
+
+	return mlrval.FromString(buffer.String())
+}
+
+func BIF_rightpad(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.IsErrorOrAbsent() {
+		return input1
+	}
+	if input2.IsErrorOrAbsent() {
+		return input2
+	}
+	if input3.IsErrorOrAbsent() {
+		return input3
+	}
+
+	if !input2.IsInt() {
+		return mlrval.ERROR
+	}
+
+	inputString := input1.String()
+	padString := input3.String()
+
+	inputLength := lib.UTF8Strlen(inputString)
+	padLength := lib.UTF8Strlen(padString)
+	targetLength := input2.AcquireIntValue()
+	outputLength := inputLength
+
+	var buffer bytes.Buffer
+	buffer.WriteString(inputString)
+	for outputLength+padLength <= targetLength {
+		buffer.WriteString(padString)
+		outputLength += padLength
+	}
+
+	return mlrval.FromString(buffer.String())
+}
+
+// ================================================================
 func BIF_lstrip(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		return mlrval.FromString(strings.TrimLeft(input1.AcquireStringValue(), " \t"))

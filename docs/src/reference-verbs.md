@@ -2264,7 +2264,8 @@ More example put expressions:
     '$new_field = $index**2; $qn = $quantity * $new_field'
   Regex-replacement:
     '$name = sub($name, "http.*com"i, "")'
-    'if ($a =~ "([a-z]+)_([0-9]+)") { $b = "left_\1"; $c = "right_\2" }'
+  Regex-capture:
+	'if ($a =~ "([a-z]+)_([0-9]+)") { $b = "left_\1"; $c = "right_\2" }'
   Built-in variables:
     '$filename = FILENAME'
   Aggregations (use mlr put -q):

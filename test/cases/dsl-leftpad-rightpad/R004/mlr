@@ -1,0 +1,1 @@
+$a = rightpad($a, 2, "X")
