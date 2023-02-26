@@ -1,1 +1,1 @@
-mlr --from test/input/abixy --d2p  put '$i = leftpad($i, 5, 0)'
+mlr --from test/input/abixy --d2p  put -f ${CASEDIR}/mlr
