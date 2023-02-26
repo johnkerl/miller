@@ -1,0 +1,1 @@
+mlr --from test/input/abixy --d2p  put '$a = rightpad($a, 5, "*")'

@@ -179,7 +179,7 @@ func BIF_leftpad(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	outputLength := inputLength
 
 	var buffer bytes.Buffer
-	for outputLength < targetLength {
+	for outputLength+padLength <= targetLength {
 		buffer.WriteString(padString)
 		outputLength += padLength
 	}
@@ -213,7 +213,7 @@ func BIF_rightpad(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 
 	var buffer bytes.Buffer
 	buffer.WriteString(inputString)
-	for outputLength < targetLength {
+	for outputLength+padLength <= targetLength {
 		buffer.WriteString(padString)
 		outputLength += padLength
 	}

@@ -568,7 +568,7 @@ Arrays are new in Miller 6; the substr function is older.`,
 			examples: []string{
 				`leftpad("abcdefg", 10 , "*") gives "***abcdefg".`,
 				`leftpad("abcdefg", 10 , "XY") gives "XYabcdefg".`,
-				`leftpad("1234567", 10 , "0") gives "1234567000".`,
+				`leftpad("1234567", 10 , "0") gives "0001234567".`,
 			},
 		},
 		{
@@ -579,7 +579,7 @@ Arrays are new in Miller 6; the substr function is older.`,
 			examples: []string{
 				`rightpad("abcdefg", 10 , "*") gives "abcdefg***".`,
 				`rightpad("abcdefg", 10 , "XY") gives "abcdefgXY".`,
-				`rightpad("1234567", 10 , "0") gives "0001234567".`,
+				`rightpad("1234567", 10 , "0") gives "1234567000".`,
 			},
 		},
 
