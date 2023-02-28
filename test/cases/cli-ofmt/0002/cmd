@@ -1,0 +1,1 @@
+mlr --ofmtf 6 --from test/input/abixy --d2p put -f ${CASEDIR}/mlr
