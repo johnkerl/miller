@@ -1238,9 +1238,19 @@ var TransTab = TransitionTable{
 		switch {
 		case r == 34: // ['"','"']
 			return 157
+		case r == 36: // ['$','$']
+			return 57
 		case r == 37: // ['%','%']
 			return 57
+		case r == 38: // ['&','&']
+			return 57
+		case r == 40: // ['(','(']
+			return 57
+		case r == 41: // [')',')']
+			return 57
 		case r == 42: // ['*','*']
+			return 57
+		case r == 43: // ['+','+']
 			return 57
 		case r == 46: // ['.','.']
 			return 57
@@ -1303,6 +1313,8 @@ var TransTab = TransitionTable{
 		case r == 92: // ['\','\']
 			return 57
 		case r == 93: // [']',']']
+			return 57
+		case r == 94: // ['^','^']
 			return 57
 		case r == 97: // ['a','a']
 			return 57
