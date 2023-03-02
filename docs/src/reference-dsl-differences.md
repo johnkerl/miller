@@ -67,7 +67,7 @@ mlr: cannot parse DSL expression.
 Parse error on token "$y" at line 6 column 3.
 Please check for missing semicolon.
 Expected one of:
-  $ ; > >> | ? || ^^ && ?? ??? =~ !=~ == != <=> >= < <= ^ & << >>> + - .+
+  ␚ ; > >> | ? || ^^ && ?? ??? =~ !=~ == != <=> >= < <= ^ & << >>> + - .+
   .- * / // % .* ./ .// . ** [ [[ [[[
 
 </pre>
