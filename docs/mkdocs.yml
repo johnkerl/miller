@@ -1,4 +1,4 @@
-site_name: Miller Latest Documentation
+site_name: Miller 6.6.0 Documentation
 theme:
   name: material
   favicon: images/favicon.ico
