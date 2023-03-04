@@ -140,6 +140,15 @@ Options:
 -h|--help Show this message.
 
 ================================================================
+downcase
+Usage: mlr downcase [options]
+Lowercases strings in record keys and/or values.
+Options:
+-k        Downcase only keys, not keys and values.
+-v        Downcase only values, not keys and values.
+-h|--help Show this message.
+
+================================================================
 fill-down
 Usage: mlr fill-down [options]
 If a given record has a missing value for a given field, fill that from
@@ -1300,4 +1309,13 @@ Options:
 Example: if the input is two records, one being 'a=1,b=2' and the other
 being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 'a=,b=3,c=4'.
+
+================================================================
+upcase
+Usage: mlr upcase [options]
+Uppercases strings in record keys and/or values.
+Options:
+-k        Upcase only keys, not keys and values.
+-v        Upcase only values, not keys and values.
+-h|--help Show this message.
 ================================================================
