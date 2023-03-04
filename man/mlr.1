@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2023-03-02
+.\"      Date: 2023-03-04
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2023-03-02" "\ \&" "\ \&"
+.TH "MILLER" "1" "2023-03-04" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -211,13 +211,14 @@ for all things with "map" in their names.
 .\}
 .nf
 altkv bar bootstrap cat check clean-whitespace count-distinct count
-count-similar cut decimate fill-down fill-empty filter flatten format-values
-fraction gap grep group-by group-like having-fields head histogram json-parse
-json-stringify join label latin1-to-utf8 least-frequent merge-fields
-most-frequent nest nothing put regularize remove-empty-columns rename reorder
-repeat reshape sample sec2gmtdate sec2gmt seqgen shuffle skip-trivial-records
-sort sort-within-records split stats1 stats2 step summary tac tail tee
-template top utf8-to-latin1 unflatten uniq unspace unsparsify
+count-similar cut decimate downcase fill-down fill-empty filter flatten
+format-values fraction gap grep group-by group-like having-fields head
+histogram json-parse json-stringify join label latin1-to-utf8 least-frequent
+merge-fields most-frequent nest nothing put regularize remove-empty-columns
+rename reorder repeat reshape sample sec2gmtdate sec2gmt seqgen shuffle
+skip-trivial-records sort sort-within-records split stats1 stats2 step summary
+tac tail tee template top utf8-to-latin1 unflatten uniq unspace unsparsify
+upcase
 .fi
 .if n \{\
 .RE
@@ -1216,6 +1217,20 @@ Options:
  -e Decimate by printing last of every n (default).
  -g {a,b,c} Optional group-by-field names for decimate counts, e.g. a,b,c.
  -n {n} Decimation factor (default 10).
+-h|--help Show this message.
+.fi
+.if n \{\
+.RE
+.SS "downcase"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr downcase [options]
+Lowercases strings in record keys and/or values.
+Options:
+-k        Downcase only keys, not keys and values.
+-v        Downcase only values, not keys and values.
 -h|--help Show this message.
 .fi
 .if n \{\
@@ -2640,6 +2655,20 @@ Options:
 Example: if the input is two records, one being 'a=1,b=2' and the other
 being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 \(cqa=,b=3,c=4'.
+.fi
+.if n \{\
+.RE
+.SS "upcase"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr upcase [options]
+Uppercases strings in record keys and/or values.
+Options:
+-k        Upcase only keys, not keys and values.
+-v        Upcase only values, not keys and values.
+-h|--help Show this message.
 .fi
 .if n \{\
 .RE
