@@ -2877,7 +2877,7 @@ this does not need to be modified.`,
 				recordsPerBatch, ok := lib.TryIntFromString(args[*pargi+1])
 				if !ok || recordsPerBatch <= 0 {
 					fmt.Fprintf(os.Stderr,
-						"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
+						"%s: --records-per-batch argument must be a positive integer; got \"%s\".\n",
 						"mlr", args[*pargi+1])
 					os.Exit(1)
 				}
