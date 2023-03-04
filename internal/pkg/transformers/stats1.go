@@ -55,11 +55,12 @@ Options:
 
 -i             Use interpolated percentiles, like R's type=7; default like type=1.
                Not sensical for string-valued fields.\n");
--s             Print iterative stats. Useful in tail -f contexts (in which
+-s             Print iterative stats. Useful in tail -f contexts, in which
                case please avoid pprint-format output since end of input
-               stream will never be seen).
--h|--help      Show this message.
 `)
+	fmt.Fprintln(o, "               stream will never be seen. Likewise, if input is coming from `tail -f`")
+	fmt.Fprintln(o, "               be sure to use `--records-per-batch 1`.")
+	fmt.Fprintln(o, "-h|--help      Show this message.")
 
 	fmt.Fprintln(o,
 		"Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape")

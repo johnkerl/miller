@@ -17,12 +17,12 @@ rather than looping through them explicitly.
 
 Since Miller takes the streaming approach when possible (see below for
 exceptions), you can often operate on files which are larger than your system's
-memory . It also means you can do `tail -f some-file | mlr --some-flags` and
-Miller will operate on records as they arrive one at a time.  You don't have to
-wait for and end-of-file marker (which never arrives with `tail-f`) to start
-seeing partial results. This also means if you pipe Miller's output to other
-streaming tools (like `cat`, `grep`, `sed`, and so on), they will also output
-partial results as data arrives.
+memory . It also means you can do `tail -f some-file | mlr --records-per-batch 1
+--some-flags` and Miller will operate on records as they arrive one at a time.
+You don't have to wait for and end-of-file marker (which never arrives with
+`tail-f`) to start seeing partial results. This also means if you pipe Miller's
+output to other streaming tools (like `cat`, `grep`, `sed`, and so on), they
+will also output partial results as data arrives.
 
 The statements in the [Miller programming language](miller-programming-language.md)
 (outside of optional `begin`/`end` blocks which execute before and after all
