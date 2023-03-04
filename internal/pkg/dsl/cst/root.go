@@ -127,6 +127,14 @@ func buildASTFromString(dslString string) (*dsl.AST, error) {
 		dslString = dslString[1 : len(dslString)-1]
 	}
 
+	// The comment-stripping lex expression in Miller's GOCC grammar matches from '#' to '\n' ... in
+	// the case where there is a '#', then comment text, then end-of-string without any final
+	// newline, the comment text does _not_ get stripped out and is a parse error.
+	// It's simplest to ensure, here, that DSL-expression strings have a final newline.
+	if !strings.HasSuffix(dslString, "\n") {
+		dslString += "\n"
+	}
+
 	theLexer := lexer.NewLexer([]byte(dslString))
 	theParser := parser.NewParser()
 	interfaceAST, err := theParser.Parse(theLexer)
