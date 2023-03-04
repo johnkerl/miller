@@ -824,6 +824,20 @@ Options:
 -h|--help Show this message.
 </pre>
 
+## downcase
+
+<pre class="pre-highlight-in-pair">
+<b>mlr downcase --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr downcase [options]
+Lowercases strings in record keys and/or values.
+Options:
+-k        Downcase only keys, not keys and values.
+-v        Downcase only values, not keys and values.
+-h|--help Show this message.
+</pre>
+
 ## fill-down
 
 <pre class="pre-highlight-in-pair">
@@ -4267,3 +4281,16 @@ a b v u w x
 - - 1 - 2 -
 </pre>
 
+## upcase
+
+<pre class="pre-highlight-in-pair">
+<b>mlr upcase --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr upcase [options]
+Uppercases strings in record keys and/or values.
+Options:
+-k        Upcase only keys, not keys and values.
+-v        Upcase only values, not keys and values.
+-h|--help Show this message.
+</pre>
