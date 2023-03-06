@@ -92,6 +92,7 @@ $tar \
   ./internal \
   ./regression_test.go \
   ./man \
-  ./test
+  ./test \
+  ./tools
 
 echo "Wrote   $TGZ_NAME"

@@ -191,13 +191,14 @@ MILLER(1)                                                            MILLER(1)
 
 1mVERB LIST0m
        altkv bar bootstrap cat check clean-whitespace count-distinct count
-       count-similar cut decimate fill-down fill-empty filter flatten format-values
-       fraction gap grep group-by group-like having-fields head histogram json-parse
-       json-stringify join label latin1-to-utf8 least-frequent merge-fields
-       most-frequent nest nothing put regularize remove-empty-columns rename reorder
-       repeat reshape sample sec2gmtdate sec2gmt seqgen shuffle skip-trivial-records
-       sort sort-within-records split stats1 stats2 step summary tac tail tee
-       template top utf8-to-latin1 unflatten uniq unspace unsparsify
+       count-similar cut decimate downcase fill-down fill-empty filter flatten
+       format-values fraction gap grep group-by group-like having-fields head
+       histogram json-parse json-stringify join label latin1-to-utf8 least-frequent
+       merge-fields most-frequent nest nothing put regularize remove-empty-columns
+       rename reorder repeat reshape sample sec2gmtdate sec2gmt seqgen shuffle
+       skip-trivial-records sort sort-within-records split stats1 stats2 step summary
+       tac tail tee template top utf8-to-latin1 unflatten uniq unspace unsparsify
+       upcase
 
 1mFUNCTION LIST0m
        abs acos acosh any append apply arrayify asin asinh asserting_absent
@@ -1002,6 +1003,14 @@ MILLER(1)                                                            MILLER(1)
         -e Decimate by printing last of every n (default).
         -g {a,b,c} Optional group-by-field names for decimate counts, e.g. a,b,c.
         -n {n} Decimation factor (default 10).
+       -h|--help Show this message.
+
+   1mdowncase0m
+       Usage: mlr downcase [options]
+       Lowercases strings in record keys and/or values.
+       Options:
+       -k        Downcase only keys, not keys and values.
+       -v        Downcase only values, not keys and values.
        -h|--help Show this message.
 
    1mfill-down0m
@@ -2112,6 +2121,14 @@ MILLER(1)                                                            MILLER(1)
        Example: if the input is two records, one being 'a=1,b=2' and the other
        being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
        'a=,b=3,c=4'.
+
+   1mupcase0m
+       Usage: mlr upcase [options]
+       Uppercases strings in record keys and/or values.
+       Options:
+       -k        Upcase only keys, not keys and values.
+       -v        Upcase only values, not keys and values.
+       -h|--help Show this message.
 
 1mFUNCTIONS FOR FILTER/PUT0m
    1mabs0m

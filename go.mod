@@ -18,7 +18,6 @@ go 1.15
 
 require (
 	github.com/facette/natsort v0.0.0-20181210072756-2cd4dd1e2dcb
-	github.com/goccmack/gocc v0.0.0-20230228185258-2292f9e40198 // indirect
 	github.com/johnkerl/lumin v1.0.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/lestrrat-go/strftime v1.0.6
