@@ -2870,8 +2870,9 @@ on JSON input records, where duplicate keys always result in the last one's valu
 		{
 			name: "--records-per-batch",
 			arg:  "{n}",
-			help: `This is an internal parameter for maximum number of records in a batch size. Normally
-this does not need to be modified.`,
+			help: "This is an internal parameter for maximum number of records in a batch size. Normally this does not\n" +
+				"need to be modified, except when input is from `tail -f`. See also\n" +
+				"https://miller.readthedocs.io/en/latest/reference-main-flag-list/.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				recordsPerBatch, ok := lib.TryIntFromString(args[*pargi+1])

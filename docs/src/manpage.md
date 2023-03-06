@@ -562,7 +562,9 @@ MILLER(1)                                                            MILLER(1)
        --ofmtg {n}              Use --ofmtg 6 as shorthand for --ofmt %.6g, etc.
        --records-per-batch {n}  This is an internal parameter for maximum number of
                                 records in a batch size. Normally this does not need
-                                to be modified.
+                                to be modified, except when input is from `tail -f`.
+                                See also
+                                https://miller.readthedocs.io/en/latest/reference-main-flag-list/.
        --seed {n}               with `n` of the form `12345678` or `0xcafefeed`. For
                                 `put`/`filter` `urand`, `urandint`, and `urand32`.
        --tz {timezone}          Specify timezone, overriding `$TZ` environment
@@ -3318,5 +3320,5 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-03-04                         MILLER(1)
+                                  2023-03-06                         MILLER(1)
 </pre>
