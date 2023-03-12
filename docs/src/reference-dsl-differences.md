@@ -261,4 +261,4 @@ Miller has the verbs
 [`json-stringify`](reference-verbs.md#json-stringify), and the DSL functions
 [`json_parse`](reference-dsl-builtin-functions.md#json_parse) and
 [`json_stringify`](reference-dsl-builtin-functions.md#json_stringify).
-In some other lannguages these are called `json_decode` and `json_encode`.
+In some other languages these are called `json_decode` and `json_encode`.

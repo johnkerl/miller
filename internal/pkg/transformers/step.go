@@ -605,6 +605,12 @@ var STEPPER_LOOKUP_TABLE = []tStepperLookup{
 		desc:                 "Compute ratios in field(s) between successive records",
 	},
 	{
+		name:                 "rprod",
+		stepperInputFromName: stepperRprodInputFromName,
+		stepperAllocator:     stepperRprodAlloc,
+		desc:                 "Compute running products of field(s) between successive records",
+	},
+	{
 		name:                 "rsum",
 		stepperInputFromName: stepperRsumInputFromName,
 		stepperAllocator:     stepperRsumAlloc,
@@ -978,6 +984,55 @@ func (stepper *tStepperRatio) process(
 		}
 	}
 	currec.PutCopy(stepper.outputFieldName, ratio.Copy())
+}
+
+// ================================================================
+type tStepperRprod struct {
+	rprod           *mlrval.Mlrval
+	inputFieldName  string
+	outputFieldName string
+}
+
+func stepperRprodInputFromName(
+	stepperName string,
+) *tStepperInput {
+	return &tStepperInput{
+		name:               stepperName,
+		numRecordsBackward: 0, // doesn't use record-windowing; retains its own pointer
+		numRecordsForward:  0,
+	}
+}
+
+func stepperRprodAlloc(
+	stepperInput *tStepperInput,
+	inputFieldName string,
+	_unused1 []string,
+	_unused2 []string,
+) tStepper {
+	return &tStepperRprod{
+		rprod:           mlrval.FromInt(1),
+		inputFieldName:  inputFieldName,
+		outputFieldName: inputFieldName + "_rprod",
+	}
+}
+
+func (stepper *tStepperRprod) process(
+	windowKeeper *utils.TWindowKeeper,
+) {
+	icur := windowKeeper.Get(0)
+	if icur == nil {
+		return
+	}
+	currecAndContext := icur.(*types.RecordAndContext)
+	currec := currecAndContext.Record
+	currval := currec.Get(stepper.inputFieldName)
+
+	if currval.IsVoid() {
+		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
+	} else {
+		stepper.rprod = bifs.BIF_times(currval, stepper.rprod)
+		currec.PutCopy(stepper.outputFieldName, stepper.rprod)
+	}
 }
 
 // ================================================================

@@ -63,7 +63,7 @@ regression-test: build
 # ----------------------------------------------------------------
 # Formatting
 # go fmt ./... finds experimental C files which we want to ignore.
-fmt:
+fmt format:
 	-go fmt ./cmd/...
 	-go fmt ./internal/pkg/...
 	-go fmt ./regression_test.go

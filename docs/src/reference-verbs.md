@@ -20,14 +20,14 @@ Verbs are the building blocks of how you can use Miller to process your data.
 When you type
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --icsv --opprint sort -n quanity then head -n 4 example.csv</b>
+<b>mlr --icsv --opprint sort -n quantity then head -n 4 example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag  k index quantity rate
-yellow triangle true  1 11    43.6498  9.8870
-red    square   true  2 15    79.2778  0.0130
-red    circle   true  3 16    13.8103  2.9010
-red    square   false 4 48    77.5542  7.4670
+color  shape    flag k index quantity rate
+red    circle   true 3 16    13.8103  2.9010
+yellow triangle true 1 11    43.6498  9.8870
+yellow circle   true 9 87    63.5058  8.3350
+yellow circle   true 8 73    63.9785  4.2370
 </pre>
 
 the `sort` and `head` bits are _verbs_.  See the [Miller command
@@ -3404,6 +3404,7 @@ Options:
   ewma       Exponentially weighted moving average over successive records
   from-first Compute differences in field(s) from first record
   ratio      Compute ratios in field(s) between successive records
+  rprod      Compute running products of field(s) between successive records
   rsum       Compute running sums of field(s) between successive records
   shift      Alias for shift_lag
   shift_lag  Include value(s) in field(s) from the previous record, if any
