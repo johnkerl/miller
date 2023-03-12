@@ -4,7 +4,7 @@ Verbs are the building blocks of how you can use Miller to process your data.
 When you type
 
 GENMD-RUN-COMMAND
-mlr --icsv --opprint sort -n quanity then head -n 4 example.csv
+mlr --icsv --opprint sort -n quantity then head -n 4 example.csv
 GENMD-EOF
 
 the `sort` and `head` bits are _verbs_.  See the [Miller command

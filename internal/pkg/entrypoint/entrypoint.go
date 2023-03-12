@@ -90,7 +90,7 @@ func processToStdout(
 //
 // I could have implemented this with a single construction of the transformers
 // and having each transformers implement a Reset() method.  However, having
-// effectively two initalizers per transformers -- constructor and reset method
+// effectively two initializers per transformers -- constructor and reset method
 // -- I'd surely miss some logic somewhere.  With in-place mode being a less
 // frequently used code path, this would likely lead to latent bugs. So this
 // approach leads to greater code stability.

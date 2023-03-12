@@ -1933,6 +1933,7 @@ MILLER(1)                                                            MILLER(1)
          ewma       Exponentially weighted moving average over successive records
          from-first Compute differences in field(s) from first record
          ratio      Compute ratios in field(s) between successive records
+         rprod      Compute running products of field(s) between successive records
          rsum       Compute running sums of field(s) between successive records
          shift      Alias for shift_lag
          shift_lag  Include value(s) in field(s) from the previous record, if any
@@ -3337,5 +3338,5 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-03-06                         MILLER(1)
+                                  2023-03-12                         MILLER(1)
 </pre>
