@@ -1,0 +1,1 @@
+mlr --nidx --from ${CASEDIR}/input put -S -f ${CASEDIR}/mlr

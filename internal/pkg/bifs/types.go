@@ -55,24 +55,51 @@ func BIF_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return to_int_dispositions[input1.Type()](input1)
 }
 
-func BIF_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	intBase, ok := input2.GetIntValue()
-	if !ok {
-		return mlrval.ERROR
-	}
-	if input1.IsVoid() {
-		return mlrval.VOID
-	}
-	if !input1.IsString() {
-		return mlrval.ERROR
-	}
-
-	i, ok := lib.TryIntFromStringWithBase(input1.AcquireStringValue(), intBase)
+// ----------------------------------------------------------------
+func string_to_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	i, ok := lib.TryIntFromStringWithBase(input1.AcquireStringValue(), input2.AcquireIntValue())
 	if ok {
 		return mlrval.FromInt(i)
 	} else {
 		return mlrval.ERROR
 	}
+}
+
+func int_to_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(int64(input1.AcquireIntValue()))
+}
+
+func float_to_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(int64(input1.AcquireFloatValue()))
+}
+
+func bool_to_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.AcquireBoolValue() == true {
+		return mlrval.FromInt(1)
+	} else {
+		return mlrval.FromInt(0)
+	}
+}
+
+var to_int_with_base_dispositions = [mlrval.MT_DIM]BinaryFunc{
+	/*INT    */ int_to_int_with_base,
+	/*FLOAT  */ float_to_int_with_base,
+	/*BOOL   */ bool_to_int_with_base,
+	/*VOID   */ _void,
+	/*STRING */ string_to_int_with_base,
+	/*ARRAY  */ _erro,
+	/*MAP    */ _erro,
+	/*FUNC   */ _erro,
+	/*ERROR  */ _erro,
+	/*NULL   */ _null,
+	/*ABSENT */ _absn,
+}
+
+func BIF_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	if !input2.IsInt() {
+		return mlrval.ERROR
+	}
+	return to_int_with_base_dispositions[input1.Type()](input1, input2)
 }
 
 // ----------------------------------------------------------------
