@@ -55,6 +55,26 @@ func BIF_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return to_int_dispositions[input1.Type()](input1)
 }
 
+func BIF_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	intBase, ok := input2.GetIntValue()
+	if !ok {
+		return mlrval.ERROR
+	}
+	if input1.IsVoid() {
+		return mlrval.VOID
+	}
+	if !input1.IsString() {
+		return mlrval.ERROR
+	}
+
+	i, ok := lib.TryIntFromStringWithBase(input1.AcquireStringValue(), intBase)
+	if ok {
+		return mlrval.FromInt(i)
+	} else {
+		return mlrval.ERROR
+	}
+}
+
 // ----------------------------------------------------------------
 func string_to_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	f, ok := lib.TryFloatFromString(input1.AcquireStringValue())
