@@ -1529,10 +1529,25 @@ Note that NaN has the property that NaN != NaN, so you need 'is_nan(x)' rather t
 		},
 
 		{
-			name:      "int",
-			class:     FUNC_CLASS_CONVERSION,
-			help:      "Convert int/float/bool/string to int.",
-			unaryFunc: bifs.BIF_int,
+			name:  "int",
+			class: FUNC_CLASS_CONVERSION,
+			help: `Convert int/float/bool/string to int.
+If the second argument is omitted and the first argument is a string, base is inferred from the first argument's prefix.
+If the second argument is provided and the first argument is a string, the second argument is used as the base.
+If the second argument is provided and the first argument is not a string, the second argument is ignored.`,
+
+			unaryFunc:          bifs.BIF_int,
+			binaryFunc:         bifs.BIF_int_with_base,
+			hasMultipleArities: true,
+			examples: []string{
+				`int("345") gives decimal 345 (base-10/decimal input is inferred)`,
+				`int("0xff") gives decimal 255 (base-16/hexadecimal input is inferred)`,
+				`int("0377") gives decimal 255 (base-8/octal input is inferred)`,
+				`int("0b11010011") gives decimal 211 which is hexadecimal 0xd3 (base-2/binary input is inferred)`,
+				`int("0377", 10) gives decimal 377`,
+				`int(345, 16) gives decimal 345`,
+				`int(string(345), 16) gives decimal 837`,
+			},
 		},
 
 		{

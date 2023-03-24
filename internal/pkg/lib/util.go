@@ -122,6 +122,27 @@ func TryIntFromString(input string) (int64, bool) {
 	return 0, false
 }
 
+// TryIntFromStringWithBase allows the user to choose the base that's used,
+// rather than inferring from 0x prefix, etc as TryIntFromString does.
+func TryIntFromStringWithBase(input string, base int64) (int64, bool) {
+	// Go's strconv parses "1_2" as 12; not OK for Miller syntax. (Also not valid JSON.)
+	for i := 0; i < len(input); i++ {
+		if input[i] == '_' {
+			return 0, false
+		}
+	}
+
+	i64, ierr := strconv.ParseInt(input, int(base), 64)
+	if ierr == nil {
+		return i64, true
+	}
+	u64, uerr := strconv.ParseUint(input, int(base), 64)
+	if uerr == nil {
+		return int64(u64), true
+	}
+	return 0, false
+}
+
 func TryFloatFromString(input string) (float64, bool) {
 	// Go's strconv parses "1_2.3_4" as 12.34; not OK for Miller syntax. (Also not valid JSON.)
 	for i := 0; i < len(input); i++ {
