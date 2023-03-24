@@ -2388,7 +2388,13 @@ MILLER(1)                                                            MILLER(1)
         (class=system #args=0) Returns the hostname as a string.
 
    1mint0m
-        (class=conversion #args=1) Convert int/float/bool/string to int.
+        (class=conversion #args=1,2) Convert int/float/bool/string to int. If the second argument is omitted, base is inferred from the input prefix; if the second argument is provided, it's used as the base, and the first argument must be a string.
+       Examples:
+       int("345") gives decimal 345 (base-10/decimal input is inferred)
+       int("0xff") gives decimal 255 (base-16/hexadecimal input is inferred)
+       int("0377") gives decimal 255 (base-8/octal input is inferred)
+       int("0x11010011") gives decimal 211 which is hexadecimal 0xd3 (base-2/binary input is inferred)
+       int("0377, 10") gives decimal 377
 
    1minvqnorm0m
         (class=math #args=1) Inverse of normal cumulative distribution function. Note that invqorm(urand()) is normally distributed.
@@ -3338,5 +3344,5 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-03-12                         MILLER(1)
+                                  2023-03-24                         MILLER(1)
 </pre>
