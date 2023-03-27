@@ -126,6 +126,30 @@ func BIF_substr_0_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // ================================================================
+// index(string, substring) returns the index of substring within string (if found), or -1 if not
+// found.
+
+func BIF_index(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.IsAbsent() {
+		return mlrval.ABSENT
+	}
+	if input1.IsError() {
+		return mlrval.ERROR
+	}
+	sinput1 := input1.String()
+	sinput2 := input2.String()
+
+	// Handle UTF-8 correctly, since Go's strings.Index counts bytes
+	iindex := strings.Index(sinput1, sinput2)
+	if iindex < 0 {
+		return mlrval.FromInt(int64(iindex))
+	}
+
+	// Go indices are 0-up; Miller indices are 1-up.
+	return mlrval.FromInt(lib.UTF8Strlen(sinput1[:iindex]) + 1)
+}
+
+// ================================================================
 func BIF_truncate(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
