@@ -210,12 +210,12 @@ MILLER(1)                                                            MILLER(1)
        capitalize cbrt ceil clean_whitespace collapse_whitespace concat cos cosh
        depth dhms2fsec dhms2sec erf erfc every exec exp expm1 flatten float floor
        fmtifnum fmtnum fold format fsec2dhms fsec2hms get_keys get_values
-       gmt2localtime gmt2sec gssub gsub haskey hexfmt hms2fsec hms2sec hostname int
-       invqnorm is_absent is_array is_bool is_boolean is_empty is_empty_map is_error
-       is_float is_int is_map is_nan is_nonempty_map is_not_array is_not_empty
-       is_not_map is_not_null is_null is_numeric is_present is_string joink joinkv
-       joinv json_parse json_stringify latin1_to_utf8 leafcount leftpad length
-       localtime2gmt localtime2sec log log10 log1p logifit lstrip madd mapdiff
+       gmt2localtime gmt2sec gssub gsub haskey hexfmt hms2fsec hms2sec hostname index
+       int invqnorm is_absent is_array is_bool is_boolean is_empty is_empty_map
+       is_error is_float is_int is_map is_nan is_nonempty_map is_not_array
+       is_not_empty is_not_map is_not_null is_null is_numeric is_present is_string
+       joink joinkv joinv json_parse json_stringify latin1_to_utf8 leafcount leftpad
+       length localtime2gmt localtime2sec log log10 log1p logifit lstrip madd mapdiff
        mapexcept mapselect mapsum max md5 mexp min mmul msub os pow qnorm reduce
        regextract regextract_or_else rightpad round roundm rstrip sec2dhms sec2gmt
        sec2gmtdate sec2hms sec2localdate sec2localtime select sgn sha1 sha256 sha512
@@ -2387,6 +2387,14 @@ MILLER(1)                                                            MILLER(1)
    1mhostname0m
         (class=system #args=0) Returns the hostname as a string.
 
+   1mindex0m
+        (class=string #args=2) Returns the index (1-based) of the second argument within the first. Returns -1 if the second argument isn't a substring of the first. Stringifies non-string inputs. Uses UTF-8 encoding to count characters, not bytes.
+       Examples:
+       index("abcde", "e") gives 5
+       index("abcde", "x") gives 01
+       index(12345, 34) gives 3
+       index("fort", "t") gives 5
+
    1mint0m
         (class=conversion #args=1,2) Convert int/float/bool/string to int. If the second argument is omitted and the first argument is a string, base is inferred from the first argument's prefix. If the second argument is provided and the first argument is a string, the second argument is used as the base. If the second argument is provided and the first argument is not a string, the second argument is ignored.
        Examples:
@@ -3346,5 +3354,5 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-03-24                         MILLER(1)
+                                  2023-03-27                         MILLER(1)
 </pre>

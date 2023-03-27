@@ -538,6 +538,18 @@ array and string indices, but, this is a backward-compatibility issue with Mille
 Arrays are new in Miller 6; the substr function is older.`,
 			ternaryFunc: bifs.BIF_substr_0_up,
 		},
+		{
+			name:       "index",
+			class:      FUNC_CLASS_STRING,
+			help:       `Returns the index (1-based) of the second argument within the first. Returns -1 if the second argument isn't a substring of the first. Stringifies non-string inputs. Uses UTF-8 encoding to count characters, not bytes.`,
+			binaryFunc: bifs.BIF_index,
+			examples: []string{
+				`index("abcde", "e") gives 5`,
+				`index("abcde", "x") gives 01`,
+				`index(12345, 34) gives 3`,
+				`index("forêt", "t") gives 5`,
+			},
+		},
 
 		{
 			name:      "tolower",
