@@ -20,7 +20,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@4d34df0c2316fe8122ab82dc22947d607c0c91f9
       with:
-        go-version: 1.15
+        go-version: 1.18
 
     - name: Build
       run: make build
