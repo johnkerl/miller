@@ -1,1 +1,1 @@
-${MLR} :  unknown time zone this-is-not-a-valid-timezone-name
+mlr: TZ environment variable appears malformed: "this-is-not-a-valid-timezone-name"

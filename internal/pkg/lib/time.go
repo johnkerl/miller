@@ -16,9 +16,10 @@ import (
 // platform this is necessary for *changing* TZ mid-process: e.g.  if a DSL
 // statement does 'ENV["TZ"] = Asia/Istanbul'.
 func SetTZFromEnv() error {
-	location, err := time.LoadLocation(os.Getenv("TZ"))
+	tzenv := os.Getenv("TZ")
+	location, err := time.LoadLocation(tzenv)
 	if err != nil {
-		return err
+		return fmt.Errorf("TZ environment variable appears malformed: \"%s\"", tzenv)
 	}
 	time.Local = location
 	return nil
