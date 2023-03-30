@@ -53,7 +53,7 @@ func Main() MainReturn {
 
 	options, recordTransformers, err := climain.ParseCommandLine(os.Args)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
+		fmt.Fprintln(os.Stderr, "mlr:", err)
 		os.Exit(1)
 	}
 
