@@ -30,7 +30,7 @@ GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
 GENMD-EOF
 
-Mulltiple formats including JSON:
+Multiple formats including JSON:
 
 GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json

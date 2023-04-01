@@ -46,7 +46,7 @@ Join multiple data sources on key columns:
 <b>mlr join -j account_id -f accounts.dat then group-by account_name balances.dat</b>
 </pre>
 
-Mulltiple formats including JSON:
+Multiple formats including JSON:
 
 <pre class="pre-highlight-non-pair">
 <b>mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json</b>
