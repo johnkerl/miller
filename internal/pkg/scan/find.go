@@ -37,6 +37,9 @@ func FindScanType(sinput string) ScanType {
 	if i0 == '-' {
 		return findScanTypePositiveNumberOrString(input[1:])
 	}
+	if i0 == '+' {
+		return findScanTypePositiveNumberOrString(input[1:])
+	}
 	if i0 >= '0' && i0 <= '9' {
 		return findScanTypePositiveNumberOrString(input)
 	}
