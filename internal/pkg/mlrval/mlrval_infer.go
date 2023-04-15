@@ -142,6 +142,9 @@ func inferHexInt(mv *Mlrval) *Mlrval {
 	if mv.printrep[0] == '-' {
 		input = mv.printrep[3:]
 		negate = true
+	} else if mv.printrep[0] == '+' {
+		input = mv.printrep[3:]
+		negate = false
 	} else {
 		input = mv.printrep[2:]
 		negate = false
@@ -207,6 +210,9 @@ func inferBaseInt(mv *Mlrval, base int) *Mlrval {
 	if mv.printrep[0] == '-' {
 		input = mv.printrep[3:]
 		negate = true
+	} else if mv.printrep[0] == '+' {
+		input = mv.printrep[3:]
+		negate = false
 	} else {
 		input = mv.printrep[2:]
 		negate = false
