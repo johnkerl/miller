@@ -6,9 +6,9 @@ AST:
 * statement block
     * assignment "="
         * direct field value "y"
-        * operator "??"
-            * operator "*"
-                * int literal "1"
+        * operator "*"
+            * int literal "1"
+            * operator "??"
                 * int literal "2"
-            * int literal "3"
+                * int literal "3"
 

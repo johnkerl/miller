@@ -28,6 +28,8 @@ Operators are listed in order of decreasing precedence, highest first.
 |-------------------------------|---------------|
 | `()` `{}` `[]`                | left to right |
 | `**`                          | right to left |
+| `???`                         | left to right |
+| `??`                          | left to right |
 | `!` `~` unary`+` unary`-`     | right to left |
 | `.`                           | left to right |
 | `*` `/` `//` `%`              | left to right |
@@ -38,8 +40,6 @@ Operators are listed in order of decreasing precedence, highest first.
 | `|`                           | left to right |
 | `<` `<=` `>` `>=`             | left to right |
 | `==` `!=` `=~` `!=~` `<=>`    | left to right |
-| `???`                         | left to right |
-| `??`                          | left to right |
 | `&&`                          | left to right |
 | `^^`                          | left to right |
 | `||`                          | left to right |
