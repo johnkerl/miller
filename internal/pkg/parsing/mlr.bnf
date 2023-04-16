@@ -1402,19 +1402,7 @@ LogicalXORTerm
 ;
 
 LogicalAndTerm
-  : LogicalAndTerm "&&" AbsentCoalesceTerm
-    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | AbsentCoalesceTerm
-;
-
-AbsentCoalesceTerm
-  : AbsentCoalesceTerm "??" EmptyCoalesceTerm
-    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | EmptyCoalesceTerm
-;
-
-EmptyCoalesceTerm
-  : EmptyCoalesceTerm "???" EqneTerm
+  : LogicalAndTerm "&&" EqneTerm
     << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | EqneTerm
 ;
@@ -1489,6 +1477,18 @@ UnaryOpTerm
   | ".-" UnaryOpTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
   | "!"  UnaryOpTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
   | "~"  UnaryOpTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | AbsentCoalesceTerm
+;
+
+AbsentCoalesceTerm
+  : AbsentCoalesceTerm "??" EmptyCoalesceTerm
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | EmptyCoalesceTerm
+;
+
+EmptyCoalesceTerm
+  : EmptyCoalesceTerm "???" PowTerm
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | PowTerm
 ;
 
