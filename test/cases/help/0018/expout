@@ -1,3 +1,5 @@
+--csv-trim-leading-space
+Trims leading spaces in CSV data. Use this for data like '"foo", "bar' which is non-RFC-4180 compliant, but common.
 --csv
 Use CSV format for input and output data.
 --csvlite

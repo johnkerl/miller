@@ -2174,6 +2174,15 @@ var CSVTSVOnlyFlagSection = FlagSection{
 		},
 
 		{
+			name: "--csv-trim-leading-space",
+			help: `Trims leading spaces in CSV data. Use this for data like '"foo", "bar' which is non-RFC-4180 compliant, but common.`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.CSVTrimLeadingSpace = true
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--quote-all",
 			help: "Force double-quoting of CSV fields.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
