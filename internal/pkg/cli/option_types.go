@@ -56,6 +56,7 @@ type TReaderOptions struct {
 	UseImplicitCSVHeader bool
 	AllowRaggedCSVInput  bool
 	CSVLazyQuotes        bool
+	CSVTrimLeadingSpace  bool
 
 	CommentHandling TCommentHandling
 	CommentString   string

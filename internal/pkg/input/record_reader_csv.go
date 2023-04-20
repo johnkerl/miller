@@ -18,10 +18,11 @@ import (
 
 // ----------------------------------------------------------------
 type RecordReaderCSV struct {
-	readerOptions   *cli.TReaderOptions
-	recordsPerBatch int64 // distinct from readerOptions.RecordsPerBatch for join/repl
-	ifs0            byte  // Go's CSV library only lets its 'Comma' be a single character
-	csvLazyQuotes   bool  // Maps directly to Go's CSV library's LazyQuotes
+	readerOptions       *cli.TReaderOptions
+	recordsPerBatch     int64 // distinct from readerOptions.RecordsPerBatch for join/repl
+	ifs0                byte  // Go's CSV library only lets its 'Comma' be a single character
+	csvLazyQuotes       bool  // Maps directly to Go's CSV library's LazyQuotes
+	csvTrimLeadingSpace bool  // Maps directly to Go's CSV library's TrimLeadingSpace
 
 	filename   string
 	rowNumber  int64
@@ -40,10 +41,11 @@ func NewRecordReaderCSV(
 		return nil, fmt.Errorf("for CSV, IFS can only be a single character")
 	}
 	return &RecordReaderCSV{
-		readerOptions:   readerOptions,
-		ifs0:            readerOptions.IFS[0],
-		recordsPerBatch: recordsPerBatch,
-		csvLazyQuotes:   readerOptions.CSVLazyQuotes,
+		readerOptions:       readerOptions,
+		ifs0:                readerOptions.IFS[0],
+		recordsPerBatch:     recordsPerBatch,
+		csvLazyQuotes:       readerOptions.CSVLazyQuotes,
+		csvTrimLeadingSpace: readerOptions.CSVTrimLeadingSpace,
 	}, nil
 }
 
@@ -105,6 +107,7 @@ func (reader *RecordReaderCSV) processHandle(
 	csvReader := csv.NewReader(NewBOMStrippingReader(handle))
 	csvReader.Comma = rune(reader.ifs0)
 	csvReader.LazyQuotes = reader.csvLazyQuotes
+	csvReader.TrimLeadingSpace = reader.csvTrimLeadingSpace
 	csvRecordsChannel := make(chan *list.List, recordsPerBatch)
 	go channelizedCSVRecordScanner(csvReader, csvRecordsChannel, downstreamDoneChannel, errorChannel,
 		recordsPerBatch)

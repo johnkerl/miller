@@ -316,6 +316,9 @@ MILLER(1)                                                            MILLER(1)
                                 fill remaining keys with empty string. If a data line
                                 has more fields than the header line, use integer
                                 field labels as in the implicit-header case.
+       --csv-trim-leading-space Trims leading spaces in CSV data. Use this for data
+                                like '"foo", "bar' which is non-RFC-4180 compliant,
+                                but common.
        --headerless-csv-output or --ho or --headerless-tsv-output
                                 Print only CSV/TSV data lines; do not print CSV/TSV
                                 header lines.
@@ -3354,5 +3357,5 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-04-16                         MILLER(1)
+                                  2023-04-20                         MILLER(1)
 </pre>

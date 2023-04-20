@@ -117,6 +117,7 @@ These are flags which are applicable to CSV format.
 **Flags:**
 
 * `--allow-ragged-csv-input or --ragged or --allow-ragged-tsv-input`: If a data line has fewer fields than the header line, fill remaining keys with empty string. If a data line has more fields than the header line, use integer field labels as in the implicit-header case.
+* `--csv-trim-leading-space`: Trims leading spaces in CSV data. Use this for data like '"foo", "bar' which is non-RFC-4180 compliant, but common.
 * `--headerless-csv-output or --ho or --headerless-tsv-output`: Print only CSV/TSV data lines; do not print CSV/TSV header lines.
 * `--implicit-csv-header or --headerless-csv-input or --hi or --implicit-tsv-header`: Use 1,2,3,... as field labels, rather than from line 1 of input files. Tip: combine with `label` to recreate missing headers.
 * `--lazy-quotes`: Accepts quotes appearing in unquoted fields, and non-doubled quotes appearing in quoted fields.
