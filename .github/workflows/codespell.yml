@@ -29,7 +29,7 @@ jobs:
       # Run linter against code base
       # https://github.com/codespell-project/codespell
       - name: Codespell
-        uses: codespell-project/actions-codespell@57beb9f38f49d773d641ac555d1565c3b6a59938
+        uses: codespell-project/actions-codespell@94259cd8be02ad2903ba34a22d9c13de21a74461
         with:
           check_filenames: true
           ignore_words_file: .codespellignore
