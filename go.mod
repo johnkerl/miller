@@ -25,7 +25,7 @@ require (
 	github.com/nine-lives-later/go-windows-terminal-sequences v1.0.4
 	github.com/pkg/profile v1.7.0
 	github.com/stretchr/testify v1.8.2
-	golang.org/x/sys v0.7.0
+	golang.org/x/sys v0.8.0
 	golang.org/x/term v0.7.0
 )
 
