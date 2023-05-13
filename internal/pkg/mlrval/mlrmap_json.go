@@ -169,6 +169,14 @@ func (entry *MlrmapEntry) JSONParseInPlace() {
 	}
 }
 
+func (entry *MlrmapEntry) JSONTryParseInPlace() {
+	input := entry.Value.String()
+	pmv, err := TryUnmarshalJSON([]byte(input))
+	if err == nil {
+		entry.Value = pmv
+	}
+}
+
 // StringifyValuesRecursively is nominally for the `--jvquoteall` flag.
 func (mlrmap *Mlrmap) StringifyValuesRecursively() {
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
