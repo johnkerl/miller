@@ -1,0 +1,19 @@
+[
+{
+  "foo": "ts",
+  "bar": "some value",
+  "baz": 10
+},
+{
+  "foo": "ts",
+  "bar": (error),
+  "baz": 10
+},
+{
+  "foo": "ts",
+  "bar": {
+    "key": "val"
+  },
+  "baz": 10
+}
+]

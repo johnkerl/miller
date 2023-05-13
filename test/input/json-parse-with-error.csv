@@ -1,0 +1,4 @@
+foo,bar,baz
+"""ts""","""some value""",10
+"""ts""","{key:""val""}",10
+"""ts""","{""key"":""val""}",10
