@@ -31,7 +31,7 @@ func transformerJSONParseUsage(
 	)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {...} Comma-separated list of field names to json-parse (default all).\n")
-	fmt.Fprintf(o, "-k       If supplied, then on parse fail for any cell, keep the (unparseable)\n")
+	fmt.Fprintf(o, "-k       If supplied, then on parse fail for any cell, keep the (unparsable)\n")
 	fmt.Fprintf(o, "         input value for the cell.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 }

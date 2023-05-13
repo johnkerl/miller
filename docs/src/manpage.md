@@ -1269,7 +1269,7 @@ MILLER(1)                                                            MILLER(1)
        Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -&gt; [1,2,3].
        Options:
        -f {...} Comma-separated list of field names to json-parse (default all).
-       -k       If supplied, then on parse fail for any cell, keep the (unparseable)
+       -k       If supplied, then on parse fail for any cell, keep the (unparsable)
                 input value for the cell.
        -h|--help Show this message.
 
