@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2023-04-20
+.\"      Date: 2023-05-13
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2023-04-20" "\ \&" "\ \&"
+.TH "MILLER" "1" "2023-05-13" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1575,6 +1575,8 @@ Usage: mlr json-parse [options]
 Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -> [1,2,3].
 Options:
 -f {...} Comma-separated list of field names to json-parse (default all).
+-k       If supplied, then on parse fail for any cell, keep the (unparsable)
+         input value for the cell.
 -h|--help Show this message.
 .fi
 .if n \{\

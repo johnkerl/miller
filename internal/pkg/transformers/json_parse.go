@@ -31,6 +31,8 @@ func transformerJSONParseUsage(
 	)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {...} Comma-separated list of field names to json-parse (default all).\n")
+	fmt.Fprintf(o, "-k       If supplied, then on parse fail for any cell, keep the (unparsable)\n")
+	fmt.Fprintf(o, "         input value for the cell.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 }
 
@@ -46,6 +48,7 @@ func transformerJSONParseParseCLI(
 	argi := *pargi
 	verb := args[argi]
 	argi++
+	keepFailed := false
 
 	var fieldNames []string = nil
 
@@ -66,6 +69,9 @@ func transformerJSONParseParseCLI(
 		} else if opt == "-f" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
+		} else if opt == "-k" {
+			keepFailed = true
+
 		} else {
 			transformerJSONParseUsage(os.Stderr)
 			os.Exit(1)
@@ -79,6 +85,7 @@ func transformerJSONParseParseCLI(
 
 	transformer, err := NewTransformerJSONParse(
 		fieldNames,
+		keepFailed,
 	)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -92,6 +99,7 @@ func transformerJSONParseParseCLI(
 type TransformerJSONParse struct {
 	// input
 	fieldNameSet map[string]bool
+	keepFailed   bool
 
 	// state
 	recordTransformerFunc RecordTransformerFunc
@@ -99,6 +107,7 @@ type TransformerJSONParse struct {
 
 func NewTransformerJSONParse(
 	fieldNames []string,
+	keepFailed bool,
 ) (*TransformerJSONParse, error) {
 	var fieldNameSet map[string]bool = nil
 	if fieldNames != nil {
@@ -107,6 +116,7 @@ func NewTransformerJSONParse(
 
 	retval := &TransformerJSONParse{
 		fieldNameSet: fieldNameSet,
+		keepFailed:   keepFailed,
 	}
 
 	retval.recordTransformerFunc = retval.jsonParseAll
@@ -139,7 +149,11 @@ func (tr *TransformerJSONParse) jsonParseAll(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			pe.JSONParseInPlace()
+			if tr.keepFailed {
+				pe.JSONTryParseInPlace()
+			} else {
+				pe.JSONParseInPlace()
+			}
 		}
 		outputRecordsAndContexts.PushBack(inrecAndContext)
 	} else {
@@ -158,7 +172,11 @@ func (tr *TransformerJSONParse) jsonParseSome(
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if tr.fieldNameSet[pe.Key] {
-				pe.JSONParseInPlace()
+				if tr.keepFailed {
+					pe.JSONTryParseInPlace()
+				} else {
+					pe.JSONParseInPlace()
+				}
 			}
 		}
 		outputRecordsAndContexts.PushBack(inrecAndContext)

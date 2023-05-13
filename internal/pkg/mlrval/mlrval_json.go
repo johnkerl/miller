@@ -115,6 +115,16 @@ func (mv *Mlrval) UnmarshalJSON(inputBytes []byte) error {
 }
 
 // ----------------------------------------------------------------
+func TryUnmarshalJSON(inputBytes []byte) (pmv *Mlrval, err error) {
+	decoder := json.NewDecoder(bytes.NewReader(inputBytes))
+	pmv, eof, err := MlrvalDecodeFromJSON(decoder)
+	if eof {
+		err = fmt.Errorf("mlr: JSON parser: unexpected premature EOF.")
+	}
+	return pmv, err
+}
+
+// ----------------------------------------------------------------
 func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 	mlrval *Mlrval,
 	eof bool,
