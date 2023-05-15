@@ -10,6 +10,7 @@ import (
 
 	"github.com/mattn/go-isatty"
 
+	"github.com/johnkerl/miller/internal/pkg/auxents"
 	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/dsl/cst"
@@ -325,12 +326,14 @@ func listSeparatorRegexAliases() {
 func helpAuxents() {
 	fmt.Print(`Miller has a few otherwise-standalone executables packaged within it.
 They do not participate in any other parts of Miller.
-Please "mlr aux-list" for more information.
 `)
+	fmt.Println()
+	auxents.ShowAuxEntries(os.Stdout)
 }
 
 func helpTerminals() {
-	fmt.Println("Terminals include on-line help, regression-test entry point, and the REPL.")
+	fmt.Println("Terminals include mlr help, the regression-test entry point mlr regtest, and the REPL mlr repl.")
+	// We can't invoke the terminal-lister since that would create a cyclic package reference.
 }
 
 // ----------------------------------------------------------------
