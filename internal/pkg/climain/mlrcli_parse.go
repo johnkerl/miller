@@ -74,10 +74,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/johnkerl/miller/internal/pkg/auxents/help"
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
+	"github.com/johnkerl/miller/internal/pkg/terminals"
+	"github.com/johnkerl/miller/internal/pkg/terminals/help"
 	"github.com/johnkerl/miller/internal/pkg/transformers"
 	"github.com/johnkerl/miller/internal/pkg/version"
 )
@@ -99,10 +100,10 @@ func ParseCommandLine(
 	}
 
 	// Pass one as described at the top of this file.
-	flagSequences, verbSequences, dataFileNames := parseCommandLinePassOne(args)
+	flagSequences, terminalSequence, verbSequences, dataFileNames := parseCommandLinePassOne(args)
 
 	// Pass two as described at the top of this file.
-	return parseCommandLinePassTwo(flagSequences, verbSequences, dataFileNames)
+	return parseCommandLinePassTwo(flagSequences, terminalSequence, verbSequences, dataFileNames)
 }
 
 // parseCommandLinePassOne is as described at the top of this file.
@@ -110,10 +111,12 @@ func parseCommandLinePassOne(
 	args []string,
 ) (
 	flagSequences [][]string,
+	terminalSequence []string,
 	verbSequences [][]string,
 	dataFileNames []string,
 ) {
 	flagSequences = make([][]string, 0)
+	terminalSequence = nil
 	verbSequences = make([][]string, 0)
 	dataFileNames = make([]string, 0)
 
@@ -143,7 +146,7 @@ func parseCommandLinePassOne(
 				os.Exit(0)
 			} else if help.ParseTerminalUsage(args[argi]) {
 				// Exiting flag: handle it immediately.
-				// Most help is in the 'mlr help' auxent but there are a few
+				// Most help is in the 'mlr help' terminal but there are a few
 				// shorthands like 'mlr -h' and 'mlr -F'.
 				os.Exit(0)
 
@@ -164,6 +167,12 @@ func parseCommandLinePassOne(
 				fmt.Fprintf(os.Stderr, "Please run \"%s --help\" for usage information.\n", "mlr")
 				os.Exit(1)
 			}
+
+		} else if onFirst && terminals.Dispatchable(args[argi]) {
+			// mlr help, mlr regtest, etc -- _everything_ on the command line after this
+			// will be handled by that terminal
+			terminalSequence = args[argi:]
+			break
 
 		} else if onFirst || args[argi] == "then" || args[argi] == "+" {
 			// The first verb in the then-chain can *optionally* be preceded by
@@ -212,22 +221,26 @@ func parseCommandLinePassOne(
 		}
 	}
 
-	for ; argi < argc; argi++ {
-		dataFileNames = append(dataFileNames, args[argi])
+	if terminalSequence == nil {
+
+		for ; argi < argc; argi++ {
+			dataFileNames = append(dataFileNames, args[argi])
+		}
+
+		if len(verbSequences) == 0 {
+			fmt.Fprintf(os.Stderr, "%s: no verb supplied.\n", "mlr")
+			help.MainUsage(os.Stderr)
+			os.Exit(1)
+		}
 	}
 
-	if len(verbSequences) == 0 {
-		fmt.Fprintf(os.Stderr, "%s: no verb supplied.\n", "mlr")
-		help.MainUsage(os.Stderr)
-		os.Exit(1)
-	}
-
-	return flagSequences, verbSequences, dataFileNames
+	return flagSequences, terminalSequence, verbSequences, dataFileNames
 }
 
 // parseCommandLinePassTwo is as described at the top of this file.
 func parseCommandLinePassTwo(
 	flagSequences [][]string,
+	terminalSequence []string,
 	verbSequences [][]string,
 	dataFileNames []string,
 ) (
@@ -298,6 +311,12 @@ func parseCommandLinePassTwo(
 		if err != nil {
 			return options, recordTransformers, err
 		}
+	}
+
+	if terminalSequence != nil {
+		terminals.Dispatch(terminalSequence)
+		// They are expected to exit the process
+		panic("mlr: internal coding error: terminal did not exit the process")
 	}
 
 	// Now process the verb-sequences from pass one, with options-struct set up

@@ -98,7 +98,7 @@ So, in broad overview, the key packages are:
     * This package defines the grammar for Miller's domain-specific language (DSL) for the Miller `put` and `filter` verbs. And, GOCC is a joy to use. :)
     * It is used on the terms of its open-source license.
   * [golang.org/x/term](https://pkg.go.dev/golang.org/x/term):
-    * Just a one-line Miller callsite for is-a-terminal checking for the [Miller REPL](./internal/pkg/auxents/repl/README.md).
+    * Just a one-line Miller callsite for is-a-terminal checking for the [Miller REPL](./internal/pkg/terminals/repl/README.md).
     * It is used on the terms of its open-source license.
 * See also [./go.mod](go.mod). Setup:
   * `go get github.com/goccmack/gocc`

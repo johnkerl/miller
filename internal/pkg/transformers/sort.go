@@ -196,8 +196,8 @@ func transformerSortParseCLI(
 			// expanded to "-x -y -z" while "--xyz" is left intact. This is OK
 			// to do globally (before any verb such as this one sees the
 			// command line) since Miller is quite consistent (in main, verbs,
-			// and auxents) that multi-character options start with two dashes,
-			// e.g.  "--csv" ...
+			// auxents, and terminals) that multi-character options start with
+			// two dashes, e.g.  "--csv" ...
 			//
 			// ... with the sole exception being -nf/-nr, right here. This goes
 			// back to the very start of Miller, and we don't want to break the

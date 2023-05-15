@@ -7,7 +7,6 @@ package regtest
 import (
 	"fmt"
 	"os"
-	"path"
 	"strconv"
 	"strings"
 )
@@ -16,8 +15,7 @@ const defaultPath = "./test/cases"
 
 // ================================================================
 func regTestUsage(verbName string, o *os.File, exitCode int) {
-	exeName := path.Base(os.Args[0])
-	fmt.Fprintf(o, "Usage: %s %s [options] [one or more directories/files]\n", exeName, verbName)
+	fmt.Fprintf(o, "Usage: mlr %s [options] [one or more directories/files]\n", verbName)
 	fmt.Fprintf(o, "If no directories/files are specified, the directory %s is used by default.\n", defaultPath)
 	fmt.Fprintf(o, "Recursively walks the directory/ies looking for foo.cmd files having Miller command-lines,\n")
 	fmt.Fprintf(o, "with foo.expout and foo.experr files having expected stdout and stderr, respectively.\n")
@@ -41,10 +39,10 @@ func regTestUsage(verbName string, o *os.File, exitCode int) {
 // Here the args are the full Miller command line: "mlr regtest --foo bar".
 func RegTestMain(args []string) int {
 
-	exeName := args[0]
-	verbName := args[1]
+	exeName := os.Args[0]
+	verbName := args[0]
 	argc := len(args)
-	argi := 2
+	argi := 1
 	verbosityLevel := 0
 	doPopulate := false
 	plainMode := false

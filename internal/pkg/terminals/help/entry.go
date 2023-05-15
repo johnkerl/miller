@@ -10,6 +10,7 @@ import (
 
 	"github.com/mattn/go-isatty"
 
+	"github.com/johnkerl/miller/internal/pkg/auxents"
 	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/dsl/cst"
@@ -56,7 +57,7 @@ var handlerLookupTable = tHandlerLookupTable{}
 var shorthandLookupTable = tShorthandTable{}
 
 func init() {
-	// For things like 'mlr help foo', invoked through the auxent framework
+	// For things like 'mlr help foo', invoked through the terminals framework
 	// which goes through our HelpMain().
 	handlerLookupTable = tHandlerLookupTable{
 		sections: []tHandlerInfoSection{
@@ -71,7 +72,8 @@ func init() {
 			{
 				name: "Flags",
 				handlerInfos: []tHandlerInfo{
-					{name: "flags", zaryHandlerFunc: showFlagHelp},
+					{name: "flags", zaryHandlerFunc: showFlagsHelp},
+					{name: "flag", varArgHandlerFunc: helpForFlag},
 					{name: "list-separator-aliases", zaryHandlerFunc: listSeparatorAliases},
 					{name: "list-separator-regex-aliases", zaryHandlerFunc: listSeparatorRegexAliases},
 					// Per-section entries will be computed and installed below
@@ -108,6 +110,7 @@ func init() {
 				name: "Other",
 				handlerInfos: []tHandlerInfo{
 					{name: "auxents", zaryHandlerFunc: helpAuxents},
+					{name: "terminals", zaryHandlerFunc: helpTerminals},
 					{name: "mlrrc", zaryHandlerFunc: helpMlrrc},
 					{name: "output-colorization", zaryHandlerFunc: helpOutputColorization},
 					{name: "type-arithmetic-info", zaryHandlerFunc: helpTypeArithmeticInfo},
@@ -183,11 +186,12 @@ func init() {
 }
 
 // ================================================================
-// For things like 'mlr help foo', invoked through the auxent framework which
-// goes through our HelpMain().  Here, the args are the full Miller command
-// line: "mlr help foo bar".
+// For things like 'mlr help foo', invoked through the terminals framework which
+// goes through our HelpMain().  Here, the args are the terminal part of the full
+// Miller command line: if the latter was "mlr --some-flag help foo bar" then
+// the former is "help foo bar".
 func HelpMain(args []string) int {
-	args = args[2:]
+	args = args[1:]
 
 	// "mlr help" and nothing else
 	if len(args) == 0 {
@@ -308,8 +312,20 @@ func listTopics() {
 }
 
 // ----------------------------------------------------------------
-func showFlagHelp() {
+func showFlagsHelp() {
 	cli.FLAG_TABLE.ShowHelp()
+}
+
+func helpForFlag(args []string) {
+	for i, arg := range args {
+		if i > 0 {
+			fmt.Println()
+		}
+		fmt.Printf("%s:\n", arg)
+		if !cli.FLAG_TABLE.ShowHelpForFlag(arg) {
+			fmt.Println("Not found.")
+		}
+	}
 }
 
 func listSeparatorAliases() {
@@ -320,14 +336,17 @@ func listSeparatorRegexAliases() {
 	cli.ListSeparatorRegexAliasesForOnlineHelp()
 }
 
-// ----------------------------------------------------------------
 func helpAuxents() {
 	fmt.Print(`Miller has a few otherwise-standalone executables packaged within it.
 They do not participate in any other parts of Miller.
-Please "mlr aux-list" for more information.
 `)
-	// imports github.com/johnkerl/miller/internal/pkg/auxents: import cycle not allowed
-	// auxents.ShowAuxEntries(o)
+	fmt.Println()
+	auxents.ShowAuxEntries(os.Stdout)
+}
+
+func helpTerminals() {
+	fmt.Println("Terminals include mlr help, the regression-test entry point mlr regtest, and the REPL mlr repl.")
+	// We can't invoke the terminal-lister since that would create a cyclic package reference.
 }
 
 // ----------------------------------------------------------------
@@ -498,7 +517,7 @@ func helpTypeArithmeticInfo() {
 
 // ----------------------------------------------------------------
 // listFlagSections et al. are for webdoc/manpage autogen in the miller/docs
-// and miller/man subdirectories. Unlike showFlagHelp where all looping over
+// and miller/man subdirectories. Unlike showFlagsHelp where all looping over
 // the flags table, its sections, and flags within each section is done within
 // this Go program, by contrast the following few methods expose the hierarchy
 // to standard output, letting the calling programs (nominally Ruby autogen

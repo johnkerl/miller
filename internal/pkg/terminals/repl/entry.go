@@ -77,12 +77,13 @@ at the Miller REPL prompt.
 	os.Exit(exitCode)
 }
 
-// Here the args are the full Miller command line: "mlr repl foo bar".
+// Here the args are the full Miller command line: if the latter was "mlr
+// --some-flag repl foo bar" then the former is "repl foo bar".
 func ReplMain(args []string) int {
-	exeName := path.Base(args[0])
-	replName := args[1]
+	exeName := os.Args[0]
+	replName := args[0]
 	argc := len(args)
-	argi := 2
+	argi := 1
 
 	showStartupBanner := true
 	showPrompts := true
@@ -184,14 +185,14 @@ func ReplMain(args []string) int {
 
 	err = repl.handleSession(os.Stdin)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s %s: %v", repl.exeName, repl.replName, err)
+		fmt.Fprintf(os.Stderr, "mlr %s: %v", repl.replName, err)
 		os.Exit(1)
 	}
 
 	repl.bufferedRecordOutputStream.Flush()
 	err = repl.closeBufferedOutputStream()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s %s: %v", repl.exeName, repl.replName, err)
+		fmt.Fprintf(os.Stderr, "mlr %s: %v", repl.replName, err)
 		os.Exit(1)
 	}
 	return 0
