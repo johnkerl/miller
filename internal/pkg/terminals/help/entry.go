@@ -72,7 +72,8 @@ func init() {
 			{
 				name: "Flags",
 				handlerInfos: []tHandlerInfo{
-					{name: "flags", zaryHandlerFunc: showFlagHelp},
+					{name: "flags", zaryHandlerFunc: showFlagsHelp},
+					{name: "flag", varArgHandlerFunc: helpForFlag},
 					{name: "list-separator-aliases", zaryHandlerFunc: listSeparatorAliases},
 					{name: "list-separator-regex-aliases", zaryHandlerFunc: listSeparatorRegexAliases},
 					// Per-section entries will be computed and installed below
@@ -311,8 +312,20 @@ func listTopics() {
 }
 
 // ----------------------------------------------------------------
-func showFlagHelp() {
+func showFlagsHelp() {
 	cli.FLAG_TABLE.ShowHelp()
+}
+
+func helpForFlag(args []string) {
+	for i, arg := range args {
+		if i > 0 {
+			fmt.Println()
+		}
+		fmt.Printf("%s:\n", arg)
+		if !cli.FLAG_TABLE.ShowHelpForFlag(arg) {
+			fmt.Println("Not found.")
+		}
+	}
 }
 
 func listSeparatorAliases() {
@@ -504,7 +517,7 @@ func helpTypeArithmeticInfo() {
 
 // ----------------------------------------------------------------
 // listFlagSections et al. are for webdoc/manpage autogen in the miller/docs
-// and miller/man subdirectories. Unlike showFlagHelp where all looping over
+// and miller/man subdirectories. Unlike showFlagsHelp where all looping over
 // the flags table, its sections, and flags within each section is done within
 // this Go program, by contrast the following few methods expose the hierarchy
 // to standard output, letting the calling programs (nominally Ruby autogen
