@@ -9,9 +9,9 @@ import (
 // is a keystroke-saver for the user.
 //
 // This is OK to do here globally since Miller is quite consistent (in main,
-// verbs, and auxents) that multi-character options start with two dashes, e.g.
-// "--csv". (The sole exception is the sort verb's -nf/-nr which are handled
-// specially there.)
+// verbs, auxents, and terminals) that multi-character options start with two
+// dashes, e.g.  "--csv". (The sole exception is the sort verb's -nf/-nr which
+// are handled specially there.)
 //
 // Additionally, we split "--foo=bar" into "--foo" and "bar".
 func Getoptify(inargs []string) []string {

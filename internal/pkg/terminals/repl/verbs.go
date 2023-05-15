@@ -181,8 +181,8 @@ func handleLoad(repl *Repl, args []string) bool {
 // ----------------------------------------------------------------
 func usageOpen(repl *Repl) {
 	fmt.Printf(
-		":open {one or more data-file names in the format specified by %s %s}.\n",
-		repl.exeName, repl.replName,
+		":open {one or more data-file names in the format specified by mlr %s}.\n",
+		repl.replName,
 	)
 	fmt.Print(
 		`Then you can type :read to load the next record. Then any interactive
@@ -216,14 +216,14 @@ func openFilesPreCheck(repl *Repl, args []string) bool {
 	for _, arg := range args {
 		fileInfo, err := os.Stat(arg)
 		if err != nil {
-			fmt.Printf("%s %s: could not open \"%s\"\n",
-				repl.exeName, repl.replName, arg,
+			fmt.Printf("mlr %s: could not open \"%s\"\n",
+				repl.replName, arg,
 			)
 			return false
 		}
 		if fileInfo.IsDir() {
-			fmt.Printf("%s %s: \"%s\" is a directory.\n",
-				repl.exeName, repl.replName, arg,
+			fmt.Printf("mlr %s: \"%s\" is a directory.\n",
+				repl.replName, arg,
 			)
 			return false
 		}
@@ -271,8 +271,8 @@ func handleReopen(repl *Repl, args []string) bool {
 func usageRead(repl *Repl) {
 	fmt.Println(":read with no arguments.")
 	fmt.Printf(
-		"Reads in the next record from file(s) listed by :open, or by %s %s.\n",
-		repl.exeName, repl.replName,
+		"Reads in the next record from file(s) listed by :open, or by mlr %s.\n",
+		repl.replName,
 	)
 	fmt.Println("Then you can operate on it with interactive statements, or :main, and you can")
 	fmt.Println("write it out using :write.")
@@ -340,8 +340,8 @@ func handleContext(repl *Repl, args []string) bool {
 func usageSkip(repl *Repl) {
 	fmt.Println(":skip {n} to read n records without invoking :main statements or printing the records.")
 	fmt.Printf(
-		"Reads in the next record from file(s) listed by :open, or by %s %s.\n",
-		repl.exeName, repl.replName,
+		"Reads in the next record from file(s) listed by :open, or by mlr %s.\n",
+		repl.replName,
 	)
 	fmt.Println("Then you can operate on it with interactive statements, or :main, and you can")
 	fmt.Println("write it out using :write.")
@@ -389,8 +389,8 @@ func handleSkip(repl *Repl, args []string) bool {
 func usageProcess(repl *Repl) {
 	fmt.Println(":process {n} to read n records, invoking :main statements on them, and printing the records.")
 	fmt.Printf(
-		"Reads in the next record from file(s) listed by :open, or by %s %s.\n",
-		repl.exeName, repl.replName,
+		"Reads in the next record from file(s) listed by :open, or by mlr %s.\n",
+		repl.replName,
 	)
 	fmt.Println("Then you can operate on it with interactive statements, or :main, and you can")
 	fmt.Println("write it out using :write.")
@@ -615,8 +615,8 @@ func skipOrProcessRecord(
 func usageWrite(repl *Repl) {
 	fmt.Println(":write with no arguments.")
 	fmt.Println("Sends the current record (maybe modified by statements you enter)")
-	fmt.Printf("to standard output, with format as specified by %s %s.\n",
-		repl.exeName, repl.replName)
+	fmt.Printf("to standard output, with format as specified by mlr %s.\n",
+		repl.replName)
 }
 func handleWrite(repl *Repl, args []string) bool {
 	if len(args) != 1 {
@@ -683,8 +683,8 @@ func handleRedirectWrite(repl *Repl, args []string) bool {
 	)
 	if err != nil {
 		fmt.Printf(
-			"%s %s: couldn't open \"%s\" for write.\n",
-			repl.exeName, repl.replName, filename,
+			"mlr %s: couldn't open \"%s\" for write.\n",
+			repl.replName, filename,
 		)
 	}
 	fmt.Printf("Redirecting record output to \"%s\"\n", filename)
@@ -714,8 +714,8 @@ func handleRedirectAppend(repl *Repl, args []string) bool {
 	)
 	if err != nil {
 		fmt.Printf(
-			"%s %s: couldn't open \"%s\" for write.\n",
-			repl.exeName, repl.replName, filename,
+			"mlr %s: couldn't open \"%s\" for write.\n",
+			repl.replName, filename,
 		)
 	}
 	fmt.Printf("Redirecting record output to \"%s\"\n", filename)
@@ -1022,8 +1022,7 @@ to record-processing using the put/filter DSL (domain-specific language).`)
 * Define user-defined functions/subroutines using func and subr.
 * Specify statements to be executed on each record -- which are anything outside of begin/end/func/subr.
 * Example:
-  %s --icsv --ojson put 'begin {print "HELLO"} $z = $x + $y; end {print "GOODBYE"}`,
-		repl.exeName)
+  mlr --icsv --ojson put 'begin {print "HELLO"} $z = $x + $y; end {print "GOODBYE"}`)
 	fmt.Println()
 	fmt.Println()
 

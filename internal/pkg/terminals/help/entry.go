@@ -56,7 +56,7 @@ var handlerLookupTable = tHandlerLookupTable{}
 var shorthandLookupTable = tShorthandTable{}
 
 func init() {
-	// For things like 'mlr help foo', invoked through the auxent framework
+	// For things like 'mlr help foo', invoked through the terminals framework
 	// which goes through our HelpMain().
 	handlerLookupTable = tHandlerLookupTable{
 		sections: []tHandlerInfoSection{
@@ -108,6 +108,7 @@ func init() {
 				name: "Other",
 				handlerInfos: []tHandlerInfo{
 					{name: "auxents", zaryHandlerFunc: helpAuxents},
+					{name: "terminals", zaryHandlerFunc: helpTerminals},
 					{name: "mlrrc", zaryHandlerFunc: helpMlrrc},
 					{name: "output-colorization", zaryHandlerFunc: helpOutputColorization},
 					{name: "type-arithmetic-info", zaryHandlerFunc: helpTypeArithmeticInfo},
@@ -183,11 +184,12 @@ func init() {
 }
 
 // ================================================================
-// For things like 'mlr help foo', invoked through the auxent framework which
-// goes through our HelpMain().  Here, the args are the full Miller command
-// line: "mlr help foo bar".
+// For things like 'mlr help foo', invoked through the terminals framework which
+// goes through our HelpMain().  Here, the args are the terminal part of the full
+// Miller command line: if the latter was "mlr --some-flag help foo bar" then
+// the former is "help foo bar".
 func HelpMain(args []string) int {
-	args = args[2:]
+	args = args[1:]
 
 	// "mlr help" and nothing else
 	if len(args) == 0 {
@@ -320,14 +322,15 @@ func listSeparatorRegexAliases() {
 	cli.ListSeparatorRegexAliasesForOnlineHelp()
 }
 
-// ----------------------------------------------------------------
 func helpAuxents() {
 	fmt.Print(`Miller has a few otherwise-standalone executables packaged within it.
 They do not participate in any other parts of Miller.
 Please "mlr aux-list" for more information.
 `)
-	// imports github.com/johnkerl/miller/internal/pkg/auxents: import cycle not allowed
-	// auxents.ShowAuxEntries(o)
+}
+
+func helpTerminals() {
+	fmt.Println("Terminals include on-line help, regression-test entry point, and the REPL.")
 }
 
 // ----------------------------------------------------------------

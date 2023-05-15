@@ -316,8 +316,8 @@ func (ft *FlagTable) GetDowndashSectionNames() []string {
 // since in Go you needn't specify all struct initializers, so for example a
 // Flag struct-initializer which doesn't say `help: "..."` will have empty help
 // string. This nil-checking doesn't need to be done on every Miller
-// invocation, but rather, only at build time. The `mlr help` auxent has an
-// entry point wherein a regression-test case can do `mlr help nil-check` and
+// invocation, but rather, only at build time. The `mlr help` terminal has an
+// entrypoint wherein a regression-test case can do `mlr help nil-check` and
 // make this function exits cleanly.
 func (ft *FlagTable) NilCheck() {
 	lib.InternalCodingErrorWithMessageIf(ft.sections == nil, "Nil table sections")
