@@ -141,6 +141,7 @@ MILLER(1)                                                            MILLER(1)
          mlr help file-formats
        Flags:
          mlr help flags
+         mlr help flag
          mlr help list-separator-aliases
          mlr help list-separator-regex-aliases
          mlr help comments-in-data-flags
@@ -173,6 +174,7 @@ MILLER(1)                                                            MILLER(1)
          mlr help keyword
        Other:
          mlr help auxents
+         mlr help terminals
          mlr help mlrrc
          mlr help output-colorization
          mlr help type-arithmetic-info
@@ -801,16 +803,12 @@ MILLER(1)                                                            MILLER(1)
        --rs {string}            Specify RS for input and output.
 
 1mAUXILIARY COMMANDS0m
-       Available subcommands:
-         aux-list
-         hex
-         lecat
-         termcvt
-         unhex
-         help
-         regtest
-         repl
-         version
+       Available entries:
+         mlr aux-list
+         mlr hex
+         mlr lecat
+         mlr termcvt
+         mlr unhex
        For more information, please invoke mlr {subcommand} --help.
 
 1mMLRRC0m
@@ -1203,17 +1201,18 @@ MILLER(1)                                                            MILLER(1)
        Options:
        -i  Use case-insensitive search.
        -v  Invert: pass through records which do not match the regex.
+       -a  Only grep for values, not keys and values.
        -h|--help Show this message.
        Note that "mlr filter" is more powerful, but requires you to know field names.
-       By contrast, "mlr grep" allows you to regex-match the entire record. It does
-       this by formatting each record in memory as DKVP, using command-line-specified
-       ORS/OFS/OPS, and matching the resulting line against the regex specified
-       here. In particular, the regex is not applied to the input stream: if you
-       have CSV with header line "x,y,z" and data line "1,2,3" then the regex will
-       be matched, not against either of these lines, but against the DKVP line
-       "x=1,y=2,z=3".  Furthermore, not all the options to system grep are supported,
-       and this command is intended to be merely a keystroke-saver. To get all the
-       features of system grep, you can do
+       By contrast, "mlr grep" allows you to regex-match the entire record. It does this
+       by formatting each record in memory as DKVP (or NIDX, if -a is supplied), using
+       command-line-specified ORS/OFS/OPS, and matching the resulting line against the
+       regex specified here. In particular, the regex is not applied to the input
+       stream: if you have CSV with header line "x,y,z" and data line "1,2,3" then the
+       regex will be matched, not against either of these lines, but against the DKVP
+       line "x=1,y=2,z=3".  Furthermore, not all the options to system grep are
+       supported, and this command is intended to be merely a keystroke-saver. To get
+       all the features of system grep, you can do
          "mlr --odkvp ... | grep ... | mlr --idkvp ..."
 
    1mgroup-by0m
@@ -3359,5 +3358,5 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-05-13                         MILLER(1)
+                                  2023-06-03                         MILLER(1)
 </pre>
