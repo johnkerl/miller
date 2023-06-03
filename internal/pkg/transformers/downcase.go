@@ -29,6 +29,9 @@ func transformerDowncaseUsage(
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-k        Downcase only keys, not keys and values.\n")
 	fmt.Fprintf(o, "-v        Downcase only values, not keys and values.\n")
+	// xxx -u -l -t
+	// xxx -f
+	// xxx -t
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 }
 
