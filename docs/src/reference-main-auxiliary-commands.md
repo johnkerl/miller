@@ -22,16 +22,12 @@ There are a few nearly-standalone programs which have a little to do with the re
 <b>mlr aux-list</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-Available subcommands:
-  aux-list
-  hex
-  lecat
-  termcvt
-  unhex
-  help
-  regtest
-  repl
-  version
+Available entries:
+  mlr aux-list
+  mlr hex
+  mlr lecat
+  mlr termcvt
+  mlr unhex
 For more information, please invoke mlr {subcommand} --help.
 </pre>
 

@@ -769,6 +769,13 @@ can split it into several files, one for each distinct `id`. See the [section
 on tee statements](reference-dsl-output-statements.md#tee-statements) for an
 example.
 
+## terminals
+
+These include `mlr help`, `mlr regtest`, `mlr repl`, and `mlr version`.  They
+aren't verbs but they can be preceded by various command-line flags.  They're in
+contrast to [auxents](#auxents) which are effectively standalone programs
+packaged with Miller.
+
 ## terminator
 
 Used in two senses:

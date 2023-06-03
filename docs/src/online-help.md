@@ -49,6 +49,7 @@ Essentials:
   mlr help file-formats
 Flags:
   mlr help flags
+  mlr help flag
   mlr help list-separator-aliases
   mlr help list-separator-regex-aliases
   mlr help comments-in-data-flags
@@ -81,6 +82,7 @@ Keywords:
   mlr help keyword
 Other:
   mlr help auxents
+  mlr help terminals
   mlr help mlrrc
   mlr help output-colorization
   mlr help type-arithmetic-info
