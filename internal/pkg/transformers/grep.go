@@ -30,18 +30,19 @@ func transformerGrepUsage(
 	fmt.Fprint(o, "Options:\n")
 	fmt.Fprint(o, "-i  Use case-insensitive search.\n")
 	fmt.Fprint(o, "-v  Invert: pass through records which do not match the regex.\n")
+	fmt.Fprint(o, "-a  Only grep for values, not keys and values.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	fmt.Fprintf(o, `Note that "%s filter" is more powerful, but requires you to know field names.
-By contrast, "%s grep" allows you to regex-match the entire record. It does
-this by formatting each record in memory as DKVP, using command-line-specified
-ORS/OFS/OPS, and matching the resulting line against the regex specified
-here. In particular, the regex is not applied to the input stream: if you
-have CSV with header line "x,y,z" and data line "1,2,3" then the regex will
-be matched, not against either of these lines, but against the DKVP line
-"x=1,y=2,z=3".  Furthermore, not all the options to system grep are supported,
-and this command is intended to be merely a keystroke-saver. To get all the
-features of system grep, you can do
+By contrast, "%s grep" allows you to regex-match the entire record. It does this
+by formatting each record in memory as DKVP (or NIDX, if -a is supplied), using
+command-line-specified ORS/OFS/OPS, and matching the resulting line against the
+regex specified here. In particular, the regex is not applied to the input
+stream: if you have CSV with header line "x,y,z" and data line "1,2,3" then the
+regex will be matched, not against either of these lines, but against the DKVP
+line "x=1,y=2,z=3".  Furthermore, not all the options to system grep are
+supported, and this command is intended to be merely a keystroke-saver. To get
+all the features of system grep, you can do
   "%s --odkvp ... | grep ... | %s --idkvp ..."
 `, "mlr", "mlr", "mlr", "mlr")
 }
@@ -61,6 +62,7 @@ func transformerGrepParseCLI(
 
 	ignoreCase := false
 	invert := false
+	valuesOnly := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
@@ -81,6 +83,9 @@ func transformerGrepParseCLI(
 
 		} else if opt == "-v" {
 			invert = true
+
+		} else if opt == "-a" {
+			valuesOnly = true
 
 		} else {
 			transformerGrepUsage(os.Stderr)
@@ -116,6 +121,7 @@ func transformerGrepParseCLI(
 	transformer, err := NewTransformerGrep(
 		regexp,
 		invert,
+		valuesOnly,
 	)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -127,17 +133,20 @@ func transformerGrepParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerGrep struct {
-	regexp *regexp.Regexp
-	invert bool
+	regexp     *regexp.Regexp
+	invert     bool
+	valuesOnly bool
 }
 
 func NewTransformerGrep(
 	regexp *regexp.Regexp,
 	invert bool,
+	valuesOnly bool,
 ) (*TransformerGrep, error) {
 	tr := &TransformerGrep{
-		regexp: regexp,
-		invert: invert,
+		regexp:     regexp,
+		invert:     invert,
+		valuesOnly: valuesOnly,
 	}
 	return tr, nil
 }
@@ -153,7 +162,12 @@ func (tr *TransformerGrep) Transform(
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		inrecAsString := inrec.ToDKVPString()
+		var inrecAsString string
+		if tr.valuesOnly {
+			inrecAsString = inrec.ToNIDXString()
+		} else {
+			inrecAsString = inrec.ToDKVPString()
+		}
 		matches := tr.regexp.Match([]byte(inrecAsString))
 		if tr.invert {
 			if !matches {
