@@ -1,0 +1,13 @@
+mkdir 0020; echo mlr --from test/input.cases-csv --c2j case -u > 0020/cmd
+mkdir 0021; echo mlr --from test/input.cases-csv --c2j case -l > 0021/cmd
+mkdir 0022; echo mlr --from test/input.cases-csv --c2j case -s > 0022/cmd
+mkdir 0023; echo mlr --from test/input.cases-csv --c2j case -t > 0023/cmd
+mkdir 0024; echo mlr --from test/input.cases-csv --c2j case -k -u > 0024/cmd
+mkdir 0025; echo mlr --from test/input.cases-csv --c2j case -k -l > 0025/cmd
+mkdir 0026; echo mlr --from test/input.cases-csv --c2j case -k -s > 0026/cmd
+mkdir 0027; echo mlr --from test/input.cases-csv --c2j case -k -t > 0027/cmd
+mkdir 0028; echo mlr --from test/input.cases-csv --c2j case -v -u > 0028/cmd
+mkdir 0029; echo mlr --from test/input.cases-csv --c2j case -v -l > 0029/cmd
+mkdir 0030; echo mlr --from test/input.cases-csv --c2j case -v -s > 0030/cmd
+mkdir 0031; echo mlr --from test/input.cases-csv --c2j case -v -t > 0031/cmd
+mkdir 0032; echo mlr --from test/input.cases-csv --c2j case -u apple,ball then case -l cat,dog > 0032/cmd
