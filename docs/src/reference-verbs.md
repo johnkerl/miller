@@ -233,6 +233,45 @@ orange 0.4802164827586204  290
 green  0.5129018241860459  1075
 </pre>
 
+## case
+
+<pre class="pre-highlight-in-pair">
+<b>mlr case --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr case [options]
+Uppercases strings in record keys and/or values.
+Options:
+-k  Case only keys, not keys and values.
+-v  Case only values, not keys and values.
+-f  {a,b,c} Specify which field names to case (default: all)
+-u  Convert to uppercase
+-l  Convert to lowercase
+-s  Convert to sentence case (capitalize first letter)
+-t  Convert to title case (capitalize words)
+-h|--help Show this message.
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>mlr --from test/input/cases.csv --icsv --ojson case -u</b>
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>mlr --from test/input/cases.csv --icsv --ojson case -u -k</b>
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>mlr --from test/input/cases.csv --icsv --ojson case -u -v</b>
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>mlr --from test/input/cases.csv --icsv --ojson case -k -t then case -v -s</b>
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>mlr --from test/input/cases.csv --icsv --ojson case -u -f apple,ball then case -l -f cat,dog</b>
+</pre>
+
 ## cat
 
 Most useful for format conversions (see [File Formats](file-formats.md)) and concatenating multiple same-schema CSV files to have the same header:
@@ -821,20 +860,6 @@ Options:
  -e Decimate by printing last of every n (default).
  -g {a,b,c} Optional group-by-field names for decimate counts, e.g. a,b,c.
  -n {n} Decimation factor (default 10).
--h|--help Show this message.
-</pre>
-
-## downcase
-
-<pre class="pre-highlight-in-pair">
-<b>mlr downcase --help</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-Usage: mlr downcase [options]
-Lowercases strings in record keys and/or values.
-Options:
--k        Downcase only keys, not keys and values.
--v        Downcase only values, not keys and values.
 -h|--help Show this message.
 </pre>
 
@@ -4287,18 +4312,4 @@ a b v u w x
 - 2 - 1 - -
 1 - 2 - - 3
 - - 1 - 2 -
-</pre>
-
-## upcase
-
-<pre class="pre-highlight-in-pair">
-<b>mlr upcase --help</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-Usage: mlr upcase [options]
-Uppercases strings in record keys and/or values.
-Options:
--k        Upcase only keys, not keys and values.
--v        Upcase only values, not keys and values.
--h|--help Show this message.
 </pre>
