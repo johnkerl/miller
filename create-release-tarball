@@ -53,6 +53,8 @@ fi
 tar=/usr/bin/tar
 if [ -x /usr/local/bin/gtar ]; then
   tar=/usr/local/bin/gtar
+elif [ -x /opt/homebrew/bin/gtar ]; then
+  tar=/opt/homebrew/bin/gtar
 fi
 if [ ! -x "$tar" ]; then
   echo "$0: "$tar" is not executable. Please edit this script with the path." 1>&2
