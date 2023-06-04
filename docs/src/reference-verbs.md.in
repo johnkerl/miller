@@ -127,6 +127,32 @@ orange 0.4802164827586204  290
 green  0.5129018241860459  1075
 GENMD-EOF
 
+## case
+
+GENMD-RUN-COMMAND
+mlr case --help
+GENMD-EOF
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+mlr --from test/input/cases.csv --icsv --ojson case -u
+GENMD-EOF
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+mlr --from test/input/cases.csv --icsv --ojson case -u -k
+GENMD-EOF
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+mlr --from test/input/cases.csv --icsv --ojson case -u -v
+GENMD-EOF
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+mlr --from test/input/cases.csv --icsv --ojson case -k -t then case -v -s
+GENMD-EOF
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+mlr --from test/input/cases.csv --icsv --ojson case -u -f apple,ball then case -l -f cat,dog
+GENMD-EOF
+
 ## cat
 
 Most useful for format conversions (see [File Formats](file-formats.md)) and concatenating multiple same-schema CSV files to have the same header:
@@ -295,12 +321,6 @@ GENMD-EOF
 
 GENMD-RUN-COMMAND
 mlr decimate --help
-GENMD-EOF
-
-## downcase
-
-GENMD-RUN-COMMAND
-mlr downcase --help
 GENMD-EOF
 
 ## fill-down
@@ -1293,10 +1313,4 @@ GENMD-EOF
 
 GENMD-RUN-COMMAND
 mlr --ijson --opprint unsparsify -f a,b,u,v,w,x then regularize data/sparse.json
-GENMD-EOF
-
-## upcase
-
-GENMD-RUN-COMMAND
-mlr upcase --help
 GENMD-EOF
