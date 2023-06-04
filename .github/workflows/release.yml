@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  GO_VERSION: 1.17.6
+  GO_VERSION: 1.18.10
 
 jobs:
   release:
@@ -44,6 +44,6 @@ jobs:
         #if: startsWith(github.ref, 'refs/tags/v')
         with:
           version: latest
-          args: release -f .goreleaser.yml --rm-dist
+          args: release -f .goreleaser.yml --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
