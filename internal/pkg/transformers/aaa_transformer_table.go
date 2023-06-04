@@ -14,6 +14,7 @@ var TRANSFORMER_LOOKUP_TABLE = []TransformerSetup{
 	AltkvSetup,
 	BarSetup,
 	BootstrapSetup,
+	CaseSetup,
 	CatSetup,
 	CheckSetup,
 	CleanWhitespaceSetup,
@@ -22,7 +23,6 @@ var TRANSFORMER_LOOKUP_TABLE = []TransformerSetup{
 	CountSimilarSetup,
 	CutSetup,
 	DecimateSetup,
-	DowncaseSetup,
 	FillDownSetup,
 	FillEmptySetup,
 	FilterSetup,
@@ -76,7 +76,6 @@ var TRANSFORMER_LOOKUP_TABLE = []TransformerSetup{
 	UniqSetup,
 	UnspaceSetup,
 	UnsparsifySetup,
-	UpcaseSetup,
 }
 
 func ShowHelpForTransformer(verb string) bool {
