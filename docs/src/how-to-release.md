@@ -45,9 +45,16 @@ In this example I am using version 6.2.0 to 6.3.0; of course that will change fo
     * Before marking the release as public, download an executable from among the generated binaries and make sure its `mlr version` prints what you expect -- else, restart this process.
     * Then mark the release as public.
 
-* Check the release-specific docs:
+* Build the release-specific docs:
 
-    * Look at [https://miller.readthedocs.io](https://miller.readthedocs.io) for new-version docs, after a few minutes' propagation time.
+    * Note: the GitHub release above created a tag `v6.3.0` which is correct. Here we'll create a branch named `6.3.0` which is also correct.
+    * Create a branch `6.3.0` (not `v6.3.0`). Locally: `git checkout -b 6.3.0`, then `git push`.
+    * Edit `docs/mkdocs.yml`, replacing "Miller Dev Documentation" with "Miller 6.3.0 Documentation". Commit and push.
+    * At the Miller Read the Docs admin page, [https://readthedocs.org/projects/miller](https://readthedocs.org/projects/miller), in the Versions tab, scroll down to _Activate a version_, then activate 6.3.0.
+    * In the Admin tab, in Advanced Settings, set the Default Version and Default Branch both to 6.3.0. Scroll to the end of the page and poke Save.
+    * In the Builds tab, if they're not already building,  build 6.3.0 as well as latest.
+    * Verify that [https://miller.readthedocs.io/en/6.3.0](https://miller.readthedocs.io/en/6.3.0) now exists.
+    * Verify that [https://miller.readthedocs.io/en/latest](https://miller.readthedocs.io/en/latest) (with hard page-reload) shows _Miller 6.8.0 Documentation_ in the upper left of the doc pages.
 
 * Notify:
 
