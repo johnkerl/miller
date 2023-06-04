@@ -1196,6 +1196,13 @@ See also strftime_local.`,
 		},
 
 		{
+			name:     "sysntime",
+			class:    FUNC_CLASS_TIME,
+			help:     "Returns the system time in 64-bit nanoseconds since the epoch.",
+			zaryFunc: bifs.BIF_sysntime,
+		},
+
+		{
 			name:     "systimeint",
 			class:    FUNC_CLASS_TIME,
 			help:     "Returns the system time in integer seconds since the epoch.",
@@ -1207,6 +1214,13 @@ See also strftime_local.`,
 			class:    FUNC_CLASS_TIME,
 			help:     "Returns the time in floating-point seconds since the current Miller program was started.",
 			zaryFunc: bifs.BIF_uptime,
+		},
+
+		{
+			name:     "upntime",
+			class:    FUNC_CLASS_TIME,
+			help:     "Returns the time in 64-bit nanoseconds since the current Miller program was started.",
+			zaryFunc: bifs.BIF_upntime,
 		},
 
 		// ----------------------------------------------------------------

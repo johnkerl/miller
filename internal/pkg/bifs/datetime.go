@@ -28,14 +28,25 @@ func BIF_systimeint() *mlrval.Mlrval {
 	return mlrval.FromInt(time.Now().Unix())
 }
 
+func BIF_sysntime() *mlrval.Mlrval {
+	return mlrval.FromInt(time.Now().UnixNano())
+}
+
 var startTime float64
+var startNTime int64
 
 func init() {
 	startTime = float64(time.Now().UnixNano()) / 1.0e9
+	startNTime = time.Now().UnixNano()
 }
 func BIF_uptime() *mlrval.Mlrval {
 	return mlrval.FromFloat(
 		float64(time.Now().UnixNano())/1.0e9 - startTime,
+	)
+}
+func BIF_upntime() *mlrval.Mlrval {
+	return mlrval.FromInt(
+		time.Now().UnixNano() - startNTime,
 	)
 }
 
@@ -135,6 +146,19 @@ func BIF_sec2localdate_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 	return BIF_strftime_local_ternary(input1, ptr_YMD_FORMAT, input2)
 }
+
+//// ----------------------------------------------------------------
+//func BIF_nanosec2gmt_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+//	// XXX WHAT IF FLOAT?
+//	intValue, ok := input1.GetIntValue()
+//	if !isNumeric {
+//		return input1
+//	}
+//
+//	numDecimalPlaces := 0
+//
+//	return mlrval.FromString(lib.Sec2GMT(floatValue, numDecimalPlaces))
+//}
 
 // ----------------------------------------------------------------
 
