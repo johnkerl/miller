@@ -36,13 +36,13 @@ func transformerGrepUsage(
 	fmt.Fprintf(o, `Note that "%s filter" is more powerful, but requires you to know field names.
 By contrast, "%s grep" allows you to regex-match the entire record. It does this
 by formatting each record in memory as DKVP (or NIDX, if -a is supplied), using
-command-line-specified ORS/OFS/OPS, and matching the resulting line against the
-regex specified here. In particular, the regex is not applied to the input
-stream: if you have CSV with header line "x,y,z" and data line "1,2,3" then the
-regex will be matched, not against either of these lines, but against the DKVP
-line "x=1,y=2,z=3".  Furthermore, not all the options to system grep are
-supported, and this command is intended to be merely a keystroke-saver. To get
-all the features of system grep, you can do
+OFS "," and OPS "=", and matching the resulting line against the regex specified
+here. In particular, the regex is not applied to the input stream: if you have
+CSV with header line "x,y,z" and data line "1,2,3" then the regex will be
+matched, not against either of these lines, but against the DKVP line
+"x=1,y=2,z=3".  Furthermore, not all the options to system grep are supported,
+and this command is intended to be merely a keystroke-saver. To get all the
+features of system grep, you can do
   "%s --odkvp ... | grep ... | %s --idkvp ..."
 `, "mlr", "mlr", "mlr", "mlr")
 }
