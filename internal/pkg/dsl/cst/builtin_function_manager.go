@@ -1088,6 +1088,21 @@ See also strftime_local.`,
 		},
 
 		{
+			name:  "strfntime",
+			class: FUNC_CLASS_TIME,
+			help: `Formats integer nanoseconds since the epoch as timestamp. Format strings are as at
+https://pkg.go.dev/github.com/lestrrat-go/strftime, with the Miller-specific addition of "%1S"
+through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no
+decimal places.) See also ` + lib.DOC_URL + `/en/latest/reference-dsl-time/ for more information on the differences from the C library ("man strftime" on your system).
+See also strftime_local.`,
+			examples: []string{
+				`XXX strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ")  = "2015-08-28T13:33:21Z"`,
+				`XXX strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z"`,
+			},
+			binaryFunc: bifs.BIF_strfntime,
+		},
+
+		{
 			name:  "strptime",
 			class: FUNC_CLASS_TIME,
 			help:  `strptime: Parses timestamp as floating-point seconds since the epoch. See also strptime_local.`,
@@ -1112,6 +1127,20 @@ See also strftime_local.`,
 			},
 			binaryFunc:         bifs.BIF_strftime_local_binary,
 			ternaryFunc:        bifs.BIF_strftime_local_ternary,
+			hasMultipleArities: true,
+		},
+
+		{
+			name:  "strfntime_local",
+			class: FUNC_CLASS_TIME,
+			help:  `Like strfntime but consults the $TZ environment variable to get local time zone.`,
+			examples: []string{
+				`XXX strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%S %z")  = "2015-08-28 16:33:21 +0300" with TZ="Asia/Istanbul"`,
+				`strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%3S %z") = "2015-08-28 16:33:21.700 +0300" with TZ="Asia/Istanbul"`,
+				`strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%3S %z", "Asia/Istanbul") = "2015-08-28 16:33:21.700 +0300"`,
+			},
+			binaryFunc:         bifs.BIF_strfntime_local_binary,
+			ternaryFunc:        bifs.BIF_strfntime_local_ternary,
 			hasMultipleArities: true,
 		},
 

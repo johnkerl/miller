@@ -322,6 +322,71 @@ func init() {
 }
 
 // ================================================================
+func BIF_strfntime(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return strfntimeHelper(input1, input2, false, nil)
+}
+
+func BIF_strfntime_local_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return strfntimeHelper(input1, input2, true, nil)
+}
+
+func BIF_strfntime_local_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+	locationString, isString := input3.GetStringValue()
+	if !isString {
+		return mlrval.ERROR
+	}
+
+	location, err := time.LoadLocation(locationString)
+	if err != nil {
+		return mlrval.ERROR
+	}
+
+	return strfntimeHelper(input1, input2, true, location)
+}
+
+func strfntimeHelper(input1, input2 *mlrval.Mlrval, doLocal bool, location *time.Location) *mlrval.Mlrval {
+	if input1.IsVoid() {
+		return input1
+	}
+	epochNanoseconds, ok := input1.GetIntValue() // XXX PARTICULAR HANDLING FOR FLOAT ... ?
+	if !ok {
+		return mlrval.ERROR
+	}
+	if !input2.IsString() {
+		return mlrval.ERROR
+	}
+
+	// Convert argument1 from float seconds since the epoch to a Go time.
+	var inputTime time.Time
+	if doLocal {
+		if location != nil {
+			inputTime = lib.EpochNanosecondsToLocationTime(epochNanoseconds, location)
+		} else {
+			inputTime = lib.EpochNanosecondsToLocalTime(epochNanoseconds)
+		}
+	} else {
+		inputTime = lib.EpochNanosecondsToGMT(epochNanoseconds)
+	}
+
+	// Convert argument 2 to a strfntime format string.
+	//
+	// Miller fractional-second formats are like "%6S", and were so in the C
+	// implementation. However, in the strfntime package we're using in the Go
+	// port, extension-formats are only a single byte so we need to rewrite
+	// them to "%6".
+	formatString := extensionRegex.ReplaceAllString(input2.AcquireStringValue(), "$1")
+
+	formatter, err := strftime.New(formatString, strftimeExtensions)
+	if err != nil {
+		return mlrval.ERROR
+	}
+
+	outputString := formatter.FormatString(inputTime)
+
+	return mlrval.FromString(outputString)
+}
+
+// ================================================================
 // Argument 1 is formatted date string like "2021-03-04 02:59:50".
 // Argument 2 is format string like "%Y-%m-%d %H:%M:%S".
 func BIF_strptime(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {

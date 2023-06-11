@@ -119,3 +119,32 @@ func epochSecondsToTime(epochSeconds float64, doLocal bool, location *time.Locat
 		return time.Unix(intPart, decimalPart).UTC()
 	}
 }
+
+// ----------------------------------------------------------------
+// 64-bit-int epoch nanoseconds
+
+func EpochNanosecondsToGMT(epochNanoseconds int64) time.Time {
+	return epochNanosecondsToTime(epochNanoseconds, false, nil)
+}
+
+func EpochNanosecondsToLocalTime(epochNanoseconds int64) time.Time {
+	return epochNanosecondsToTime(epochNanoseconds, true, nil)
+}
+
+func EpochNanosecondsToLocationTime(epochNanoseconds int64, location *time.Location) time.Time {
+	return epochNanosecondsToTime(epochNanoseconds, true, location)
+}
+
+func epochNanosecondsToTime(epochNanoseconds int64, doLocal bool, location *time.Location) time.Time {
+	intPart := epochNanoseconds / 1000000000
+	fractionalPart := epochNanoseconds % 1000000000
+	if doLocal {
+		if location == nil {
+			return time.Unix(intPart, fractionalPart).Local()
+		} else {
+			return time.Unix(intPart, fractionalPart).In(location)
+		}
+	} else {
+		return time.Unix(intPart, fractionalPart).UTC()
+	}
+}
