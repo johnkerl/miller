@@ -990,9 +990,22 @@ unless second argument is supplied.`,
 				`localtime2sec("2001-02-03 04:05:06") = 981165906 with TZ="Asia/Istanbul"`,
 				`localtime2sec("2001-02-03 04:05:06", "Asia/Istanbul") = 981165906"`,
 			},
-			// TODO: help-string
 			unaryFunc:          bifs.BIF_localtime2sec_unary,
 			binaryFunc:         bifs.BIF_localtime2sec_binary,
+			hasMultipleArities: true,
+		},
+
+		{
+			name:  "localtime2nsec",
+			class: FUNC_CLASS_TIME,
+			help: `Parses local timestamp as integer nanoseconds since the epoch. Consults $TZ environment variable,
+unless second argument is supplied.`,
+			examples: []string{
+				`localtime2nsec("2001-02-03 04:05:06") = 981165906000000000 with TZ="Asia/Istanbul"`,
+				`localtime2nsec("2001-02-03 04:05:06", "Asia/Istanbul") = 981165906000000000"`,
+			},
+			unaryFunc:          bifs.BIF_localtime2nsec_unary,
+			binaryFunc:         bifs.BIF_localtime2nsec_binary,
 			hasMultipleArities: true,
 		},
 

@@ -198,34 +198,32 @@ func BIF_sec2localdate_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // ----------------------------------------------------------------
-// XXX use nanos?
-
 func BIF_localtime2gmt_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
 		return mlrval.ERROR
 	}
-	return BIF_sec2gmt_unary(BIF_localtime2sec_unary(input1))
+	return BIF_nsec2gmt_unary(BIF_localtime2nsec_unary(input1))
 }
 
 func BIF_localtime2gmt_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
 		return mlrval.ERROR
 	}
-	return BIF_sec2gmt_unary(BIF_localtime2sec_binary(input1, input2))
+	return BIF_nsec2gmt_unary(BIF_localtime2nsec_binary(input1, input2))
 }
 
 func BIF_gmt2localtime_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
 		return mlrval.ERROR
 	}
-	return BIF_sec2localtime_unary(BIF_gmt2sec(input1))
+	return BIF_nsec2localtime_unary(BIF_gmt2nsec(input1))
 }
 
 func BIF_gmt2localtime_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
 		return mlrval.ERROR
 	}
-	return BIF_sec2localtime_ternary(BIF_gmt2sec(input1), mlrval.FromInt(0), input2)
+	return BIF_nsec2localtime_ternary(BIF_gmt2nsec(input1), mlrval.FromInt(0), input2)
 }
 
 // ================================================================
@@ -470,9 +468,12 @@ func BIF_gmt2nsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return bif_strptime_unary_aux(input1, ptr_ISO8601_TIME_FORMAT, false, true)
 }
 
-// XXX: ns too
 func BIF_localtime2sec_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return bif_strptime_unary_aux(input1, ptr_ISO8601_LOCAL_TIME_FORMAT, true, false)
+}
+
+func BIF_localtime2nsec_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_strptime_unary_aux(input1, ptr_ISO8601_LOCAL_TIME_FORMAT, true, true)
 }
 
 // ----------------------------------------------------------------
@@ -525,6 +526,10 @@ func BIF_strpntime_local_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.
 
 func BIF_localtime2sec_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return bif_strptime_local_ternary_aux(input1, ptr_ISO8601_LOCAL_TIME_FORMAT, input2, false)
+}
+
+func BIF_localtime2nsec_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_strptime_local_ternary_aux(input1, ptr_ISO8601_LOCAL_TIME_FORMAT, input2, true)
 }
 
 func bif_strptime_local_ternary_aux(input1, input2, input3 *mlrval.Mlrval, produceNanoseconds bool) *mlrval.Mlrval {
