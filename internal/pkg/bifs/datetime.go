@@ -57,10 +57,17 @@ func BIF_sec2gmt_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !isNumeric {
 		return input1
 	}
-
 	numDecimalPlaces := 0
-
 	return mlrval.FromString(lib.Sec2GMT(floatValue, numDecimalPlaces))
+}
+
+func BIF_nsec2gmt_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	intValue, ok := input1.GetIntValue()
+	if !ok {
+		return mlrval.ERROR
+	}
+	numDecimalPlaces := 0
+	return mlrval.FromString(lib.Nsec2GMT(intValue, numDecimalPlaces))
 }
 
 func BIF_sec2gmt_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -68,13 +75,23 @@ func BIF_sec2gmt_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !isNumeric {
 		return input1
 	}
-
 	numDecimalPlaces, isInt := input2.GetIntValue()
 	if !isInt {
 		return mlrval.ERROR
 	}
-
 	return mlrval.FromString(lib.Sec2GMT(floatValue, int(numDecimalPlaces)))
+}
+
+func BIF_nsec2gmt_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	intValue, ok := input1.GetIntValue()
+	if !ok {
+		return input1
+	}
+	numDecimalPlaces, isInt := input2.GetIntValue()
+	if !isInt {
+		return mlrval.ERROR
+	}
+	return mlrval.FromString(lib.Nsec2GMT(intValue, int(numDecimalPlaces)))
 }
 
 func BIF_sec2localtime_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -82,10 +99,17 @@ func BIF_sec2localtime_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !isNumeric {
 		return input1
 	}
-
 	numDecimalPlaces := 0
-
 	return mlrval.FromString(lib.Sec2LocalTime(floatValue, numDecimalPlaces))
+}
+
+func BIF_nsec2localtime_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	intValue, ok := input1.GetIntValue()
+	if !ok {
+		return input1
+	}
+	numDecimalPlaces := 0
+	return mlrval.FromString(lib.Nsec2LocalTime(intValue, numDecimalPlaces))
 }
 
 func BIF_sec2localtime_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -93,13 +117,23 @@ func BIF_sec2localtime_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !isNumeric {
 		return input1
 	}
-
 	numDecimalPlaces, isInt := input2.GetIntValue()
 	if !isInt {
 		return mlrval.ERROR
 	}
-
 	return mlrval.FromString(lib.Sec2LocalTime(floatValue, int(numDecimalPlaces)))
+}
+
+func BIF_nsec2localtime_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	intValue, ok := input1.GetIntValue()
+	if !ok {
+		return input1
+	}
+	numDecimalPlaces, isInt := input2.GetIntValue()
+	if !isInt {
+		return mlrval.ERROR
+	}
+	return mlrval.FromString(lib.Nsec2LocalTime(intValue, int(numDecimalPlaces)))
 }
 
 func BIF_sec2localtime_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -107,23 +141,39 @@ func BIF_sec2localtime_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Ml
 	if !isNumeric {
 		return input1
 	}
-
 	numDecimalPlaces, isInt := input2.GetIntValue()
 	if !isInt {
 		return mlrval.ERROR
 	}
-
 	locationString, isString := input3.GetStringValue()
 	if !isString {
 		return mlrval.ERROR
 	}
-
 	location, err := time.LoadLocation(locationString)
 	if err != nil {
 		return mlrval.ERROR
 	}
-
 	return mlrval.FromString(lib.Sec2LocationTime(floatValue, int(numDecimalPlaces), location))
+}
+
+func BIF_nsec2localtime_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+	intValue, isNumeric := input1.GetIntValue()
+	if !isNumeric {
+		return input1
+	}
+	numDecimalPlaces, isInt := input2.GetIntValue()
+	if !isInt {
+		return mlrval.ERROR
+	}
+	locationString, isString := input3.GetStringValue()
+	if !isString {
+		return mlrval.ERROR
+	}
+	location, err := time.LoadLocation(locationString)
+	if err != nil {
+		return mlrval.ERROR
+	}
+	return mlrval.FromString(lib.Nsec2LocationTime(intValue, int(numDecimalPlaces), location))
 }
 
 func BIF_sec2gmtdate(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -147,20 +197,8 @@ func BIF_sec2localdate_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return BIF_strftime_local_ternary(input1, ptr_YMD_FORMAT, input2)
 }
 
-//// ----------------------------------------------------------------
-//func BIF_nanosec2gmt_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-//	// XXX WHAT IF FLOAT?
-//	intValue, ok := input1.GetIntValue()
-//	if !isNumeric {
-//		return input1
-//	}
-//
-//	numDecimalPlaces := 0
-//
-//	return mlrval.FromString(lib.Sec2GMT(floatValue, numDecimalPlaces))
-//}
-
 // ----------------------------------------------------------------
+// XXX use nanos?
 
 func BIF_localtime2gmt_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
@@ -200,8 +238,16 @@ func BIF_strftime(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return strftimeHelper(input1, input2, false, nil)
 }
 
+func BIF_strfntime(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return strfntimeHelper(input1, input2, false, nil)
+}
+
 func BIF_strftime_local_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return strftimeHelper(input1, input2, true, nil)
+}
+
+func BIF_strfntime_local_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return strfntimeHelper(input1, input2, true, nil)
 }
 
 func BIF_strftime_local_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -216,6 +262,18 @@ func BIF_strftime_local_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.M
 	}
 
 	return strftimeHelper(input1, input2, true, location)
+}
+
+func BIF_strfntime_local_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+	locationString, isString := input3.GetStringValue()
+	if !isString {
+		return mlrval.ERROR
+	}
+	location, err := time.LoadLocation(locationString)
+	if err != nil {
+		return mlrval.ERROR
+	}
+	return strfntimeHelper(input1, input2, true, location)
 }
 
 func strftimeHelper(input1, input2 *mlrval.Mlrval, doLocal bool, location *time.Location) *mlrval.Mlrval {
@@ -246,6 +304,48 @@ func strftimeHelper(input1, input2 *mlrval.Mlrval, doLocal bool, location *time.
 	//
 	// Miller fractional-second formats are like "%6S", and were so in the C
 	// implementation. However, in the strftime package we're using in the Go
+	// port, extension-formats are only a single byte so we need to rewrite
+	// them to "%6".
+	formatString := extensionRegex.ReplaceAllString(input2.AcquireStringValue(), "$1")
+
+	formatter, err := strftime.New(formatString, strftimeExtensions)
+	if err != nil {
+		return mlrval.ERROR
+	}
+
+	outputString := formatter.FormatString(inputTime)
+
+	return mlrval.FromString(outputString)
+}
+
+func strfntimeHelper(input1, input2 *mlrval.Mlrval, doLocal bool, location *time.Location) *mlrval.Mlrval {
+	if input1.IsVoid() {
+		return input1
+	}
+	epochNanoseconds, ok := input1.GetIntValue()
+	if !ok {
+		return mlrval.ERROR
+	}
+	if !input2.IsString() {
+		return mlrval.ERROR
+	}
+
+	// Convert argument1 from float seconds since the epoch to a Go time.
+	var inputTime time.Time
+	if doLocal {
+		if location != nil {
+			inputTime = lib.EpochNanosecondsToLocationTime(epochNanoseconds, location)
+		} else {
+			inputTime = lib.EpochNanosecondsToLocalTime(epochNanoseconds)
+		}
+	} else {
+		inputTime = lib.EpochNanosecondsToGMT(epochNanoseconds)
+	}
+
+	// Convert argument 2 to a strfntime format string.
+	//
+	// Miller fractional-second formats are like "%6S", and were so in the C
+	// implementation. However, in the strfntime package we're using in the Go
 	// port, extension-formats are only a single byte so we need to rewrite
 	// them to "%6".
 	formatString := extensionRegex.ReplaceAllString(input2.AcquireStringValue(), "$1")
@@ -322,74 +422,17 @@ func init() {
 }
 
 // ================================================================
-func BIF_strfntime(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return strfntimeHelper(input1, input2, false, nil)
-}
-
-func BIF_strfntime_local_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return strfntimeHelper(input1, input2, true, nil)
-}
-
-func BIF_strfntime_local_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
-	locationString, isString := input3.GetStringValue()
-	if !isString {
-		return mlrval.ERROR
-	}
-
-	location, err := time.LoadLocation(locationString)
-	if err != nil {
-		return mlrval.ERROR
-	}
-
-	return strfntimeHelper(input1, input2, true, location)
-}
-
-func strfntimeHelper(input1, input2 *mlrval.Mlrval, doLocal bool, location *time.Location) *mlrval.Mlrval {
-	if input1.IsVoid() {
-		return input1
-	}
-	epochNanoseconds, ok := input1.GetIntValue() // XXX PARTICULAR HANDLING FOR FLOAT ... ?
-	if !ok {
-		return mlrval.ERROR
-	}
-	if !input2.IsString() {
-		return mlrval.ERROR
-	}
-
-	// Convert argument1 from float seconds since the epoch to a Go time.
-	var inputTime time.Time
-	if doLocal {
-		if location != nil {
-			inputTime = lib.EpochNanosecondsToLocationTime(epochNanoseconds, location)
-		} else {
-			inputTime = lib.EpochNanosecondsToLocalTime(epochNanoseconds)
-		}
-	} else {
-		inputTime = lib.EpochNanosecondsToGMT(epochNanoseconds)
-	}
-
-	// Convert argument 2 to a strfntime format string.
-	//
-	// Miller fractional-second formats are like "%6S", and were so in the C
-	// implementation. However, in the strfntime package we're using in the Go
-	// port, extension-formats are only a single byte so we need to rewrite
-	// them to "%6".
-	formatString := extensionRegex.ReplaceAllString(input2.AcquireStringValue(), "$1")
-
-	formatter, err := strftime.New(formatString, strftimeExtensions)
-	if err != nil {
-		return mlrval.ERROR
-	}
-
-	outputString := formatter.FormatString(inputTime)
-
-	return mlrval.FromString(outputString)
-}
-
-// ================================================================
 // Argument 1 is formatted date string like "2021-03-04 02:59:50".
 // Argument 2 is format string like "%Y-%m-%d %H:%M:%S".
 func BIF_strptime(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_strptime_unary_aux(input1, input2, false, false)
+}
+
+func BIF_strpntime(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_strptime_unary_aux(input1, input2, false, true)
+}
+
+func bif_strptime_unary_aux(input1, input2 *mlrval.Mlrval, doLocal, produceNanoseconds bool) *mlrval.Mlrval {
 	if !input1.IsString() {
 		return mlrval.ERROR
 	}
@@ -399,15 +442,50 @@ func BIF_strptime(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	timeString := input1.AcquireStringValue()
 	formatString := input2.AcquireStringValue()
 
-	t, err := strptime.Parse(timeString, formatString)
+	var t time.Time
+	var err error
+	if doLocal {
+		t, err = strptime.ParseLocal(timeString, formatString)
+	} else {
+		t, err = strptime.Parse(timeString, formatString)
+	}
 	if err != nil {
 		return mlrval.ERROR
 	}
 
-	return mlrval.FromFloat(float64(t.UnixNano()) / 1.0e9)
+	if produceNanoseconds {
+		return mlrval.FromInt(t.UnixNano())
+	} else {
+		return mlrval.FromFloat(float64(t.UnixNano()) / 1.0e9)
+	}
 }
+
+// Argument 1 is formatted date string like "2021-03-04T02:59:50Z".
+func BIF_gmt2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_strptime_unary_aux(input1, ptr_ISO8601_TIME_FORMAT, false, false)
+}
+
+// Argument 1 is formatted date string like "2021-03-04T02:59:50Z".
+func BIF_gmt2nsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_strptime_unary_aux(input1, ptr_ISO8601_TIME_FORMAT, false, true)
+}
+
+// XXX: ns too
+func BIF_localtime2sec_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_strptime_unary_aux(input1, ptr_ISO8601_LOCAL_TIME_FORMAT, true, false)
+}
+
+// ----------------------------------------------------------------
 
 func BIF_strptime_local_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_strptime_binary_aux(input1, input2, true, false)
+}
+
+func BIF_strpntime_local_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_strptime_binary_aux(input1, input2, true, true)
+}
+
+func bif_strptime_binary_aux(input1, input2 *mlrval.Mlrval, doLocal, produceNanoseconds bool) *mlrval.Mlrval {
 	if !input1.IsString() {
 		return mlrval.ERROR
 	}
@@ -417,15 +495,39 @@ func BIF_strptime_local_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	timeString := input1.AcquireStringValue()
 	formatString := input2.AcquireStringValue()
 
-	t, err := strptime.ParseLocal(timeString, formatString)
+	var t time.Time
+	var err error
+	if doLocal {
+		t, err = strptime.ParseLocal(timeString, formatString)
+	} else {
+		t, err = strptime.Parse(timeString, formatString)
+	}
 	if err != nil {
 		return mlrval.ERROR
 	}
 
-	return mlrval.FromFloat(float64(t.UnixNano()) / 1.0e9)
+	if produceNanoseconds {
+		return mlrval.FromInt(t.UnixNano())
+	} else {
+		return mlrval.FromFloat(float64(t.UnixNano()) / 1.0e9)
+	}
 }
 
+// ----------------------------------------------------------------
+
 func BIF_strptime_local_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_strptime_local_ternary_aux(input1, input2, input3, false)
+}
+
+func BIF_strpntime_local_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_strptime_local_ternary_aux(input1, input2, input3, true)
+}
+
+func BIF_localtime2sec_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_strptime_local_ternary_aux(input1, ptr_ISO8601_LOCAL_TIME_FORMAT, input2, false)
+}
+
+func bif_strptime_local_ternary_aux(input1, input2, input3 *mlrval.Mlrval, produceNanoseconds bool) *mlrval.Mlrval {
 	if !input1.IsString() {
 		return mlrval.ERROR
 	}
@@ -445,26 +547,14 @@ func BIF_strptime_local_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.M
 		return mlrval.ERROR
 	}
 
-	// TODO: use location
-
 	t, err := strptime.ParseLocation(timeString, formatString, location)
 	if err != nil {
 		return mlrval.ERROR
 	}
 
-	return mlrval.FromFloat(float64(t.UnixNano()) / 1.0e9)
-}
-
-// ================================================================
-// Argument 1 is formatted date string like "2021-03-04T02:59:50Z".
-func BIF_gmt2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return BIF_strptime(input1, ptr_ISO8601_TIME_FORMAT)
-}
-
-func BIF_localtime2sec_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return BIF_strptime_local_binary(input1, ptr_ISO8601_LOCAL_TIME_FORMAT)
-}
-
-func BIF_localtime2sec_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return BIF_strptime_local_ternary(input1, ptr_ISO8601_LOCAL_TIME_FORMAT, input2)
+	if produceNanoseconds {
+		return mlrval.FromInt(t.UnixNano())
+	} else {
+		return mlrval.FromFloat(float64(t.UnixNano()) / 1.0e9)
+	}
 }

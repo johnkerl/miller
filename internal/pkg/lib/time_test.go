@@ -33,6 +33,35 @@ func TestSec2GMT(t *testing.T) {
 }
 
 // ----------------------------------------------------------------
+type tDataForNsec2GMT struct {
+	epochNanoseconds int64
+	numDecimalPlaces int
+	expectedOutput   string
+}
+
+var dataForNsec2GMT = []tDataForNsec2GMT{
+	{0, 0, "1970-01-01T00:00:00Z"},
+	{0, 6, "1970-01-01T00:00:00.000000Z"},
+	{946684800123456789, 0, "2000-01-01T00:00:00Z"},
+	{946684800123456789, 1, "2000-01-01T00:00:00.1Z"},
+	{946684800123456789, 2, "2000-01-01T00:00:00.12Z"},
+	{946684800123456789, 3, "2000-01-01T00:00:00.123Z"},
+	{946684800123456789, 4, "2000-01-01T00:00:00.1234Z"},
+	{946684800123456789, 5, "2000-01-01T00:00:00.12345Z"},
+	{946684800123456789, 6, "2000-01-01T00:00:00.123456Z"},
+	{946684800123456789, 7, "2000-01-01T00:00:00.1234567Z"},
+	{946684800123456789, 8, "2000-01-01T00:00:00.12345678Z"},
+	{946684800123456789, 9, "2000-01-01T00:00:00.123456789Z"},
+}
+
+func TestNsec2GMT(t *testing.T) {
+	for _, entry := range dataForNsec2GMT {
+		actualOutput := Nsec2GMT(entry.epochNanoseconds, entry.numDecimalPlaces)
+		assert.Equal(t, entry.expectedOutput, actualOutput)
+	}
+}
+
+// ----------------------------------------------------------------
 type tDataForEpochSecondsToGMT struct {
 	epochSeconds   float64
 	expectedOutput time.Time
@@ -49,26 +78,6 @@ func TestEpochSecondsToGMT(t *testing.T) {
 		assert.Equal(t, entry.expectedOutput, EpochSecondsToGMT(entry.epochSeconds))
 	}
 }
-
-//// ----------------------------------------------------------------
-// XXX TO DO
-//type tDataForNsec2GMT struct {
-//	epochSeconds     int64
-//	numDecimalPlaces int
-//	expectedOutput   string
-//}
-
-//var dataForNsec2GMT = []tDataForNsec2GMT{
-//	{0, 0, "1970-01-01T00:00:00Z"},
-//	{0, 6, "1970-01-01T00:00:00.000000Z"},
-//	{123456789250000000, 3, "1973-11-29T21:33:09.250Z"},
-//}
-
-//func TestNsec2GMT(t *testing.T) {
-//	for _, entry := range dataForNsec2GMT {
-//		assert.Equal(t, entry.expectedOutput, Nsec2GMT(entry.epochSeconds, entry.numDecimalPlaces))
-//	}
-//}
 
 // ----------------------------------------------------------------
 type tDataForEpochNanosecondsToGMT struct {
