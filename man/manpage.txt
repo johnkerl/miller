@@ -190,21 +190,23 @@ MILLER(1)                                                            MILLER(1)
        capitalize cbrt ceil clean_whitespace collapse_whitespace concat cos cosh
        depth dhms2fsec dhms2sec erf erfc every exec exp expm1 flatten float floor
        fmtifnum fmtnum fold format fsec2dhms fsec2hms get_keys get_values
-       gmt2localtime gmt2sec gssub gsub haskey hexfmt hms2fsec hms2sec hostname index
-       int invqnorm is_absent is_array is_bool is_boolean is_empty is_empty_map
-       is_error is_float is_int is_map is_nan is_nonempty_map is_not_array
-       is_not_empty is_not_map is_not_null is_null is_numeric is_present is_string
-       joink joinkv joinv json_parse json_stringify latin1_to_utf8 leafcount leftpad
-       length localtime2gmt localtime2sec log log10 log1p logifit lstrip madd mapdiff
-       mapexcept mapselect mapsum max md5 mexp min mmul msub os pow qnorm reduce
-       regextract regextract_or_else rightpad round roundm rstrip sec2dhms sec2gmt
-       sec2gmtdate sec2hms sec2localdate sec2localtime select sgn sha1 sha256 sha512
-       sin sinh sort splita splitax splitkv splitkvx splitnv splitnvx sqrt ssub
-       strftime strftime_local string strip strlen strptime strptime_local sub substr
-       substr0 substr1 system systime systimeint tan tanh tolower toupper truncate
-       typeof unflatten unformat unformatx uptime urand urand32 urandelement urandint
-       urandrange utf8_to_latin1 version ! != !=~ % & && * ** + - . .* .+ .- ./ / //
-       < << <= <=> == =~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
+       gmt2localtime gmt2nsec gmt2sec gssub gsub haskey hexfmt hms2fsec hms2sec
+       hostname index int invqnorm is_absent is_array is_bool is_boolean is_empty
+       is_empty_map is_error is_float is_int is_map is_nan is_nonempty_map
+       is_not_array is_not_empty is_not_map is_not_null is_null is_numeric is_present
+       is_string joink joinkv joinv json_parse json_stringify latin1_to_utf8
+       leafcount leftpad length localtime2gmt localtime2nsec localtime2sec log log10
+       log1p logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5 mexp min
+       mmul msub nsec2gmt nsec2gmtdate nsec2localdate nsec2localtime os pow qnorm
+       reduce regextract regextract_or_else rightpad round roundm rstrip sec2dhms
+       sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime select sgn sha1 sha256
+       sha512 sin sinh sort splita splitax splitkv splitkvx splitnv splitnvx sqrt
+       ssub strfntime strfntime_local strftime strftime_local string strip strlen
+       strpntime strpntime_local strptime strptime_local sub substr substr0 substr1
+       sysntime system systime systimeint tan tanh tolower toupper truncate typeof
+       unflatten unformat unformatx upntime uptime urand urand32 urandelement
+       urandint urandrange utf8_to_latin1 version ! != !=~ % & && * ** + - . .* .+ .-
+       ./ / // < << <= <=> == =~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
 
 1mCOMMENTS-IN-DATA FLAGS0m
        Miller lets you put comments in your data, such as
@@ -1189,13 +1191,13 @@ MILLER(1)                                                            MILLER(1)
        Note that "mlr filter" is more powerful, but requires you to know field names.
        By contrast, "mlr grep" allows you to regex-match the entire record. It does this
        by formatting each record in memory as DKVP (or NIDX, if -a is supplied), using
-       OFS "," and OPS "=", and matching the resulting line against the regex specified
-       here. In particular, the regex is not applied to the input stream: if you have
-       CSV with header line "x,y,z" and data line "1,2,3" then the regex will be
-       matched, not against either of these lines, but against the DKVP line
-       "x=1,y=2,z=3".  Furthermore, not all the options to system grep are supported,
-       and this command is intended to be merely a keystroke-saver. To get all the
-       features of system grep, you can do
+       command-line-specified ORS/OFS/OPS, and matching the resulting line against the
+       regex specified here. In particular, the regex is not applied to the input
+       stream: if you have CSV with header line "x,y,z" and data line "1,2,3" then the
+       regex will be matched, not against either of these lines, but against the DKVP
+       line "x=1,y=2,z=3".  Furthermore, not all the options to system grep are
+       supported, and this command is intended to be merely a keystroke-saver. To get
+       all the features of system grep, you can do
          "mlr --odkvp ... | grep ... | mlr --idkvp ..."
 
    1mgroup-by0m
@@ -2332,6 +2334,11 @@ MILLER(1)                                                            MILLER(1)
        gmt2localtime("1999-12-31T22:00:00Z") = "2000-01-01 00:00:00" with TZ="Asia/Istanbul"
        gmt2localtime("1999-12-31T22:00:00Z", "Asia/Istanbul") = "2000-01-01 00:00:00"
 
+   1mgmt2nsec0m
+        (class=time #args=1) Parses GMT timestamp as integer nanoseconds since the epoch.
+       Example:
+       gmt2nsec("2001-02-03T04:05:06Z") = 981173106000000000
+
    1mgmt2sec0m
         (class=time #args=1) Parses GMT timestamp as integer seconds since the epoch.
        Example:
@@ -2497,6 +2504,12 @@ MILLER(1)                                                            MILLER(1)
        localtime2gmt("2000-01-01 00:00:00") = "1999-12-31T22:00:00Z" with TZ="Asia/Istanbul"
        localtime2gmt("2000-01-01 00:00:00", "Asia/Istanbul") = "1999-12-31T22:00:00Z"
 
+   1mlocaltime2nsec0m
+        (class=time #args=1,2) Parses local timestamp as integer nanoseconds since the epoch. Consults $TZ environment variable, unless second argument is supplied.
+       Examples:
+       localtime2nsec("2001-02-03 04:05:06") = 981165906000000000 with TZ="Asia/Istanbul"
+       localtime2nsec("2001-02-03 04:05:06", "Asia/Istanbul") = 981165906000000000"
+
    1mlocaltime2sec0m
         (class=time #args=1,2) Parses local timestamp as integer seconds since the epoch. Consults $TZ environment variable, unless second argument is supplied.
        Examples:
@@ -2550,6 +2563,32 @@ MILLER(1)                                                            MILLER(1)
 
    1mmsub0m
         (class=arithmetic #args=3) a - b mod m (integers)
+
+   1mnsec2gmt0m
+        (class=time #args=1,2) Formats integer nanoseconds since epoch as GMT timestamp. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part.
+       Examples:
+       nsec2gmt(1234567890000000000)    = "2009-02-13T23:31:30Z"
+       nsec2gmt(1234567890123456789)    = "2009-02-13T23:31:30Z"
+       nsec2gmt(1234567890123456789, 6) = "2009-02-13T23:31:30.123456Z"
+
+   1mnsec2gmtdate0m
+        (class=time #args=1) Formats integer nanoseconds since epoch as GMT timestamp with year-month-date. Leaves non-numbers as-is.
+       Example:
+       sec2gmtdate(1440768801700000000) = "2015-08-28".
+
+   1mnsec2localdate0m
+        (class=time #args=1,2) Formats integer nanoseconds since epoch as local timestamp with year-month-date. Leaves non-numbers as-is. Consults $TZ environment variable unless second argument is supplied.
+       Examples:
+       nsec2localdate(1440768801700000000) = "2015-08-28" with TZ="Asia/Istanbul"
+       nsec2localdate(1440768801700000000, "Asia/Istanbul") = "2015-08-28"
+
+   1mnsec2localtime0m
+        (class=time #args=1,2,3) Formats integer nanoseconds since epoch as local timestamp. Consults $TZ environment variable unless third argument is supplied. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
+       Examples:
+       nsec2localtime(1234567890000000000)    = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"
+       nsec2localtime(1234567890123456789)    = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"
+       nsec2localtime(1234567890123456789, 6) = "2009-02-14 01:31:30.123456" with TZ="Asia/Istanbul"
+       nsec2localtime(1234567890123456789, 6, "Asia/Istanbul") = "2009-02-14 01:31:30.123456"
 
    1mos0m
         (class=system #args=0) Returns the operating-system name as a string.
@@ -2704,6 +2743,21 @@ MILLER(1)                                                            MILLER(1)
        Example:
        ssub("abc.def", ".", "X") gives "abcXdef"
 
+   1mstrfntime0m
+        (class=time #args=2) Formats integer nanoseconds since the epoch as timestamp. Format strings are as at https://pkg.go.dev/github.com/lestrrat-go/strftime, with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also https://miller.readthedocs.io/en/latest/reference-dsl-time/ for more information on the differences from the C library ("man strftime" on your system). See also strftime_local.
+       Examples:
+       strfntime(1440768801123456789,"%Y-%m-%dT%H:%M:%SZ")  = "2015-08-28T13:33:21Z"
+       strfntime(1440768801123456789,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.123Z"
+       strfntime(1440768801123456789,"%Y-%m-%dT%H:%M:%6SZ") = "2015-08-28T13:33:21.123456Z"
+
+   1mstrfntime_local0m
+        (class=time #args=2,3) Like strfntime but consults the $TZ environment variable to get local time zone.
+       Examples:
+       strfntime_local(1440768801123456789, "%Y-%m-%d %H:%M:%S %z")  = "2015-08-28 16:33:21 +0300" with TZ="Asia/Istanbul"
+       strfntime_local(1440768801123456789, "%Y-%m-%d %H:%M:%3S %z") = "2015-08-28 16:33:21.123 +0300" with TZ="Asia/Istanbul"
+       strfntime_local(1440768801123456789, "%Y-%m-%d %H:%M:%3S %z", "Asia/Istanbul") = "2015-08-28 16:33:21.123 +0300"
+       strfntime_local(1440768801123456789, "%Y-%m-%d %H:%M:%9S %z", "Asia/Istanbul") = "2015-08-28 16:33:21.123456789 +0300"
+
    1mstrftime0m
         (class=time #args=2) Formats seconds since the epoch as timestamp. Format strings are as at https://pkg.go.dev/github.com/lestrrat-go/strftime, with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also https://miller.readthedocs.io/en/latest/reference-dsl-time/ for more information on the differences from the C library ("man strftime" on your system). See also strftime_local.
        Examples:
@@ -2726,16 +2780,32 @@ MILLER(1)                                                            MILLER(1)
    1mstrlen0m
         (class=string #args=1) String length.
 
+   1mstrpntime0m
+        (class=time #args=2) strpntime: Parses timestamp as integer nanoseconds since the epoch. See also strpntime_local.
+       Examples:
+       strpntime("2015-08-28T13:33:21Z",      "%Y-%m-%dT%H:%M:%SZ")   = 1440768801000000000
+       strpntime("2015-08-28T13:33:21.345Z",  "%Y-%m-%dT%H:%M:%SZ")   = 1440768801345000000
+       strpntime("1970-01-01 00:00:00 -0400", "%Y-%m-%d %H:%M:%S %z") = 14400000000000
+       strpntime("1970-01-01 00:00:00 +0200", "%Y-%m-%d %H:%M:%S %z") = -7200000000000
+
+   1mstrpntime_local0m
+        (class=time #args=2,3) Like strpntime but consults the $TZ environment variable to get local time zone.
+       Examples:
+       strpntime_local("2015-08-28T13:33:21Z",    "%Y-%m-%dT%H:%M:%SZ") = 1440758001000000000 with TZ="Asia/Istanbul"
+       strpntime_local("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440758001345000000 with TZ="Asia/Istanbul"
+       strpntime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S")  = 1440758001000000000 with TZ="Asia/Istanbul"
+       strpntime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S", "Asia/Istanbul") = 1440758001000000000
+
    1mstrptime0m
         (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch. See also strptime_local.
        Examples:
        strptime("2015-08-28T13:33:21Z",      "%Y-%m-%dT%H:%M:%SZ")   = 1440768801.000000
        strptime("2015-08-28T13:33:21.345Z",  "%Y-%m-%dT%H:%M:%SZ")   = 1440768801.345000
        strptime("1970-01-01 00:00:00 -0400", "%Y-%m-%d %H:%M:%S %z") = 14400
-       strptime("1970-01-01 00:00:00 EET",   "%Y-%m-%d %H:%M:%S %Z") = -7200
+       strptime("1970-01-01 00:00:00 +0200", "%Y-%m-%d %H:%M:%S %z") = -7200
 
    1mstrptime_local0m
-        (class=time #args=2,3) Like strftime but consults the $TZ environment variable to get local time zone.
+        (class=time #args=2,3) Like strptime but consults the $TZ environment variable to get local time zone.
        Examples:
        strptime_local("2015-08-28T13:33:21Z",    "%Y-%m-%dT%H:%M:%SZ") = 1440758001     with TZ="Asia/Istanbul"
        strptime_local("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440758001.345 with TZ="Asia/Istanbul"
@@ -2759,6 +2829,9 @@ MILLER(1)                                                            MILLER(1)
 
    1msubstr10m
         (class=string #args=3) substr1(s,m,n) gives substring of s from 1-up position m to n inclusive. Negative indices -len .. -1 alias to 1 .. len. See also substr and substr0.
+
+   1msysntime0m
+        (class=time #args=0) Returns the system time in 64-bit nanoseconds since the epoch.
 
    1msystem0m
         (class=system #args=1) Run command string, yielding its stdout minus final carriage return.
@@ -2805,6 +2878,9 @@ MILLER(1)                                                            MILLER(1)
        unformatx("{}:{}:{}",  "1:2:3") gives ["1", "2", "3"].
        unformatx("{}h{}m{}s", "3h47m22s") gives ["3", "47", "22"].
        is_error(unformatx("{}h{}m{}s", "3:47:22")) gives true.
+
+   1mupntime0m
+        (class=time #args=0) Returns the time in 64-bit nanoseconds since the current Miller program was started.
 
    1muptime0m
         (class=time #args=0) Returns the time in floating-point seconds since the current Miller program was started.
@@ -3333,4 +3409,4 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-06-06                         MILLER(1)
+                                  2023-06-24                         MILLER(1)

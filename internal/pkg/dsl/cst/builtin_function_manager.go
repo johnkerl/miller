@@ -972,6 +972,16 @@ is normally distributed.`,
 		},
 
 		{
+			name:  "gmt2nsec",
+			class: FUNC_CLASS_TIME,
+			help:  `Parses GMT timestamp as integer nanoseconds since the epoch.`,
+			examples: []string{
+				`gmt2nsec("2001-02-03T04:05:06Z") = 981173106000000000`,
+			},
+			unaryFunc: bifs.BIF_gmt2nsec,
+		},
+
+		{
 			name:  "localtime2sec",
 			class: FUNC_CLASS_TIME,
 			help: `Parses local timestamp as integer seconds since the epoch. Consults $TZ environment variable,
@@ -980,9 +990,22 @@ unless second argument is supplied.`,
 				`localtime2sec("2001-02-03 04:05:06") = 981165906 with TZ="Asia/Istanbul"`,
 				`localtime2sec("2001-02-03 04:05:06", "Asia/Istanbul") = 981165906"`,
 			},
-			// TODO: help-string
 			unaryFunc:          bifs.BIF_localtime2sec_unary,
 			binaryFunc:         bifs.BIF_localtime2sec_binary,
+			hasMultipleArities: true,
+		},
+
+		{
+			name:  "localtime2nsec",
+			class: FUNC_CLASS_TIME,
+			help: `Parses local timestamp as integer nanoseconds since the epoch. Consults $TZ environment variable,
+unless second argument is supplied.`,
+			examples: []string{
+				`localtime2nsec("2001-02-03 04:05:06") = 981165906000000000 with TZ="Asia/Istanbul"`,
+				`localtime2nsec("2001-02-03 04:05:06", "Asia/Istanbul") = 981165906000000000"`,
+			},
+			unaryFunc:          bifs.BIF_localtime2nsec_unary,
+			binaryFunc:         bifs.BIF_localtime2nsec_binary,
 			hasMultipleArities: true,
 		},
 
@@ -998,6 +1021,21 @@ argument n, includes n decimal places for the seconds part.`,
 			},
 			unaryFunc:          bifs.BIF_sec2gmt_unary,
 			binaryFunc:         bifs.BIF_sec2gmt_binary,
+			hasMultipleArities: true,
+		},
+
+		{
+			name:  "nsec2gmt",
+			class: FUNC_CLASS_TIME,
+			help: `Formats integer nanoseconds since epoch as GMT timestamp. Leaves non-numbers as-is. With second integer
+argument n, includes n decimal places for the seconds part.`,
+			examples: []string{
+				`nsec2gmt(1234567890000000000)    = "2009-02-13T23:31:30Z"`,
+				`nsec2gmt(1234567890123456789)    = "2009-02-13T23:31:30Z"`,
+				`nsec2gmt(1234567890123456789, 6) = "2009-02-13T23:31:30.123456Z"`,
+			},
+			unaryFunc:          bifs.BIF_nsec2gmt_unary,
+			binaryFunc:         bifs.BIF_nsec2gmt_binary,
 			hasMultipleArities: true,
 		},
 
@@ -1020,6 +1058,24 @@ includes n decimal places for the seconds part`,
 		},
 
 		{
+			name:  "nsec2localtime",
+			class: FUNC_CLASS_TIME,
+			help: `Formats integer nanoseconds since epoch as local timestamp.  Consults $TZ
+environment variable unless third argument is supplied. Leaves non-numbers as-is. With second integer argument n,
+includes n decimal places for the seconds part`,
+			examples: []string{
+				`nsec2localtime(1234567890000000000)    = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"`,
+				`nsec2localtime(1234567890123456789)    = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"`,
+				`nsec2localtime(1234567890123456789, 6) = "2009-02-14 01:31:30.123456" with TZ="Asia/Istanbul"`,
+				`nsec2localtime(1234567890123456789, 6, "Asia/Istanbul") = "2009-02-14 01:31:30.123456"`,
+			},
+			unaryFunc:          bifs.BIF_nsec2localtime_unary,
+			binaryFunc:         bifs.BIF_nsec2localtime_binary,
+			ternaryFunc:        bifs.BIF_nsec2localtime_ternary,
+			hasMultipleArities: true,
+		},
+
+		{
 			name:  "sec2gmtdate",
 			class: FUNC_CLASS_TIME,
 			help: `Formats seconds since epoch (integer part) as GMT timestamp with year-month-date.
@@ -1028,6 +1084,17 @@ Leaves non-numbers as-is.`,
 				`sec2gmtdate(1440768801.7) = "2015-08-28".`,
 			},
 			unaryFunc: bifs.BIF_sec2gmtdate,
+		},
+
+		{
+			name:  "nsec2gmtdate",
+			class: FUNC_CLASS_TIME,
+			help: `Formats integer nanoseconds since epoch as GMT timestamp with year-month-date.
+Leaves non-numbers as-is.`,
+			examples: []string{
+				`sec2gmtdate(1440768801700000000) = "2015-08-28".`,
+			},
+			unaryFunc: bifs.BIF_nsec2gmtdate,
 		},
 
 		{
@@ -1041,6 +1108,20 @@ Leaves non-numbers as-is. Consults $TZ environment variable unless second argume
 			},
 			unaryFunc:          bifs.BIF_sec2localdate_unary,
 			binaryFunc:         bifs.BIF_sec2localdate_binary,
+			hasMultipleArities: true,
+		},
+
+		{
+			name:  "nsec2localdate",
+			class: FUNC_CLASS_TIME,
+			help: `Formats integer nanoseconds since epoch as local timestamp with year-month-date.
+Leaves non-numbers as-is. Consults $TZ environment variable unless second argument is supplied.`,
+			examples: []string{
+				`nsec2localdate(1440768801700000000) = "2015-08-28" with TZ="Asia/Istanbul"`,
+				`nsec2localdate(1440768801700000000, "Asia/Istanbul") = "2015-08-28"`,
+			},
+			unaryFunc:          bifs.BIF_nsec2localdate_unary,
+			binaryFunc:         bifs.BIF_nsec2localdate_binary,
 			hasMultipleArities: true,
 		},
 
@@ -1088,17 +1169,19 @@ See also strftime_local.`,
 		},
 
 		{
-			name:  "strptime",
+			name:  "strfntime",
 			class: FUNC_CLASS_TIME,
-			help:  `strptime: Parses timestamp as floating-point seconds since the epoch. See also strptime_local.`,
+			help: `Formats integer nanoseconds since the epoch as timestamp. Format strings are as at
+https://pkg.go.dev/github.com/lestrrat-go/strftime, with the Miller-specific addition of "%1S"
+through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no
+decimal places.) See also ` + lib.DOC_URL + `/en/latest/reference-dsl-time/ for more information on the differences from the C library ("man strftime" on your system).
+See also strftime_local.`,
 			examples: []string{
-				`strptime("2015-08-28T13:33:21Z",      "%Y-%m-%dT%H:%M:%SZ")   = 1440768801.000000`,
-				`strptime("2015-08-28T13:33:21.345Z",  "%Y-%m-%dT%H:%M:%SZ")   = 1440768801.345000`,
-				`strptime("1970-01-01 00:00:00 -0400", "%Y-%m-%d %H:%M:%S %z") = 14400`,
-				`strptime("1970-01-01 00:00:00 EET",   "%Y-%m-%d %H:%M:%S %Z") = -7200`,
+				`strfntime(1440768801123456789,"%Y-%m-%dT%H:%M:%SZ")  = "2015-08-28T13:33:21Z"`,
+				`strfntime(1440768801123456789,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.123Z"`,
+				`strfntime(1440768801123456789,"%Y-%m-%dT%H:%M:%6SZ") = "2015-08-28T13:33:21.123456Z"`,
 			},
-
-			binaryFunc: bifs.BIF_strptime,
+			binaryFunc: bifs.BIF_strfntime,
 		},
 
 		{
@@ -1116,9 +1199,50 @@ See also strftime_local.`,
 		},
 
 		{
+			name:  "strfntime_local",
+			class: FUNC_CLASS_TIME,
+			help:  `Like strfntime but consults the $TZ environment variable to get local time zone.`,
+			examples: []string{
+				`strfntime_local(1440768801123456789, "%Y-%m-%d %H:%M:%S %z")  = "2015-08-28 16:33:21 +0300" with TZ="Asia/Istanbul"`,
+				`strfntime_local(1440768801123456789, "%Y-%m-%d %H:%M:%3S %z") = "2015-08-28 16:33:21.123 +0300" with TZ="Asia/Istanbul"`,
+				`strfntime_local(1440768801123456789, "%Y-%m-%d %H:%M:%3S %z", "Asia/Istanbul") = "2015-08-28 16:33:21.123 +0300"`,
+				`strfntime_local(1440768801123456789, "%Y-%m-%d %H:%M:%9S %z", "Asia/Istanbul") = "2015-08-28 16:33:21.123456789 +0300"`,
+			},
+			binaryFunc:         bifs.BIF_strfntime_local_binary,
+			ternaryFunc:        bifs.BIF_strfntime_local_ternary,
+			hasMultipleArities: true,
+		},
+
+		{
+			name:  "strptime",
+			class: FUNC_CLASS_TIME,
+			help:  `strptime: Parses timestamp as floating-point seconds since the epoch. See also strptime_local.`,
+			examples: []string{
+				`strptime("2015-08-28T13:33:21Z",      "%Y-%m-%dT%H:%M:%SZ")   = 1440768801.000000`,
+				`strptime("2015-08-28T13:33:21.345Z",  "%Y-%m-%dT%H:%M:%SZ")   = 1440768801.345000`,
+				`strptime("1970-01-01 00:00:00 -0400", "%Y-%m-%d %H:%M:%S %z") = 14400`,
+				`strptime("1970-01-01 00:00:00 +0200", "%Y-%m-%d %H:%M:%S %z") = -7200`,
+			},
+			binaryFunc: bifs.BIF_strptime,
+		},
+
+		{
+			name:  "strpntime",
+			class: FUNC_CLASS_TIME,
+			help:  `strpntime: Parses timestamp as integer nanoseconds since the epoch. See also strpntime_local.`,
+			examples: []string{
+				`strpntime("2015-08-28T13:33:21Z",      "%Y-%m-%dT%H:%M:%SZ")   = 1440768801000000000`,
+				`strpntime("2015-08-28T13:33:21.345Z",  "%Y-%m-%dT%H:%M:%SZ")   = 1440768801345000000`,
+				`strpntime("1970-01-01 00:00:00 -0400", "%Y-%m-%d %H:%M:%S %z") = 14400000000000`,
+				`strpntime("1970-01-01 00:00:00 +0200", "%Y-%m-%d %H:%M:%S %z") = -7200000000000`,
+			},
+			binaryFunc: bifs.BIF_strpntime,
+		},
+
+		{
 			name:  "strptime_local",
 			class: FUNC_CLASS_TIME,
-			help:  `Like strftime but consults the $TZ environment variable to get local time zone.`,
+			help:  `Like strptime but consults the $TZ environment variable to get local time zone.`,
 			examples: []string{
 				`strptime_local("2015-08-28T13:33:21Z",    "%Y-%m-%dT%H:%M:%SZ") = 1440758001     with TZ="Asia/Istanbul"`,
 				`strptime_local("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440758001.345 with TZ="Asia/Istanbul"`,
@@ -1129,6 +1253,23 @@ See also strftime_local.`,
 			},
 			binaryFunc:         bifs.BIF_strptime_local_binary,
 			ternaryFunc:        bifs.BIF_strptime_local_ternary,
+			hasMultipleArities: true,
+		},
+
+		{
+			name:  "strpntime_local",
+			class: FUNC_CLASS_TIME,
+			help:  `Like strpntime but consults the $TZ environment variable to get local time zone.`,
+			examples: []string{
+				`strpntime_local("2015-08-28T13:33:21Z",    "%Y-%m-%dT%H:%M:%SZ") = 1440758001000000000 with TZ="Asia/Istanbul"`,
+				`strpntime_local("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440758001345000000 with TZ="Asia/Istanbul"`,
+				`strpntime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S")  = 1440758001000000000 with TZ="Asia/Istanbul"`,
+				`strpntime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S", "Asia/Istanbul") = 1440758001000000000`,
+				// TODO: fix parse error on decimal part
+				//`strpntime_local("2015-08-28 13:33:21.345","%Y-%m-%d %H:%M:%S") = 1440758001.345`,
+			},
+			binaryFunc:         bifs.BIF_strpntime_local_binary,
+			ternaryFunc:        bifs.BIF_strpntime_local_ternary,
 			hasMultipleArities: true,
 		},
 
@@ -1196,6 +1337,13 @@ See also strftime_local.`,
 		},
 
 		{
+			name:     "sysntime",
+			class:    FUNC_CLASS_TIME,
+			help:     "Returns the system time in 64-bit nanoseconds since the epoch.",
+			zaryFunc: bifs.BIF_sysntime,
+		},
+
+		{
 			name:     "systimeint",
 			class:    FUNC_CLASS_TIME,
 			help:     "Returns the system time in integer seconds since the epoch.",
@@ -1207,6 +1355,13 @@ See also strftime_local.`,
 			class:    FUNC_CLASS_TIME,
 			help:     "Returns the time in floating-point seconds since the current Miller program was started.",
 			zaryFunc: bifs.BIF_uptime,
+		},
+
+		{
+			name:     "upntime",
+			class:    FUNC_CLASS_TIME,
+			help:     "Returns the time in 64-bit nanoseconds since the current Miller program was started.",
+			zaryFunc: bifs.BIF_upntime,
 		},
 
 		// ----------------------------------------------------------------

@@ -76,7 +76,7 @@ is 2. Unary operators such as `!` and `~` show argument-count of 1; the ternary
 * [**Math functions**](#math-functions):  [abs](#abs),  [acos](#acos),  [acosh](#acosh),  [asin](#asin),  [asinh](#asinh),  [atan](#atan),  [atan2](#atan2),  [atanh](#atanh),  [cbrt](#cbrt),  [ceil](#ceil),  [cos](#cos),  [cosh](#cosh),  [erf](#erf),  [erfc](#erfc),  [exp](#exp),  [expm1](#expm1),  [floor](#floor),  [invqnorm](#invqnorm),  [log](#log),  [log10](#log10),  [log1p](#log1p),  [logifit](#logifit),  [max](#max),  [min](#min),  [qnorm](#qnorm),  [round](#round),  [roundm](#roundm),  [sgn](#sgn),  [sin](#sin),  [sinh](#sinh),  [sqrt](#sqrt),  [tan](#tan),  [tanh](#tanh),  [urand](#urand),  [urand32](#urand32),  [urandelement](#urandelement),  [urandint](#urandint),  [urandrange](#urandrange).
 * [**String functions**](#string-functions):  [capitalize](#capitalize),  [clean_whitespace](#clean_whitespace),  [collapse_whitespace](#collapse_whitespace),  [format](#format),  [gssub](#gssub),  [gsub](#gsub),  [index](#index),  [latin1_to_utf8](#latin1_to_utf8),  [leftpad](#leftpad),  [lstrip](#lstrip),  [regextract](#regextract),  [regextract_or_else](#regextract_or_else),  [rightpad](#rightpad),  [rstrip](#rstrip),  [ssub](#ssub),  [strip](#strip),  [strlen](#strlen),  [sub](#sub),  [substr](#substr),  [substr0](#substr0),  [substr1](#substr1),  [tolower](#tolower),  [toupper](#toupper),  [truncate](#truncate),  [unformat](#unformat),  [unformatx](#unformatx),  [utf8_to_latin1](#utf8_to_latin1),  [\.](#dot).
 * [**System functions**](#system-functions):  [exec](#exec),  [hostname](#hostname),  [os](#os),  [system](#system),  [version](#version).
-* [**Time functions**](#time-functions):  [dhms2fsec](#dhms2fsec),  [dhms2sec](#dhms2sec),  [fsec2dhms](#fsec2dhms),  [fsec2hms](#fsec2hms),  [gmt2localtime](#gmt2localtime),  [gmt2sec](#gmt2sec),  [hms2fsec](#hms2fsec),  [hms2sec](#hms2sec),  [localtime2gmt](#localtime2gmt),  [localtime2sec](#localtime2sec),  [sec2dhms](#sec2dhms),  [sec2gmt](#sec2gmt),  [sec2gmtdate](#sec2gmtdate),  [sec2hms](#sec2hms),  [sec2localdate](#sec2localdate),  [sec2localtime](#sec2localtime),  [strftime](#strftime),  [strftime_local](#strftime_local),  [strptime](#strptime),  [strptime_local](#strptime_local),  [systime](#systime),  [systimeint](#systimeint),  [uptime](#uptime).
+* [**Time functions**](#time-functions):  [dhms2fsec](#dhms2fsec),  [dhms2sec](#dhms2sec),  [fsec2dhms](#fsec2dhms),  [fsec2hms](#fsec2hms),  [gmt2localtime](#gmt2localtime),  [gmt2nsec](#gmt2nsec),  [gmt2sec](#gmt2sec),  [hms2fsec](#hms2fsec),  [hms2sec](#hms2sec),  [localtime2gmt](#localtime2gmt),  [localtime2nsec](#localtime2nsec),  [localtime2sec](#localtime2sec),  [nsec2gmt](#nsec2gmt),  [nsec2gmtdate](#nsec2gmtdate),  [nsec2localdate](#nsec2localdate),  [nsec2localtime](#nsec2localtime),  [sec2dhms](#sec2dhms),  [sec2gmt](#sec2gmt),  [sec2gmtdate](#sec2gmtdate),  [sec2hms](#sec2hms),  [sec2localdate](#sec2localdate),  [sec2localtime](#sec2localtime),  [strfntime](#strfntime),  [strfntime_local](#strfntime_local),  [strftime](#strftime),  [strftime_local](#strftime_local),  [strpntime](#strpntime),  [strpntime_local](#strpntime_local),  [strptime](#strptime),  [strptime_local](#strptime_local),  [sysntime](#sysntime),  [systime](#systime),  [systimeint](#systimeint),  [upntime](#upntime),  [uptime](#uptime).
 * [**Typing functions**](#typing-functions):  [asserting_absent](#asserting_absent),  [asserting_array](#asserting_array),  [asserting_bool](#asserting_bool),  [asserting_boolean](#asserting_boolean),  [asserting_empty](#asserting_empty),  [asserting_empty_map](#asserting_empty_map),  [asserting_error](#asserting_error),  [asserting_float](#asserting_float),  [asserting_int](#asserting_int),  [asserting_map](#asserting_map),  [asserting_nonempty_map](#asserting_nonempty_map),  [asserting_not_array](#asserting_not_array),  [asserting_not_empty](#asserting_not_empty),  [asserting_not_map](#asserting_not_map),  [asserting_not_null](#asserting_not_null),  [asserting_null](#asserting_null),  [asserting_numeric](#asserting_numeric),  [asserting_present](#asserting_present),  [asserting_string](#asserting_string),  [is_absent](#is_absent),  [is_array](#is_array),  [is_bool](#is_bool),  [is_boolean](#is_boolean),  [is_empty](#is_empty),  [is_empty_map](#is_empty_map),  [is_error](#is_error),  [is_float](#is_float),  [is_int](#is_int),  [is_map](#is_map),  [is_nan](#is_nan),  [is_nonempty_map](#is_nonempty_map),  [is_not_array](#is_not_array),  [is_not_empty](#is_not_empty),  [is_not_map](#is_not_map),  [is_not_null](#is_not_null),  [is_null](#is_null),  [is_numeric](#is_numeric),  [is_present](#is_present),  [is_string](#is_string),  [typeof](#typeof).
 
 ## Arithmetic functions
@@ -1267,6 +1267,14 @@ gmt2localtime("1999-12-31T22:00:00Z", "Asia/Istanbul") = "2000-01-01 00:00:00"
 </pre>
 
 
+### gmt2nsec
+<pre class="pre-non-highlight-non-pair">
+gmt2nsec  (class=time #args=1) Parses GMT timestamp as integer nanoseconds since the epoch.
+Example:
+gmt2nsec("2001-02-03T04:05:06Z") = 981173106000000000
+</pre>
+
+
 ### gmt2sec
 <pre class="pre-non-highlight-non-pair">
 gmt2sec  (class=time #args=1) Parses GMT timestamp as integer seconds since the epoch.
@@ -1296,12 +1304,59 @@ localtime2gmt("2000-01-01 00:00:00", "Asia/Istanbul") = "1999-12-31T22:00:00Z"
 </pre>
 
 
+### localtime2nsec
+<pre class="pre-non-highlight-non-pair">
+localtime2nsec  (class=time #args=1,2) Parses local timestamp as integer nanoseconds since the epoch. Consults $TZ environment variable, unless second argument is supplied.
+Examples:
+localtime2nsec("2001-02-03 04:05:06") = 981165906000000000 with TZ="Asia/Istanbul"
+localtime2nsec("2001-02-03 04:05:06", "Asia/Istanbul") = 981165906000000000"
+</pre>
+
+
 ### localtime2sec
 <pre class="pre-non-highlight-non-pair">
 localtime2sec  (class=time #args=1,2) Parses local timestamp as integer seconds since the epoch. Consults $TZ environment variable, unless second argument is supplied.
 Examples:
 localtime2sec("2001-02-03 04:05:06") = 981165906 with TZ="Asia/Istanbul"
 localtime2sec("2001-02-03 04:05:06", "Asia/Istanbul") = 981165906"
+</pre>
+
+
+### nsec2gmt
+<pre class="pre-non-highlight-non-pair">
+nsec2gmt  (class=time #args=1,2) Formats integer nanoseconds since epoch as GMT timestamp. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part.
+Examples:
+nsec2gmt(1234567890000000000)    = "2009-02-13T23:31:30Z"
+nsec2gmt(1234567890123456789)    = "2009-02-13T23:31:30Z"
+nsec2gmt(1234567890123456789, 6) = "2009-02-13T23:31:30.123456Z"
+</pre>
+
+
+### nsec2gmtdate
+<pre class="pre-non-highlight-non-pair">
+nsec2gmtdate  (class=time #args=1) Formats integer nanoseconds since epoch as GMT timestamp with year-month-date. Leaves non-numbers as-is.
+Example:
+sec2gmtdate(1440768801700000000) = "2015-08-28".
+</pre>
+
+
+### nsec2localdate
+<pre class="pre-non-highlight-non-pair">
+nsec2localdate  (class=time #args=1,2) Formats integer nanoseconds since epoch as local timestamp with year-month-date. Leaves non-numbers as-is. Consults $TZ environment variable unless second argument is supplied.
+Examples:
+nsec2localdate(1440768801700000000) = "2015-08-28" with TZ="Asia/Istanbul"
+nsec2localdate(1440768801700000000, "Asia/Istanbul") = "2015-08-28"
+</pre>
+
+
+### nsec2localtime
+<pre class="pre-non-highlight-non-pair">
+nsec2localtime  (class=time #args=1,2,3) Formats integer nanoseconds since epoch as local timestamp. Consults $TZ environment variable unless third argument is supplied. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
+Examples:
+nsec2localtime(1234567890000000000)    = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"
+nsec2localtime(1234567890123456789)    = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"
+nsec2localtime(1234567890123456789, 6) = "2009-02-14 01:31:30.123456" with TZ="Asia/Istanbul"
+nsec2localtime(1234567890123456789, 6, "Asia/Istanbul") = "2009-02-14 01:31:30.123456"
 </pre>
 
 
@@ -1355,6 +1410,27 @@ sec2localtime(1234567890.123456, 6, "Asia/Istanbul") = "2009-02-14 01:31:30.1234
 </pre>
 
 
+### strfntime
+<pre class="pre-non-highlight-non-pair">
+strfntime  (class=time #args=2) Formats integer nanoseconds since the epoch as timestamp. Format strings are as at https://pkg.go.dev/github.com/lestrrat-go/strftime, with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also https://miller.readthedocs.io/en/latest/reference-dsl-time/ for more information on the differences from the C library ("man strftime" on your system). See also strftime_local.
+Examples:
+strfntime(1440768801123456789,"%Y-%m-%dT%H:%M:%SZ")  = "2015-08-28T13:33:21Z"
+strfntime(1440768801123456789,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.123Z"
+strfntime(1440768801123456789,"%Y-%m-%dT%H:%M:%6SZ") = "2015-08-28T13:33:21.123456Z"
+</pre>
+
+
+### strfntime_local
+<pre class="pre-non-highlight-non-pair">
+strfntime_local  (class=time #args=2,3) Like strfntime but consults the $TZ environment variable to get local time zone.
+Examples:
+strfntime_local(1440768801123456789, "%Y-%m-%d %H:%M:%S %z")  = "2015-08-28 16:33:21 +0300" with TZ="Asia/Istanbul"
+strfntime_local(1440768801123456789, "%Y-%m-%d %H:%M:%3S %z") = "2015-08-28 16:33:21.123 +0300" with TZ="Asia/Istanbul"
+strfntime_local(1440768801123456789, "%Y-%m-%d %H:%M:%3S %z", "Asia/Istanbul") = "2015-08-28 16:33:21.123 +0300"
+strfntime_local(1440768801123456789, "%Y-%m-%d %H:%M:%9S %z", "Asia/Istanbul") = "2015-08-28 16:33:21.123456789 +0300"
+</pre>
+
+
 ### strftime
 <pre class="pre-non-highlight-non-pair">
 strftime  (class=time #args=2) Formats seconds since the epoch as timestamp. Format strings are as at https://pkg.go.dev/github.com/lestrrat-go/strftime, with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also https://miller.readthedocs.io/en/latest/reference-dsl-time/ for more information on the differences from the C library ("man strftime" on your system). See also strftime_local.
@@ -1374,6 +1450,28 @@ strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%3S %z", "Asia/Istanbul") = "2015-0
 </pre>
 
 
+### strpntime
+<pre class="pre-non-highlight-non-pair">
+strpntime  (class=time #args=2) strpntime: Parses timestamp as integer nanoseconds since the epoch. See also strpntime_local.
+Examples:
+strpntime("2015-08-28T13:33:21Z",      "%Y-%m-%dT%H:%M:%SZ")   = 1440768801000000000
+strpntime("2015-08-28T13:33:21.345Z",  "%Y-%m-%dT%H:%M:%SZ")   = 1440768801345000000
+strpntime("1970-01-01 00:00:00 -0400", "%Y-%m-%d %H:%M:%S %z") = 14400000000000
+strpntime("1970-01-01 00:00:00 +0200", "%Y-%m-%d %H:%M:%S %z") = -7200000000000
+</pre>
+
+
+### strpntime_local
+<pre class="pre-non-highlight-non-pair">
+strpntime_local  (class=time #args=2,3) Like strpntime but consults the $TZ environment variable to get local time zone.
+Examples:
+strpntime_local("2015-08-28T13:33:21Z",    "%Y-%m-%dT%H:%M:%SZ") = 1440758001000000000 with TZ="Asia/Istanbul"
+strpntime_local("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440758001345000000 with TZ="Asia/Istanbul"
+strpntime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S")  = 1440758001000000000 with TZ="Asia/Istanbul"
+strpntime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S", "Asia/Istanbul") = 1440758001000000000
+</pre>
+
+
 ### strptime
 <pre class="pre-non-highlight-non-pair">
 strptime  (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch. See also strptime_local.
@@ -1381,18 +1479,24 @@ Examples:
 strptime("2015-08-28T13:33:21Z",      "%Y-%m-%dT%H:%M:%SZ")   = 1440768801.000000
 strptime("2015-08-28T13:33:21.345Z",  "%Y-%m-%dT%H:%M:%SZ")   = 1440768801.345000
 strptime("1970-01-01 00:00:00 -0400", "%Y-%m-%d %H:%M:%S %z") = 14400
-strptime("1970-01-01 00:00:00 EET",   "%Y-%m-%d %H:%M:%S %Z") = -7200
+strptime("1970-01-01 00:00:00 +0200", "%Y-%m-%d %H:%M:%S %z") = -7200
 </pre>
 
 
 ### strptime_local
 <pre class="pre-non-highlight-non-pair">
-strptime_local  (class=time #args=2,3) Like strftime but consults the $TZ environment variable to get local time zone.
+strptime_local  (class=time #args=2,3) Like strptime but consults the $TZ environment variable to get local time zone.
 Examples:
 strptime_local("2015-08-28T13:33:21Z",    "%Y-%m-%dT%H:%M:%SZ") = 1440758001     with TZ="Asia/Istanbul"
 strptime_local("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440758001.345 with TZ="Asia/Istanbul"
 strptime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S")  = 1440758001     with TZ="Asia/Istanbul"
 strptime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S", "Asia/Istanbul") = 1440758001
+</pre>
+
+
+### sysntime
+<pre class="pre-non-highlight-non-pair">
+sysntime  (class=time #args=0) Returns the system time in 64-bit nanoseconds since the epoch.
 </pre>
 
 
@@ -1405,6 +1509,12 @@ systime  (class=time #args=0) Returns the system time in floating-point seconds 
 ### systimeint
 <pre class="pre-non-highlight-non-pair">
 systimeint  (class=time #args=0) Returns the system time in integer seconds since the epoch.
+</pre>
+
+
+### upntime
+<pre class="pre-non-highlight-non-pair">
+upntime  (class=time #args=0) Returns the time in 64-bit nanoseconds since the current Miller program was started.
 </pre>
 
 

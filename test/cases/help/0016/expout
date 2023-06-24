@@ -20,6 +20,14 @@ Options:
 --micros Input numbers are treated as microseconds since the epoch.
 --nanos  Input numbers are treated as nanoseconds since the epoch.
 -h|--help Show this message.
+nsec2gmt  (class=time #args=1,2) Formats integer nanoseconds since epoch as GMT timestamp. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part.
+Examples:
+nsec2gmt(1234567890000000000)    = "2009-02-13T23:31:30Z"
+nsec2gmt(1234567890123456789)    = "2009-02-13T23:31:30Z"
+nsec2gmt(1234567890123456789, 6) = "2009-02-13T23:31:30.123456Z"
+nsec2gmtdate  (class=time #args=1) Formats integer nanoseconds since epoch as GMT timestamp with year-month-date. Leaves non-numbers as-is.
+Example:
+sec2gmtdate(1440768801700000000) = "2015-08-28".
 sec2gmt  (class=time #args=1,2) Formats seconds since epoch as GMT timestamp. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part.
 Examples:
 sec2gmt(1234567890)           = "2009-02-13T23:31:30Z"
