@@ -1,0 +1,4 @@
+end {
+  print strfntime(strpntime("001 2021", "%j %Y"),"%Y-%m-%d");
+  print strfntime(strpntime("363 2021", "%j %Y"),"%Y-%m-%d");
+}

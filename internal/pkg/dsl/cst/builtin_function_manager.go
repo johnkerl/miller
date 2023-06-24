@@ -1087,6 +1087,17 @@ Leaves non-numbers as-is.`,
 		},
 
 		{
+			name:  "nsec2gmtdate",
+			class: FUNC_CLASS_TIME,
+			help: `Formats integer nanoseconds since epoch as GMT timestamp with year-month-date.
+Leaves non-numbers as-is.`,
+			examples: []string{
+				`sec2gmtdate(1440768801700000000) = "2015-08-28".`,
+			},
+			unaryFunc: bifs.BIF_nsec2gmtdate,
+		},
+
+		{
 			name:  "sec2localdate",
 			class: FUNC_CLASS_TIME,
 			help: `Formats seconds since epoch (integer part) as local timestamp with year-month-date.
@@ -1097,6 +1108,20 @@ Leaves non-numbers as-is. Consults $TZ environment variable unless second argume
 			},
 			unaryFunc:          bifs.BIF_sec2localdate_unary,
 			binaryFunc:         bifs.BIF_sec2localdate_binary,
+			hasMultipleArities: true,
+		},
+
+		{
+			name:  "nsec2localdate",
+			class: FUNC_CLASS_TIME,
+			help: `Formats integer nanoseconds since epoch as local timestamp with year-month-date.
+Leaves non-numbers as-is. Consults $TZ environment variable unless second argument is supplied.`,
+			examples: []string{
+				`nsec2localdate(1440768801700000000) = "2015-08-28" with TZ="Asia/Istanbul"`,
+				`nsec2localdate(1440768801700000000, "Asia/Istanbul") = "2015-08-28"`,
+			},
+			unaryFunc:          bifs.BIF_nsec2localdate_unary,
+			binaryFunc:         bifs.BIF_nsec2localdate_binary,
 			hasMultipleArities: true,
 		},
 

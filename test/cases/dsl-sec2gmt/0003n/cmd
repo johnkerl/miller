@@ -1,0 +1,1 @@
+mlr --from test/input/ten.dkvp --opprint put '$z=nsec2gmt($i * 1000000000 * 123456789)'

@@ -1,0 +1,1 @@
+$sec = gmt2nsec($gmt)

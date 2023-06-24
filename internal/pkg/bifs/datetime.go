@@ -183,6 +183,13 @@ func BIF_sec2gmtdate(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return BIF_strftime(input1, ptr_YMD_FORMAT)
 }
 
+func BIF_nsec2gmtdate(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	if !input1.IsNumeric() {
+		return input1
+	}
+	return BIF_strfntime(input1, ptr_YMD_FORMAT)
+}
+
 func BIF_sec2localdate_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsNumeric() {
 		return input1
@@ -190,11 +197,25 @@ func BIF_sec2localdate_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return BIF_strftime_local_binary(input1, ptr_YMD_FORMAT)
 }
 
+func BIF_nsec2localdate_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	if !input1.IsNumeric() {
+		return input1
+	}
+	return BIF_strfntime_local_binary(input1, ptr_YMD_FORMAT)
+}
+
 func BIF_sec2localdate_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsNumeric() {
 		return input1
 	}
 	return BIF_strftime_local_ternary(input1, ptr_YMD_FORMAT, input2)
+}
+
+func BIF_nsec2localdate_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	if !input1.IsNumeric() {
+		return input1
+	}
+	return BIF_strfntime_local_ternary(input1, ptr_YMD_FORMAT, input2)
 }
 
 // ----------------------------------------------------------------
