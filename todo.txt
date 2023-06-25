@@ -1,41 +1,19 @@
 ===============================================================
-* 404 -- what broke?
-  https://github.com/johnkerl/miller/pull/757/files
-* https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+label%3Aneeds-documentation
-* https://squidfunk.github.io/mkdocs-material/setup/setting-up-versioning/
+* 1050 mlr check w/ empty csv column name
+*  283 strmatch DSL function
+*  440 strict mode
+* 1128 bash/zsh autocompletions
+* 1025 emitv2
+* 1082 summary/type
+* 1105 too many open files
 
-RELEASES
-* 6.4.0 ideas:
-
-  ! -r splits for rename, merge-fields, cut
-  ! summing up empty data
-  ! emitv2
-  ! csv check for empty field names
-  ! strmatch
-  ! transposed output
-
-  o mrpl exits ...
-  o opt-in type-infers for inf, true, etc
-  o #982 '.' ',' etc
-  o extended field accessors for #763 and #948 (positional & json.nested)
-  o strict mode
-  o awk-like exit
-  o unsparsify -f CSV by default -- ? into CSV record-writer -- ? caveat that record 1 controls all ...
-  o mlr split -- needs an example page along with the tee DSL function
-    - some mlr merge somehow -- ? would need a verb-API refactor
-
-  ? zlen csv?
-  ? datediff et al.
-  ? rank
-  ? YAML
-  ? #908 inferencing options
-  ? gogll
-
+* opt-in type-infers for inf, true, etc
+* 982 '.' ',' etc
+* extended field accessors for #763 and #948 (positional & json.nested)
+* awk-like exit
+* mrpl exits ...
 
 ================================================================
-FEATURES
-
-----------------------------------------------------------------
 STRICT MODE
 
 ? re silent zero-pass for-loops on non-collections:
@@ -327,8 +305,6 @@ w contact re https://jsonlines.org/on_the_web/
 
  ===============================================================
 TESTING
-
-! ./mlr vs mlr ...
 
 ! pos/neg 0x/0b/0o UTs
 
