@@ -67,6 +67,7 @@ Consumes records without printing any output,
 Useful for doing a well-formatted check on input data.
 with the exception that warnings are printed to stderr.
 Current checks are:
+* Data are parseable
 * If any key is the empty string
 Options:
 -h|--help Show this message.
