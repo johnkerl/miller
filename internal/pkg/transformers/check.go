@@ -79,10 +79,13 @@ func transformerCheckParseCLI(
 // ----------------------------------------------------------------
 type TransformerCheck struct {
 	// stateless
+	messagedReEmptyKey map[string]bool
 }
 
 func NewTransformerCheck() (*TransformerCheck, error) {
-	return &TransformerCheck{}, nil
+	return &TransformerCheck{
+		messagedReEmptyKey: make(map[string]bool),
+	}, nil
 }
 
 func (tr *TransformerCheck) Transform(
@@ -92,7 +95,27 @@ func (tr *TransformerCheck) Transform(
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	if inrecAndContext.EndOfStream {
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
+		for pe := inrec.Head; pe != nil; pe = pe.Next {
+			if pe.Key == "" {
+				context := inrecAndContext.Context
+
+				// Most Miller users are CSV users. And for CSV this will be an error on
+				// *every* record, or none -- so let's not print this multiple times.
+				if tr.messagedReEmptyKey[context.FILENAME] {
+					continue
+				}
+
+				message := fmt.Sprintf(
+					"mlr: warning: empty-string key at filename %s record number %d",
+					context.FILENAME, context.NR,
+				)
+				fmt.Fprintln(os.Stderr, message)
+				tr.messagedReEmptyKey[context.FILENAME] = true
+			}
+		}
+	} else {
 		outputRecordsAndContexts.PushBack(inrecAndContext)
 	}
 }
