@@ -178,7 +178,7 @@ Notes:
   * For `strftime`, this is thanks to [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime), with a Miller-specific modification for fractional seconds.
   * For `strftime`, this is thanks to [https://github.com/pbnjay/strptime](https://github.com/pbnjay/strptime), with Miller-specific modifications.
 
-Available format strings for `strftime`, taken directly from [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime):
+Available format strings for `strftime`, taken directly from [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime) except for `%1..%9`, `%N`, and `%O` which are Miller-specific additions:
 
 | Pattern | Description |
 |---------|-------------|
@@ -201,6 +201,8 @@ Available format strings for `strftime`, taken directly from [https://github.com
 | `%M` | the minute as a decimal number (00-59) |
 | `%m` | the month as a decimal number (01-12) |
 | `%n` | a newline |
+| `%N` | zero-padded nanoseconds |
+| `%O` | non-zero-padded nanoseconds |
 | `%p` | national representation of either "ante meridiem" (a.m.) or "post meridiem" (p.m.) as appropriate. |
 | `%R` | equivalent to `%H:%M` |
 | `%r` | equivalent to `%I:%M:%S %p` |
@@ -249,6 +251,8 @@ GENMD-RUN-COMMAND
 mlr -n put 'end {
   print strftime(0, "%Y-%m-%dT%H:%M:%SZ");
   print strftime(0, "%FT%TZ");
+  print strfntime(123, "%N");
+  print strfntime(123, "%O");
 }'
 GENMD-EOF
 

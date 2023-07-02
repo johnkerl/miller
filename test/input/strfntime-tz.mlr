@@ -13,5 +13,7 @@ end {
   print strfntime(123456, "%Y-%m-%d %H:%M:%S %z");
   print strfntime(0,      "%Y-%m-%d %H:%M:%S %Z");
   print strfntime(0,      "%Y-%m-%d %H:%M:%S %z");
+  print strfntime(123456, "%S %N");
+  print strfntime(123456, "%S %O");
 
 }
