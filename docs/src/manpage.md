@@ -940,6 +940,7 @@ MILLER(1)                                                            MILLER(1)
        Useful for doing a well-formatted check on input data.
        with the exception that warnings are printed to stderr.
        Current checks are:
+       * Data are parseable
        * If any key is the empty string
        Options:
        -h|--help Show this message.
@@ -3433,5 +3434,5 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-06-25                         MILLER(1)
+                                  2023-07-02                         MILLER(1)
 </pre>

@@ -246,7 +246,7 @@ Notes:
   * For `strftime`, this is thanks to [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime), with a Miller-specific modification for fractional seconds.
   * For `strftime`, this is thanks to [https://github.com/pbnjay/strptime](https://github.com/pbnjay/strptime), with Miller-specific modifications.
 
-Available format strings for `strftime`, taken directly from [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime):
+Available format strings for `strftime`, taken directly from [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime) except for `%1..%9`, `%N`, and `%O` which are Miller-specific additions:
 
 | Pattern | Description |
 |---------|-------------|
@@ -269,6 +269,8 @@ Available format strings for `strftime`, taken directly from [https://github.com
 | `%M` | the minute as a decimal number (00-59) |
 | `%m` | the month as a decimal number (01-12) |
 | `%n` | a newline |
+| `%N` | zero-padded nanoseconds |
+| `%O` | non-zero-padded nanoseconds |
 | `%p` | national representation of either "ante meridiem" (a.m.) or "post meridiem" (p.m.) as appropriate. |
 | `%R` | equivalent to `%H:%M` |
 | `%r` | equivalent to `%I:%M:%S %p` |
@@ -317,11 +319,15 @@ Examples:
 <b>mlr -n put 'end {</b>
 <b>  print strftime(0, "%Y-%m-%dT%H:%M:%SZ");</b>
 <b>  print strftime(0, "%FT%TZ");</b>
+<b>  print strfntime(123, "%N");</b>
+<b>  print strfntime(123, "%O");</b>
 <b>}'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 1970-01-01T00:00:00Z
 1970-01-01T00:00:00Z
+000000123
+123
 </pre>
 
 <pre class="pre-highlight-in-pair">

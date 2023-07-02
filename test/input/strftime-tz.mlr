@@ -13,5 +13,7 @@ end {
   print strftime(0.123456, "%Y-%m-%d %H:%M:%S %z");
   print strftime(0.0,      "%Y-%m-%d %H:%M:%S %Z");
   print strftime(0.0,      "%Y-%m-%d %H:%M:%S %z");
+  print strftime(0.123456, "%S %N");
+  print strftime(0.123456, "%S %O");
 
 }
