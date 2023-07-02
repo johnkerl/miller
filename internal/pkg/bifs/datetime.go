@@ -425,6 +425,18 @@ func init() {
 	appender9 := strftime.AppendFunc(func(b []byte, t time.Time) []byte {
 		return specificationHelper(b, t, "%09d", 1)
 	})
+	appenderN := strftime.AppendFunc(func(b []byte, t time.Time) []byte {
+		nanos := int(t.Nanosecond())
+		s := fmt.Sprintf("%09d", nanos)
+		//return append(b, []byte(s))
+		return append(b, s...)
+	})
+	appenderO := strftime.AppendFunc(func(b []byte, t time.Time) []byte {
+		nanos := int(t.Nanosecond())
+		s := fmt.Sprintf("%d", nanos)
+		//return append(b, []byte(s))
+		return append(b, s...)
+	})
 
 	ss := strftime.NewSpecificationSet()
 	ss.Set('1', appender1)
@@ -436,6 +448,8 @@ func init() {
 	ss.Set('7', appender7)
 	ss.Set('8', appender8)
 	ss.Set('9', appender9)
+	ss.Set('N', appenderN)
+	ss.Set('O', appenderO)
 
 	strftimeExtensions = strftime.WithSpecificationSet(ss)
 }
