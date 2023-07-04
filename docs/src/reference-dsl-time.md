@@ -246,7 +246,7 @@ Notes:
   * For `strftime`, this is thanks to [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime), with a Miller-specific modification for fractional seconds.
   * For `strftime`, this is thanks to [https://github.com/pbnjay/strptime](https://github.com/pbnjay/strptime), with Miller-specific modifications.
 
-Available format strings for `strftime`, taken directly from [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime) except for `%1..%9`, `%N`, and `%O` which are Miller-specific additions:
+Available format strings for `strftime`, taken directly from [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime) except for `%1..%9`, `%s`, `%N`, and `%O` which are Miller-specific additions:
 
 | Pattern | Description |
 |---------|-------------|
@@ -274,6 +274,7 @@ Available format strings for `strftime`, taken directly from [https://github.com
 | `%p` | national representation of either "ante meridiem" (a.m.) or "post meridiem" (p.m.) as appropriate. |
 | `%R` | equivalent to `%H:%M` |
 | `%r` | equivalent to `%I:%M:%S %p` |
+| `%s` | integer seconds since the epoch |
 | `%S` | the second as a decimal number (00-60) |
 | `%1S`, ..., `%9S` | the second as a decimal number (00-60) with 1..9 decimal places, respectively |
 | `%T` | equivalent to `%H:%M:%S` |

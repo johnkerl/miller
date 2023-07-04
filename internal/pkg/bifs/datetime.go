@@ -437,6 +437,11 @@ func init() {
 		//return append(b, []byte(s))
 		return append(b, s...)
 	})
+	appenderS := strftime.AppendFunc(func(b []byte, t time.Time) []byte {
+		epochSeconds := t.Unix()
+		s := fmt.Sprintf("%d", epochSeconds)
+		return append(b, s...)
+	})
 
 	ss := strftime.NewSpecificationSet()
 	ss.Set('1', appender1)
@@ -450,6 +455,7 @@ func init() {
 	ss.Set('9', appender9)
 	ss.Set('N', appenderN)
 	ss.Set('O', appenderO)
+	ss.Set('s', appenderS)
 
 	strftimeExtensions = strftime.WithSpecificationSet(ss)
 }
