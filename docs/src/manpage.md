@@ -1442,8 +1442,8 @@ MILLER(1)                                                            MILLER(1)
          -f {field name}       Required.
          --nested-fs {string}  Defaults to ";". Field separator for nested values.
          --nested-ps {string}  Defaults to ":". Pair separator for nested key-value pairs.
-         --evar {string}       Shorthand for --explode --values ---across-records --nested-fs {string}
-         --ivar {string}       Shorthand for --implode --values ---across-records --nested-fs {string}
+         --evar {string}       Shorthand for --explode --values --across-records --nested-fs {string}
+         --ivar {string}       Shorthand for --implode --values --across-records --nested-fs {string}
        Please use "mlr --usage-separator-options" for information on specifying separators.
 
        Examples:
@@ -3434,5 +3434,5 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-07-04                         MILLER(1)
+                                  2023-08-09                         MILLER(1)
 </pre>
