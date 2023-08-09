@@ -40,8 +40,8 @@ func transformerNestUsage(
 	fmt.Fprintf(o, "  -f {field name}       Required.\n")
 	fmt.Fprintf(o, "  --nested-fs {string}  Defaults to \";\". Field separator for nested values.\n")
 	fmt.Fprintf(o, "  --nested-ps {string}  Defaults to \":\". Pair separator for nested key-value pairs.\n")
-	fmt.Fprintf(o, "  --evar {string}       Shorthand for --explode --values ---across-records --nested-fs {string}\n")
-	fmt.Fprintf(o, "  --ivar {string}       Shorthand for --implode --values ---across-records --nested-fs {string}\n")
+	fmt.Fprintf(o, "  --evar {string}       Shorthand for --explode --values --across-records --nested-fs {string}\n")
+	fmt.Fprintf(o, "  --ivar {string}       Shorthand for --implode --values --across-records --nested-fs {string}\n")
 	fmt.Fprintf(o, "Please use \"%s --usage-separator-options\" for information on specifying separators.\n",
 		argv0)
 
