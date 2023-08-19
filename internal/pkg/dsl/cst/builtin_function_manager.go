@@ -29,6 +29,7 @@ type TFunctionClass string
 const (
 	FUNC_CLASS_ARITHMETIC  TFunctionClass = "arithmetic"
 	FUNC_CLASS_MATH        TFunctionClass = "math"
+	FUNC_CLASS_STATS       TFunctionClass = "stats"
 	FUNC_CLASS_BOOLEAN     TFunctionClass = "boolean"
 	FUNC_CLASS_STRING      TFunctionClass = "string"
 	FUNC_CLASS_HASHING     TFunctionClass = "hashing"
@@ -956,6 +957,100 @@ is normally distributed.`,
 			class:     FUNC_CLASS_MATH,
 			help:      `Random sample from the first argument, which must be an non-empty array.`,
 			unaryFunc: bifs.BIF_urandelement,
+		},
+
+		// ----------------------------------------------------------------
+		// FUNC_CLASS_STATS
+
+		{
+			name:      "stats_count",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_count,
+		},
+
+		{
+			name:      "stats_sum",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_sum,
+		},
+
+		{
+			name:      "stats_sum2",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_sum2,
+		},
+
+		{
+			name:      "stats_sum3",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_sum3,
+		},
+
+		{
+			name:      "stats_sum4",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_sum4,
+		},
+
+		{
+			name:      "stats_mean",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_mean,
+		},
+
+		{
+			name:      "stats_meaneb",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_meaneb,
+		},
+
+		{
+			name:      "stats_var",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_variance,
+		},
+
+		{
+			name:      "stats_stddev",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_stddev,
+		},
+
+		{
+			name:      "stats_skewness",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_skewness,
+		},
+
+		{
+			name:      "stats_kurtosis",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_kurtosis,
+		},
+
+		{
+			name:      "stats_min",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_min,
+		},
+
+		{
+			name:      "stats_max",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_max,
 		},
 
 		// ----------------------------------------------------------------

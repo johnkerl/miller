@@ -149,3 +149,216 @@ func BIF_get_kurtosis(mn, msum, msum2, msum3, msum4 *mlrval.Mlrval) *mlrval.Mlrv
 	return mlrval.FromFloat(numerator/denominator - 3.0)
 
 }
+
+// ================================================================
+// XXX TEMP
+
+// XXX COMMENT
+func check_collection(c *mlrval.Mlrval) (bool, *mlrval.Mlrval) {
+	vtype := c.Type()
+	switch vtype {
+	case mlrval.MT_ARRAY:
+		return true, nil
+	case mlrval.MT_MAP:
+		return true, nil
+	case mlrval.MT_ABSENT:
+		return false, mlrval.ABSENT
+	default:
+		return false, mlrval.ERROR
+	}
+}
+
+// XXX COMMENT
+func accumulate_sum(
+	acc *mlrval.Mlrval,
+	element *mlrval.Mlrval,
+	f func(element *mlrval.Mlrval) *mlrval.Mlrval,
+) *mlrval.Mlrval {
+	return BIF_plus_binary(acc, f(element))
+}
+
+// XXX COMMENT
+func collection_sum_of_function(
+	collection *mlrval.Mlrval,
+	f func(element *mlrval.Mlrval) *mlrval.Mlrval,
+) *mlrval.Mlrval {
+	acc := mlrval.FromInt(0)
+	if collection.IsArray() {
+		arrayval := collection.AcquireArrayValue()
+		for _, e := range arrayval {
+			acc = accumulate_sum(acc, e, f)
+		}
+	} else {
+		mapval := collection.AcquireMapValue()
+		for pe := mapval.Head; pe != nil; pe = pe.Next {
+			acc = accumulate_sum(acc, pe.Value, f)
+		}
+	}
+	return acc
+}
+
+func BIF_collection_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, errout := check_collection(collection)
+	if !ok {
+		return errout
+	}
+	if collection.IsArray() {
+		arrayval := collection.AcquireArrayValue()
+		return mlrval.FromInt(int64(len(arrayval)))
+	} else {
+		mapval := collection.AcquireMapValue()
+		return mlrval.FromInt(mapval.FieldCount)
+	}
+}
+
+func BIF_collection_sum(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, errout := check_collection(collection)
+	if !ok {
+		return errout
+	}
+	f := func(element *mlrval.Mlrval) *mlrval.Mlrval { return element }
+	return collection_sum_of_function(collection, f)
+}
+
+func BIF_collection_sum2(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, errout := check_collection(collection)
+	if !ok {
+		return errout
+	}
+	f := func(element *mlrval.Mlrval) *mlrval.Mlrval { return BIF_times(element, element) }
+	return collection_sum_of_function(collection, f)
+}
+
+func BIF_collection_sum3(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, errout := check_collection(collection)
+	if !ok {
+		return errout
+	}
+	f := func(element *mlrval.Mlrval) *mlrval.Mlrval {
+		return BIF_times(element, BIF_times(element, element))
+	}
+	return collection_sum_of_function(collection, f)
+}
+
+func BIF_collection_sum4(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, errout := check_collection(collection)
+	if !ok {
+		return errout
+	}
+	f := func(element *mlrval.Mlrval) *mlrval.Mlrval {
+		sq := BIF_times(element, element)
+		return BIF_times(sq, sq)
+	}
+	return collection_sum_of_function(collection, f)
+}
+
+func BIF_collection_mean(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, errout := check_collection(collection)
+	if !ok {
+		return errout
+	}
+	n := BIF_collection_count(collection)
+	sum := BIF_collection_sum(collection)
+	return BIF_divide(sum, n)
+}
+
+func BIF_collection_meaneb(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, errout := check_collection(collection)
+	if !ok {
+		return errout
+	}
+	n := BIF_collection_count(collection)
+	sum := BIF_collection_sum(collection)
+	sum2 := BIF_collection_sum2(collection)
+	return BIF_get_mean_EB(n, sum, sum2)
+}
+
+func BIF_collection_variance(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, errout := check_collection(collection)
+	if !ok {
+		return errout
+	}
+	n := BIF_collection_count(collection)
+	sum := BIF_collection_sum(collection)
+	sum2 := BIF_collection_sum2(collection)
+	return BIF_get_var(n, sum, sum2)
+}
+
+func BIF_collection_stddev(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, errout := check_collection(collection)
+	if !ok {
+		return errout
+	}
+	n := BIF_collection_count(collection)
+	sum := BIF_collection_sum(collection)
+	sum2 := BIF_collection_sum2(collection)
+	return BIF_get_stddev(n, sum, sum2)
+}
+
+func BIF_collection_skewness(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, errout := check_collection(collection)
+	if !ok {
+		return errout
+	}
+	n := BIF_collection_count(collection)
+	sum := BIF_collection_sum(collection)
+	sum2 := BIF_collection_sum2(collection)
+	sum3 := BIF_collection_sum3(collection)
+	return BIF_get_skewness(n, sum, sum2, sum3)
+}
+
+func BIF_collection_kurtosis(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, errout := check_collection(collection)
+	if !ok {
+		return errout
+	}
+	n := BIF_collection_count(collection)
+	sum := BIF_collection_sum(collection)
+	sum2 := BIF_collection_sum2(collection)
+	sum3 := BIF_collection_sum3(collection)
+	sum4 := BIF_collection_sum4(collection)
+	return BIF_get_kurtosis(n, sum, sum2, sum3, sum4)
+}
+
+func BIF_collection_min(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, errout := check_collection(collection)
+	if !ok {
+		return errout
+	}
+	if collection.IsArray() {
+		return BIF_min_variadic(collection.AcquireArrayValue())
+	} else {
+		return BIF_min_over_map_values(collection.AcquireMapValue())
+	}
+}
+
+func BIF_collection_max(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, errout := check_collection(collection)
+	if !ok {
+		return errout
+	}
+	if collection.IsArray() {
+		return BIF_max_variadic(collection.AcquireArrayValue())
+	} else {
+		return BIF_max_over_map_values(collection.AcquireMapValue())
+	}
+}
+
+//   antimode Find least-frequently-occurring values for fields; first-found wins tie
+// * count    Count instances of fields
+//   distinct_count Count number of distinct values per field
+// * kurtosis Compute sample kurtosis of specified fields
+// * max      Compute maximum values of specified fields
+//   maxlen   Compute maximum string-lengths of specified fields
+// * mean     Compute averages (sample means) of specified fields
+// * meaneb   Estimate error bars for averages (assuming no sample autocorrelation)
+//   median   This is the same as p50
+// * min      Compute minimum values of specified fields
+//   minlen   Compute minimum string-lengths of specified fields
+//   mode     Find most-frequently-occurring values for fields; first-found wins tie
+//   null_count Count number of empty-string/JSON-null instances per field
+//   p10 p25.2 p50 p98 p100 etc.
+// * skewness Compute sample skewness of specified fields
+// * stddev   Compute sample standard deviation of specified fields
+// * sum      Compute sums of specified fields
+// * var      Compute sample variance of specified fields

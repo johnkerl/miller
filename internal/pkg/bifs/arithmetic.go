@@ -825,6 +825,20 @@ func BIF_min_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
+func BIF_min_over_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
+	// XXX dedupe with BIF_min_over_map_values via callback
+	if m.Head == nil {
+		return mlrval.VOID
+	}
+	pe := m.Head
+	retval := m.Head.Value
+	pe = pe.Next
+	for ; pe != nil; pe = pe.Next {
+		retval = BIF_min_binary(retval, pe.Value)
+	}
+	return retval
+}
+
 // ----------------------------------------------------------------
 func max_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	var a float64 = input1.AcquireFloatValue()
@@ -898,13 +912,25 @@ func BIF_max_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_max_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) == 0 {
 		return mlrval.VOID
-	} else {
-		retval := mlrvals[0]
-		for i := range mlrvals {
-			if i > 0 {
-				retval = BIF_max_binary(retval, mlrvals[i])
-			}
-		}
-		return retval
 	}
+	retval := mlrvals[0]
+	for i := range mlrvals {
+		if i > 0 {
+			retval = BIF_max_binary(retval, mlrvals[i])
+		}
+	}
+	return retval
+}
+
+func BIF_max_over_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
+	if m.Head == nil {
+		return mlrval.VOID
+	}
+	pe := m.Head
+	retval := m.Head.Value
+	pe = pe.Next
+	for ; pe != nil; pe = pe.Next {
+		retval = BIF_max_binary(retval, pe.Value)
+	}
+	return retval
 }
