@@ -2992,7 +2992,7 @@ has its own overhead.`,
 		{
 			name: "--s-no-comment-strip",
 			arg:  "{file name}",
-			help: `Take command-line flags from file name, with no comment-stripping. For more information please see ` +
+			help: `Take command-line flags from file name, like -s, but with no comment-stripping. For more information please see ` +
 				lib.DOC_URL + `/en/latest/scripting/.`,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				// Already handled in main(). Nothing to do here except to accept this as valid syntax.

@@ -573,8 +573,9 @@ MILLER(1)                                                            MILLER(1)
                                 See also
                                 https://miller.readthedocs.io/en/latest/reference-main-flag-list/.
        --s-no-comment-strip {file name}
-                                Take command-line flags from file name, with no
-                                comment-stripping. For more information please see
+                                Take command-line flags from file name, like -s, but
+                                with no comment-stripping. For more information
+                                please see
                                 https://miller.readthedocs.io/en/latest/scripting/.
        --seed {n}               with `n` of the form `12345678` or `0xcafefeed`. For
                                 `put`/`filter` `urand`, `urandint`, and `urand32`.
