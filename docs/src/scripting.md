@@ -137,7 +137,7 @@ Here instead of putting `#!/bin/bash` on the first line, we can put `mlr` direct
 <pre class="pre-non-highlight-in-pair">
 #!/usr/bin/env mlr -s
 --c2p
-filter '$quantity != 20'
+filter '$quantity != 20' # Here is a comment
 then count-distinct -f shape
 then fraction -f count
 </pre>
@@ -149,6 +149,7 @@ Points:
 * You leave off the initial `mlr` since that's present on line 1.
 * You don't need all the backslashing for line-continuations.
 * You don't need the explicit `--` or `"$@"`.
+* All text from `#` to end of line is stripped out. If for any reason you need to suppress this, please use `mlr --s-no-comment-strip` in place of `mlr -s`.
 
 Then you can do
 
