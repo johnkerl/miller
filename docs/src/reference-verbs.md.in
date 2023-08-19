@@ -487,6 +487,20 @@ GENMD-RUN-COMMAND
 mlr --opprint group-like data/het.dkvp
 GENMD-EOF
 
+## gsub
+
+GENMD-RUN-COMMAND
+mlr gsub -h
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint --from example.csv cat --filename then sub -f color,shape l X
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint --from example.csv cat --filename then gsub -f color,shape l X
+GENMD-EOF
+
 ## having-fields
 
 GENMD-RUN-COMMAND
@@ -987,6 +1001,20 @@ GENMD-RUN-COMMAND
 mlr split --help
 GENMD-EOF
 
+## ssub
+
+GENMD-RUN-COMMAND
+mlr ssub -h
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint --from example.csv cat --filename then sub -f filename . o
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint --from example.csv cat --filename then ssub -f filename . o
+GENMD-EOF
+
 ## stats1
 
 GENMD-RUN-COMMAND
@@ -1094,6 +1122,20 @@ GENMD-EOF
 Example deriving uptime-delta from system uptime:
 
 GENMD-INCLUDE-ESCAPED(data/ping-delta-example.txt)
+
+## sub
+
+GENMD-RUN-COMMAND
+mlr sub -h
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint --from example.csv cat --filename then sub -f color,shape l X
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint --from example.csv cat --filename then gsub -f color,shape l X
+GENMD-EOF
 
 ## summary
 
