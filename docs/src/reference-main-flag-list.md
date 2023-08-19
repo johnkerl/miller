@@ -281,6 +281,7 @@ These are flags which don't fit into any other category.
 * `--ofmtf {n}`: Use --ofmtf 6 as shorthand for --ofmt %.6f, etc.
 * `--ofmtg {n}`: Use --ofmtg 6 as shorthand for --ofmt %.6g, etc.
 * `--records-per-batch {n}`: This is an internal parameter for maximum number of records in a batch size. Normally this does not need to be modified, except when input is from `tail -f`. See also https://miller.readthedocs.io/en/latest/reference-main-flag-list/.
+* `--s-no-comment-strip {file name}`: Take command-line flags from file name, with no comment-stripping. For more information please see https://miller.readthedocs.io/en/latest/scripting/.
 * `--seed {n}`: with `n` of the form `12345678` or `0xcafefeed`. For `put`/`filter` `urand`, `urandint`, and `urand32`.
 * `--tz {timezone}`: Specify timezone, overriding `$TZ` environment variable (if any).
 * `-I`: Process files in-place. For each file name on the command line, output is written to a temp file in the same directory, which is then renamed over the original. Each file is processed in isolation: if the output format is CSV, CSV headers will be present in each output file, statistics are only over each file's own records; and so on.
