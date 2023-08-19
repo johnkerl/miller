@@ -214,12 +214,13 @@ for all things with "map" in their names.
 .nf
 altkv bar bootstrap case cat check clean-whitespace count-distinct count
 count-similar cut decimate fill-down fill-empty filter flatten format-values
-fraction gap grep group-by group-like having-fields head histogram json-parse
-json-stringify join label latin1-to-utf8 least-frequent merge-fields
-most-frequent nest nothing put regularize remove-empty-columns rename reorder
-repeat reshape sample sec2gmtdate sec2gmt seqgen shuffle skip-trivial-records
-sort sort-within-records split stats1 stats2 step summary tac tail tee
-template top utf8-to-latin1 unflatten uniq unspace unsparsify
+fraction gap grep group-by group-like gsub having-fields head histogram
+json-parse json-stringify join label latin1-to-utf8 least-frequent
+merge-fields most-frequent nest nothing put regularize remove-empty-columns
+rename reorder repeat reshape sample sec2gmtdate sec2gmt seqgen shuffle
+skip-trivial-records sort sort-within-records split ssub stats1 stats2 step
+sub summary tac tail tee template top utf8-to-latin1 unflatten uniq unspace
+unsparsify
 .fi
 .if n \{\
 .RE
@@ -1529,6 +1530,21 @@ Options:
 .fi
 .if n \{\
 .RE
+.SS "gsub"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr gsub [options]
+Replaces old string with new string in specified field(s), with regex support
+for the old string and handling multiple matches, like the `gsub` DSL function.
+See also the `sub` and `ssub` verbs.
+Options:
+-f {a,b,c}  Field names to convert.
+-h|--help   Show this message.
+.fi
+.if n \{\
+.RE
 .SS "having-fields"
 .if n \{\
 .RS 0
@@ -2311,6 +2327,20 @@ See also the "tee" DSL function which lets you do more ad-hoc customization.
 .fi
 .if n \{\
 .RE
+.SS "ssub"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr ssub [options]
+Replaces old string with new string in specified field(s), without regex support for
+the old string, like the `ssub` DSL function. See also the `gsub` and `sub` verbs.
+Options:
+-f {a,b,c}  Field names to convert.
+-h|--help   Show this message.
+.fi
+.if n \{\
+.RE
 .SS "stats1"
 .if n \{\
 .RS 0
@@ -2463,6 +2493,21 @@ Examples:
 Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or
 https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
 for more information on EWMA.
+.fi
+.if n \{\
+.RE
+.SS "sub"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr sub [options]
+Replaces old string with new string in specified field(s), with regex support
+for the old string and not handling multiple matches, like the `sub` DSL function.
+See also the `gsub` and `ssub` verbs.
+Options:
+-f {a,b,c}  Field names to convert.
+-h|--help   Show this message.
 .fi
 .if n \{\
 .RE
