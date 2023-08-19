@@ -143,7 +143,7 @@ the `TZ` environment variable. Please see [DSL datetime/timezone functions](refe
 
 ### In-process support for compressed input
 
-In addition to `--prepipe gunzip`, you can now use the `--gzin` flag. In fact, if your files end in `.gz` you don't even need to do that -- Miller will autodetect by file extension and automatically uncompress `mlr --csv cat foo.csv.gz`. Similarly for `.z` and `.bz2` files.  Please see the page on [Compressed data](reference-main-compressed-data.md) for more information.
+In addition to `--prepipe gunzip`, you can now use the `--gzin` flag. In fact, if your files end in `.gz` you don't even need to do that -- Miller will autodetect by file extension and automatically uncompress `mlr --csv cat foo.csv.gz`. Similarly for `.z`, `.bz2`, and `.zst` files.  Please see the page on [Compressed data](reference-main-compressed-data.md) for more information.
 
 ### Support for reading web URLs
 

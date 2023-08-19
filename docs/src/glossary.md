@@ -905,3 +905,8 @@ See also the [arrays page](reference-main-arrays.md), as well as the page on
 
 A [data-compression format supported by Miller](reference-main-compressed-data.md).
 Files compressed using ZLIB compression normally end in `.z`.
+
+## ZSTD / .zst
+
+A [data-compression format supported by Miller](reference-main-compressed-data.md).
+Files compressed using ZSTD compression normally end in`.zst`.
