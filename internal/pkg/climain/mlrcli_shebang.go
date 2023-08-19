@@ -3,6 +3,7 @@ package climain
 import (
 	"fmt"
 	"io/ioutil"
+	"regexp"
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
@@ -25,10 +26,16 @@ import (
 // * This is how shebang lines work
 // * There are Miller verbs with -s flags and we don't want to disrupt their behavior.
 func maybeInterpolateDashS(args []string) ([]string, error) {
+	stripComments := true
+
 	if len(args) < 2 {
 		return args, nil
 	}
-	if args[1] != "-s" { // Normal case
+	if args[1] == "-s" {
+		stripComments = true
+	} else if args[1] == "--s-no-comment-strip" {
+		stripComments = false
+	} else { // Normal case
 		return args, nil
 	}
 	if len(args) < 3 {
@@ -59,9 +66,12 @@ func maybeInterpolateDashS(args []string) ([]string, error) {
 		}
 	}
 
-	// TODO: maybe support comment lines deeper within the script-file.
-	// Make sure they're /^[\s]+#/ since we don't want to disrupt a "#" within
-	// strings which are not actually comment characters.
+	if stripComments {
+		re := regexp.MustCompile(`#.*`)
+		for i, _ := range lines {
+			lines[i] = re.ReplaceAllString(lines[i], "")
+		}
+	}
 
 	// Re-join lines to strings, and pass off to a shell-parser to split into
 	// an args[]-style array.
