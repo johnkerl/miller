@@ -194,12 +194,13 @@ MILLER(1)                                                            MILLER(1)
 1mVERB LIST0m
        altkv bar bootstrap case cat check clean-whitespace count-distinct count
        count-similar cut decimate fill-down fill-empty filter flatten format-values
-       fraction gap grep group-by group-like having-fields head histogram json-parse
-       json-stringify join label latin1-to-utf8 least-frequent merge-fields
-       most-frequent nest nothing put regularize remove-empty-columns rename reorder
-       repeat reshape sample sec2gmtdate sec2gmt seqgen shuffle skip-trivial-records
-       sort sort-within-records split stats1 stats2 step summary tac tail tee
-       template top utf8-to-latin1 unflatten uniq unspace unsparsify
+       fraction gap grep group-by group-like gsub having-fields head histogram
+       json-parse json-stringify join label latin1-to-utf8 least-frequent
+       merge-fields most-frequent nest nothing put regularize remove-empty-columns
+       rename reorder repeat reshape sample sec2gmtdate sec2gmt seqgen shuffle
+       skip-trivial-records sort sort-within-records split ssub stats1 stats2 step
+       sub summary tac tail tee template top utf8-to-latin1 unflatten uniq unspace
+       unsparsify
 
 1mFUNCTION LIST0m
        abs acos acosh any append apply arrayify asin asinh asserting_absent
@@ -1245,6 +1246,15 @@ MILLER(1)                                                            MILLER(1)
        Options:
        -h|--help Show this message.
 
+   1mgsub0m
+       Usage: mlr gsub [options]
+       Replaces old string with new string in specified field(s), with regex support
+       for the old string and handling multiple matches, like the `gsub` DSL function.
+       See also the `sub` and `ssub` verbs.
+       Options:
+       -f {a,b,c}  Field names to convert.
+       -h|--help   Show this message.
+
    1mhaving-fields0m
        Usage: mlr having-fields [options]
        Conditionally passes through records depending on each record's field names.
@@ -1853,6 +1863,14 @@ MILLER(1)                                                            MILLER(1)
 
        See also the "tee" DSL function which lets you do more ad-hoc customization.
 
+   1mssub0m
+       Usage: mlr ssub [options]
+       Replaces old string with new string in specified field(s), without regex support for
+       the old string, like the `ssub` DSL function. See also the `gsub` and `sub` verbs.
+       Options:
+       -f {a,b,c}  Field names to convert.
+       -h|--help   Show this message.
+
    1mstats10m
        Usage: mlr stats1 [options]
        Computes univariate statistics for one or more given fields, accumulated across
@@ -1989,6 +2007,15 @@ MILLER(1)                                                            MILLER(1)
        Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or
        https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
        for more information on EWMA.
+
+   1msub0m
+       Usage: mlr sub [options]
+       Replaces old string with new string in specified field(s), with regex support
+       for the old string and not handling multiple matches, like the `sub` DSL function.
+       See also the `gsub` and `ssub` verbs.
+       Options:
+       -f {a,b,c}  Field names to convert.
+       -h|--help   Show this message.
 
    1msummary0m
        Usage: mlr summary [options]
