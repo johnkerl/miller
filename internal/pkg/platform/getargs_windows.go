@@ -11,6 +11,7 @@ package platform
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	shellquote "github.com/kballard/go-shellquote"
@@ -76,7 +77,20 @@ func GetArgs() []string {
 		}
 	}
 	//printArgs(retargs, "NEW")
-	return retargs
+
+	globbed := make([]string, 0)
+	for i, _ := range retargs {
+		// Expand things like *.csv
+		matches, err := filepath.Glob(retargs[i])
+		if matches != nil && err == nil {
+			globbed = append(globbed, matches...)
+		} else {
+			globbed = append(globbed, retargs[i])
+		}
+	}
+	//printArgs(globbed, "NEW")
+
+	return globbed
 }
 
 // ----------------------------------------------------------------
