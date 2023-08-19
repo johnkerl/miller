@@ -16,13 +16,13 @@ Quick links:
 </div>
 # Compressed data
 
-As of [Miller 6](new-in-miller-6.md), Miller supports reading GZIP, BZIP2, and
-ZLIB formats transparently, and in-process. And (as before Miller 6) you have a
+As of [Miller 6](new-in-miller-6.md), Miller supports reading GZIP, BZIP2, ZLIB, and
+ZSTD formats transparently, and in-process. And (as before Miller 6) you have a
 more general `--prepipe` option to support other decompression programs.
 
 ## Automatic detection on input
 
-If your files end in `.gz`, `.bz2`, or `.z` then Miller will autodetect by file extension:
+If your files end in `.gz`, `.bz2`, `.z`, or `.zst` then Miller will autodetect by file extension:
 
 <pre class="pre-highlight-in-pair">
 <b>file gz-example.csv.gz</b>
@@ -52,7 +52,7 @@ This will decompress the input data on the fly, while leaving the disk file unmo
 
 ## Manual detection on input
 
-If the filename doesn't in in `.gz`, `.bz2`, or `.z` then you can use the flags `--gzin`, `--bz2in`, or `--zin` to let Miller know:
+If the filename doesn't in in `.gz`, `.bz2`, `-z`, or `.zst` then you can use the flags `--gzin`, `--bz2in`, `--zin`, or `--zstdin` to let Miller know:
 
 <pre class="pre-highlight-non-pair">
 <b>mlr --csv --gzin sort -f color myfile.bin # myfile.bin has gzip contents</b>
@@ -94,7 +94,7 @@ If the command has flags, quote them: e.g. `mlr --prepipe 'zcat -cf'`.
 
 In your [.mlrrc file](customization.md), `--prepipe` and `--prepipex` are not
 allowed as they could be used for unexpected code execution. You can use
-`--prepipe-bz2`, `--prepipe-gunzip`, and `--prepipe-zcat` in `.mlrrc`, though.
+`--prepipe-bz2`, `--prepipe-gunzip`, `--prepipe-zcat`, and `--prepipe-zstdcat` in `.mlrrc`, though.
 
 Note that this feature is quite general and is not limited to decompression
 utilities. You can use it to apply per-file filters of your choice: e.g. `mlr
@@ -107,7 +107,7 @@ There is a `--prepipe` and a `--prepipex`:
 
 Lastly, note that if `--prepipe` or `--prepipex` is specified on the Miller
 command line, it replaces any autodetect decisions that might have been made
-based on the filename extension. Likewise, `--gzin`/`--bz2in`/`--zin` are ignored if
+based on the filename extension. Likewise, `--gzin`/`--bz2in`/`--zin`/`--zstdin` are ignored if
 `--prepipe` or `--prepipex` is also specified.
 
 ## Compressed output

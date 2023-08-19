@@ -72,7 +72,7 @@ Notes:
 Miller offers a few different ways to handle reading data files
 	which have been compressed.
 
-* Decompression done within the Miller process itself: `--bz2in` `--gzin` `--zin`
+* Decompression done within the Miller process itself: `--bz2in` `--gzin` `--zin``--zstdin`
 * Decompression done outside the Miller process: `--prepipe` `--prepipex`
 
 Using `--prepipe` and `--prepipex` you can specify an action to be
@@ -95,7 +95,7 @@ compression (or other) utilities, simply pipe the output:
 
 Lastly, note that if `--prepipe` or `--prepipex` is specified, it replaces any
 decisions that might have been made based on the file suffix. Likewise,
-`--gzin`/`--bz2in`/`--zin` are ignored if `--prepipe` is also specified.
+`--gzin`/`--bz2in`/`--zin``--zin` are ignored if `--prepipe` is also specified.
 
 
 **Flags:**
@@ -106,8 +106,10 @@ decisions that might have been made based on the file suffix. Likewise,
 * `--prepipe-bz2`: Same as  `--prepipe bz2`, except this is allowed in `.mlrrc`.
 * `--prepipe-gunzip`: Same as  `--prepipe gunzip`, except this is allowed in `.mlrrc`.
 * `--prepipe-zcat`: Same as  `--prepipe zcat`, except this is allowed in `.mlrrc`.
+* `--prepipe-zstdcat`: Same as  `--prepipe zstdcat`, except this is allowed in `.mlrrc`.
 * `--prepipex {decompression command}`: Like `--prepipe` with one exception: doesn't insert `<` between command and filename at runtime. Useful for some commands like `unzip -qc` which don't read standard input.  Allowed at the command line, but not in `.mlrrc` to avoid unexpected code execution.
 * `--zin`: Uncompress zlib within the Miller process. Done by default if file ends in `.z`.
+* `--zstdin`: Uncompress zstd within the Miller process. Done by default if file ends in `.zstd`.
 
 ## CSV/TSV-only flags
 

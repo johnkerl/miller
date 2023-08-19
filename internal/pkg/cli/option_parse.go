@@ -2280,6 +2280,16 @@ var CompressedDataFlagSection = FlagSection{
 		},
 
 		{
+			name: "--prepipe-zstdcat",
+			help: "Same as  `--prepipe zstdcat`, except this is allowed in `.mlrrc`.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.Prepipe = "zstdcat"
+				options.ReaderOptions.PrepipeIsRaw = false
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--prepipe-bz2",
 			help: "Same as  `--prepipe bz2`, except this is allowed in `.mlrrc`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
