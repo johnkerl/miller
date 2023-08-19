@@ -380,6 +380,16 @@ Options:
 -h|--help Show this message.
 
 ================================================================
+gsub
+Usage: mlr gsub [options]
+Replaces old string with new string in specified field(s), with regex support
+for the old string and handling multiple matches, like the `gsub` DSL function.
+See also the `sub` and `ssub` verbs.
+Options:
+-f {a,b,c}  Field names to convert.
+-h|--help   Show this message.
+
+================================================================
 having-fields
 Usage: mlr having-fields [options]
 Conditionally passes through records depending on each record's field names.
@@ -1017,6 +1027,15 @@ then there will be split_yellow_triangle.csv, split_yellow_square.csv, etc.
 See also the "tee" DSL function which lets you do more ad-hoc customization.
 
 ================================================================
+ssub
+Usage: mlr ssub [options]
+Replaces old string with new string in specified field(s), without regex support for
+the old string, like the `ssub` DSL function. See also the `gsub` and `sub` verbs.
+Options:
+-f {a,b,c}  Field names to convert.
+-h|--help   Show this message.
+
+================================================================
 stats1
 Usage: mlr stats1 [options]
 Computes univariate statistics for one or more given fields, accumulated across
@@ -1155,6 +1174,16 @@ Examples:
 Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or
 https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
 for more information on EWMA.
+
+================================================================
+sub
+Usage: mlr sub [options]
+Replaces old string with new string in specified field(s), with regex support
+for the old string and not handling multiple matches, like the `sub` DSL function.
+See also the `gsub` and `ssub` verbs.
+Options:
+-f {a,b,c}  Field names to convert.
+-h|--help   Show this message.
 
 ================================================================
 summary
