@@ -2200,7 +2200,8 @@ func CompressedDataPrintInfo() {
 	fmt.Print(`Miller offers a few different ways to handle reading data files
 	which have been compressed.
 
-* Decompression done within the Miller process itself: ` + "`--bz2in`" + ` ` + "`--gzin`" + ` ` + "`--zin`" + `
+* Decompression done within the Miller process itself: ` + "`--bz2in`" + ` ` + "`--gzin`" + ` ` + "`--zin`" + "`--zstdin`" +
+		`
 * Decompression done outside the Miller process: ` + "`--prepipe`" + ` ` + "`--prepipex`" + `
 
 Using ` + "`--prepipe`" + ` and ` + "`--prepipex`" + ` you can specify an action to be
@@ -2223,7 +2224,7 @@ compression (or other) utilities, simply pipe the output:
 
 Lastly, note that if ` + "`--prepipe`" + ` or ` + "`--prepipex`" + ` is specified, it replaces any
 decisions that might have been made based on the file suffix. Likewise,
-` + "`--gzin`" + `/` + "`--bz2in`" + `/` + "`--zin`" + ` are ignored if ` + "`--prepipe`" + ` is also specified.
+` + "`--gzin`" + `/` + "`--bz2in`" + `/` + "`--zin`" + "`--zin`" + ` are ignored if ` + "`--prepipe`" + ` is also specified.
 `)
 }
 
@@ -2311,6 +2312,15 @@ var CompressedDataFlagSection = FlagSection{
 			help: "Uncompress bzip2 within the Miller process. Done by default if file ends in `.bz2`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.FileInputEncoding = lib.FileInputEncodingBzip2
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--zstdin",
+			help: "Uncompress zstd within the Miller process. Done by default if file ends in `.zstd`.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.FileInputEncoding = lib.FileInputEncodingZstd
 				*pargi += 1
 			},
 		},

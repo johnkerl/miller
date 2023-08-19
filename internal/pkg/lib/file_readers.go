@@ -25,6 +25,7 @@ import (
 	"compress/gzip"
 	"compress/zlib"
 	"fmt"
+	"github.com/klauspost/compress/zstd"
 	"io"
 	"net/http"
 	"os"
@@ -38,6 +39,7 @@ const (
 	FileInputEncodingBzip2
 	FileInputEncodingGzip
 	FileInputEncodingZlib
+	FileInputEncodingZstd
 )
 
 // OpenFileForRead: If prepipe is non-empty, popens "{prepipe} < {filename}"
@@ -160,6 +162,8 @@ func openEncodedHandleForRead(
 		return gzip.NewReader(handle)
 	case FileInputEncodingZlib:
 		return zlib.NewReader(handle)
+	case FileInputEncodingZstd:
+		return NewZstdReadCloser(handle)
 	}
 
 	InternalCodingErrorIf(encoding != FileInputEncodingDefault)
@@ -172,6 +176,9 @@ func openEncodedHandleForRead(
 	}
 	if strings.HasSuffix(filename, ".z") {
 		return zlib.NewReader(handle)
+	}
+	if strings.HasSuffix(filename, ".zst") {
+		return NewZstdReadCloser(handle)
 	}
 
 	// Pass along os.Stdin or os.Open(filename)
@@ -197,6 +204,32 @@ func (rc *BZip2ReadCloser) Read(p []byte) (n int, err error) {
 }
 
 func (rc *BZip2ReadCloser) Close() error {
+	return rc.originalHandle.Close()
+}
+
+// ----------------------------------------------------------------
+// ZstdReadCloser remedies the fact that zstd.NewReader does not implement io.ReadCloser.
+type ZstdReadCloser struct {
+	originalHandle io.ReadCloser
+	zstdHandle     io.Reader
+}
+
+func NewZstdReadCloser(handle io.ReadCloser) (*ZstdReadCloser, error) {
+	zstdHandle, err := zstd.NewReader(handle)
+	if err != nil {
+		return nil, err
+	}
+	return &ZstdReadCloser{
+		originalHandle: handle,
+		zstdHandle:     zstdHandle,
+	}, nil
+}
+
+func (rc *ZstdReadCloser) Read(p []byte) (n int, err error) {
+	return rc.zstdHandle.Read(p)
+}
+
+func (rc *ZstdReadCloser) Close() error {
 	return rc.originalHandle.Close()
 }
 
