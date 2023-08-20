@@ -1,0 +1,1 @@
+mlr --c2p filter '$año > 2020' test/input/datos-plurilingües.csv
