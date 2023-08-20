@@ -1,1 +1,1 @@
-mlr --c2p filter '${ποσότητα} > 100' test/input/datos-plurilingües.csv
+mlr --c2p filter -f ${CASEDIR}/mlr test/input/datos-plurilingües.csv
