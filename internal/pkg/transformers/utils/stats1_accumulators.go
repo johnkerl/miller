@@ -615,7 +615,7 @@ func (acc *Stats1VarAccumulator) Ingest(value *mlrval.Mlrval) {
 	}
 }
 func (acc *Stats1VarAccumulator) Emit() *mlrval.Mlrval {
-	return bifs.BIF_get_var(mlrval.FromInt(acc.count), acc.sum, acc.sum2)
+	return bifs.BIF_finalize_variance(mlrval.FromInt(acc.count), acc.sum, acc.sum2)
 }
 func (acc *Stats1VarAccumulator) Reset() {
 	acc.count = 0
@@ -646,7 +646,7 @@ func (acc *Stats1StddevAccumulator) Ingest(value *mlrval.Mlrval) {
 	}
 }
 func (acc *Stats1StddevAccumulator) Emit() *mlrval.Mlrval {
-	return bifs.BIF_get_stddev(mlrval.FromInt(acc.count), acc.sum, acc.sum2)
+	return bifs.BIF_finalize_stddev(mlrval.FromInt(acc.count), acc.sum, acc.sum2)
 }
 func (acc *Stats1StddevAccumulator) Reset() {
 	acc.count = 0
@@ -678,7 +678,7 @@ func (acc *Stats1MeanEBAccumulator) Ingest(value *mlrval.Mlrval) {
 }
 func (acc *Stats1MeanEBAccumulator) Emit() *mlrval.Mlrval {
 	mcount := mlrval.FromInt(acc.count)
-	return bifs.BIF_get_mean_EB(mcount, acc.sum, acc.sum2)
+	return bifs.BIF_finalize_mean_eb(mcount, acc.sum, acc.sum2)
 }
 func (acc *Stats1MeanEBAccumulator) Reset() {
 	acc.count = 0
@@ -714,7 +714,7 @@ func (acc *Stats1SkewnessAccumulator) Ingest(value *mlrval.Mlrval) {
 }
 func (acc *Stats1SkewnessAccumulator) Emit() *mlrval.Mlrval {
 	mcount := mlrval.FromInt(acc.count)
-	return bifs.BIF_get_skewness(mcount, acc.sum, acc.sum2, acc.sum3)
+	return bifs.BIF_finalize_skewness(mcount, acc.sum, acc.sum2, acc.sum3)
 }
 func (acc *Stats1SkewnessAccumulator) Reset() {
 	acc.count = 0
@@ -755,7 +755,7 @@ func (acc *Stats1KurtosisAccumulator) Ingest(value *mlrval.Mlrval) {
 }
 func (acc *Stats1KurtosisAccumulator) Emit() *mlrval.Mlrval {
 	mcount := mlrval.FromInt(acc.count)
-	return bifs.BIF_get_kurtosis(mcount, acc.sum, acc.sum2, acc.sum3, acc.sum4)
+	return bifs.BIF_finalize_kurtosis(mcount, acc.sum, acc.sum2, acc.sum3, acc.sum4)
 }
 func (acc *Stats1KurtosisAccumulator) Reset() {
 	acc.count = 0

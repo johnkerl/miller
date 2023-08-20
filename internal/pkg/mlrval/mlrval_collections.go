@@ -739,3 +739,51 @@ func LengthenMlrvalArray(array *[]*Mlrval, newLength64 int) {
 		*array = newArray
 	}
 }
+
+// ArrayFold reduces an array to a single value, with a user-supplied starting value and pairwise
+// element-reducer function. Canonical example: start value is 0 and reducer f(a,b) is a+b: this
+// will sum up the values in the array.
+func ArrayFold(
+	a []*Mlrval,
+	initval *Mlrval,
+	f func(a, b *Mlrval) *Mlrval,
+) *Mlrval {
+	acc := initval
+	for _, e := range a {
+		acc = f(acc, e)
+	}
+	return acc
+}
+
+// MapFold reduces a map's values to a single value, with a user-supplied starting value and
+// pairwise element-reducer function. Canonical example: start value is 0 and reducer f(a,b) is a+b:
+// this will sum up the values in the map. Nothing here accesses map keys.
+func MapFold(
+	m *Mlrmap,
+	initval *Mlrval,
+	f func(a, b *Mlrval) *Mlrval,
+) *Mlrval {
+	acc := initval
+	for pe := m.Head; pe != nil; pe = pe.Next {
+		acc = f(acc, pe.Value)
+	}
+	return acc
+}
+
+// CollectionFold multiplexes ArrayFold or MapFold. The panic here is not robust, but is done to
+// avoid adding an error-return that would frictionalize the API.  The idea is that the caller
+// (internal/library functions, not directly user-facing) must have pre-validated that the argument
+// is an array or map. The panic here is merely a fallback, not the primary check.
+func CollectionFold(
+	c *Mlrval,
+	initval *Mlrval,
+	f func(a, b *Mlrval) *Mlrval,
+) *Mlrval {
+	if c.IsArray() {
+		return ArrayFold(c.AcquireArrayValue(), initval, f)
+	} else if c.IsMap() {
+		return MapFold(c.AcquireMapValue(), initval, f)
+	} else {
+		panic("CollectionFold argument is neither array nor map")
+	}
+}

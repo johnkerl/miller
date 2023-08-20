@@ -24,7 +24,7 @@ import (
 //	output = [m, b, math.sqrt(var_m), math.sqrt(var_b)]
 
 // ----------------------------------------------------------------
-func BIF_get_var(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_finalize_variance(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
 	n, isInt := mn.GetIntValue()
 	lib.InternalCodingErrorIf(!isInt)
 	sum, isNumber := msum.GetNumericToFloatValue()
@@ -46,8 +46,8 @@ func BIF_get_var(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // ----------------------------------------------------------------
-func BIF_get_stddev(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
-	mvar := BIF_get_var(mn, msum, msum2)
+func BIF_finalize_stddev(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
+	mvar := BIF_finalize_variance(mn, msum, msum2)
 	if mvar.IsVoid() {
 		return mvar
 	}
@@ -55,8 +55,8 @@ func BIF_get_stddev(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // ----------------------------------------------------------------
-func BIF_get_mean_EB(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
-	mvar := BIF_get_var(mn, msum, msum2)
+func BIF_finalize_mean_eb(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
+	mvar := BIF_finalize_variance(mn, msum, msum2)
 	if mvar.IsVoid() {
 		return mvar
 	}
@@ -87,7 +87,7 @@ func BIF_get_mean_EB(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
 //   = sumx2 - n mean^2
 
 // ----------------------------------------------------------------
-func BIF_get_skewness(mn, msum, msum2, msum3 *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_finalize_skewness(mn, msum, msum2, msum3 *mlrval.Mlrval) *mlrval.Mlrval {
 	n, isInt := mn.GetIntValue()
 	lib.InternalCodingErrorIf(!isInt)
 	if n < 2 {
@@ -124,7 +124,7 @@ func BIF_get_skewness(mn, msum, msum2, msum3 *mlrval.Mlrval) *mlrval.Mlrval {
 //   = sumx4 - mean*(4 sumx3 - mean*(6 sumx2 - 3 n mean^2))
 
 // ----------------------------------------------------------------
-func BIF_get_kurtosis(mn, msum, msum2, msum3, msum4 *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_finalize_kurtosis(mn, msum, msum2, msum3, msum4 *mlrval.Mlrval) *mlrval.Mlrval {
 	n, isInt := mn.GetIntValue()
 	lib.InternalCodingErrorIf(!isInt)
 	if n < 2 {
@@ -158,9 +158,9 @@ func check_collection(c *mlrval.Mlrval) (bool, *mlrval.Mlrval) {
 	vtype := c.Type()
 	switch vtype {
 	case mlrval.MT_ARRAY:
-		return true, nil
+		return true, c
 	case mlrval.MT_MAP:
-		return true, nil
+		return true, c
 	case mlrval.MT_ABSENT:
 		return false, mlrval.ABSENT
 	default:
@@ -168,39 +168,25 @@ func check_collection(c *mlrval.Mlrval) (bool, *mlrval.Mlrval) {
 	}
 }
 
-// XXX COMMENT
-func accumulate_sum(
-	acc *mlrval.Mlrval,
-	element *mlrval.Mlrval,
-	f func(element *mlrval.Mlrval) *mlrval.Mlrval,
-) *mlrval.Mlrval {
-	return BIF_plus_binary(acc, f(element))
-}
-
-// XXX COMMENT
+// collection_sum_of_function sums f(value) for value in the array or map:
+// e.g. sum of values, sum of squares of values, etc.
 func collection_sum_of_function(
 	collection *mlrval.Mlrval,
 	f func(element *mlrval.Mlrval) *mlrval.Mlrval,
 ) *mlrval.Mlrval {
-	acc := mlrval.FromInt(0)
-	if collection.IsArray() {
-		arrayval := collection.AcquireArrayValue()
-		for _, e := range arrayval {
-			acc = accumulate_sum(acc, e, f)
-		}
-	} else {
-		mapval := collection.AcquireMapValue()
-		for pe := mapval.Head; pe != nil; pe = pe.Next {
-			acc = accumulate_sum(acc, pe.Value, f)
-		}
-	}
-	return acc
+	return mlrval.CollectionFold(
+		collection,
+		mlrval.FromInt(0),
+		func(a, b *mlrval.Mlrval) *mlrval.Mlrval {
+			return BIF_plus_binary(a, f(b))
+		},
+	)
 }
 
 func BIF_collection_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, errout := check_collection(collection)
+	ok, value_if_not := check_collection(collection)
 	if !ok {
-		return errout
+		return value_if_not
 	}
 	if collection.IsArray() {
 		arrayval := collection.AcquireArrayValue()
@@ -212,27 +198,33 @@ func BIF_collection_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_collection_sum(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, errout := check_collection(collection)
+	ok, value_if_not := check_collection(collection)
 	if !ok {
-		return errout
+		return value_if_not
 	}
-	f := func(element *mlrval.Mlrval) *mlrval.Mlrval { return element }
-	return collection_sum_of_function(collection, f)
+	return collection_sum_of_function(
+		collection,
+		func(e *mlrval.Mlrval) *mlrval.Mlrval {
+			return e
+		},
+	)
 }
 
 func BIF_collection_sum2(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, errout := check_collection(collection)
+	ok, value_if_not := check_collection(collection)
 	if !ok {
-		return errout
+		return value_if_not
 	}
-	f := func(element *mlrval.Mlrval) *mlrval.Mlrval { return BIF_times(element, element) }
+	f := func(element *mlrval.Mlrval) *mlrval.Mlrval {
+		return BIF_times(element, element)
+	}
 	return collection_sum_of_function(collection, f)
 }
 
 func BIF_collection_sum3(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, errout := check_collection(collection)
+	ok, value_if_not := check_collection(collection)
 	if !ok {
-		return errout
+		return value_if_not
 	}
 	f := func(element *mlrval.Mlrval) *mlrval.Mlrval {
 		return BIF_times(element, BIF_times(element, element))
@@ -241,9 +233,9 @@ func BIF_collection_sum3(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_collection_sum4(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, errout := check_collection(collection)
+	ok, value_if_not := check_collection(collection)
 	if !ok {
-		return errout
+		return value_if_not
 	}
 	f := func(element *mlrval.Mlrval) *mlrval.Mlrval {
 		sq := BIF_times(element, element)
@@ -253,9 +245,9 @@ func BIF_collection_sum4(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_collection_mean(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, errout := check_collection(collection)
+	ok, value_if_not := check_collection(collection)
 	if !ok {
-		return errout
+		return value_if_not
 	}
 	n := BIF_collection_count(collection)
 	sum := BIF_collection_sum(collection)
@@ -263,67 +255,67 @@ func BIF_collection_mean(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_collection_meaneb(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, errout := check_collection(collection)
+	ok, value_if_not := check_collection(collection)
 	if !ok {
-		return errout
+		return value_if_not
 	}
 	n := BIF_collection_count(collection)
 	sum := BIF_collection_sum(collection)
 	sum2 := BIF_collection_sum2(collection)
-	return BIF_get_mean_EB(n, sum, sum2)
+	return BIF_finalize_mean_eb(n, sum, sum2)
 }
 
 func BIF_collection_variance(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, errout := check_collection(collection)
+	ok, value_if_not := check_collection(collection)
 	if !ok {
-		return errout
+		return value_if_not
 	}
 	n := BIF_collection_count(collection)
 	sum := BIF_collection_sum(collection)
 	sum2 := BIF_collection_sum2(collection)
-	return BIF_get_var(n, sum, sum2)
+	return BIF_finalize_variance(n, sum, sum2)
 }
 
 func BIF_collection_stddev(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, errout := check_collection(collection)
+	ok, value_if_not := check_collection(collection)
 	if !ok {
-		return errout
+		return value_if_not
 	}
 	n := BIF_collection_count(collection)
 	sum := BIF_collection_sum(collection)
 	sum2 := BIF_collection_sum2(collection)
-	return BIF_get_stddev(n, sum, sum2)
+	return BIF_finalize_stddev(n, sum, sum2)
 }
 
 func BIF_collection_skewness(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, errout := check_collection(collection)
+	ok, value_if_not := check_collection(collection)
 	if !ok {
-		return errout
+		return value_if_not
 	}
 	n := BIF_collection_count(collection)
 	sum := BIF_collection_sum(collection)
 	sum2 := BIF_collection_sum2(collection)
 	sum3 := BIF_collection_sum3(collection)
-	return BIF_get_skewness(n, sum, sum2, sum3)
+	return BIF_finalize_skewness(n, sum, sum2, sum3)
 }
 
 func BIF_collection_kurtosis(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, errout := check_collection(collection)
+	ok, value_if_not := check_collection(collection)
 	if !ok {
-		return errout
+		return value_if_not
 	}
 	n := BIF_collection_count(collection)
 	sum := BIF_collection_sum(collection)
 	sum2 := BIF_collection_sum2(collection)
 	sum3 := BIF_collection_sum3(collection)
 	sum4 := BIF_collection_sum4(collection)
-	return BIF_get_kurtosis(n, sum, sum2, sum3, sum4)
+	return BIF_finalize_kurtosis(n, sum, sum2, sum3, sum4)
 }
 
 func BIF_collection_min(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, errout := check_collection(collection)
+	ok, value_if_not := check_collection(collection)
 	if !ok {
-		return errout
+		return value_if_not
 	}
 	if collection.IsArray() {
 		return BIF_min_variadic(collection.AcquireArrayValue())
@@ -333,9 +325,9 @@ func BIF_collection_min(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_collection_max(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, errout := check_collection(collection)
+	ok, value_if_not := check_collection(collection)
 	if !ok {
-		return errout
+		return value_if_not
 	}
 	if collection.IsArray() {
 		return BIF_max_variadic(collection.AcquireArrayValue())
@@ -344,21 +336,25 @@ func BIF_collection_max(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-//   antimode Find least-frequently-occurring values for fields; first-found wins tie
 // * count    Count instances of fields
-//   distinct_count Count number of distinct values per field
-// * kurtosis Compute sample kurtosis of specified fields
-// * max      Compute maximum values of specified fields
-//   maxlen   Compute maximum string-lengths of specified fields
+// * sum      Compute sums of specified fields
 // * mean     Compute averages (sample means) of specified fields
 // * meaneb   Estimate error bars for averages (assuming no sample autocorrelation)
-//   median   This is the same as p50
-// * min      Compute minimum values of specified fields
-//   minlen   Compute minimum string-lengths of specified fields
-//   mode     Find most-frequently-occurring values for fields; first-found wins tie
-//   null_count Count number of empty-string/JSON-null instances per field
-//   p10 p25.2 p50 p98 p100 etc.
-// * skewness Compute sample skewness of specified fields
-// * stddev   Compute sample standard deviation of specified fields
-// * sum      Compute sums of specified fields
 // * var      Compute sample variance of specified fields
+// * stddev   Compute sample standard deviation of specified fields
+// * skewness Compute sample skewness of specified fields
+// * kurtosis Compute sample kurtosis of specified fields
+
+// * min      Compute minimum values of specified fields
+// * max      Compute maximum values of specified fields
+
+//   median   This is the same as p50
+//   p10 p25.2 p50 p98 p100 etc.
+
+//   minlen   Compute minimum string-lengths of specified fields
+//   maxlen   Compute maximum string-lengths of specified fields
+
+//   null_count Count number of empty-string/JSON-null instances per field
+//   distinct_count Count number of distinct values per field
+//   mode     Find most-frequently-occurring values for fields; first-found wins tie
+//   antimode Find least-frequently-occurring values for fields; first-found wins tie
