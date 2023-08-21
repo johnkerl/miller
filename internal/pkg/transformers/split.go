@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"bytes"
 	"container/list"
 	"fmt"
 	"net/url"
@@ -17,6 +16,7 @@ import (
 // ----------------------------------------------------------------
 const verbNameSplit = "split"
 const splitDefaultOutputFileNamePrefix = "split"
+const splitDefaultFileNamePartJoiner = "_"
 
 var SplitSetup = TransformerSetup{
 	Verb:         verbNameSplit,
@@ -39,6 +39,8 @@ Exactly one  of -m, -n, or -g must be supplied.
 --suffix {s} Specify filename suffix; default is from mlr output format, e.g. "csv".
 -a           Append to existing file(s), if any, rather than overwriting.
 -v           Send records along to downstream verbs as well as splitting to files.
+-e           Do NOT URL-escape names of output files.
+-j {j}       Use string J to join filename parts; default "`+splitDefaultFileNamePartJoiner+`".
 -h|--help    Show this message.
 Any of the output-format command-line flags (see mlr -h). For example, using
   mlr --icsv --from myfile.csv split --ojson -n 1000
@@ -88,6 +90,8 @@ func transformerSplitParseCLI(
 	var doSize bool = false
 	var groupByFieldNames []string = nil
 	var emitDownstream bool = false
+	var escapeFileNameCharacters bool = true
+	var fileNamePartJoiner string = splitDefaultFileNamePartJoiner
 	var doAppend bool = false
 	var outputFileNamePrefix string = splitDefaultOutputFileNamePrefix
 	var outputFileNameSuffix string = "uninit"
@@ -138,6 +142,12 @@ func transformerSplitParseCLI(
 		} else if opt == "-v" {
 			emitDownstream = true
 
+		} else if opt == "-e" {
+			escapeFileNameCharacters = false
+
+		} else if opt == "-j" {
+			fileNamePartJoiner = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+
 		} else {
 			// This is inelegant. For error-proofing we advance argi already in our
 			// loop (so individual if-statements don't need to). However,
@@ -180,6 +190,8 @@ func transformerSplitParseCLI(
 		doSize,
 		groupByFieldNames,
 		emitDownstream,
+		escapeFileNameCharacters,
+		fileNamePartJoiner,
 		doAppend,
 		outputFileNamePrefix,
 		outputFileNameSuffix,
@@ -195,14 +207,16 @@ func transformerSplitParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerSplit struct {
-	n                    int64
-	outputFileNamePrefix string
-	outputFileNameSuffix string
-	emitDownstream       bool
-	ungroupedCounter     int64
-	groupByFieldNames    []string
-	recordWriterOptions  *cli.TWriterOptions
-	doAppend             bool
+	n                        int64
+	outputFileNamePrefix     string
+	outputFileNameSuffix     string
+	emitDownstream           bool
+	escapeFileNameCharacters bool
+	fileNamePartJoiner       string
+	ungroupedCounter         int64
+	groupByFieldNames        []string
+	recordWriterOptions      *cli.TWriterOptions
+	doAppend                 bool
 
 	// For doSize ungrouped: only one file open at a time
 	outputHandler    output.OutputHandler
@@ -220,6 +234,8 @@ func NewTransformerSplit(
 	doSize bool,
 	groupByFieldNames []string,
 	emitDownstream bool,
+	escapeFileNameCharacters bool,
+	fileNamePartJoiner string,
 	doAppend bool,
 	outputFileNamePrefix string,
 	outputFileNameSuffix string,
@@ -227,14 +243,16 @@ func NewTransformerSplit(
 ) (*TransformerSplit, error) {
 
 	tr := &TransformerSplit{
-		n:                    n,
-		outputFileNamePrefix: outputFileNamePrefix,
-		outputFileNameSuffix: outputFileNameSuffix,
-		emitDownstream:       emitDownstream,
-		ungroupedCounter:     0,
-		groupByFieldNames:    groupByFieldNames,
-		recordWriterOptions:  recordWriterOptions,
-		doAppend:             doAppend,
+		n:                        n,
+		outputFileNamePrefix:     outputFileNamePrefix,
+		outputFileNameSuffix:     outputFileNameSuffix,
+		emitDownstream:           emitDownstream,
+		escapeFileNameCharacters: escapeFileNameCharacters,
+		fileNamePartJoiner:       fileNamePartJoiner,
+		ungroupedCounter:         0,
+		groupByFieldNames:        groupByFieldNames,
+		recordWriterOptions:      recordWriterOptions,
+		doAppend:                 doAppend,
 
 		outputHandler:    nil,
 		previousQuotient: -1,
@@ -402,13 +420,21 @@ func (tr *TransformerSplit) makeUngroupedOutputFileName(k int64) string {
 func (tr *TransformerSplit) makeGroupedOutputFileName(
 	groupByFieldValues []*mlrval.Mlrval,
 ) string {
-	var buffer bytes.Buffer
-	buffer.WriteString(tr.outputFileNamePrefix)
-	for _, groupByFieldValue := range groupByFieldValues {
-		buffer.WriteString("_")
-		buffer.WriteString(url.QueryEscape(groupByFieldValue.String()))
+	var fileNameParts []string
+
+	if tr.outputFileNamePrefix != "" {
+		fileNameParts = append(fileNameParts, tr.outputFileNamePrefix)
 	}
-	buffer.WriteString(".")
-	buffer.WriteString(tr.outputFileNameSuffix)
-	return buffer.String()
+
+	for _, groupByFieldValue := range groupByFieldValues {
+		fileNameParts = append(fileNameParts, groupByFieldValue.String())
+	}
+
+	fileName := strings.Join(fileNameParts, tr.fileNamePartJoiner)
+
+	if tr.escapeFileNameCharacters {
+		fileName = url.QueryEscape(fileName)
+	}
+
+	return fileName + "." + tr.outputFileNameSuffix
 }
