@@ -179,8 +179,8 @@ See also [./README-profiling.md](./README-profiling.md) and [https://miller.read
 
 In summary:
 
-* #765, #774, and #787 were low-hanging fruit.
-* #424 was a bit more involved, and reveals that memory allocation -- not just GC -- needs to be handled more mindfully in Go than in C.
-* #779 was a bit more involved, and reveals that Go's elegant goroutine/channel processing model comes with the caveat that channelized data should not be organized in many, small pieces.
-* #809 was also bit more involved, and reveals that library functions are convenient, but profiling and analysis can sometimes reveal an opportunity for an impact, custom solution.
-* #786 was a massive refactor involving about 10KLOC -- in hindsight it would have been best to do this work at the start of the Go port, not at the end.
+* [#765](https://github.com/johnkerl/miller/pull/765), [#774](https://github.com/johnkerl/miller/pull/774), and [#787](https://github.com/johnkerl/miller/pull/787) were low-hanging fruit.
+* [#424](https://github.com/johnkerl/miller/pull/424) was a bit more involved, and reveals that memory allocation -- not just GC -- needs to be handled more mindfully in Go than in C.
+* [#779](https://github.com/johnkerl/miller/pull/779) was a bit more involved, and reveals that Go's elegant goroutine/channel processing model comes with the caveat that channelized data should not be organized in many, small pieces.
+* [#809](https://github.com/johnkerl/miller/pull/809) was also bit more involved, and reveals that library functions are convenient, but profiling and analysis can sometimes reveal an opportunity for an impact, custom solution.
+* [#786](https://github.com/johnkerl/miller/pull/786) was a massive refactor involving about 10KLOC -- in hindsight it would have been best to do this work at the start of the Go port, not at the end.
