@@ -74,6 +74,7 @@ is 2. Unary operators such as `!` and `~` show argument-count of 1; the ternary
 * [**Hashing functions**](#hashing-functions):  [md5](#md5),  [sha1](#sha1),  [sha256](#sha256),  [sha512](#sha512).
 * [**Higher-order-functions functions**](#higher-order-functions-functions):  [any](#any),  [apply](#apply),  [every](#every),  [fold](#fold),  [reduce](#reduce),  [select](#select),  [sort](#sort).
 * [**Math functions**](#math-functions):  [abs](#abs),  [acos](#acos),  [acosh](#acosh),  [asin](#asin),  [asinh](#asinh),  [atan](#atan),  [atan2](#atan2),  [atanh](#atanh),  [cbrt](#cbrt),  [ceil](#ceil),  [cos](#cos),  [cosh](#cosh),  [erf](#erf),  [erfc](#erfc),  [exp](#exp),  [expm1](#expm1),  [floor](#floor),  [invqnorm](#invqnorm),  [log](#log),  [log10](#log10),  [log1p](#log1p),  [logifit](#logifit),  [max](#max),  [min](#min),  [qnorm](#qnorm),  [round](#round),  [roundm](#roundm),  [sgn](#sgn),  [sin](#sin),  [sinh](#sinh),  [sqrt](#sqrt),  [tan](#tan),  [tanh](#tanh),  [urand](#urand),  [urand32](#urand32),  [urandelement](#urandelement),  [urandint](#urandint),  [urandrange](#urandrange).
+* [**Stats functions**](#stats-functions):  [stats_count](#stats_count),  [stats_kurtosis](#stats_kurtosis),  [stats_max](#stats_max),  [stats_mean](#stats_mean),  [stats_meaneb](#stats_meaneb),  [stats_min](#stats_min),  [stats_skewness](#stats_skewness),  [stats_stddev](#stats_stddev),  [stats_sum](#stats_sum),  [stats_sum2](#stats_sum2),  [stats_sum3](#stats_sum3),  [stats_sum4](#stats_sum4),  [stats_var](#stats_var).
 * [**String functions**](#string-functions):  [capitalize](#capitalize),  [clean_whitespace](#clean_whitespace),  [collapse_whitespace](#collapse_whitespace),  [format](#format),  [gssub](#gssub),  [gsub](#gsub),  [index](#index),  [latin1_to_utf8](#latin1_to_utf8),  [leftpad](#leftpad),  [lstrip](#lstrip),  [regextract](#regextract),  [regextract_or_else](#regextract_or_else),  [rightpad](#rightpad),  [rstrip](#rstrip),  [ssub](#ssub),  [strip](#strip),  [strlen](#strlen),  [sub](#sub),  [substr](#substr),  [substr0](#substr0),  [substr1](#substr1),  [tolower](#tolower),  [toupper](#toupper),  [truncate](#truncate),  [unformat](#unformat),  [unformatx](#unformatx),  [utf8_to_latin1](#utf8_to_latin1),  [\.](#dot).
 * [**System functions**](#system-functions):  [exec](#exec),  [hostname](#hostname),  [os](#os),  [system](#system),  [version](#version).
 * [**Time functions**](#time-functions):  [dhms2fsec](#dhms2fsec),  [dhms2sec](#dhms2sec),  [fsec2dhms](#fsec2dhms),  [fsec2hms](#fsec2hms),  [gmt2localtime](#gmt2localtime),  [gmt2nsec](#gmt2nsec),  [gmt2sec](#gmt2sec),  [hms2fsec](#hms2fsec),  [hms2sec](#hms2sec),  [localtime2gmt](#localtime2gmt),  [localtime2nsec](#localtime2nsec),  [localtime2sec](#localtime2sec),  [nsec2gmt](#nsec2gmt),  [nsec2gmtdate](#nsec2gmtdate),  [nsec2localdate](#nsec2localdate),  [nsec2localtime](#nsec2localtime),  [sec2dhms](#sec2dhms),  [sec2gmt](#sec2gmt),  [sec2gmtdate](#sec2gmtdate),  [sec2hms](#sec2hms),  [sec2localdate](#sec2localdate),  [sec2localtime](#sec2localtime),  [strfntime](#strfntime),  [strfntime_local](#strfntime_local),  [strftime](#strftime),  [strftime_local](#strftime_local),  [strpntime](#strpntime),  [strpntime_local](#strpntime_local),  [strptime](#strptime),  [strptime_local](#strptime_local),  [sysntime](#sysntime),  [systime](#systime),  [systimeint](#systimeint),  [upntime](#upntime),  [uptime](#uptime).
@@ -970,6 +971,86 @@ urandint  (class=math #args=2) Integer uniformly distributed between inclusive i
 ### urandrange
 <pre class="pre-non-highlight-non-pair">
 urandrange  (class=math #args=2) Floating-point numbers uniformly distributed on the interval [a, b).
+</pre>
+
+## Stats functions
+
+
+### stats_count
+<pre class="pre-non-highlight-non-pair">
+stats_count  (class=stats #args=1) XXX write me.
+</pre>
+
+
+### stats_kurtosis
+<pre class="pre-non-highlight-non-pair">
+stats_kurtosis  (class=stats #args=1) XXX write me.
+</pre>
+
+
+### stats_max
+<pre class="pre-non-highlight-non-pair">
+stats_max  (class=stats #args=1) XXX write me.
+</pre>
+
+
+### stats_mean
+<pre class="pre-non-highlight-non-pair">
+stats_mean  (class=stats #args=1) XXX write me.
+</pre>
+
+
+### stats_meaneb
+<pre class="pre-non-highlight-non-pair">
+stats_meaneb  (class=stats #args=1) XXX write me.
+</pre>
+
+
+### stats_min
+<pre class="pre-non-highlight-non-pair">
+stats_min  (class=stats #args=1) XXX write me.
+</pre>
+
+
+### stats_skewness
+<pre class="pre-non-highlight-non-pair">
+stats_skewness  (class=stats #args=1) XXX write me.
+</pre>
+
+
+### stats_stddev
+<pre class="pre-non-highlight-non-pair">
+stats_stddev  (class=stats #args=1) XXX write me.
+</pre>
+
+
+### stats_sum
+<pre class="pre-non-highlight-non-pair">
+stats_sum  (class=stats #args=1) XXX write me.
+</pre>
+
+
+### stats_sum2
+<pre class="pre-non-highlight-non-pair">
+stats_sum2  (class=stats #args=1) XXX write me.
+</pre>
+
+
+### stats_sum3
+<pre class="pre-non-highlight-non-pair">
+stats_sum3  (class=stats #args=1) XXX write me.
+</pre>
+
+
+### stats_sum4
+<pre class="pre-non-highlight-non-pair">
+stats_sum4  (class=stats #args=1) XXX write me.
+</pre>
+
+
+### stats_var
+<pre class="pre-non-highlight-non-pair">
+stats_var  (class=stats #args=1) XXX write me.
 </pre>
 
 ## String functions

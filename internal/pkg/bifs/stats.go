@@ -197,6 +197,51 @@ func BIF_collection_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
+func BIF_collection_null_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, value_if_not := check_collection(collection)
+	if !ok {
+		return value_if_not
+	}
+	f := func(element *mlrval.Mlrval) *mlrval.Mlrval {
+		if element.IsVoid() || element.IsNull() {
+			return mlrval.FromInt(1)
+		} else {
+			return mlrval.FromInt(0)
+		}
+	}
+	return mlrval.CollectionFold(
+		collection,
+		mlrval.FromInt(0),
+		func(a, b *mlrval.Mlrval) *mlrval.Mlrval {
+			return BIF_plus_binary(a, f(b))
+		},
+	)
+}
+
+func BIF_collection_distinct_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, value_if_not := check_collection(collection)
+	if !ok {
+		return value_if_not
+	}
+	counts := make(map[string]int)
+	if collection.IsArray() {
+		a := collection.AcquireArrayValue()
+		for _, e := range a {
+			valueString := e.OriginalString()
+			counts[valueString] += 1
+		}
+
+	} else {
+		m := collection.AcquireMapValue()
+		for pe := m.Head; pe != nil; pe = pe.Next {
+			valueString := pe.Value.OriginalString()
+			counts[valueString] += 1
+		}
+	}
+
+	return mlrval.FromInt(int64(len(counts)))
+}
+
 func BIF_collection_sum(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
@@ -336,6 +381,41 @@ func BIF_collection_max(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
+func BIF_collection_minlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, value_if_not := check_collection(collection)
+	if !ok {
+		return value_if_not
+	}
+	if collection.IsArray() {
+		return BIF_minlen_variadic(collection.AcquireArrayValue())
+	} else {
+		return BIF_minlen_over_map_values(collection.AcquireMapValue())
+	}
+}
+
+func BIF_collection_maxlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, value_if_not := check_collection(collection)
+	if !ok {
+		return value_if_not
+	}
+	if collection.IsArray() {
+		return BIF_maxlen_variadic(collection.AcquireArrayValue())
+	} else {
+		return BIF_maxlen_over_map_values(collection.AcquireMapValue())
+	}
+}
+
+//	"sort"
+//func BIF_sort_in_place(collection *mlrval.Mlrval) {
+//	// XXX what if map?
+//	if xxx {
+//		sort.Slice(array, func(i, j int) bool {
+//			return mlrval.LessThan(array[i], array[j])
+//		})
+//		keeper.sorted = true
+//	}
+//}
+
 // * count    Count instances of fields
 // * sum      Compute sums of specified fields
 // * mean     Compute averages (sample means) of specified fields
@@ -345,16 +425,17 @@ func BIF_collection_max(collection *mlrval.Mlrval) *mlrval.Mlrval {
 // * skewness Compute sample skewness of specified fields
 // * kurtosis Compute sample kurtosis of specified fields
 
+// * distinct_count Count number of distinct values per field
+// * null_count Count number of empty-string/JSON-null instances per field
+
 // * min      Compute minimum values of specified fields
 // * max      Compute maximum values of specified fields
 
-//   median   This is the same as p50
-//   p10 p25.2 p50 p98 p100 etc.
+// * minlen   Compute minimum string-lengths of specified fields
+// * maxlen   Compute maximum string-lengths of specified fields
 
-//   minlen   Compute minimum string-lengths of specified fields
-//   maxlen   Compute maximum string-lengths of specified fields
-
-//   null_count Count number of empty-string/JSON-null instances per field
-//   distinct_count Count number of distinct values per field
 //   mode     Find most-frequently-occurring values for fields; first-found wins tie
 //   antimode Find least-frequently-occurring values for fields; first-found wins tie
+
+//   p10 p25.2 p50 p98 p100 etc.
+//   median   This is the same as p50

@@ -970,6 +970,20 @@ is normally distributed.`,
 		},
 
 		{
+			name:      "stats_distinct_count",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_distinct_count,
+		},
+
+		{
+			name:      "stats_null_count",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_null_count,
+		},
+
+		{
 			name:      "stats_sum",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
@@ -1051,6 +1065,20 @@ is normally distributed.`,
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
 			unaryFunc: bifs.BIF_collection_max,
+		},
+
+		{
+			name:      "stats_minlen",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_minlen,
+		},
+
+		{
+			name:      "stats_maxlen",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_maxlen,
 		},
 
 		// ----------------------------------------------------------------

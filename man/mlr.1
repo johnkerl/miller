@@ -249,10 +249,12 @@ mmul msub nsec2gmt nsec2gmtdate nsec2localdate nsec2localtime os pow qnorm
 reduce regextract regextract_or_else rightpad round roundm rstrip sec2dhms
 sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime select sgn sha1 sha256
 sha512 sin sinh sort splita splitax splitkv splitkvx splitnv splitnvx sqrt
-ssub strfntime strfntime_local strftime strftime_local string strip strlen
-strpntime strpntime_local strptime strptime_local sub substr substr0 substr1
-sysntime system systime systimeint tan tanh tolower toupper truncate typeof
-unflatten unformat unformatx upntime uptime urand urand32 urandelement
+ssub stats_count stats_kurtosis stats_max stats_mean stats_meaneb stats_min
+stats_skewness stats_stddev stats_sum stats_sum2 stats_sum3 stats_sum4
+stats_var strfntime strfntime_local strftime strftime_local string strip
+strlen strpntime strpntime_local strptime strptime_local sub substr substr0
+substr1 sysntime system systime systimeint tan tanh tolower toupper truncate
+typeof unflatten unformat unformatx upntime uptime urand urand32 urandelement
 urandint urandrange utf8_to_latin1 version ! != !=~ % & && * ** + - . .* .+ .-
 \&./ / // < << <= <=> == =~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
 .fi
@@ -4313,6 +4315,123 @@ splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
  (class=string #args=3) Like sub but does no regexing. No characters are special.
 Example:
 ssub("abc.def", ".", "X") gives "abcXdef"
+.fi
+.if n \{\
+.RE
+.SS "stats_count"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=stats #args=1) XXX write me.
+.fi
+.if n \{\
+.RE
+.SS "stats_kurtosis"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=stats #args=1) XXX write me.
+.fi
+.if n \{\
+.RE
+.SS "stats_max"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=stats #args=1) XXX write me.
+.fi
+.if n \{\
+.RE
+.SS "stats_mean"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=stats #args=1) XXX write me.
+.fi
+.if n \{\
+.RE
+.SS "stats_meaneb"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=stats #args=1) XXX write me.
+.fi
+.if n \{\
+.RE
+.SS "stats_min"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=stats #args=1) XXX write me.
+.fi
+.if n \{\
+.RE
+.SS "stats_skewness"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=stats #args=1) XXX write me.
+.fi
+.if n \{\
+.RE
+.SS "stats_stddev"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=stats #args=1) XXX write me.
+.fi
+.if n \{\
+.RE
+.SS "stats_sum"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=stats #args=1) XXX write me.
+.fi
+.if n \{\
+.RE
+.SS "stats_sum2"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=stats #args=1) XXX write me.
+.fi
+.if n \{\
+.RE
+.SS "stats_sum3"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=stats #args=1) XXX write me.
+.fi
+.if n \{\
+.RE
+.SS "stats_sum4"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=stats #args=1) XXX write me.
+.fi
+.if n \{\
+.RE
+.SS "stats_var"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=stats #args=1) XXX write me.
 .fi
 .if n \{\
 .RE

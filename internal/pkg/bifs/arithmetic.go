@@ -3,6 +3,7 @@ package bifs
 import (
 	"math"
 
+	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
@@ -824,6 +825,21 @@ func BIF_min_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	)
 }
 
+func BIF_minlen_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
+	if len(mlrvals) == 0 {
+		return mlrval.VOID
+	}
+	// Do the bulk arithmetic on native ints not Mlrvals, to avoid unnecessary allocation.
+	retval := lib.UTF8Strlen(mlrvals[0].AcquireStringValue())
+	for i, _ := range mlrvals {
+		clen := lib.UTF8Strlen(mlrvals[i].AcquireStringValue())
+		if clen < retval {
+			retval = clen
+		}
+	}
+	return mlrval.FromInt(retval)
+}
+
 func BIF_min_over_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
 	if m.Head == nil {
 		return mlrval.VOID
@@ -835,6 +851,21 @@ func BIF_min_over_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
 			return BIF_min_binary(a, b)
 		},
 	)
+}
+
+func BIF_minlen_over_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
+	if m.Head == nil {
+		return mlrval.VOID
+	}
+	// Do the bulk arithmetic on native ints not Mlrvals, to avoid unnecessary allocation.
+	retval := lib.UTF8Strlen(m.Head.Value.AcquireStringValue())
+	for pe := m.Head.Next; pe != nil; pe = pe.Next {
+		clen := lib.UTF8Strlen(pe.Value.AcquireStringValue())
+		if clen < retval {
+			retval = clen
+		}
+	}
+	return mlrval.FromInt(retval)
 }
 
 // ----------------------------------------------------------------
@@ -920,6 +951,21 @@ func BIF_max_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	)
 }
 
+func BIF_maxlen_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
+	if len(mlrvals) == 0 {
+		return mlrval.VOID
+	}
+	// Do the bulk arithmetic on native ints not Mlrvals, to avoid unnecessary allocation.
+	retval := lib.UTF8Strlen(mlrvals[0].AcquireStringValue())
+	for i, _ := range mlrvals {
+		clen := lib.UTF8Strlen(mlrvals[i].AcquireStringValue())
+		if clen > retval {
+			retval = clen
+		}
+	}
+	return mlrval.FromInt(retval)
+}
+
 func BIF_max_over_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
 	if m.Head == nil {
 		return mlrval.VOID
@@ -931,4 +977,19 @@ func BIF_max_over_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
 			return BIF_max_binary(a, b)
 		},
 	)
+}
+
+func BIF_maxlen_over_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
+	if m.Head == nil {
+		return mlrval.VOID
+	}
+	// Do the bulk arithmetic on native ints not Mlrvals, to avoid unnecessary allocation.
+	retval := lib.UTF8Strlen(m.Head.Value.AcquireStringValue())
+	for pe := m.Head.Next; pe != nil; pe = pe.Next {
+		clen := lib.UTF8Strlen(pe.Value.AcquireStringValue())
+		if clen > retval {
+			retval = clen
+		}
+	}
+	return mlrval.FromInt(retval)
 }

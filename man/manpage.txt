@@ -202,10 +202,12 @@ MILLER(1)                                                            MILLER(1)
        reduce regextract regextract_or_else rightpad round roundm rstrip sec2dhms
        sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime select sgn sha1 sha256
        sha512 sin sinh sort splita splitax splitkv splitkvx splitnv splitnvx sqrt
-       ssub strfntime strfntime_local strftime strftime_local string strip strlen
-       strpntime strpntime_local strptime strptime_local sub substr substr0 substr1
-       sysntime system systime systimeint tan tanh tolower toupper truncate typeof
-       unflatten unformat unformatx upntime uptime urand urand32 urandelement
+       ssub stats_count stats_kurtosis stats_max stats_mean stats_meaneb stats_min
+       stats_skewness stats_stddev stats_sum stats_sum2 stats_sum3 stats_sum4
+       stats_var strfntime strfntime_local strftime strftime_local string strip
+       strlen strpntime strpntime_local strptime strptime_local sub substr substr0
+       substr1 sysntime system systime systimeint tan tanh tolower toupper truncate
+       typeof unflatten unformat unformatx upntime uptime urand urand32 urandelement
        urandint urandrange utf8_to_latin1 version ! != !=~ % & && * ** + - . .* .+ .-
        ./ / // < << <= <=> == =~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
 
@@ -2784,6 +2786,45 @@ MILLER(1)                                                            MILLER(1)
         (class=string #args=3) Like sub but does no regexing. No characters are special.
        Example:
        ssub("abc.def", ".", "X") gives "abcXdef"
+
+   1mstats_count0m
+        (class=stats #args=1) XXX write me.
+
+   1mstats_kurtosis0m
+        (class=stats #args=1) XXX write me.
+
+   1mstats_max0m
+        (class=stats #args=1) XXX write me.
+
+   1mstats_mean0m
+        (class=stats #args=1) XXX write me.
+
+   1mstats_meaneb0m
+        (class=stats #args=1) XXX write me.
+
+   1mstats_min0m
+        (class=stats #args=1) XXX write me.
+
+   1mstats_skewness0m
+        (class=stats #args=1) XXX write me.
+
+   1mstats_stddev0m
+        (class=stats #args=1) XXX write me.
+
+   1mstats_sum0m
+        (class=stats #args=1) XXX write me.
+
+   1mstats_sum20m
+        (class=stats #args=1) XXX write me.
+
+   1mstats_sum30m
+        (class=stats #args=1) XXX write me.
+
+   1mstats_sum40m
+        (class=stats #args=1) XXX write me.
+
+   1mstats_var0m
+        (class=stats #args=1) XXX write me.
 
    1mstrfntime0m
         (class=time #args=2) Formats integer nanoseconds since the epoch as timestamp. Format strings are as at https://pkg.go.dev/github.com/lestrrat-go/strftime, with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also https://miller.readthedocs.io/en/latest/reference-dsl-time/ for more information on the differences from the C library ("man strftime" on your system). See also strftime_local.
