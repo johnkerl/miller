@@ -230,7 +230,6 @@ func BIF_collection_distinct_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 			valueString := e.OriginalString()
 			counts[valueString] += 1
 		}
-
 	} else {
 		m := collection.AcquireMapValue()
 		for pe := m.Head; pe != nil; pe = pe.Next {
@@ -238,8 +237,69 @@ func BIF_collection_distinct_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 			counts[valueString] += 1
 		}
 	}
-
 	return mlrval.FromInt(int64(len(counts)))
+}
+
+func BIF_collection_mode(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, value_if_not := check_collection(collection)
+	if !ok {
+		return value_if_not
+	}
+	counts := make(map[string]int)
+	if collection.IsArray() {
+		a := collection.AcquireArrayValue()
+		for _, e := range a {
+			valueString := e.OriginalString()
+			counts[valueString] += 1
+		}
+	} else {
+		m := collection.AcquireMapValue()
+		for pe := m.Head; pe != nil; pe = pe.Next {
+			valueString := pe.Value.OriginalString()
+			counts[valueString] += 1
+		}
+	}
+	maxk := ""
+	maxv := -1
+	for k, v := range counts {
+		if v > maxv {
+			maxk = k
+			maxv = v
+		}
+	}
+	return mlrval.FromString(maxk)
+}
+
+func BIF_collection_antimode(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	ok, value_if_not := check_collection(collection)
+	if !ok {
+		return value_if_not
+	}
+	counts := make(map[string]int)
+	if collection.IsArray() {
+		a := collection.AcquireArrayValue()
+		for _, e := range a {
+			valueString := e.OriginalString()
+			counts[valueString] += 1
+		}
+	} else {
+		m := collection.AcquireMapValue()
+		for pe := m.Head; pe != nil; pe = pe.Next {
+			valueString := pe.Value.OriginalString()
+			counts[valueString] += 1
+		}
+	}
+	first := true
+	maxk := ""
+	maxv := -1
+	for k, v := range counts {
+		if first || v < maxv {
+			maxk = k
+			maxv = v
+			first = false
+		}
+	}
+	return mlrval.FromString(maxk)
 }
 
 func BIF_collection_sum(collection *mlrval.Mlrval) *mlrval.Mlrval {
@@ -434,8 +494,8 @@ func BIF_collection_maxlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
 // * minlen   Compute minimum string-lengths of specified fields
 // * maxlen   Compute maximum string-lengths of specified fields
 
-//   mode     Find most-frequently-occurring values for fields; first-found wins tie
-//   antimode Find least-frequently-occurring values for fields; first-found wins tie
+// * mode     Find most-frequently-occurring values for fields; first-found wins tie
+// * antimode Find least-frequently-occurring values for fields; first-found wins tie
 
 //   p10 p25.2 p50 p98 p100 etc.
 //   median   This is the same as p50

@@ -984,6 +984,20 @@ is normally distributed.`,
 		},
 
 		{
+			name:      "stats_mode",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_mode,
+		},
+
+		{
+			name:      "stats_antimode",
+			class:     FUNC_CLASS_STATS,
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_collection_antimode,
+		},
+
+		{
 			name:      "stats_sum",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
