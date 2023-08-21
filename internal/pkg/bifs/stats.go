@@ -465,8 +465,10 @@ func BIF_collection_maxlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
+// import:
 //	"sort"
-//func BIF_sort_in_place(collection *mlrval.Mlrval) {
+
+//func BIF_sort_collection(collection *mlrval.Mlrval) {
 //	// XXX what if map?
 //	if xxx {
 //		sort.Slice(array, func(i, j int) bool {
@@ -475,6 +477,20 @@ func BIF_collection_maxlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
 //		keeper.sorted = true
 //	}
 //}
+
+//func BIF_collection_median(collection *mlrval.Mlrval) {
+// }
+//func BIF_collection_percentile(collection *mlrval.Mlrval) {
+// }
+//func BIF_collection_percentiles(collection *mlrval.Mlrval) {
+// }
+
+//func BIF_collection_median_presorted(collection *mlrval.Mlrval) {
+// }
+//func BIF_collection_percentile_presorted(collection *mlrval.Mlrval) {
+// }
+//func BIF_collection_percentiles_presorted(collection *mlrval.Mlrval) {
+// }
 
 // * count    Count instances of fields
 // * sum      Compute sums of specified fields
