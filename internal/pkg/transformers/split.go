@@ -422,10 +422,6 @@ func (tr *TransformerSplit) makeGroupedOutputFileName(
 ) string {
 	var fileNameParts []string
 
-	if tr.outputFileNamePrefix != "" {
-		fileNameParts = append(fileNameParts, tr.outputFileNamePrefix)
-	}
-
 	for _, groupByFieldValue := range groupByFieldValues {
 		fileNameParts = append(fileNameParts, groupByFieldValue.String())
 	}
@@ -433,8 +429,12 @@ func (tr *TransformerSplit) makeGroupedOutputFileName(
 	fileName := strings.Join(fileNameParts, tr.fileNamePartJoiner)
 
 	if tr.escapeFileNameCharacters {
-		fileName = url.QueryEscape(fileName)
+		fileName = url.QueryEscape(fileName) + "." + tr.outputFileNameSuffix
 	}
 
-	return fileName + "." + tr.outputFileNameSuffix
+	if tr.outputFileNamePrefix != "" {
+		fileName = tr.outputFileNamePrefix + tr.fileNamePartJoiner + fileName
+	}
+
+	return fileName
 }
