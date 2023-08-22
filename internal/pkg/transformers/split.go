@@ -429,12 +429,12 @@ func (tr *TransformerSplit) makeGroupedOutputFileName(
 	fileName := strings.Join(fileNameParts, tr.fileNamePartJoiner)
 
 	if tr.escapeFileNameCharacters {
-		fileName = url.QueryEscape(fileName) + "." + tr.outputFileNameSuffix
+		fileName = url.QueryEscape(fileName)
 	}
 
 	if tr.outputFileNamePrefix != "" {
 		fileName = tr.outputFileNamePrefix + tr.fileNamePartJoiner + fileName
 	}
 
-	return fileName
+	return fileName + "." + tr.outputFileNameSuffix
 }
