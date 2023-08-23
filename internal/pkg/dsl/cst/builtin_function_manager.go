@@ -966,133 +966,167 @@ is normally distributed.`,
 			name:      "stats_count",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_count,
+			unaryFunc: bifs.BIF_stats_count,
 		},
 
 		{
 			name:      "stats_distinct_count",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_distinct_count,
+			unaryFunc: bifs.BIF_stats_distinct_count,
 		},
 
 		{
 			name:      "stats_null_count",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_null_count,
+			unaryFunc: bifs.BIF_stats_null_count,
 		},
 
 		{
 			name:      "stats_mode",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_mode,
+			unaryFunc: bifs.BIF_stats_mode,
 		},
 
 		{
 			name:      "stats_antimode",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_antimode,
+			unaryFunc: bifs.BIF_stats_antimode,
 		},
 
 		{
 			name:      "stats_sum",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_sum,
+			unaryFunc: bifs.BIF_stats_sum,
 		},
 
 		{
 			name:      "stats_sum2",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_sum2,
+			unaryFunc: bifs.BIF_stats_sum2,
 		},
 
 		{
 			name:      "stats_sum3",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_sum3,
+			unaryFunc: bifs.BIF_stats_sum3,
 		},
 
 		{
 			name:      "stats_sum4",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_sum4,
+			unaryFunc: bifs.BIF_stats_sum4,
 		},
 
 		{
 			name:      "stats_mean",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_mean,
+			unaryFunc: bifs.BIF_stats_mean,
 		},
 
 		{
 			name:      "stats_meaneb",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_meaneb,
+			unaryFunc: bifs.BIF_stats_meaneb,
 		},
 
 		{
 			name:      "stats_var",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_variance,
+			unaryFunc: bifs.BIF_stats_variance,
 		},
 
 		{
 			name:      "stats_stddev",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_stddev,
+			unaryFunc: bifs.BIF_stats_stddev,
 		},
 
 		{
 			name:      "stats_skewness",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_skewness,
+			unaryFunc: bifs.BIF_stats_skewness,
 		},
 
 		{
 			name:      "stats_kurtosis",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_kurtosis,
+			unaryFunc: bifs.BIF_stats_kurtosis,
 		},
 
 		{
 			name:      "stats_min",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_min,
+			unaryFunc: bifs.BIF_stats_min,
 		},
 
 		{
 			name:      "stats_max",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_max,
+			unaryFunc: bifs.BIF_stats_max,
 		},
 
 		{
 			name:      "stats_minlen",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_minlen,
+			unaryFunc: bifs.BIF_stats_minlen,
 		},
 
 		{
 			name:      "stats_maxlen",
 			class:     FUNC_CLASS_STATS,
 			help:      `XXX write me.`,
-			unaryFunc: bifs.BIF_collection_maxlen,
+			unaryFunc: bifs.BIF_stats_maxlen,
+		},
+
+		{
+			name:               "stats_median",
+			class:              FUNC_CLASS_STATS,
+			help:               `XXX write me.`,
+			unaryFunc:          bifs.BIF_stats_median,
+			binaryFunc:         bifs.BIF_stats_median_with_options,
+			hasMultipleArities: true,
+		},
+
+		{
+			name:               "stats_percentile",
+			class:              FUNC_CLASS_STATS,
+			help:               `XXX write me.`,
+			binaryFunc:         bifs.BIF_stats_percentile,
+			ternaryFunc:        bifs.BIF_stats_percentile_with_options,
+			hasMultipleArities: true,
+		},
+
+		{
+			name:               "stats_percentiles",
+			class:              FUNC_CLASS_STATS,
+			help:               `XXX write me.`,
+			binaryFunc:         bifs.BIF_stats_percentiles,
+			ternaryFunc:        bifs.BIF_stats_percentiles_with_options,
+			hasMultipleArities: true,
+		},
+
+		{
+			name:      "sort_collection",
+			class:     FUNC_CLASS_STATS, // XXX change
+			help:      `XXX write me.`,
+			unaryFunc: bifs.BIF_sort_collection,
 		},
 
 		// ----------------------------------------------------------------
