@@ -35,23 +35,21 @@ func ValidateAST(
 		}
 	}
 
-	if ast.RootNode.Children != nil {
-		for _, astChild := range ast.RootNode.Children {
-			err := validateASTAux(
-				astChild,
-				dslInstanceType,
-				atTopLevel,
-				inLoop,
-				inBeginOrEnd,
-				inUDF,
-				inUDS,
-				isMainBlockLastStatement,
-				isAssignmentLHS,
-				isUnset,
-			)
-			if err != nil {
-				return err
-			}
+	for _, astChild := range ast.RootNode.Children {
+		err := validateASTAux(
+			astChild,
+			dslInstanceType,
+			atTopLevel,
+			inLoop,
+			inBeginOrEnd,
+			inUDF,
+			inUDS,
+			isMainBlockLastStatement,
+			isAssignmentLHS,
+			isUnset,
+		)
+		if err != nil {
+			return err
 		}
 	}
 
@@ -219,25 +217,23 @@ func validateASTAux(
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Treewalk
 
-	if astNode.Children != nil {
-		for i, astChild := range astNode.Children {
-			nextLevelIsAssignmentLHS = astNode.Type == dsl.NodeTypeAssignment && i == 0
-			nextLevelIsUnset = astNode.Type == dsl.NodeTypeUnset
-			err := validateASTAux(
-				astChild,
-				dslInstanceType,
-				nextLevelAtTopLevel,
-				nextLevelInLoop,
-				nextLevelInBeginOrEnd,
-				nextLevelInUDF,
-				nextLevelInUDS,
-				isMainBlockLastStatement,
-				nextLevelIsAssignmentLHS,
-				nextLevelIsUnset,
-			)
-			if err != nil {
-				return err
-			}
+	for i, astChild := range astNode.Children {
+		nextLevelIsAssignmentLHS = astNode.Type == dsl.NodeTypeAssignment && i == 0
+		nextLevelIsUnset = astNode.Type == dsl.NodeTypeUnset
+		err := validateASTAux(
+			astChild,
+			dslInstanceType,
+			nextLevelAtTopLevel,
+			nextLevelInLoop,
+			nextLevelInBeginOrEnd,
+			nextLevelInUDF,
+			nextLevelInUDS,
+			isMainBlockLastStatement,
+			nextLevelIsAssignmentLHS,
+			nextLevelIsUnset,
+		)
+		if err != nil {
+			return err
 		}
 	}
 
