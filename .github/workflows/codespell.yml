@@ -34,3 +34,12 @@ jobs:
           check_filenames: true
           ignore_words_file: .codespellignore
           skip: "*.csv,*.dkvp,*.txt,*.js,*.html,*.map,*.z,./tags,./test/cases,./docs/src/shapes-of-data.md.in,./docs/src/shapes-of-data.md,test/input/latin1.xtab"
+          # As of August 2023 or so, Codespell started exiting with status 1 just _examining_ the
+          # latin1.xtab file which is (intentionally) not UTF-8. Before, it said
+          #
+          #   Warning: WARNING: Cannot decode file using encoding "utf-8": ./test/input/latin1.xtab
+          #   WARNING: Trying next encoding "iso-8859-1"
+          #
+          # but would exit 0. After, it started exiting with a 1. This is annoying as it makes
+          # every PR red in CI. So we have to use warning mode now.
+          only_warn: 1
