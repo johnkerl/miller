@@ -1834,6 +1834,8 @@ MILLER(1)                                                            MILLER(1)
        --suffix {s} Specify filename suffix; default is from mlr output format, e.g. "csv".
        -a           Append to existing file(s), if any, rather than overwriting.
        -v           Send records along to downstream verbs as well as splitting to files.
+       -e           Do NOT URL-escape names of output files.
+       -j {J}       Use string J to join filename parts; default "_".
        -h|--help    Show this message.
        Any of the output-format command-line flags (see mlr -h). For example, using
          mlr --icsv --from myfile.csv split --ojson -n 1000
@@ -3470,5 +3472,5 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-08-20                         MILLER(1)
+                                  2023-08-23                         MILLER(1)
 </pre>
