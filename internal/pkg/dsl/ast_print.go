@@ -75,10 +75,8 @@ func (node *ASTNode) printAux(depth int) {
 	fmt.Println()
 
 	// Children, indented one level further
-	if node.Children != nil {
-		for _, child := range node.Children {
-			child.printAux(depth + 1)
-		}
+	for _, child := range node.Children {
+		child.printAux(depth + 1)
 	}
 }
 

@@ -398,11 +398,9 @@ func (flag *Flag) Owns(input string) bool {
 	if flag.name == input {
 		return true
 	}
-	if flag.altNames != nil {
-		for _, name := range flag.altNames {
-			if name == input {
-				return true
-			}
+	for _, name := range flag.altNames {
+		if name == input {
+			return true
 		}
 	}
 	return false
@@ -414,11 +412,9 @@ func (flag *Flag) Matches(input string) bool {
 	if strings.Contains(flag.name, input) {
 		return true
 	}
-	if flag.altNames != nil {
-		for _, name := range flag.altNames {
-			if strings.Contains(name, input) {
-				return true
-			}
+	for _, name := range flag.altNames {
+		if strings.Contains(name, input) {
+			return true
 		}
 	}
 	return false

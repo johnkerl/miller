@@ -887,12 +887,10 @@ func (node *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload,
 	}
 
 	for {
-		if node.precontinuationAssignments != nil {
-			for _, precontinuationAssignment := range node.precontinuationAssignments {
-				_, err := precontinuationAssignment.Execute(state)
-				if err != nil {
-					return nil, err
-				}
+		for _, precontinuationAssignment := range node.precontinuationAssignments {
+			_, err := precontinuationAssignment.Execute(state)
+			if err != nil {
+				return nil, err
 			}
 		}
 		if node.continuationExpressionNode != nil { // empty is true

@@ -24,16 +24,14 @@ func WarnOnAST(
 	inAssignment := false
 	ok := true
 
-	if ast.RootNode.Children != nil {
-		for _, astChild := range ast.RootNode.Children {
-			ok1 := warnOnASTAux(
-				astChild,
-				variableNamesWrittenTo,
-				inAssignment,
-			)
-			// Don't end early on first warning; tree-walk to list them all.
-			ok = ok1 && ok
-		}
+	for _, astChild := range ast.RootNode.Children {
+		ok1 := warnOnASTAux(
+			astChild,
+			variableNamesWrittenTo,
+			inAssignment,
+		)
+		// Don't end early on first warning; tree-walk to list them all.
+		ok = ok1 && ok
 	}
 
 	return ok
@@ -134,52 +132,50 @@ func warnOnASTAux(
 
 	// Treewalk to check the rest of the AST below this node.
 
-	if astNode.Children != nil {
-		for i, astChild := range astNode.Children {
-			childInAssignment := inAssignment
+	for i, astChild := range astNode.Children {
+		childInAssignment := inAssignment
 
-			if astNode.Type == dsl.NodeTypeAssignment && i == 0 {
-				// LHS of assignment statements
+		if astNode.Type == dsl.NodeTypeAssignment && i == 0 {
+			// LHS of assignment statements
+			childInAssignment = true
+		} else if astNode.Type == dsl.NodeTypeForLoopOneVariable && i == 0 {
+			// The 'k' in 'for (k in $*)'
+			childInAssignment = true
+		} else if astNode.Type == dsl.NodeTypeForLoopTwoVariable && (i == 0 || i == 1) {
+			// The 'k' and 'v' in 'for (k,v in $*)'
+			childInAssignment = true
+		} else if astNode.Type == dsl.NodeTypeForLoopMultivariable && (i == 0 || i == 1) {
+			// The 'k1', 'k2', and 'v' in 'for ((k1,k2),v in $*)'
+			childInAssignment = true
+		} else if astNode.Type == dsl.NodeTypeParameterList {
+			childInAssignment = true
+		} else if inAssignment && astNode.Type == dsl.NodeTypeArrayOrMapIndexAccess {
+			// In 'z[i] = 1', the 'i' is a read and the 'z' is a write.
+			//
+			// mlr --from r put -v -W 'z[i] = 1'
+			// DSL EXPRESSION:
+			// z[i]=1
+			//
+			// AST:
+			// * statement block
+			//     * assignment "="
+			//         * array or map index access "[]"
+			//             * local variable "z"
+			//             * local variable "i"
+			//         * int literal "1"
+			if i == 0 {
 				childInAssignment = true
-			} else if astNode.Type == dsl.NodeTypeForLoopOneVariable && i == 0 {
-				// The 'k' in 'for (k in $*)'
-				childInAssignment = true
-			} else if astNode.Type == dsl.NodeTypeForLoopTwoVariable && (i == 0 || i == 1) {
-				// The 'k' and 'v' in 'for (k,v in $*)'
-				childInAssignment = true
-			} else if astNode.Type == dsl.NodeTypeForLoopMultivariable && (i == 0 || i == 1) {
-				// The 'k1', 'k2', and 'v' in 'for ((k1,k2),v in $*)'
-				childInAssignment = true
-			} else if astNode.Type == dsl.NodeTypeParameterList {
-				childInAssignment = true
-			} else if inAssignment && astNode.Type == dsl.NodeTypeArrayOrMapIndexAccess {
-				// In 'z[i] = 1', the 'i' is a read and the 'z' is a write.
-				//
-				// mlr --from r put -v -W 'z[i] = 1'
-				// DSL EXPRESSION:
-				// z[i]=1
-				//
-				// AST:
-				// * statement block
-				//     * assignment "="
-				//         * array or map index access "[]"
-				//             * local variable "z"
-				//             * local variable "i"
-				//         * int literal "1"
-				if i == 0 {
-					childInAssignment = true
-				} else {
-					childInAssignment = false
-				}
+			} else {
+				childInAssignment = false
 			}
-			ok1 := warnOnASTAux(
-				astChild,
-				variableNamesWrittenTo,
-				childInAssignment,
-			)
-			// Don't end early on first error; tree-walk to list them all.
-			ok = ok1 && ok
 		}
+		ok1 := warnOnASTAux(
+			astChild,
+			variableNamesWrittenTo,
+			childInAssignment,
+		)
+		// Don't end early on first error; tree-walk to list them all.
+		ok = ok1 && ok
 	}
 
 	return ok
