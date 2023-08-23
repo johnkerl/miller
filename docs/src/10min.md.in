@@ -434,3 +434,21 @@ GENMD-EOF
 GENMD-RUN-COMMAND
 cat triangle.csv
 GENMD-EOF
+
+Alternatively, the `split` verb can do the same thing:
+
+GENMD-RUN-COMMAND
+mlr --csv --from example.csv split -g shape
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat split_circle.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat split_square.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat split_triangle.csv
+GENMD-EOF
