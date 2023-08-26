@@ -1086,8 +1086,7 @@ percentile(["abc", "def", "ghi", "ghi"], 90) is "ghi"
 percentiles  (class=stats #args=2,3) Returns the given percentiles of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types. See examples for information on the three option flags.
 Examples:
 
-Defaults are to not interpolate linearly, to produce a map keyed by percentile name, and to sort
-the input before computing percentiles:
+Defaults are to not interpolate linearly, to produce a map keyed by percentile name, and to sort the input before computing percentiles:
 
   percentiles([3,4,5,6,9,10], [25,75]) is { "25": 4, "75": 9 }
   percentiles(["abc", "def", "ghi", "ghi"], [25,75]) is { "25": "def", "75": "ghi" }
@@ -1096,36 +1095,41 @@ Use "output_array_not_map" (or shorthand "oa") to get the outputs as an array:
 
   percentiles([3,4,5,6,9,10], [25,75], {"output_array_not_map":true}) is [4, 9]
 
-Use "interpolate_linearly" (or shorthand "il") to do linear interpolation -- note this produces
-,error on string inputs:
+Use "interpolate_linearly" (or shorthand "il") to do linear interpolation -- note this produces error values on string inputs:
 
   percentiles([3,4,5,6,9,10], [25,75], {"interpolate_linearly":true}) is { "25": 4.25, "75": 8.25 }
 
-The percentiles function always sorts its inputs before computing percentiles. If you know your input
-is already sorted -- see also the sort_collection function -- then computation will be faster on
-large input if you pass in "array_is_sorted":
+The percentiles function always sorts its inputs before computing percentiles. If you know your input is already sorted -- see also the sort_collection function -- then computation will be faster on large input if you pass in "array_is_sorted" (shorthand: "ais":
 
   x = [6,5,9,10,4,3]
-  percentiles(x, [25,75], {"array_is_sorted":true}) gives { "25": 5, "75": 4 } which is incorrect
+  percentiles(x, [25,75], {"ais":true}) gives { "25": 5, "75": 4 } which is incorrect
   x = sort_collection(x)
-  percentiles(x, [25,75], {"array_is_sorted":true}) gives { "25": 4, "75": 9 } which is correct
+  percentiles(x, [25,75], {"ais":true}) gives { "25": 4, "75": 9 } which is correct
 
 You can also leverage this feature to compute percentiles on a sort of your choosing. For example:
 
   Non-sorted input:
+
     x = splitax("the quick brown fox jumped loquaciously over the lazy dogs", " ")
     x is: ["the", "quick", "brown", "fox", "jumped", "loquaciously", "over", "the", "lazy", "dogs"]
-  Percentiles are taken over the original positions of the words in the array -- "dogs" is last
-  and hence appears as p99:
+
+  Percentiles are taken over the original positions of the words in the array -- "dogs" is last and hence appears as p99:
+
     percentiles(x, [50, 99], {"oa":true, "ais":true}) gives ["loquaciously", "dogs"]
+
   With sorting done inside percentiles, "the" is alphabetically last and is therefore the p99:
+
     percentiles(x, [50, 99], {"oa":true}) gives ["loquaciously", "the"]
+
   With default sorting done outside percentiles, the same:
+
     x = sort(x) # or x = sort_collection(x)
     x is: ["brown", "dogs", "fox", "jumped", "lazy", "loquaciously", "over", "quick", "the", "the"]
     percentiles(x, [50, 99], {"oa":true, "ais":true}) gives ["loquaciously", "the"]
     percentiles(x, [50, 99], {"oa":true}) gives ["loquaciously", "the"]
+
   Now sorting by word length, "loquaciously" is longest and hence is the p99:
+
     x = sort(x, func(a,b) { return strlen(a) <=> strlen(b) } )
     x is: ["fox", "the", "the", "dogs", "lazy", "over", "brown", "quick", "jumped", "loquaciously"]
     percentiles(x, [50, 99], {"oa":true, "ais":true})

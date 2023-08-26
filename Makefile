@@ -98,7 +98,8 @@ dev:
 	make -C docs
 	@echo DONE
 
-docs:
+docs: build
+	make -C docs/src forcebuild
 	make -C docs
 
 # ----------------------------------------------------------------
