@@ -242,36 +242,17 @@ func BIF_distinct_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_mode(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
-	if !ok {
-		return value_if_not
-	}
-	counts := make(map[string]int)
-	if collection.IsArray() {
-		a := collection.AcquireArrayValue()
-		for _, e := range a {
-			valueString := e.OriginalString()
-			counts[valueString] += 1
-		}
-	} else {
-		m := collection.AcquireMapValue()
-		for pe := m.Head; pe != nil; pe = pe.Next {
-			valueString := pe.Value.OriginalString()
-			counts[valueString] += 1
-		}
-	}
-	maxk := ""
-	maxv := -1
-	for k, v := range counts {
-		if v > maxv {
-			maxk = k
-			maxv = v
-		}
-	}
-	return mlrval.FromString(maxk)
+	return bif_mode_or_antimode(collection, func(a,b int) bool { return a > b })
 }
 
 func BIF_antimode(collection *mlrval.Mlrval) *mlrval.Mlrval {
+	return bif_mode_or_antimode(collection, func(a,b int) bool { return a < b })
+}
+
+func bif_mode_or_antimode(
+	collection *mlrval.Mlrval,
+	cmp func(int, int) bool,
+) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
@@ -294,7 +275,7 @@ func BIF_antimode(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	maxk := ""
 	maxv := -1
 	for k, v := range counts {
-		if first || v < maxv {
+		if first || cmp(v, maxv) {
 			maxk = k
 			maxv = v
 			first = false
@@ -598,7 +579,7 @@ func bif_percentiles(
 		p, ok := ps[i].GetNumericToFloatValue()
 		if !ok {
 			outputs[i] = mlrval.ERROR.Copy()
-		} else if len(sorted_array) == 0{
+		} else if len(sorted_array) == 0 {
 			outputs[i] = mlrval.VOID
 		} else {
 			if interpolate_linearly {

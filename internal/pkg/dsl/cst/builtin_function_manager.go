@@ -1067,21 +1067,21 @@ is normally distributed.`,
 			unaryFunc: bifs.BIF_kurtosis,
 		},
 
-// XXX
-//		{
-//			name:      "min",
-//			class:     FUNC_CLASS_STATS,
-//			help:      `XXX write me.`,
-//			unaryFunc: bifs.BIF_min,
-//		},
+		// XXX
+		//		{
+		//			name:      "min",
+		//			class:     FUNC_CLASS_STATS,
+		//			help:      `XXX write me.`,
+		//			unaryFunc: bifs.BIF_min,
+		//		},
 
-// XXX
-//		{
-//			name:      "max",
-//			class:     FUNC_CLASS_STATS,
-//			help:      `XXX write me.`,
-//			unaryFunc: bifs.BIF_max,
-//		},
+		// XXX
+		//		{
+		//			name:      "max",
+		//			class:     FUNC_CLASS_STATS,
+		//			help:      `XXX write me.`,
+		//			unaryFunc: bifs.BIF_max,
+		//		},
 
 		{
 			name:      "minlen",
