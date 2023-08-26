@@ -847,14 +847,14 @@ is normally distributed.`,
 		{
 			name:         "max",
 			class:        FUNC_CLASS_MATH,
-			help:         `Max of n numbers; null loses.`,
+			help:         `Max of n numbers; null loses. The min and max functions also recurse into arrays and maps, so they can be used to get min/max stats on array/map values.`,
 			variadicFunc: bifs.BIF_max_variadic,
 		},
 
 		{
 			name:         "min",
 			class:        FUNC_CLASS_MATH,
-			help:         `Min of n numbers; null loses.`,
+			help:         `Min of n numbers; null loses. The min and max functions also recurse into arrays and maps, so they can be used to get min/max stats on array/map values.`,
 			variadicFunc: bifs.BIF_min_variadic,
 		},
 
