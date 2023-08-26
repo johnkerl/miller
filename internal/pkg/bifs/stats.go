@@ -418,30 +418,6 @@ func BIF_kurtosis(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	return BIF_finalize_kurtosis(n, sum, sum2, sum3, sum4)
 }
 
-func BIF_min(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
-	if !ok {
-		return value_if_not
-	}
-	if collection.IsArray() {
-		return BIF_min_variadic(collection.AcquireArrayValue())
-	} else {
-		return BIF_min_over_map_values(collection.AcquireMapValue())
-	}
-}
-
-func BIF_max(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
-	if !ok {
-		return value_if_not
-	}
-	if collection.IsArray() {
-		return BIF_max_variadic(collection.AcquireArrayValue())
-	} else {
-		return BIF_max_over_map_values(collection.AcquireMapValue())
-	}
-}
-
 func BIF_minlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
@@ -450,7 +426,7 @@ func BIF_minlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	if collection.IsArray() {
 		return BIF_minlen_variadic(collection.AcquireArrayValue())
 	} else {
-		return BIF_minlen_over_map_values(collection.AcquireMapValue())
+		return BIF_minlen_within_map_values(collection.AcquireMapValue())
 	}
 }
 
@@ -462,7 +438,7 @@ func BIF_maxlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	if collection.IsArray() {
 		return BIF_maxlen_variadic(collection.AcquireArrayValue())
 	} else {
-		return BIF_maxlen_over_map_values(collection.AcquireMapValue())
+		return BIF_maxlen_within_map_values(collection.AcquireMapValue())
 	}
 }
 
@@ -642,6 +618,6 @@ func bif_percentiles(
 
 // ================================================================
 // TODO:
-// * remove "stats_" prefixes?
-//   o min&max -> accept array/map
+// * mode & antimode ... doing strings ... :|
 
+// * also: str contains ... but extend to arrays? or nah?

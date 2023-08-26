@@ -163,6 +163,8 @@ func TestBIF_sum(t *testing.T) {
 	}
 }
 
+// More easily tested (much lower keystroking) within the regression-test framework:
+
 // BIF_mean
 // BIF_meaneb
 // BIF_variance

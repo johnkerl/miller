@@ -794,7 +794,7 @@ func min_s_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 var min_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
-	//       .  INT       FLOAT     BOOL      VOID   STRING    ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
+	//       .  INT        FLOAT     BOOL      VOID   STRING    ARRAY  MAP    FUNC   ERROR  NULL   ABSENT
 	/*INT    */ {min_i_ii, min_f_if, _1___, _1___, _1___, _absn, _absn, _erro, _erro, _1___, _1___},
 	/*FLOAT  */ {min_f_fi, min_f_ff, _1___, _1___, _1___, _absn, _absn, _erro, _erro, _1___, _1___},
 	/*BOOL   */ {_2___, _2___, min_b_bb, _1___, _1___, _absn, _absn, _erro, _erro, _1___, _1___},
@@ -808,6 +808,8 @@ var min_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	/*ABSENT */ {_2___, _2___, _2___, _2___, _2___, _absn, _absn, _erro, _erro, _null, _absn},
 }
 
+// BIF_min_binary is not a direct DSL function. It's a helper here,
+// and is also exposed publicly for use by the stats1 verb.
 func BIF_min_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return (min_dispositions[input1.Type()][input2.Type()])(input1, input2)
 }
@@ -818,13 +820,60 @@ func BIF_min_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	}
 	return mlrval.ArrayFold(
 		mlrvals,
-		mlrvals[0],
+		bif_min_unary(mlrvals[0]),
+		func(a, b *mlrval.Mlrval) *mlrval.Mlrval {
+			return BIF_min_binary(bif_min_unary(a), bif_min_unary(b))
+		},
+	)
+}
+
+func BIF_min_within_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
+	if m.Head == nil {
+		return mlrval.VOID
+	}
+	return mlrval.MapFold(
+		m,
+		m.Head.Value,
 		func(a, b *mlrval.Mlrval) *mlrval.Mlrval {
 			return BIF_min_binary(a, b)
 		},
 	)
 }
 
+// bif_min_unary allows recursion into arguments, so users can do either
+// min(1,2,3) or min([1,2,3]).
+func bif_min_unary_array(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return BIF_min_variadic(input1.AcquireArrayValue())
+}
+func bif_min_unary_map(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return BIF_min_within_map_values(input1.AcquireMapValue())
+}
+
+// We get a Golang "initialization loop" due to recursive depth computation
+// if this is defined statically. So, we use a "package init" function.
+var min_unary_dispositions = [mlrval.MT_DIM]UnaryFunc{}
+
+func init() {
+	min_unary_dispositions = [mlrval.MT_DIM]UnaryFunc{
+		/*INT    */ _1u___,
+		/*FLOAT  */ _1u___,
+		/*BOOL   */ _1u___,
+		/*VOID   */ _1u___,
+		/*STRING */ _1u___,
+		/*ARRAY  */ bif_min_unary_array,
+		/*MAP    */ bif_min_unary_map,
+		/*FUNC   */ _erro1,
+		/*ERROR  */ _erro1,
+		/*NULL   */ _null1,
+		/*ABSENT */ _absn1,
+	}
+}
+
+func bif_min_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return min_unary_dispositions[input1.Type()](input1)
+}
+
+// ----------------------------------------------------------------
 func BIF_minlen_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) == 0 {
 		return mlrval.VOID
@@ -840,20 +889,7 @@ func BIF_minlen_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(retval)
 }
 
-func BIF_min_over_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
-	if m.Head == nil {
-		return mlrval.VOID
-	}
-	return mlrval.MapFold(
-		m,
-		m.Head.Value,
-		func(a, b *mlrval.Mlrval) *mlrval.Mlrval {
-			return BIF_min_binary(a, b)
-		},
-	)
-}
-
-func BIF_minlen_over_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
+func BIF_minlen_within_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
 	if m.Head == nil {
 		return mlrval.VOID
 	}
@@ -934,6 +970,8 @@ var max_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	/*ABSENT */ {_2___, _2___, _2___, _2___, _2___, _absn, _absn, _erro, _erro, _absn, _absn},
 }
 
+// BIF_max_binary is not a direct DSL function. It's a helper here,
+// and is also exposed publicly for use by the stats1 verb.
 func BIF_max_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return (max_dispositions[input1.Type()][input2.Type()])(input1, input2)
 }
@@ -944,13 +982,60 @@ func BIF_max_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	}
 	return mlrval.ArrayFold(
 		mlrvals,
-		mlrvals[0],
+		bif_max_unary(mlrvals[0]),
+		func(a, b *mlrval.Mlrval) *mlrval.Mlrval {
+			return BIF_max_binary(bif_max_unary(a), bif_max_unary(b))
+		},
+	)
+}
+
+func BIF_max_within_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
+	if m.Head == nil {
+		return mlrval.VOID
+	}
+	return mlrval.MapFold(
+		m,
+		m.Head.Value,
 		func(a, b *mlrval.Mlrval) *mlrval.Mlrval {
 			return BIF_max_binary(a, b)
 		},
 	)
 }
 
+// bif_max_unary allows recursion into arguments, so users can do either
+// max(1,2,3) or max([1,2,3]).
+func bif_max_unary_array(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return BIF_max_variadic(input1.AcquireArrayValue())
+}
+func bif_max_unary_map(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return BIF_max_within_map_values(input1.AcquireMapValue())
+}
+
+// We get a Golang "initialization loop" due to recursive depth computation
+// if this is defined statically. So, we use a "package init" function.
+var max_unary_dispositions = [mlrval.MT_DIM]UnaryFunc{}
+
+func init() {
+	max_unary_dispositions = [mlrval.MT_DIM]UnaryFunc{
+		/*INT    */ _1u___,
+		/*FLOAT  */ _1u___,
+		/*BOOL   */ _1u___,
+		/*VOID   */ _1u___,
+		/*STRING */ _1u___,
+		/*ARRAY  */ bif_max_unary_array,
+		/*MAP    */ bif_max_unary_map,
+		/*FUNC   */ _erro1,
+		/*ERROR  */ _erro1,
+		/*NULL   */ _null1,
+		/*ABSENT */ _absn1,
+	}
+}
+
+func bif_max_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return max_unary_dispositions[input1.Type()](input1)
+}
+
+// ----------------------------------------------------------------
 func BIF_maxlen_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) == 0 {
 		return mlrval.VOID
@@ -966,20 +1051,7 @@ func BIF_maxlen_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(retval)
 }
 
-func BIF_max_over_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
-	if m.Head == nil {
-		return mlrval.VOID
-	}
-	return mlrval.MapFold(
-		m,
-		m.Head.Value,
-		func(a, b *mlrval.Mlrval) *mlrval.Mlrval {
-			return BIF_max_binary(a, b)
-		},
-	)
-}
-
-func BIF_maxlen_over_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
+func BIF_maxlen_within_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
 	if m.Head == nil {
 		return mlrval.VOID
 	}
