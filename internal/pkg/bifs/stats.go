@@ -639,28 +639,3 @@ func bif_percentiles(
 		return mlrval.FromMap(m)
 	}
 }
-
-// ================================================================
-// * count    Count instances of fields
-// * sum      Compute sums of specified fields
-// * mean     Compute averages (sample means) of specified fields
-// * meaneb   Estimate error bars for averages (assuming no sample autocorrelation)
-// * var      Compute sample variance of specified fields
-// * stddev   Compute sample standard deviation of specified fields
-// * skewness Compute sample skewness of specified fields
-// * kurtosis Compute sample kurtosis of specified fields
-
-// * distinct_count Count number of distinct values per field
-// * null_count Count number of empty-string/JSON-null instances per field
-
-// * min      Compute minimum values of specified fields
-// * max      Compute maximum values of specified fields
-
-// * minlen   Compute minimum string-lengths of specified fields
-// * maxlen   Compute maximum string-lengths of specified fields
-
-// * mode     Find most-frequently-occurring values for fields; first-found wins tie
-// * antimode Find least-frequently-occurring values for fields; first-found wins tie
-
-//   p10 p25.2 p50 p98 p100 etc.
-//   median   This is the same as p50
