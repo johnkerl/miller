@@ -3922,7 +3922,7 @@ localtime2sec("2001-02-03 04:05:06", "Asia/Istanbul") = 981165906"
 .RS 0
 .\}
 .nf
- (class=math #args=variadic) Max of n numbers; null loses.
+ (class=math #args=variadic) Max of n numbers; null loses. The min and max functions also recurse into arrays and maps, so they can be used to get min/max stats on array/map values.
 .fi
 .if n \{\
 .RE
@@ -3995,7 +3995,7 @@ median(["abc", "def", "ghi", "ghi"]) is "ghi"
 .RS 0
 .\}
 .nf
- (class=math #args=variadic) Min of n numbers; null loses.
+ (class=math #args=variadic) Min of n numbers; null loses. The min and max functions also recurse into arrays and maps, so they can be used to get min/max stats on array/map values.
 .fi
 .if n \{\
 .RE

@@ -2636,7 +2636,7 @@ MILLER(1)                                                            MILLER(1)
         (class=collections #args=variadic) With 0 args, returns empty map. With &gt;= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
 
    1mmax0m
-        (class=math #args=variadic) Max of n numbers; null loses.
+        (class=math #args=variadic) Max of n numbers; null loses. The min and max functions also recurse into arrays and maps, so they can be used to get min/max stats on array/map values.
 
    1mmaxlen0m
         (class=stats #args=1) Returns the maximum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
@@ -2667,7 +2667,7 @@ MILLER(1)                                                            MILLER(1)
         (class=arithmetic #args=3) a ** b mod m (integers)
 
    1mmin0m
-        (class=math #args=variadic) Min of n numbers; null loses.
+        (class=math #args=variadic) Min of n numbers; null loses. The min and max functions also recurse into arrays and maps, so they can be used to get min/max stats on array/map values.
 
    1mminlen0m
         (class=stats #args=1) Returns the minimum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.

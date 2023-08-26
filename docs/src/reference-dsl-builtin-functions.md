@@ -878,13 +878,13 @@ logifit  (class=math #args=3) Given m and b from logistic regression, compute fi
 
 ### max
 <pre class="pre-non-highlight-non-pair">
-max  (class=math #args=variadic) Max of n numbers; null loses.
+max  (class=math #args=variadic) Max of n numbers; null loses. The min and max functions also recurse into arrays and maps, so they can be used to get min/max stats on array/map values.
 </pre>
 
 
 ### min
 <pre class="pre-non-highlight-non-pair">
-min  (class=math #args=variadic) Min of n numbers; null loses.
+min  (class=math #args=variadic) Min of n numbers; null loses. The min and max functions also recurse into arrays and maps, so they can be used to get min/max stats on array/map values.
 </pre>
 
 
