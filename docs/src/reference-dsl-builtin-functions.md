@@ -1006,7 +1006,7 @@ distinct_count([1,1.0]) is 2
 
 ### kurtosis
 <pre class="pre-non-highlight-non-pair">
-kurtosis  (class=stats #args=1) Returns the sample kurtosis of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+kurtosis  (class=stats #args=1) Returns the sample kurtosis of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
 Example:
 kurtosis([4,5,9,10,11]) is -1.6703688
 </pre>
@@ -1014,7 +1014,7 @@ kurtosis([4,5,9,10,11]) is -1.6703688
 
 ### maxlen
 <pre class="pre-non-highlight-non-pair">
-maxlen  (class=stats #args=1) Returns the maximum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+maxlen  (class=stats #args=1) Returns the maximum string length of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
 Example:
 maxlen(["año", "alto"]) is 4
 </pre>
@@ -1022,7 +1022,7 @@ maxlen(["año", "alto"]) is 4
 
 ### mean
 <pre class="pre-non-highlight-non-pair">
-mean  (class=stats #args=1) Returns the arithmetic mean of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types.
+mean  (class=stats #args=1) Returns the arithmetic mean of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types.
 Example:
 mean([4,5,7,10]) is 6.5
 </pre>
@@ -1030,7 +1030,7 @@ mean([4,5,7,10]) is 6.5
 
 ### meaneb
 <pre class="pre-non-highlight-non-pair">
-meaneb  (class=stats #args=1) Returns the error bar for arithmetic mean of values in an array or map, assuming the values are independent and identically distributed. Returns "" AKA void for empty array/map; returns error for non-array/non-map types.
+meaneb  (class=stats #args=1) Returns the error bar for arithmetic mean of values in an array or map, assuming the values are independent and identically distributed. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types.
 Example:
 meaneb([4,5,7,10]) is 1.3228756
 </pre>
@@ -1038,7 +1038,7 @@ meaneb([4,5,7,10]) is 1.3228756
 
 ### median
 <pre class="pre-non-highlight-non-pair">
-median  (class=stats #args=1,2) Returns the median of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles for information on optional flags, and on performance for large inputs.
+median  (class=stats #args=1,2) Returns the median of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles function for information on optional flags, and on performance for large inputs.
 Examples:
 median([3,4,5,6,9,10]) is 6
 median([3,4,5,6,9,10],{"interpolate_linearly":true}) is 5.5
@@ -1048,7 +1048,7 @@ median(["abc", "def", "ghi", "ghi"]) is "ghi"
 
 ### minlen
 <pre class="pre-non-highlight-non-pair">
-minlen  (class=stats #args=1) Returns the minimum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+minlen  (class=stats #args=1) Returns the minimum string length of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
 Example:
 minlen(["año", "alto"]) is 3
 </pre>
@@ -1073,7 +1073,7 @@ null_count(["a", "", "c"]) is 1
 
 ### percentile
 <pre class="pre-non-highlight-non-pair">
-percentile  (class=stats #args=2,3) Returns the given percentile of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles for information on optional flags, and on performance for large inputs.
+percentile  (class=stats #args=2,3) Returns the given percentile of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles function for information on optional flags, and on performance for large inputs.
 Examples:
 percentile([3,4,5,6,9,10], 90) is 10
 percentile([3,4,5,6,9,10], 90, {"interpolate_linearly":true}) is 9.5
@@ -1083,7 +1083,7 @@ percentile(["abc", "def", "ghi", "ghi"], 90) is "ghi"
 
 ### percentiles
 <pre class="pre-non-highlight-non-pair">
-percentiles  (class=stats #args=2,3) Returns the given percentiles of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. See examples for information on the three option flags.
+percentiles  (class=stats #args=2,3) Returns the given percentiles of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types. See examples for information on the three option flags.
 Examples:
 
 Defaults are to not interpolate linearly, to produce a map keyed by percentile name, and to sort
@@ -1135,7 +1135,7 @@ You can also leverage this feature to compute percentiles on a sort of your choo
 
 ### skewness
 <pre class="pre-non-highlight-non-pair">
-skewness  (class=stats #args=1) Returns the sample skewness of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+skewness  (class=stats #args=1) Returns the sample skewness of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
 Example:
 skewness([4,5,9,10,11]) is -0.2097285
 </pre>
@@ -1149,7 +1149,7 @@ sort_collection  (class=stats #args=1) This is a helper function for the percent
 
 ### stddev
 <pre class="pre-non-highlight-non-pair">
-stddev  (class=stats #args=1) Returns the sample standard deviation of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+stddev  (class=stats #args=1) Returns the sample standard deviation of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
 Example:
 stddev([4,5,9,10,11]) is 3.1144823
 </pre>
@@ -1189,7 +1189,7 @@ sum4([1,2,3,4,5]) is 979
 
 ### variance
 <pre class="pre-non-highlight-non-pair">
-variance  (class=stats #args=1) Returns the sample variance of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+variance  (class=stats #args=1) Returns the sample variance of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
 Example:
 variance([4,5,9,10,11]) is 9.7
 </pre>

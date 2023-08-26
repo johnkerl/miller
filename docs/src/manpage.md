@@ -2564,7 +2564,7 @@ MILLER(1)                                                            MILLER(1)
         (class=collections #args=1,2) Converts value to JSON-formatted string. Default output is single-line. With optional second boolean argument set to true, produces multiline output.
 
    1mkurtosis0m
-        (class=stats #args=1) Returns the sample kurtosis of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+        (class=stats #args=1) Returns the sample kurtosis of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
        Example:
        kurtosis([4,5,9,10,11]) is -1.6703688
 
@@ -2639,7 +2639,7 @@ MILLER(1)                                                            MILLER(1)
         (class=math #args=variadic) Max of n numbers; null loses. The min and max functions also recurse into arrays and maps, so they can be used to get min/max stats on array/map values.
 
    1mmaxlen0m
-        (class=stats #args=1) Returns the maximum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+        (class=stats #args=1) Returns the maximum string length of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
        Example:
        maxlen(["ao", "alto"]) is 4
 
@@ -2647,17 +2647,17 @@ MILLER(1)                                                            MILLER(1)
         (class=hashing #args=1) MD5 hash.
 
    1mmean0m
-        (class=stats #args=1) Returns the arithmetic mean of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types.
+        (class=stats #args=1) Returns the arithmetic mean of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types.
        Example:
        mean([4,5,7,10]) is 6.5
 
    1mmeaneb0m
-        (class=stats #args=1) Returns the error bar for arithmetic mean of values in an array or map, assuming the values are independent and identically distributed. Returns "" AKA void for empty array/map; returns error for non-array/non-map types.
+        (class=stats #args=1) Returns the error bar for arithmetic mean of values in an array or map, assuming the values are independent and identically distributed. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types.
        Example:
        meaneb([4,5,7,10]) is 1.3228756
 
    1mmedian0m
-        (class=stats #args=1,2) Returns the median of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles for information on optional flags, and on performance for large inputs.
+        (class=stats #args=1,2) Returns the median of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles function for information on optional flags, and on performance for large inputs.
        Examples:
        median([3,4,5,6,9,10]) is 6
        median([3,4,5,6,9,10],{"interpolate_linearly":true}) is 5.5
@@ -2670,7 +2670,7 @@ MILLER(1)                                                            MILLER(1)
         (class=math #args=variadic) Min of n numbers; null loses. The min and max functions also recurse into arrays and maps, so they can be used to get min/max stats on array/map values.
 
    1mminlen0m
-        (class=stats #args=1) Returns the minimum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+        (class=stats #args=1) Returns the minimum string length of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
        Example:
        minlen(["ao", "alto"]) is 3
 
@@ -2721,14 +2721,14 @@ MILLER(1)                                                            MILLER(1)
         (class=system #args=0) Returns the operating-system name as a string.
 
    1mpercentile0m
-        (class=stats #args=2,3) Returns the given percentile of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles for information on optional flags, and on performance for large inputs.
+        (class=stats #args=2,3) Returns the given percentile of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles function for information on optional flags, and on performance for large inputs.
        Examples:
        percentile([3,4,5,6,9,10], 90) is 10
        percentile([3,4,5,6,9,10], 90, {"interpolate_linearly":true}) is 9.5
        percentile(["abc", "def", "ghi", "ghi"], 90) is "ghi"
 
    1mpercentiles0m
-        (class=stats #args=2,3) Returns the given percentiles of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. See examples for information on the three option flags.
+        (class=stats #args=2,3) Returns the given percentiles of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types. See examples for information on the three option flags.
        Examples:
 
        Defaults are to not interpolate linearly, to produce a map keyed by percentile name, and to sort
@@ -2873,7 +2873,7 @@ MILLER(1)                                                            MILLER(1)
         (class=math #args=1) Hyperbolic sine.
 
    1mskewness0m
-        (class=stats #args=1) Returns the sample skewness of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+        (class=stats #args=1) Returns the sample skewness of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
        Example:
        skewness([4,5,9,10,11]) is -0.2097285
 
@@ -2935,7 +2935,7 @@ MILLER(1)                                                            MILLER(1)
        ssub("abc.def", ".", "X") gives "abcXdef"
 
    1mstddev0m
-        (class=stats #args=1) Returns the sample standard deviation of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+        (class=stats #args=1) Returns the sample standard deviation of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
        Example:
        stddev([4,5,9,10,11]) is 3.1144823
 
@@ -3125,7 +3125,7 @@ MILLER(1)                                                            MILLER(1)
        $* = utf8_to_latin1($*)
 
    1mvariance0m
-        (class=stats #args=1) Returns the sample variance of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+        (class=stats #args=1) Returns the sample variance of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
        Example:
        variance([4,5,9,10,11]) is 9.7
 

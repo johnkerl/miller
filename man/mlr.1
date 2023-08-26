@@ -3742,7 +3742,7 @@ joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
 .RS 0
 .\}
 .nf
- (class=stats #args=1) Returns the sample kurtosis of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+ (class=stats #args=1) Returns the sample kurtosis of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
 Example:
 kurtosis([4,5,9,10,11]) is -1.6703688
 .fi
@@ -3931,7 +3931,7 @@ localtime2sec("2001-02-03 04:05:06", "Asia/Istanbul") = 981165906"
 .RS 0
 .\}
 .nf
- (class=stats #args=1) Returns the maximum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+ (class=stats #args=1) Returns the maximum string length of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
 Example:
 maxlen(["año", "alto"]) is 4
 .fi
@@ -3951,7 +3951,7 @@ maxlen(["año", "alto"]) is 4
 .RS 0
 .\}
 .nf
- (class=stats #args=1) Returns the arithmetic mean of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types.
+ (class=stats #args=1) Returns the arithmetic mean of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types.
 Example:
 mean([4,5,7,10]) is 6.5
 .fi
@@ -3962,7 +3962,7 @@ mean([4,5,7,10]) is 6.5
 .RS 0
 .\}
 .nf
- (class=stats #args=1) Returns the error bar for arithmetic mean of values in an array or map, assuming the values are independent and identically distributed. Returns "" AKA void for empty array/map; returns error for non-array/non-map types.
+ (class=stats #args=1) Returns the error bar for arithmetic mean of values in an array or map, assuming the values are independent and identically distributed. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types.
 Example:
 meaneb([4,5,7,10]) is 1.3228756
 .fi
@@ -3973,7 +3973,7 @@ meaneb([4,5,7,10]) is 1.3228756
 .RS 0
 .\}
 .nf
- (class=stats #args=1,2) Returns the median of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles for information on optional flags, and on performance for large inputs.
+ (class=stats #args=1,2) Returns the median of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles function for information on optional flags, and on performance for large inputs.
 Examples:
 median([3,4,5,6,9,10]) is 6
 median([3,4,5,6,9,10],{"interpolate_linearly":true}) is 5.5
@@ -4004,7 +4004,7 @@ median(["abc", "def", "ghi", "ghi"]) is "ghi"
 .RS 0
 .\}
 .nf
- (class=stats #args=1) Returns the minimum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+ (class=stats #args=1) Returns the minimum string length of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
 Example:
 minlen(["año", "alto"]) is 3
 .fi
@@ -4115,7 +4115,7 @@ null_count(["a", "", "c"]) is 1
 .RS 0
 .\}
 .nf
- (class=stats #args=2,3) Returns the given percentile of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles for information on optional flags, and on performance for large inputs.
+ (class=stats #args=2,3) Returns the given percentile of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles function for information on optional flags, and on performance for large inputs.
 Examples:
 percentile([3,4,5,6,9,10], 90) is 10
 percentile([3,4,5,6,9,10], 90, {"interpolate_linearly":true}) is 9.5
@@ -4128,7 +4128,7 @@ percentile(["abc", "def", "ghi", "ghi"], 90) is "ghi"
 .RS 0
 .\}
 .nf
- (class=stats #args=2,3) Returns the given percentiles of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. See examples for information on the three option flags.
+ (class=stats #args=2,3) Returns the given percentiles of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types. See examples for information on the three option flags.
 Examples:
 
 Defaults are to not interpolate linearly, to produce a map keyed by percentile name, and to sort
@@ -4411,7 +4411,7 @@ Map example: select({"a":1, "b":3, "c":5}, func(k,v) {return v >= 3}) returns {"
 .RS 0
 .\}
 .nf
- (class=stats #args=1) Returns the sample skewness of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+ (class=stats #args=1) Returns the sample skewness of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
 Example:
 skewness([4,5,9,10,11]) is -0.2097285
 .fi
@@ -4539,7 +4539,7 @@ ssub("abc.def", ".", "X") gives "abcXdef"
 .RS 0
 .\}
 .nf
- (class=stats #args=1) Returns the sample standard deviation of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+ (class=stats #args=1) Returns the sample standard deviation of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
 Example:
 stddev([4,5,9,10,11]) is 3.1144823
 .fi
@@ -4975,7 +4975,7 @@ $* = utf8_to_latin1($*)
 .RS 0
 .\}
 .nf
- (class=stats #args=1) Returns the sample variance of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+ (class=stats #args=1) Returns the sample variance of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
 Example:
 variance([4,5,9,10,11]) is 9.7
 .fi
