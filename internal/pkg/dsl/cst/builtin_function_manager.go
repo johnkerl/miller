@@ -1060,7 +1060,7 @@ is normally distributed.`,
 		{
 			name:      "mean",
 			class:     FUNC_CLASS_STATS,
-			help:      `Returns the arithmetic mean of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types.`,
+			help:      `Returns the arithmetic mean of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_mean,
 			examples: []string{
 				`mean([4,5,7,10]) is 6.5`,
@@ -1070,7 +1070,7 @@ is normally distributed.`,
 		{
 			name:      "meaneb",
 			class:     FUNC_CLASS_STATS,
-			help:      `Returns the error bar for arithmetic mean of values in an array or map, assuming the values are independent and identically distributed. Returns "" AKA void for empty array/map; returns error for non-array/non-map types.`,
+			help:      `Returns the error bar for arithmetic mean of values in an array or map, assuming the values are independent and identically distributed. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_meaneb,
 			examples: []string{
 				`meaneb([4,5,7,10]) is 1.3228756`,
@@ -1080,7 +1080,7 @@ is normally distributed.`,
 		{
 			name:      "variance",
 			class:     FUNC_CLASS_STATS,
-			help:      `Returns the sample variance of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
+			help:      `Returns the sample variance of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_variance,
 			examples: []string{
 				`variance([4,5,9,10,11]) is 9.7`,
@@ -1090,7 +1090,7 @@ is normally distributed.`,
 		{
 			name:      "stddev",
 			class:     FUNC_CLASS_STATS,
-			help:      `Returns the sample standard deviation of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
+			help:      `Returns the sample standard deviation of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_stddev,
 			examples: []string{
 				`stddev([4,5,9,10,11]) is 3.1144823`,
@@ -1100,7 +1100,7 @@ is normally distributed.`,
 		{
 			name:      "skewness",
 			class:     FUNC_CLASS_STATS,
-			help:      `Returns the sample skewness of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
+			help:      `Returns the sample skewness of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_skewness,
 			examples: []string{
 				`skewness([4,5,9,10,11]) is -0.2097285`,
@@ -1110,7 +1110,7 @@ is normally distributed.`,
 		{
 			name:      "kurtosis",
 			class:     FUNC_CLASS_STATS,
-			help:      `Returns the sample kurtosis of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
+			help:      `Returns the sample kurtosis of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_kurtosis,
 			examples: []string{
 				`kurtosis([4,5,9,10,11]) is -1.6703688`,
@@ -1120,7 +1120,7 @@ is normally distributed.`,
 		{
 			name:      "minlen",
 			class:     FUNC_CLASS_STATS,
-			help:      `Returns the minimum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
+			help:      `Returns the minimum string length of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_minlen,
 			examples: []string{
 				`minlen(["año", "alto"]) is 3`,
@@ -1130,7 +1130,7 @@ is normally distributed.`,
 		{
 			name:      "maxlen",
 			class:     FUNC_CLASS_STATS,
-			help:      `Returns the maximum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
+			help:      `Returns the maximum string length of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_maxlen,
 			examples: []string{
 				`maxlen(["año", "alto"]) is 4`,
@@ -1140,7 +1140,7 @@ is normally distributed.`,
 		{
 			name:               "median",
 			class:              FUNC_CLASS_STATS,
-			help:               `Returns the median of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles for information on optional flags, and on performance for large inputs.`,
+			help:               `Returns the median of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles function for information on optional flags, and on performance for large inputs.`,
 			unaryFunc:          bifs.BIF_median,
 			binaryFunc:         bifs.BIF_median_with_options,
 			hasMultipleArities: true,
@@ -1154,7 +1154,7 @@ is normally distributed.`,
 		{
 			name:               "percentile",
 			class:              FUNC_CLASS_STATS,
-			help:               `Returns the given percentile of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles for information on optional flags, and on performance for large inputs.`,
+			help:               `Returns the given percentile of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles function for information on optional flags, and on performance for large inputs.`,
 			binaryFunc:         bifs.BIF_percentile,
 			ternaryFunc:        bifs.BIF_percentile_with_options,
 			hasMultipleArities: true,
@@ -1168,7 +1168,7 @@ is normally distributed.`,
 		{
 			name:               "percentiles",
 			class:              FUNC_CLASS_STATS,
-			help:               `Returns the given percentiles of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. See examples for information on the three option flags.`,
+			help:               `Returns the given percentiles of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types. See examples for information on the three option flags.`,
 			binaryFunc:         bifs.BIF_percentiles,
 			ternaryFunc:        bifs.BIF_percentiles_with_options,
 			hasMultipleArities: true,
