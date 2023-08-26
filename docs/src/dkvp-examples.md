@@ -251,6 +251,7 @@ a=eks,b=pan,i=2,y=0.522151,ab=ekspan,iy=2.522151,ta=String,tb=String,ti=Integer,
 a=wye,b=wye,i=3,y=0.338318,ab=wyewye,iy=3.338318,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
 a=eks,b=wye,i=4,y=0.134188,ab=ekswye,iy=4.134188,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
 a=wye,b=pan,i=5,y=0.863624,ab=wyepan,iy=5.863624,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
+/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib/ruby/2.6.0/universal-darwin22/rbconfig.rb:21: warning: Insecure world writable dir /usr/local/bin in PATH, mode 040777
 </pre>
 
 Run as-is, then pipe to Miller for pretty-printing:
@@ -265,4 +266,5 @@ eks pan 2 0.522151 ekspan 2.522151 String String Integer Float String Float
 wye wye 3 0.338318 wyewye 3.338318 String String Integer Float String Float
 eks wye 4 0.134188 ekswye 4.134188 String String Integer Float String Float
 wye pan 5 0.863624 wyepan 5.863624 String String Integer Float String Float
+/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib/ruby/2.6.0/universal-darwin22/rbconfig.rb:21: warning: Insecure world writable dir /usr/local/bin in PATH, mode 040777
 </pre>

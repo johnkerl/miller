@@ -203,34 +203,34 @@ MILLER(1)                                                            MILLER(1)
        unsparsify
 
 1mFUNCTION LIST0m
-       abs acos acosh any append apply arrayify asin asinh asserting_absent
+       abs acos acosh antimode any append apply arrayify asin asinh asserting_absent
        asserting_array asserting_bool asserting_boolean asserting_empty
        asserting_empty_map asserting_error asserting_float asserting_int
        asserting_map asserting_nonempty_map asserting_not_array asserting_not_empty
        asserting_not_map asserting_not_null asserting_null asserting_numeric
        asserting_present asserting_string atan atan2 atanh bitcount boolean
        capitalize cbrt ceil clean_whitespace collapse_whitespace concat cos cosh
-       depth dhms2fsec dhms2sec erf erfc every exec exp expm1 flatten float floor
-       fmtifnum fmtnum fold format fsec2dhms fsec2hms get_keys get_values
-       gmt2localtime gmt2nsec gmt2sec gssub gsub haskey hexfmt hms2fsec hms2sec
-       hostname index int invqnorm is_absent is_array is_bool is_boolean is_empty
-       is_empty_map is_error is_float is_int is_map is_nan is_nonempty_map
+       count depth dhms2fsec dhms2sec distinct_count erf erfc every exec exp expm1
+       flatten float floor fmtifnum fmtnum fold format fsec2dhms fsec2hms get_keys
+       get_values gmt2localtime gmt2nsec gmt2sec gssub gsub haskey hexfmt hms2fsec
+       hms2sec hostname index int invqnorm is_absent is_array is_bool is_boolean
+       is_empty is_empty_map is_error is_float is_int is_map is_nan is_nonempty_map
        is_not_array is_not_empty is_not_map is_not_null is_null is_numeric is_present
-       is_string joink joinkv joinv json_parse json_stringify latin1_to_utf8
+       is_string joink joinkv joinv json_parse json_stringify kurtosis latin1_to_utf8
        leafcount leftpad length localtime2gmt localtime2nsec localtime2sec log log10
-       log1p logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5 mexp min
-       mmul msub nsec2gmt nsec2gmtdate nsec2localdate nsec2localtime os pow qnorm
+       log1p logifit lstrip madd mapdiff mapexcept mapselect mapsum max maxlen md5
+       mean meaneb median mexp min minlen mmul mode msub nsec2gmt nsec2gmtdate
+       nsec2localdate nsec2localtime null_count os percentile percentiles pow qnorm
        reduce regextract regextract_or_else rightpad round roundm rstrip sec2dhms
        sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime select sgn sha1 sha256
-       sha512 sin sinh sort splita splitax splitkv splitkvx splitnv splitnvx sqrt
-       ssub stats_count stats_kurtosis stats_max stats_mean stats_meaneb stats_min
-       stats_skewness stats_stddev stats_sum stats_sum2 stats_sum3 stats_sum4
-       stats_var strfntime strfntime_local strftime strftime_local string strip
-       strlen strpntime strpntime_local strptime strptime_local sub substr substr0
-       substr1 sysntime system systime systimeint tan tanh tolower toupper truncate
-       typeof unflatten unformat unformatx upntime uptime urand urand32 urandelement
-       urandint urandrange utf8_to_latin1 version ! != !=~ % & && * ** + - . .* .+ .-
-       ./ / // &lt; &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
+       sha512 sin sinh skewness sort sort_collection splita splitax splitkv splitkvx
+       splitnv splitnvx sqrt ssub stddev strfntime strfntime_local strftime
+       strftime_local string strip strlen strpntime strpntime_local strptime
+       strptime_local sub substr substr0 substr1 sum sum2 sum3 sum4 sysntime system
+       systime systimeint tan tanh tolower toupper truncate typeof unflatten unformat
+       unformatx upntime uptime urand urand32 urandelement urandint urandrange
+       utf8_to_latin1 variance version ! != !=~ % & && * ** + - . .* .+ .- ./ / // &lt;
+       &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
 
 1mCOMMENTS-IN-DATA FLAGS0m
        Miller lets you put comments in your data, such as
@@ -2187,6 +2187,12 @@ MILLER(1)                                                            MILLER(1)
    1macosh0m
         (class=math #args=1) Inverse hyperbolic cosine.
 
+   1mantimode0m
+        (class=stats #args=1) Returns the most frequently occurring value in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct. In cases of ties, first-found wins.
+       Examples:
+       antimode([3,3,4,4,4]) is 3
+       antimode([3,3,4,4]) is 3
+
    1many0m
         (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for any array/map element, false otherwise. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
        Examples:
@@ -2311,6 +2317,12 @@ MILLER(1)                                                            MILLER(1)
    1mcosh0m
         (class=math #args=1) Hyperbolic cosine.
 
+   1mcount0m
+        (class=stats #args=1) Returns the length of an array or map. Returns error for non-array/non-map types.
+       Examples:
+       count([7,8,9]) is 3
+       count({"a":7,"b":8,"c":9}) is 3
+
    1mdepth0m
         (class=collections #args=1) Prints maximum depth of map/array. Scalars have depth 0.
 
@@ -2319,6 +2331,13 @@ MILLER(1)                                                            MILLER(1)
 
    1mdhms2sec0m
         (class=time #args=1) Recovers integer seconds as in dhms2sec("5d18h53m20s") = 500000
+
+   1mdistinct_count0m
+        (class=stats #args=1) Returns the number of disinct values in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct.
+       Examples:
+       distinct_count([7,8,9,7])  is 3
+       distinct_count([1,"1"]) is 1
+       distinct_count([1,1.0]) is 2
 
    1merf0m
         (class=math #args=1) Error function.
@@ -2544,6 +2563,11 @@ MILLER(1)                                                            MILLER(1)
    1mjson_stringify0m
         (class=collections #args=1,2) Converts value to JSON-formatted string. Default output is single-line. With optional second boolean argument set to true, produces multiline output.
 
+   1mkurtosis0m
+        (class=stats #args=1) Returns the sample kurtosis of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+       Example:
+       kurtosis([4,5,9,10,11]) is -1.6703688
+
    1mlatin1_to_utf80m
         (class=string #args=1) Tries to convert Latin-1-encoded string to UTF-8-encoded string. If argument is array or map, recurses into it.
        Examples:
@@ -2614,8 +2638,30 @@ MILLER(1)                                                            MILLER(1)
    1mmax0m
         (class=math #args=variadic) Max of n numbers; null loses.
 
+   1mmaxlen0m
+        (class=stats #args=1) Returns the maximum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+       Example:
+       maxlen(["ao", "alto"]) is 4
+
    1mmd50m
         (class=hashing #args=1) MD5 hash.
+
+   1mmean0m
+        (class=stats #args=1) Returns the arithmetic mean of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types.
+       Example:
+       mean([4,5,7,10]) is 6.5
+
+   1mmeaneb0m
+        (class=stats #args=1) Returns the error bar for arithmetic mean of values in an array or map, assuming the values are independent and identically distributed. Returns "" AKA void for empty array/map; returns error for non-array/non-map types.
+       Example:
+       meaneb([4,5,7,10]) is 1.3228756
+
+   1mmedian0m
+        (class=stats #args=1,2) Returns the median of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles for information on optional flags, and on performance for large inputs.
+       Examples:
+       median([3,4,5,6,9,10]) is 6
+       median([3,4,5,6,9,10],{"interpolate_linearly":true}) is 5.5
+       median(["abc", "def", "ghi", "ghi"]) is "ghi"
 
    1mmexp0m
         (class=arithmetic #args=3) a ** b mod m (integers)
@@ -2623,8 +2669,19 @@ MILLER(1)                                                            MILLER(1)
    1mmin0m
         (class=math #args=variadic) Min of n numbers; null loses.
 
+   1mminlen0m
+        (class=stats #args=1) Returns the minimum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+       Example:
+       minlen(["ao", "alto"]) is 3
+
    1mmmul0m
         (class=arithmetic #args=3) a * b mod m (integers)
+
+   1mmode0m
+        (class=stats #args=1) Returns the most frequently occurring value in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct. In cases of ties, first-found wins.
+       Examples:
+       mode([3,3,4,4,4]) is 4
+       mode([3,3,4,4]) is 3
 
    1mmsub0m
         (class=arithmetic #args=3) a - b mod m (integers)
@@ -2655,8 +2712,69 @@ MILLER(1)                                                            MILLER(1)
        nsec2localtime(1234567890123456789, 6) = "2009-02-14 01:31:30.123456" with TZ="Asia/Istanbul"
        nsec2localtime(1234567890123456789, 6, "Asia/Istanbul") = "2009-02-14 01:31:30.123456"
 
+   1mnull_count0m
+        (class=stats #args=1) Returns the number of values in an array or map which are empty-string (AKA void) or JSON null. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct.
+       Example:
+       null_count(["a", "", "c"]) is 1
+
    1mos0m
         (class=system #args=0) Returns the operating-system name as a string.
+
+   1mpercentile0m
+        (class=stats #args=2,3) Returns the given percentile of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles for information on optional flags, and on performance for large inputs.
+       Examples:
+       percentile([3,4,5,6,9,10], 90) is 10
+       percentile([3,4,5,6,9,10], 90, {"interpolate_linearly":true}) is 9.5
+       percentile(["abc", "def", "ghi", "ghi"], 90) is "ghi"
+
+   1mpercentiles0m
+        (class=stats #args=2,3) Returns the given percentiles of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. See examples for information on the three option flags.
+       Examples:
+
+       Defaults are to not interpolate linearly, to produce a map keyed by percentile name, and to sort
+       the input before computing percentiles:
+
+         percentiles([3,4,5,6,9,10], [25,75]) is { "25": 4, "75": 9 }
+         percentiles(["abc", "def", "ghi", "ghi"], [25,75]) is { "25": "def", "75": "ghi" }
+
+       Use "output_array_not_map" (or shorthand "oa") to get the outputs as an array:
+
+         percentiles([3,4,5,6,9,10], [25,75], {"output_array_not_map":true}) is [4, 9]
+
+       Use "interpolate_linearly" (or shorthand "il") to do linear interpolation -- note this produces
+       ,error on string inputs:
+
+         percentiles([3,4,5,6,9,10], [25,75], {"interpolate_linearly":true}) is { "25": 4.25, "75": 8.25 }
+
+       The percentiles function always sorts its inputs before computing percentiles. If you know your input
+       is already sorted -- see also the sort_collection function -- then computation will be faster on
+       large input if you pass in "array_is_sorted":
+
+         x = [6,5,9,10,4,3]
+         percentiles(x, [25,75], {"array_is_sorted":true}) gives { "25": 5, "75": 4 } which is incorrect
+         x = sort_collection(x)
+         percentiles(x, [25,75], {"array_is_sorted":true}) gives { "25": 4, "75": 9 } which is correct
+
+       You can also leverage this feature to compute percentiles on a sort of your choosing. For example:
+
+         Non-sorted input:
+           x = splitax("the quick brown fox jumped loquaciously over the lazy dogs", " ")
+           x is: ["the", "quick", "brown", "fox", "jumped", "loquaciously", "over", "the", "lazy", "dogs"]
+         Percentiles are taken over the original positions of the words in the array -- "dogs" is last
+         and hence appears as p99:
+           percentiles(x, [50, 99], {"oa":true, "ais":true}) gives ["loquaciously", "dogs"]
+         With sorting done inside percentiles, "the" is alphabetically last and is therefore the p99:
+           percentiles(x, [50, 99], {"oa":true}) gives ["loquaciously", "the"]
+         With default sorting done outside percentiles, the same:
+           x = sort(x) # or x = sort_collection(x)
+           x is: ["brown", "dogs", "fox", "jumped", "lazy", "loquaciously", "over", "quick", "the", "the"]
+           percentiles(x, [50, 99], {"oa":true, "ais":true}) gives ["loquaciously", "the"]
+           percentiles(x, [50, 99], {"oa":true}) gives ["loquaciously", "the"]
+         Now sorting by word length, "loquaciously" is longest and hence is the p99:
+           x = sort(x, func(a,b) { return strlen(a) &lt;=&gt; strlen(b) } )
+           x is: ["fox", "the", "the", "dogs", "lazy", "over", "brown", "quick", "jumped", "loquaciously"]
+           percentiles(x, [50, 99], {"oa":true, "ais":true})
+           ["over", "loquaciously"]
 
    1mpow0m
         (class=arithmetic #args=2) Exponentiation. Same as **, but as a function.
@@ -2754,6 +2872,11 @@ MILLER(1)                                                            MILLER(1)
    1msinh0m
         (class=math #args=1) Hyperbolic sine.
 
+   1mskewness0m
+        (class=stats #args=1) Returns the sample skewness of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+       Example:
+       skewness([4,5,9,10,11]) is -0.2097285
+
    1msort0m
         (class=higher-order-functions #args=1-2) Given a map or array as first argument and string flags or function as optional second argument, returns a sorted copy of the input. With one argument, sorts array elements with numbers first numerically and then strings lexically, and map elements likewise by map keys. If the second argument is a string, it can contain any of "f" for lexical ("n" is for the above default), "c" for case-folded lexical, or "t" for natural sort order. An additional "r" in that string is for reverse. An additional "v" in that string means sort maps by value, rather than by key. If the second argument is a function, then for arrays it should take two arguments a and b, returning &lt; 0, 0, or &gt; 0 as a &lt; b, a == b, or a &gt; b respectively; for maps the function should take four arguments ak, av, bk, and bv, again returning &lt; 0, 0, or &gt; 0, using a and b's keys and values.
        Examples:
@@ -2769,6 +2892,9 @@ MILLER(1)                                                            MILLER(1)
        Map without function: sort({"c":2,"a":3,"b":1}) returns {"a":3,"b":1,"c":2}.
        Map without function: sort({"c":2,"a":3,"b":1}, "v") returns {"b":1,"c":2,"a":3}.
        Map without function: sort({"c":2,"a":3,"b":1}, "vnr") returns {"a":3,"c":2,"b":1}.
+
+   1msort_collection0m
+        (class=stats #args=1) This is a helper function for the percentiles function; please see its online help for details.
 
    1msplita0m
         (class=conversion #args=2) Splits string into array with type inference. First argument is string to split; second is the separator to split on.
@@ -2808,44 +2934,10 @@ MILLER(1)                                                            MILLER(1)
        Example:
        ssub("abc.def", ".", "X") gives "abcXdef"
 
-   1mstats_count0m
-        (class=stats #args=1) XXX write me.
-
-   1mstats_kurtosis0m
-        (class=stats #args=1) XXX write me.
-
-   1mstats_max0m
-        (class=stats #args=1) XXX write me.
-
-   1mstats_mean0m
-        (class=stats #args=1) XXX write me.
-
-   1mstats_meaneb0m
-        (class=stats #args=1) XXX write me.
-
-   1mstats_min0m
-        (class=stats #args=1) XXX write me.
-
-   1mstats_skewness0m
-        (class=stats #args=1) XXX write me.
-
-   1mstats_stddev0m
-        (class=stats #args=1) XXX write me.
-
-   1mstats_sum0m
-        (class=stats #args=1) XXX write me.
-
-   1mstats_sum20m
-        (class=stats #args=1) XXX write me.
-
-   1mstats_sum30m
-        (class=stats #args=1) XXX write me.
-
-   1mstats_sum40m
-        (class=stats #args=1) XXX write me.
-
-   1mstats_var0m
-        (class=stats #args=1) XXX write me.
+   1mstddev0m
+        (class=stats #args=1) Returns the sample standard deviation of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+       Example:
+       stddev([4,5,9,10,11]) is 3.1144823
 
    1mstrfntime0m
         (class=time #args=2) Formats integer nanoseconds since the epoch as timestamp. Format strings are as at https://pkg.go.dev/github.com/lestrrat-go/strftime, with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also https://miller.readthedocs.io/en/latest/reference-dsl-time/ for more information on the differences from the C library ("man strftime" on your system). See also strftime_local.
@@ -2934,6 +3026,26 @@ MILLER(1)                                                            MILLER(1)
    1msubstr10m
         (class=string #args=3) substr1(s,m,n) gives substring of s from 1-up position m to n inclusive. Negative indices -len .. -1 alias to 1 .. len. See also substr and substr0.
 
+   1msum0m
+        (class=stats #args=1) Returns the sum of values in an array or map. Returns error for non-array/non-map types.
+       Example:
+       sum([1,2,3,4,5]) is 15
+
+   1msum20m
+        (class=stats #args=1) Returns the sum of squares of values in an array or map. Returns error for non-array/non-map types.
+       Example:
+       sum2([1,2,3,4,5]) is 55
+
+   1msum30m
+        (class=stats #args=1) Returns the sum of cubes of values in an array or map. Returns error for non-array/non-map types.
+       Example:
+       sum3([1,2,3,4,5]) is 225
+
+   1msum40m
+        (class=stats #args=1) Returns the sum of fourth powers of values in an array or map. Returns error for non-array/non-map types.
+       Example:
+       sum4([1,2,3,4,5]) is 979
+
    1msysntime0m
         (class=time #args=0) Returns the system time in 64-bit nanoseconds since the epoch.
 
@@ -3011,6 +3123,11 @@ MILLER(1)                                                            MILLER(1)
        Examples:
        $y = utf8_to_latin1($x)
        $* = utf8_to_latin1($*)
+
+   1mvariance0m
+        (class=stats #args=1) Returns the sample variance of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+       Example:
+       variance([4,5,9,10,11]) is 9.7
 
    1mversion0m
         (class=system #args=0) Returns the Miller version as a string.
@@ -3513,5 +3630,5 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-08-23                         MILLER(1)
+                                  2023-08-26                         MILLER(1)
 </pre>
