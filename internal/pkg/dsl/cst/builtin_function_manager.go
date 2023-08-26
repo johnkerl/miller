@@ -965,170 +965,268 @@ is normally distributed.`,
 		{
 			name:      "count",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the length of an array or map. Returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_count,
+			examples: []string{
+				"count([7,8,9]) is 3",
+				`count({"a":7,"b":8,"c":9}) is 3`,
+			},
 		},
 
 		{
 			name:      "distinct_count",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the number of disinct values in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct.`,
 			unaryFunc: bifs.BIF_distinct_count,
+			examples: []string{
+				`distinct_count([7,8,9,7])  is 3`,
+				`distinct_count([1,"1"]) is 1`,
+				`distinct_count([1,1.0]) is 2`,
+			},
 		},
 
 		{
 			name:      "null_count",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the number of values in an array or map which are empty-string (AKA void) or JSON null. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct.`,
 			unaryFunc: bifs.BIF_null_count,
+			examples: []string{
+				`null_count(["a", "", "c"]) is 1`,
+			},
 		},
 
 		{
 			name:      "mode",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the most frequently occurring value in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct. In cases of ties, first-found wins.`,
 			unaryFunc: bifs.BIF_mode,
+			examples: []string{
+				`mode([3,3,4,4,4]) is 4`,
+				`mode([3,3,4,4]) is 3`,
+			},
 		},
 
 		{
 			name:      "antimode",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the most frequently occurring value in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct. In cases of ties, first-found wins.`,
 			unaryFunc: bifs.BIF_antimode,
+			examples: []string{
+				`antimode([3,3,4,4,4]) is 3`,
+				`antimode([3,3,4,4]) is 3`,
+			},
 		},
 
 		{
 			name:      "sum",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the sum of values in an array or map. Returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_sum,
+			examples: []string{
+				`sum([1,2,3,4,5]) is 15`,
+			},
 		},
 
 		{
 			name:      "sum2",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the sum of squares of values in an array or map. Returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_sum2,
+			examples: []string{
+				`sum2([1,2,3,4,5]) is 55`,
+			},
 		},
 
 		{
 			name:      "sum3",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the sum of cubes of values in an array or map. Returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_sum3,
+			examples: []string{
+				`sum3([1,2,3,4,5]) is 225`,
+			},
 		},
 
 		{
 			name:      "sum4",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the sum of fourth powers of values in an array or map. Returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_sum4,
+			examples: []string{
+				`sum4([1,2,3,4,5]) is 979`,
+			},
 		},
 
 		{
 			name:      "mean",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the arithmetic mean of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_mean,
+			examples: []string{
+				`mean([4,5,7,10]) is 6.5`,
+			},
 		},
 
 		{
 			name:      "meaneb",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the error bar for arithmetic mean of values in an array or map, assuming the values are independent and identically distributed. Returns "" AKA void for empty array/map; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_meaneb,
+			examples: []string{
+				`meaneb([4,5,7,10]) is 1.3228756`,
+			},
 		},
 
 		{
 			name:      "variance",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the sample variance of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_variance,
+			examples: []string{
+				`variance([4,5,9,10,11]) is 9.7`,
+			},
 		},
 
 		{
 			name:      "stddev",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the sample standard deviation of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_stddev,
+			examples: []string{
+				`stddev([4,5,9,10,11]) is 3.1144823`,
+			},
 		},
 
 		{
 			name:      "skewness",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the sample skewness of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_skewness,
+			examples: []string{
+				`skewness([4,5,9,10,11]) is -0.2097285`,
+			},
 		},
 
 		{
 			name:      "kurtosis",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the sample kurtosis of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_kurtosis,
+			examples: []string{
+				`kurtosis([4,5,9,10,11]) is -1.6703688`,
+			},
 		},
-
-		// XXX
-		//		{
-		//			name:      "min",
-		//			class:     FUNC_CLASS_STATS,
-		//			help:      `XXX write me.`,
-		//			unaryFunc: bifs.BIF_min,
-		//		},
-
-		// XXX
-		//		{
-		//			name:      "max",
-		//			class:     FUNC_CLASS_STATS,
-		//			help:      `XXX write me.`,
-		//			unaryFunc: bifs.BIF_max,
-		//		},
 
 		{
 			name:      "minlen",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the minimum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_minlen,
+			examples: []string{
+				`minlen(["año", "alto"]) is 3`,
+			},
 		},
 
 		{
 			name:      "maxlen",
 			class:     FUNC_CLASS_STATS,
-			help:      `XXX write me.`,
+			help:      `Returns the maximum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_maxlen,
+			examples: []string{
+				`maxlen(["año", "alto"]) is 4`,
+			},
 		},
 
 		{
 			name:               "median",
 			class:              FUNC_CLASS_STATS,
-			help:               `XXX write me.`,
+			help:               `Returns the median of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles for information on optional flags, and on performance for large inputs.`,
 			unaryFunc:          bifs.BIF_median,
 			binaryFunc:         bifs.BIF_median_with_options,
 			hasMultipleArities: true,
+			examples: []string{
+				`median([3,4,5,6,9,10]) is 6`,
+				`median([3,4,5,6,9,10],{"interpolate_linearly":true}) is 5.5`,
+				`median(["abc", "def", "ghi", "ghi"]) is "ghi"`,
+			},
 		},
 
 		{
 			name:               "percentile",
 			class:              FUNC_CLASS_STATS,
-			help:               `XXX write me.`,
+			help:               `Returns the given percentile of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles for information on optional flags, and on performance for large inputs.`,
 			binaryFunc:         bifs.BIF_percentile,
 			ternaryFunc:        bifs.BIF_percentile_with_options,
 			hasMultipleArities: true,
+			examples: []string{
+				`percentile([3,4,5,6,9,10], 90) is 10`,
+				`percentile([3,4,5,6,9,10], 90, {"interpolate_linearly":true}) is 9.5`,
+				`percentile(["abc", "def", "ghi", "ghi"], 90) is "ghi"`,
+			},
 		},
 
 		{
 			name:               "percentiles",
 			class:              FUNC_CLASS_STATS,
-			help:               `XXX write me.`,
+			help:               `Returns the given percentiles of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. See examples for information on the three option flags.`,
 			binaryFunc:         bifs.BIF_percentiles,
 			ternaryFunc:        bifs.BIF_percentiles_with_options,
 			hasMultipleArities: true,
+			examples: []string{
+				``,
+				`Defaults are to not interpolate linearly, to produce a map keyed by percentile name, and to sort`,
+				`the input before computing percentiles:`,
+				``,
+				`  percentiles([3,4,5,6,9,10], [25,75]) is { "25": 4, "75": 9 }`,
+				`  percentiles(["abc", "def", "ghi", "ghi"], [25,75]) is { "25": "def", "75": "ghi" }`,
+				``,
+				`Use "output_array_not_map" (or shorthand "oa") to get the outputs as an array:`,
+				``,
+				`  percentiles([3,4,5,6,9,10], [25,75], {"output_array_not_map":true}) is [4, 9]`,
+				``,
+				`Use "interpolate_linearly" (or shorthand "il") to do linear interpolation -- note this produces`,
+				`,error on string inputs:`,
+				``,
+				`  percentiles([3,4,5,6,9,10], [25,75], {"interpolate_linearly":true}) is { "25": 4.25, "75": 8.25 }`,
+				``,
+				`The percentiles function always sorts its inputs before computing percentiles. If you know your input`,
+				`is already sorted -- see also the sort_collection function -- then computation will be faster on`,
+				`large input if you pass in "array_is_sorted":`,
+				``,
+				`  x = [6,5,9,10,4,3]`,
+				`  percentiles(x, [25,75], {"array_is_sorted":true}) gives { "25": 5, "75": 4 } which is incorrect`,
+				`  x = sort_collection(x)`,
+				`  percentiles(x, [25,75], {"array_is_sorted":true}) gives { "25": 4, "75": 9 } which is correct`,
+				``,
+				`You can also leverage this feature to compute percentiles on a sort of your choosing. For example:`,
+				``,
+				`  Non-sorted input:`,
+				`    x = splitax("the quick brown fox jumped loquaciously over the lazy dogs", " ")`,
+				`    x is: ["the", "quick", "brown", "fox", "jumped", "loquaciously", "over", "the", "lazy", "dogs"]`,
+				`  Percentiles are taken over the original positions of the words in the array -- "dogs" is last`,
+				`  and hence appears as p99:`,
+				`    percentiles(x, [50, 99], {"oa":true, "ais":true}) gives ["loquaciously", "dogs"]`,
+				`  With sorting done inside percentiles, "the" is alphabetically last and is therefore the p99:`,
+				`    percentiles(x, [50, 99], {"oa":true}) gives ["loquaciously", "the"]`,
+				`  With default sorting done outside percentiles, the same:`,
+				`    x = sort(x) # or x = sort_collection(x)`,
+				`    x is: ["brown", "dogs", "fox", "jumped", "lazy", "loquaciously", "over", "quick", "the", "the"]`,
+				`    percentiles(x, [50, 99], {"oa":true, "ais":true}) gives ["loquaciously", "the"]`,
+				`    percentiles(x, [50, 99], {"oa":true}) gives ["loquaciously", "the"]`,
+				`  Now sorting by word length, "loquaciously" is longest and hence is the p99:`,
+				`    x = sort(x, func(a,b) { return strlen(a) <=> strlen(b) } )`,
+				`    x is: ["fox", "the", "the", "dogs", "lazy", "over", "brown", "quick", "jumped", "loquaciously"]`,
+				`    percentiles(x, [50, 99], {"oa":true, "ais":true})`,
+				`    ["over", "loquaciously"]`,
+			},
 		},
 
 		{
 			name:      "sort_collection",
-			class:     FUNC_CLASS_STATS, // XXX change
-			help:      `XXX write me.`,
+			class:     FUNC_CLASS_STATS,
+			help:      `This is a helper function for the percentiles function; please see its online help for details.`,
 			unaryFunc: bifs.BIF_sort_collection,
+			examples:  []string{},
 		},
 
 		// ----------------------------------------------------------------
