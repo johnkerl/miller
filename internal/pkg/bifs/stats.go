@@ -184,7 +184,7 @@ func collection_sum_of_function(
 	)
 }
 
-func BIF_stats_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
@@ -198,7 +198,7 @@ func BIF_stats_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-func BIF_stats_null_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_null_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
@@ -219,7 +219,7 @@ func BIF_stats_null_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	)
 }
 
-func BIF_stats_distinct_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_distinct_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
@@ -241,7 +241,7 @@ func BIF_stats_distinct_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(int64(len(counts)))
 }
 
-func BIF_stats_mode(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_mode(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
@@ -271,7 +271,7 @@ func BIF_stats_mode(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromString(maxk)
 }
 
-func BIF_stats_antimode(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_antimode(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
@@ -303,7 +303,7 @@ func BIF_stats_antimode(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromString(maxk)
 }
 
-func BIF_stats_sum(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_sum(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
@@ -316,7 +316,7 @@ func BIF_stats_sum(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	)
 }
 
-func BIF_stats_sum2(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_sum2(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
@@ -327,7 +327,7 @@ func BIF_stats_sum2(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	return collection_sum_of_function(collection, f)
 }
 
-func BIF_stats_sum3(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_sum3(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
@@ -338,7 +338,7 @@ func BIF_stats_sum3(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	return collection_sum_of_function(collection, f)
 }
 
-func BIF_stats_sum4(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_sum4(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
@@ -350,75 +350,75 @@ func BIF_stats_sum4(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	return collection_sum_of_function(collection, f)
 }
 
-func BIF_stats_mean(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_mean(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
 	}
-	n := BIF_stats_count(collection)
-	sum := BIF_stats_sum(collection)
+	n := BIF_count(collection)
+	sum := BIF_sum(collection)
 	return BIF_divide(sum, n)
 }
 
-func BIF_stats_meaneb(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_meaneb(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
 	}
-	n := BIF_stats_count(collection)
-	sum := BIF_stats_sum(collection)
-	sum2 := BIF_stats_sum2(collection)
+	n := BIF_count(collection)
+	sum := BIF_sum(collection)
+	sum2 := BIF_sum2(collection)
 	return BIF_finalize_mean_eb(n, sum, sum2)
 }
 
-func BIF_stats_variance(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_variance(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
 	}
-	n := BIF_stats_count(collection)
-	sum := BIF_stats_sum(collection)
-	sum2 := BIF_stats_sum2(collection)
+	n := BIF_count(collection)
+	sum := BIF_sum(collection)
+	sum2 := BIF_sum2(collection)
 	return BIF_finalize_variance(n, sum, sum2)
 }
 
-func BIF_stats_stddev(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_stddev(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
 	}
-	n := BIF_stats_count(collection)
-	sum := BIF_stats_sum(collection)
-	sum2 := BIF_stats_sum2(collection)
+	n := BIF_count(collection)
+	sum := BIF_sum(collection)
+	sum2 := BIF_sum2(collection)
 	return BIF_finalize_stddev(n, sum, sum2)
 }
 
-func BIF_stats_skewness(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_skewness(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
 	}
-	n := BIF_stats_count(collection)
-	sum := BIF_stats_sum(collection)
-	sum2 := BIF_stats_sum2(collection)
-	sum3 := BIF_stats_sum3(collection)
+	n := BIF_count(collection)
+	sum := BIF_sum(collection)
+	sum2 := BIF_sum2(collection)
+	sum3 := BIF_sum3(collection)
 	return BIF_finalize_skewness(n, sum, sum2, sum3)
 }
 
-func BIF_stats_kurtosis(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_kurtosis(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
 	}
-	n := BIF_stats_count(collection)
-	sum := BIF_stats_sum(collection)
-	sum2 := BIF_stats_sum2(collection)
-	sum3 := BIF_stats_sum3(collection)
-	sum4 := BIF_stats_sum4(collection)
+	n := BIF_count(collection)
+	sum := BIF_sum(collection)
+	sum2 := BIF_sum2(collection)
+	sum3 := BIF_sum3(collection)
+	sum4 := BIF_sum4(collection)
 	return BIF_finalize_kurtosis(n, sum, sum2, sum3, sum4)
 }
 
-func BIF_stats_min(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_min(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
@@ -430,7 +430,7 @@ func BIF_stats_min(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-func BIF_stats_max(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_max(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
@@ -442,7 +442,7 @@ func BIF_stats_max(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-func BIF_stats_minlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_minlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
@@ -454,7 +454,7 @@ func BIF_stats_minlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-func BIF_stats_maxlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_maxlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	ok, value_if_not := check_collection(collection)
 	if !ok {
 		return value_if_not
@@ -498,44 +498,44 @@ func BIF_sort_collection(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromArray(array)
 }
 
-func BIF_stats_median(
+func BIF_median(
 	collection *mlrval.Mlrval,
 ) *mlrval.Mlrval {
-	return BIF_stats_percentile(collection, mlrval.FromFloat(50.0))
+	return BIF_percentile(collection, mlrval.FromFloat(50.0))
 }
 
-func BIF_stats_median_with_options(
+func BIF_median_with_options(
 	collection *mlrval.Mlrval,
 	options *mlrval.Mlrval,
 ) *mlrval.Mlrval {
-	return BIF_stats_percentile_with_options(collection, mlrval.FromFloat(50.0), options)
+	return BIF_percentile_with_options(collection, mlrval.FromFloat(50.0), options)
 }
 
-func BIF_stats_percentile(
+func BIF_percentile(
 	collection *mlrval.Mlrval,
 	percentile *mlrval.Mlrval,
 ) *mlrval.Mlrval {
-	return BIF_stats_percentile_with_options(collection, percentile, nil)
+	return BIF_percentile_with_options(collection, percentile, nil)
 }
 
-func BIF_stats_percentile_with_options(
+func BIF_percentile_with_options(
 	collection *mlrval.Mlrval,
 	percentile *mlrval.Mlrval,
 	options *mlrval.Mlrval,
 ) *mlrval.Mlrval {
 	percentiles := mlrval.FromSingletonArray(percentile)
-	outputs := BIF_stats_percentiles_with_options(collection, percentiles, options)
+	outputs := BIF_percentiles_with_options(collection, percentiles, options)
 	return outputs.AcquireMapValue().Head.Value
 }
 
-func BIF_stats_percentiles(
+func BIF_percentiles(
 	collection *mlrval.Mlrval,
 	percentiles *mlrval.Mlrval,
 ) *mlrval.Mlrval {
-	return BIF_stats_percentiles_with_options(collection, percentiles, nil)
+	return BIF_percentiles_with_options(collection, percentiles, nil)
 }
 
-func BIF_stats_percentiles_with_options(
+func BIF_percentiles_with_options(
 	collection *mlrval.Mlrval,
 	percentiles *mlrval.Mlrval,
 	options *mlrval.Mlrval,
@@ -639,3 +639,9 @@ func bif_percentiles(
 		return mlrval.FromMap(m)
 	}
 }
+
+// ================================================================
+// TODO:
+// * remove "stats_" prefixes?
+//   o min&max -> accept array/map
+
