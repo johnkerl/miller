@@ -1030,7 +1030,7 @@ mean([4,5,7,10]) is 6.5
 
 ### meaneb
 <pre class="pre-non-highlight-non-pair">
-meaneb  (class=stats #args=1) Returns the error bar for arithmetic mean of values in an array or map, assuming the values are independent and identically distributed. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types.
+meaneb  (class=stats #args=1) Returns the error bar for arithmetic mean of values in an array or map, assuming the values are independent and identically distributed. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
 Example:
 meaneb([4,5,7,10]) is 1.3228756
 </pre>
