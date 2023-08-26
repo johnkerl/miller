@@ -2,8 +2,8 @@
 {
   "a_min": "pan",
   "a_max": "pan",
-  "a_minlen": "pan",
-  "a_maxlen": "pan",
+  "a_minlen": 3,
+  "a_maxlen": 3,
   "a_median": "pan",
   "a_ps": {
     "0": "pan",
@@ -31,8 +31,8 @@
   "a_psia": ["pan", "pan", "pan", "pan", "pan", "pan", "pan", "pan", "pan"],
   "m_min": "pan",
   "m_max": "pan",
-  "m_minlen": "pan",
-  "m_maxlen": "pan",
+  "m_minlen": 3,
+  "m_maxlen": 3,
   "m_median": "pan",
   "m_ps": {
     "0": "pan",

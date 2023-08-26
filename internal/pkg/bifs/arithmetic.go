@@ -879,9 +879,9 @@ func BIF_minlen_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.VOID
 	}
 	// Do the bulk arithmetic on native ints not Mlrvals, to avoid unnecessary allocation.
-	retval := lib.UTF8Strlen(mlrvals[0].AcquireStringValue())
+	retval := lib.UTF8Strlen(mlrvals[0].OriginalString())
 	for i, _ := range mlrvals {
-		clen := lib.UTF8Strlen(mlrvals[i].AcquireStringValue())
+		clen := lib.UTF8Strlen(mlrvals[i].OriginalString())
 		if clen < retval {
 			retval = clen
 		}
@@ -894,9 +894,9 @@ func BIF_minlen_within_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
 		return mlrval.VOID
 	}
 	// Do the bulk arithmetic on native ints not Mlrvals, to avoid unnecessary allocation.
-	retval := lib.UTF8Strlen(m.Head.Value.AcquireStringValue())
+	retval := lib.UTF8Strlen(m.Head.Value.OriginalString())
 	for pe := m.Head.Next; pe != nil; pe = pe.Next {
-		clen := lib.UTF8Strlen(pe.Value.AcquireStringValue())
+		clen := lib.UTF8Strlen(pe.Value.OriginalString())
 		if clen < retval {
 			retval = clen
 		}
@@ -1041,9 +1041,9 @@ func BIF_maxlen_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.VOID
 	}
 	// Do the bulk arithmetic on native ints not Mlrvals, to avoid unnecessary allocation.
-	retval := lib.UTF8Strlen(mlrvals[0].AcquireStringValue())
+	retval := lib.UTF8Strlen(mlrvals[0].OriginalString())
 	for i, _ := range mlrvals {
-		clen := lib.UTF8Strlen(mlrvals[i].AcquireStringValue())
+		clen := lib.UTF8Strlen(mlrvals[i].OriginalString())
 		if clen > retval {
 			retval = clen
 		}
@@ -1056,9 +1056,9 @@ func BIF_maxlen_within_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
 		return mlrval.VOID
 	}
 	// Do the bulk arithmetic on native ints not Mlrvals, to avoid unnecessary allocation.
-	retval := lib.UTF8Strlen(m.Head.Value.AcquireStringValue())
+	retval := lib.UTF8Strlen(m.Head.Value.OriginalString())
 	for pe := m.Head.Next; pe != nil; pe = pe.Next {
-		clen := lib.UTF8Strlen(pe.Value.AcquireStringValue())
+		clen := lib.UTF8Strlen(pe.Value.OriginalString())
 		if clen > retval {
 			retval = clen
 		}

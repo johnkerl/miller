@@ -3,7 +3,7 @@
   "a_min": 1,
   "a_max": 3,
   "a_minlen": 1,
-  "a_maxlen": 3,
+  "a_maxlen": 1,
   "a_median": 2,
   "a_ps": {
     "0": 1,
@@ -32,7 +32,7 @@
   "m_min": 1,
   "m_max": 3,
   "m_minlen": 1,
-  "m_maxlen": 3,
+  "m_maxlen": 1,
   "m_median": 2,
   "m_ps": {
     "0": 1,

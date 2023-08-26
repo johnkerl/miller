@@ -2,8 +2,8 @@
 {
   "a_min": "eks",
   "a_max": "wye",
-  "a_minlen": "eks",
-  "a_maxlen": "wye",
+  "a_minlen": 3,
+  "a_maxlen": 3,
   "a_median": "pan",
   "a_ps": {
     "0": "eks",
@@ -31,8 +31,8 @@
   "a_psia": [(error), (error), (error), (error), (error), (error), (error), (error), "wye"],
   "m_min": "eks",
   "m_max": "wye",
-  "m_minlen": "eks",
-  "m_maxlen": "wye",
+  "m_minlen": 3,
+  "m_maxlen": 3,
   "m_median": "pan",
   "m_ps": {
     "0": "eks",
