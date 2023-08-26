@@ -1,0 +1,28 @@
+end {
+    outputs = {};
+
+    # Only empty string and JSON-null count as nulls
+
+    outputs["null_count_0"] = null_count(0);
+    outputs["null_count_null"] = null_count(null);
+    outputs["null_count_nonesuch"] = null_count(nonesuch);
+
+    outputs["null_count_empty_array"] = null_count([]);
+    outputs["null_count_array_1"] = null_count([7]);
+    outputs["null_count_array_2"] = null_count([7,8]);
+    outputs["null_count_array_3"] = null_count(["",null,nonesuch]);
+
+    outputs["null_count_empty_map"] = null_count({});
+    outputs["null_count_map_1"] = null_count({ "a" : 7});
+    outputs["null_count_map_2"] = null_count({ "a" : 7, "b" : 8 });
+    outputs["null_count_map_3"] = null_count({ "a" : "", "b" : null, "c" : nonesuch });
+
+    typed_outputs = {};
+
+    for (k, v in outputs) {
+        typed_outputs[k] = v;
+        typed_outputs[k."_type"] = typeof(v);
+    }
+
+    emit typed_outputs;
+}

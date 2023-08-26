@@ -1,0 +1,32 @@
+end {
+    outputs = {};
+
+    outputs["distinct_count_0"] = distinct_count(0);
+    outputs["distinct_count_null"] = distinct_count(null);
+    outputs["distinct_count_nonesuch"] = distinct_count(nonesuch);
+
+    outputs["distinct_count_empty_array"] = distinct_count([]);
+    outputs["distinct_count_array_1"] = distinct_count([7]);
+    outputs["distinct_count_array_3a"] = distinct_count([7,8,9]);
+    outputs["distinct_count_array_3b"] = distinct_count([7,7,9]);
+    outputs["distinct_count_array_3c"] = distinct_count([7,7,7]);
+    outputs["distinct_count_array_3d"] = distinct_count([null,null,null]);
+    outputs["distinct_count_array_nested"] = distinct_count([7,[7],7]);
+
+    outputs["distinct_count_empty_map"] = distinct_count({});
+    outputs["distinct_count_map_1"] = distinct_count({ "a" : 7} );
+    outputs["distinct_count_map_3a"] = distinct_count({ "a" : 7, "b" : 8, "c" : 9 } );
+    outputs["distinct_count_map_3b"] = distinct_count({ "a" : 7, "b" : 7, "c" : 9 } );
+    outputs["distinct_count_map_3c"] = distinct_count({ "a" : 7, "b" : 7, "c" : 7 } );
+    outputs["distinct_count_map_3d"] = distinct_count({ "a" : null, "b" : null, "c" : null } );
+    outputs["distinct_count_map_nested"] = distinct_count({ "a" : 7, "b" : [7], "c" : 7 });
+
+    typed_outputs = {};
+
+    for (k, v in outputs) {
+        typed_outputs[k] = v;
+        typed_outputs[k."_type"] = typeof(v);
+    }
+
+    emit typed_outputs;
+}

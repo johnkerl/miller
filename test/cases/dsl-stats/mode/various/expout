@@ -1,0 +1,24 @@
+mode_0                 (error)
+mode_0_type            error
+mode_null              (error)
+mode_null_type         error
+mode_empty_array       
+mode_empty_array_type  empty
+mode_array_1           7
+mode_array_1_type      int
+mode_array_3a          7
+mode_array_3a_type     int
+mode_array_3b          7
+mode_array_3b_type     int
+mode_array_nested      9
+mode_array_nested_type int
+mode_empty_map         
+mode_empty_map_type    empty
+mode_map_1             7
+mode_map_1_type        int
+mode_map_3a            7
+mode_map_3a_type       int
+mode_map_3b            7
+mode_map_3b_type       int
+mode_map_nested        9
+mode_map_nested_type   int

@@ -1,0 +1,39 @@
+begin {
+    @a = [];
+    @m = {};
+    @field = "i";
+}
+
+@a[NR] = $[@field];
+@m[NR] = $[@field];
+
+end {
+    outputs = {
+
+        "a_count": count(@a),
+        "a_sum": sum(@a),
+        "a_sum2": sum2(@a),
+        "a_sum3": sum3(@a),
+        "a_sum4": sum4(@a),
+        "a_mean": mean(@a),
+        "a_var": variance(@a),
+        "a_stddev": stddev(@a),
+        "a_meaneb": meaneb(@a),
+        "a_skewness": skewness(@a),
+        "a_kurtosis": kurtosis(@a),
+
+        "m_count": count(@m),
+        "m_sum": sum(@m),
+        "m_sum2": sum2(@m),
+        "m_sum3": sum3(@m),
+        "m_sum4": sum4(@m),
+        "m_mean": mean(@m),
+        "m_var": variance(@m),
+        "m_stddev": stddev(@m),
+        "m_meaneb": meaneb(@m),
+        "m_skewness": skewness(@m),
+        "m_kurtosis": kurtosis(@m),
+
+    };
+    emit outputs;
+}

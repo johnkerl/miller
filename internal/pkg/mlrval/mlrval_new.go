@@ -222,6 +222,12 @@ func FromArray(arrayval []*Mlrval) *Mlrval {
 	}
 }
 
+func FromSingletonArray(element *Mlrval) *Mlrval {
+	a := make([]*Mlrval, 1)
+	a[0] = element
+	return FromArray(a)
+}
+
 func FromEmptyArray() *Mlrval {
 	return FromArray(make([]*Mlrval, 0))
 }

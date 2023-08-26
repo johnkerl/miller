@@ -74,6 +74,7 @@ is 2. Unary operators such as `!` and `~` show argument-count of 1; the ternary
 * [**Hashing functions**](#hashing-functions):  [md5](#md5),  [sha1](#sha1),  [sha256](#sha256),  [sha512](#sha512).
 * [**Higher-order-functions functions**](#higher-order-functions-functions):  [any](#any),  [apply](#apply),  [every](#every),  [fold](#fold),  [reduce](#reduce),  [select](#select),  [sort](#sort).
 * [**Math functions**](#math-functions):  [abs](#abs),  [acos](#acos),  [acosh](#acosh),  [asin](#asin),  [asinh](#asinh),  [atan](#atan),  [atan2](#atan2),  [atanh](#atanh),  [cbrt](#cbrt),  [ceil](#ceil),  [cos](#cos),  [cosh](#cosh),  [erf](#erf),  [erfc](#erfc),  [exp](#exp),  [expm1](#expm1),  [floor](#floor),  [invqnorm](#invqnorm),  [log](#log),  [log10](#log10),  [log1p](#log1p),  [logifit](#logifit),  [max](#max),  [min](#min),  [qnorm](#qnorm),  [round](#round),  [roundm](#roundm),  [sgn](#sgn),  [sin](#sin),  [sinh](#sinh),  [sqrt](#sqrt),  [tan](#tan),  [tanh](#tanh),  [urand](#urand),  [urand32](#urand32),  [urandelement](#urandelement),  [urandint](#urandint),  [urandrange](#urandrange).
+* [**Stats functions**](#stats-functions):  [antimode](#antimode),  [count](#count),  [distinct_count](#distinct_count),  [kurtosis](#kurtosis),  [maxlen](#maxlen),  [mean](#mean),  [meaneb](#meaneb),  [median](#median),  [minlen](#minlen),  [mode](#mode),  [null_count](#null_count),  [percentile](#percentile),  [percentiles](#percentiles),  [skewness](#skewness),  [sort_collection](#sort_collection),  [stddev](#stddev),  [sum](#sum),  [sum2](#sum2),  [sum3](#sum3),  [sum4](#sum4),  [variance](#variance).
 * [**String functions**](#string-functions):  [capitalize](#capitalize),  [clean_whitespace](#clean_whitespace),  [collapse_whitespace](#collapse_whitespace),  [format](#format),  [gssub](#gssub),  [gsub](#gsub),  [index](#index),  [latin1_to_utf8](#latin1_to_utf8),  [leftpad](#leftpad),  [lstrip](#lstrip),  [regextract](#regextract),  [regextract_or_else](#regextract_or_else),  [rightpad](#rightpad),  [rstrip](#rstrip),  [ssub](#ssub),  [strip](#strip),  [strlen](#strlen),  [sub](#sub),  [substr](#substr),  [substr0](#substr0),  [substr1](#substr1),  [tolower](#tolower),  [toupper](#toupper),  [truncate](#truncate),  [unformat](#unformat),  [unformatx](#unformatx),  [utf8_to_latin1](#utf8_to_latin1),  [\.](#dot).
 * [**System functions**](#system-functions):  [exec](#exec),  [hostname](#hostname),  [os](#os),  [system](#system),  [version](#version).
 * [**Time functions**](#time-functions):  [dhms2fsec](#dhms2fsec),  [dhms2sec](#dhms2sec),  [fsec2dhms](#fsec2dhms),  [fsec2hms](#fsec2hms),  [gmt2localtime](#gmt2localtime),  [gmt2nsec](#gmt2nsec),  [gmt2sec](#gmt2sec),  [hms2fsec](#hms2fsec),  [hms2sec](#hms2sec),  [localtime2gmt](#localtime2gmt),  [localtime2nsec](#localtime2nsec),  [localtime2sec](#localtime2sec),  [nsec2gmt](#nsec2gmt),  [nsec2gmtdate](#nsec2gmtdate),  [nsec2localdate](#nsec2localdate),  [nsec2localtime](#nsec2localtime),  [sec2dhms](#sec2dhms),  [sec2gmt](#sec2gmt),  [sec2gmtdate](#sec2gmtdate),  [sec2hms](#sec2hms),  [sec2localdate](#sec2localdate),  [sec2localtime](#sec2localtime),  [strfntime](#strfntime),  [strfntime_local](#strfntime_local),  [strftime](#strftime),  [strftime_local](#strftime_local),  [strpntime](#strpntime),  [strpntime_local](#strpntime_local),  [strptime](#strptime),  [strptime_local](#strptime_local),  [sysntime](#sysntime),  [systime](#systime),  [systimeint](#systimeint),  [upntime](#upntime),  [uptime](#uptime).
@@ -877,13 +878,13 @@ logifit  (class=math #args=3) Given m and b from logistic regression, compute fi
 
 ### max
 <pre class="pre-non-highlight-non-pair">
-max  (class=math #args=variadic) Max of n numbers; null loses.
+max  (class=math #args=variadic) Max of n numbers; null loses. The min and max functions also recurse into arrays and maps, so they can be used to get min/max stats on array/map values.
 </pre>
 
 
 ### min
 <pre class="pre-non-highlight-non-pair">
-min  (class=math #args=variadic) Min of n numbers; null loses.
+min  (class=math #args=variadic) Min of n numbers; null loses. The min and max functions also recurse into arrays and maps, so they can be used to get min/max stats on array/map values.
 </pre>
 
 
@@ -970,6 +971,227 @@ urandint  (class=math #args=2) Integer uniformly distributed between inclusive i
 ### urandrange
 <pre class="pre-non-highlight-non-pair">
 urandrange  (class=math #args=2) Floating-point numbers uniformly distributed on the interval [a, b).
+</pre>
+
+## Stats functions
+
+
+### antimode
+<pre class="pre-non-highlight-non-pair">
+antimode  (class=stats #args=1) Returns the most frequently occurring value in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct. In cases of ties, first-found wins.
+Examples:
+antimode([3,3,4,4,4]) is 3
+antimode([3,3,4,4]) is 3
+</pre>
+
+
+### count
+<pre class="pre-non-highlight-non-pair">
+count  (class=stats #args=1) Returns the length of an array or map. Returns error for non-array/non-map types.
+Examples:
+count([7,8,9]) is 3
+count({"a":7,"b":8,"c":9}) is 3
+</pre>
+
+
+### distinct_count
+<pre class="pre-non-highlight-non-pair">
+distinct_count  (class=stats #args=1) Returns the number of disinct values in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct.
+Examples:
+distinct_count([7,8,9,7])  is 3
+distinct_count([1,"1"]) is 1
+distinct_count([1,1.0]) is 2
+</pre>
+
+
+### kurtosis
+<pre class="pre-non-highlight-non-pair">
+kurtosis  (class=stats #args=1) Returns the sample kurtosis of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+Example:
+kurtosis([4,5,9,10,11]) is -1.6703688
+</pre>
+
+
+### maxlen
+<pre class="pre-non-highlight-non-pair">
+maxlen  (class=stats #args=1) Returns the maximum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+Example:
+maxlen(["año", "alto"]) is 4
+</pre>
+
+
+### mean
+<pre class="pre-non-highlight-non-pair">
+mean  (class=stats #args=1) Returns the arithmetic mean of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types.
+Example:
+mean([4,5,7,10]) is 6.5
+</pre>
+
+
+### meaneb
+<pre class="pre-non-highlight-non-pair">
+meaneb  (class=stats #args=1) Returns the error bar for arithmetic mean of values in an array or map, assuming the values are independent and identically distributed. Returns "" AKA void for empty array/map; returns error for non-array/non-map types.
+Example:
+meaneb([4,5,7,10]) is 1.3228756
+</pre>
+
+
+### median
+<pre class="pre-non-highlight-non-pair">
+median  (class=stats #args=1,2) Returns the median of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles for information on optional flags, and on performance for large inputs.
+Examples:
+median([3,4,5,6,9,10]) is 6
+median([3,4,5,6,9,10],{"interpolate_linearly":true}) is 5.5
+median(["abc", "def", "ghi", "ghi"]) is "ghi"
+</pre>
+
+
+### minlen
+<pre class="pre-non-highlight-non-pair">
+minlen  (class=stats #args=1) Returns the minimum string length of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+Example:
+minlen(["año", "alto"]) is 3
+</pre>
+
+
+### mode
+<pre class="pre-non-highlight-non-pair">
+mode  (class=stats #args=1) Returns the most frequently occurring value in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct. In cases of ties, first-found wins.
+Examples:
+mode([3,3,4,4,4]) is 4
+mode([3,3,4,4]) is 3
+</pre>
+
+
+### null_count
+<pre class="pre-non-highlight-non-pair">
+null_count  (class=stats #args=1) Returns the number of values in an array or map which are empty-string (AKA void) or JSON null. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct.
+Example:
+null_count(["a", "", "c"]) is 1
+</pre>
+
+
+### percentile
+<pre class="pre-non-highlight-non-pair">
+percentile  (class=stats #args=2,3) Returns the given percentile of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. Please see the percentiles for information on optional flags, and on performance for large inputs.
+Examples:
+percentile([3,4,5,6,9,10], 90) is 10
+percentile([3,4,5,6,9,10], 90, {"interpolate_linearly":true}) is 9.5
+percentile(["abc", "def", "ghi", "ghi"], 90) is "ghi"
+</pre>
+
+
+### percentiles
+<pre class="pre-non-highlight-non-pair">
+percentiles  (class=stats #args=2,3) Returns the given percentiles of values in an array or map. Returns "" AKA void for empty array/map; returns error for non-array/non-map types. See examples for information on the three option flags.
+Examples:
+
+Defaults are to not interpolate linearly, to produce a map keyed by percentile name, and to sort
+the input before computing percentiles:
+
+  percentiles([3,4,5,6,9,10], [25,75]) is { "25": 4, "75": 9 }
+  percentiles(["abc", "def", "ghi", "ghi"], [25,75]) is { "25": "def", "75": "ghi" }
+
+Use "output_array_not_map" (or shorthand "oa") to get the outputs as an array:
+
+  percentiles([3,4,5,6,9,10], [25,75], {"output_array_not_map":true}) is [4, 9]
+
+Use "interpolate_linearly" (or shorthand "il") to do linear interpolation -- note this produces
+,error on string inputs:
+
+  percentiles([3,4,5,6,9,10], [25,75], {"interpolate_linearly":true}) is { "25": 4.25, "75": 8.25 }
+
+The percentiles function always sorts its inputs before computing percentiles. If you know your input
+is already sorted -- see also the sort_collection function -- then computation will be faster on
+large input if you pass in "array_is_sorted":
+
+  x = [6,5,9,10,4,3]
+  percentiles(x, [25,75], {"array_is_sorted":true}) gives { "25": 5, "75": 4 } which is incorrect
+  x = sort_collection(x)
+  percentiles(x, [25,75], {"array_is_sorted":true}) gives { "25": 4, "75": 9 } which is correct
+
+You can also leverage this feature to compute percentiles on a sort of your choosing. For example:
+
+  Non-sorted input:
+    x = splitax("the quick brown fox jumped loquaciously over the lazy dogs", " ")
+    x is: ["the", "quick", "brown", "fox", "jumped", "loquaciously", "over", "the", "lazy", "dogs"]
+  Percentiles are taken over the original positions of the words in the array -- "dogs" is last
+  and hence appears as p99:
+    percentiles(x, [50, 99], {"oa":true, "ais":true}) gives ["loquaciously", "dogs"]
+  With sorting done inside percentiles, "the" is alphabetically last and is therefore the p99:
+    percentiles(x, [50, 99], {"oa":true}) gives ["loquaciously", "the"]
+  With default sorting done outside percentiles, the same:
+    x = sort(x) # or x = sort_collection(x)
+    x is: ["brown", "dogs", "fox", "jumped", "lazy", "loquaciously", "over", "quick", "the", "the"]
+    percentiles(x, [50, 99], {"oa":true, "ais":true}) gives ["loquaciously", "the"]
+    percentiles(x, [50, 99], {"oa":true}) gives ["loquaciously", "the"]
+  Now sorting by word length, "loquaciously" is longest and hence is the p99:
+    x = sort(x, func(a,b) { return strlen(a) <=> strlen(b) } )
+    x is: ["fox", "the", "the", "dogs", "lazy", "over", "brown", "quick", "jumped", "loquaciously"]
+    percentiles(x, [50, 99], {"oa":true, "ais":true})
+    ["over", "loquaciously"]
+</pre>
+
+
+### skewness
+<pre class="pre-non-highlight-non-pair">
+skewness  (class=stats #args=1) Returns the sample skewness of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+Example:
+skewness([4,5,9,10,11]) is -0.2097285
+</pre>
+
+
+### sort_collection
+<pre class="pre-non-highlight-non-pair">
+sort_collection  (class=stats #args=1) This is a helper function for the percentiles function; please see its online help for details.
+</pre>
+
+
+### stddev
+<pre class="pre-non-highlight-non-pair">
+stddev  (class=stats #args=1) Returns the sample standard deviation of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+Example:
+stddev([4,5,9,10,11]) is 3.1144823
+</pre>
+
+
+### sum
+<pre class="pre-non-highlight-non-pair">
+sum  (class=stats #args=1) Returns the sum of values in an array or map. Returns error for non-array/non-map types.
+Example:
+sum([1,2,3,4,5]) is 15
+</pre>
+
+
+### sum2
+<pre class="pre-non-highlight-non-pair">
+sum2  (class=stats #args=1) Returns the sum of squares of values in an array or map. Returns error for non-array/non-map types.
+Example:
+sum2([1,2,3,4,5]) is 55
+</pre>
+
+
+### sum3
+<pre class="pre-non-highlight-non-pair">
+sum3  (class=stats #args=1) Returns the sum of cubes of values in an array or map. Returns error for non-array/non-map types.
+Example:
+sum3([1,2,3,4,5]) is 225
+</pre>
+
+
+### sum4
+<pre class="pre-non-highlight-non-pair">
+sum4  (class=stats #args=1) Returns the sum of fourth powers of values in an array or map. Returns error for non-array/non-map types.
+Example:
+sum4([1,2,3,4,5]) is 979
+</pre>
+
+
+### variance
+<pre class="pre-non-highlight-non-pair">
+variance  (class=stats #args=1) Returns the sample variance of values in an array or map. Returns "" AKA void for array/map of length less than two; returns error for non-array/non-map types.
+Example:
+variance([4,5,9,10,11]) is 9.7
 </pre>
 
 ## String functions
@@ -1765,3 +1987,4 @@ is_string  (class=typing #args=1) True if field is present with string (includin
 typeof  (class=typing #args=1) Convert argument to type of argument (e.g. "str"). For debug.
 </pre>
 
+/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib/ruby/2.6.0/universal-darwin22/rbconfig.rb:21: warning: Insecure world writable dir /usr/local/bin in PATH, mode 040777

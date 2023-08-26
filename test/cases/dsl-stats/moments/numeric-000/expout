@@ -1,0 +1,26 @@
+[
+{
+  "a_count": 0,
+  "a_sum": 0,
+  "a_sum2": 0,
+  "a_sum3": 0,
+  "a_sum4": 0,
+  "a_mean": "",
+  "a_var": "",
+  "a_stddev": "",
+  "a_meaneb": "",
+  "a_skewness": "",
+  "a_kurtosis": "",
+  "m_count": 0,
+  "m_sum": 0,
+  "m_sum2": 0,
+  "m_sum3": 0,
+  "m_sum4": 0,
+  "m_mean": "",
+  "m_var": "",
+  "m_stddev": "",
+  "m_meaneb": "",
+  "m_skewness": "",
+  "m_kurtosis": ""
+}
+]
