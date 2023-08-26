@@ -1070,7 +1070,7 @@ is normally distributed.`,
 		{
 			name:      "meaneb",
 			class:     FUNC_CLASS_STATS,
-			help:      `Returns the error bar for arithmetic mean of values in an array or map, assuming the values are independent and identically distributed. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types.`,
+			help:      `Returns the error bar for arithmetic mean of values in an array or map, assuming the values are independent and identically distributed. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.`,
 			unaryFunc: bifs.BIF_meaneb,
 			examples: []string{
 				`meaneb([4,5,7,10]) is 1.3228756`,
