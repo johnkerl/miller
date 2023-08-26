@@ -35,7 +35,6 @@ i j  k
 7 8  15
 8 9  17
 9 10 19
-/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib/ruby/2.6.0/universal-darwin22/rbconfig.rb:21: warning: Insecure world writable dir /usr/local/bin in PATH, mode 040777
 </pre>
 
 Newlines within the expression are ignored, which can help increase legibility of complex expressions:

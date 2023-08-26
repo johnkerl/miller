@@ -1991,4 +1991,3 @@ is_string  (class=typing #args=1) True if field is present with string (includin
 typeof  (class=typing #args=1) Convert argument to type of argument (e.g. "str"). For debug.
 </pre>
 
-/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib/ruby/2.6.0/universal-darwin22/rbconfig.rb:21: warning: Insecure world writable dir /usr/local/bin in PATH, mode 040777

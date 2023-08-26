@@ -495,4 +495,3 @@ Notes about all other separators:
 * `--repifs`: Let IFS be repeated: e.g. for splitting on multiple spaces.
 * `--rs {string}`: Specify RS for input and output.
 
-/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib/ruby/2.6.0/universal-darwin22/rbconfig.rb:21: warning: Insecure world writable dir /usr/local/bin in PATH, mode 040777
