@@ -1,0 +1,26 @@
+end {
+    outputs = {};
+
+    outputs["count_0"] = count(0);
+    outputs["count_null"] = count(null);
+    outputs["count_nonesuch"] = count(nonesuch);
+
+    outputs["count_empty_array"] = count([]);
+    outputs["count_array_1"] = count([7]);
+    outputs["count_array_3"] = count([7,8,9]);
+    outputs["count_array_nested"] = count([7,[80,90],9]);
+
+    outputs["count_empty_map"] = count({});
+    outputs["count_map_1"] = count({ "a" : 7} );
+    outputs["count_map_3"] = count({ "a" : 7, "b" : 8, "c" : 9 } );
+    outputs["count_map_nested"] = count({ "a" : 7, "b" : [80,90], "c" : 9 });
+
+    typed_outputs = {};
+
+    for (k, v in outputs) {
+        typed_outputs[k] = v;
+        typed_outputs[k."_type"] = typeof(v);
+    }
+
+    emit typed_outputs;
+}

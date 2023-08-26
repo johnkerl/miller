@@ -1,0 +1,44 @@
+begin {
+    @a = [];
+    @m = {};
+    # @field must be given by put -s field=namegoeshere in the script invocation.
+    # This lets us test percentiles over various field names/types while re-using
+    # this same script.
+}
+
+@a[NR] = $[@field];
+@m[NR] = $[@field];
+
+end {
+    outputs = {
+
+        "a_min": min(@a),
+        "a_max": max(@a),
+        "a_minlen": min(@a),
+        "a_maxlen": max(@a),
+        "a_median": median(@a),
+        "a_ps": percentiles(@a, [0,1,10,25,50,75,90,99,100]),
+        "a_psi": percentiles(@a, [0,1,10,25,50,75,90,99,100], {"interpolate_linearly":true}),
+        "a_psa": percentiles(@a, [0,1,10,25,50,75,90,99,100], {"output_array_not_map":true}),
+        "a_psia": percentiles(@a, [0,1,10,25,50,75,90,99,100], {
+            "interpolate_linearly": true,
+            "output_array_not_map":true,
+        }),
+
+        "m_min": min(@m),
+        "m_max": max(@m),
+        "m_minlen": min(@m),
+        "m_maxlen": max(@m),
+        "m_median": median(@m),
+        "m_ps": percentiles(@m, [0,1,10,25,50,75,90,99,100]),
+        "m_psi": percentiles(@m, [0,1,10,25,50,75,90,99,100], {"interpolate_linearly":true}),
+        "m_psa": percentiles(@m, [0,1,10,25,50,75,90,99,100], {"output_array_not_map":true}),
+        "m_psia": percentiles(@m, [0,1,10,25,50,75,90,99,100], {
+            "interpolate_linearly": true,
+            "output_array_not_map":true,
+        }),
+
+    };
+    emit outputs;
+}
+

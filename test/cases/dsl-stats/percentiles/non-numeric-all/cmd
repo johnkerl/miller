@@ -1,0 +1,1 @@
+mlr --ofmtf 6 --ojson --zin --from test/input/medium.z put -q -f test/input/test-percentiles.mlr -s field=a

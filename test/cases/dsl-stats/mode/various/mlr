@@ -1,0 +1,28 @@
+end {
+    outputs = {};
+
+    outputs["mode_0"] = mode(0);
+    outputs["mode_null"] = mode(null);
+    outputs["mode_nonesuch"] = mode(nonesuch);
+
+    outputs["mode_empty_array"] = mode([]);
+    outputs["mode_array_1"] = mode([7]);
+    outputs["mode_array_3a"] = mode([7,8,9]);
+    outputs["mode_array_3b"] = mode([7,8,7]);
+    outputs["mode_array_nested"] = mode([7,[8,8,8,8,8,8],9,9,9]);
+
+    outputs["mode_empty_map"] = mode({});
+    outputs["mode_map_1"] = mode({ "a" : 7} );
+    outputs["mode_map_3a"] = mode({ "a" : 7, "b" : 8, "c" : 9 } );
+    outputs["mode_map_3b"] = mode({ "a" : 7, "b" : 8, "c" : 7 } );
+    outputs["mode_map_nested"] = mode({ "a" : 7, "b" : [8,8,8,8,8,8], "c" : 9, "d": 9, "e": 9 });
+
+    typed_outputs = {};
+
+    for (k, v in outputs) {
+        typed_outputs[k] = v;
+        typed_outputs[k."_type"] = typeof(v);
+    }
+
+    emit typed_outputs;
+}

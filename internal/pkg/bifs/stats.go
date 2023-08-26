@@ -356,6 +356,9 @@ func BIF_mean(collection *mlrval.Mlrval) *mlrval.Mlrval {
 		return value_if_not
 	}
 	n := BIF_count(collection)
+	if n.AcquireIntValue() == 0 {
+		return mlrval.VOID
+	}
 	sum := BIF_sum(collection)
 	return BIF_divide(sum, n)
 }
@@ -595,6 +598,8 @@ func bif_percentiles(
 		p, ok := ps[i].GetNumericToFloatValue()
 		if !ok {
 			outputs[i] = mlrval.ERROR.Copy()
+		} else if len(sorted_array) == 0{
+			outputs[i] = mlrval.VOID
 		} else {
 			if interpolate_linearly {
 				outputs[i] = GetPercentileLinearlyInterpolated(sorted_array, len(sorted_array), p)
@@ -619,5 +624,7 @@ func bif_percentiles(
 // ================================================================
 // TODO:
 // * mode & antimode ... doing strings ... :|
+// * mode ties are non-deterministic ... fix that ...
+// * olh: min/max recurse but other stats funcs do not
 
 // * also: str contains ... but extend to arrays? or nah?

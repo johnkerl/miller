@@ -1,0 +1,62 @@
+[
+{
+  "a_min": "eks",
+  "a_max": "zee",
+  "a_minlen": "eks",
+  "a_maxlen": "zee",
+  "a_median": "pan",
+  "a_ps": {
+    "0": "eks",
+    "1": "eks",
+    "10": "eks",
+    "25": "hat",
+    "50": "pan",
+    "75": "wye",
+    "90": "zee",
+    "99": "zee",
+    "100": "zee"
+  },
+  "a_psi": {
+    "0": (error),
+    "1": (error),
+    "10": (error),
+    "25": (error),
+    "50": (error),
+    "75": (error),
+    "90": (error),
+    "99": (error),
+    "100": "zee"
+  },
+  "a_psa": ["eks", "eks", "eks", "hat", "pan", "wye", "zee", "zee", "zee"],
+  "a_psia": [(error), (error), (error), (error), (error), (error), (error), (error), "zee"],
+  "m_min": "eks",
+  "m_max": "zee",
+  "m_minlen": "eks",
+  "m_maxlen": "zee",
+  "m_median": "pan",
+  "m_ps": {
+    "0": "eks",
+    "1": "eks",
+    "10": "eks",
+    "25": "hat",
+    "50": "pan",
+    "75": "wye",
+    "90": "zee",
+    "99": "zee",
+    "100": "zee"
+  },
+  "m_psi": {
+    "0": (error),
+    "1": (error),
+    "10": (error),
+    "25": (error),
+    "50": (error),
+    "75": (error),
+    "90": (error),
+    "99": (error),
+    "100": "zee"
+  },
+  "m_psa": ["eks", "eks", "eks", "hat", "pan", "wye", "zee", "zee", "zee"],
+  "m_psia": [(error), (error), (error), (error), (error), (error), (error), (error), "zee"]
+}
+]
