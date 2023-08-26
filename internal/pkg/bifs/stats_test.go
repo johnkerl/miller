@@ -83,52 +83,56 @@ func TestBIF_null_count(t *testing.T) {
 
 }
 
-// XXX
-//func TestBIF_mode(t *testing.T) {
-//	// Needs array or map
-//	input := mlrval.FromInt(3)
-//	output := BIF_count(input)
-//	assert.True(t, output.IsError())
-//
-//	// TODO: check empty array/map
-//
-//	input = mlrval.FromArray([]*mlrval.Mlrval{
-//		mlrval.FromInt(1),
-//		mlrval.FromInt(2),
-//		mlrval.FromInt(3),
-//		mlrval.FromInt(1),
-//		mlrval.FromInt(1),
-//		mlrval.FromInt(2),
-//	})
-//	// XXX eff, strings :(
-//	assert.True(t, mlrval.Equals(BIF_mode(input), mlrval.FromInt(1)))
-//
-//	input = array_to_map_for_test(input)
-//	assert.True(t, mlrval.Equals(BIF_mode(input), mlrval.FromInt(1)))
-//}
-//
-//func TestBIF_antimode(t *testing.T) {
-//	// Needs array or map
-//	input := mlrval.FromInt(3)
-//	output := BIF_count(input)
-//	assert.True(t, output.IsError())
-//
-//	// TODO: check empty array/map
-//
-//	input = mlrval.FromArray([]*mlrval.Mlrval{
-//		mlrval.FromInt(1),
-//		mlrval.FromInt(2),
-//		mlrval.FromInt(3),
-//		mlrval.FromInt(1),
-//		mlrval.FromInt(1),
-//		mlrval.FromInt(2),
-//	})
-//	// XXX eff, strings :(
-//	assert.True(t, mlrval.Equals(BIF_antimode(input), mlrval.FromInt(1)))
-//
-//	input = array_to_map_for_test(input)
-//	assert.True(t, mlrval.Equals(BIF_antimode(input), mlrval.FromInt(1)))
-//}
+func TestBIF_mode_and_antimode(t *testing.T) {
+	// Needs array or map
+	input := mlrval.FromInt(3)
+	output := BIF_count(input)
+	assert.True(t, output.IsError())
+
+	// Empty array
+	input = mlrval.FromArray([]*mlrval.Mlrval{})
+	assert.True(t, mlrval.Equals(BIF_mode(input), mlrval.VOID))
+	assert.True(t, mlrval.Equals(BIF_antimode(input), mlrval.VOID))
+
+	// Empty map
+	input = array_to_map_for_test(input)
+	assert.True(t, mlrval.Equals(BIF_mode(input), mlrval.VOID))
+	assert.True(t, mlrval.Equals(BIF_antimode(input), mlrval.VOID))
+
+	// Clear winner as array
+	input = mlrval.FromArray([]*mlrval.Mlrval{
+		mlrval.FromInt(1),
+		mlrval.FromInt(2),
+		mlrval.FromInt(3),
+		mlrval.FromInt(1),
+		mlrval.FromInt(1),
+		mlrval.FromInt(2),
+	})
+	assert.True(t, mlrval.Equals(BIF_mode(input), mlrval.FromInt(1)))
+	assert.True(t, mlrval.Equals(BIF_antimode(input), mlrval.FromInt(3)))
+
+	// Clear winner as map
+	input = array_to_map_for_test(input)
+	assert.True(t, mlrval.Equals(BIF_mode(input), mlrval.FromInt(1)))
+	assert.True(t, mlrval.Equals(BIF_antimode(input), mlrval.FromInt(3)))
+
+	// Ties as array -- first-found breaks the tie
+	input = mlrval.FromArray([]*mlrval.Mlrval{
+		mlrval.FromInt(1),
+		mlrval.FromInt(1),
+		mlrval.FromInt(1),
+		mlrval.FromInt(2),
+		mlrval.FromInt(2),
+		mlrval.FromInt(2),
+	})
+	assert.True(t, mlrval.Equals(BIF_mode(input), mlrval.FromInt(1)))
+	assert.True(t, mlrval.Equals(BIF_antimode(input), mlrval.FromInt(1)))
+
+	// Clear winner as map
+	input = array_to_map_for_test(input)
+	assert.True(t, mlrval.Equals(BIF_mode(input), mlrval.FromInt(1)))
+	assert.True(t, mlrval.Equals(BIF_antimode(input), mlrval.FromInt(1)))
+}
 
 func TestBIF_sum(t *testing.T) {
 	// Needs array or map

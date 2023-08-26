@@ -152,9 +152,10 @@ func BIF_finalize_kurtosis(mn, msum, msum2, msum3, msum4 *mlrval.Mlrval) *mlrval
 }
 
 // ================================================================
-// XXX TEMP
+// STATS ROUTINES -- other than min/max which are placed separately.
 
-// XXX COMMENT
+// This is a helper function for BIFs which operate only on array or map.
+// It shorthands what values to return for non-collection inputs.
 func check_collection(c *mlrval.Mlrval) (bool, *mlrval.Mlrval) {
 	vtype := c.Type()
 	switch vtype {
@@ -242,11 +243,11 @@ func BIF_distinct_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_mode(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	return bif_mode_or_antimode(collection, func(a,b int) bool { return a > b })
+	return bif_mode_or_antimode(collection, func(a, b int) bool { return a > b })
 }
 
 func BIF_antimode(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	return bif_mode_or_antimode(collection, func(a,b int) bool { return a < b })
+	return bif_mode_or_antimode(collection, func(a, b int) bool { return a < b })
 }
 
 func bif_mode_or_antimode(
@@ -257,31 +258,61 @@ func bif_mode_or_antimode(
 	if !ok {
 		return value_if_not
 	}
-	counts := make(map[string]int)
+
+	// Do not use a Go map[string]int as that makes the output in the case of ties
+	// (e.g. input = [3,3,4,4]) non-determinstic. That's bad for unit tests and also
+	// simply bad UX.
+	counts := lib.NewOrderedMap()
+
+	// We use stringification to detect uniqueness. Yet we want the output to be typed,
+	// e.g. mode of an array of ints should be an int, not a string. Here we store
+	// a reference to one representative for each equivalence class.
+	reps := lib.NewOrderedMap()
+
 	if collection.IsArray() {
 		a := collection.AcquireArrayValue()
+		if len(a) == 0 {
+			return mlrval.VOID
+		}
 		for _, e := range a {
 			valueString := e.OriginalString()
-			counts[valueString] += 1
+			if counts.Has(valueString) {
+				counts.Put(valueString, counts.Get(valueString).(int)+1)
+			} else {
+				counts.Put(valueString, 1)
+				reps.Put(valueString, e)
+			}
 		}
 	} else {
 		m := collection.AcquireMapValue()
+		if m.Head == nil {
+			return mlrval.VOID
+		}
 		for pe := m.Head; pe != nil; pe = pe.Next {
 			valueString := pe.Value.OriginalString()
-			counts[valueString] += 1
+			if counts.Has(valueString) {
+				counts.Put(valueString, counts.Get(valueString).(int)+1)
+			} else {
+				counts.Put(valueString, 1)
+				reps.Put(valueString, pe.Value)
+			}
 		}
 	}
 	first := true
 	maxk := ""
 	maxv := -1
-	for k, v := range counts {
+	for pf := counts.Head; pf != nil; pf = pf.Next {
+		k := pf.Key
+		v := pf.Value.(int)
 		if first || cmp(v, maxv) {
 			maxk = k
 			maxv = v
 			first = false
 		}
 	}
-	return mlrval.FromString(maxk)
+	// OrderedMap has interface{} values, so dereference as Mlrval. Then, copy the Mlrval
+	// so we're not returning a pointer to input data.
+	return reps.Get(maxk).(*mlrval.Mlrval).Copy()
 }
 
 func BIF_sum(collection *mlrval.Mlrval) *mlrval.Mlrval {
@@ -601,11 +632,3 @@ func bif_percentiles(
 		return mlrval.FromMap(m)
 	}
 }
-
-// ================================================================
-// TODO:
-// * mode & antimode ... doing strings ... :|
-// * mode ties are non-deterministic ... fix that ...
-// * olh: min/max recurse but other stats funcs do not
-
-// * also: str contains ... but extend to arrays? or nah?
