@@ -34,7 +34,7 @@ GENMD-RUN-COMMAND
 mlr sort -nr a data/sort-null.dat
 GENMD-EOF
 
-* Functions/operators which have one or more *empty* arguments produce empty output: e.g.
+* Most functions/operators which have one or more *empty* arguments produce empty output: e.g.
 
 GENMD-RUN-COMMAND
 echo 'x=2,y=3' | mlr put '$a=$x+$y'
@@ -52,6 +52,33 @@ with the exception that the `min` and `max` functions are special: if one argume
 
 GENMD-RUN-COMMAND
 echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'
+GENMD-EOF
+
+Likewise, empty works like 0 for addition and subtraction, and multiplication:
+
+GENMD-RUN-COMMAND
+echo 'x=,y=3' | mlr put '$a = $x + $y; $b = $x - $y; $c = $x * $y'
+GENMD-EOF
+
+This is intended to follow the arithmetic rule for absent data (explained next). In particular:
+
+* For file formats allowing for heterogeneity in keys, e.g. JSON, you should be able to keep a running sum of some field, say `$x`. If a given record doesn't have `$x`, then `$x` will be absent for that record, and the sum should simply continue.
+* For CSV and TSV, which don't allow for hetrogeneity in keys, the _only_ way a value can be missing is to be empty.  Here, if a given record doesn't have `$x`, then `$x` will be empty for that record, and the sum should simply continue.
+
+GENMD-RUN-COMMAND
+cat missings.json
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --ijson --from missings.json put -q 'begin { @sum = 0 } @sum += $x; end { print @sum }'
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat missings.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --from missings.csv put -q 'begin { @sum = 0 } @sum += $x; end { print @sum }'
 GENMD-EOF
 
 * Functions of *absent* variables (e.g. `mlr put '$y = log10($nonesuch)'`) evaluate to absent, and arithmetic/bitwise/boolean operators with both operands being absent evaluate to absent. Arithmetic operators with one absent operand return the other operand. More specifically, absent values act like zero for addition/subtraction, and one for multiplication: Furthermore, **any expression which evaluates to absent is not stored in the left-hand side of an assignment statement**:

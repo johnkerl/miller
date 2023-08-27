@@ -486,6 +486,7 @@ func helpTypeArithmeticInfo() {
 	mlrvals := []*mlrval.Mlrval{
 		mlrval.FromInt(1),
 		mlrval.FromFloat(2.5),
+		mlrval.VOID,
 		mlrval.ABSENT,
 		mlrval.ERROR,
 	}
@@ -497,17 +498,27 @@ func helpTypeArithmeticInfo() {
 			fmt.Printf("%-10s |", "(+)")
 		} else if i == -1 {
 			fmt.Printf("%-10s +", "------")
+		} else if mlrvals[i].IsVoid() {
+			fmt.Printf("%-10s |", "(empty)")
 		} else {
 			fmt.Printf("%-10s |", mlrvals[i].String())
 		}
 		for j := 0; j < n; j++ {
 			if i == -2 {
-				fmt.Printf(" %-10s", mlrvals[j].String())
+				if mlrvals[j].IsVoid() {
+					fmt.Printf("%-10s", "(empty)")
+				} else {
+					fmt.Printf(" %-10s", mlrvals[j].String())
+				}
 			} else if i == -1 {
 				fmt.Printf(" %-10s", "------")
 			} else {
 				sum := bifs.BIF_plus_binary(mlrvals[i], mlrvals[j])
-				fmt.Printf(" %-10s", sum.String())
+				if sum.IsVoid() {
+					fmt.Printf(" %-10s", "(empty)")
+				} else {
+					fmt.Printf(" %-10s", sum.String())
+				}
 			}
 		}
 		fmt.Println()
