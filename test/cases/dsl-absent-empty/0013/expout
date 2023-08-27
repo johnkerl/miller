@@ -1,6 +1,6 @@
 x=int,y=int,z=int
-x=int,y=empty,z=empty
-x=empty,y=int,z=empty
+x=int,y=empty,z=int
+x=empty,y=int,z=int
 x=empty,y=empty,z=empty
 a=1,y=int,z=int,x=absent
 a=1,y=empty,x=absent,z=absent

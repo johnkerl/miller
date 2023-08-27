@@ -106,6 +106,11 @@ func _zero1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(0)
 }
 
+// Return one (unary)
+func __one1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(1)
+}
+
 // Return null (unary)
 func _null1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.NULL

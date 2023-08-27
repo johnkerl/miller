@@ -1,6 +1,6 @@
 x=1	y=2	xy=2	sy=2	xt=1
-x=1	y=	xy=	xt=1
-x=	y=2	xy=	sy=2
+x=1	y=	xy=1	xt=1
+x=	y=2	xy=2	sy=2
 x=	y=	xy=
 a=1	y=2	xy=2	sy=2
 a=1	y=
