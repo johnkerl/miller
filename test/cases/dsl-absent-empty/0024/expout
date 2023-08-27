@@ -1,4 +1,4 @@
 x=1	xtype=int	sum=11	stype=int
-x=	xtype=empty	sum=	stype=empty
+x=	xtype=empty	sum=10	stype=int
 y=	xtype=absent	sum=10	stype=int
 x=7	xtype=int	sum=17	stype=int

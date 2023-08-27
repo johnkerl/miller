@@ -93,7 +93,7 @@ a=1,b=8
 x=9,b=10
 </pre>
 
-* Functions/operators which have one or more *empty* arguments produce empty output: e.g.
+* Most functions/operators which have one or more *empty* arguments produce empty output: e.g.
 
 <pre class="pre-highlight-in-pair">
 <b>echo 'x=2,y=3' | mlr put '$a=$x+$y'</b>
@@ -106,7 +106,7 @@ x=2,y=3,a=5
 <b>echo 'x=,y=3' | mlr put '$a=$x+$y'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-x=,y=3,a=
+x=,y=3,a=3
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -123,6 +123,55 @@ with the exception that the `min` and `max` functions are special: if one argume
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x=,y=3,a=3,b=
+</pre>
+
+Likewise, empty works like 0 for addition and subtraction, and multiplication:
+
+<pre class="pre-highlight-in-pair">
+<b>echo 'x=,y=3' | mlr put '$a = $x + $y; $b = $x - $y; $c = $x * $y'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+x=,y=3,a=3,b=-3,c=3
+</pre>
+
+This is intended to follow the arithmetic rule for absent data (explained next). In particular:
+
+* For file formats allowing for heterogeneity in keys, e.g. JSON, you should be able to keep a running sum of some field, say `$x`. If a given record doesn't have `$x`, then `$x` will be absent for that record, and the sum should simply continue.
+* For CSV and TSV, which don't allow for hetrogeneity in keys, the _only_ way a value can be missing is to be empty.  Here, if a given record doesn't have `$x`, then `$x` will be empty for that record, and the sum should simply continue.
+
+<pre class="pre-highlight-in-pair">
+<b>cat missings.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+  { "a": "red",   "x": 7 },
+  { "a": "green", "z": 242, "w": "zdatsyg" },
+  { "a": "blue",  "x": 9 }
+]
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --from missings.json put -q 'begin { @sum = 0 } @sum += $x; end { print @sum }'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+16
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>cat missings.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,x,z,w
+red,7,,
+green,,242,zdatsyg
+blue,9,,
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --from missings.csv put -q 'begin { @sum = 0 } @sum += $x; end { print @sum }'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+16
 </pre>
 
 * Functions of *absent* variables (e.g. `mlr put '$y = log10($nonesuch)'`) evaluate to absent, and arithmetic/bitwise/boolean operators with both operands being absent evaluate to absent. Arithmetic operators with one absent operand return the other operand. More specifically, absent values act like zero for addition/subtraction, and one for multiplication: Furthermore, **any expression which evaluates to absent is not stored in the left-hand side of an assignment statement**:
@@ -144,8 +193,6 @@ x=2,y=3,a=2,b=3
 * Likewise, for assignment to maps, **absent-valued keys or values result in a skipped assignment**.
 
 The reasoning is as follows:
-
-* Empty values are explicit in the data so they should explicitly affect accumulations: `mlr put '@sum += $x'` should accumulate numeric `x` values into the sum but an empty `x`, when encountered in the input data stream, should make the sum non-numeric. To work around this you can use the `is_not_null` function as follows: `mlr put 'is_not_null($x) { @sum += $x }'`
 
 * Absent stream-record values should not break accumulations, since Miller by design handles heterogeneous data: the running `@sum` in `mlr put '@sum += $x'` should not be invalidated for records which have no `x`.
 
@@ -198,10 +245,11 @@ If you're interested in a formal description of how empty and absent fields part
 <b>mlr help type-arithmetic-info</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-(+)        | 1          2.5        (absent)   (error)   
-------     + ------     ------     ------     ------    
-1          | 2          3.5        1          (error)   
-2.5        | 3.5        5          2.5        (error)   
-(absent)   | 1          2.5        (absent)   (error)   
-(error)    | (error)    (error)    (error)    (error)   
+(+)        | 1          2.5       (empty)    (absent)   (error)   
+------     + ------     ------     ------     ------     ------    
+1          | 2          3.5        1          1          (error)   
+2.5        | 3.5        5          2.5        2.5        (error)   
+(empty)    | 1          2.5        (empty)    (absent)   (error)   
+(absent)   | 1          2.5        (absent)   (absent)   (error)   
+(error)    | (error)    (error)    (error)    (error)    (error)   
 </pre>
