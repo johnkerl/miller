@@ -194,8 +194,6 @@ x=2,y=3,a=2,b=3
 
 The reasoning is as follows:
 
-* Empty values are explicit in the data so they should explicitly affect accumulations: `mlr put '@sum += $x'` should accumulate numeric `x` values into the sum but an empty `x`, when encountered in the input data stream, should make the sum non-numeric. To work around this you can use the `is_not_null` function as follows: `mlr put 'is_not_null($x) { @sum += $x }'`
-
 * Absent stream-record values should not break accumulations, since Miller by design handles heterogeneous data: the running `@sum` in `mlr put '@sum += $x'` should not be invalidated for records which have no `x`.
 
 * Absent out-of-stream-variable values are precisely what allow you to write `mlr put '@sum += $x'`. Otherwise you would have to write `mlr put 'begin{@sum = 0}; @sum += $x'` -- which is tolerable -- but for `mlr put 'begin{...}; @sum[$a][$b] += $x'` you'd have to pre-initialize `@sum` for all values of `$a` and `$b` in your input data stream, which is intolerable.
