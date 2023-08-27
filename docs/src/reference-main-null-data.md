@@ -106,7 +106,7 @@ x=2,y=3,a=5
 <b>echo 'x=,y=3' | mlr put '$a=$x+$y'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-x=,y=3,a=
+x=,y=3,a=3
 </pre>
 
 <pre class="pre-highlight-in-pair">
