@@ -15,6 +15,7 @@ package output
 import (
 	"bufio"
 	"container/list"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -213,10 +214,11 @@ type FileOutputHandler struct {
 	// lazily created on WriteRecord. The record-writer / channel parts are
 	// called only by WriteRecrod which is called by emit and tee variants;
 	// print and dump variants call WriteString.
-	recordWriterOptions *cli.TWriterOptions
-	recordWriter        IRecordWriter
-	recordOutputChannel chan *list.List // list of *types.RecordAndContext
-	recordDoneChannel   chan bool
+	recordWriterOptions  *cli.TWriterOptions
+	recordWriter         IRecordWriter
+	recordOutputChannel  chan *list.List // list of *types.RecordAndContext
+	recordDoneChannel    chan bool
+	recordErroredChannel chan bool
 }
 
 func newOutputHandlerCommon(
@@ -231,10 +233,11 @@ func newOutputHandlerCommon(
 		bufferedOutputStream: bufio.NewWriter(handle),
 		closeable:            closeable,
 
-		recordWriterOptions: recordWriterOptions,
-		recordWriter:        nil,
-		recordOutputChannel: nil,
-		recordDoneChannel:   nil,
+		recordWriterOptions:  recordWriterOptions,
+		recordWriter:         nil,
+		recordOutputChannel:  nil,
+		recordDoneChannel:    nil,
+		recordErroredChannel: nil,
 	}
 }
 
@@ -368,12 +371,14 @@ func (handler *FileOutputHandler) setUpRecordWriter() error {
 
 	handler.recordOutputChannel = make(chan *list.List, 1) // list of *types.RecordAndContext
 	handler.recordDoneChannel = make(chan bool, 1)
+	handler.recordErroredChannel = make(chan bool, 1)
 
 	go ChannelWriter(
 		handler.recordOutputChannel,
 		handler.recordWriter,
 		handler.recordWriterOptions,
 		handler.recordDoneChannel,
+		handler.recordErroredChannel,
 		handler.bufferedOutputStream,
 		false, // outputIsStdout
 	)
@@ -382,7 +387,9 @@ func (handler *FileOutputHandler) setUpRecordWriter() error {
 }
 
 // ----------------------------------------------------------------
-func (handler *FileOutputHandler) Close() error {
+func (handler *FileOutputHandler) Close() (retval error) {
+	retval = nil
+
 	if handler.recordOutputChannel != nil {
 		// TODO: see if we need a real context
 		emptyContext := types.Context{}
@@ -392,6 +399,10 @@ func (handler *FileOutputHandler) Close() error {
 		done := false
 		for !done {
 			select {
+			case _ = <-handler.recordErroredChannel:
+				done = true
+				retval = errors.New("exiting due to data error") // details already printed
+				break
 			case _ = <-handler.recordDoneChannel:
 				done = true
 				break
@@ -399,10 +410,14 @@ func (handler *FileOutputHandler) Close() error {
 		}
 	}
 
+	if retval != nil {
+		return retval
+	}
+
 	handler.bufferedOutputStream.Flush()
 	if handler.closeable {
 		return handler.handle.Close()
-	} else {
+	} else { // e.g. stdout
 		return nil
 	}
 }

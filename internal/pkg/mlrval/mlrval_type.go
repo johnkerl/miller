@@ -56,6 +56,7 @@ package mlrval
 type Mlrval struct {
 	printrep      string
 	intf          interface{}
+	err           error // Payload for MT_ERROR types
 	printrepValid bool
 	// Enumeration for string / int / float / boolean / etc.
 	// I would call this "type" not "mvtype" but "type" is a keyword in Go.

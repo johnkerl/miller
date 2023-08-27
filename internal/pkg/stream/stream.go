@@ -3,6 +3,7 @@ package stream
 import (
 	"bufio"
 	"container/list"
+	"errors"
 	"io"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
@@ -67,8 +68,9 @@ func Stream(
 	// We're done when a fatal error is registered on input (file not found,
 	// etc) or when the record-writer has written all its output. We use
 	// channels to communicate both of these conditions.
-	errorChannel := make(chan error, 1)
+	inputErrorChannel := make(chan error, 1)
 	doneWritingChannel := make(chan bool, 1)
+	erroredWritingChannel := make(chan bool, 1)
 
 	// For mlr head, so a transformer can communicate it will disregard all
 	// further input.  It writes this back upstream, and that is passed back to
@@ -81,17 +83,22 @@ func Stream(
 	// error or end-of-processing happens.
 	bufferedOutputStream := bufio.NewWriter(outputStream)
 
-	go recordReader.Read(fileNames, *initialContext, readerChannel, errorChannel, readerDownstreamDoneChannel)
+	go recordReader.Read(fileNames, *initialContext, readerChannel, inputErrorChannel, readerDownstreamDoneChannel)
 	go transformers.ChainTransformer(readerChannel, readerDownstreamDoneChannel, recordTransformers,
 		writerChannel, options)
 	go output.ChannelWriter(writerChannel, recordWriter, &options.WriterOptions, doneWritingChannel,
-		bufferedOutputStream, outputIsStdout)
+		erroredWritingChannel, bufferedOutputStream, outputIsStdout)
 
+	var retval error
 	done := false
 	for !done {
 		select {
-		case err := <-errorChannel:
-			return err
+		case ierr := <-inputErrorChannel:
+			retval = ierr
+			break
+		case _ = <-erroredWritingChannel:
+			retval = errors.New("exiting due to data error") // details already printed
+			break
 		case _ = <-doneWritingChannel:
 			done = true
 			break
@@ -100,5 +107,5 @@ func Stream(
 
 	bufferedOutputStream.Flush()
 
-	return nil
+	return retval
 }
