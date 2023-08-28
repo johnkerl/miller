@@ -1,0 +1,8 @@
+abc abc true
+abc  true
+  true
+ abc false
+abcde abc true
+123 3 true
+123 34 false
+123 23 true
