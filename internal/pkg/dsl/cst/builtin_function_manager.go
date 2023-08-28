@@ -546,9 +546,21 @@ Arrays are new in Miller 6; the substr function is older.`,
 			binaryFunc: bifs.BIF_index,
 			examples: []string{
 				`index("abcde", "e") gives 5`,
-				`index("abcde", "x") gives 01`,
+				`index("abcde", "x") gives -1`,
 				`index(12345, 34) gives 3`,
 				`index("forêt", "t") gives 5`,
+			},
+		},
+		{
+			name:       "contains",
+			class:      FUNC_CLASS_STRING,
+			help:       `Returns true if the first argument contains the second as a substring. This is like saying ` + "`index(arg1, arg2) >= 0`" + `but with less keystroking.`,
+			binaryFunc: bifs.BIF_contains,
+			examples: []string{
+				`contains("abcde", "e") gives true`,
+				`contains("abcde", "x") gives false`,
+				`contains(12345, 34) gives true`,
+				`contains("forêt", "ê") gives true`,
 			},
 		},
 
