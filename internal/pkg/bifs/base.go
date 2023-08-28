@@ -48,6 +48,8 @@
 package bifs
 
 import (
+	"fmt"
+
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
@@ -91,6 +93,19 @@ type ComparatorFunc func(*mlrval.Mlrval, *mlrval.Mlrval) int
 // reasonable rectangular even after gofmt has been run.
 
 // ----------------------------------------------------------------
+// Type error for unary functions
+func _type_error_unary(funcname string, input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromError(
+		fmt.Errorf(
+			"%s: unacceptable type (%s) with value (%s)",
+			funcname,
+			input1.GetTypeName(),
+			input1.String(),
+		),
+	)
+}
+
+// ----------------------------------------------------------------
 // Return error (unary)
 func _erro1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.ERROR
@@ -127,6 +142,20 @@ func _1u___(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // ----------------------------------------------------------------
+// Type error for binary functions
+func _type_error_binary(funcname string, input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromError(
+		fmt.Errorf(
+			"%s: unacceptable types (%s, %s) with values (%s, %s)",
+			funcname,
+			input1.GetTypeName(),
+			input2.GetTypeName(),
+			input1.String(),
+			input2.String(),
+		),
+	)
+}
+
 // Return error (binary)
 func _erro(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.ERROR

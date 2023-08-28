@@ -5,8 +5,6 @@
 package mlrval
 
 import (
-	//"errors"
-
 	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
@@ -27,6 +25,15 @@ func FromDeferredType(input string) *Mlrval {
 	return &Mlrval{
 		mvtype:        MT_PENDING,
 		printrep:      input,
+		printrepValid: true,
+	}
+}
+
+func FromError(err error) *Mlrval {
+	return &Mlrval{
+		mvtype:        MT_ERROR,
+		err:           err,
+		printrep:      ERROR_PRINTREP,
 		printrepValid: true,
 	}
 }
