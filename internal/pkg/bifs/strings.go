@@ -150,6 +150,20 @@ func BIF_index(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // ================================================================
+// contains(string, substring) returns true if string contains substring, else false.
+
+func BIF_contains(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.IsAbsent() {
+		return mlrval.ABSENT
+	}
+	if input1.IsError() {
+		return mlrval.ERROR
+	}
+
+	return mlrval.FromBool(strings.Contains(input1.String(), input2.String()))
+}
+
+// ================================================================
 func BIF_truncate(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
