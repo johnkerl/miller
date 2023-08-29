@@ -89,6 +89,13 @@ func (repl *Repl) handleDSLStringAux(
 		filterExpression := repl.runtimeState.FilterExpression
 		if filterExpression.IsNull() {
 			// nothing to print
+		} else if filterExpression.IsError() {
+			_, err := filterExpression.GetError()
+			if err == nil { // No supporting information
+				fmt.Printf("\"%s\"\n", filterExpression.String())
+			} else {
+				fmt.Printf("%v\n", err)
+			}
 		} else if filterExpression.IsStringOrVoid() {
 			fmt.Printf("\"%s\"\n", filterExpression.String())
 		} else {
