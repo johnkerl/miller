@@ -106,11 +106,6 @@ func _type_error_unary(funcname string, input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // ----------------------------------------------------------------
-// Return error (unary)
-func _erro1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.ERROR
-}
-
 // Return absent (unary)
 func _absn1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.ABSENT
@@ -154,11 +149,6 @@ func _type_error_binary(funcname string, input1, input2 *mlrval.Mlrval) *mlrval.
 			input2.String(),
 		),
 	)
-}
-
-// Return error (binary)
-func _erro(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.ERROR
 }
 
 // Return absent (binary)

@@ -65,6 +65,10 @@ func depth_from_scalar(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 // if this is defined statically. So, we use a "package init" function.
 var depth_dispositions = [mlrval.MT_DIM]UnaryFunc{}
 
+func depth_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return _type_error_unary("depth", input1)
+}
+
 func init() {
 	depth_dispositions = [mlrval.MT_DIM]UnaryFunc{
 		/*INT    */ depth_from_scalar,
@@ -74,8 +78,8 @@ func init() {
 		/*STRING */ depth_from_scalar,
 		/*ARRAY  */ depth_from_array,
 		/*MAP    */ depth_from_map,
-		/*FUNC   */ _erro1,
-		/*ERROR  */ _erro1,
+		/*FUNC   */ depth_te,
+		/*ERROR  */ depth_te,
 		/*NULL   */ _zero1,
 		/*ABSENT */ _absn1,
 	}
@@ -134,6 +138,10 @@ func leafcount_from_scalar(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(1)
 }
 
+func leafcount_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return _type_error_unary("leafcount", input1)
+}
+
 var leafcount_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*INT    */ leafcount_from_scalar,
 	/*FLOAT  */ leafcount_from_scalar,
@@ -142,8 +150,8 @@ var leafcount_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*STRING */ leafcount_from_scalar,
 	/*ARRAY  */ leafcount_from_array,
 	/*MAP    */ leafcount_from_map,
-	/*FUNC   */ _erro1,
-	/*ERROR  */ _erro1,
+	/*FUNC   */ leafcount_te,
+	/*ERROR  */ leafcount_te,
 	/*NULL   */ _zero1,
 	/*ABSENT */ _absn1,
 }
