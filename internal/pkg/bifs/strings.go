@@ -13,7 +13,7 @@ import (
 // ================================================================
 func BIF_strlen(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return _type_error_unary("strlen", input1)
 	} else {
 		return mlrval.FromInt(lib.UTF8Strlen(input1.AcquireStringValue()))
 	}
@@ -74,7 +74,7 @@ func BIF_substr_1_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ABSENT
 	}
 	if input1.IsError() {
-		return mlrval.ERROR
+		return _type_error_unary("substr1", input1)
 	}
 	sinput := input1.String()
 
@@ -106,7 +106,7 @@ func BIF_substr_0_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ABSENT
 	}
 	if input1.IsError() {
-		return mlrval.ERROR
+		return _type_error_unary("substr0", input1)
 	}
 	sinput := input1.String()
 
@@ -138,7 +138,7 @@ func BIF_index(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ABSENT
 	}
 	if input1.IsError() {
-		return mlrval.ERROR
+		return _type_error_unary("index", input1)
 	}
 	sinput1 := input1.String()
 	sinput2 := input2.String()
@@ -176,13 +176,13 @@ func BIF_truncate(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return input2
 	}
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return _type_error_unary("truncate", input1)
 	}
 	if !input2.IsInt() {
-		return mlrval.ERROR
+		return _type_error_unary("truncate", input2)
 	}
 	if input2.AcquireIntValue() < 0 {
-		return mlrval.ERROR
+		return _type_error_unary("truncate", input2)
 	}
 
 	// Handle UTF-8 correctly: len(input1.AcquireStringValue()) will count bytes, not runes.
@@ -209,7 +209,7 @@ func BIF_leftpad(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 
 	if !input2.IsInt() {
-		return mlrval.ERROR
+		return _type_error_unary("leftpad", input2)
 	}
 
 	inputString := input1.String()
@@ -242,7 +242,7 @@ func BIF_rightpad(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 
 	if !input2.IsInt() {
-		return mlrval.ERROR
+		return _type_error_unary("rightpad", input2)
 	}
 
 	inputString := input1.String()
@@ -357,7 +357,7 @@ func BIF_format(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	}
 	formatString, ok := mlrvals[0].GetStringValue()
 	if !ok { // not a string
-		return mlrval.ERROR
+		return _type_error_unary("format", mlrvals[0])
 	}
 
 	pieces := lib.SplitString(formatString, "{}")
@@ -409,11 +409,11 @@ func BIF_unformatx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 func bif_unformat_aux(input1, input2 *mlrval.Mlrval, inferTypes bool) *mlrval.Mlrval {
 	template, ok1 := input1.GetStringValue()
 	if !ok1 {
-		return mlrval.ERROR
+		return _type_error_unary("unformat", input1)
 	}
 	input, ok2 := input2.GetStringValue()
 	if !ok2 {
-		return mlrval.ERROR
+		return _type_error_unary("unformat", input2)
 	}
 
 	templatePieces := strings.Split(template, "{}")
@@ -470,7 +470,7 @@ func BIF_hexfmt(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 // ----------------------------------------------------------------
 func fmtnum_is(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return _type_error_unary("fmtnum", input2)
 	}
 	formatString := input2.AcquireStringValue()
 	formatter, err := mlrval.GetFormatter(formatString)
@@ -483,7 +483,7 @@ func fmtnum_is(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func fmtnum_fs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return _type_error_unary("fmtnum", input2)
 	}
 	formatString := input2.AcquireStringValue()
 	formatter, err := mlrval.GetFormatter(formatString)
@@ -496,7 +496,7 @@ func fmtnum_fs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func fmtnum_bs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return _type_error_unary("fmtnum", input2)
 	}
 	formatString := input2.AcquireStringValue()
 	formatter, err := mlrval.GetFormatter(formatString)
