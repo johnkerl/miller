@@ -72,7 +72,7 @@ type RegexCaptureBinaryFunc func(input *mlrval.Mlrval, sregex *mlrval.Mlrval) (*
 // Helps keystroke-saving for wrapping Go math-library functions
 // Examples: cos, sin, etc.
 type mathLibUnaryFunc func(float64) float64
-type mathLibUnaryFuncWrapper func(input1 *mlrval.Mlrval, f mathLibUnaryFunc) *mlrval.Mlrval
+type mathLibUnaryFuncWrapper func(input1 *mlrval.Mlrval, f mathLibUnaryFunc, fname string) *mlrval.Mlrval
 
 // Function-pointer type for binary-operator disposition matrices.
 type BinaryFunc func(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval
