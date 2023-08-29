@@ -44,6 +44,16 @@ func (mv *Mlrval) OriginalString() string {
 	}
 }
 
+// StringMaybeQuoted Returns strings double-quoted; all else not.
+func (mv *Mlrval) StringMaybeQuoted() string {
+	output := mv.String()
+	if mv.mvtype == MT_VOID || mv.mvtype == MT_STRING {
+		return `"` + output + `"`
+	} else {
+		return output
+	}
+}
+
 // See mlrval.go for more about JIT-formatting of string backings
 func (mv *Mlrval) setPrintRep() {
 	if !mv.printrepValid {

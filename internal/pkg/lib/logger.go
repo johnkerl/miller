@@ -31,9 +31,11 @@ func InternalCodingErrorIf(condition bool) {
 			"(unknown)",
 		)
 	}
-	// Uncomment this and re-run if you want to get a stack trace to get the
+	// Use this and re-run if you want to get a stack trace to get the
 	// call-tree that led to the indicated file/line:
-	// panic("eek")
+	if os.Getenv("MLR_PANIC_ON_INTERNAL_ERROR") != "" {
+		panic("Here is the stack trace")
+	}
 	os.Exit(1)
 }
 
@@ -61,9 +63,11 @@ func InternalCodingErrorWithMessageIf(condition bool, message string) {
 			message,
 		)
 	}
-	// Uncomment this and re-run if you want to get a stack trace to get the
+	// use this and re-run if you want to get a stack trace to get the
 	// call-tree that led to the indicated file/line:
-	// panic("eek")
+	if os.Getenv("MLR_PANIC_ON_INTERNAL_ERROR") != "" {
+		panic("Here is the stack trace")
+	}
 	os.Exit(1)
 }
 

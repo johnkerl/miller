@@ -97,10 +97,10 @@ type ComparatorFunc func(*mlrval.Mlrval, *mlrval.Mlrval) int
 func _type_error_unary(funcname string, input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromError(
 		fmt.Errorf(
-			"%s: unacceptable type (%s) with value (%s)",
+			"%s: unacceptable type %s with value %s",
 			funcname,
 			input1.GetTypeName(),
-			input1.String(),
+			input1.StringMaybeQuoted(),
 		),
 	)
 }
@@ -141,12 +141,12 @@ func _1u___(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 func _type_error_binary(funcname string, input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromError(
 		fmt.Errorf(
-			"%s: unacceptable types (%s, %s) with values (%s, %s)",
+			"%s: unacceptable types %s, %s with values %s, %s",
 			funcname,
 			input1.GetTypeName(),
 			input2.GetTypeName(),
-			input1.String(),
-			input2.String(),
+			input1.StringMaybeQuoted(),
+			input2.StringMaybeQuoted(),
 		),
 	)
 }
@@ -272,4 +272,22 @@ func recurseBinaryFuncOnInput1(binaryFunc BinaryFunc, input1, input2 *mlrval.Mlr
 	} else {
 		return binaryFunc(input1, input2)
 	}
+}
+
+func type_error_named_argument(
+	funcname string,
+	expected_type_name string,
+	varname string,
+	varval *mlrval.Mlrval,
+) *mlrval.Mlrval {
+	return mlrval.FromError(
+		fmt.Errorf(
+			"%s: %s should be a %s; got type %s with value %s",
+			funcname,
+			varname,
+			expected_type_name,
+			varval.GetTypeName(),
+			varval.StringMaybeQuoted(),
+		),
+	)
 }
