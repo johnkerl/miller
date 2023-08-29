@@ -252,6 +252,10 @@ func BIF_roundm(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // ================================================================
+func logifit_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return _type_error_binary("logifit", input1, input2)
+}
+
 func BIF_logifit(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsLegit() {
 		return input1
@@ -266,15 +270,15 @@ func BIF_logifit(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	// int/float OK; rest not
 	x, xok := input1.GetNumericToFloatValue()
 	if !xok {
-		return mlrval.ERROR
+		return logifit_te(input1, input2)
 	}
 	m, mok := input2.GetNumericToFloatValue()
 	if !mok {
-		return mlrval.ERROR
+		return logifit_te(input1, input2)
 	}
 	b, bok := input3.GetNumericToFloatValue()
 	if !bok {
-		return mlrval.ERROR
+		return logifit_te(input1, input2)
 	}
 
 	return mlrval.FromFloat(1.0 / (1.0 + math.Exp(-m*x-b)))
