@@ -94,7 +94,7 @@ type ComparatorFunc func(*mlrval.Mlrval, *mlrval.Mlrval) int
 
 // ----------------------------------------------------------------
 // Type error for unary functions
-func _type_error_unary(funcname string, input1 *mlrval.Mlrval) *mlrval.Mlrval {
+func type_error_unary(funcname string, input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromError(
 		fmt.Errorf(
 			"%s: unacceptable type %s with value %s",
@@ -138,7 +138,7 @@ func _1u___(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ----------------------------------------------------------------
 // Type error for binary functions
-func _type_error_binary(funcname string, input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+func type_error_binary(funcname string, input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromError(
 		fmt.Errorf(
 			"%s: unacceptable types %s, %s with values %s, %s",
@@ -288,6 +288,23 @@ func type_error_named_argument(
 			expected_type_name,
 			varval.GetTypeName(),
 			varval.StringMaybeQuoted(),
+		),
+	)
+}
+
+// ----------------------------------------------------------------
+// Type error for ternary functions
+func type_error_ternary(funcname string, input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromError(
+		fmt.Errorf(
+			"%s: unacceptable types %s, %s, %s with values %s, %s, %s",
+			funcname,
+			input1.GetTypeName(),
+			input2.GetTypeName(),
+			input3.GetTypeName(),
+			input1.StringMaybeQuoted(),
+			input2.StringMaybeQuoted(),
+			input3.StringMaybeQuoted(),
 		),
 	)
 }

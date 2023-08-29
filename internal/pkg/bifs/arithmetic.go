@@ -11,7 +11,7 @@ import (
 // Unary plus operator
 
 func upos_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_unary("+", input1)
+	return type_error_unary("+", input1)
 }
 
 var upos_dispositions = [mlrval.MT_DIM]UnaryFunc{
@@ -36,7 +36,7 @@ func BIF_plus_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 // Unary minus operator
 
 func uneg_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_unary("-", input1)
+	return type_error_unary("-", input1)
 }
 
 func uneg_i_i(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -105,7 +105,7 @@ func plus_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func plste(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary("+", input1, input2)
+	return type_error_binary("+", input1, input2)
 }
 
 var plus_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -167,7 +167,7 @@ func minus_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func mnste(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary("-", input1, input2)
+	return type_error_binary("-", input1, input2)
 }
 
 var minus_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -245,7 +245,7 @@ func times_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func tmste(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary("*", input1, input2)
+	return type_error_binary("*", input1, input2)
 }
 
 var times_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -312,7 +312,7 @@ func divide_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func dvdte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary("/", input1, input2)
+	return type_error_binary("/", input1, input2)
 }
 
 var divide_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -377,7 +377,7 @@ func int_divide_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func idvte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary("//", input1, input2)
+	return type_error_binary("//", input1, input2)
 }
 
 var int_divide_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -417,7 +417,7 @@ func dotplus_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func dplte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary(".+", input1, input2)
+	return type_error_binary(".+", input1, input2)
 }
 
 var dot_plus_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -457,7 +457,7 @@ func dotminus_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func dmnte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary(".-", input1, input2)
+	return type_error_binary(".-", input1, input2)
 }
 
 var dotminus_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -497,7 +497,7 @@ func dottimes_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func dttte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary(".*", input1, input2)
+	return type_error_binary(".*", input1, input2)
 }
 
 var dottimes_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -537,7 +537,7 @@ func dotdivide_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func ddvte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary("./", input1, input2)
+	return type_error_binary("./", input1, input2)
 }
 
 var dotdivide_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -602,7 +602,7 @@ func dotidivide_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func didte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary(".//", input1, input2)
+	return type_error_binary(".//", input1, input2)
 }
 
 var dotidivide_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -670,7 +670,7 @@ func modulus_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func modte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary("%", input1, input2)
+	return type_error_binary("%", input1, input2)
 }
 
 var modulus_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -737,7 +737,7 @@ func imodexp(a, e, m int64) int64 {
 	return c
 }
 
-func imodop(input1, input2, input3 *mlrval.Mlrval, iop i_iii_func) *mlrval.Mlrval {
+func imodop(input1, input2, input3 *mlrval.Mlrval, iop i_iii_func, funcname string) *mlrval.Mlrval {
 	if !input1.IsLegit() {
 		return input1
 	}
@@ -747,29 +747,29 @@ func imodop(input1, input2, input3 *mlrval.Mlrval, iop i_iii_func) *mlrval.Mlrva
 	if !input3.IsLegit() {
 		return input3
 	}
-	if !input1.IsInt() {
-		return mlrval.ERROR
-	}
-	if !input2.IsInt() {
-		return mlrval.ERROR
-	}
-	if !input3.IsInt() {
-		return mlrval.ERROR
+	if !input1.IsInt() || !input2.IsInt() || !input3.IsInt() {
+		return type_error_ternary(funcname, input1, input2, input3)
 	}
 
-	return mlrval.FromInt(iop(input1.AcquireIntValue(), input2.AcquireIntValue(), input3.AcquireIntValue()))
+	return mlrval.FromInt(
+		iop(
+			input1.AcquireIntValue(),
+			input2.AcquireIntValue(),
+			input3.AcquireIntValue(),
+		),
+	)
 }
 
 func BIF_mod_add(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
-	return imodop(input1, input2, input3, imodadd)
+	return imodop(input1, input2, input3, imodadd, "madd")
 }
 
 func BIF_mod_sub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
-	return imodop(input1, input2, input3, imodsub)
+	return imodop(input1, input2, input3, imodsub, "msub")
 }
 
 func BIF_mod_mul(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
-	return imodop(input1, input2, input3, imodmul)
+	return imodop(input1, input2, input3, imodmul, "mmul")
 }
 
 func BIF_mod_exp(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -777,7 +777,7 @@ func BIF_mod_exp(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input2.IsInt() && input2.AcquireIntValue() < 0 {
 		return mlrval.ERROR
 	}
-	return imodop(input1, input2, input3, imodexp)
+	return imodop(input1, input2, input3, imodexp, "mexp")
 }
 
 // ================================================================
@@ -846,7 +846,7 @@ func min_s_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func min_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary("min", input1, input2)
+	return type_error_binary("min", input1, input2)
 }
 
 var min_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -910,7 +910,7 @@ func bif_min_unary_map(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 var min_unary_dispositions = [mlrval.MT_DIM]UnaryFunc{}
 
 func min_unary_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_unary("min", input1)
+	return type_error_unary("min", input1)
 }
 
 func init() {
@@ -1016,7 +1016,7 @@ func max_s_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func max_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary("max", input1, input2)
+	return type_error_binary("max", input1, input2)
 }
 
 var max_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -1080,7 +1080,7 @@ func bif_max_unary_map(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 var max_unary_dispositions = [mlrval.MT_DIM]UnaryFunc{}
 
 func max_unary_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_unary("max", input1)
+	return type_error_unary("max", input1)
 }
 
 func init() {

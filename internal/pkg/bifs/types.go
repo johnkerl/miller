@@ -38,7 +38,7 @@ func bool_to_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func to_int_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_unary("int", input1)
+	return type_error_unary("int", input1)
 }
 
 var to_int_dispositions = [mlrval.MT_DIM]UnaryFunc{
@@ -86,7 +86,7 @@ func bool_to_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func to_int_with_base_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary("int", input1, input2)
+	return type_error_binary("int", input1, input2)
 }
 
 var to_int_with_base_dispositions = [mlrval.MT_DIM]BinaryFunc{
@@ -105,7 +105,7 @@ var to_int_with_base_dispositions = [mlrval.MT_DIM]BinaryFunc{
 
 func BIF_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsInt() {
-		return _type_error_binary("int", input1, input2)
+		return type_error_binary("int", input1, input2)
 	}
 	return to_int_with_base_dispositions[input1.Type()](input1, input2)
 }
@@ -133,7 +133,7 @@ func bool_to_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func to_float_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_unary("float", input1)
+	return type_error_unary("float", input1)
 }
 
 var to_float_dispositions = [mlrval.MT_DIM]UnaryFunc{
@@ -173,7 +173,7 @@ func float_to_bool(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func to_boolean_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_unary("boolean", input1)
+	return type_error_unary("boolean", input1)
 }
 
 var to_boolean_dispositions = [mlrval.MT_DIM]UnaryFunc{

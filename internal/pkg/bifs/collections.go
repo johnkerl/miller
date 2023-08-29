@@ -66,7 +66,7 @@ func depth_from_scalar(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 var depth_dispositions = [mlrval.MT_DIM]UnaryFunc{}
 
 func depth_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_unary("depth", input1)
+	return type_error_unary("depth", input1)
 }
 
 func init() {
@@ -139,7 +139,7 @@ func leafcount_from_scalar(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func leafcount_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_unary("leafcount", input1)
+	return type_error_unary("leafcount", input1)
 }
 
 var leafcount_dispositions = [mlrval.MT_DIM]UnaryFunc{

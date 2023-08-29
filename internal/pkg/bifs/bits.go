@@ -12,7 +12,7 @@ func bitwise_not_i_i(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func bitwise_not_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_unary("~", input1)
+	return type_error_unary("~", input1)
 }
 
 var bitwise_not_dispositions = [mlrval.MT_DIM]UnaryFunc{
@@ -56,7 +56,7 @@ func bitcount_i_i(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func bitcount_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_unary("bitcount", input1)
+	return type_error_unary("bitcount", input1)
 }
 
 var bitcount_dispositions = [mlrval.MT_DIM]UnaryFunc{
@@ -85,7 +85,7 @@ func bitwise_and_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func bwandte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary("&", input1, input2)
+	return type_error_binary("&", input1, input2)
 }
 
 var bitwise_and_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -115,7 +115,7 @@ func bitwise_or_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func bworte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary("|", input1, input2)
+	return type_error_binary("|", input1, input2)
 }
 
 var bitwise_or_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -145,7 +145,7 @@ func bitwise_xor_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func bwxorte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary("^", input1, input2)
+	return type_error_binary("^", input1, input2)
 }
 
 var bitwise_xor_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -175,7 +175,7 @@ func lsh_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func lshfte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary("<<", input1, input2)
+	return type_error_binary("<<", input1, input2)
 }
 
 var left_shift_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -205,7 +205,7 @@ func srsh_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func srste(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary(">>>", input1, input2)
+	return type_error_binary(">>>", input1, input2)
 }
 
 var signed_right_shift_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -238,7 +238,7 @@ func ursh_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func rste(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return _type_error_binary(">>", input1, input2)
+	return type_error_binary(">>", input1, input2)
 }
 
 var unsigned_right_shift_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{

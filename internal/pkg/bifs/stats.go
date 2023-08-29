@@ -168,7 +168,7 @@ func check_collection(c *mlrval.Mlrval, funcname string) (bool, *mlrval.Mlrval) 
 	case mlrval.MT_ERROR:
 		return false, c
 	default:
-		return false, _type_error_unary(funcname, c)
+		return false, type_error_unary(funcname, c)
 	}
 }
 
