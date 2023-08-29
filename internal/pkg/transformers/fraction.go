@@ -2,6 +2,7 @@ package transformers
 
 import (
 	"container/list"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -269,7 +270,11 @@ func (tr *TransformerFraction) Transform(
 							outputValue = bifs.BIF_divide(numerator, denominator)
 							outputValue = bifs.BIF_times(outputValue, tr.multiplier)
 						} else {
-							outputValue = mlrval.ERROR
+							outputValue = mlrval.FromError(
+								errors.New(
+									"mlr fraction: division by zero",
+								),
+							)
 						}
 
 						outrec.PutCopy(

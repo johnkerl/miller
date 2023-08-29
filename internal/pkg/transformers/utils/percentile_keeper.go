@@ -149,7 +149,9 @@ func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
 		}
 
 	} else {
-		return mlrval.ERROR
+		return mlrval.FromError(
+			fmt.Errorf(`stats1: unrecognized percentilename "%s"`, name),
+		)
 	}
 }
 

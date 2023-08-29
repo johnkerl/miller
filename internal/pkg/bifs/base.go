@@ -93,19 +93,6 @@ type ComparatorFunc func(*mlrval.Mlrval, *mlrval.Mlrval) int
 // reasonable rectangular even after gofmt has been run.
 
 // ----------------------------------------------------------------
-// Type error for unary functions
-func type_error_unary(funcname string, input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromError(
-		fmt.Errorf(
-			"%s: unacceptable type %s with value %s",
-			funcname,
-			input1.GetTypeName(),
-			input1.StringMaybeQuoted(),
-		),
-	)
-}
-
-// ----------------------------------------------------------------
 // Return absent (unary)
 func _absn1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.ABSENT
@@ -134,21 +121,6 @@ func _void1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 // Return argument (unary)
 func _1u___(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return input1
-}
-
-// ----------------------------------------------------------------
-// Type error for binary functions
-func type_error_binary(funcname string, input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromError(
-		fmt.Errorf(
-			"%s: unacceptable types %s, %s with values %s, %s",
-			funcname,
-			input1.GetTypeName(),
-			input2.GetTypeName(),
-			input1.StringMaybeQuoted(),
-			input2.StringMaybeQuoted(),
-		),
-	)
 }
 
 // Return absent (binary)
@@ -288,23 +260,6 @@ func type_error_named_argument(
 			expected_type_name,
 			varval.GetTypeName(),
 			varval.StringMaybeQuoted(),
-		),
-	)
-}
-
-// ----------------------------------------------------------------
-// Type error for ternary functions
-func type_error_ternary(funcname string, input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromError(
-		fmt.Errorf(
-			"%s: unacceptable types %s, %s, %s with values %s, %s, %s",
-			funcname,
-			input1.GetTypeName(),
-			input2.GetTypeName(),
-			input3.GetTypeName(),
-			input1.StringMaybeQuoted(),
-			input2.StringMaybeQuoted(),
-			input3.StringMaybeQuoted(),
 		),
 	)
 }

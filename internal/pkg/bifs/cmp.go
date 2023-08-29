@@ -271,7 +271,7 @@ func ne_b_mm(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 var eq_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{}
 
 func eqte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return type_error_binary("==", input1, input2)
+	return mlrval.FromTypeErrorBinary("==", input1, input2)
 }
 
 func init() {
@@ -292,7 +292,7 @@ func init() {
 }
 
 func nete(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return type_error_binary("!=", input1, input2)
+	return mlrval.FromTypeErrorBinary("!=", input1, input2)
 }
 
 var ne_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -311,7 +311,7 @@ var ne_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 }
 
 func gtte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return type_error_binary(">", input1, input2)
+	return mlrval.FromTypeErrorBinary(">", input1, input2)
 }
 
 var gt_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -330,7 +330,7 @@ var gt_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 }
 
 func gete(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return type_error_binary(">=", input1, input2)
+	return mlrval.FromTypeErrorBinary(">=", input1, input2)
 }
 
 var ge_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -349,7 +349,7 @@ var ge_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 }
 
 func ltte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return type_error_binary("<", input1, input2)
+	return mlrval.FromTypeErrorBinary("<", input1, input2)
 }
 
 var lt_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -368,7 +368,7 @@ var lt_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 }
 
 func lete(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return type_error_binary("<=", input1, input2)
+	return mlrval.FromTypeErrorBinary("<=", input1, input2)
 }
 
 var le_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -387,7 +387,7 @@ var le_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 }
 
 func cmpte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return type_error_binary("<=>", input1, input2)
+	return mlrval.FromTypeErrorBinary("<=>", input1, input2)
 }
 
 var cmp_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{

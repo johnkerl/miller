@@ -488,7 +488,7 @@ func helpTypeArithmeticInfo() {
 		mlrval.FromFloat(2.5),
 		mlrval.VOID,
 		mlrval.ABSENT,
-		mlrval.ERROR,
+		mlrval.FromAnonymousError(),
 	}
 
 	n := len(mlrvals)

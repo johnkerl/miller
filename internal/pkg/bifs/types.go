@@ -21,7 +21,14 @@ func string_to_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if ok {
 		return mlrval.FromInt(i)
 	} else {
-		return mlrval.ERROR
+		return mlrval.FromError(
+			fmt.Errorf(
+				"%s: unacceptable value %s with type %s",
+				"int",
+				input1.StringMaybeQuoted(),
+				input1.GetTypeName(),
+			),
+		)
 	}
 }
 
@@ -38,7 +45,7 @@ func bool_to_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func to_int_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return type_error_unary("int", input1)
+	return mlrval.FromTypeErrorUnary("int", input1)
 }
 
 var to_int_dispositions = [mlrval.MT_DIM]UnaryFunc{
@@ -65,7 +72,14 @@ func string_to_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if ok {
 		return mlrval.FromInt(i)
 	} else {
-		return mlrval.ERROR
+		return mlrval.FromError(
+			fmt.Errorf(
+				"%s: unacceptable value %s with type %s",
+				"int",
+				input1.StringMaybeQuoted(),
+				input1.GetTypeName(),
+			),
+		)
 	}
 }
 
@@ -86,7 +100,7 @@ func bool_to_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func to_int_with_base_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return type_error_binary("int", input1, input2)
+	return mlrval.FromTypeErrorBinary("int", input1, input2)
 }
 
 var to_int_with_base_dispositions = [mlrval.MT_DIM]BinaryFunc{
@@ -105,7 +119,7 @@ var to_int_with_base_dispositions = [mlrval.MT_DIM]BinaryFunc{
 
 func BIF_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsInt() {
-		return type_error_binary("int", input1, input2)
+		return mlrval.FromTypeErrorBinary("int", input1, input2)
 	}
 	return to_int_with_base_dispositions[input1.Type()](input1, input2)
 }
@@ -116,7 +130,14 @@ func string_to_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if ok {
 		return mlrval.FromFloat(f)
 	} else {
-		return mlrval.ERROR
+		return mlrval.FromError(
+			fmt.Errorf(
+				"%s: unacceptable value %s with type %s",
+				"float",
+				input1.StringMaybeQuoted(),
+				input1.GetTypeName(),
+			),
+		)
 	}
 }
 
@@ -133,7 +154,7 @@ func bool_to_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func to_float_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return type_error_unary("float", input1)
+	return mlrval.FromTypeErrorUnary("float", input1)
 }
 
 var to_float_dispositions = [mlrval.MT_DIM]UnaryFunc{
@@ -160,7 +181,14 @@ func string_to_boolean(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if ok {
 		return mlrval.FromBool(b)
 	} else {
-		return mlrval.ERROR
+		return mlrval.FromError(
+			fmt.Errorf(
+				"%s: unacceptable value %s with type %s",
+				"boolean",
+				input1.StringMaybeQuoted(),
+				input1.GetTypeName(),
+			),
+		)
 	}
 }
 
@@ -173,7 +201,7 @@ func float_to_bool(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func to_boolean_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return type_error_unary("boolean", input1)
+	return mlrval.FromTypeErrorUnary("boolean", input1)
 }
 
 var to_boolean_dispositions = [mlrval.MT_DIM]UnaryFunc{

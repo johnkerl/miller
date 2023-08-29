@@ -5,6 +5,9 @@
 package mlrval
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
@@ -36,6 +39,62 @@ func FromError(err error) *Mlrval {
 		printrep:      ERROR_PRINTREP,
 		printrepValid: true,
 	}
+}
+
+func FromErrorString(err string) *Mlrval {
+	return &Mlrval{
+		mvtype:        MT_ERROR,
+		err:           errors.New(err),
+		printrep:      ERROR_PRINTREP,
+		printrepValid: true,
+	}
+}
+
+func FromAnonymousError() *Mlrval {
+	return &Mlrval{
+		mvtype:        MT_ERROR,
+		printrep:      ERROR_PRINTREP,
+		printrepValid: true,
+	}
+}
+
+func FromTypeErrorUnary(funcname string, input1 *Mlrval) *Mlrval {
+	return FromError(
+		fmt.Errorf(
+			"%s: unacceptable type %s with value %s",
+			funcname,
+			input1.GetTypeName(),
+			input1.StringMaybeQuoted(),
+		),
+	)
+}
+
+func FromTypeErrorBinary(funcname string, input1, input2 *Mlrval) *Mlrval {
+	return FromError(
+		fmt.Errorf(
+			"%s: unacceptable types %s, %s with values %s, %s",
+			funcname,
+			input1.GetTypeName(),
+			input2.GetTypeName(),
+			input1.StringMaybeQuoted(),
+			input2.StringMaybeQuoted(),
+		),
+	)
+}
+
+func FromTypeErrorTernary(funcname string, input1, input2, input3 *Mlrval) *Mlrval {
+	return FromError(
+		fmt.Errorf(
+			"%s: unacceptable types %s, %s, %s with values %s, %s, %s",
+			funcname,
+			input1.GetTypeName(),
+			input2.GetTypeName(),
+			input3.GetTypeName(),
+			input1.StringMaybeQuoted(),
+			input2.StringMaybeQuoted(),
+			input3.StringMaybeQuoted(),
+		),
+	)
 }
 
 // TODO: comment non-JIT context like mlr put -s.

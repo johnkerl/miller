@@ -14,7 +14,7 @@ import (
 // ----------------------------------------------------------------
 // Return error (unary math-library func)
 func _math_unary_erro1(input1 *mlrval.Mlrval, f mathLibUnaryFunc, fname string) *mlrval.Mlrval {
-	return type_error_unary(fname, input1)
+	return mlrval.FromTypeErrorUnary(fname, input1)
 }
 
 // Return absent (unary math-library func)
@@ -185,7 +185,7 @@ func pow_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func powte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return type_error_binary("**", input1, input2)
+	return mlrval.FromTypeErrorBinary("**", input1, input2)
 }
 
 var pow_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -222,7 +222,7 @@ func atan2_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func atan2te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return type_error_binary("atan2", input1, input2)
+	return mlrval.FromTypeErrorBinary("atan2", input1, input2)
 }
 
 var atan2_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -263,7 +263,7 @@ func roundm_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func rdmte(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return type_error_binary("roundm", input1, input2)
+	return mlrval.FromTypeErrorBinary("roundm", input1, input2)
 }
 
 var roundm_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
@@ -287,7 +287,7 @@ func BIF_roundm(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ================================================================
 func logifit_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return type_error_binary("logifit", input1, input2)
+	return mlrval.FromTypeErrorBinary("logifit", input1, input2)
 }
 
 func BIF_logifit(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
