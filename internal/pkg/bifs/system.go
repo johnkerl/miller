@@ -22,7 +22,7 @@ func BIF_os() *mlrval.Mlrval {
 func BIF_hostname() *mlrval.Mlrval {
 	hostname, err := os.Hostname()
 	if err != nil {
-		return mlrval.ERROR
+		return mlrval.FromErrorString("could not retrieve system hostname")
 	} else {
 		return mlrval.FromString(hostname)
 	}
@@ -30,7 +30,7 @@ func BIF_hostname() *mlrval.Mlrval {
 
 func BIF_system(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("system", input1)
 	}
 	commandString := input1.AcquireStringValue()
 
@@ -38,7 +38,7 @@ func BIF_system(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 	outputBytes, err := exec.Command(shellRunArray[0], shellRunArray[1:]...).Output()
 	if err != nil {
-		return mlrval.ERROR
+		return mlrval.FromError(err)
 	}
 	outputString := strings.TrimRight(string(outputBytes), "\n")
 
@@ -48,7 +48,7 @@ func BIF_system(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_exec(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 
 	if len(mlrvals) == 0 {
-		return mlrval.ERROR
+		return mlrval.FromErrorString("exec: zero-length input given")
 	}
 
 	cmd := exec.Command(mlrvals[0].String())
@@ -96,7 +96,7 @@ func BIF_exec(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	}
 
 	if err != nil {
-		return mlrval.ERROR
+		return mlrval.FromError(err)
 	}
 
 	outputString := strings.TrimRight(string(outputBytes), "\n")

@@ -30,10 +30,10 @@ func BIF_urandint(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return input2
 	}
 	if !input1.IsInt() {
-		return mlrval.ERROR
+		return mlrval.FromNotIntError("urandint", input1)
 	}
 	if !input2.IsInt() {
-		return mlrval.ERROR
+		return mlrval.FromNotIntError("urandint", input2)
 	}
 
 	a := input1.AcquireIntValue()
@@ -62,10 +62,10 @@ func BIF_urandrange(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	a, aok := input1.GetNumericToFloatValue()
 	b, bok := input2.GetNumericToFloatValue()
 	if !aok {
-		return mlrval.ERROR
+		return mlrval.FromNotIntOrFloatError("urandrange", input1)
 	}
 	if !bok {
-		return mlrval.ERROR
+		return mlrval.FromNotIntOrFloatError("urandrange", input2)
 	}
 	return mlrval.FromFloat(
 		a + (b-a)*lib.RandFloat64(),

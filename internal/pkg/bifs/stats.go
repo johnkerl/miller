@@ -168,7 +168,7 @@ func check_collection(c *mlrval.Mlrval, funcname string) (bool, *mlrval.Mlrval) 
 	case mlrval.MT_ERROR:
 		return false, c
 	default:
-		return false, mlrval.FromTypeErrorUnary(funcname, c)
+		return false, mlrval.FromNotCollectionError(funcname, c)
 	}
 }
 
@@ -605,7 +605,7 @@ func bif_percentiles_with_options_aux(
 	var sorted_array *mlrval.Mlrval
 	if array_is_sorted {
 		if !collection.IsArray() {
-			return type_error_named_argument(funcname, "array", "collection", collection)
+			return mlrval.FromNotArrayError(funcname+" collection", collection)
 		}
 		sorted_array = collection
 	} else {
@@ -631,7 +631,7 @@ func bif_percentiles_impl(
 
 	ps := percentiles.GetArray()
 	if ps == nil { // not an array
-		return type_error_named_argument(funcname, "array", "percentiles", percentiles)
+		return mlrval.FromNotArrayError(funcname+" percentiles", percentiles)
 	}
 
 	outputs := make([]*mlrval.Mlrval, len(ps))

@@ -71,11 +71,27 @@ func (mv *Mlrval) GetArray() []*Mlrval {
 	}
 }
 
+func (mv *Mlrval) GetArrayOrError(funcname string) (ok []*Mlrval, err *Mlrval) {
+	if mv.IsArray() {
+		return mv.intf.([]*Mlrval), nil
+	} else {
+		return nil, FromNotArrayError(funcname, mv)
+	}
+}
+
 func (mv *Mlrval) GetMap() *Mlrmap {
 	if mv.IsMap() {
 		return mv.intf.(*Mlrmap)
 	} else {
 		return nil
+	}
+}
+
+func (mv *Mlrval) GetMapOrError(funcname string) (ok *Mlrmap, err *Mlrval) {
+	if mv.IsMap() {
+		return mv.intf.(*Mlrmap), nil
+	} else {
+		return nil, FromNotMapError(funcname, mv)
 	}
 }
 

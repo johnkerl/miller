@@ -12,7 +12,7 @@ import (
 
 func BIF_md5(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("md5", input1)
 	} else {
 		return mlrval.FromString(
 			fmt.Sprintf(
@@ -25,7 +25,7 @@ func BIF_md5(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func BIF_sha1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("sha1", input1)
 	} else {
 		return mlrval.FromString(
 			fmt.Sprintf(
@@ -38,7 +38,7 @@ func BIF_sha1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func BIF_sha256(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("sha256", input1)
 	} else {
 		return mlrval.FromString(
 			fmt.Sprintf(
@@ -51,7 +51,7 @@ func BIF_sha256(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func BIF_sha512(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("sha512", input1)
 	} else {
 		return mlrval.FromString(
 			fmt.Sprintf(

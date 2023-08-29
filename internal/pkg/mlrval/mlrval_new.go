@@ -58,41 +58,81 @@ func FromAnonymousError() *Mlrval {
 	}
 }
 
-func FromTypeErrorUnary(funcname string, input1 *Mlrval) *Mlrval {
+func FromTypeErrorUnary(funcname string, v *Mlrval) *Mlrval {
 	return FromError(
 		fmt.Errorf(
 			"%s: unacceptable type %s with value %s",
 			funcname,
-			input1.GetTypeName(),
-			input1.StringMaybeQuoted(),
+			v.GetTypeName(),
+			v.StringMaybeQuoted(),
 		),
 	)
 }
 
-func FromTypeErrorBinary(funcname string, input1, input2 *Mlrval) *Mlrval {
+func FromTypeErrorBinary(funcname string, v, input2 *Mlrval) *Mlrval {
 	return FromError(
 		fmt.Errorf(
 			"%s: unacceptable types %s, %s with values %s, %s",
 			funcname,
-			input1.GetTypeName(),
+			v.GetTypeName(),
 			input2.GetTypeName(),
-			input1.StringMaybeQuoted(),
+			v.StringMaybeQuoted(),
 			input2.StringMaybeQuoted(),
 		),
 	)
 }
 
-func FromTypeErrorTernary(funcname string, input1, input2, input3 *Mlrval) *Mlrval {
+func FromTypeErrorTernary(funcname string, v, input2, input3 *Mlrval) *Mlrval {
 	return FromError(
 		fmt.Errorf(
 			"%s: unacceptable types %s, %s, %s with values %s, %s, %s",
 			funcname,
-			input1.GetTypeName(),
+			v.GetTypeName(),
 			input2.GetTypeName(),
 			input3.GetTypeName(),
-			input1.StringMaybeQuoted(),
+			v.StringMaybeQuoted(),
 			input2.StringMaybeQuoted(),
 			input3.StringMaybeQuoted(),
+		),
+	)
+}
+
+func FromNotStringError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "string")
+}
+
+func FromNotIntError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "int")
+}
+
+func FromNotIntOrFloatError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "int or float")
+}
+
+func FromNotArrayError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "array")
+}
+
+func FromNotMapError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "map")
+}
+
+func FromNotCollectionError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "array or map")
+}
+
+func FromNotFunctionError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "function")
+}
+
+func FromNotNamedTypeError(funcname string, v *Mlrval, expected_type_name string) *Mlrval {
+	return FromError(
+		fmt.Errorf(
+			"%s: unacceptable non-array value %s with type %s; needed type %s",
+			funcname,
+			v.StringMaybeQuoted(),
+			v.GetTypeName(),
+			expected_type_name,
 		),
 	)
 }
