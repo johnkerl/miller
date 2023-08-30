@@ -2715,7 +2715,7 @@ var MiscFlagSection = FlagSection{
 			name: "-x",
 			help: "If any record has an error value in it, report it and stop the process. The default is to print the field value as `(error)` and continue.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.FatalOnErrorData = true
+				options.WriterOptions.FailOnDataError = true
 				*pargi += 1
 			},
 		},

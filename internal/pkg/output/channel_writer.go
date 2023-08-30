@@ -15,7 +15,7 @@ func ChannelWriter(
 	recordWriter IRecordWriter,
 	writerOptions *cli.TWriterOptions,
 	doneChannel chan<- bool,
-	erroredChannel chan<- bool,
+	dataProcessingErrorChannel chan<- bool,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
@@ -26,12 +26,12 @@ func ChannelWriter(
 			recordsAndContexts,
 			recordWriter,
 			writerOptions,
-			erroredChannel,
+			dataProcessingErrorChannel,
 			bufferedOutputStream,
 			outputIsStdout,
 		)
 		if errored {
-			erroredChannel <- true
+			dataProcessingErrorChannel <- true
 			doneChannel <- true
 			break
 		}
@@ -48,7 +48,7 @@ func channelWriterHandleBatch(
 	recordsAndContexts *list.List,
 	recordWriter IRecordWriter,
 	writerOptions *cli.TWriterOptions,
-	erroredChannel chan<- bool,
+	dataProcessingErrorChannel chan<- bool,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) (done bool, errored bool) {
@@ -69,7 +69,7 @@ func channelWriterHandleBatch(
 
 			// XXX more
 			// XXX also make sure this results in exit 1 & goroutine cleanup
-			if writerOptions.FatalOnErrorData {
+			if writerOptions.FailOnDataError {
 				ok := true
 				for pe := record.Head; pe != nil; pe = pe.Next {
 					if pe.Value.IsError() {

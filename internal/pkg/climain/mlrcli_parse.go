@@ -261,6 +261,10 @@ func parseCommandLinePassTwo(
 		options.WriterOptions.FPOFMT = mlr_ofmt
 	}
 
+	if os.Getenv("MLR_FAIL_ON_DATA_ERROR") != "" {
+		options.WriterOptions.FailOnDataError = true
+	}
+
 	recordTransformers = make([]transformers.IRecordTransformer, 0)
 	err = nil
 	ignoresInput := false

@@ -137,7 +137,7 @@ type TWriterOptions struct {
 	FPOFMT string
 
 	// Fatal the process when error data in a given record is about to be output.
-	FatalOnErrorData bool
+	FailOnDataError bool
 }
 
 // ----------------------------------------------------------------

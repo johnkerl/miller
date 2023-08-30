@@ -70,7 +70,7 @@ func Stream(
 	// channels to communicate both of these conditions.
 	inputErrorChannel := make(chan error, 1)
 	doneWritingChannel := make(chan bool, 1)
-	erroredWritingChannel := make(chan bool, 1)
+	dataProcessingErrorChannel := make(chan bool, 1)
 
 	// For mlr head, so a transformer can communicate it will disregard all
 	// further input.  It writes this back upstream, and that is passed back to
@@ -87,7 +87,7 @@ func Stream(
 	go transformers.ChainTransformer(readerChannel, readerDownstreamDoneChannel, recordTransformers,
 		writerChannel, options)
 	go output.ChannelWriter(writerChannel, recordWriter, &options.WriterOptions, doneWritingChannel,
-		erroredWritingChannel, bufferedOutputStream, outputIsStdout)
+		dataProcessingErrorChannel, bufferedOutputStream, outputIsStdout)
 
 	var retval error
 	done := false
@@ -96,7 +96,7 @@ func Stream(
 		case ierr := <-inputErrorChannel:
 			retval = ierr
 			break
-		case _ = <-erroredWritingChannel:
+		case _ = <-dataProcessingErrorChannel:
 			retval = errors.New("exiting due to data error") // details already printed
 			break
 		case _ = <-doneWritingChannel:
