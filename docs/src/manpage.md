@@ -603,6 +603,9 @@ MILLER(1)                                                            MILLER(1)
        -s {file name}           Take command-line flags from file name. For more
                                 information please see
                                 https://miller.readthedocs.io/en/latest/scripting/.
+       -x                       If any record has an error value in it, report it and
+                                stop the process. The default is to print the field
+                                value as `(error)` and continue.
 
 1mOUTPUT-COLORIZATION FLAGS0m
        Miller uses colors to highlight outputs. You can specify color preferences.

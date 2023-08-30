@@ -54,11 +54,11 @@ func TestComparators(t *testing.T) {
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Across-type lexical comparisons
 
-	assert.Equal(t, -1, LexicalAscendingComparator(i10, btrue)) // "10" < "true"
-	assert.Equal(t, -1, LexicalAscendingComparator(i10, sabc))  // "10" < "abc"
-	assert.Equal(t, 1, LexicalAscendingComparator(i10, FromErrorString("foo")))  // "10" > "(error)"
+	assert.Equal(t, -1, LexicalAscendingComparator(i10, btrue))                 // "10" < "true"
+	assert.Equal(t, -1, LexicalAscendingComparator(i10, sabc))                  // "10" < "abc"
+	assert.Equal(t, 1, LexicalAscendingComparator(i10, FromErrorString("foo"))) // "10" > "(error)"
 
-	assert.Equal(t, 1, LexicalAscendingComparator(bfalse, sabc))  // "false" > "abc"
+	assert.Equal(t, 1, LexicalAscendingComparator(bfalse, sabc))                   // "false" > "abc"
 	assert.Equal(t, 1, LexicalAscendingComparator(bfalse, FromErrorString("foo"))) // "false" > "(error)"
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

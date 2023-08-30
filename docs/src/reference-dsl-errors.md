@@ -59,7 +59,7 @@ mlr: field y: log10: unacceptable type string with value "text"
 mlr: exiting due to data error.
 </pre>
 
-The second is to put `-x` into your [`~/.mlrrc file`](customization.md).
+The second is to put `-x` into your [`~/.mlrrc` file](customization.md).
 
 The third is to set the `MLR_FAIL_ON_DATA_ERROR` environment variable, which makes `-x` implicit.
 
@@ -76,8 +76,6 @@ The syntax-error message gives you line/column position for the syntax that coul
 * Curly braces are required for the bodies of `if`/`while`/`for` blocks, even when the body is a single statement.
 
 # Transparency
-
-As for transparency:
 
 * As in any language, you can do `print`, or `eprint` to print to stderr.  See [Print statements](reference-dsl-output-statements.md#print-statements); see also [Dump statements](reference-dsl-output-statements.md#dump-statements) and [Emit statements](reference-dsl-output-statements.md#emit-statements).
 

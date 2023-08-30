@@ -701,6 +701,9 @@ These are flags which don't fit into any other category.
 -s {file name}           Take command-line flags from file name. For more
                          information please see
                          https://miller.readthedocs.io/en/latest/scripting/.
+-x                       If any record has an error value in it, report it and
+                         stop the process. The default is to print the field
+                         value as `(error)` and continue.
 .fi
 .if n \{\
 .RE
