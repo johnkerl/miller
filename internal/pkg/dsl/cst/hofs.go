@@ -216,7 +216,7 @@ func selectArray(
 	input2 *mlrval.Mlrval,
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	inputArray, errVal := input1.GetArrayOrError("select")
+	inputArray, errVal := input1.GetArrayValueOrError("select")
 	if inputArray == nil { // not an array
 		return errVal
 	}
@@ -252,7 +252,7 @@ func selectMap(
 	input2 *mlrval.Mlrval,
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	inputMap, errVal := input1.GetMapOrError("select")
+	inputMap, errVal := input1.GetMapValueOrError("select")
 	if inputMap == nil { // not a map
 		return errVal
 	}
@@ -307,7 +307,7 @@ func applyArray(
 	input2 *mlrval.Mlrval,
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	inputArray, errVal := input1.GetArrayOrError("apply")
+	inputArray, errVal := input1.GetArrayValueOrError("apply")
 	if inputArray == nil {
 		return errVal
 	}
@@ -334,7 +334,7 @@ func applyMap(
 	input2 *mlrval.Mlrval,
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	inputMap, errVal := input1.GetMapOrError("apply")
+	inputMap, errVal := input1.GetMapValueOrError("apply")
 	if inputMap == nil { // not a map
 		return errVal
 	}
@@ -378,7 +378,7 @@ func reduceArray(
 	input2 *mlrval.Mlrval,
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	inputArray, errVal := input1.GetArrayOrError("reduce")
+	inputArray, errVal := input1.GetArrayValueOrError("reduce")
 	if inputArray == nil {
 		return errVal
 	}
@@ -408,7 +408,7 @@ func reduceMap(
 	input2 *mlrval.Mlrval,
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	inputMap, errVal := input1.GetMapOrError("reduce")
+	inputMap, errVal := input1.GetMapValueOrError("reduce")
 	if inputMap == nil { // not a map
 		return errVal
 	}
@@ -459,7 +459,7 @@ func foldArray(
 	input3 *mlrval.Mlrval,
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	inputArray, errVal := input1.GetArrayOrError("fold")
+	inputArray, errVal := input1.GetArrayValueOrError("fold")
 	if inputArray == nil {
 		return errVal
 	}
@@ -486,7 +486,7 @@ func foldMap(
 	input3 *mlrval.Mlrval,
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	inputMap, errVal := input1.GetMapOrError("fold")
+	inputMap, errVal := input1.GetMapValueOrError("fold")
 	if inputMap == nil { // not a map
 		return errVal
 	}
@@ -602,7 +602,7 @@ func sortA(
 	input1 *mlrval.Mlrval,
 	flags string,
 ) *mlrval.Mlrval {
-	temp, errVal := input1.GetArrayOrError("sort")
+	temp, errVal := input1.GetArrayValueOrError("sort")
 	if temp == nil { // not an array
 		return errVal
 	}
@@ -679,7 +679,7 @@ func sortM(
 	input1 *mlrval.Mlrval,
 	flags string,
 ) *mlrval.Mlrval {
-	inputMap, errVal := input1.GetMapOrError("sort")
+	inputMap, errVal := input1.GetMapValueOrError("sort")
 	if inputMap == nil { // not a map
 		return errVal
 	}
@@ -840,7 +840,7 @@ func sortAF(
 	input2 *mlrval.Mlrval,
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	inputArray, errVal := input1.GetArrayOrError("select")
+	inputArray, errVal := input1.GetArrayValueOrError("select")
 	if inputArray == nil { // not an array
 		return errVal
 	}
@@ -881,7 +881,7 @@ func sortMF(
 	input2 *mlrval.Mlrval,
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	inputMap, errVal := input1.GetMapOrError("sort")
+	inputMap, errVal := input1.GetMapValueOrError("sort")
 	if inputMap == nil { // not a map
 		return errVal
 	}
@@ -943,7 +943,7 @@ func anyArray(
 	input2 *mlrval.Mlrval,
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	inputArray, errVal := input1.GetArrayOrError("any")
+	inputArray, errVal := input1.GetArrayValueOrError("any")
 	if inputArray == nil { // not an array
 		return errVal
 	}
@@ -979,7 +979,7 @@ func anyMap(
 	input2 *mlrval.Mlrval,
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	inputMap, errVal := input1.GetMapOrError("any")
+	inputMap, errVal := input1.GetMapValueOrError("any")
 	if inputMap == nil { // not a map
 		return errVal
 	}
@@ -1035,7 +1035,7 @@ func everyArray(
 	input2 *mlrval.Mlrval,
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	inputArray, errVal := input1.GetArrayOrError("every")
+	inputArray, errVal := input1.GetArrayValueOrError("every")
 	if inputArray == nil { // not an array
 		return errVal
 	}
@@ -1071,7 +1071,7 @@ func everyMap(
 	input2 *mlrval.Mlrval,
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	inputMap, errVal := input1.GetMapOrError("every")
+	inputMap, errVal := input1.GetMapValueOrError("every")
 	if inputMap == nil { // not a map
 		return errVal
 	}

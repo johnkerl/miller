@@ -910,7 +910,8 @@ func MillerSliceAccess(
 		if lowerIndexMlrval.IsVoid() {
 			lowerIndex = 1
 		} else {
-			return false, mlrval.ERROR, 0, 0
+			e := mlrval.FromNotNamedTypeError("array/map/slice lower index", lowerIndexMlrval, "int or empty")
+			return false, e, 0, 0
 		}
 	}
 	upperIndex, ok := upperIndexMlrval.GetIntValue()
@@ -918,7 +919,8 @@ func MillerSliceAccess(
 		if upperIndexMlrval.IsVoid() {
 			upperIndex = int64(n)
 		} else {
-			return false, mlrval.ERROR, 0, 0
+			e := mlrval.FromNotNamedTypeError("array/map/slice upper index", upperIndexMlrval, "int or empty")
+			return false, e, 0, 0
 		}
 	}
 

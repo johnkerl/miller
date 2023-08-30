@@ -6,6 +6,8 @@
 package cst
 
 import (
+	"fmt"
+
 	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
@@ -97,14 +99,28 @@ func (node *ArrayOrMapIndexAccessNode) Evaluate(
 	} else if baseMlrval.IsStringOrVoid() {
 		mindex, isInt := indexMlrval.GetIntValue()
 		if !isInt {
-			return mlrval.ERROR
+			return mlrval.FromError(
+				fmt.Errorf(
+					"unacceptable non-int index value %s of type %s on base value %s",
+					indexMlrval.StringMaybeQuoted(),
+					indexMlrval.GetTypeName(),
+					baseMlrval.StringMaybeQuoted(),
+				),
+			)
 		}
 		// Handle UTF-8 correctly: len(input1.printrep) will count bytes, not runes.
 		runes := []rune(baseMlrval.String())
 		// Miller uses 1-up, and negatively aliased, indexing for strings and arrays.
 		zindex, inBounds := mlrval.UnaliasArrayLengthIndex(len(runes), int(mindex))
 		if !inBounds {
-			return mlrval.ERROR
+			return mlrval.FromError(
+				fmt.Errorf(
+					"cannot index base string %s of length %d with out-of-bounds index %d",
+					baseMlrval.StringMaybeQuoted(),
+					len(runes),
+					int(mindex),
+				),
+			)
 		}
 		return mlrval.FromString(string(runes[zindex]))
 
@@ -112,7 +128,13 @@ func (node *ArrayOrMapIndexAccessNode) Evaluate(
 		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
 	} else {
-		return mlrval.ERROR
+		return mlrval.FromError(
+			fmt.Errorf(
+				"cannot index base value %s of type %s, which is not array, map, or string",
+				baseMlrval.StringMaybeQuoted(),
+				baseMlrval.GetTypeName(),
+			),
+		)
 	}
 }
 
@@ -171,7 +193,13 @@ func (node *ArraySliceAccessNode) Evaluate(
 	}
 	array := baseMlrval.GetArray()
 	if array == nil {
-		return mlrval.ERROR
+		return mlrval.FromError(
+			fmt.Errorf(
+				"cannot slice base value %s with non-array type %s",
+				baseMlrval.StringMaybeQuoted(),
+				baseMlrval.GetTypeName(),
+			),
+		)
 	}
 	n := len(array)
 
@@ -236,7 +264,7 @@ func (node *PositionalFieldNameNode) Evaluate(
 
 	index, ok := indexMlrval.GetIntValue()
 	if !ok {
-		return mlrval.ERROR
+		return mlrval.FromNotIntError("$[[...]]", indexMlrval)
 	}
 
 	name, ok := state.Inrec.GetNameAtPositionalIndex(index)
@@ -282,7 +310,7 @@ func (node *PositionalFieldValueNode) Evaluate(
 
 	index, ok := indexMlrval.GetIntValue()
 	if !ok {
-		return mlrval.ERROR
+		return mlrval.FromNotIntError("$[[...]]", indexMlrval)
 	}
 
 	retval := state.Inrec.GetWithPositionalIndex(index)
@@ -338,7 +366,7 @@ func (node *ArrayOrMapPositionalNameAccessNode) Evaluate(
 
 	index, ok := indexMlrval.GetIntValue()
 	if !ok {
-		return mlrval.ERROR
+		return mlrval.FromNotIntError("$[[...]]", indexMlrval)
 	}
 
 	if baseMlrval.IsArray() {
@@ -363,7 +391,13 @@ func (node *ArrayOrMapPositionalNameAccessNode) Evaluate(
 		return mlrval.ABSENT
 
 	} else {
-		return mlrval.ERROR
+		return mlrval.FromError(
+			fmt.Errorf(
+				"cannot index base value %s of type %s, which is not array, map, or string",
+				baseMlrval.StringMaybeQuoted(),
+				baseMlrval.GetTypeName(),
+			),
+		)
 	}
 }
 
@@ -412,7 +446,7 @@ func (node *ArrayOrMapPositionalValueAccessNode) Evaluate(
 
 	index, ok := indexMlrval.GetIntValue()
 	if !ok {
-		return mlrval.ERROR
+		return mlrval.FromNotIntError("$[[...]]", indexMlrval)
 	}
 
 	if baseMlrval.IsArray() {
@@ -434,7 +468,13 @@ func (node *ArrayOrMapPositionalValueAccessNode) Evaluate(
 		return mlrval.ABSENT
 
 	} else {
-		return mlrval.ERROR
+		return mlrval.FromError(
+			fmt.Errorf(
+				"cannot index base value %s of type %s, which is not array, map, or string",
+				baseMlrval.StringMaybeQuoted(),
+				baseMlrval.GetTypeName(),
+			),
+		)
 	}
 }
 

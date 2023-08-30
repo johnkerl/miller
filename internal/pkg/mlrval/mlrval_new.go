@@ -109,7 +109,7 @@ func FromNotIntError(funcname string, v *Mlrval) *Mlrval {
 	return FromNotNamedTypeError(funcname, v, "int")
 }
 
-func FromNotIntOrFloatError(funcname string, v *Mlrval) *Mlrval {
+func FromNotNumericError(funcname string, v *Mlrval) *Mlrval {
 	return FromNotNamedTypeError(funcname, v, "int or float")
 }
 

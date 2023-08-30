@@ -62,22 +62,22 @@ func BIF_sec2gmt_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_nsec2gmt_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	intValue, ok := input1.GetIntValue()
-	if !ok {
-		return mlrval.ERROR
+	intValue, errValue := input1.GetIntValueOrError("nsec2gmt")
+	if errValue != nil {
+		return errValue
 	}
 	numDecimalPlaces := 0
 	return mlrval.FromString(lib.Nsec2GMT(intValue, numDecimalPlaces))
 }
 
 func BIF_sec2gmt_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	floatValue, isNumeric := input1.GetNumericToFloatValue()
-	if !isNumeric {
-		return input1
+	floatValue, errValue := input1.GetNumericToFloatValueOrError("sec2gmt")
+	if errValue != nil {
+		return errValue
 	}
-	numDecimalPlaces, isInt := input2.GetIntValue()
-	if !isInt {
-		return mlrval.ERROR
+	numDecimalPlaces, errValue := input2.GetIntValueOrError("sec2gmt")
+	if errValue != nil {
+		return errValue
 	}
 	return mlrval.FromString(lib.Sec2GMT(floatValue, int(numDecimalPlaces)))
 }
