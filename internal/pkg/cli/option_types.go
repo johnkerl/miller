@@ -135,6 +135,9 @@ type TWriterOptions struct {
 
 	// For floating-point numbers: "" means use the Go default.
 	FPOFMT string
+
+	// Fatal the process when error data in a given record is about to be output.
+	FailOnDataError bool
 }
 
 // ----------------------------------------------------------------

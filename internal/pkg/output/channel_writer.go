@@ -3,6 +3,8 @@ package output
 import (
 	"bufio"
 	"container/list"
+	"fmt"
+	"os"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/types"
@@ -13,19 +15,26 @@ func ChannelWriter(
 	recordWriter IRecordWriter,
 	writerOptions *cli.TWriterOptions,
 	doneChannel chan<- bool,
+	dataProcessingErrorChannel chan<- bool,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
 
 	for {
 		recordsAndContexts := <-writerChannel
-		done := channelWriterHandleBatch(
+		done, errored := channelWriterHandleBatch(
 			recordsAndContexts,
 			recordWriter,
 			writerOptions,
+			dataProcessingErrorChannel,
 			bufferedOutputStream,
 			outputIsStdout,
 		)
+		if errored {
+			dataProcessingErrorChannel <- true
+			doneChannel <- true
+			break
+		}
 		if done {
 			doneChannel <- true
 			break
@@ -39,9 +48,10 @@ func channelWriterHandleBatch(
 	recordsAndContexts *list.List,
 	recordWriter IRecordWriter,
 	writerOptions *cli.TWriterOptions,
+	dataProcessingErrorChannel chan<- bool,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
-) bool {
+) (done bool, errored bool) {
 	for e := recordsAndContexts.Front(); e != nil; e = e.Next() {
 		recordAndContext := e.Value.(*types.RecordAndContext)
 
@@ -56,6 +66,33 @@ func channelWriterHandleBatch(
 
 		if !recordAndContext.EndOfStream {
 			record := recordAndContext.Record
+
+			// XXX more
+			// XXX also make sure this results in exit 1 & goroutine cleanup
+			if writerOptions.FailOnDataError {
+				ok := true
+				for pe := record.Head; pe != nil; pe = pe.Next {
+					if pe.Value.IsError() {
+						context := recordAndContext.Context
+						fmt.Fprintf(os.Stderr, "mlr: data error at NR=%d FNR=%d FILENAME=%s\n",
+							context.NR, context.FNR, context.FILENAME,
+						)
+						is, err := pe.Value.GetError()
+						if is {
+							if err != nil {
+								fmt.Fprintf(os.Stderr, "mlr: field %s: %v\n", pe.Key, err)
+							} else {
+								fmt.Fprintf(os.Stderr, "mlr: field %s\n", pe.Key)
+							}
+							ok = false
+						}
+					}
+				}
+				if !ok {
+					return true, true
+				}
+			}
+
 			if record != nil {
 				recordWriter.Write(record, bufferedOutputStream, outputIsStdout)
 			}
@@ -75,8 +112,8 @@ func channelWriterHandleBatch(
 			// records before printing any, since it needs to compute max width
 			// down columns.
 			recordWriter.Write(nil, bufferedOutputStream, outputIsStdout)
-			return true
+			return true, false
 		}
 	}
-	return false
+	return false, false
 }

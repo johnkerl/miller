@@ -41,7 +41,7 @@ func (node *EnvironmentVariableNode) Evaluate(
 		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "ENV[(absent)]")
 	}
 	if !name.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("ENV[]", name)
 	}
 
 	return mlrval.FromString(os.Getenv(name.String()))

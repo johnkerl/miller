@@ -153,7 +153,7 @@ func (entry *MlrmapEntry) JSONStringifyInPlace(
 ) {
 	outputBytes, err := entry.Value.MarshalJSON(jsonFormatting, false)
 	if err != nil {
-		entry.Value = ERROR
+		entry.Value = FromError(err)
 	} else {
 		entry.Value = FromString(string(outputBytes))
 	}
@@ -165,7 +165,7 @@ func (entry *MlrmapEntry) JSONParseInPlace() {
 	input := entry.Value.String()
 	err := entry.Value.UnmarshalJSON([]byte(input))
 	if err != nil {
-		entry.Value = ERROR
+		entry.Value = FromError(err)
 	}
 }
 

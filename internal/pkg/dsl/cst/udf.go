@@ -250,12 +250,12 @@ func (site *UDFCallsite) EvaluateWithArguments(
 	// being MT_ERROR should be mapped to MT_ERROR here (nominally,
 	// data-dependent). But error-return could be something not data-dependent.
 	if err != nil {
-		err = udf.signature.typeGatedReturnValue.Check(mlrval.ERROR)
-		if err != nil {
-			fmt.Fprint(os.Stderr, err)
+		err2 := udf.signature.typeGatedReturnValue.Check(mlrval.FromError(err))
+		if err2 != nil {
+			fmt.Fprint(os.Stderr, err2)
 			os.Exit(1)
 		}
-		return mlrval.ERROR
+		return mlrval.FromError(err)
 	}
 
 	// Fell off end of function with no return

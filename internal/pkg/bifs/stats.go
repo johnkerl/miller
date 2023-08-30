@@ -156,7 +156,7 @@ func BIF_finalize_kurtosis(mn, msum, msum2, msum3, msum4 *mlrval.Mlrval) *mlrval
 
 // This is a helper function for BIFs which operate only on array or map.
 // It shorthands what values to return for non-collection inputs.
-func check_collection(c *mlrval.Mlrval) (bool, *mlrval.Mlrval) {
+func check_collection(c *mlrval.Mlrval, funcname string) (bool, *mlrval.Mlrval) {
 	vtype := c.Type()
 	switch vtype {
 	case mlrval.MT_ARRAY:
@@ -165,8 +165,10 @@ func check_collection(c *mlrval.Mlrval) (bool, *mlrval.Mlrval) {
 		return true, c
 	case mlrval.MT_ABSENT:
 		return false, mlrval.ABSENT
+	case mlrval.MT_ERROR:
+		return false, c
 	default:
-		return false, mlrval.ERROR
+		return false, mlrval.FromNotCollectionError(funcname, c)
 	}
 }
 
@@ -186,7 +188,7 @@ func collection_sum_of_function(
 }
 
 func BIF_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "count")
 	if !ok {
 		return value_if_not
 	}
@@ -200,7 +202,7 @@ func BIF_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_null_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "null_count")
 	if !ok {
 		return value_if_not
 	}
@@ -221,7 +223,7 @@ func BIF_null_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_distinct_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "distinct_count")
 	if !ok {
 		return value_if_not
 	}
@@ -243,18 +245,19 @@ func BIF_distinct_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_mode(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	return bif_mode_or_antimode(collection, func(a, b int) bool { return a > b })
+	return bif_mode_or_antimode(collection, "mode", func(a, b int) bool { return a > b })
 }
 
 func BIF_antimode(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	return bif_mode_or_antimode(collection, func(a, b int) bool { return a < b })
+	return bif_mode_or_antimode(collection, "antimode", func(a, b int) bool { return a < b })
 }
 
 func bif_mode_or_antimode(
 	collection *mlrval.Mlrval,
+	funcname string,
 	cmp func(int, int) bool,
 ) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, funcname)
 	if !ok {
 		return value_if_not
 	}
@@ -316,7 +319,7 @@ func bif_mode_or_antimode(
 }
 
 func BIF_sum(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "sum")
 	if !ok {
 		return value_if_not
 	}
@@ -329,7 +332,7 @@ func BIF_sum(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_sum2(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "sum2")
 	if !ok {
 		return value_if_not
 	}
@@ -340,7 +343,7 @@ func BIF_sum2(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_sum3(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "sum3")
 	if !ok {
 		return value_if_not
 	}
@@ -351,7 +354,7 @@ func BIF_sum3(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_sum4(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "sum4")
 	if !ok {
 		return value_if_not
 	}
@@ -363,7 +366,7 @@ func BIF_sum4(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_mean(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "mean")
 	if !ok {
 		return value_if_not
 	}
@@ -376,7 +379,7 @@ func BIF_mean(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_meaneb(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "meaneb")
 	if !ok {
 		return value_if_not
 	}
@@ -387,7 +390,7 @@ func BIF_meaneb(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_variance(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "variance")
 	if !ok {
 		return value_if_not
 	}
@@ -398,7 +401,7 @@ func BIF_variance(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_stddev(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "stddev")
 	if !ok {
 		return value_if_not
 	}
@@ -409,7 +412,7 @@ func BIF_stddev(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_skewness(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "skewness")
 	if !ok {
 		return value_if_not
 	}
@@ -421,7 +424,7 @@ func BIF_skewness(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_kurtosis(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "kurtosis")
 	if !ok {
 		return value_if_not
 	}
@@ -434,7 +437,7 @@ func BIF_kurtosis(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_minlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "minlen")
 	if !ok {
 		return value_if_not
 	}
@@ -446,7 +449,7 @@ func BIF_minlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_maxlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "maxlen")
 	if !ok {
 		return value_if_not
 	}
@@ -458,7 +461,7 @@ func BIF_maxlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_sort_collection(collection *mlrval.Mlrval) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	ok, value_if_not := check_collection(collection, "sort_collection")
 	if !ok {
 		return value_if_not
 	}
@@ -492,21 +495,21 @@ func BIF_sort_collection(collection *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_median(
 	collection *mlrval.Mlrval,
 ) *mlrval.Mlrval {
-	return BIF_percentile(collection, mlrval.FromFloat(50.0))
+	return bif_percentile_with_options_aux(collection, mlrval.FromFloat(50.0), nil, "median")
 }
 
 func BIF_median_with_options(
 	collection *mlrval.Mlrval,
 	options *mlrval.Mlrval,
 ) *mlrval.Mlrval {
-	return BIF_percentile_with_options(collection, mlrval.FromFloat(50.0), options)
+	return bif_percentile_with_options_aux(collection, mlrval.FromFloat(50.0), options, "median")
 }
 
 func BIF_percentile(
 	collection *mlrval.Mlrval,
 	percentile *mlrval.Mlrval,
 ) *mlrval.Mlrval {
-	return BIF_percentile_with_options(collection, percentile, nil)
+	return bif_percentile_with_options_aux(collection, percentile, nil, "percentile")
 }
 
 func BIF_percentile_with_options(
@@ -514,16 +517,14 @@ func BIF_percentile_with_options(
 	percentile *mlrval.Mlrval,
 	options *mlrval.Mlrval,
 ) *mlrval.Mlrval {
-	percentiles := mlrval.FromSingletonArray(percentile)
-	outputs := BIF_percentiles_with_options(collection, percentiles, options)
-	return outputs.AcquireMapValue().Head.Value
+	return bif_percentile_with_options_aux(collection, percentile, options, "percentile")
 }
 
 func BIF_percentiles(
 	collection *mlrval.Mlrval,
 	percentiles *mlrval.Mlrval,
 ) *mlrval.Mlrval {
-	return BIF_percentiles_with_options(collection, percentiles, nil)
+	return bif_percentiles_with_options_aux(collection, percentiles, nil, "percentiles")
 }
 
 func BIF_percentiles_with_options(
@@ -531,7 +532,34 @@ func BIF_percentiles_with_options(
 	percentiles *mlrval.Mlrval,
 	options *mlrval.Mlrval,
 ) *mlrval.Mlrval {
-	ok, value_if_not := check_collection(collection)
+	return bif_percentiles_with_options_aux(collection, percentiles, options, "percentiles")
+}
+
+func bif_percentile_with_options_aux(
+	collection *mlrval.Mlrval,
+	percentile *mlrval.Mlrval,
+	options *mlrval.Mlrval,
+	funcname string,
+) *mlrval.Mlrval {
+	percentiles := mlrval.FromSingletonArray(percentile)
+	outputs := bif_percentiles_with_options_aux(collection, percentiles, options, funcname)
+
+	// Check for error/absent returns from the main impl body
+	ok, value_if_not := check_collection(outputs, funcname)
+	if !ok {
+		return value_if_not
+	}
+
+	return outputs.AcquireMapValue().Head.Value
+}
+
+func bif_percentiles_with_options_aux(
+	collection *mlrval.Mlrval,
+	percentiles *mlrval.Mlrval,
+	options *mlrval.Mlrval,
+	funcname string,
+) *mlrval.Mlrval {
+	ok, value_if_not := check_collection(collection, funcname)
 	if !ok {
 		return value_if_not
 	}
@@ -543,7 +571,7 @@ func BIF_percentiles_with_options(
 	if options != nil {
 		om := options.GetMap()
 		if om == nil { // not a map
-			return mlrval.ERROR
+			return type_error_named_argument(funcname, "map", "options", options)
 		}
 		for pe := om.Head; pe != nil; pe = pe.Next {
 			if pe.Key == "array_is_sorted" || pe.Key == "ais" {
@@ -552,7 +580,7 @@ func BIF_percentiles_with_options(
 				} else if mlrval.Equals(pe.Value, mlrval.FALSE) {
 					array_is_sorted = false
 				} else {
-					return mlrval.ERROR
+					return type_error_named_argument(funcname, "boolean", pe.Key, pe.Value)
 				}
 			} else if pe.Key == "interpolate_linearly" || pe.Key == "il" {
 				if mlrval.Equals(pe.Value, mlrval.TRUE) {
@@ -560,7 +588,7 @@ func BIF_percentiles_with_options(
 				} else if mlrval.Equals(pe.Value, mlrval.FALSE) {
 					interpolate_linearly = false
 				} else {
-					return mlrval.ERROR
+					return type_error_named_argument(funcname, "boolean", pe.Key, pe.Value)
 				}
 			} else if pe.Key == "output_array_not_map" || pe.Key == "oa" {
 				if mlrval.Equals(pe.Value, mlrval.TRUE) {
@@ -568,7 +596,7 @@ func BIF_percentiles_with_options(
 				} else if mlrval.Equals(pe.Value, mlrval.FALSE) {
 					output_array_not_map = false
 				} else {
-					return mlrval.ERROR
+					return type_error_named_argument(funcname, "boolean", pe.Key, pe.Value)
 				}
 			}
 		}
@@ -577,31 +605,33 @@ func BIF_percentiles_with_options(
 	var sorted_array *mlrval.Mlrval
 	if array_is_sorted {
 		if !collection.IsArray() {
-			return mlrval.ERROR
+			return mlrval.FromNotArrayError(funcname+" collection", collection)
 		}
 		sorted_array = collection
 	} else {
 		sorted_array = BIF_sort_collection(collection)
 	}
 
-	return bif_percentiles(
+	return bif_percentiles_impl(
 		sorted_array.AcquireArrayValue(),
 		percentiles,
 		interpolate_linearly,
 		output_array_not_map,
+		funcname,
 	)
 }
 
-func bif_percentiles(
+func bif_percentiles_impl(
 	sorted_array []*mlrval.Mlrval,
 	percentiles *mlrval.Mlrval,
 	interpolate_linearly bool,
 	output_array_not_map bool,
+	funcname string,
 ) *mlrval.Mlrval {
 
 	ps := percentiles.GetArray()
 	if ps == nil { // not an array
-		return mlrval.ERROR
+		return mlrval.FromNotArrayError(funcname+" percentiles", percentiles)
 	}
 
 	outputs := make([]*mlrval.Mlrval, len(ps))
@@ -609,7 +639,7 @@ func bif_percentiles(
 	for i, _ := range ps {
 		p, ok := ps[i].GetNumericToFloatValue()
 		if !ok {
-			outputs[i] = mlrval.ERROR.Copy()
+			outputs[i] = type_error_named_argument(funcname, "numeric", "percentile", ps[i])
 		} else if len(sorted_array) == 0 {
 			outputs[i] = mlrval.VOID
 		} else {

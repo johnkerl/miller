@@ -72,7 +72,7 @@ func TestBIF_null_count(t *testing.T) {
 		mlrval.FromInt(1),
 		mlrval.FromString("two"),
 		mlrval.FromString(""), // this counts
-		mlrval.ERROR,
+		mlrval.FromAnonymousError(),
 		mlrval.ABSENT,
 		mlrval.NULL, // this counts
 	})

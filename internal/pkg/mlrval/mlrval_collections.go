@@ -81,10 +81,10 @@ import (
 // TODO: copy-reduction refactor
 func (mv *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 	if !mv.IsArray() {
-		return *ERROR
+		return *FromNotArrayError("array [] base", mv)
 	}
 	if !mindex.IsInt() {
-		return *ERROR
+		return *FromNotIntError("array [] index", mindex)
 	}
 	arrayval := mv.intf.([]*Mlrval)
 	value := arrayGetAliased(&arrayval, int(mindex.intf.(int64)))
@@ -223,12 +223,12 @@ func (mv *Mlrval) ArrayAppend(value *Mlrval) {
 // ================================================================
 func (mv *Mlrval) MapGet(key *Mlrval) Mlrval {
 	if !mv.IsMap() {
-		return *ERROR
+		return *FromNotMapError("map[]", mv)
 	}
 
 	mval, err := mv.intf.(*Mlrmap).GetWithMlrvalIndex(key)
-	if err != nil { // xxx maybe error-return in the API
-		return *ERROR
+	if err != nil {
+		return *FromError(err)
 	}
 	if mval == nil {
 		return *ABSENT

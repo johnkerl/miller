@@ -23,6 +23,14 @@ func (mv *Mlrval) IsError() bool {
 	return mv.Type() == MT_ERROR
 }
 
+func (mv *Mlrval) GetError() (bool, error) {
+	if mv.Type() == MT_ERROR {
+		return true, mv.err
+	} else {
+		return false, nil
+	}
+}
+
 // TODO: comment no JIT-infer here -- absent is non-inferrable and we needn't take the expense of JIT.
 func (mv *Mlrval) IsAbsent() bool {
 	return mv.mvtype == MT_ABSENT

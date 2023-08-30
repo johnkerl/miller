@@ -5,7 +5,8 @@
 package mlrval
 
 import (
-	//"errors"
+	"errors"
+	"fmt"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
 )
@@ -29,6 +30,115 @@ func FromDeferredType(input string) *Mlrval {
 		printrep:      input,
 		printrepValid: true,
 	}
+}
+
+func FromError(err error) *Mlrval {
+	return &Mlrval{
+		mvtype:        MT_ERROR,
+		err:           err,
+		printrep:      ERROR_PRINTREP,
+		printrepValid: true,
+	}
+}
+
+func FromErrorString(err string) *Mlrval {
+	return &Mlrval{
+		mvtype:        MT_ERROR,
+		err:           errors.New(err),
+		printrep:      ERROR_PRINTREP,
+		printrepValid: true,
+	}
+}
+
+func FromAnonymousError() *Mlrval {
+	return &Mlrval{
+		mvtype:        MT_ERROR,
+		printrep:      ERROR_PRINTREP,
+		printrepValid: true,
+	}
+}
+
+func FromTypeErrorUnary(funcname string, v *Mlrval) *Mlrval {
+	return FromError(
+		fmt.Errorf(
+			"%s: unacceptable type %s with value %s",
+			funcname,
+			v.GetTypeName(),
+			v.StringMaybeQuoted(),
+		),
+	)
+}
+
+func FromTypeErrorBinary(funcname string, v, input2 *Mlrval) *Mlrval {
+	return FromError(
+		fmt.Errorf(
+			"%s: unacceptable types %s, %s with values %s, %s",
+			funcname,
+			v.GetTypeName(),
+			input2.GetTypeName(),
+			v.StringMaybeQuoted(),
+			input2.StringMaybeQuoted(),
+		),
+	)
+}
+
+func FromTypeErrorTernary(funcname string, v, input2, input3 *Mlrval) *Mlrval {
+	return FromError(
+		fmt.Errorf(
+			"%s: unacceptable types %s, %s, %s with values %s, %s, %s",
+			funcname,
+			v.GetTypeName(),
+			input2.GetTypeName(),
+			input3.GetTypeName(),
+			v.StringMaybeQuoted(),
+			input2.StringMaybeQuoted(),
+			input3.StringMaybeQuoted(),
+		),
+	)
+}
+
+func FromNotStringError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "string")
+}
+
+func FromNotBooleanError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "boolean")
+}
+
+func FromNotIntError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "int")
+}
+
+func FromNotNumericError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "int or float")
+}
+
+func FromNotArrayError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "array")
+}
+
+func FromNotMapError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "map")
+}
+
+func FromNotCollectionError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "array or map")
+}
+
+func FromNotFunctionError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "function")
+}
+
+func FromNotNamedTypeError(funcname string, v *Mlrval, expected_type_name string) *Mlrval {
+	return FromError(
+		fmt.Errorf(
+			"%s: unacceptable non-array value %s with type %s; needed type %s",
+			funcname,
+			v.StringMaybeQuoted(),
+			v.GetTypeName(),
+			expected_type_name,
+		),
+	)
 }
 
 // TODO: comment non-JIT context like mlr put -s.

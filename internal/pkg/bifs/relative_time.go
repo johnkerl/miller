@@ -10,12 +10,12 @@ import (
 
 func BIF_dhms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("dhms2sec", input1)
 	}
 
 	input := input1.String()
 	if input == "" {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("dhms2sec", input1)
 	}
 
 	negate := false
@@ -36,10 +36,10 @@ func BIF_dhms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 		_, err := fmt.Sscanf(remainingInput, "%d%s", &n, &rest)
 		if err != nil {
-			return mlrval.ERROR
+			return mlrval.FromError(err)
 		}
 		if len(rest) < 1 {
-			return mlrval.ERROR
+			return mlrval.FromErrorString("dhms2sec: input too short")
 		}
 		unitPart := rest[0]
 		remainingInput = rest[1:]
@@ -54,7 +54,13 @@ func BIF_dhms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		case 's':
 			seconds += n
 		default:
-			return mlrval.ERROR
+			return mlrval.FromError(
+				fmt.Errorf(
+					"dhms2sec(\"%s\"): unrecognized unit '%c'",
+					input1.OriginalString(),
+					unitPart,
+				),
+			)
 		}
 	}
 	if negate {
@@ -66,12 +72,12 @@ func BIF_dhms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func BIF_dhms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("dhms2fsec", input1)
 	}
 
 	input := input1.String()
 	if input == "" {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("dhms2fsec", input1)
 	}
 
 	negate := false
@@ -92,10 +98,10 @@ func BIF_dhms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 		_, err := fmt.Sscanf(remainingInput, "%f%s", &f, &rest)
 		if err != nil {
-			return mlrval.ERROR
+			return mlrval.FromError(err)
 		}
 		if len(rest) < 1 {
-			return mlrval.ERROR
+			return mlrval.FromErrorString("dhms2fsec: input too short")
 		}
 		unitPart := rest[0]
 		remainingInput = rest[1:]
@@ -110,7 +116,13 @@ func BIF_dhms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		case 's':
 			seconds += f
 		default:
-			return mlrval.ERROR
+			return mlrval.FromError(
+				fmt.Errorf(
+					"dhms2fsec(\"%s\"): unrecognized unit '%c'",
+					input1.OriginalString(),
+					unitPart,
+				),
+			)
 		}
 	}
 	if negate {
@@ -122,10 +134,10 @@ func BIF_dhms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func BIF_hms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("hms2sec", input1)
 	}
 	if input1.AcquireStringValue() == "" {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("hms2sec", input1)
 	}
 	var h, m, s int64
 
@@ -141,12 +153,14 @@ func BIF_hms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		}
 	}
 
-	return mlrval.ERROR
+	return mlrval.FromError(
+		fmt.Errorf("hsm2sec: could not parse input \"%s\"", input1.OriginalString()),
+	)
 }
 
 func BIF_hms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("hms2fsec", input1)
 	}
 
 	var h, m int
@@ -164,13 +178,15 @@ func BIF_hms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		}
 	}
 
-	return mlrval.ERROR
+	return mlrval.FromError(
+		fmt.Errorf("hsm2fsec: could not parse input \"%s\"", input1.OriginalString()),
+	)
 }
 
 func BIF_sec2dhms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	isec, ok := input1.GetIntValue()
 	if !ok {
-		return mlrval.ERROR
+		return mlrval.FromNotIntError("sec2dhms", input1)
 	}
 
 	var d, h, m, s int64
@@ -198,7 +214,7 @@ func BIF_sec2dhms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_sec2hms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	isec, ok := input1.GetIntValue()
 	if !ok {
-		return mlrval.ERROR
+		return mlrval.FromNotIntError("sec2hms", input1)
 	}
 	sign := ""
 	if isec < 0 {
@@ -219,7 +235,7 @@ func BIF_sec2hms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_fsec2dhms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	fsec, ok := input1.GetNumericToFloatValue()
 	if !ok {
-		return mlrval.ERROR
+		return mlrval.FromNotIntError("fsec2dhms", input1)
 	}
 
 	sign := int64(1)
@@ -269,7 +285,7 @@ func BIF_fsec2dhms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_fsec2hms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	fsec, ok := input1.GetNumericToFloatValue()
 	if !ok {
-		return mlrval.ERROR
+		return mlrval.FromNotIntError("fsec2hms", input1)
 	}
 
 	sign := ""

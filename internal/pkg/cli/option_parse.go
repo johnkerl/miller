@@ -2712,6 +2712,15 @@ var MiscFlagSection = FlagSection{
 	flags: []Flag{
 
 		{
+			name: "-x",
+			help: "If any record has an error value in it, report it and stop the process. The default is to print the field value as `(error)` and continue.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.FailOnDataError = true
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "-n",
 			help: "Process no input files, nor standard input either. Useful for `mlr put` with `begin`/`end` statements only. (Same as `--from /dev/null`.) Also useful in `mlr -n put -v '...'` for analyzing abstract syntax trees (if that's your thing).",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {

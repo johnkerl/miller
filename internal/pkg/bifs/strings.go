@@ -2,6 +2,7 @@ package bifs
 
 import (
 	"bytes"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -13,7 +14,7 @@ import (
 // ================================================================
 func BIF_strlen(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("strlen", input1)
 	} else {
 		return mlrval.FromInt(lib.UTF8Strlen(input1.AcquireStringValue()))
 	}
@@ -42,19 +43,23 @@ func dot_s_xx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromString(input1.String() + input2.String())
 }
 
+func dot_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromTypeErrorBinary(".", input1, input2)
+}
+
 var dot_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  INT       FLOAT     BOOL      VOID   STRING    ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
-	/*INT    */ {dot_s_xx, dot_s_xx, dot_s_xx, _s1__, dot_s_xx, _erro, _erro, _erro, _erro, _1___, _s1__},
-	/*FLOAT  */ {dot_s_xx, dot_s_xx, dot_s_xx, _s1__, dot_s_xx, _erro, _erro, _erro, _erro, _1___, _s1__},
-	/*BOOL   */ {dot_s_xx, dot_s_xx, dot_s_xx, _s1__, dot_s_xx, _erro, _erro, _erro, _erro, _1___, _s1__},
-	/*VOID   */ {_s2__, _s2__, _s2__, _void, _2___, _absn, _absn, _erro, _erro, _void, _void},
-	/*STRING */ {dot_s_xx, dot_s_xx, dot_s_xx, _1___, dot_s_xx, _erro, _erro, _erro, _erro, _1___, _1___},
-	/*ARRAY  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*MAP    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*FUNC   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro, _erro, _erro, _erro},
-	/*NULL   */ {_s2__, _s2__, _s2__, _void, _2___, _absn, _absn, _erro, _erro, _null, _null},
-	/*ABSENT */ {_s2__, _s2__, _s2__, _void, _2___, _absn, _absn, _erro, _erro, _null, _absn},
+	/*INT    */ {dot_s_xx, dot_s_xx, dot_s_xx, _s1__, dot_s_xx, dot_te, dot_te, dot_te, dot_te, _1___, _s1__},
+	/*FLOAT  */ {dot_s_xx, dot_s_xx, dot_s_xx, _s1__, dot_s_xx, dot_te, dot_te, dot_te, dot_te, _1___, _s1__},
+	/*BOOL   */ {dot_s_xx, dot_s_xx, dot_s_xx, _s1__, dot_s_xx, dot_te, dot_te, dot_te, dot_te, _1___, _s1__},
+	/*VOID   */ {_s2__, _s2__, _s2__, _void, _2___, _absn, _absn, dot_te, dot_te, _void, _void},
+	/*STRING */ {dot_s_xx, dot_s_xx, dot_s_xx, _1___, dot_s_xx, dot_te, dot_te, dot_te, dot_te, _1___, _1___},
+	/*ARRAY  */ {dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te},
+	/*MAP    */ {dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te},
+	/*FUNC   */ {dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te},
+	/*ERROR  */ {dot_te, dot_te, dot_te, dot_te, dot_te, _absn, _absn, dot_te, dot_te, dot_te, dot_te},
+	/*NULL   */ {_s2__, _s2__, _s2__, _void, _2___, _absn, _absn, dot_te, dot_te, _null, _null},
+	/*ABSENT */ {_s2__, _s2__, _s2__, _void, _2___, _absn, _absn, dot_te, dot_te, _null, _absn},
 }
 
 func BIF_dot(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -70,7 +75,7 @@ func BIF_substr_1_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ABSENT
 	}
 	if input1.IsError() {
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("substr1", input1)
 	}
 	sinput := input1.String()
 
@@ -102,7 +107,7 @@ func BIF_substr_0_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ABSENT
 	}
 	if input1.IsError() {
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("substr0", input1)
 	}
 	sinput := input1.String()
 
@@ -134,7 +139,7 @@ func BIF_index(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ABSENT
 	}
 	if input1.IsError() {
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("index", input1)
 	}
 	sinput1 := input1.String()
 	sinput2 := input2.String()
@@ -157,7 +162,7 @@ func BIF_contains(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ABSENT
 	}
 	if input1.IsError() {
-		return mlrval.ERROR
+		return input1
 	}
 
 	return mlrval.FromBool(strings.Contains(input1.String(), input2.String()))
@@ -172,13 +177,13 @@ func BIF_truncate(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return input2
 	}
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("truncate", input1)
 	}
 	if !input2.IsInt() {
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("truncate", input2)
 	}
 	if input2.AcquireIntValue() < 0 {
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("truncate", input2)
 	}
 
 	// Handle UTF-8 correctly: len(input1.AcquireStringValue()) will count bytes, not runes.
@@ -205,7 +210,7 @@ func BIF_leftpad(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 
 	if !input2.IsInt() {
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("leftpad", input2)
 	}
 
 	inputString := input1.String()
@@ -238,7 +243,7 @@ func BIF_rightpad(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 
 	if !input2.IsInt() {
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("rightpad", input2)
 	}
 
 	inputString := input1.String()
@@ -353,7 +358,7 @@ func BIF_format(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	}
 	formatString, ok := mlrvals[0].GetStringValue()
 	if !ok { // not a string
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("format", mlrvals[0])
 	}
 
 	pieces := lib.SplitString(formatString, "{}")
@@ -405,11 +410,11 @@ func BIF_unformatx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 func bif_unformat_aux(input1, input2 *mlrval.Mlrval, inferTypes bool) *mlrval.Mlrval {
 	template, ok1 := input1.GetStringValue()
 	if !ok1 {
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("unformat", input1)
 	}
 	input, ok2 := input2.GetStringValue()
 	if !ok2 {
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("unformat", input2)
 	}
 
 	templatePieces := strings.Split(template, "{}")
@@ -422,7 +427,15 @@ func bif_unformat_aux(input1, input2 *mlrval.Mlrval, inferTypes bool) *mlrval.Ml
 	remaining := input
 
 	if !strings.HasPrefix(remaining, templatePieces[0]) {
-		return mlrval.ERROR
+		return mlrval.FromError(
+			fmt.Errorf(
+				"unformat(\"%s\", \"%s\"): component \"%s\" lacks prefix \"%s\"",
+				input1.OriginalString(),
+				input2.OriginalString(),
+				remaining,
+				templatePieces[0],
+			),
+		)
 	}
 	remaining = remaining[len(templatePieces[0]):]
 	templatePieces = templatePieces[1:]
@@ -438,7 +451,15 @@ func bif_unformat_aux(input1, input2 *mlrval.Mlrval, inferTypes bool) *mlrval.Ml
 		} else {
 			index = strings.Index(remaining, templatePiece)
 			if index < 0 {
-				return mlrval.ERROR
+				return mlrval.FromError(
+					fmt.Errorf(
+						"unformat(\"%s\", \"%s\"): component \"%s\" lacks prefix \"%s\"",
+						input1.OriginalString(),
+						input2.OriginalString(),
+						remaining,
+						templatePiece,
+					),
+				)
 			}
 		}
 
@@ -466,12 +487,12 @@ func BIF_hexfmt(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 // ----------------------------------------------------------------
 func fmtnum_is(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("fmtnum", input2)
 	}
 	formatString := input2.AcquireStringValue()
 	formatter, err := mlrval.GetFormatter(formatString)
 	if err != nil {
-		return mlrval.ERROR
+		return mlrval.FromError(err)
 	}
 
 	return formatter.Format(input1)
@@ -479,12 +500,12 @@ func fmtnum_is(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func fmtnum_fs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("fmtnum", input2)
 	}
 	formatString := input2.AcquireStringValue()
 	formatter, err := mlrval.GetFormatter(formatString)
 	if err != nil {
-		return mlrval.ERROR
+		return mlrval.FromError(err)
 	}
 
 	return formatter.Format(input1)
@@ -492,12 +513,12 @@ func fmtnum_fs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func fmtnum_bs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromTypeErrorUnary("fmtnum", input2)
 	}
 	formatString := input2.AcquireStringValue()
 	formatter, err := mlrval.GetFormatter(formatString)
 	if err != nil {
-		return mlrval.ERROR
+		return mlrval.FromError(err)
 	}
 
 	intMv := mlrval.FromInt(lib.BoolToInt(input1.AcquireBoolValue()))
@@ -505,19 +526,23 @@ func fmtnum_bs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return formatter.Format(intMv)
 }
 
+func fmtnum_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromTypeErrorBinary("fmtnum", input1, input2)
+}
+
 var fmtnum_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  INT    FLOAT  BOOL   VOID   STRING     ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
-	/*INT    */ {_erro, _erro, _erro, _erro, fmtnum_is, _erro, _erro, _erro, _erro, _erro, _absn},
-	/*FLOAT  */ {_erro, _erro, _erro, _erro, fmtnum_fs, _erro, _erro, _erro, _erro, _erro, _absn},
-	/*BOOL   */ {_erro, _erro, _erro, _erro, fmtnum_bs, _erro, _erro, _erro, _erro, _erro, _absn},
-	/*VOID   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn},
-	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn},
-	/*ARRAY  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn},
-	/*MAP    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn},
-	/*FUNC   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*NULL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn},
-	/*ABSENT */ {_absn, _absn, _erro, _absn, _absn, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*INT    */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_is, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*FLOAT  */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_fs, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*BOOL   */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_bs, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*VOID   */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*STRING */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*ARRAY  */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*MAP    */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*FUNC   */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te},
+	/*ERROR  */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te},
+	/*NULL   */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*ABSENT */ {_absn, _absn, fmtnum_te, _absn, _absn, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn, _absn},
 }
 
 func BIF_fmtnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -549,7 +574,7 @@ func BIF_latin1_to_utf8(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		if err != nil {
 			// Somewhat arbitrary design decision
 			// return input1
-			return mlrval.ERROR
+			return mlrval.FromError(err)
 		} else {
 			return mlrval.FromString(output)
 		}
@@ -566,7 +591,7 @@ func BIF_utf8_to_latin1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		if err != nil {
 			// Somewhat arbitrary design decision
 			// return input1
-			return mlrval.ERROR
+			return mlrval.FromError(err)
 		} else {
 			return mlrval.FromString(output)
 		}

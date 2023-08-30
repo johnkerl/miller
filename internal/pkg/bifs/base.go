@@ -48,6 +48,8 @@
 package bifs
 
 import (
+	"fmt"
+
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
@@ -70,7 +72,7 @@ type RegexCaptureBinaryFunc func(input *mlrval.Mlrval, sregex *mlrval.Mlrval) (*
 // Helps keystroke-saving for wrapping Go math-library functions
 // Examples: cos, sin, etc.
 type mathLibUnaryFunc func(float64) float64
-type mathLibUnaryFuncWrapper func(input1 *mlrval.Mlrval, f mathLibUnaryFunc) *mlrval.Mlrval
+type mathLibUnaryFuncWrapper func(input1 *mlrval.Mlrval, f mathLibUnaryFunc, fname string) *mlrval.Mlrval
 
 // Function-pointer type for binary-operator disposition matrices.
 type BinaryFunc func(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval
@@ -91,11 +93,6 @@ type ComparatorFunc func(*mlrval.Mlrval, *mlrval.Mlrval) int
 // reasonable rectangular even after gofmt has been run.
 
 // ----------------------------------------------------------------
-// Return error (unary)
-func _erro1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.ERROR
-}
-
 // Return absent (unary)
 func _absn1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.ABSENT
@@ -124,12 +121,6 @@ func _void1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 // Return argument (unary)
 func _1u___(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return input1
-}
-
-// ----------------------------------------------------------------
-// Return error (binary)
-func _erro(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.ERROR
 }
 
 // Return absent (binary)
@@ -253,4 +244,22 @@ func recurseBinaryFuncOnInput1(binaryFunc BinaryFunc, input1, input2 *mlrval.Mlr
 	} else {
 		return binaryFunc(input1, input2)
 	}
+}
+
+func type_error_named_argument(
+	funcname string,
+	expected_type_name string,
+	varname string,
+	varval *mlrval.Mlrval,
+) *mlrval.Mlrval {
+	return mlrval.FromError(
+		fmt.Errorf(
+			"%s: %s should be a %s; got type %s with value %s",
+			funcname,
+			varname,
+			expected_type_name,
+			varval.GetTypeName(),
+			varval.StringMaybeQuoted(),
+		),
+	)
 }

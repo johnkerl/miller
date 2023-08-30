@@ -10,17 +10,17 @@ import (
 // BIF_ssub implements the ssub function -- no-frills string-replace, no
 // regexes, no escape sequences.
 func BIF_ssub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
-	return bif_ssub_gssub(input1, input2, input3, false)
+	return bif_ssub_gssub(input1, input2, input3, false, "ssub")
 }
 
 // BIF_gssub implements the gssub function -- no-frills string-replace, no
 // regexes, no escape sequences.
 func BIF_gssub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
-	return bif_ssub_gssub(input1, input2, input3, true)
+	return bif_ssub_gssub(input1, input2, input3, true, "gssub")
 }
 
 // bif_ssub_gssub is shared code for BIF_ssub and BIF_gssub.
-func bif_ssub_gssub(input1, input2, input3 *mlrval.Mlrval, doAll bool) *mlrval.Mlrval {
+func bif_ssub_gssub(input1, input2, input3 *mlrval.Mlrval, doAll bool, funcname string) *mlrval.Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
 	}
@@ -31,13 +31,13 @@ func bif_ssub_gssub(input1, input2, input3 *mlrval.Mlrval, doAll bool) *mlrval.M
 		return input3
 	}
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError(funcname, input1)
 	}
 	if !input2.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError(funcname, input2)
 	}
 	if !input3.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError(funcname, input3)
 	}
 	if doAll {
 		return mlrval.FromString(
@@ -68,13 +68,13 @@ func BIF_sub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 		return input3
 	}
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("sub", input1)
 	}
 	if !input2.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("sub", input2)
 	}
 	if !input3.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("sub", input3)
 	}
 
 	input := input1.AcquireStringValue()
@@ -98,13 +98,13 @@ func BIF_gsub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 		return input3
 	}
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("gsub", input1)
 	}
 	if !input2.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("gsub", input2)
 	}
 	if !input3.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("gsub", input3)
 	}
 
 	input := input1.AcquireStringValue()
@@ -126,7 +126,7 @@ func BIF_string_matches_regexp(input1, input2 *mlrval.Mlrval) (retval *mlrval.Ml
 	}
 	input1string := input1.String()
 	if !input2.IsStringOrVoid() {
-		return mlrval.ERROR, nil
+		return mlrval.FromNotStringError("=~", input2), nil
 	}
 
 	boolOutput, captures := lib.RegexMatches(input1string, input2.AcquireStringValue())
@@ -146,10 +146,10 @@ func BIF_string_does_not_match_regexp(input1, input2 *mlrval.Mlrval) (retval *ml
 
 func BIF_regextract(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("!=~", input1)
 	}
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("!=~", input2)
 	}
 	regex := lib.CompileMillerRegexOrDie(input2.AcquireStringValue())
 	match := regex.FindStringIndex(input1.AcquireStringValue())
@@ -162,10 +162,10 @@ func BIF_regextract(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func BIF_regextract_or_else(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("regextract_or_else", input1)
 	}
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("regextract_or_else", input2)
 	}
 	regex := lib.CompileMillerRegexOrDie(input2.AcquireStringValue())
 	match := regex.FindStringIndex(input1.AcquireStringValue())

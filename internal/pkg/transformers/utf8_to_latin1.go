@@ -106,7 +106,7 @@ func (tr *TransformerUTF8ToLatin1) Transform(
 				if err == nil {
 					pe.Value = mlrval.FromString(output)
 				} else {
-					pe.Value = mlrval.ERROR
+					pe.Value = mlrval.FromError(err)
 				}
 			}
 		}
