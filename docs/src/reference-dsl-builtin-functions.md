@@ -978,7 +978,7 @@ urandrange  (class=math #args=2) Floating-point numbers uniformly distributed on
 
 ### antimode
 <pre class="pre-non-highlight-non-pair">
-antimode  (class=stats #args=1) Returns the most frequently occurring value in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct. In cases of ties, first-found wins.
+antimode  (class=stats #args=1) Returns the least frequently occurring value in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct. In cases of ties, first-found wins.
 Examples:
 antimode([3,3,4,4,4]) is 3
 antimode([3,3,4,4]) is 3

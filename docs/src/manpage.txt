@@ -2167,7 +2167,7 @@ MILLER(1)                                                            MILLER(1)
         (class=math #args=1) Inverse hyperbolic cosine.
 
    1mantimode0m
-        (class=stats #args=1) Returns the most frequently occurring value in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct. In cases of ties, first-found wins.
+        (class=stats #args=1) Returns the least frequently occurring value in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct. In cases of ties, first-found wins.
        Examples:
        antimode([3,3,4,4,4]) is 3
        antimode([3,3,4,4]) is 3
@@ -3621,4 +3621,4 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-08-28                         MILLER(1)
+                                  2023-08-30                         MILLER(1)

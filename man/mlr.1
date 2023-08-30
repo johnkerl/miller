@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2023-08-28
+.\"      Date: 2023-08-30
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2023-08-28" "\ \&" "\ \&"
+.TH "MILLER" "1" "2023-08-30" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2772,7 +2772,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
- (class=stats #args=1) Returns the most frequently occurring value in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct. In cases of ties, first-found wins.
+ (class=stats #args=1) Returns the least frequently occurring value in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct. In cases of ties, first-found wins.
 Examples:
 antimode([3,3,4,4,4]) is 3
 antimode([3,3,4,4]) is 3
