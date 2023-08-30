@@ -101,6 +101,10 @@ func FromNotStringError(funcname string, v *Mlrval) *Mlrval {
 	return FromNotNamedTypeError(funcname, v, "string")
 }
 
+func FromNotBooleanError(funcname string, v *Mlrval) *Mlrval {
+	return FromNotNamedTypeError(funcname, v, "boolean")
+}
+
 func FromNotIntError(funcname string, v *Mlrval) *Mlrval {
 	return FromNotNamedTypeError(funcname, v, "int")
 }

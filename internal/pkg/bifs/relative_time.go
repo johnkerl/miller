@@ -10,7 +10,7 @@ import (
 
 func BIF_dhms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("dhms2sec", input1)
 	}
 
 	input := input1.String()
@@ -66,7 +66,7 @@ func BIF_dhms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func BIF_dhms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("dhms2fsec", input1)
 	}
 
 	input := input1.String()
@@ -122,7 +122,7 @@ func BIF_dhms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func BIF_hms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("hms2sec", input1)
 	}
 	if input1.AcquireStringValue() == "" {
 		return mlrval.ERROR
@@ -146,7 +146,7 @@ func BIF_hms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func BIF_hms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("hms2fsec", input1)
 	}
 
 	var h, m int
@@ -170,7 +170,7 @@ func BIF_hms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_sec2dhms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	isec, ok := input1.GetIntValue()
 	if !ok {
-		return mlrval.ERROR
+		return mlrval.FromNotIntError("sec2dhms", input1)
 	}
 
 	var d, h, m, s int64
@@ -198,7 +198,7 @@ func BIF_sec2dhms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_sec2hms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	isec, ok := input1.GetIntValue()
 	if !ok {
-		return mlrval.ERROR
+		return mlrval.FromNotIntError("sec2hms", input1)
 	}
 	sign := ""
 	if isec < 0 {
@@ -219,7 +219,7 @@ func BIF_sec2hms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_fsec2dhms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	fsec, ok := input1.GetNumericToFloatValue()
 	if !ok {
-		return mlrval.ERROR
+		return mlrval.FromNotIntError("fsec2dhms", input1)
 	}
 
 	sign := int64(1)
@@ -269,7 +269,7 @@ func BIF_fsec2dhms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_fsec2hms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	fsec, ok := input1.GetNumericToFloatValue()
 	if !ok {
-		return mlrval.ERROR
+		return mlrval.FromNotIntError("fsec2hms", input1)
 	}
 
 	sign := ""

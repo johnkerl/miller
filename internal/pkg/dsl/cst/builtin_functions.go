@@ -908,10 +908,10 @@ func (node *StandardTernaryOperatorNode) Evaluate(
 
 func BinaryShortCircuitPlaceholder(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	lib.InternalCodingErrorPanic("Short-circuting was not correctly implemented")
-	return mlrval.ERROR // not reached
+	return nil // not reached
 }
 
 func TernaryShortCircuitPlaceholder(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	lib.InternalCodingErrorPanic("Short-circuting was not correctly implemented")
-	return mlrval.ERROR // not reached
+	return nil // not reached
 }

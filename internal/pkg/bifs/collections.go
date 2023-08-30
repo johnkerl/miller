@@ -166,7 +166,7 @@ func has_key_in_array(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.FALSE
 	}
 	if !input2.IsInt() {
-		return mlrval.ERROR
+		return mlrval.FromNotIntError("haskey", input2)
 	}
 	arrayval := input1.AcquireArrayValue()
 	_, ok := unaliasArrayIndex(&arrayval, int(input2.AcquireIntValue()))
@@ -177,7 +177,7 @@ func has_key_in_map(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input2.IsString() || input2.IsInt() {
 		return mlrval.FromBool(input1.AcquireMapValue().Has(input2.String()))
 	} else {
-		return mlrval.ERROR
+		return mlrval.FromNotNamedTypeError("haskey", input2, "string or int")
 	}
 }
 
@@ -187,7 +187,7 @@ func BIF_haskey(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	} else if input1.IsMap() {
 		return has_key_in_map(input1, input2)
 	} else {
-		return mlrval.ERROR
+		return mlrval.FromNotCollectionError("haskey", input1)
 	}
 }
 
@@ -212,10 +212,10 @@ func BIF_concat(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 // ================================================================
 func BIF_mapselect(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) < 1 {
-		return mlrval.ERROR
+		return mlrval.FromErrorString("mapselect: received a zero-length array as input")
 	}
 	if !mlrvals[0].IsMap() {
-		return mlrval.ERROR
+		return mlrval.FromNotMapError("mapselect", mlrvals[0])
 	}
 	oldmap := mlrvals[0].AcquireMapValue()
 	newMap := mlrval.NewMlrmap()
@@ -231,11 +231,11 @@ func BIF_mapselect(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 				if element.IsString() {
 					newKeys[element.AcquireStringValue()] = true
 				} else {
-					return mlrval.ERROR
+					return mlrval.FromNotStringError("mapselect", element)
 				}
 			}
 		} else {
-			return mlrval.ERROR
+			return mlrval.FromNotNamedTypeError("mapselect", selectArg, "string, int, or array")
 		}
 	}
 
@@ -253,10 +253,10 @@ func BIF_mapselect(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 // ----------------------------------------------------------------
 func BIF_mapexcept(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) < 1 {
-		return mlrval.ERROR
+		return mlrval.FromErrorString("mapexcept: received a zero-length array as input")
 	}
 	if !mlrvals[0].IsMap() {
-		return mlrval.ERROR
+		return mlrval.FromNotMapError("mapexcept", mlrvals[0])
 	}
 	newMap := mlrvals[0].AcquireMapValue().Copy()
 
@@ -270,11 +270,11 @@ func BIF_mapexcept(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 				if element.IsString() {
 					newMap.Remove(element.AcquireStringValue())
 				} else {
-					return mlrval.ERROR
+					return mlrval.FromNotStringError("mapselect", element)
 				}
 			}
 		} else {
-			return mlrval.ERROR
+			return mlrval.FromNotNamedTypeError("mapexcept", exceptArg, "string, int, or array")
 		}
 	}
 
@@ -290,13 +290,13 @@ func BIF_mapsum(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrvals[0]
 	}
 	if mlrvals[0].Type() != mlrval.MT_MAP {
-		return mlrval.ERROR
+		return mlrval.FromNotMapError("mapsum", mlrvals[0])
 	}
 	newMap := mlrvals[0].AcquireMapValue().Copy()
 
 	for _, otherMapArg := range mlrvals[1:] {
 		if otherMapArg.Type() != mlrval.MT_MAP {
-			return mlrval.ERROR
+			return mlrval.FromNotMapError("mapsum", otherMapArg)
 		}
 
 		for pe := otherMapArg.AcquireMapValue().Head; pe != nil; pe = pe.Next {
@@ -316,13 +316,13 @@ func BIF_mapdiff(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrvals[0]
 	}
 	if !mlrvals[0].IsMap() {
-		return mlrval.ERROR
+		return mlrval.FromNotMapError("mapdiff", mlrvals[0])
 	}
 	newMap := mlrvals[0].AcquireMapValue().Copy()
 
 	for _, otherMapArg := range mlrvals[1:] {
 		if !otherMapArg.IsMap() {
-			return mlrval.ERROR
+			return mlrval.FromNotMapError("mapdiff", otherMapArg)
 		}
 
 		for pe := otherMapArg.AcquireMapValue().Head; pe != nil; pe = pe.Next {
@@ -338,7 +338,7 @@ func BIF_mapdiff(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 // joink({"a":3,"b":4,"c":5}, ",") -> "a,b,c"
 func BIF_joink(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("joink", input2)
 	}
 	fieldSeparator := input2.AcquireStringValue()
 	if input1.IsMap() {
@@ -365,7 +365,7 @@ func BIF_joink(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 		return mlrval.FromString(buffer.String())
 	} else {
-		return mlrval.ERROR
+		return mlrval.FromNotCollectionError("joink", input1)
 	}
 }
 
@@ -374,7 +374,7 @@ func BIF_joink(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // joinv({"a":3,"b":4,"c":5}, ",") -> "3,4,5"
 func BIF_joinv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("joinv", input2)
 	}
 	fieldSeparator := input2.AcquireStringValue()
 
@@ -401,7 +401,7 @@ func BIF_joinv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 		return mlrval.FromString(buffer.String())
 	} else {
-		return mlrval.ERROR
+		return mlrval.FromNotCollectionError("joinv", input1)
 	}
 }
 
@@ -410,11 +410,11 @@ func BIF_joinv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // joinkv({"a":3,"b":4,"c":5}, "=", ",") -> "a=3,b=4,c=5"
 func BIF_joinkv(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("joinkv", input2)
 	}
 	pairSeparator := input2.AcquireStringValue()
 	if !input3.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("joinkv", input3)
 	}
 	fieldSeparator := input3.AcquireStringValue()
 
@@ -446,7 +446,7 @@ func BIF_joinkv(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 
 		return mlrval.FromString(buffer.String())
 	} else {
-		return mlrval.ERROR
+		return mlrval.FromNotCollectionError("joinkv", input1)
 	}
 }
 
@@ -454,14 +454,14 @@ func BIF_joinkv(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 // splitkv("a=3,b=4,c=5", "=", ",") -> {"a":3,"b":4,"c":5}
 func BIF_splitkv(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("splitkv", input1)
 	}
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("splitkv", input2)
 	}
 	pairSeparator := input2.AcquireStringValue()
 	if !input3.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("splitkv", input3)
 	}
 	fieldSeparator := input3.AcquireStringValue()
 
@@ -489,14 +489,14 @@ func BIF_splitkv(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 // splitkvx("a=3,b=4,c=5", "=", ",") -> {"a":"3","b":"4","c":"5"}
 func BIF_splitkvx(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("splitkvx", input1)
 	}
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("splitkvx", input2)
 	}
 	pairSeparator := input2.AcquireStringValue()
 	if !input3.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("splitkvx", input3)
 	}
 	fieldSeparator := input3.AcquireStringValue()
 
@@ -525,10 +525,10 @@ func BIF_splitkvx(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 // splitnv("a,b,c", ",") -> {"1":"a","2":"b","3":"c"}
 func BIF_splitnv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("splitnv", input1)
 	}
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("splitnv", input2)
 	}
 
 	output := mlrval.FromMap(mlrval.NewMlrmap())
@@ -547,10 +547,10 @@ func BIF_splitnv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // splitnvx("3,4,5", ",") -> {"1":"3","2":"4","3":"5"}
 func BIF_splitnvx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("splitnvx", input1)
 	}
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("splitnvx", input2)
 	}
 
 	output := mlrval.FromMap(mlrval.NewMlrmap())
@@ -569,10 +569,10 @@ func BIF_splitnvx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // splita("3,4,5", ",") -> [3,4,5]
 func BIF_splita(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("splita", input1)
 	}
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("splita", input2)
 	}
 	fieldSeparator := input2.AcquireStringValue()
 
@@ -593,10 +593,10 @@ func BIF_splita(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // e.g. splitax("3,4,5", ",") -> ["3","4","5"]
 func BIF_splitax(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("splitax", input1)
 	}
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("splitax", input2)
 	}
 	input := input1.AcquireStringValue()
 	fieldSeparator := input2.AcquireStringValue()
@@ -640,7 +640,7 @@ func BIF_get_keys(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.FromArray(arrayval)
 
 	} else {
-		return mlrval.ERROR
+		return mlrval.FromNotCollectionError("get_keys", input1)
 	}
 }
 
@@ -665,14 +665,14 @@ func BIF_get_values(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.FromArray(arrayval)
 
 	} else {
-		return mlrval.ERROR
+		return mlrval.FromNotCollectionError("get_values", input1)
 	}
 }
 
 // ----------------------------------------------------------------
 func BIF_append(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsArray() {
-		return mlrval.ERROR
+		return mlrval.FromNotArrayError("append", input1)
 	}
 
 	output := input1.Copy()
@@ -689,11 +689,11 @@ func BIF_append(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_flatten(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input3.IsMap() || input3.IsArray() {
 		if !input1.IsString() && input1.Type() != mlrval.MT_VOID {
-			return mlrval.ERROR
+			return mlrval.FromNotStringError("flatten", input1)
 		}
 		prefix := input1.AcquireStringValue()
 		if !input2.IsString() {
-			return mlrval.ERROR
+			return mlrval.FromNotStringError("flatten", input2)
 		}
 		delimiter := input2.AcquireStringValue()
 
@@ -715,7 +715,7 @@ func BIF_flatten_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // unflatten({"a.b.c", ".") is {"a": { "b": { "c": 4}}}.
 func BIF_unflatten(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("unflatten", input2)
 	}
 	if input1.Type() != mlrval.MT_MAP {
 		return input1
@@ -778,12 +778,12 @@ func BIF_json_parse(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsVoid() {
 		return input1
 	} else if !input1.IsString() {
-		return mlrval.ERROR
+		return mlrval.FromNotStringError("json_parse", input1)
 	} else {
 		output := mlrval.FromPending()
 		err := output.UnmarshalJSON([]byte(input1.AcquireStringValue()))
 		if err != nil {
-			return mlrval.ERROR
+			return mlrval.FromError(err)
 		}
 		return output
 	}
@@ -792,7 +792,7 @@ func BIF_json_parse(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_json_stringify_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	outputBytes, err := input1.MarshalJSON(mlrval.JSON_SINGLE_LINE, false)
 	if err != nil {
-		return mlrval.ERROR
+		return mlrval.FromError(err)
 	} else {
 		return mlrval.FromString(string(outputBytes))
 	}
@@ -802,7 +802,7 @@ func BIF_json_stringify_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	var jsonFormatting mlrval.TJSONFormatting = mlrval.JSON_SINGLE_LINE
 	useMultiline, ok := input2.GetBoolValue()
 	if !ok {
-		return mlrval.ERROR
+		return mlrval.FromNotBooleanError("json_stringify", input2)
 	}
 	if useMultiline {
 		jsonFormatting = mlrval.JSON_MULTILINE
@@ -810,7 +810,7 @@ func BIF_json_stringify_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 	outputBytes, err := input1.MarshalJSON(jsonFormatting, false)
 	if err != nil {
-		return mlrval.ERROR
+		return mlrval.FromError(err)
 	} else {
 		return mlrval.FromString(string(outputBytes))
 	}

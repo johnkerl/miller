@@ -75,10 +75,10 @@ func BIF_urandrange(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_urandelement(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	arrayval := input1.GetArray()
 	if arrayval == nil { // not an array
-		return mlrval.ERROR
+		return mlrval.FromNotArrayError("urandelement", input1)
 	}
 	if len(arrayval) == 0 {
-		return mlrval.ERROR
+		return mlrval.FromErrorString("urandelement: received a zero-length array as input")
 	}
 
 	// lo is inclusive, hi is exclusive
