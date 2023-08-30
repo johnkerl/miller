@@ -131,7 +131,7 @@ func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
 		}
 
 	} else if name == "uif" {
-		p75 := keeper.EmitNonInterpolated(25.0)
+		p75 := keeper.EmitNonInterpolated(75.0)
 		iqr := keeper.EmitNamed("iqr")
 		if p75.IsNumeric() && iqr.IsNumeric() {
 			return bifs.BIF_plus_binary(p75, bifs.BIF_times(fenceInnerK, iqr))
@@ -140,7 +140,7 @@ func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
 		}
 
 	} else if name == "uof" {
-		p75 := keeper.EmitNonInterpolated(25.0)
+		p75 := keeper.EmitNonInterpolated(75.0)
 		iqr := keeper.EmitNamed("iqr")
 		if p75.IsNumeric() && iqr.IsNumeric() {
 			return bifs.BIF_plus_binary(p75, bifs.BIF_times(fenceOuterK, iqr))
