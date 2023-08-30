@@ -36,7 +36,7 @@ func BIF_dhms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 		_, err := fmt.Sscanf(remainingInput, "%d%s", &n, &rest)
 		if err != nil {
-			return mlrval.ERROR
+			return mlrval.FromError(err)
 		}
 		if len(rest) < 1 {
 			return mlrval.ERROR
@@ -92,7 +92,7 @@ func BIF_dhms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 		_, err := fmt.Sscanf(remainingInput, "%f%s", &f, &rest)
 		if err != nil {
-			return mlrval.ERROR
+			return mlrval.FromError(err)
 		}
 		if len(rest) < 1 {
 			return mlrval.ERROR

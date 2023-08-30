@@ -23,6 +23,14 @@ func (mv *Mlrval) GetStringValue() (stringValue string, isString bool) {
 	}
 }
 
+func (mv *Mlrval) GetStringValueOrError(funcname string) (stringValue string, errValue *Mlrval) {
+	if mv.Type() == MT_STRING || mv.Type() == MT_VOID {
+		return mv.printrep, nil
+	} else {
+		return "", FromNotStringError(funcname, mv)
+	}
+}
+
 func (mv *Mlrval) GetIntValue() (intValue int64, isInt bool) {
 	if mv.Type() == MT_INT {
 		return mv.intf.(int64), true
@@ -31,7 +39,7 @@ func (mv *Mlrval) GetIntValue() (intValue int64, isInt bool) {
 	}
 }
 
-func (mv *Mlrval) GetIntValueOrError(funcname string) (intValue int64, err *Mlrval) {
+func (mv *Mlrval) GetIntValueOrError(funcname string) (intValue int64, errValue *Mlrval) {
 	if mv.Type() == MT_INT {
 		return mv.intf.(int64), nil
 	} else {
@@ -89,7 +97,7 @@ func (mv *Mlrval) GetArray() []*Mlrval {
 	}
 }
 
-func (mv *Mlrval) GetArrayValueOrError(funcname string) (ok []*Mlrval, err *Mlrval) {
+func (mv *Mlrval) GetArrayValueOrError(funcname string) (ok []*Mlrval, errValue *Mlrval) {
 	if mv.IsArray() {
 		return mv.intf.([]*Mlrval), nil
 	} else {
@@ -105,7 +113,7 @@ func (mv *Mlrval) GetMap() *Mlrmap {
 	}
 }
 
-func (mv *Mlrval) GetMapValueOrError(funcname string) (ok *Mlrmap, err *Mlrval) {
+func (mv *Mlrval) GetMapValueOrError(funcname string) (ok *Mlrmap, errValue *Mlrval) {
 	if mv.IsMap() {
 		return mv.intf.(*Mlrmap), nil
 	} else {
