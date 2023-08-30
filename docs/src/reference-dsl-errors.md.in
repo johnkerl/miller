@@ -1,5 +1,29 @@
 # DSL errors and transparency
 
+# Handling for data errors
+
+By default, Miller doesn't stop data processing for a single cell error. For example:
+
+GENMD-RUN-COMMAND
+mlr --csv --from data-error.csv cat
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv --from data-error.csv put '$y = log10($x)'
+GENMD-EOF
+
+If you do want to stop processing, though, you have three options. The first is the `mlr -x` flag:
+
+GENMD-RUN-COMMAND-TOLERATING-ERROR
+mlr -x --csv --from data-error.csv put '$y = log10($x)'
+GENMD-EOF
+
+The second is to put `-x` into your [`~/.mlrrc` file](customization.md).
+
+The third is to set the `MLR_FAIL_ON_DATA_ERROR` environment variable, which makes `-x` implicit.
+
+# Common causes of syntax errors
+
 As soon as you have a [programming language](miller-programming-language.md), you start having the problem *What is my code doing, and why?* This includes getting syntax errors -- which are always annoying -- as well as the even more annoying problem of a program which parses without syntax error but doesn't do what you expect.
 
 The syntax-error message gives you line/column position for the syntax that couldn't be parsed. The cause may be clear from that information, or perhaps not.  Here are some common causes of syntax errors:
@@ -10,7 +34,7 @@ The syntax-error message gives you line/column position for the syntax that coul
 
 * Curly braces are required for the bodies of `if`/`while`/`for` blocks, even when the body is a single statement.
 
-As for transparency:
+# Transparency
 
 * As in any language, you can do `print`, or `eprint` to print to stderr.  See [Print statements](reference-dsl-output-statements.md#print-statements); see also [Dump statements](reference-dsl-output-statements.md#dump-statements) and [Emit statements](reference-dsl-output-statements.md#emit-statements).
 

@@ -1,7 +1,5 @@
 ----------------------------------------------------------------
-* optional env var: MLR_DATA_ERROR_FAIL_FAST or somesuch
 * look at: mr -vvv test/cases/io-spec-tsv/0004/cmd
-* doc page w/ options incl .mlrrc
 
 ----------------------------------------------------------------
 
