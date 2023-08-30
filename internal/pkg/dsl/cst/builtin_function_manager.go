@@ -1021,7 +1021,7 @@ is normally distributed.`,
 		{
 			name:      "antimode",
 			class:     FUNC_CLASS_STATS,
-			help:      `Returns the most frequently occurring value in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct. In cases of ties, first-found wins.`,
+			help:      `Returns the least frequently occurring value in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct. In cases of ties, first-found wins.`,
 			unaryFunc: bifs.BIF_antimode,
 			examples: []string{
 				`antimode([3,3,4,4,4]) is 3`,
