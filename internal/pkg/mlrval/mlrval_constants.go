@@ -41,12 +41,6 @@ var VOID = &Mlrval{
 	printrepValid: true,
 }
 
-var ERROR = &Mlrval{
-	mvtype:        MT_ERROR,
-	printrep:      ERROR_PRINTREP,
-	printrepValid: true,
-}
-
 var NULL = &Mlrval{
 	mvtype:        MT_NULL,
 	printrep:      "null",

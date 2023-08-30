@@ -1,13 +1,7 @@
 ----------------------------------------------------------------
-* _erro and _erro1 rid entirely of
-* other modules obv ... long and winding road ...
 * optional env var: MLR_DATA_ERROR_FAIL_FAST or somesuch
 * maybe call it data-processing error to differentiate from input-data error -- ?
 * look at: mr -vvv test/cases/io-spec-tsv/0004/cmd
-
-grep -c mlrval.ERROR $(rg -wl mlrval.ERROR|sort)
-
-mlr -x --from x --csv fraction -f c
 
 ----------------------------------------------------------------
 
@@ -51,7 +45,7 @@ func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
         }
 
     } else if name == "uif" {
-        p75 := keeper.EmitNonInterpolated(25.0)
+        p75 := keeper.EmitNonInterpolated(75.0)
         iqr := keeper.EmitNamed("iqr")
         if p75.IsNumeric() && iqr.IsNumeric() {
             return bifs.BIF_plus_binary(p75, bifs.BIF_times(fenceInnerK, iqr))
@@ -60,7 +54,7 @@ func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
         }
 
     } else if name == "uof" {
-        p75 := keeper.EmitNonInterpolated(25.0)
+        p75 := keeper.EmitNonInterpolated(75.0)
         iqr := keeper.EmitNamed("iqr")
         if p75.IsNumeric() && iqr.IsNumeric() {
             return bifs.BIF_plus_binary(p75, bifs.BIF_times(fenceOuterK, iqr))

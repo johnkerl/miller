@@ -34,7 +34,7 @@ var orderedMlrvals = []*Mlrval{
 	// FromMap(NewMlrmap()),
 
 	// TODO:
-	ERROR,
+	FromErrorString("error text goes here"),
 	NULL,
 	ABSENT,
 }

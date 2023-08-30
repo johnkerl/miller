@@ -752,7 +752,7 @@ func (node *LogicalANDOperatorNode) Evaluate(
 	aout := node.a.Evaluate(state)
 	atype := aout.Type()
 	if !(atype == mlrval.MT_ABSENT || atype == mlrval.MT_BOOL) {
-		return mlrval.ERROR
+		return mlrval.FromNotNamedTypeError("&&", aout, "absent or boolean")
 	}
 	if atype == mlrval.MT_ABSENT {
 		return mlrval.ABSENT
@@ -768,7 +768,7 @@ func (node *LogicalANDOperatorNode) Evaluate(
 	bout := node.b.Evaluate(state)
 	btype := bout.Type()
 	if !(btype == mlrval.MT_ABSENT || btype == mlrval.MT_BOOL) {
-		return mlrval.ERROR
+		return mlrval.FromNotNamedTypeError("&&", bout, "absent or boolean")
 	}
 	if btype == mlrval.MT_ABSENT {
 		return mlrval.ABSENT
@@ -800,7 +800,7 @@ func (node *LogicalOROperatorNode) Evaluate(
 	aout := node.a.Evaluate(state)
 	atype := aout.Type()
 	if !(atype == mlrval.MT_ABSENT || atype == mlrval.MT_BOOL) {
-		return mlrval.ERROR
+		return mlrval.FromNotNamedTypeError("||", aout, "absent or boolean")
 	}
 	if atype == mlrval.MT_ABSENT {
 		return mlrval.ABSENT
@@ -816,7 +816,7 @@ func (node *LogicalOROperatorNode) Evaluate(
 	bout := node.b.Evaluate(state)
 	btype := bout.Type()
 	if !(btype == mlrval.MT_ABSENT || btype == mlrval.MT_BOOL) {
-		return mlrval.ERROR
+		return mlrval.FromNotNamedTypeError("||", bout, "absent or boolean")
 	}
 	if btype == mlrval.MT_ABSENT {
 		return mlrval.ABSENT
@@ -884,7 +884,7 @@ func (node *StandardTernaryOperatorNode) Evaluate(
 
 	boolValue, isBool := aout.GetBoolValue()
 	if !isBool {
-		return mlrval.ERROR
+		return mlrval.FromNotBooleanError("?:", aout)
 	}
 
 	// Short-circuit: defer evaluation unless needed

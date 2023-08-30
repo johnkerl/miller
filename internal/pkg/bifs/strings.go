@@ -2,6 +2,7 @@ package bifs
 
 import (
 	"bytes"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -161,7 +162,7 @@ func BIF_contains(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ABSENT
 	}
 	if input1.IsError() {
-		return mlrval.ERROR
+		return input1
 	}
 
 	return mlrval.FromBool(strings.Contains(input1.String(), input2.String()))
@@ -426,7 +427,15 @@ func bif_unformat_aux(input1, input2 *mlrval.Mlrval, inferTypes bool) *mlrval.Ml
 	remaining := input
 
 	if !strings.HasPrefix(remaining, templatePieces[0]) {
-		return mlrval.ERROR
+		return mlrval.FromError(
+			fmt.Errorf(
+				"unformat(\"%s\", \"%s\"): component \"%s\" lacks prefix \"%s\"",
+				input1.OriginalString(),
+				input2.OriginalString(),
+				remaining,
+				templatePieces[0],
+			),
+		)
 	}
 	remaining = remaining[len(templatePieces[0]):]
 	templatePieces = templatePieces[1:]
@@ -442,7 +451,15 @@ func bif_unformat_aux(input1, input2 *mlrval.Mlrval, inferTypes bool) *mlrval.Ml
 		} else {
 			index = strings.Index(remaining, templatePiece)
 			if index < 0 {
-				return mlrval.ERROR
+				return mlrval.FromError(
+					fmt.Errorf(
+						"unformat(\"%s\", \"%s\"): component \"%s\" lacks prefix \"%s\"",
+						input1.OriginalString(),
+						input2.OriginalString(),
+						remaining,
+						templatePiece,
+					),
+				)
 			}
 		}
 
@@ -475,7 +492,7 @@ func fmtnum_is(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	formatString := input2.AcquireStringValue()
 	formatter, err := mlrval.GetFormatter(formatString)
 	if err != nil {
-		return mlrval.ERROR
+		return mlrval.FromError(err)
 	}
 
 	return formatter.Format(input1)
@@ -488,7 +505,7 @@ func fmtnum_fs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	formatString := input2.AcquireStringValue()
 	formatter, err := mlrval.GetFormatter(formatString)
 	if err != nil {
-		return mlrval.ERROR
+		return mlrval.FromError(err)
 	}
 
 	return formatter.Format(input1)
@@ -501,7 +518,7 @@ func fmtnum_bs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	formatString := input2.AcquireStringValue()
 	formatter, err := mlrval.GetFormatter(formatString)
 	if err != nil {
-		return mlrval.ERROR
+		return mlrval.FromError(err)
 	}
 
 	intMv := mlrval.FromInt(lib.BoolToInt(input1.AcquireBoolValue()))
@@ -557,7 +574,7 @@ func BIF_latin1_to_utf8(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		if err != nil {
 			// Somewhat arbitrary design decision
 			// return input1
-			return mlrval.ERROR
+			return mlrval.FromError(err)
 		} else {
 			return mlrval.FromString(output)
 		}
@@ -574,7 +591,7 @@ func BIF_utf8_to_latin1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		if err != nil {
 			// Somewhat arbitrary design decision
 			// return input1
-			return mlrval.ERROR
+			return mlrval.FromError(err)
 		} else {
 			return mlrval.FromString(output)
 		}

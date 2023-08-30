@@ -37,7 +37,7 @@ func TestComparators(t *testing.T) {
 	assert.Equal(t, 0, LexicalAscendingComparator(bfalse, bfalse))
 	assert.Equal(t, -1, LexicalAscendingComparator(bfalse, btrue))
 	assert.Equal(t, -1, LexicalAscendingComparator(sabc, sdef))
-	assert.Equal(t, 0, LexicalAscendingComparator(ERROR, ERROR))
+	assert.Equal(t, 0, LexicalAscendingComparator(FromErrorString("foo"), FromErrorString("foo")))
 	assert.Equal(t, 0, LexicalAscendingComparator(ABSENT, ABSENT))
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -48,7 +48,7 @@ func TestComparators(t *testing.T) {
 
 	assert.Equal(t, 1, NumericAscendingComparator(btrue, bfalse))
 
-	assert.Equal(t, 0, NumericAscendingComparator(ERROR, ERROR))
+	assert.Equal(t, 0, NumericAscendingComparator(FromErrorString("foo"), FromErrorString("foo")))
 	assert.Equal(t, 0, NumericAscendingComparator(ABSENT, ABSENT))
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -56,22 +56,22 @@ func TestComparators(t *testing.T) {
 
 	assert.Equal(t, -1, LexicalAscendingComparator(i10, btrue)) // "10" < "true"
 	assert.Equal(t, -1, LexicalAscendingComparator(i10, sabc))  // "10" < "abc"
-	assert.Equal(t, 1, LexicalAscendingComparator(i10, ERROR))  // "10" > "(error)"
+	assert.Equal(t, 1, LexicalAscendingComparator(i10, FromErrorString("foo")))  // "10" > "(error)"
 
 	assert.Equal(t, 1, LexicalAscendingComparator(bfalse, sabc))  // "false" > "abc"
-	assert.Equal(t, 1, LexicalAscendingComparator(bfalse, ERROR)) // "false" > "(error)"
+	assert.Equal(t, 1, LexicalAscendingComparator(bfalse, FromErrorString("foo"))) // "false" > "(error)"
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Across-type numeric comparisons
 
 	assert.Equal(t, -1, NumericAscendingComparator(i10, btrue))
 	assert.Equal(t, -1, NumericAscendingComparator(i10, sabc))
-	assert.Equal(t, -1, NumericAscendingComparator(i10, ERROR))
+	assert.Equal(t, -1, NumericAscendingComparator(i10, FromErrorString("foo")))
 	assert.Equal(t, -1, NumericAscendingComparator(i10, ABSENT))
 
 	assert.Equal(t, -1, NumericAscendingComparator(bfalse, sabc))
-	assert.Equal(t, -1, NumericAscendingComparator(bfalse, ERROR))
+	assert.Equal(t, -1, NumericAscendingComparator(bfalse, FromErrorString("foo")))
 	assert.Equal(t, -1, NumericAscendingComparator(bfalse, ABSENT))
 
-	assert.Equal(t, -1, NumericAscendingComparator(ERROR, ABSENT))
+	assert.Equal(t, -1, NumericAscendingComparator(FromErrorString("foo"), ABSENT))
 }
