@@ -20,7 +20,7 @@ builds:
     goos:
       - linux
       - windows
-      - darwin
+      - macos
       - freebsd
       - aix
     goarch:
@@ -38,11 +38,11 @@ builds:
     ignore:
       - goos: linux
         goarch: ppc64
-      - goos: darwin
+      - goos: macos
         goarch: arm
-      - goos: darwin
+      - goos: macos
         goarch: ppc64le
-      - goos: darwin
+      - goos: macos
         goarch: s390x
       - goos: windows
         goarch: arm64
@@ -70,8 +70,6 @@ archives:
     format_overrides:
       - goos: windows
         format: zip
-    replacements:
-      darwin: macos
     name_template: '{{ .ProjectName }}-{{ .Version }}-{{ .Os }}-{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     files:
       - LICENSE.txt
