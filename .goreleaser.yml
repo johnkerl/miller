@@ -20,7 +20,7 @@ builds:
     goos:
       - linux
       - windows
-      - macos
+      - darwin
       - freebsd
       - aix
     goarch:
@@ -38,11 +38,11 @@ builds:
     ignore:
       - goos: linux
         goarch: ppc64
-      - goos: macos
+      - goos: darwin
         goarch: arm
-      - goos: macos
+      - goos: darwin
         goarch: ppc64le
-      - goos: macos
+      - goos: darwin
         goarch: s390x
       - goos: windows
         goarch: arm64
