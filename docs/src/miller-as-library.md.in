@@ -3,6 +3,11 @@
 Very initially and experimentally, as of Miller 6.9.1, Go developers will be able to access Miller source
 code --- moved from `internal/pkg/` to `pkg/` --- within their own Go projects.
 
+Caveat emptor: Miller's backward-compatibility guarantees are at the CLI level; API is not guaranteed stable.
+For this reason, please be careful with your version pins.
+
+I'm happy to discuss this new area further at the [discussions page](https://github.com/johnkerl/miller/discussions).
+
 ## Setup
 
 ```
