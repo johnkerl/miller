@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/johnkerl/miller/internal/pkg/entrypoint"
+	"github.com/johnkerl/miller/pkg/entrypoint"
 	"github.com/pkg/profile" // for trace.out
 )
 

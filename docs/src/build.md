@@ -33,7 +33,7 @@ Two-clause BSD license [https://github.com/johnkerl/miller/blob/master/LICENSE.t
 * `make` creates the `./mlr` (or `.\mlr.exe` on Windows) executable
     * Without `make`: `go build github.com/johnkerl/miller/cmd/mlr`
 * `make check` runs tests
-    * Without `make`: `go test github.com/johnkerl/miller/internal/pkg/...` and `mlr regtest`
+    * Without `make`: `go test github.com/johnkerl/miller/pkg/...` and `mlr regtest`
 * `make install` installs the `mlr` executable and the `mlr` manpage
     * Without make: `go install github.com/johnkerl/miller/cmd/mlr` will install to _GOPATH_`/bin/mlr`
 

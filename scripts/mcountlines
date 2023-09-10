@@ -1,14 +1,14 @@
 #!/bin/bash
 
 wc -l \
-  $(find internal -name \*.go | grep -v internal/pkg/parsing) \
-  internal/pkg/parsing/mlr.bnf \
+  $(find -name \*.go | grep -v pkg/parsing) \
+  pkg/parsing/mlr.bnf \
 | sort -n
 
 echo
 wc -c \
-  $(find internal -name \*.go | grep -v internal/pkg/parsing) \
-  internal/pkg/parsing/mlr.bnf \
+  $(find -name \*.go | grep -v pkg/parsing) \
+  pkg/parsing/mlr.bnf \
 | sort -n \
 | tail -n 5
 

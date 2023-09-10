@@ -22,7 +22,7 @@ In this example I am using version 6.2.0 to 6.3.0; of course that will change fo
 
 * Update version found in `mlr --version` and `man mlr`:
 
-    * Edit `internal/pkg/version/version.go` from `6.2.0-dev` to `6.3.0`.
+    * Edit `pkg/version/version.go` from `6.2.0-dev` to `6.3.0`.
     * Edit `miller.spec`: `Version`, and `changelog` entry
     * Run `make dev` in the Miller repo base directory
     * The ordering in this makefile rule is important: the first build creates `mlr`; the second runs `mlr` to create `manpage.txt`; the third includes `manpage.txt` into one of its outputs.
@@ -69,6 +69,6 @@ In this example I am using version 6.2.0 to 6.3.0; of course that will change fo
 
 * Afterwork:
 
-    * Edit `internal/pkg/version/version.go` to change version from `6.3.0` to `6.3.0-dev`.
+    * Edit `pkg/version/version.go` to change version from `6.3.0` to `6.3.0-dev`.
     * `make dev`
     * Commit and push.

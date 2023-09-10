@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/johnkerl/miller/internal/pkg/scan"
+	"github.com/johnkerl/miller/pkg/scan"
 )
 
 func main() {

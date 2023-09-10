@@ -1,0 +1,54 @@
+# Miller as a library
+
+Very initially and experimentally, as of Miller 6.9.1, Go developers will be able to access Miller source
+code --- moved from `internal/pkg/` to `pkg/` --- within their own Go projects.
+
+## Setup
+
+```
+$ mkdir use-mlr
+
+$ cd cd use-mlr
+
+$ go mod init github.com/johnkerl/miller-library-example
+go: creating new go.mod: module github.com/johnkerl/miller-library-example
+
+# One of:
+$ go get github.com/johnkerl/miller
+$ go get github.com/johnkerl/miller@0f27a39a9f92d4c633dd29d99ad203e95a484dd3
+# Etc.
+
+$ go mod tidy
+```
+
+## One example use
+
+GENMD-INCLUDE-ESCAPED(miller-as-library/main1.go)
+
+```
+$ go build main1.go
+$ ./main1
+1152921504606846976
+```
+
+Or simply:
+```
+$ go run main1.go
+1152921504606846976
+```
+
+## Another example use
+
+GENMD-INCLUDE-ESCAPED(miller-as-library/main2.go)
+
+GENMD-INCLUDE-ESCAPED(data/hostnames.csv)
+
+```
+$ go build main2.go
+$ ./main2 data/hostnames.csv
+{"host": "apoapsis.east.our.org", "status": "up"}
+{"host": "nadir.west.our.org", "status": "down"}
+```
+
+
+

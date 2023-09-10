@@ -5,13 +5,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/johnkerl/miller/internal/pkg/terminals/regtest"
+	"github.com/johnkerl/miller/pkg/terminals/regtest"
 )
 
 // TestRegression is a familiar entry point for regression testing.  Miller
 // regression tests are more flexibly invoked via 'mlr regtest'.  However here
 // is a standard location so people can get at them via 'go test'.  Please see
-// (as of this writing) internal/pkg/terminals/regtest for the Miller regtest package.
+// (as of this writing) pkg/terminals/regtest for the Miller regtest package.
 func TestRegression(t *testing.T) {
 	// How much detail to show?  There are thousands of cases, organized into a
 	// few hundred top-level directories under ./test/cases.

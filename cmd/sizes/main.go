@@ -11,7 +11,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/internal/pkg/mlrval"
+	"github.com/johnkerl/miller/pkg/mlrval"
 )
 
 func main() {

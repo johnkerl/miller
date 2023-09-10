@@ -35,26 +35,26 @@ if [ ! -x "$bingocc" ]; then
   exit 1
 fi
 
-rm -f internal/pkg/parsing/*.txt
+rm -f pkg/parsing/*.txt
 if [ "$verbose" = "true" ]; then
-  lr1="internal/pkg/parsing/LR1_conflicts.txt"
-  $bingocc -v -o ./internal/pkg/parsing -p mlr/internal/pkg/parsing internal/pkg/parsing/mlr.bnf || expand -2 $lr1
+  lr1="pkg/parsing/LR1_conflicts.txt"
+  $bingocc -v -o ./pkg/parsing -p mlr/pkg/parsing pkg/parsing/mlr.bnf || expand -2 $lr1
 else
-  $bingocc -o ./internal/pkg/parsing -p mlr/internal/pkg/parsing internal/pkg/parsing/mlr.bnf
+  $bingocc -o ./pkg/parsing -p mlr/pkg/parsing pkg/parsing/mlr.bnf
 fi
 
 # Code-gen directories:
-#   internal/pkg/parsing/errors/
-#   internal/pkg/parsing/lexer/
-#   internal/pkg/parsing/parser/
-#   internal/pkg/parsing/token/
-#   internal/pkg/parsing/util/
+#   pkg/parsing/errors/
+#   pkg/parsing/lexer/
+#   pkg/parsing/parser/
+#   pkg/parsing/token/
+#   pkg/parsing/util/
 
 # Override GOCC codegen with customized error handling
-cp internal/pkg/parsing/errors.go.template internal/pkg/parsing/errors/errors.go
+cp pkg/parsing/errors.go.template pkg/parsing/errors/errors.go
 
 # We might need a manual replace of os.ReadFile by ioutil.ReadFile in autogen code.  Note we don't
 # use latest-and-greatest Go compiler version in our go.mod since we want to build on Centos which
 # can be trailing-edge in that regard.
 
-for x in internal/pkg/parsing/*/*.go; do gofmt -w $x; done
+for x in pkg/parsing/*/*.go; do gofmt -w $x; done
