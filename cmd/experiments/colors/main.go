@@ -3,7 +3,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/johnkerl/miller/internal/pkg/colorizer"
+	"github.com/johnkerl/miller/pkg/colorizer"
 )
 
 const boldString = "\u001b[1m"

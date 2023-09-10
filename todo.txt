@@ -280,7 +280,7 @@ DOC
 w contact re https://jsonlines.org/on_the_web/
 * verslink old relnotes
 * single UT, hard to invoke w/ new full go.mod path
-  go test $(ls internal/pkg/lib/*.go|grep -v test) internal/pkg/lib/unbackslash_test.go
+  go test $(ls pkg/lib/*.go|grep -v test) pkg/lib/unbackslash_test.go
   etc
 * file-formats: NIDX link to headerless CSV
 * window.mlr, window2.mlr -> doc somewhere
