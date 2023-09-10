@@ -46,7 +46,7 @@ func custom_options() *cli.TOptions {
 }
 
 // This function you don't need to modify.
-func convert_csv_to_json(
+func run_custom_processor(
 	fileNames []string,
 	options *cli.TOptions,
 	record_processor func (irac *types.RecordAndContext) (*types.RecordAndContext, error),
@@ -125,7 +125,7 @@ func convert_csv_to_json(
 
 func main() {
 	options := custom_options()
-	err := convert_csv_to_json(os.Args[1:], options, custom_record_processor)
+	err := run_custom_processor(os.Args[1:], options, custom_record_processor)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 	}
