@@ -50,10 +50,9 @@ GENMD-INCLUDE-ESCAPED(data/hostnames.csv)
 
 ```
 $ go build main2.go
-$ ./main2 data/hostnames.csv
-{"host": "apoapsis.east.our.org", "status": "up"}
-{"host": "nadir.west.our.org", "status": "down"}
+{"a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533, "i2": 1}
+{"a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797, "i2": 4}
+{"a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776, "i2": 9}
+{"a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463, "i2": 16}
+{"a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729, "i2": 25}$ ./main2 data/small.csv
 ```
-
-
-
