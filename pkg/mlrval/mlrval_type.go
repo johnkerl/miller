@@ -168,6 +168,7 @@ const MT_TYPE_MASK_VAR = (1 << MT_INT) |
 	(1 << MT_FLOAT) |
 	(1 << MT_BOOL) |
 	(1 << MT_VOID) |
+	(1 << MT_NULL) |
 	(1 << MT_STRING) |
 	(1 << MT_ARRAY) |
 	(1 << MT_MAP)
