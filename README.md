@@ -64,7 +64,7 @@ There's a good chance you can get Miller pre-built for your system:
 [![Homebrew/MacOSX](https://img.shields.io/badge/distros-homebrew-ba832b.svg)](https://formulae.brew.sh/formula/miller)
 [![MacPorts/MacOSX](https://img.shields.io/badge/distros-macports-1376ec.svg)](https://www.macports.org/ports.php?by=name&substr=miller)
 [![Chocolatey](https://img.shields.io/badge/distros-chocolatey-red.svg)](https://chocolatey.org/packages/miller)
-[![winget](https://img.shields.io/badge/distros-winget-red.svg)](https://github.com/microsoft/winget-pkgs/tree/master/manifests/m/Miller/Miller)
+[![WinGet](https://img.shields.io/badge/distros-winget-392f55.svg)](https://github.com/microsoft/winget-pkgs/tree/master/manifests/m/Miller/Miller)
 
 |OS|Installation command|
 |---|---|
