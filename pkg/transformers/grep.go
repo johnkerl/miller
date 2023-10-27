@@ -168,7 +168,7 @@ func (tr *TransformerGrep) Transform(
 		} else {
 			inrecAsString = inrec.ToDKVPString()
 		}
-		matches := tr.regexp.Match([]byte(inrecAsString))
+		matches := tr.regexp.MatchString(inrecAsString)
 		if tr.invert {
 			if !matches {
 				outputRecordsAndContexts.PushBack(inrecAndContext)
