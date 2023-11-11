@@ -123,7 +123,8 @@ func (mlrmap *Mlrmap) marshalJSONAuxSingleLine(
 		// Write the key which is necessarily string-valued in Miller, and in
 		// JSON for that matter :)
 		buffer.WriteString("\"")
-		buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+		encoded := string(millerJSONEncodeString(pe.Key))
+		buffer.WriteString(colorizer.MaybeColorizeKey(encoded, outputIsStdout))
 		buffer.WriteString("\": ")
 
 		// Write the value which is a mlrval
