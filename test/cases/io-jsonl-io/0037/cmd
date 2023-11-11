@@ -1,0 +1,1 @@
+mlr --l2j --from test/input/quoted-keys.json cat
