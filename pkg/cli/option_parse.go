@@ -7,7 +7,9 @@
 package cli
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
@@ -2767,6 +2769,51 @@ var MiscFlagSection = FlagSection{
 				if args[*pargi] == "--" {
 					*pargi += 1
 				}
+			},
+		},
+
+		{
+			name: "--files",
+			arg:  "{filename}",
+			help: "Use this to specify a file which itself contains, one per line, names of input files. May be used more than once.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+
+				fileName := args[*pargi+1]
+				handle, err := os.Open(fileName)
+				if err != nil {
+					/// XXXX return false
+					fmt.Fprintln(os.Stderr, "mlr", err)
+					os.Exit(1)
+				}
+				defer handle.Close()
+
+				lineReader := bufio.NewReader(handle)
+
+				eof := false
+				lineno := 0
+				for !eof {
+					line, err := lineReader.ReadString('\n')
+					if err == io.EOF {
+						err = nil
+						eof = true
+						break
+					}
+					lineno++
+
+					if err != nil {
+						fmt.Fprintln(os.Stderr, "mlr", err)
+						os.Exit(1)
+					}
+
+					// This is how to do a chomp:
+					// TODO: handle \r\n with libified solution.
+					line = strings.TrimRight(line, "\n")
+
+					options.FileNames = append(options.FileNames, line)
+				}
+
+				*pargi += 2
 			},
 		},
 
