@@ -87,6 +87,16 @@ If there's more than one input file, you can use `--mfrom`, then however many fi
 <b>mlr --c2p --mfrom data/*.csv -- sort -n index</b>
 </pre>
 
+Alternatively, you may place filenames within another file, one per line:
+
+<pre class="pre-highlight-non-pair">
+<b>cat data/filenames.txt</b>
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>mlr --c2p --files data/filenames.txt cat</b>
+</pre>
+
 ## Shortest flags for CSV, TSV, and JSON
 
 The following have even shorter versions:

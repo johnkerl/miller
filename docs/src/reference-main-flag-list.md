@@ -266,6 +266,7 @@ These are flags which don't fit into any other category.
 **Flags:**
 
 * `--fflush`: Force buffered output to be written after every output record. The default is flush output after every record if the output is to the terminal, or less often if the output is to a file or a pipe. The default is a significant performance optimization for large files.  Use this flag to force frequent updates even when output is to a pipe or file, at a performance cost.
+* `--files {filename}`: Use this to specify a file which itself contains, one per line, names of input files. May be used more than once.
 * `--from {filename}`: Use this to specify an input file before the verb(s), rather than after. May be used more than once. Example: `mlr --from a.dat --from b.dat cat` is the same as `mlr cat a.dat b.dat`.
 * `--hash-records`: This is an internal parameter which normally does not need to be modified. It controls the mechanism by which Miller accesses fields within records. In general --no-hash-records is faster, and is the default. For specific use-cases involving data having many fields, and many of them being processed during a given processing run, --hash-records might offer a slight performance benefit.
 * `--infer-int-as-float or -A`: Cast all integers in data files to floats.
