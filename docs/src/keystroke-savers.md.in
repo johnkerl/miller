@@ -32,6 +32,16 @@ GENMD-SHOW-COMMAND
 mlr --c2p --mfrom data/*.csv -- sort -n index
 GENMD-EOF
 
+Alternatively, you may place filenames within another file, one per line:
+
+GENMD-SHOW-COMMAND
+cat data/filenames.txt
+GENMD-EOF
+
+GENMD-SHOW-COMMAND
+mlr --c2p --files data/filenames.txt cat
+GENMD-EOF
+
 ## Shortest flags for CSV, TSV, and JSON
 
 The following have even shorter versions:
