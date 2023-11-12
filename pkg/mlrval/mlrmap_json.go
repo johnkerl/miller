@@ -122,9 +122,9 @@ func (mlrmap *Mlrmap) marshalJSONAuxSingleLine(
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		// Write the key which is necessarily string-valued in Miller, and in
 		// JSON for that matter :)
-		buffer.WriteString("\"")
-		buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
-		buffer.WriteString("\": ")
+		encoded := string(millerJSONEncodeString(pe.Key))
+		buffer.WriteString(colorizer.MaybeColorizeKey(encoded, outputIsStdout))
+		buffer.WriteString(": ")
 
 		// Write the value which is a mlrval
 		valueString, err := pe.Value.marshalJSONAux(jsonFormatting, elementNestingDepth+1, outputIsStdout)

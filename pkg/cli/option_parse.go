@@ -1683,6 +1683,21 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			},
 		},
 		{
+			name: "--j2l",
+			help: "Use JSON for input, JSONL for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = false
+				options.WriterOptions.JSONOutputMultiline = false
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--j2t",
 			help: "Use JSON for input, TSV for output.",
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
@@ -1802,6 +1817,18 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "dkvp"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--l2j",
+			help: "Use JSONL for input, JSON for output.",
+			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+			// need to print a tedious 60-line list.
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "json"
 				*pargi += 1
 			},
 		},
