@@ -249,20 +249,22 @@ func (reader *RecordReaderCSV) getRecordBatch(
 				)
 				errorChannel <- err
 				return
-			} else {
-				i := int64(0)
-				n := lib.IntMin2(nh, nd)
-				for i = 0; i < n; i++ {
-					key := reader.header[i]
-					value := mlrval.FromDeferredType(csvRecord[i])
-					_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
-					if err != nil {
-						errorChannel <- err
-						return
-					}
+			}
+
+			i := int64(0)
+			n := lib.IntMin2(nh, nd)
+			for i = 0; i < n; i++ {
+				key := reader.header[i]
+				value := mlrval.FromDeferredType(csvRecord[i])
+				_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
+				if err != nil {
+					errorChannel <- err
+					return
 				}
-				if nh < nd {
-					// if header shorter than data: use 1-up itoa keys
+			}
+			if nh < nd {
+				// if header shorter than data: use 1-up itoa keys
+				for i = nh; i < nd; i++ {
 					key := strconv.FormatInt(i+1, 10)
 					value := mlrval.FromDeferredType(csvRecord[i])
 					_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
@@ -271,17 +273,8 @@ func (reader *RecordReaderCSV) getRecordBatch(
 						return
 					}
 				}
-				if nh > nd {
-					// if header longer than data: use "" values
-					for i = nd; i < nh; i++ {
-						_, err := record.PutReferenceMaybeDedupe(reader.header[i], mlrval.VOID.Copy(), dedupeFieldNames)
-						if err != nil {
-							errorChannel <- err
-							return
-						}
-					}
-				}
 			}
+			// if nh > nd: leave it short. This is a job for unsparsify.
 		}
 
 		context.UpdateForInputRecord()
