@@ -86,6 +86,7 @@ Other:
   mlr help mlrrc
   mlr help output-colorization
   mlr help type-arithmetic-info
+  mlr help type-arithmetic-info-extended
 Shorthands:
   mlr -g = mlr help flags
   mlr -l = mlr help list-verbs

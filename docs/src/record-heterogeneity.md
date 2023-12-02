@@ -154,8 +154,7 @@ with 1) for too-long rows:
 },
 {
   "a": 4,
-  "b": 5,
-  "c": ""
+  "b": 5
 },
 {
   "a": 7,
@@ -455,7 +454,9 @@ Miller handles explicit header changes as just shown. If your CSV input contains
 <pre class="pre-non-highlight-in-pair">
 a,b,c
 1,2,3
-4,5,
+
+a,b
+4,5
 
 a,b,c,4
 7,8,9,10

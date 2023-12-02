@@ -245,11 +245,12 @@ If you're interested in a formal description of how empty and absent fields part
 <b>mlr help type-arithmetic-info</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-(+)        | 1          2.5       (empty)    (absent)   (error)   
-------     + ------     ------     ------     ------     ------    
-1          | 2          3.5        1          1          (error)   
-2.5        | 3.5        5          2.5        2.5        (error)   
-(empty)    | 1          2.5        (empty)    (absent)   (error)   
-(absent)   | 1          2.5        (absent)   (absent)   (error)   
-(error)    | (error)    (error)    (error)    (error)    (error)   
+(+)        | 1          2.5        true      (empty)    (absent)   (error)   
+------     + ------     ------     ------     ------     ------     ------    
+1          | 2          3.5        (error)    1          1          (error)   
+2.5        | 3.5        5          (error)    2.5        2.5        (error)   
+true       | (error)    (error)    (error)    (error)    (error)    (error)   
+(empty)    | 1          2.5        (error)    (empty)    (absent)   (error)   
+(absent)   | 1          2.5        (error)    (absent)   (absent)   (error)   
+(error)    | (error)    (error)    (error)    (error)    (error)    (error)   
 </pre>
