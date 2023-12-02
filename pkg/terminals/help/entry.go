@@ -16,6 +16,7 @@ import (
 	"github.com/johnkerl/miller/pkg/dsl/cst"
 	"github.com/johnkerl/miller/pkg/lib"
 	"github.com/johnkerl/miller/pkg/mlrval"
+	"github.com/johnkerl/miller/pkg/runtime"
 	"github.com/johnkerl/miller/pkg/transformers"
 )
 
@@ -114,6 +115,7 @@ func init() {
 					{name: "mlrrc", zaryHandlerFunc: helpMlrrc},
 					{name: "output-colorization", zaryHandlerFunc: helpOutputColorization},
 					{name: "type-arithmetic-info", zaryHandlerFunc: helpTypeArithmeticInfo},
+					{name: "type-arithmetic-info-extended", zaryHandlerFunc: helpTypeArithmeticInfoExtended},
 				},
 			},
 			{
@@ -483,9 +485,18 @@ func helpOutputColorization() {
 
 // ----------------------------------------------------------------
 func helpTypeArithmeticInfo() {
+	helpTypeArithmeticInfoAux(false)
+}
+
+func helpTypeArithmeticInfoExtended() {
+	helpTypeArithmeticInfoAux(true)
+}
+
+func helpTypeArithmeticInfoAux(extended bool) {
 	mlrvals := []*mlrval.Mlrval{
 		mlrval.FromInt(1),
 		mlrval.FromFloat(2.5),
+		mlrval.FromBool(true),
 		mlrval.VOID,
 		mlrval.ABSENT,
 		mlrval.FromAnonymousError(),
@@ -524,6 +535,70 @@ func helpTypeArithmeticInfo() {
 		fmt.Println()
 	}
 
+	if !extended {
+		return
+	}
+
+	mlrvals = []*mlrval.Mlrval{
+		mlrval.FromBool(true),
+		mlrval.FromBool(false),
+		mlrval.FromInt(3),
+		mlrval.VOID,
+		mlrval.ABSENT,
+		mlrval.FromAnonymousError(),
+	}
+
+	n = len(mlrvals)
+
+	state := runtime.NewEmptyState(cli.DefaultOptions(), false)
+
+	descs := []string{"(&&)", "(||)"}
+	for k, desc := range descs {
+
+		fmt.Println()
+		for i := -2; i < n; i++ {
+			if i == -2 {
+				fmt.Printf("%-10s |", desc)
+			} else if i == -1 {
+				fmt.Printf("%-10s +", "------")
+			} else if mlrvals[i].IsVoid() {
+				fmt.Printf("%-10s |", "(empty)")
+			} else {
+				fmt.Printf("%-10s |", mlrvals[i].String())
+			}
+			for j := 0; j < n; j++ {
+				if i == -2 {
+					if mlrvals[j].IsVoid() {
+						fmt.Printf("%-10s", "(empty)")
+					} else {
+						fmt.Printf(" %-10s", mlrvals[j].String())
+					}
+				} else if i == -1 {
+					fmt.Printf(" %-10s", "------")
+				} else {
+
+					inode := cst.BuildMlrvalLiteralNode(mlrvals[i])
+					jnode := cst.BuildMlrvalLiteralNode(mlrvals[j])
+
+					var binary_node cst.IEvaluable
+					if k == 0 {
+						binary_node = cst.BuildLogicalANDOperatorNode(inode, jnode)
+					} else {
+						binary_node = cst.BuildLogicalOROperatorNode(inode, jnode)
+					}
+
+					output := binary_node.Evaluate(state)
+
+					if output.IsVoid() {
+						fmt.Printf(" %-10s", "(empty)")
+					} else {
+						fmt.Printf(" %-10s", output.String())
+					}
+				}
+			}
+			fmt.Println()
+		}
+	}
 }
 
 // ----------------------------------------------------------------

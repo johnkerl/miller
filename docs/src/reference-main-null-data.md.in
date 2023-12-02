@@ -119,8 +119,16 @@ GENMD-EOF
 
 ## Arithmetic rules
 
-If you're interested in a formal description of how empty and absent fields participate in arithmetic, here's a table for plus (other arithmetic/boolean/bitwise operators are similar):
+If you're interested in a formal description of how empty and absent fields participate in arithmetic, here's a table for `+`, `&&, and `||`. Notes:
+
+* Other arithmetic, boolean, and bitwise operators besides `&&` and `||` are similar to `+`.
+* The `&&` and `||` obey _short-circuiting semantics_. That is:
+  * `false && X` is `false` and `X` is not evaluated even if it is a complex expression (maybe including function calls)
+  * `true || X` is `true` and `X` is not evaluated even if it is a complex expression (maybe including function calls)
+* This means in particular that:
+  * `false && X` is false even if `X` is an error, a non-boolean type, etc.
+  * `true || X` is true even if `X` is an error, a non-boolean type, etc.
 
 GENMD-RUN-COMMAND
-mlr help type-arithmetic-info
+mlr help type-arithmetic-info-extended
 GENMD-EOF

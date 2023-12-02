@@ -157,6 +157,7 @@ MILLER(1)                                                            MILLER(1)
          mlr help mlrrc
          mlr help output-colorization
          mlr help type-arithmetic-info
+         mlr help type-arithmetic-info-extended
        Shorthands:
          mlr -g = mlr help flags
          mlr -l = mlr help list-verbs
@@ -3627,4 +3628,4 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-11-12                         MILLER(1)
+                                  2023-12-02                         MILLER(1)

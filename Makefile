@@ -11,6 +11,9 @@ build:
 	@echo "Build complete. The Miller executable is ./mlr (or .\mlr.exe on Windows)."
 	@echo "You can use 'make check' to run tests".
 
+quiet:
+	@go build github.com/johnkerl/miller/cmd/mlr
+
 # For interactive use, 'mlr regtest' offers more options and transparency.
 check: unit-test regression-test
 	@echo "Tests complete. You can use 'make install' if you like, optionally preceded"

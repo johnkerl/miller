@@ -32,7 +32,7 @@ func (root *RootNode) BuildBuiltinFunctionCallsiteNode(
 		if builtinFunctionInfo.hasMultipleArities { // E.g. "+" and "-"
 			return root.BuildMultipleArityFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.zaryFunc != nil {
-			return root.BuildZaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+			return BuildZaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.unaryFunc != nil {
 			return root.BuildUnaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.unaryFuncWithContext != nil {
@@ -89,7 +89,7 @@ type ZaryFunctionCallsiteNode struct {
 	zaryFunc bifs.ZaryFunc
 }
 
-func (root *RootNode) BuildZaryFunctionCallsiteNode(
+func BuildZaryFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
@@ -228,25 +228,25 @@ func (root *RootNode) BuildBinaryFunctionCallsiteNode(
 
 	// Special short-circuiting cases
 	if builtinFunctionInfo.name == "&&" {
-		return root.BuildLogicalANDOperatorNode(
+		return BuildLogicalANDOperatorNode(
 			evaluable1,
 			evaluable2,
 		), nil
 	}
 	if builtinFunctionInfo.name == "||" {
-		return root.BuildLogicalOROperatorNode(
+		return BuildLogicalOROperatorNode(
 			evaluable1,
 			evaluable2,
 		), nil
 	}
 	if builtinFunctionInfo.name == "??" {
-		return root.BuildAbsentCoalesceOperatorNode(
+		return BuildAbsentCoalesceOperatorNode(
 			evaluable1,
 			evaluable2,
 		), nil
 	}
 	if builtinFunctionInfo.name == "???" {
-		return root.BuildEmptyCoalesceOperatorNode(
+		return BuildEmptyCoalesceOperatorNode(
 			evaluable1,
 			evaluable2,
 		), nil
@@ -557,7 +557,7 @@ func (root *RootNode) BuildTernaryFunctionCallsiteNode(
 
 	// Special short-circuiting case
 	if builtinFunctionInfo.name == "?:" {
-		return root.BuildStandardTernaryOperatorNode(
+		return BuildStandardTernaryOperatorNode(
 			evaluable1,
 			evaluable2,
 			evaluable3,
@@ -703,7 +703,7 @@ type LogicalANDOperatorNode struct {
 	a, b IEvaluable
 }
 
-func (root *RootNode) BuildLogicalANDOperatorNode(a, b IEvaluable) *LogicalANDOperatorNode {
+func BuildLogicalANDOperatorNode(a, b IEvaluable) *LogicalANDOperatorNode {
 	return &LogicalANDOperatorNode{
 		a: a,
 		b: b,
@@ -712,53 +712,74 @@ func (root *RootNode) BuildLogicalANDOperatorNode(a, b IEvaluable) *LogicalANDOp
 
 // This is different from most of the evaluator functions in that it does
 // short-circuiting: since is logical AND, the second argument is not evaluated
-// if the first argument is false.
+// if the first argument is false. Thus we cannot use disposition matrices.
 //
-// Disposition matrix:
-//
-//       {
-//a      b  ERROR   ABSENT  EMPTY  STRING INT    FLOAT  BOOL
-//ERROR  :  {ERROR, ERROR,  ERROR, ERROR, ERROR, ERROR, ERROR},
-//ABSENT :  {ERROR, absent, ERROR, ERROR, ERROR, ERROR, absent},
-//EMPTY  :  {ERROR, ERROR,  ERROR, ERROR, ERROR, ERROR, ERROR},
-//STRING :  {ERROR, ERROR,  ERROR, ERROR, ERROR, ERROR, ERROR},
-//INT    :  {ERROR, ERROR,  ERROR, ERROR, ERROR, ERROR, ERROR},
-//FLOAT  :  {ERROR, ERROR,  ERROR, ERROR, ERROR, ERROR, ERROR},
-//BOOL   :  {ERROR, absent, ERROR, ERROR, ERROR, ERROR, a&&b},
-//       }
-//
-// which without the all-error rows/columns reduces to
-//
-//       {
-//a      b  ABSENT   BOOL
-//ABSENT :  {absent, absent},
-//BOOL   :  {absent, a&&b},
-//       }
-//
-// So:
-// * Evaluate a
-// * If a is not absent or bool: return error
-// * If a is absent: return absent
-// * If a is false: return a
-// * Now a is boolean true
-// * Evaluate b
-// * If b is not absent or bool: return error
-// * If b is absent: return absent
-// * Return a && b
+// * evaluate a
+// * if   a is error:
+//   * return a
+// * elif a is absent:
+//   * Evaluate b
+//   * if   b is error: return error
+//   * elif b is empty or absent: return absent
+//   * elif b is empty or absent: return absent
+//   * else: return b
+// * elif a is empty:
+//   * evaluate b
+//   * if   b is error: return error
+//   * elif b is empty: return empty
+//   * elif b is absent: return absent
+//   * else: return b
+// * else:
+//   * return the BIF (using its disposition matrix)
+
+// mlr help type-arithmetic-info-extended | lumin -c red .error. | lumin -c blue .absent. | lumin -c green .empty.
 
 func (node *LogicalANDOperatorNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
 	aout := node.a.Evaluate(state)
 	atype := aout.Type()
-	if !(atype == mlrval.MT_ABSENT || atype == mlrval.MT_BOOL) {
-		return mlrval.FromNotNamedTypeError("&&", aout, "absent or boolean")
+
+	if atype == mlrval.MT_ERROR {
+		return aout
 	}
+
 	if atype == mlrval.MT_ABSENT {
-		return mlrval.ABSENT
+		bout := node.b.Evaluate(state)
+		btype := bout.Type()
+		if btype == mlrval.MT_ERROR {
+			return bout
+		}
+		if btype == mlrval.MT_VOID || btype == mlrval.MT_ABSENT {
+			return mlrval.ABSENT
+		}
+		if btype != mlrval.MT_BOOL {
+			return mlrval.FromNotNamedTypeError("&&", bout, "absent or boolean")
+		}
+		return bout
 	}
+
+	if atype == mlrval.MT_VOID {
+		bout := node.b.Evaluate(state)
+		btype := bout.Type()
+		if btype == mlrval.MT_ERROR {
+			return bout
+		}
+		if btype == mlrval.MT_VOID {
+			return mlrval.FromNotNamedTypeError("&&", bout, "absent or boolean")
+		}
+		if btype == mlrval.MT_ABSENT {
+			return mlrval.ABSENT
+		}
+		if btype != mlrval.MT_BOOL {
+			return mlrval.FromNotNamedTypeError("&&", bout, "absent or boolean")
+		}
+		return bout
+	}
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	if aout.IsFalse() {
-		// This means false && bogus type evaluates to true, which is sad but
+		// This means false && bogus type evaluates to false, which is sad but
 		// which we MUST do in order to not violate the short-circuiting
 		// property.  We would have to evaluate b to know if it were error or
 		// not.
@@ -782,7 +803,7 @@ type LogicalOROperatorNode struct {
 	a, b IEvaluable
 }
 
-func (root *RootNode) BuildLogicalOROperatorNode(a, b IEvaluable) *LogicalOROperatorNode {
+func BuildLogicalOROperatorNode(a, b IEvaluable) *LogicalOROperatorNode {
 	return &LogicalOROperatorNode{
 		a: a,
 		b: b,
@@ -792,19 +813,54 @@ func (root *RootNode) BuildLogicalOROperatorNode(a, b IEvaluable) *LogicalOROper
 // This is different from most of the evaluator functions in that it does
 // short-circuiting: since is logical OR, the second argument is not evaluated
 // if the first argument is false.
-//
-// See the disposition-matrix discussion for LogicalANDOperator.
+
 func (node *LogicalOROperatorNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
 	aout := node.a.Evaluate(state)
 	atype := aout.Type()
-	if !(atype == mlrval.MT_ABSENT || atype == mlrval.MT_BOOL) {
-		return mlrval.FromNotNamedTypeError("||", aout, "absent or boolean")
+
+	if atype == mlrval.MT_ERROR {
+		return aout
 	}
+
 	if atype == mlrval.MT_ABSENT {
-		return mlrval.ABSENT
+		bout := node.b.Evaluate(state)
+		btype := bout.Type()
+		if btype == mlrval.MT_ERROR {
+			return bout
+		}
+		if btype == mlrval.MT_VOID || btype == mlrval.MT_ABSENT {
+			return mlrval.ABSENT
+		}
+		if btype == mlrval.MT_VOID {
+			return mlrval.FromNotNamedTypeError("||", bout, "absent or boolean")
+		}
+		if btype != mlrval.MT_BOOL {
+			return mlrval.FromNotNamedTypeError("||", bout, "absent or boolean")
+		}
+		return bout
 	}
+
+	if atype == mlrval.MT_VOID {
+		bout := node.b.Evaluate(state)
+		btype := bout.Type()
+		if btype == mlrval.MT_ERROR {
+			return bout
+		}
+		if btype == mlrval.MT_VOID {
+			return mlrval.FromNotNamedTypeError("||", bout, "absent or boolean")
+		}
+		if btype == mlrval.MT_ABSENT {
+			return mlrval.ABSENT
+		}
+		if btype != mlrval.MT_BOOL {
+			return mlrval.FromNotNamedTypeError("||", bout, "absent or boolean")
+		}
+		return bout
+	}
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	if aout.IsTrue() {
 		// This means true || bogus type evaluates to true, which is sad but
 		// which we MUST do in order to not violate the short-circuiting
@@ -821,6 +877,7 @@ func (node *LogicalOROperatorNode) Evaluate(
 	if btype == mlrval.MT_ABSENT {
 		return mlrval.ABSENT
 	}
+
 	return bifs.BIF_logical_OR(aout, bout)
 }
 
@@ -829,7 +886,7 @@ func (node *LogicalOROperatorNode) Evaluate(
 // current record has no field $foo.
 type AbsentCoalesceOperatorNode struct{ a, b IEvaluable }
 
-func (root *RootNode) BuildAbsentCoalesceOperatorNode(a, b IEvaluable) *AbsentCoalesceOperatorNode {
+func BuildAbsentCoalesceOperatorNode(a, b IEvaluable) *AbsentCoalesceOperatorNode {
 	return &AbsentCoalesceOperatorNode{a: a, b: b}
 }
 
@@ -852,7 +909,7 @@ func (node *AbsentCoalesceOperatorNode) Evaluate(
 // when the current record has no field $foo, or when $foo is empty..
 type EmptyCoalesceOperatorNode struct{ a, b IEvaluable }
 
-func (root *RootNode) BuildEmptyCoalesceOperatorNode(a, b IEvaluable) *EmptyCoalesceOperatorNode {
+func BuildEmptyCoalesceOperatorNode(a, b IEvaluable) *EmptyCoalesceOperatorNode {
 	return &EmptyCoalesceOperatorNode{a: a, b: b}
 }
 
@@ -874,7 +931,7 @@ func (node *EmptyCoalesceOperatorNode) Evaluate(
 // ================================================================
 type StandardTernaryOperatorNode struct{ a, b, c IEvaluable }
 
-func (root *RootNode) BuildStandardTernaryOperatorNode(a, b, c IEvaluable) *StandardTernaryOperatorNode {
+func BuildStandardTernaryOperatorNode(a, b, c IEvaluable) *StandardTernaryOperatorNode {
 	return &StandardTernaryOperatorNode{a: a, b: b, c: c}
 }
 func (node *StandardTernaryOperatorNode) Evaluate(
