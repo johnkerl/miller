@@ -239,10 +239,18 @@ resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970
 
 ## Arithmetic rules
 
-If you're interested in a formal description of how empty and absent fields participate in arithmetic, here's a table for plus (other arithmetic/boolean/bitwise operators are similar):
+If you're interested in a formal description of how empty and absent fields participate in arithmetic, here's a table for `+`, `&&, and `||`. Notes:
+
+* Other arithmetic, boolean, and bitwise operators besides `&&` and `||` are similar to `+`.
+* The `&&` and `||` obey _short-circuiting semantics_. That is:
+  * `false && X` is `false` and `X` is not evaluated even if it is a complex expression (maybe including function calls)
+  * `true || X` is `true` and `X` is not evaluated even if it is a complex expression (maybe including function calls)
+* This means in particular that:
+  * `false && X` is false even if `X` is an error, a non-boolean type, etc.
+  * `true || X` is true even if `X` is an error, a non-boolean type, etc.
 
 <pre class="pre-highlight-in-pair">
-<b>mlr help type-arithmetic-info</b>
+<b>mlr help type-arithmetic-info-extended</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 (+)        | 1          2.5        true      (empty)    (absent)   (error)   
@@ -252,5 +260,23 @@ If you're interested in a formal description of how empty and absent fields part
 true       | (error)    (error)    (error)    (error)    (error)    (error)   
 (empty)    | 1          2.5        (error)    (empty)    (absent)   (error)   
 (absent)   | 1          2.5        (error)    (absent)   (absent)   (error)   
+(error)    | (error)    (error)    (error)    (error)    (error)    (error)   
+
+(&&)       | true       false      3         (empty)    (absent)   (error)   
+------     + ------     ------     ------     ------     ------     ------    
+true       | true       false      (error)    (error)    (absent)   (error)   
+false      | false      false      false      false      false      false     
+3          | (error)    (error)    (error)    (error)    (absent)   (error)   
+(empty)    | true       false      (error)    (error)    (absent)   (error)   
+(absent)   | true       false      (error)    (absent)   (absent)   (error)   
+(error)    | (error)    (error)    (error)    (error)    (error)    (error)   
+
+(||)       | true       false      3         (empty)    (absent)   (error)   
+------     + ------     ------     ------     ------     ------     ------    
+true       | true       true       true       true       true       true      
+false      | true       false      (error)    (error)    (absent)   (error)   
+3          | (error)    (error)    (error)    (error)    (absent)   (error)   
+(empty)    | true       false      (error)    (error)    (absent)   (error)   
+(absent)   | true       false      (error)    (absent)   (absent)   (error)   
 (error)    | (error)    (error)    (error)    (error)    (error)    (error)   
 </pre>
