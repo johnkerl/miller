@@ -375,6 +375,24 @@ func (node *NullLiteralNode) Evaluate(
 	return node.literal
 }
 
+// ----------------------------------------------------------------
+// Used for testing purposes; not used by the main DSL.
+
+type MlrvalLiteralNode struct {
+	literal *mlrval.Mlrval
+}
+
+func BuildMlrvalLiteralNode(literal *mlrval.Mlrval) *MlrvalLiteralNode {
+	return &MlrvalLiteralNode{
+		literal: literal.Copy(),
+	}
+}
+func (node *MlrvalLiteralNode) Evaluate(
+	state *runtime.State,
+) *mlrval.Mlrval {
+	return node.literal
+}
+
 // ================================================================
 func (root *RootNode) BuildContextVariableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Token == nil)
