@@ -753,6 +753,9 @@ func (node *LogicalANDOperatorNode) Evaluate(
 		if btype == mlrval.MT_VOID || btype == mlrval.MT_ABSENT {
 			return mlrval.ABSENT
 		}
+		if btype != mlrval.MT_BOOL {
+			return mlrval.FromNotNamedTypeError("&&", bout, "absent or boolean")
+		}
 		return bout
 	}
 
@@ -763,10 +766,13 @@ func (node *LogicalANDOperatorNode) Evaluate(
 			return bout
 		}
 		if btype == mlrval.MT_VOID {
-			return mlrval.VOID
+			return mlrval.FromNotNamedTypeError("&&", bout, "absent or boolean")
 		}
 		if btype == mlrval.MT_ABSENT {
 			return mlrval.ABSENT
+		}
+		if btype != mlrval.MT_BOOL {
+			return mlrval.FromNotNamedTypeError("&&", bout, "absent or boolean")
 		}
 		return bout
 	}
@@ -827,6 +833,12 @@ func (node *LogicalOROperatorNode) Evaluate(
 		if btype == mlrval.MT_VOID || btype == mlrval.MT_ABSENT {
 			return mlrval.ABSENT
 		}
+		if btype == mlrval.MT_VOID {
+			return mlrval.FromNotNamedTypeError("||", bout, "absent or boolean")
+		}
+		if btype != mlrval.MT_BOOL {
+			return mlrval.FromNotNamedTypeError("||", bout, "absent or boolean")
+		}
 		return bout
 	}
 
@@ -837,10 +849,13 @@ func (node *LogicalOROperatorNode) Evaluate(
 			return bout
 		}
 		if btype == mlrval.MT_VOID {
-			return mlrval.VOID
+			return mlrval.FromNotNamedTypeError("||", bout, "absent or boolean")
 		}
 		if btype == mlrval.MT_ABSENT {
 			return mlrval.ABSENT
+		}
+		if btype != mlrval.MT_BOOL {
+			return mlrval.FromNotNamedTypeError("||", bout, "absent or boolean")
 		}
 		return bout
 	}
