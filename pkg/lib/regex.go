@@ -142,6 +142,101 @@ func RegexReplacementHasCaptures(
 	}
 }
 
+// TODO: UPDATE ME
+// TODO: RENAME
+// RegexMatches implements the =~ DSL operator. The captures are stored in DSL
+// state and may be used by a DSL statement after the =~. For example, in
+//
+//	sub($a, "(..)_(...)", "\1:\2")
+//
+// the replacement string is an argument to sub and therefore the captures are
+// confined to the implementation of the sub function.  Similarly for gsub. But
+// for the match operator, people can do
+//
+//	if ($x =~ "(..)_(...)") {
+//	  ... other lines of code ...
+//	  $y = "\2:\1"
+//	}
+//
+// and the =~ callsite doesn't know if captures will be used or not. So,
+// RegexMatches always returns the captures array. It is stored within the CST
+// state.
+func RegexMatchesTemp(
+	input string,
+	sregex string,
+) (
+	matches bool,
+	capturesOneUp []string,
+	startsOneUp []int,
+	lengthsOneUp []int,
+) {
+	regex := CompileMillerRegexOrDie(sregex)
+	return RegexMatchesCompiledTemp(input, regex)
+}
+
+// TODO: UPDATE ME
+// RegexMatchesCompiled is the implementation for the =~ operator.  Without
+// Miller-style regex captures this would a simple one-line
+// regex.MatchString(input). However, we return the captures array for the
+// benefit of subsequent references to "\0".."\9".
+func RegexMatchesCompiledTemp(
+	input string,
+	regex *regexp.Regexp,
+) (bool, []string, []int, []int) {
+	captures := make([]string, 0, 10)
+	startsOneUp := make([]int, 0, 10)
+	lengthsOneUp := make([]int, 0, 10)
+
+	matrix := regex.FindAllSubmatchIndex([]byte(input), -1)
+	if matrix == nil || len(matrix) == 0 {
+		return false, captures, startsOneUp, lengthsOneUp
+	}
+
+	// If there are multiple matches -- e.g. input is
+	//
+	//   "...ab_cde...fg_hij..."
+	//
+	// with regex
+	//
+	//   "(..)_(...)"
+	//
+	// -- then we only consider the first match: boolean return value is true
+	// (the input string matched the regex), and the captures array will map
+	// "\1" to "ab" and "\2" to "cde".
+	row := matrix[0]
+	n := len(row)
+
+	// Example return value from FindAllSubmatchIndex with input
+	// "...ab_cde...fg_hij..." and regex "(..)_(...)":
+	//
+	// Matrix is [][]int{
+	//   []int{3, 9, 3, 5, 6, 9},
+	//   []int{12, 18, 12, 14, 15, 18},
+	// }
+	//
+	// As noted above we look at only the first row.
+	//
+	// * 3-9 is for the entire match "ab_cde"
+	// * 3-5 is for the first capture "ab"
+	// * 6-9 is for the second capture "cde"
+
+	for si := 0; si < n; si += 2 {
+		start := row[si]
+		end := row[si+1]
+		if start >= 0 && end >= 0 {
+			captures = append(captures, input[start:end])
+			startsOneUp = append(startsOneUp, start+1)
+			lengthsOneUp = append(lengthsOneUp, end-start)
+		} else {
+			captures = append(captures, "")
+			startsOneUp = append(startsOneUp, -1)
+			lengthsOneUp = append(lengthsOneUp, -1)
+		}
+	}
+
+	return true, captures, startsOneUp, lengthsOneUp
+}
+
 // RegexMatches implements the =~ DSL operator. The captures are stored in DSL
 // state and may be used by a DSL statement after the =~. For example, in
 //
