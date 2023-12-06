@@ -166,9 +166,9 @@ func RegexMatchesTemp(
 	sregex string,
 ) (
 	matches bool,
-	capturesOneUp []string,
-	startsOneUp []int,
-	lengthsOneUp []int,
+	captures[]string,
+	starts[]int,
+	ends[]int,
 ) {
 	regex := CompileMillerRegexOrDie(sregex)
 	return RegexMatchesCompiledTemp(input, regex)
@@ -184,12 +184,12 @@ func RegexMatchesCompiledTemp(
 	regex *regexp.Regexp,
 ) (bool, []string, []int, []int) {
 	captures := make([]string, 0, 10)
-	startsOneUp := make([]int, 0, 10)
-	lengthsOneUp := make([]int, 0, 10)
+	starts := make([]int, 0, 10)
+	ends := make([]int, 0, 10)
 
 	matrix := regex.FindAllSubmatchIndex([]byte(input), -1)
 	if matrix == nil || len(matrix) == 0 {
-		return false, captures, startsOneUp, lengthsOneUp
+		return false, captures, starts, ends
 	}
 
 	// If there are multiple matches -- e.g. input is
@@ -225,16 +225,16 @@ func RegexMatchesCompiledTemp(
 		end := row[si+1]
 		if start >= 0 && end >= 0 {
 			captures = append(captures, input[start:end])
-			startsOneUp = append(startsOneUp, start+1)
-			lengthsOneUp = append(lengthsOneUp, end-start)
+			starts= append(starts, start+1)
+			ends= append(ends, end)
 		} else {
 			captures = append(captures, "")
-			startsOneUp = append(startsOneUp, -1)
-			lengthsOneUp = append(lengthsOneUp, -1)
+			starts= append(starts, -1)
+			ends= append(ends, -1)
 		}
 	}
 
-	return true, captures, startsOneUp, lengthsOneUp
+	return true, captures, starts, ends
 }
 
 // RegexMatches implements the =~ DSL operator. The captures are stored in DSL

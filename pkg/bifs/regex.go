@@ -128,7 +128,7 @@ func BIF_match(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.FromNotStringError("match", input2)
 	}
 
-	boolOutput, captures, starts, lengths := lib.RegexMatchesTemp(input1string, input2.AcquireStringValue())
+	boolOutput, captures, starts, ends := lib.RegexMatchesTemp(input1string, input2.AcquireStringValue())
 
 	results := mlrval.NewMlrmap()
 	results.PutReference("matched", mlrval.FromBool(boolOutput))
@@ -137,41 +137,44 @@ func BIF_match(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 	captures_array := make([]*mlrval.Mlrval, len(captures))
 	starts_array := make([]*mlrval.Mlrval, len(captures))
-	lengths_array := make([]*mlrval.Mlrval, len(captures))
+	ends_array := make([]*mlrval.Mlrval, len(captures))
 
 	if len(captures) > 0 {
 		for i, _ := range captures {
 			if i == 0 {
-				captures_array[i] = mlrval.FromString("")
+				results.PutReference("full_capture", mlrval.FromString(captures[i]))
 			} else {
 				captures_array[i] = mlrval.FromString(captures[i])
 			}
 		}
-		results.PutReference("captures", mlrval.FromArray(captures_array[1:]))
 
 		starts_array := make([]*mlrval.Mlrval, len(starts))
 		for i, _ := range starts {
 			if i == 0 {
-				starts_array[i] = mlrval.FromInt(0)
+				results.PutReference("full_start", mlrval.FromInt(int64(starts[i])))
 			} else {
 				starts_array[i] = mlrval.FromInt(int64(starts[i]))
 			}
 		}
-		results.PutReference("starts", mlrval.FromArray(starts_array[1:]))
 
-		lengths_array := make([]*mlrval.Mlrval, len(lengths))
-		for i, _ := range lengths {
+		ends_array := make([]*mlrval.Mlrval, len(ends))
+		for i, _ := range ends {
 			if i == 0 {
-				lengths_array[i] = mlrval.FromInt(0)
+				results.PutReference("full_end", mlrval.FromInt(int64(ends[i])))
 			} else {
-				lengths_array[i] = mlrval.FromInt(int64(lengths[i]))
+				ends_array[i] = mlrval.FromInt(int64(ends[i]))
 			}
 		}
-		results.PutReference("lengths", mlrval.FromArray(lengths_array[1:]))
+
+		if len(captures) > 1 {
+		results.PutReference("captures", mlrval.FromArray(captures_array[1:]))
+		results.PutReference("starts", mlrval.FromArray(starts_array[1:]))
+		results.PutReference("ends", mlrval.FromArray(ends_array[1:]))
+		}
 	} else {
 		results.PutReference("captures", mlrval.FromArray(captures_array))
 		results.PutReference("starts", mlrval.FromArray(starts_array))
-		results.PutReference("lengths", mlrval.FromArray(lengths_array))
+		results.PutReference("ends", mlrval.FromArray(ends_array))
 	}
 
 	return mlrval.FromMap(results)
