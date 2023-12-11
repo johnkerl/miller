@@ -14,7 +14,7 @@ module github.com/johnkerl/miller
 // Local development:
 // replace github.com/johnkerl/lumin => /Users/kerl/git/johnkerl/lumin
 
-go 1.18
+go 1.19
 
 require (
 	github.com/facette/natsort v0.0.0-20181210072756-2cd4dd1e2dcb
