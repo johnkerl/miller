@@ -91,7 +91,7 @@ $tar \
   ./go.mod \
   ./go.sum \
   ./cmd \
-  ./internal \
+  ./pkg \
   ./regression_test.go \
   ./man \
   ./test \
