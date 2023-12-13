@@ -1,14 +1,12 @@
 #!/bin/bash
 
 wc -l \
-  $(find -name \*.go | grep -v pkg/parsing) \
-  pkg/parsing/mlr.bnf \
+  $(find pkg -name '*.go' | grep -v pkg/parsing) pkg/parsing/mlr.bnf \
 | sort -n
 
 echo
 wc -c \
-  $(find -name \*.go | grep -v pkg/parsing) \
-  pkg/parsing/mlr.bnf \
+  $(find pkg -name '*.go' | grep -v pkg/parsing) pkg/parsing/mlr.bnf \
 | sort -n \
 | tail -n 5
 
