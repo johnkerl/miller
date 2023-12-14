@@ -28,6 +28,12 @@ In this example I am using version 6.2.0 to 6.3.0; of course that will change fo
     * The ordering in this makefile rule is important: the first build creates `mlr`; the second runs `mlr` to create `manpage.txt`; the third includes `manpage.txt` into one of its outputs.
     * Commit and push.
 
+* If Go version is being updated: edit all three of
+
+  * `go.mod`
+  * `.github/workflows/go.yml`
+  * `.github/workflows/release.yml`
+
 * Create the release tarball:
 
     * `make release_tarball`
