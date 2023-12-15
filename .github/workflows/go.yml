@@ -41,7 +41,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: mkdir -p bin/${{matrix.os}} && cp mlr.exe bin/${{matrix.os}}
 
-    - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32
+    - uses: actions/upload-artifact@c7d193f32edcb7bfad88892161225aeda64e9392
       with:
         name: mlr-${{matrix.os}}
         path: bin/${{matrix.os}}/*
