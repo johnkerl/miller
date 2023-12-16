@@ -158,7 +158,7 @@ type tIPSRegexSplitter struct {
 }
 
 func (s *tIPSRegexSplitter) Split(input string) []string {
-	return lib.RegexSplitString(s.ipsRegex, input, 2)
+	return lib.RegexCompiledSplitString(s.ipsRegex, input, 2)
 }
 
 // IFieldSplitter splits a string into pieces, e.g. for IFS.
@@ -193,5 +193,5 @@ type tIFSRegexSplitter struct {
 }
 
 func (s *tIFSRegexSplitter) Split(input string) []string {
-	return lib.RegexSplitString(s.ifsRegex, input, -1)
+	return lib.RegexCompiledSplitString(s.ifsRegex, input, -1)
 }

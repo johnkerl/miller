@@ -81,7 +81,7 @@ func BIF_sub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	sregex := input2.AcquireStringValue()
 	replacement := input3.AcquireStringValue()
 
-	stringOutput := lib.RegexSub(input, sregex, replacement)
+	stringOutput := lib.RegexStringSub(input, sregex, replacement)
 	return mlrval.FromString(stringOutput)
 }
 
@@ -111,7 +111,7 @@ func BIF_gsub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	sregex := input2.AcquireStringValue()
 	replacement := input3.AcquireStringValue()
 
-	stringOutput := lib.RegexGsub(input, sregex, replacement)
+	stringOutput := lib.RegexStringGsub(input, sregex, replacement)
 	return mlrval.FromString(stringOutput)
 }
 
@@ -128,7 +128,27 @@ func BIF_match(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.FromNotStringError("match", input2)
 	}
 
-	boolOutput, captures, starts, ends := lib.RegexMatchesTemp(input1string, input2.AcquireStringValue())
+	// TODO: make a simpler function which does less in the first place (don't just
+	// do more work and then throw it away -- do less)
+	boolOutput, _, _, _ := lib.RegexStringMatchWithMapResults(input1string, input2.AcquireStringValue())
+
+	return mlrval.FromBool(boolOutput)
+}
+
+// TODO: WRITE ME
+func BIF_matchx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	if !input1.IsLegit() {
+		return mlrval.FromNotStringError("match", input1) // TODO: CHANGE FLAVOR
+	}
+	if !input2.IsLegit() {
+		return mlrval.FromNotStringError("match", input2) // TODO: CHANGE FLAVOR
+	}
+	input1string := input1.String()
+	if !input2.IsStringOrVoid() {
+		return mlrval.FromNotStringError("match", input2)
+	}
+
+	boolOutput, captures, starts, ends := lib.RegexStringMatchWithMapResults(input1string, input2.AcquireStringValue())
 
 	results := mlrval.NewMlrmap()
 	results.PutReference("matched", mlrval.FromBool(boolOutput))
@@ -167,9 +187,9 @@ func BIF_match(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		}
 
 		if len(captures) > 1 {
-		results.PutReference("captures", mlrval.FromArray(captures_array[1:]))
-		results.PutReference("starts", mlrval.FromArray(starts_array[1:]))
-		results.PutReference("ends", mlrval.FromArray(ends_array[1:]))
+			results.PutReference("captures", mlrval.FromArray(captures_array[1:]))
+			results.PutReference("starts", mlrval.FromArray(starts_array[1:]))
+			results.PutReference("ends", mlrval.FromArray(ends_array[1:]))
 		}
 	} else {
 		results.PutReference("captures", mlrval.FromArray(captures_array))
@@ -194,7 +214,7 @@ func BIF_string_matches_regexp(input1, input2 *mlrval.Mlrval) (retval *mlrval.Ml
 		return mlrval.FromNotStringError("=~", input2), nil
 	}
 
-	boolOutput, captures := lib.RegexMatches(input1string, input2.AcquireStringValue())
+	boolOutput, captures := lib.RegexStringMatchWithCaptures(input1string, input2.AcquireStringValue())
 	return mlrval.FromBool(boolOutput), captures
 }
 

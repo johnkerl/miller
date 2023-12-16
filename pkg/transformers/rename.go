@@ -169,7 +169,7 @@ func NewTransformerRename(
 			regexString := pe.Key
 			regex := lib.CompileMillerRegexOrDie(regexString)
 			replacement := pe.Value.(string)
-			_, replacementCaptureMatrix := lib.RegexReplacementHasCaptures(replacement)
+			_, replacementCaptureMatrix := lib.ReplacementHasCaptures(replacement)
 			regexAndReplacement := tRegexAndReplacement{
 				regex:                    regex,
 				replacement:              replacement,
@@ -241,7 +241,7 @@ func (tr *TransformerRename) transformWithRegexes(
 						inrec.Rename(oldName, newName)
 					}
 				} else {
-					newName := lib.RegexSubCompiled(oldName, regex, replacement, replacementCaptureMatrix)
+					newName := lib.RegexCompiledSub(oldName, regex, replacement, replacementCaptureMatrix)
 					if newName != oldName {
 						inrec.Rename(oldName, newName)
 					}

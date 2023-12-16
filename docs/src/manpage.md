@@ -220,18 +220,19 @@ MILLER(1)                                                            MILLER(1)
        is_numeric is_present is_string joink joinkv joinv json_parse json_stringify
        kurtosis latin1_to_utf8 leafcount leftpad length localtime2gmt localtime2nsec
        localtime2sec log log10 log1p logifit lstrip madd mapdiff mapexcept mapselect
-       mapsum max maxlen md5 mean meaneb median mexp min minlen mmul mode msub
-       nsec2gmt nsec2gmtdate nsec2localdate nsec2localtime null_count os percentile
-       percentiles pow qnorm reduce regextract regextract_or_else rightpad round
-       roundm rstrip sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime
-       select sgn sha1 sha256 sha512 sin sinh skewness sort sort_collection splita
-       splitax splitkv splitkvx splitnv splitnvx sqrt ssub stddev strfntime
-       strfntime_local strftime strftime_local string strip strlen strpntime
-       strpntime_local strptime strptime_local sub substr substr0 substr1 sum sum2
-       sum3 sum4 sysntime system systime systimeint tan tanh tolower toupper truncate
-       typeof unflatten unformat unformatx upntime uptime urand urand32 urandelement
-       urandint urandrange utf8_to_latin1 variance version ! != !=~ % & && * ** + - .
-       .* .+ .- ./ / // &lt; &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
+       mapsum match matchx max maxlen md5 mean meaneb median mexp min minlen mmul
+       mode msub nsec2gmt nsec2gmtdate nsec2localdate nsec2localtime null_count os
+       percentile percentiles pow qnorm reduce regextract regextract_or_else rightpad
+       round roundm rstrip sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate
+       sec2localtime select sgn sha1 sha256 sha512 sin sinh skewness sort
+       sort_collection splita splitax splitkv splitkvx splitnv splitnvx sqrt ssub
+       stddev strfntime strfntime_local strftime strftime_local string strip strlen
+       strpntime strpntime_local strptime strptime_local sub substr substr0 substr1
+       sum sum2 sum3 sum4 sysntime system systime systimeint tan tanh tolower toupper
+       truncate typeof unflatten unformat unformatx upntime uptime urand urand32
+       urandelement urandint urandrange utf8_to_latin1 variance version ! != !=~ % &
+       && * ** + - . .* .+ .- ./ / // &lt; &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ |
+       || ~
 
 1mCOMMENTS-IN-DATA FLAGS0m
        Miller lets you put comments in your data, such as
@@ -2650,6 +2651,16 @@ MILLER(1)                                                            MILLER(1)
    1mmapsum0m
         (class=collections #args=variadic) With 0 args, returns empty map. With &gt;= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
 
+   1mmatch0m
+        (class=string #args=2) TODO: WRITE ME
+       Example:
+       TODO: WRITE ME
+
+   1mmatchx0m
+        (class=string #args=2) TODO: WRITE ME
+       Example:
+       TODO: WRITE ME
+
    1mmax0m
         (class=math #args=variadic) Max of n numbers; null loses. The min and max functions also recurse into arrays and maps, so they can be used to get min/max stats on array/map values.
 
@@ -3649,5 +3660,5 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-12-02                         MILLER(1)
+                                  2023-12-16                         MILLER(1)
 </pre>

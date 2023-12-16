@@ -88,7 +88,7 @@ var dataForMatches = []tDataForMatches{
 
 func TestRegexReplacementHasCaptures(t *testing.T) {
 	for i, entry := range dataForHasCaptures {
-		actualHasCaptures, actualMatrix := RegexReplacementHasCaptures(entry.replacement)
+		actualHasCaptures, actualMatrix := ReplacementHasCaptures(entry.replacement)
 		if actualHasCaptures != entry.expectedHasCaptures {
 			t.Fatalf("case %d replacement \"%s\" expected %v got %v\n",
 				i, entry.replacement, entry.expectedHasCaptures, actualHasCaptures,
@@ -104,7 +104,7 @@ func TestRegexReplacementHasCaptures(t *testing.T) {
 
 func TestRegexSub(t *testing.T) {
 	for i, entry := range dataForSub {
-		actualOutput := RegexSub(entry.input, entry.sregex, entry.replacement)
+		actualOutput := RegexStringSub(entry.input, entry.sregex, entry.replacement)
 		if actualOutput != entry.expectedOutput {
 			t.Fatalf("case %d input \"%s\" sregex \"%s\" replacement \"%s\" expected \"%s\" got \"%s\"\n",
 				i, entry.input, entry.sregex, entry.replacement, entry.expectedOutput, actualOutput,
@@ -115,7 +115,7 @@ func TestRegexSub(t *testing.T) {
 
 func TestRegexGsub(t *testing.T) {
 	for i, entry := range dataForGsub {
-		actualOutput := RegexGsub(entry.input, entry.sregex, entry.replacement)
+		actualOutput := RegexStringGsub(entry.input, entry.sregex, entry.replacement)
 		if actualOutput != entry.expectedOutput {
 			t.Fatalf("case %d input \"%s\" sregex \"%s\" replacement \"%s\" expected \"%s\" got \"%s\"\n",
 				i, entry.input, entry.sregex, entry.replacement, entry.expectedOutput, actualOutput,
@@ -126,7 +126,7 @@ func TestRegexGsub(t *testing.T) {
 
 func TestRegexMatches(t *testing.T) {
 	for i, entry := range dataForMatches {
-		actualOutput, actualCaptures := RegexMatches(entry.input, entry.sregex)
+		actualOutput, actualCaptures := RegexStringMatchWithCaptures(entry.input, entry.sregex)
 		if actualOutput != entry.expectedOutput {
 			t.Fatalf("case %d input \"%s\" sregex \"%s\" expected %v got %v\n",
 				i, entry.input, entry.sregex, entry.expectedOutput, actualOutput,

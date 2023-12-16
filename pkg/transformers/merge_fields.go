@@ -479,7 +479,7 @@ func (tr *TransformerMergeFields) transformByCollapsing(
 			matched = valueFieldNameRegex.MatchString(pe.Key)
 			if matched {
 				// TODO: comment re matrix
-				shortName = lib.RegexSubCompiled(valueFieldName, valueFieldNameRegex, "", nil)
+				shortName = lib.RegexCompiledSub(valueFieldName, valueFieldNameRegex, "", nil)
 				break
 			}
 		}

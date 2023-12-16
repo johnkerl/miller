@@ -84,6 +84,7 @@ func CompileMillerRegex(regexString string) (*regexp.Regexp, error) {
 	return regexp.Compile(regexString)
 }
 
+// XXX TODO: make a keeper with cache, full for now, LRU if needed
 // CompileMillerRegexOrDie wraps CompileMillerRegex. Usually in Go we want to
 // return a second error argument rather than fataling. However, if there's a
 // malformed regex we really cannot continue so it's simpler to just fatal.
@@ -110,7 +111,7 @@ func CompileMillerRegexesOrDie(regexStrings []string) []*regexp.Regexp {
 // In Go as in all languages I'm aware of with a string-split, "a,b,c" splits
 // on "," to ["a", "b", "c" and "a" splits to ["a"], both of which are fine --
 // but "" splits to [""] when I wish it were []. This function does the latter.
-func RegexSplitString(regex *regexp.Regexp, input string, n int) []string {
+func RegexCompiledSplitString(regex *regexp.Regexp, input string, n int) []string {
 	if input == "" {
 		return make([]string, 0)
 	} else {
@@ -118,33 +119,125 @@ func RegexSplitString(regex *regexp.Regexp, input string, n int) []string {
 	}
 }
 
-// MakeEmptyRegexCaptures is for initial CST state at the start of executing
-// the DSL expression for the current record.  Even if '$x =~ "(..)_(...)" set
-// "\1" and "\2" on the previous record, at start of processing for the current
-// record we need to start with a clean slate.
-func MakeEmptyRegexCaptures() []string {
-	return nil
+// RegexStringSub implements the sub DSL function.
+func RegexStringSub(
+	input string,
+	sregex string,
+	replacement string,
+) string {
+	regex := CompileMillerRegexOrDie(sregex)
+	_, replacementCaptureMatrix := ReplacementHasCaptures(replacement)
+	return RegexCompiledSub(input, regex, replacement, replacementCaptureMatrix)
 }
 
-// RegexReplacementHasCaptures is used by the CST builder to see if
-// string-literal is like "foo bar" or "foo \1 bar" -- in the latter case it
-// needs to retain the compiled offsets-matrix information.
-func RegexReplacementHasCaptures(
+// RegexCompiledSub is the same as RegexStringSub but with compiled regex and
+// replacement strings.
+func RegexCompiledSub(
+	input string,
+	regex *regexp.Regexp,
 	replacement string,
-) (
-	hasCaptures bool,
-	matrix [][]int,
-) {
-	if captureDetector.MatchString(replacement) {
-		return true, captureSplitter.FindAllSubmatchIndex([]byte(replacement), -1)
-	} else {
-		return false, nil
+	replacementCaptureMatrix [][]int,
+) string {
+	return regexCompiledSubOrGsub(input, regex, replacement, replacementCaptureMatrix, true)
+}
+
+// RegexStringGsub implements the gsub DSL function.
+func RegexStringGsub(
+	input string,
+	sregex string,
+	replacement string,
+) string {
+	regex := CompileMillerRegexOrDie(sregex)
+	_, replacementCaptureMatrix := ReplacementHasCaptures(replacement)
+	return regexCompiledSubOrGsub(input, regex, replacement, replacementCaptureMatrix, false)
+}
+
+// regexCompiledSubOrGsub is the implementation for sub/gsub with compilex regex
+// and replacement strings.
+func regexCompiledSubOrGsub(
+	input string,
+	regex *regexp.Regexp,
+	replacement string,
+	replacementCaptureMatrix [][]int,
+	breakOnFirst bool,
+) string {
+	matrix := regex.FindAllSubmatchIndex([]byte(input), -1)
+	if matrix == nil || len(matrix) == 0 {
+		return input
 	}
+
+	// Example return value from FindAllSubmatchIndex with input
+	// "...ab_cde...fg_hij..." and regex "(..)_(...)":
+	//
+	// Matrix is [][]int{
+	//   []int{3, 9, 3, 5, 6, 9},
+	//   []int{12, 18, 12, 14, 15, 18},
+	// }
+	//
+	// * 3-9 is for the entire match "ab_cde"
+	// * 3-5 is for the first capture "ab"
+	// * 6-9 is for the second capture "cde"
+	//
+	// * 12-18 is for the entire match "fg_hij"
+	// * 12-14 is for the first capture "fg"
+	// * 15-18 is for the second capture "hij"
+
+	var buffer bytes.Buffer
+	nonMatchStartIndex := 0
+
+	for _, row := range matrix {
+		buffer.WriteString(input[nonMatchStartIndex:row[0]])
+
+		// "\0" .. "\9"
+		captures := make([]string, 10)
+		di := 0
+		n := len(row)
+		for si := 0; si < n && di <= 9; si += 2 {
+			start := row[si]
+			end := row[si+1]
+			if start >= 0 && end >= 0 {
+				captures[di] = input[start:end]
+			}
+			di += 1
+		}
+
+		// If the replacement had no captures, e.g. "xyz", we would insert it
+		//
+		//   "..."     -> "..."
+		//   "ab_cde"  -> "xyz"   --- here
+		//   "..."     -> "..."
+		//   "fg_hij"  -> "xyz"   --- and here
+		//   "..."     -> "..."
+		//
+		// using buffer.WriteString(replacement). However, this function exists
+		// to handle the case when the replacement string has captures like
+		// "\2:\1", so we need to produce
+		//
+		//   "..."     -> "..."
+		//   "ab_cde"  -> "cde:ab"   --- here
+		//   "..."     -> "..."
+		//   "fg_hij"  -> "hij:fg"   --- and here
+		//   "..."     -> "..."
+		updatedReplacement := InterpolateCaptures(
+			replacement,
+			replacementCaptureMatrix,
+			captures,
+		)
+		buffer.WriteString(updatedReplacement)
+
+		nonMatchStartIndex = row[1]
+		if breakOnFirst {
+			break
+		}
+	}
+
+	buffer.WriteString(input[nonMatchStartIndex:])
+	return buffer.String()
 }
 
 // TODO: UPDATE ME
 // TODO: RENAME
-// RegexMatches implements the =~ DSL operator. The captures are stored in DSL
+// RegexStringMatchWithCaptures implements the =~ DSL operator. The captures are stored in DSL
 // state and may be used by a DSL statement after the =~. For example, in
 //
 //	sub($a, "(..)_(...)", "\1:\2")
@@ -159,27 +252,27 @@ func RegexReplacementHasCaptures(
 //	}
 //
 // and the =~ callsite doesn't know if captures will be used or not. So,
-// RegexMatches always returns the captures array. It is stored within the CST
+// RegexStringMatchWithCaptures always returns the captures array. It is stored within the CST
 // state.
-func RegexMatchesTemp(
+func RegexStringMatchWithMapResults(
 	input string,
 	sregex string,
 ) (
 	matches bool,
-	captures[]string,
-	starts[]int,
-	ends[]int,
+	captures []string,
+	starts []int,
+	ends []int,
 ) {
 	regex := CompileMillerRegexOrDie(sregex)
-	return RegexMatchesCompiledTemp(input, regex)
+	return RegexCompiledMatchWithMapResults(input, regex)
 }
 
 // TODO: UPDATE ME
-// RegexMatchesCompiled is the implementation for the =~ operator.  Without
+// RegexCompiledMatchWithCaptures is the implementation for the =~ operator.  Without
 // Miller-style regex captures this would a simple one-line
 // regex.MatchString(input). However, we return the captures array for the
 // benefit of subsequent references to "\0".."\9".
-func RegexMatchesCompiledTemp(
+func RegexCompiledMatchWithMapResults(
 	input string,
 	regex *regexp.Regexp,
 ) (bool, []string, []int, []int) {
@@ -225,19 +318,43 @@ func RegexMatchesCompiledTemp(
 		end := row[si+1]
 		if start >= 0 && end >= 0 {
 			captures = append(captures, input[start:end])
-			starts= append(starts, start+1)
-			ends= append(ends, end)
+			starts = append(starts, start+1)
+			ends = append(ends, end)
 		} else {
 			captures = append(captures, "")
-			starts= append(starts, -1)
-			ends= append(ends, -1)
+			starts = append(starts, -1)
+			ends = append(ends, -1)
 		}
 	}
 
 	return true, captures, starts, ends
 }
 
-// RegexMatches implements the =~ DSL operator. The captures are stored in DSL
+// MakeEmptyCaptures is for initial CST state at the start of executing
+// the DSL expression for the current record.  Even if '$x =~ "(..)_(...)" set
+// "\1" and "\2" on the previous record, at start of processing for the current
+// record we need to start with a clean slate.
+func MakeEmptyCaptures() []string {
+	return nil
+}
+
+// ReplacementHasCaptures is used by the CST builder to see if
+// string-literal is like "foo bar" or "foo \1 bar" -- in the latter case it
+// needs to retain the compiled offsets-matrix information.
+func ReplacementHasCaptures(
+	replacement string,
+) (
+	hasCaptures bool,
+	matrix [][]int,
+) {
+	if captureDetector.MatchString(replacement) {
+		return true, captureSplitter.FindAllSubmatchIndex([]byte(replacement), -1)
+	} else {
+		return false, nil
+	}
+}
+
+// RegexStringMatchWithCaptures implements the =~ DSL operator. The captures are stored in DSL
 // state and may be used by a DSL statement after the =~. For example, in
 //
 //	sub($a, "(..)_(...)", "\1:\2")
@@ -252,9 +369,9 @@ func RegexMatchesCompiledTemp(
 //	}
 //
 // and the =~ callsite doesn't know if captures will be used or not. So,
-// RegexMatches always returns the captures array. It is stored within the CST
+// RegexStringMatchWithCaptures always returns the captures array. It is stored within the CST
 // state.
-func RegexMatches(
+func RegexStringMatchWithCaptures(
 	input string,
 	sregex string,
 ) (
@@ -262,14 +379,14 @@ func RegexMatches(
 	capturesOneUp []string,
 ) {
 	regex := CompileMillerRegexOrDie(sregex)
-	return RegexMatchesCompiled(input, regex)
+	return RegexCompiledMatchWithCaptures(input, regex)
 }
 
-// RegexMatchesCompiled is the implementation for the =~ operator.  Without
+// RegexCompiledMatchWithCaptures is the implementation for the =~ operator.  Without
 // Miller-style regex captures this would a simple one-line
 // regex.MatchString(input). However, we return the captures array for the
 // benefit of subsequent references to "\0".."\9".
-func RegexMatchesCompiled(
+func RegexCompiledMatchWithCaptures(
 	input string,
 	regex *regexp.Regexp,
 ) (bool, []string) {
@@ -361,121 +478,5 @@ func InterpolateCaptures(
 
 	buffer.WriteString(replacementString[nonMatchStartIndex:])
 
-	return buffer.String()
-}
-
-// RegexSub implements the sub DSL function.
-func RegexSub(
-	input string,
-	sregex string,
-	replacement string,
-) string {
-	regex := CompileMillerRegexOrDie(sregex)
-	_, replacementCaptureMatrix := RegexReplacementHasCaptures(replacement)
-	return RegexSubCompiled(input, regex, replacement, replacementCaptureMatrix)
-}
-
-// RegexSubCompiled is the same as RegexSub but with compiled regex and
-// replacement strings.
-func RegexSubCompiled(
-	input string,
-	regex *regexp.Regexp,
-	replacement string,
-	replacementCaptureMatrix [][]int,
-) string {
-	return regexSubGsubCompiled(input, regex, replacement, replacementCaptureMatrix, true)
-}
-
-// RegexGsub implements the gsub DSL function.
-func RegexGsub(
-	input string,
-	sregex string,
-	replacement string,
-) string {
-	regex := CompileMillerRegexOrDie(sregex)
-	_, replacementCaptureMatrix := RegexReplacementHasCaptures(replacement)
-	return regexSubGsubCompiled(input, regex, replacement, replacementCaptureMatrix, false)
-}
-
-// regexSubGsubCompiled is the implementation for sub/gsub with compilex regex
-// and replacement strings.
-func regexSubGsubCompiled(
-	input string,
-	regex *regexp.Regexp,
-	replacement string,
-	replacementCaptureMatrix [][]int,
-	breakOnFirst bool,
-) string {
-	matrix := regex.FindAllSubmatchIndex([]byte(input), -1)
-	if matrix == nil || len(matrix) == 0 {
-		return input
-	}
-
-	// Example return value from FindAllSubmatchIndex with input
-	// "...ab_cde...fg_hij..." and regex "(..)_(...)":
-	//
-	// Matrix is [][]int{
-	//   []int{3, 9, 3, 5, 6, 9},
-	//   []int{12, 18, 12, 14, 15, 18},
-	// }
-	//
-	// * 3-9 is for the entire match "ab_cde"
-	// * 3-5 is for the first capture "ab"
-	// * 6-9 is for the second capture "cde"
-	//
-	// * 12-18 is for the entire match "fg_hij"
-	// * 12-14 is for the first capture "fg"
-	// * 15-18 is for the second capture "hij"
-
-	var buffer bytes.Buffer
-	nonMatchStartIndex := 0
-
-	for _, row := range matrix {
-		buffer.WriteString(input[nonMatchStartIndex:row[0]])
-
-		// "\0" .. "\9"
-		captures := make([]string, 10)
-		di := 0
-		n := len(row)
-		for si := 0; si < n && di <= 9; si += 2 {
-			start := row[si]
-			end := row[si+1]
-			if start >= 0 && end >= 0 {
-				captures[di] = input[start:end]
-			}
-			di += 1
-		}
-
-		// If the replacement had no captures, e.g. "xyz", we would insert it
-		//
-		//   "..."     -> "..."
-		//   "ab_cde"  -> "xyz"   --- here
-		//   "..."     -> "..."
-		//   "fg_hij"  -> "xyz"   --- and here
-		//   "..."     -> "..."
-		//
-		// using buffer.WriteString(replacement). However, this function exists
-		// to handle the case when the replacement string has captures like
-		// "\2:\1", so we need to produce
-		//
-		//   "..."     -> "..."
-		//   "ab_cde"  -> "cde:ab"   --- here
-		//   "..."     -> "..."
-		//   "fg_hij"  -> "hij:fg"   --- and here
-		//   "..."     -> "..."
-		updatedReplacement := InterpolateCaptures(
-			replacement,
-			replacementCaptureMatrix,
-			captures,
-		)
-		buffer.WriteString(updatedReplacement)
-
-		nonMatchStartIndex = row[1]
-		if breakOnFirst {
-			break
-		}
-	}
-
-	buffer.WriteString(input[nonMatchStartIndex:])
 	return buffer.String()
 }

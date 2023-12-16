@@ -349,6 +349,16 @@ used within subsequent DSL statements. See also "Regular expressions" at ` + lib
 		},
 
 		{
+			name:  "matchx",
+			class: FUNC_CLASS_STRING,
+			help:  `TODO: WRITE ME`,
+			examples: []string{
+				`TODO: WRITE ME`,
+			},
+			binaryFunc: bifs.BIF_matchx,
+		},
+
+		{
 			name:       "&&",
 			class:      FUNC_CLASS_BOOLEAN,
 			help:       `Logical AND.`,
