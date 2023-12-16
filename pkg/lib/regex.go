@@ -24,6 +24,14 @@
 // * "\0" is for a full match; "\1" .. "\9" are for submatch cqptures. E.g.
 //   if $x is "foobarbaz" and the regex is "foo(.)(..)baz", then "\0" is
 //   "foobarbaz", "\1" is "b", "\2" is "ar", and "\3".."\9" are "".
+//
+// * Naming:
+//
+//   o "regexp" and "Regexp" are used for the Go library and its data structure, respectively;
+//
+//   o "regex" is used for regular-expression strings following Miller's idiosyncratic syntax and
+//     semantics as described above.
+//
 // ================================================================
 
 package lib
@@ -34,6 +42,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 // captureDetector is used to see if a string literal interpolates previous
@@ -43,6 +52,40 @@ var captureDetector = regexp.MustCompile(`\\[0-9]`)
 // captureSplitter is used to precompute an offsets matrix for strings like
 // "\2:\1" so they don't need to be recomputed on every record.
 var captureSplitter = regexp.MustCompile(`(\\[0-9])`)
+
+// See regexpCompileCached
+var regexpCache map[string]*regexp.Regexp
+
+const cacheMaxSize = 1000
+
+var cacheMutex sync.Mutex
+
+// regexpCompileCached keeps a cache of compiled regexes, so that the caller has the flexibility to
+// only pass in strings while getting the benefits of compilation avoidance.
+//
+// Regarding cache size: in nominal use, regexp strings are within Miller DSL code statements, and
+// there will be a handful. These will all get re-used after their first application, and the cache
+// will remain bounded by the size of the user's DSL code. However, it is possible to have regex
+// strings contained within Miller record-field data.
+//
+// We could solve this by using an LRU cache. However, for simplicity, we limit the number of
+// cached compiles, and for any extras that appear during record processing, we simply recompile
+// each time.
+func regexpCompileCached(s string) (*regexp.Regexp, error) {
+	if len(regexpCache) > cacheMaxSize {
+		return regexp.Compile(s)
+	}
+	r, err := regexp.Compile(s)
+	if err == nil {
+		cacheMutex.Lock()
+		if regexpCache == nil {
+			regexpCache = make(map[string]*regexp.Regexp)
+		}
+		regexpCache[s] = r
+		cacheMutex.Unlock()
+	}
+	return r, err
+}
 
 // CompileMillerRegex wraps Go regex-compile with some Miller-specific syntax
 // which predate the port of Miller from C to Go.  Miller regexes use a final
@@ -57,7 +100,7 @@ var captureSplitter = regexp.MustCompile(`(\\[0-9])`)
 func CompileMillerRegex(regexString string) (*regexp.Regexp, error) {
 	n := len(regexString)
 	if n < 2 {
-		return regexp.Compile(regexString)
+		return regexpCompileCached(regexString)
 	}
 
 	// TODO: rethink this. This will strip out things people have entered, e.g. "\"...\"".
@@ -68,20 +111,20 @@ func CompileMillerRegex(regexString string) (*regexp.Regexp, error) {
 	// literals) and from verbs (like cut -r or having-fields).
 
 	if strings.HasPrefix(regexString, "\"") && strings.HasSuffix(regexString, "\"") {
-		return regexp.Compile(regexString[1 : n-1])
+		return regexpCompileCached(regexString[1 : n-1])
 	}
 	if strings.HasPrefix(regexString, "/") && strings.HasSuffix(regexString, "/") {
-		return regexp.Compile(regexString[1 : n-1])
+		return regexpCompileCached(regexString[1 : n-1])
 	}
 
 	if strings.HasPrefix(regexString, "\"") && strings.HasSuffix(regexString, "\"i") {
-		return regexp.Compile("(?i)" + regexString[1:n-2])
+		return regexpCompileCached("(?i)" + regexString[1:n-2])
 	}
 	if strings.HasPrefix(regexString, "/") && strings.HasSuffix(regexString, "/i") {
-		return regexp.Compile("(?i)" + regexString[1:n-2])
+		return regexpCompileCached("(?i)" + regexString[1:n-2])
 	}
 
-	return regexp.Compile(regexString)
+	return regexpCompileCached(regexString)
 }
 
 // XXX TODO: make a keeper with cache, full for now, LRU if needed
