@@ -132,17 +132,16 @@ func BIF_match(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(boolOutput)
 }
 
-// TODO: WRITE ME
 func BIF_matchx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsLegit() {
-		return mlrval.FromNotStringError("match", input1) // TODO: CHANGE FLAVOR
+		return mlrval.FromNotStringError("matchx", input1) // TODO: CHANGE FLAVOR
 	}
 	if !input2.IsLegit() {
-		return mlrval.FromNotStringError("match", input2) // TODO: CHANGE FLAVOR
+		return mlrval.FromNotStringError("matchx", input2) // TODO: CHANGE FLAVOR
 	}
 	input1string := input1.String()
 	if !input2.IsStringOrVoid() {
-		return mlrval.FromNotStringError("match", input2)
+		return mlrval.FromNotStringError("matchx", input2)
 	}
 
 	boolOutput, captures, starts, ends := lib.RegexStringMatchWithMapResults(input1string, input2.AcquireStringValue())
@@ -150,11 +149,7 @@ func BIF_matchx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	results := mlrval.NewMlrmap()
 	results.PutReference("matched", mlrval.FromBool(boolOutput))
 
-	// XXX assert all lengths equal
-
 	captures_array := make([]*mlrval.Mlrval, len(captures))
-	starts_array := make([]*mlrval.Mlrval, len(captures))
-	ends_array := make([]*mlrval.Mlrval, len(captures))
 
 	if len(captures) > 0 {
 		for i, _ := range captures {
@@ -188,10 +183,6 @@ func BIF_matchx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 			results.PutReference("starts", mlrval.FromArray(starts_array[1:]))
 			results.PutReference("ends", mlrval.FromArray(ends_array[1:]))
 		}
-	} else {
-		results.PutReference("captures", mlrval.FromArray(captures_array))
-		results.PutReference("starts", mlrval.FromArray(starts_array))
-		results.PutReference("ends", mlrval.FromArray(ends_array))
 	}
 
 	return mlrval.FromMap(results)
