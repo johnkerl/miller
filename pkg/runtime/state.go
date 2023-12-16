@@ -25,7 +25,19 @@ type State struct {
 
 	// For holding "\0".."\9" between where they are set via things like
 	// '$x =~ "(..)_(...)"', and interpolated via things like '$y = "\2:\1"'.
-	RegexCaptures []string
+	//
+    // Each top-level block and user-defined function has its own captures.
+    //
+    // For example, in function `f()`, one can do `somevar =~ someregex`, then
+    // call some function `g()` which also uses `=~`, and then when `g()` returns,
+    // `f()` will have its "\1", "\2", etc intact.
+    //
+    // This is necessary for the stateful semantics of `=~` and "\1", "\2", etc.
+    // Those are avoided when the user calls `matchx`, which is newer, and
+    // stateless. However, `=~` exists in the Miller DSL and we must support it.
+    //////regexCapturesByFrame *list.List // list of []string
+	regexCaptures []string
+
 	Options       *cli.TOptions
 
 	// StrictMode allows for runtime handling of absent-reads and untyped assignments.
@@ -43,8 +55,9 @@ func NewEmptyState(options *cli.TOptions, strictMode bool) *State {
 
 		// OutputRecordsAndContexts is assigned after construction
 
-		// See lib.MakeEmptyCaptures for context.
-		RegexCaptures: lib.MakeEmptyCaptures(),
+		// See lib.MakeEmptyRegexCaptures for context.
+		regexCaptures: lib.MakeEmptyRegexCaptures(),
+
 		Options:       options,
 
 		StrictMode: strictMode,
@@ -57,5 +70,15 @@ func (state *State) Update(
 ) {
 	state.Inrec = inrec
 	state.Context = context
-	state.RegexCaptures = lib.MakeEmptyCaptures()
+	state.regexCaptures = lib.MakeEmptyRegexCaptures()
+}
+
+func (state *State) SetRegexCaptures(
+   captures []string,
+) {
+   state.regexCaptures = lib.CopyStringArray(captures)
+}
+
+func (state *State) GetRegexCaptures() []string {
+   return lib.CopyStringArray(state.regexCaptures)
 }

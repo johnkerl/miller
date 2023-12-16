@@ -293,7 +293,7 @@ func (node *StringLiteralNode) Evaluate(
 //	}
 //
 // the captures can be set (by =~ or !=~) quite far from where they are used.
-// This is why we consult the state.RegexCaptures here, to see if they've been
+// This is why we consult the state's regex captures here, to see if they've been
 // set on some previous invocation of =~ or !=~.
 func (node *RegexCaptureReplacementNode) Evaluate(
 	state *runtime.State,
@@ -302,7 +302,7 @@ func (node *RegexCaptureReplacementNode) Evaluate(
 		lib.InterpolateCaptures(
 			node.replacementString,
 			node.replacementCaptureMatrix,
-			state.RegexCaptures,
+			state.GetRegexCaptures(),
 		),
 	)
 }
