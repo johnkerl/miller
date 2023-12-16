@@ -236,6 +236,24 @@ func regexCompiledSubOrGsub(
 }
 
 // TODO: UPDATE ME
+func RegexStringMatchSimple(
+	input string,
+	sregex string,
+) bool {
+	regex := CompileMillerRegexOrDie(sregex)
+	return RegexCompiledMatchSimple(input, regex)
+}
+
+// TODO: UPDATE ME
+func RegexCompiledMatchSimple(
+	input string,
+	regex *regexp.Regexp,
+) bool {
+
+	return regex.Match([]byte(input))
+}
+
+// TODO: UPDATE ME
 // TODO: RENAME
 // RegexStringMatchWithCaptures implements the =~ DSL operator. The captures are stored in DSL
 // state and may be used by a DSL statement after the =~. For example, in

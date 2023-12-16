@@ -115,7 +115,6 @@ func BIF_gsub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromString(stringOutput)
 }
 
-// TODO: WRITE ME
 func BIF_match(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsLegit() {
 		return mlrval.FromNotStringError("match", input1) // TODO: CHANGE FLAVOR
@@ -128,9 +127,7 @@ func BIF_match(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.FromNotStringError("match", input2)
 	}
 
-	// TODO: make a simpler function which does less in the first place (don't just
-	// do more work and then throw it away -- do less)
-	boolOutput, _, _, _ := lib.RegexStringMatchWithMapResults(input1string, input2.AcquireStringValue())
+	boolOutput := lib.RegexStringMatchSimple(input1string, input2.AcquireStringValue())
 
 	return mlrval.FromBool(boolOutput)
 }
