@@ -120,6 +120,8 @@ func (site *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error
 	// Bind the arguments to the parameters
 	state.Stack.PushStackFrameSet()
 	defer state.Stack.PopStackFrameSet()
+	state.PushRegexCapturesFrame()
+	defer state.PopRegexCapturesFrame()
 
 	for i := range arguments {
 		err := state.Stack.DefineTypedAtScope(
