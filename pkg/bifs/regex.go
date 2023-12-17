@@ -81,7 +81,7 @@ func BIF_sub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	sregex := input2.AcquireStringValue()
 	replacement := input3.AcquireStringValue()
 
-	stringOutput := lib.RegexSub(input, sregex, replacement)
+	stringOutput := lib.RegexStringSub(input, sregex, replacement)
 	return mlrval.FromString(stringOutput)
 }
 
@@ -111,7 +111,7 @@ func BIF_gsub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	sregex := input2.AcquireStringValue()
 	replacement := input3.AcquireStringValue()
 
-	stringOutput := lib.RegexGsub(input, sregex, replacement)
+	stringOutput := lib.RegexStringGsub(input, sregex, replacement)
 	return mlrval.FromString(stringOutput)
 }
 
@@ -129,7 +129,7 @@ func BIF_string_matches_regexp(input1, input2 *mlrval.Mlrval) (retval *mlrval.Ml
 		return mlrval.FromNotStringError("=~", input2), nil
 	}
 
-	boolOutput, captures := lib.RegexMatches(input1string, input2.AcquireStringValue())
+	boolOutput, captures := lib.RegexStringMatchWithCaptures(input1string, input2.AcquireStringValue())
 	return mlrval.FromBool(boolOutput), captures
 }
 

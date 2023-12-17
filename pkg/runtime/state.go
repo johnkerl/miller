@@ -43,8 +43,8 @@ func NewEmptyState(options *cli.TOptions, strictMode bool) *State {
 
 		// OutputRecordsAndContexts is assigned after construction
 
-		// See lib.MakeEmptyRegexCaptures for context.
-		RegexCaptures: lib.MakeEmptyRegexCaptures(),
+		// See lib.MakeEmptyCaptures for context.
+		RegexCaptures: lib.MakeEmptyCaptures(),
 		Options:       options,
 
 		StrictMode: strictMode,
@@ -57,5 +57,5 @@ func (state *State) Update(
 ) {
 	state.Inrec = inrec
 	state.Context = context
-	state.RegexCaptures = lib.MakeEmptyRegexCaptures()
+	state.RegexCaptures = lib.MakeEmptyCaptures()
 }

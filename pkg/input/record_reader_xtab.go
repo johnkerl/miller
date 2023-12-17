@@ -304,7 +304,7 @@ type tXTABIPSSplitter struct {
 // which we need to produce just a pair of items -- a key and a value -- delimited by one or more
 // IPS. For exaemple, with IPS being a space, in 'abc     123' we need to get key 'abc' and value
 // '123'; for 'abc    123 456' we need key 'abc' and value '123 456'.  It's super-elegant to simply
-// regex-split the line like 'kv = lib.RegexSplitString(reader.readerOptions.IPSRegex, line, 2)' --
+// regex-split the line like 'kv = lib.RegexCompiledSplitString(reader.readerOptions.IPSRegex, line, 2)' --
 // however, that's 3x slower than the current implementation. It turns out regexes are great
 // but we should use them only when we must, since they are expensive.
 func (s *tXTABIPSSplitter) Split(input string) (key, value string, err error) {
@@ -358,7 +358,7 @@ type tXTABIPSRegexSplitter struct {
 }
 
 func (s *tXTABIPSRegexSplitter) Split(input string) (key, value string, err error) {
-	kv := lib.RegexSplitString(s.ipsRegex, input, 2)
+	kv := lib.RegexCompiledSplitString(s.ipsRegex, input, 2)
 	if len(kv) == 0 {
 		return "", "", fmt.Errorf("internal coding error in XTAB reader")
 	} else if len(kv) == 1 {
