@@ -45,9 +45,9 @@ type State struct {
 
 func NewEmptyState(options *cli.TOptions, strictMode bool) *State {
 
-	// See lib.MakeEmptyRegexCaptures for context.
+	// See lib.MakeEmptyCaptures for context.
 	regexCapturesByFrame := list.New()
-	regexCapturesByFrame.PushFront(lib.MakeEmptyRegexCaptures())
+	regexCapturesByFrame.PushFront(lib.MakeEmptyCaptures())
 
 	oosvars := mlrval.NewMlrmap()
 	return &State{
@@ -72,7 +72,7 @@ func (state *State) Update(
 ) {
 	state.Inrec = inrec
 	state.Context = context
-	state.regexCapturesByFrame.Front().Value = lib.MakeEmptyRegexCaptures()
+	state.regexCapturesByFrame.Front().Value = lib.MakeEmptyCaptures()
 }
 
 func (state *State) SetRegexCaptures(
@@ -87,7 +87,7 @@ func (state *State) GetRegexCaptures() []string {
 }
 
 func (state *State) PushRegexCapturesFrame() {
-	state.regexCapturesByFrame.PushFront(lib.MakeEmptyRegexCaptures())
+	state.regexCapturesByFrame.PushFront(lib.MakeEmptyCaptures())
 }
 
 func (state *State) PopRegexCapturesFrame() {
