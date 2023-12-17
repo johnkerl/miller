@@ -266,7 +266,7 @@ func (root *RootNode) BuildStringLiteralNode(literal string) IEvaluable {
 	// RegexLiteralNode.  See also https://github.com/johnkerl/miller/issues/297.
 	literal = lib.UnbackslashStringLiteral(literal)
 
-	hasCaptures, replacementCaptureMatrix := lib.RegexReplacementHasCaptures(literal)
+	hasCaptures, replacementCaptureMatrix := lib.ReplacementHasCaptures(literal)
 	if !hasCaptures {
 		return &StringLiteralNode{
 			literal: mlrval.FromString(literal),
