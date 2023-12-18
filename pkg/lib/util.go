@@ -209,6 +209,9 @@ func WriteTempFileOrDie(contents string) string {
 }
 
 func CopyStringArray(input []string) []string {
+	if input == nil {
+		return nil
+	}
 	output := make([]string, len(input))
 	copy(output, input)
 	return output

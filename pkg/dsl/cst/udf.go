@@ -223,6 +223,8 @@ func (site *UDFCallsite) EvaluateWithArguments(
 		state.Stack.PushStackFrameSet()
 		defer state.Stack.PopStackFrameSet()
 	}
+	state.PushRegexCapturesFrame()
+	defer state.PopRegexCapturesFrame()
 
 	cacheable := !udf.isFunctionLiteral
 

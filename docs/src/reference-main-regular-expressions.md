@@ -63,7 +63,7 @@ name=bull,regex=^b[ou]ll$
 
 ## Regex captures
 
-Regex captures of the form `\0` through `\9` are supported as
+Regex captures of the form `\0` through `\9` are supported as follows:
 
 * Captures have in-function context for `sub` and `gsub`. For example, the first `\1,\2` pair belong to the first `sub` and the second `\1,\2` pair belong to the second `sub`:
 
@@ -75,6 +75,24 @@ Regex captures of the form `\0` through `\9` are supported as
 
 <pre class="pre-highlight-non-pair">
 <b>mlr put '$a =~ "(..)_(....); $b = "left_\1"; $c = "right_\2"'</b>
+</pre>
+
+* Each user-defined function has its own frame for captures. For example:
+
+<pre class="pre-highlight-non-pair">
+<b>mlr -n put '</b>
+<b>func f() {</b>
+<b>    if ("456 defg" =~ "([0-9]+) ([a-z]+)") {</b>
+<b>        print "INNER: \1 \2";</b>
+<b>    }</b>
+<b>}</b>
+<b>end {</b>
+<b>    if ("123 abc" =~ "([0-9]+) ([a-z]+)") {</b>
+<b>        print "OUTER PRE:  \1 \2";</b>
+<b>        f();</b>
+<b>        print "OUTER POST: \1 \2";</b>
+<b>    }</b>
+<b>}'</b>
 </pre>
 
 * The captures are not retained across multiple puts. For example, here the `\1,\2` won't be expanded from the regex capture:

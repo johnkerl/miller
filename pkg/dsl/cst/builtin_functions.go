@@ -450,7 +450,7 @@ func (node *RegexCaptureBinaryFunctionCallsiteNode) Evaluate(
 		node.evaluable1.Evaluate(state),
 		node.evaluable2.Evaluate(state),
 	)
-	state.RegexCaptures = captures
+	state.SetRegexCaptures(captures)
 	return output
 }
 
