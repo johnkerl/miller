@@ -1,0 +1,15 @@
+func f() {
+    if ("456 defg" =~ "([0-9]+) ([a-z]+)") {
+        print "INNER: \1 \2";
+        print "INNER: \1 \2";
+    }
+}
+end {
+    if ("123 abc" =~ "([0-9]+) ([a-z]+)") {
+        print "OUTER PRE:  \1 \2";
+        print "OUTER PRE:  \1 \2";
+        f();
+        print "OUTER POST: \1 \2";
+        print "OUTER POST: \1 \2";
+    }
+}
