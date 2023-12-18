@@ -293,6 +293,83 @@ func RegexCompiledMatchSimple(
 	return regex.Match([]byte(input))
 }
 
+// RegexStringMatchWithMapResults implements much of the `matchx` DSL function.  This returns
+// captures via return values. This is distinct from RegexStringMatchWithCaptures which is for the
+// `=~` DSL operator.
+func RegexStringMatchWithMapResults(
+	input string,
+	sregex string,
+) (
+	matches bool,
+	captures []string,
+	starts []int,
+	ends []int,
+) {
+	regex := CompileMillerRegexOrDie(sregex)
+	return RegexCompiledMatchWithMapResults(input, regex)
+}
+
+// RegexCompiledMatchWithMapResults does the work for RegexStringMatchWithMapResults once
+// a compiled regexp is available. Array slot 0 is for the full match; slots 1 and up
+// are for the capture-matches such as "\([0-9]+\):\([a-z]+\)".
+func RegexCompiledMatchWithMapResults(
+	input string,
+	regex *regexp.Regexp,
+) (bool, []string, []int, []int) {
+	captures := make([]string, 0, 10)
+	starts := make([]int, 0, 10)
+	ends := make([]int, 0, 10)
+
+	matrix := regex.FindAllSubmatchIndex([]byte(input), -1)
+	if matrix == nil || len(matrix) == 0 {
+		return false, captures, starts, ends
+	}
+
+	// If there are multiple matches -- e.g. input is
+	//
+	//   "...ab_cde...fg_hij..."
+	//
+	// with regex
+	//
+	//   "(..)_(...)"
+	//
+	// -- then we only consider the first match: boolean return value is true
+	// (the input string matched the regex), and the captures array will map
+	// slot 1 to "ab" and slot 2 to "cde".
+	row := matrix[0]
+	n := len(row)
+
+	// Example return value from FindAllSubmatchIndex with input
+	// "...ab_cde...fg_hij..." and regex "(..)_(...)":
+	//
+	// Matrix is [][]int{
+	//   []int{3, 9, 3, 5, 6, 9},
+	//   []int{12, 18, 12, 14, 15, 18},
+	// }
+	//
+	// As noted above we look at only the first row.
+	//
+	// * 3-9 is for the entire match "ab_cde"
+	// * 3-5 is for the first capture "ab"
+	// * 6-9 is for the second capture "cde"
+
+	for si := 0; si < n; si += 2 {
+		start := row[si]
+		end := row[si+1]
+		if start >= 0 && end >= 0 {
+			captures = append(captures, input[start:end])
+			starts = append(starts, start+1)
+			ends = append(ends, end)
+		} else {
+			captures = append(captures, "")
+			starts = append(starts, -1)
+			ends = append(ends, -1)
+		}
+	}
+
+	return true, captures, starts, ends
+}
+
 // RegexStringMatchWithCaptures implements the =~ DSL operator. The captures are stored in DSL
 // state and may be used by a DSL statement after the =~. For example, in
 //

@@ -115,6 +115,79 @@ func BIF_gsub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromString(stringOutput)
 }
 
+func BIF_match(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	if !input1.IsLegit() {
+		return mlrval.FromNotStringError("match", input1) // TODO: CHANGE FLAVOR
+	}
+	if !input2.IsLegit() {
+		return mlrval.FromNotStringError("match", input2) // TODO: CHANGE FLAVOR
+	}
+	input1string := input1.String()
+	if !input2.IsStringOrVoid() {
+		return mlrval.FromNotStringError("match", input2)
+	}
+
+	boolOutput := lib.RegexStringMatchSimple(input1string, input2.AcquireStringValue())
+
+	return mlrval.FromBool(boolOutput)
+}
+
+func BIF_matchx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	if !input1.IsLegit() {
+		return mlrval.FromNotStringError("matchx", input1) // TODO: CHANGE FLAVOR
+	}
+	if !input2.IsLegit() {
+		return mlrval.FromNotStringError("matchx", input2) // TODO: CHANGE FLAVOR
+	}
+	input1string := input1.String()
+	if !input2.IsStringOrVoid() {
+		return mlrval.FromNotStringError("matchx", input2)
+	}
+
+	boolOutput, captures, starts, ends := lib.RegexStringMatchWithMapResults(input1string, input2.AcquireStringValue())
+
+	results := mlrval.NewMlrmap()
+	results.PutReference("matched", mlrval.FromBool(boolOutput))
+
+	captures_array := make([]*mlrval.Mlrval, len(captures))
+
+	if len(captures) > 0 {
+		for i, _ := range captures {
+			if i == 0 {
+				results.PutReference("full_capture", mlrval.FromString(captures[i]))
+			} else {
+				captures_array[i] = mlrval.FromString(captures[i])
+			}
+		}
+
+		starts_array := make([]*mlrval.Mlrval, len(starts))
+		for i, _ := range starts {
+			if i == 0 {
+				results.PutReference("full_start", mlrval.FromInt(int64(starts[i])))
+			} else {
+				starts_array[i] = mlrval.FromInt(int64(starts[i]))
+			}
+		}
+
+		ends_array := make([]*mlrval.Mlrval, len(ends))
+		for i, _ := range ends {
+			if i == 0 {
+				results.PutReference("full_end", mlrval.FromInt(int64(ends[i])))
+			} else {
+				ends_array[i] = mlrval.FromInt(int64(ends[i]))
+			}
+		}
+
+		if len(captures) > 1 {
+			results.PutReference("captures", mlrval.FromArray(captures_array[1:]))
+			results.PutReference("starts", mlrval.FromArray(starts_array[1:]))
+			results.PutReference("ends", mlrval.FromArray(ends_array[1:]))
+		}
+	}
+
+	return mlrval.FromMap(results)
+}
+
 // BIF_string_matches_regexp implements the =~ operator, with support for
 // setting regex-captures for later expressions to access using "\1" .. "\9".
 func BIF_string_matches_regexp(input1, input2 *mlrval.Mlrval) (retval *mlrval.Mlrval, captures []string) {
