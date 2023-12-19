@@ -61,7 +61,7 @@ name=jane,regex=^j.*e$
 name=bull,regex=^b[ou]ll$
 </pre>
 
-## Regex captures
+## Regex captures for the `=~` operator
 
 Regex captures of the form `\0` through `\9` are supported as follows:
 
@@ -144,6 +144,100 @@ false
 [mlr] "\1:\2"
 "\1:\2"
 </pre>
+
+## The `strmatch` and `strmatchx` DSL functions
+
+The `=~` and `!=~` operators have been in Miller for a long time, and they will continue to be
+supported.  They do, however, have some deficiencies. As of Miller 6.11 and beyond, the `strmatch`
+and `strmatchx` provide more robust ways to do capturing.
+
+First, some examples.
+
+The `strmatch` function only returns a boolean result, and it doesn't set `\0..\9`:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr repl</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+
+[mlr] strmatch("abc", "....")
+false
+
+[mlr] strmatch("abc", "...")
+true
+
+[mlr] strmatch("abc", "(.).(.)")
+true
+
+[mlr] strmatch("[ab:3458]", "([a-z]+):([0-9]+)")
+true
+</pre>
+
+The `strmatchx` function also doesn't set `\0..\9`, but returns a map-valued result:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr repl</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+
+[mlr] strmatchx("abc", "....")
+{
+  "matched": false
+}
+
+[mlr] strmatchx("abc", "...")
+{
+  "matched": true,
+  "full_capture": "abc",
+  "full_start": 1,
+  "full_end": 3
+}
+
+[mlr] strmatchx("abc", "(.).(.)")
+{
+  "matched": true,
+  "full_capture": "abc",
+  "full_start": 1,
+  "full_end": 3,
+  "captures": ["a", "c"],
+  "starts": [1, 3],
+  "ends": [1, 3]
+}
+
+[mlr] "[ab:3458]" =~ "([a-z]+):([0-9]+)"
+true
+
+[mlr] "\1"
+"ab"
+
+[mlr] "\2"
+"3458"
+
+[mlr] strmatchx("[ab:3458]", "([a-z]+):([0-9]+)")
+{
+  "matched": true,
+  "full_capture": "ab:3458",
+  "full_start": 2,
+  "full_end": 8,
+  "captures": ["ab", "3458"],
+  "starts": [2, 5],
+  "ends": [3, 8]
+}
+</pre>
+
+Notes:
+
+* When there is no match, the result from `strmatchx` only has the `"matched":false` key/value pair.
+* When there is a match with no captures, the result from `strmatchx` has the `"matched":true` key/value pair,
+  as well as `full_capture` (taking the place of `\0` set by `=~`), and `full_start` and `full_end`
+  which `=~` does not offer.
+* When there is a match with no captures, the result from `strmatchx` also has the `captures` array
+  whose slots 1, 2, 3, ... are the same as would have been set by `=~` via `\1, \2, \3, ...`.
+  However, `strmatchx` offers an arbitrary number of captures, not just `\1..\9`.
+  Additionally, the `starts` and `ends` arrays are indices into the input string.
+* Since you hold the return value from `strmatchx`, you can operate on it as you wish --- instead of
+  relying on the (function-scoped) globals `\0..\9`.
+* The price paid is that using `strmatchx` does indeed tend to take more keystrokes than `=~`.
 
 ## More information
 
