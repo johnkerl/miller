@@ -1,1 +1,1 @@
-$z = match($x, $y)
+$z = strmatch($x, $y)

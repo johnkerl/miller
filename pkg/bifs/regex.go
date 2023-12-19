@@ -115,16 +115,16 @@ func BIF_gsub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromString(stringOutput)
 }
 
-func BIF_match(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_strmatch(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsLegit() {
-		return mlrval.FromNotStringError("match", input1) // TODO: CHANGE FLAVOR
+		return mlrval.FromNotStringError("strmatch", input1) // TODO: CHANGE FLAVOR
 	}
 	if !input2.IsLegit() {
-		return mlrval.FromNotStringError("match", input2) // TODO: CHANGE FLAVOR
+		return mlrval.FromNotStringError("strmatch", input2) // TODO: CHANGE FLAVOR
 	}
 	input1string := input1.String()
 	if !input2.IsStringOrVoid() {
-		return mlrval.FromNotStringError("match", input2)
+		return mlrval.FromNotStringError("strmatch", input2)
 	}
 
 	boolOutput := lib.RegexStringMatchSimple(input1string, input2.AcquireStringValue())
@@ -132,16 +132,16 @@ func BIF_match(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(boolOutput)
 }
 
-func BIF_matchx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_strmatchx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsLegit() {
-		return mlrval.FromNotStringError("matchx", input1) // TODO: CHANGE FLAVOR
+		return mlrval.FromNotStringError("strmatchx", input1) // TODO: CHANGE FLAVOR
 	}
 	if !input2.IsLegit() {
-		return mlrval.FromNotStringError("matchx", input2) // TODO: CHANGE FLAVOR
+		return mlrval.FromNotStringError("strmatchx", input2) // TODO: CHANGE FLAVOR
 	}
 	input1string := input1.String()
 	if !input2.IsStringOrVoid() {
-		return mlrval.FromNotStringError("matchx", input2)
+		return mlrval.FromNotStringError("strmatchx", input2)
 	}
 
 	boolOutput, captures, starts, ends := lib.RegexStringMatchWithMapResults(input1string, input2.AcquireStringValue())

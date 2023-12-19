@@ -252,12 +252,13 @@ percentiles pow qnorm reduce regextract regextract_or_else rightpad round
 roundm rstrip sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime
 select sgn sha1 sha256 sha512 sin sinh skewness sort sort_collection splita
 splitax splitkv splitkvx splitnv splitnvx sqrt ssub stddev strfntime
-strfntime_local strftime strftime_local string strip strlen strpntime
-strpntime_local strptime strptime_local sub substr substr0 substr1 sum sum2
-sum3 sum4 sysntime system systime systimeint tan tanh tolower toupper truncate
-typeof unflatten unformat unformatx upntime uptime urand urand32 urandelement
-urandint urandrange utf8_to_latin1 variance version ! != !=~ % & && * ** + - .
-\&.* .+ .- ./ / // < << <= <=> == =~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
+strfntime_local strftime strftime_local string strip strlen strmatch strmatchx
+strpntime strpntime_local strptime strptime_local sub substr substr0 substr1
+sum sum2 sum3 sum4 sysntime system systime systimeint tan tanh tolower toupper
+truncate typeof unflatten unformat unformatx upntime uptime urand urand32
+urandelement urandint urandrange utf8_to_latin1 variance version ! != !=~ % &
+&& * ** + - . .* .+ .- ./ / // < << <= <=> == =~ > >= >> >>> ?: ?? ??? ^ ^^ |
+|| ~
 .fi
 .if n \{\
 .RE
@@ -4647,6 +4648,28 @@ strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%3S %z", "Asia/Istanbul") = "2015-0
 .\}
 .nf
  (class=string #args=1) String length.
+.fi
+.if n \{\
+.RE
+.SS "strmatch"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=string #args=2) TODO: WRITE ME
+Example:
+TODO: WRITE ME
+.fi
+.if n \{\
+.RE
+.SS "strmatchx"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=string #args=2) TODO: WRITE ME
+Example:
+TODO: WRITE ME
 .fi
 .if n \{\
 .RE

@@ -226,12 +226,13 @@ MILLER(1)                                                            MILLER(1)
        roundm rstrip sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime
        select sgn sha1 sha256 sha512 sin sinh skewness sort sort_collection splita
        splitax splitkv splitkvx splitnv splitnvx sqrt ssub stddev strfntime
-       strfntime_local strftime strftime_local string strip strlen strpntime
-       strpntime_local strptime strptime_local sub substr substr0 substr1 sum sum2
-       sum3 sum4 sysntime system systime systimeint tan tanh tolower toupper truncate
-       typeof unflatten unformat unformatx upntime uptime urand urand32 urandelement
-       urandint urandrange utf8_to_latin1 variance version ! != !=~ % & && * ** + - .
-       .* .+ .- ./ / // &lt; &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
+       strfntime_local strftime strftime_local string strip strlen strmatch strmatchx
+       strpntime strpntime_local strptime strptime_local sub substr substr0 substr1
+       sum sum2 sum3 sum4 sysntime system systime systimeint tan tanh tolower toupper
+       truncate typeof unflatten unformat unformatx upntime uptime urand urand32
+       urandelement urandint urandrange utf8_to_latin1 variance version ! != !=~ % &
+       && * ** + - . .* .+ .- ./ / // &lt; &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ |
+       || ~
 
 1mCOMMENTS-IN-DATA FLAGS0m
        Miller lets you put comments in your data, such as
@@ -2995,6 +2996,16 @@ MILLER(1)                                                            MILLER(1)
 
    1mstrlen0m
         (class=string #args=1) String length.
+
+   1mstrmatch0m
+        (class=string #args=2) TODO: WRITE ME
+       Example:
+       TODO: WRITE ME
+
+   1mstrmatchx0m
+        (class=string #args=2) TODO: WRITE ME
+       Example:
+       TODO: WRITE ME
 
    1mstrpntime0m
         (class=time #args=2) strpntime: Parses timestamp as integer nanoseconds since the epoch. See also strpntime_local.
