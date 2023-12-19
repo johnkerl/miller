@@ -278,6 +278,7 @@ These are flags which don't fit into any other category.
 * `--no-dedupe-field-names`: By default, if an input record has a field named `x` and another also named `x`, the second will be renamed `x_2`, and so on.  With this flag provided, the second `x`'s value will replace the first `x`'s value when the record is read.  This flag has no effect on JSON input records, where duplicate keys always result in the last one's value being retained.
 * `--no-fflush`: Let buffered output not be written after every output record. The default is flush output after every record if the output is to the terminal, or less often if the output is to a file or a pipe. The default is a significant performance optimization for large files.  Use this flag to allow less-frequent updates when output is to the terminal. This is unlikely to be a noticeable performance improvement, since direct-to-screen output for large files has its own overhead.
 * `--no-hash-records`: See --hash-records.
+* `--norc`: Do not load a .mlrrc file.
 * `--nr-progress-mod {m}`: With m a positive integer: print filename and record count to os.Stderr every m input records.
 * `--ofmt {format}`: E.g. `%.18f`, `%.0f`, `%9.6e`. Please use sprintf-style codes (https://pkg.go.dev/fmt) for floating-point numbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.
 * `--ofmte {n}`: Use --ofmte 6 as shorthand for --ofmt %.6e, etc.

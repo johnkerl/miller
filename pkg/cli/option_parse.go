@@ -3102,5 +3102,13 @@ has its own overhead.`,
 				*pargi += 2
 			},
 		},
+
+		{
+			name: "--norc",
+			help: "Do not load a .mlrrc file.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				*pargi += 1
+			},
+		},
 	},
 }

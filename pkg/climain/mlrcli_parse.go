@@ -151,8 +151,8 @@ func parseCommandLinePassOne(
 				os.Exit(0)
 
 			} else if args[argi] == "--norc" {
-				flagSequences = append(flagSequences, args[oargi:argi])
 				argi += 1
+				flagSequences = append(flagSequences, args[oargi:argi])
 
 			} else if cli.FLAG_TABLE.Parse(args, argc, &argi, options) {
 				flagSequences = append(flagSequences, args[oargi:argi])
