@@ -1,0 +1,11 @@
+end {
+  print("[\1]:[\2]");
+  print("abc" =~ "...");
+  print("[\1]:[\2]");
+  print("abc" =~ "(.).(.)");
+  print("[\1]:[\2]");
+  print("abc" =~ "(.)x(.)");
+  print("[\1]:[\2]");
+  print("abc" =~ null);
+  print("[\1]:[\2]");
+}
