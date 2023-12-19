@@ -136,7 +136,7 @@ $ helm list | mlr --itsv --ojson head -n 1
 ]
 GENMD-EOF
 
-A solution here is Miller's 
+A solution here is Miller's
 [clean-whitespace verb](reference-verbs.md#clean-whitespace):
 
 GENMD-CARDIFY

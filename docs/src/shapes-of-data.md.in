@@ -17,14 +17,14 @@ Also try `od -xcv` and/or `cat -e` on your file to check for non-printable chara
 Use the `file` command to see if there are CR/LF terminators (in this case, there are not):
 
 GENMD-CARDIFY-HIGHLIGHT-ONE
-file data/colours.csv 
+file data/colours.csv
 data/colours.csv: Unicode text, UTF-8 text
 GENMD-EOF
 
 Look at the file to find names of fields:
 
 GENMD-CARDIFY-HIGHLIGHT-ONE
-cat data/colours.csv 
+cat data/colours.csv
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;TO;TR
 masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
 masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
@@ -33,13 +33,13 @@ GENMD-EOF
 Extract a few fields:
 
 GENMD-CARDIFY-HIGHLIGHT-ONE
-mlr --csv cut -f KEY,PL,TO data/colours.csv 
+mlr --csv cut -f KEY,PL,TO data/colours.csv
 GENMD-EOF
 
 Use XTAB output format to get a sharper picture of where records/fields are being split:
 
 GENMD-CARDIFY-HIGHLIGHT-ONE
-mlr --icsv --oxtab cat data/colours.csv 
+mlr --icsv --oxtab cat data/colours.csv
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;TO;TR masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
 
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;TO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
@@ -48,7 +48,7 @@ GENMD-EOF
 Using XTAB output format makes it clearer that `KEY;DE;...;TR` is being treated as a single field name in the CSV header, and likewise each subsequent line is being treated as a single field value. This is because the default field separator is a comma but we have semicolons here.  Use XTAB again with different field separator (`--fs semicolon`):
 
 GENMD-CARDIFY-HIGHLIGHT-ONE
-mlr --icsv --ifs semicolon --oxtab cat data/colours.csv 
+mlr --icsv --ifs semicolon --oxtab cat data/colours.csv
 KEY masterdata_colourcode_1
 DE  Weiß
 EN  White
@@ -77,7 +77,7 @@ GENMD-EOF
 Using the new field-separator, retry the cut:
 
 GENMD-CARDIFY-HIGHLIGHT-ONE
-mlr --csv --fs semicolon cut -f KEY,PL,TO data/colours.csv 
+mlr --csv --fs semicolon cut -f KEY,PL,TO data/colours.csv
 KEY;PL;TO
 masterdata_colourcode_1;Biały;Alb
 masterdata_colourcode_2;Czarny;Negru

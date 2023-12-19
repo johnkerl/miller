@@ -7,7 +7,7 @@ For one or more specified field names, simply compute p25 and p75, then write th
 GENMD-RUN-COMMAND
 mlr --oxtab stats1 -f x -a p25,p75 \
     then put '$x_iqr = $x_p75 - $x_p25' \
-    data/medium 
+    data/medium
 GENMD-EOF
 
 For wildcarded field names, first compute p25 and p75, then loop over field names with `p25` in them:
@@ -19,7 +19,7 @@ mlr --oxtab stats1 --fr '[i-z]' -a p25,p75 \
         $["\1_iqr"] = $["\1_p75"] - $["\1_p25"]
       }
     }' \
-    data/medium 
+    data/medium
 GENMD-EOF
 
 ## Computing weighted means

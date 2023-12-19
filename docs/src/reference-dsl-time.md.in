@@ -67,7 +67,7 @@ the [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) format.  This was the
 first (and initially only) human-readable date/time format supported by Miller
 going all the way back to Miller 1.0.0.
 
-You can get these from epoch-seconds using the 
+You can get these from epoch-seconds using the
 [sec2gmt](reference-dsl-builtin-functions.md#sec2gmt) DSL function.
 (Note that the terms _UTC_ and _GMT_ are used interchangeably in Miller.)
 We also have [sec2gmtdate](reference-dsl-builtin-functions.md#sec2gmtdate) DSL function.
@@ -142,7 +142,7 @@ GENMD-EOF
 
 Note that for local times, Miller omits the `T` and the `Z` you see in GMT times.
 
-We also have the 
+We also have the
 [gmt2localtime](reference-dsl-builtin-functions.md#gmt2localtime) and
 [localtime2gmt](reference-dsl-builtin-functions.md#localtime2gmt) convenience functions:
 

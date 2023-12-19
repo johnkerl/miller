@@ -103,6 +103,48 @@ Regex captures of the form `\0` through `\9` are supported as follows:
 
 * Up to nine matches are supported: `\1` through `\9`, while `\0` is the entire match string; `\15` is treated as `\1` followed by an unrelated `5`.
 
+## Resetting captures
+
+If you use `(...)` in your regular expression, then up to 9 matches are supported for the `=~`
+operator, and an arbitrary number of matches are supported for the `match` DSL function.
+
+* Before any match is done, `"\1"` etc. in a string evaluate to themselves. 
+* After a successful match is done, `"\1"` etc. in a string evaluate to the matched substring.
+* After an unsuccessful match is done, `"\1"` etc. in a string evaluate to the empty string.
+* You can match against `null` to reset to the original state.
+
+<pre class="pre-highlight-in-pair">
+<b>mlr repl</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+
+[mlr] "\1:\2"
+"\1:\2"
+
+[mlr] "abc" =~ "..."
+true
+
+[mlr] "\1:\2"
+":"
+
+[mlr] "abc" =~ "(.).(.)"
+true
+
+[mlr] "\1:\2"
+"a:c"
+
+[mlr] "abc" =~ "(.)x(.)"
+false
+
+[mlr] "\1:\2"
+":"
+
+[mlr] "abc" =~ null
+
+[mlr] "\1:\2"
+"\1:\2"
+</pre>
+
 ## More information
 
 Regular expressions are those supported by the [Go regexp package](https://pkg.go.dev/regexp), which in turn are of type [RE2](https://github.com/google/re2/wiki/Syntax) except for `\C`:
