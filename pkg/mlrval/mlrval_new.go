@@ -132,7 +132,7 @@ func FromNotFunctionError(funcname string, v *Mlrval) *Mlrval {
 func FromNotNamedTypeError(funcname string, v *Mlrval, expected_type_name string) *Mlrval {
 	return FromError(
 		fmt.Errorf(
-			"%s: unacceptable non-array value %s with type %s; needed type %s",
+			"%s: unacceptable value %s with type %s; needed type %s",
 			funcname,
 			v.StringMaybeQuoted(),
 			v.GetTypeName(),
