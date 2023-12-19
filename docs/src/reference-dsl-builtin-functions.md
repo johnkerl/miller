@@ -1352,17 +1352,41 @@ strlen  (class=string #args=1) String length.
 
 ### strmatch
 <pre class="pre-non-highlight-non-pair">
-strmatch  (class=string #args=2) TODO: WRITE ME
-Example:
-TODO: WRITE ME
+strmatch  (class=string #args=2) Boolean yes/no for whether the stringable first argument matches the regular-expression second argument. No regex captures are provided; please see `strmatch`.
+Examples:
+strmatch("a", "abc") is false
+strmatch("abc", "a") is true
+strmatch("abc", "a[a-z]c") is true
+strmatch("abc", "(a).(c)") is true
+strmatch(12345, "34") is true
 </pre>
 
 
 ### strmatchx
 <pre class="pre-non-highlight-non-pair">
-strmatchx  (class=string #args=2) TODO: WRITE ME
-Example:
-TODO: WRITE ME
+strmatchx  (class=string #args=2) Extended information for whether the stringable first argument matches the regular-expression second argument. Regex captures are provided in the return-value map; \1, \2, etc. are not set, in constrast to the `=~` operator. As well, while the `=~` operator limits matches to \1 through \9, an arbitrary number are supported here.
+Examples:
+strmatchx("a", "abc") returns:
+  {
+    "matched": false
+  }
+strmatchx("abc", "a") returns:
+  {
+    "matched": true,
+    "full_capture": "a",
+    "full_start": 1,
+    "full_end": 1
+  }
+strmatchx("[zy:3458]", "([a-z]+):([0-9]+)") returns:
+  {
+    "matched": true,
+    "full_capture": "zy:3458",
+    "full_start": 2,
+    "full_end": 8,
+    "captures": ["zy", "3458"],
+    "starts": [2, 5],
+    "ends": [3, 8]
+  }
 </pre>
 
 

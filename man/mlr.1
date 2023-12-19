@@ -4656,9 +4656,13 @@ strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%3S %z", "Asia/Istanbul") = "2015-0
 .RS 0
 .\}
 .nf
- (class=string #args=2) TODO: WRITE ME
-Example:
-TODO: WRITE ME
+ (class=string #args=2) Boolean yes/no for whether the stringable first argument matches the regular-expression second argument. No regex captures are provided; please see `strmatch`.
+Examples:
+strmatch("a", "abc") is false
+strmatch("abc", "a") is true
+strmatch("abc", "a[a-z]c") is true
+strmatch("abc", "(a).(c)") is true
+strmatch(12345, "34") is true
 .fi
 .if n \{\
 .RE
@@ -4667,9 +4671,29 @@ TODO: WRITE ME
 .RS 0
 .\}
 .nf
- (class=string #args=2) TODO: WRITE ME
-Example:
-TODO: WRITE ME
+ (class=string #args=2) Extended information for whether the stringable first argument matches the regular-expression second argument. Regex captures are provided in the return-value map; \e1, \e2, etc. are not set, in constrast to the `=~` operator. As well, while the `=~` operator limits matches to \e1 through \e9, an arbitrary number are supported here.
+Examples:
+strmatchx("a", "abc") returns:
+  {
+    "matched": false
+  }
+strmatchx("abc", "a") returns:
+  {
+    "matched": true,
+    "full_capture": "a",
+    "full_start": 1,
+    "full_end": 1
+  }
+strmatchx("[zy:3458]", "([a-z]+):([0-9]+)") returns:
+  {
+    "matched": true,
+    "full_capture": "zy:3458",
+    "full_start": 2,
+    "full_end": 8,
+    "captures": ["zy", "3458"],
+    "starts": [2, 5],
+    "ends": [3, 8]
+  }
 .fi
 .if n \{\
 .RE

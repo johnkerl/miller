@@ -52,11 +52,6 @@ func bif_ssub_gssub(input1, input2, input3 *mlrval.Mlrval, doAll bool, funcname 
 
 // BIF_sub implements the sub function, with support for regexes and regex captures
 // of the form "\1" .. "\9".
-//
-// TODO: make a variant which allows compiling the regexp once and reusing it
-// on each record. Likewise for other regex-using functions in this file.  But
-// first, do a profiling run to see how much time would be saved, and if this
-// precomputing+caching would be worthwhile.
 func BIF_sub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
@@ -117,10 +112,10 @@ func BIF_gsub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func BIF_strmatch(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsLegit() {
-		return mlrval.FromNotStringError("strmatch", input1) // TODO: CHANGE FLAVOR
+		return mlrval.FromNotStringError("strmatch", input1)
 	}
 	if !input2.IsLegit() {
-		return mlrval.FromNotStringError("strmatch", input2) // TODO: CHANGE FLAVOR
+		return mlrval.FromNotStringError("strmatch", input2)
 	}
 	input1string := input1.String()
 	if !input2.IsStringOrVoid() {
@@ -134,10 +129,10 @@ func BIF_strmatch(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func BIF_strmatchx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsLegit() {
-		return mlrval.FromNotStringError("strmatchx", input1) // TODO: CHANGE FLAVOR
+		return mlrval.FromNotStringError("strmatchx", input1)
 	}
 	if !input2.IsLegit() {
-		return mlrval.FromNotStringError("strmatchx", input2) // TODO: CHANGE FLAVOR
+		return mlrval.FromNotStringError("strmatchx", input2)
 	}
 	input1string := input1.String()
 	if !input2.IsStringOrVoid() {
