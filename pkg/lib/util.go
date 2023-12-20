@@ -2,7 +2,6 @@ package lib
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"sort"
 	"strconv"
@@ -186,9 +185,9 @@ func GetArrayKeysSorted(input map[string]string) []string {
 // WriteTempFile places the contents string into a temp file, which the caller
 // must remove.
 func WriteTempFileOrDie(contents string) string {
-	// Use "" as first argument to ioutil.TempFile to use default directory.
+	// Use "" as first argument to os.CreateTemp to use default directory.
 	// Nominally "/tmp" or somesuch on all unix-like systems, but not for Windows.
-	handle, err := ioutil.TempFile("", "mlr-temp")
+	handle, err := os.CreateTemp("", "mlr-temp")
 	if err != nil {
 		fmt.Printf("mlr: could not create temp file.\n")
 		os.Exit(1)

@@ -2,7 +2,7 @@ package climain
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"regexp"
 	"strings"
 
@@ -49,7 +49,7 @@ func maybeInterpolateDashS(args []string) ([]string, error) {
 	remainingArgs := args[3:]
 
 	// Read the bytes in the filename given after -s.
-	byteContents, rerr := ioutil.ReadFile(filename)
+	byteContents, rerr := os.ReadFile(filename)
 	if rerr != nil {
 		return nil, fmt.Errorf("mlr: cannot read %s: %v", filename, rerr)
 	}
@@ -68,7 +68,7 @@ func maybeInterpolateDashS(args []string) ([]string, error) {
 
 	if stripComments {
 		re := regexp.MustCompile(`#.*`)
-		for i, _ := range lines {
+		for i := range lines {
 			lines[i] = re.ReplaceAllString(lines[i], "")
 		}
 	}
