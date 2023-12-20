@@ -58,7 +58,6 @@ package regtest
 import (
 	"container/list"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -153,7 +152,6 @@ func (regtester *RegTester) resetCounts() {
 func (regtester *RegTester) Execute(
 	casePaths []string,
 ) bool {
-
 	// Don't let the current user's settings affect expected results
 	for _, name := range envVarsToUnset {
 		os.Unsetenv(name)
@@ -279,7 +277,7 @@ func (regtester *RegTester) executeSingleDirectory(
 ) (bool, bool) {
 	passed := true
 	// TODO: comment
-	hasCaseSubdirectories := regtester.hasCaseSubdirectories(dirName)
+	fileNames, hasCaseSubdirectories := regtester.hasCaseSubdirectories(dirName)
 
 	if !regtester.plainMode {
 		if hasCaseSubdirectories && regtester.verbosityLevel >= 2 {
@@ -287,34 +285,26 @@ func (regtester *RegTester) executeSingleDirectory(
 		}
 	}
 
-	entries, err := ioutil.ReadDir(dirName)
-	if err != nil {
-		fmt.Printf("%s: %v\n", dirName, err)
-		passed = false
-	} else {
+	for _, name := range fileNames {
+		path := dirName + "/" + name
 
-		for i := range entries {
-			entry := &entries[i]
-			path := dirName + "/" + (*entry).Name()
-
-			ok := regtester.executeSinglePath(path)
-			if !ok {
-				passed = false
-			}
+		ok := regtester.executeSinglePath(path)
+		if !ok {
+			passed = false
 		}
+	}
 
-		// Only print if there are .cmd files directly in this directory.
-		// Otherwise it's just a directory-of-directories and we don't need to
-		// multiply announce.
-		if hasCaseSubdirectories {
-			if passed {
-				if !regtester.plainMode {
-					fmt.Printf("%s %s\n", colorizer.MaybeColorizePass("PASS", true), dirName)
-				}
-			} else {
-				if !regtester.plainMode {
-					fmt.Printf("%s %s\n", colorizer.MaybeColorizeFail("FAIL", true), dirName)
-				}
+	// Only print if there are .cmd files directly in this directory.
+	// Otherwise it's just a directory-of-directories and we don't need to
+	// multiply announce.
+	if hasCaseSubdirectories {
+		if passed {
+			if !regtester.plainMode {
+				fmt.Printf("%s %s\n", colorizer.MaybeColorizePass("PASS", true), dirName)
+			}
+		} else {
+			if !regtester.plainMode {
+				fmt.Printf("%s %s\n", colorizer.MaybeColorizeFail("FAIL", true), dirName)
 			}
 		}
 	}
@@ -340,22 +330,27 @@ func (regtester *RegTester) executeSingleDirectory(
 
 func (regtester *RegTester) hasCaseSubdirectories(
 	dirName string,
-) bool {
+) ([]string, bool) {
+	f, err := os.Open(dirName)
+	if err != nil {
+		fmt.Printf("%s: %v\n", dirName, err)
+		os.Exit(1)
+	}
+	defer f.Close()
 
-	entries, err := ioutil.ReadDir(dirName)
+	names, err := f.Readdirnames(-1)
 	if err != nil {
 		fmt.Printf("%s: %v\n", dirName, err)
 		os.Exit(1)
 	}
 
-	for i := range entries {
-		entry := &entries[i]
-		path := dirName + string(filepath.Separator) + (*entry).Name()
+	for _, name := range names {
+		path := dirName + string(filepath.Separator) + name
 		if regtester.isCaseDirectory(path) {
-			return true
+			return names, true
 		}
 	}
-	return false
+	return names, false
 }
 
 func (regtester *RegTester) isCaseDirectory(
@@ -774,7 +769,7 @@ func (regtester *RegTester) loadFile(
 	fileName string,
 	caseDir string,
 ) (string, error) {
-	byteContents, err := ioutil.ReadFile(fileName)
+	byteContents, err := os.ReadFile(fileName)
 	if err != nil {
 		return "", err
 	}
@@ -789,7 +784,7 @@ func (regtester *RegTester) storeFile(
 	fileName string,
 	contents string,
 ) error {
-	err := ioutil.WriteFile(fileName, []byte(contents), 0666)
+	err := os.WriteFile(fileName, []byte(contents), 0o666)
 	if err != nil {
 		return err
 	}
