@@ -23,7 +23,7 @@ For one or more specified field names, simply compute p25 and p75, then write th
 <pre class="pre-highlight-in-pair">
 <b>mlr --oxtab stats1 -f x -a p25,p75 \</b>
 <b>    then put '$x_iqr = $x_p75 - $x_p25' \</b>
-<b>    data/medium </b>
+<b>    data/medium</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x_p25 0.24667037823231752
@@ -40,7 +40,7 @@ For wildcarded field names, first compute p25 and p75, then loop over field name
 <b>        $["\1_iqr"] = $["\1_p75"] - $["\1_p25"]</b>
 <b>      }</b>
 <b>    }' \</b>
-<b>    data/medium </b>
+<b>    data/medium</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 i_p25 2501

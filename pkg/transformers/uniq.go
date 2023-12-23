@@ -43,6 +43,7 @@ func transformerCountDistinctUsage(
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c}    Field names for distinct count.\n")
+	fmt.Fprintf(o, "-x {a,b,c}    Field names to exclude for distinct count: use each record's others instead.\n")
 	fmt.Fprintf(o, "-n            Show only the number of distinct values. Not compatible with -u.\n")
 	fmt.Fprintf(o, "-o {name}     Field name for output count. Default \"%s\".\n", uniqDefaultOutputFieldName)
 	fmt.Fprintf(o, "              Ignored with -u.\n")
@@ -68,6 +69,7 @@ func transformerCountDistinctParseCLI(
 
 	// Parse local flags
 	var fieldNames []string = nil
+	invertFieldNames := false
 	showNumDistinctOnly := false
 	outputFieldName := uniqDefaultOutputFieldName
 	doLashed := true
@@ -88,6 +90,10 @@ func transformerCountDistinctParseCLI(
 
 		} else if opt == "-g" || opt == "-f" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+
+		} else if opt == "-x" {
+			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			invertFieldNames = true
 
 		} else if opt == "-n" {
 			showNumDistinctOnly = true
@@ -123,6 +129,7 @@ func transformerCountDistinctParseCLI(
 
 	transformer, err := NewTransformerUniq(
 		fieldNames,
+		invertFieldNames,
 		showCounts,
 		showNumDistinctOnly,
 		outputFieldName,
@@ -149,6 +156,7 @@ func transformerUniqUsage(
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-g {d,e,f}    Group-by-field names for uniq counts.\n")
+	fmt.Fprintf(o, "-x {a,b,c}    Field names to exclude for uniq: use each record's others instead.\n")
 	fmt.Fprintf(o, "-c            Show repeat counts in addition to unique values.\n")
 	fmt.Fprintf(o, "-n            Show only the number of distinct values.\n")
 	fmt.Fprintf(o, "-o {name}     Field name for output count. Default \"%s\".\n", uniqDefaultOutputFieldName)
@@ -173,6 +181,7 @@ func transformerUniqParseCLI(
 
 	// Parse local flags
 	var fieldNames []string = nil
+	invertFieldNames := false
 	showCounts := false
 	showNumDistinctOnly := false
 	outputFieldName := uniqDefaultOutputFieldName
@@ -194,6 +203,10 @@ func transformerUniqParseCLI(
 
 		} else if opt == "-g" || opt == "-f" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+
+		} else if opt == "-x" {
+			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			invertFieldNames = true
 
 		} else if opt == "-c" {
 			showCounts = true
@@ -238,6 +251,7 @@ func transformerUniqParseCLI(
 
 	transformer, _ := NewTransformerUniq(
 		fieldNames,
+		invertFieldNames,
 		showCounts,
 		showNumDistinctOnly,
 		outputFieldName,
@@ -250,9 +264,11 @@ func transformerUniqParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerUniq struct {
-	fieldNames      []string
-	showCounts      bool
-	outputFieldName string
+	fieldNames       []string
+	fieldNamesSet    map[string]bool
+	invertFieldNames bool
+	showCounts       bool
+	outputFieldName  string
 
 	// Example:
 	// Input is:
@@ -280,6 +296,7 @@ type TransformerUniq struct {
 	//   "a" => "4" => 4
 	uniqifiedRecordCounts *lib.OrderedMap // record-as-string -> counts
 	uniqifiedRecords      *lib.OrderedMap // record-as-string -> records
+	keysByGroup           *lib.OrderedMap // XXX COMMENT ME
 	countsByGroup         *lib.OrderedMap // grouping key -> count
 	valuesByGroup         *lib.OrderedMap // grouping key -> array of values
 	unlashedCounts        *lib.OrderedMap // field name -> string field value -> count
@@ -291,6 +308,7 @@ type TransformerUniq struct {
 // ----------------------------------------------------------------
 func NewTransformerUniq(
 	fieldNames []string,
+	invertFieldNames bool,
 	showCounts bool,
 	showNumDistinctOnly bool,
 	outputFieldName string,
@@ -299,12 +317,15 @@ func NewTransformerUniq(
 ) (*TransformerUniq, error) {
 
 	tr := &TransformerUniq{
-		fieldNames:      fieldNames,
-		showCounts:      showCounts,
-		outputFieldName: outputFieldName,
+		fieldNames:       fieldNames,
+		fieldNamesSet:    lib.StringListToSet(fieldNames),
+		invertFieldNames: invertFieldNames,
+		showCounts:       showCounts,
+		outputFieldName:  outputFieldName,
 
 		uniqifiedRecordCounts: lib.NewOrderedMap(),
 		uniqifiedRecords:      lib.NewOrderedMap(),
+		keysByGroup:           lib.NewOrderedMap(),
 		countsByGroup:         lib.NewOrderedMap(),
 		valuesByGroup:         lib.NewOrderedMap(),
 		unlashedCounts:        lib.NewOrderedMap(),
@@ -333,6 +354,16 @@ func NewTransformerUniq(
 }
 
 // ----------------------------------------------------------------
+
+func (tr *TransformerUniq) getFieldNamesForGrouping(
+	inrec *mlrval.Mlrmap,
+) []string {
+	if tr.invertFieldNames {
+		return inrec.GetKeysExcept(tr.fieldNamesSet)
+	} else {
+		return tr.fieldNames
+	}
+}
 
 func (tr *TransformerUniq) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -441,7 +472,7 @@ func (tr *TransformerUniq) transformUnlashed(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		for _, fieldName := range tr.fieldNames {
+		for _, fieldName := range tr.getFieldNamesForGrouping(inrec) {
 			var countsForFieldName *lib.OrderedMap = nil
 			iCountsForFieldName, present := tr.unlashedCounts.GetWithCheck(fieldName)
 			if !present {
@@ -496,7 +527,7 @@ func (tr *TransformerUniq) transformNumDistinctOnly(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.fieldNames)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.getFieldNamesForGrouping(inrec))
 		if ok {
 			iCount, present := tr.countsByGroup.GetWithCheck(groupingKey)
 			if !present {
@@ -528,28 +559,33 @@ func (tr *TransformerUniq) transformWithCounts(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(tr.fieldNames)
+		fieldNamesForGrouping := tr.getFieldNamesForGrouping(inrec)
+
+		groupingKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(fieldNamesForGrouping)
 		if ok {
 			iCount, present := tr.countsByGroup.GetWithCheck(groupingKey)
 			if !present {
 				tr.countsByGroup.Put(groupingKey, int64(1))
 				tr.valuesByGroup.Put(groupingKey, selectedValues)
+				tr.keysByGroup.Put(groupingKey, fieldNamesForGrouping)
 			} else {
 				tr.countsByGroup.Put(groupingKey, iCount.(int64)+1)
 			}
 		}
 
 	} else { // end of record stream
-
 		for pa := tr.countsByGroup.Head; pa != nil; pa = pa.Next {
 			outrec := mlrval.NewMlrmapAsRecord()
 			valuesForGroup := tr.valuesByGroup.Get(pa.Key).([]*mlrval.Mlrval)
-			for i, fieldName := range tr.fieldNames {
+			keysForGroup := tr.keysByGroup.Get(pa.Key).([]string)
+
+			for i, fieldNameForGrouping := range keysForGroup {
 				outrec.PutCopy(
-					fieldName,
+					fieldNameForGrouping,
 					valuesForGroup[i],
 				)
 			}
+
 			if tr.showCounts {
 				outrec.PutReference(
 					tr.outputFieldName,
@@ -573,7 +609,7 @@ func (tr *TransformerUniq) transformWithoutCounts(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(tr.fieldNames)
+		groupingKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(tr.getFieldNamesForGrouping(inrec))
 		if !ok {
 			return
 		}
@@ -584,9 +620,9 @@ func (tr *TransformerUniq) transformWithoutCounts(
 			tr.valuesByGroup.Put(groupingKey, selectedValues)
 			outrec := mlrval.NewMlrmapAsRecord()
 
-			for i, fieldName := range tr.fieldNames {
+			for i, fieldNameForGrouping := range tr.getFieldNamesForGrouping(inrec) {
 				outrec.PutCopy(
-					fieldName,
+					fieldNameForGrouping,
 					selectedValues[i],
 				)
 			}

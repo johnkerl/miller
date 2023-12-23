@@ -281,6 +281,19 @@ func (mlrmap *Mlrmap) GetKeys() []string {
 	return keys
 }
 
+// Returns an array of keys, not including the ones specified. The ones
+// specified are to be passed in as a map from string to bool, as Go
+// doesn't have hash-sets.
+func (mlrmap *Mlrmap) GetKeysExcept(exceptions map[string]bool) []string {
+	keys := make([]string, 0)
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
+		if _, present := exceptions[pe.Key]; !present {
+			keys = append(keys, pe.Key)
+		}
+	}
+	return keys
+}
+
 // ----------------------------------------------------------------
 // TODO: put error-return into this API
 func (mlrmap *Mlrmap) PutNameWithPositionalIndex(position int64, name *Mlrval) {

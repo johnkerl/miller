@@ -48,7 +48,7 @@ Eighth thing: It's an **awful lot of fun to write**. In my experience I didn't f
 
 Miller is command-line-only by design. People who want a graphical user interface won't find it here.  This is in part (a) accommodating my personal preferences, and in part (b) guided by my experience/belief that the command line is very expressive. Steeper learning curve than a GUI, yes. I consider that price worth paying for the tool-niche which Miller occupies.
 
-Another tradeoff: supporting lists of records keeps me supporting only what can be expressed in *all* of those formats. For example, `[1,2,3,4,5]` is valid but unmillerable JSON: the list elements are not records.  So Miller can't (and won't) handle arbitrary JSON -- because Miller only handles tabular data which can be expressed in a variety of formats. 
+Another tradeoff: supporting lists of records keeps me supporting only what can be expressed in *all* of those formats. For example, `[1,2,3,4,5]` is valid but unmillerable JSON: the list elements are not records.  So Miller can't (and won't) handle arbitrary JSON -- because Miller only handles tabular data which can be expressed in a variety of formats.
 
 A third tradeoff is doing build-from-scratch in a low-level language. It'd be quicker to write (but slower to run) if written in a high-level language. If Miller were written in Python, it would be implemented in significantly fewer lines of code than its current Go implementation. The DSL would just be an `eval` of Python code. And it would run slower, but maybe not enough slower to be a problem for most folks. Later I found out about the [rows](https://github.com/turicas/rows) tool -- if you find Miller useful, you should check out `rows` as well.
 

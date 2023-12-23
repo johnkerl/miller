@@ -47,3 +47,22 @@ func TestPutReference(t *testing.T) {
 }
 
 // TODO: TestPrependReference
+
+func TestGetKeysExcept(t *testing.T) {
+	mlrmap := NewMlrmap()
+	mlrmap.PutReference("a", FromInt(1))
+	mlrmap.PutReference("b", FromInt(2))
+
+	exceptions := make(map[string]bool)
+	exceptions["x"] = true
+	exceptions["y"] = true
+
+	assert.Equal(t, mlrmap.GetKeys(), []string{"a", "b"})
+	assert.Equal(t, mlrmap.GetKeysExcept(exceptions), []string{"a", "b"})
+
+	exceptions["a"] = true
+	assert.Equal(t, mlrmap.GetKeysExcept(exceptions), []string{"b"})
+
+	exceptions["b"] = true
+	assert.Equal(t, mlrmap.GetKeysExcept(exceptions), []string{})
+}

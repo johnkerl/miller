@@ -1,0 +1,1 @@
+mlr --dkvp uniq -x flag,k,index,quantity,rate test/input/example-with-changed-keys.dkvp
