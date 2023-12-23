@@ -111,6 +111,29 @@ func (omap *OrderedMap) GetWithCheck(key string) (interface{}, bool) {
 	}
 }
 
+func (omap *OrderedMap) GetKeys() []string {
+	keys := make([]string, omap.FieldCount)
+	i := 0
+	for pe := omap.Head; pe != nil; pe = pe.Next {
+		keys[i] = pe.Key
+		i++
+	}
+	return keys
+}
+
+// Returns an array of keys, not including the ones specified. The ones
+// specified are to be passed in as a map from string to bool, as Go
+// doesn't have hash-sets.
+func (omap *OrderedMap) GetKeysExcept(exceptions map[string]bool) []string {
+	keys := make([]string, 0)
+	for pe := omap.Head; pe != nil; pe = pe.Next {
+		if _, present := exceptions[pe.Key]; !present {
+			keys = append(keys, pe.Key)
+		}
+	}
+	return keys
+}
+
 // ----------------------------------------------------------------
 func (omap *OrderedMap) Clear() {
 	omap.FieldCount = 0
