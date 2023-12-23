@@ -1,0 +1,7 @@
+color=yellow,shape=triangle,count=1
+color=red,shape=square,count=3
+color=red,shape=circle,count=1
+color=purple,shape=triangle,extra=here,count=1
+color=purple,shape=triangle,count=1
+color=yellow,shape=circle,count=2
+color=purple,shape=square,count=1
