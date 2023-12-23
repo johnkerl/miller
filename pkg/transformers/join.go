@@ -92,6 +92,8 @@ func transformerJoinUsage(
 	fmt.Fprintf(o, "  --lk|--left-keep-field-names {a,b,c} If supplied, this means keep only the specified field\n")
 	fmt.Fprintf(o, "               names from the left file. Automatically includes the join-field name(s). Helpful\n")
 	fmt.Fprintf(o, "               for when you only want a limited subset of information from the left file.\n")
+	fmt.Fprintf(o, "               Tip: you can use --lk \"\": this means the left file becomes solely a row-selector\n")
+	fmt.Fprintf(o, "               for the input files.\n")
 	fmt.Fprintf(o, "  --lp {text}  Additional prefix for non-join output field names from\n")
 	fmt.Fprintf(o, "               the left file\n")
 	fmt.Fprintf(o, "  --rp {text}  Additional prefix for non-join output field names from\n")
