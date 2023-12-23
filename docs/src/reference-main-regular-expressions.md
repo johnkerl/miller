@@ -108,7 +108,7 @@ Regex captures of the form `\0` through `\9` are supported as follows:
 If you use `(...)` in your regular expression, then up to 9 matches are supported for the `=~`
 operator, and an arbitrary number of matches are supported for the `match` DSL function.
 
-* Before any match is done, `"\1"` etc. in a string evaluate to themselves. 
+* Before any match is done, `"\1"` etc. in a string evaluate to themselves.
 * After a successful match is done, `"\1"` etc. in a string evaluate to the matched substring.
 * After an unsuccessful match is done, `"\1"` etc. in a string evaluate to the empty string.
 * You can match against `null` to reset to the original state.

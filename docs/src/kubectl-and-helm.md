@@ -152,7 +152,7 @@ $ helm list | mlr --itsv --ojson head -n 1
 ]
 </pre>
 
-A solution here is Miller's 
+A solution here is Miller's
 [clean-whitespace verb](reference-verbs.md#clean-whitespace):
 
 <pre class="pre-non-highlight-non-pair">

@@ -33,7 +33,7 @@ Also try `od -xcv` and/or `cat -e` on your file to check for non-printable chara
 Use the `file` command to see if there are CR/LF terminators (in this case, there are not):
 
 <pre class="pre-highlight-in-pair">
-<b>file data/colours.csv </b>
+<b>file data/colours.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 data/colours.csv: Unicode text, UTF-8 text
@@ -42,7 +42,7 @@ data/colours.csv: Unicode text, UTF-8 text
 Look at the file to find names of fields:
 
 <pre class="pre-highlight-in-pair">
-<b>cat data/colours.csv </b>
+<b>cat data/colours.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;TO;TR
@@ -53,13 +53,13 @@ masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;S
 Extract a few fields:
 
 <pre class="pre-highlight-non-pair">
-<b>mlr --csv cut -f KEY,PL,TO data/colours.csv </b>
+<b>mlr --csv cut -f KEY,PL,TO data/colours.csv</b>
 </pre>
 
 Use XTAB output format to get a sharper picture of where records/fields are being split:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --icsv --oxtab cat data/colours.csv </b>
+<b>mlr --icsv --oxtab cat data/colours.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;TO;TR masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
@@ -70,7 +70,7 @@ KEY;DE;EN;ES;FI;FR;IT;NL;PL;TO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Mu
 Using XTAB output format makes it clearer that `KEY;DE;...;TR` is being treated as a single field name in the CSV header, and likewise each subsequent line is being treated as a single field value. This is because the default field separator is a comma but we have semicolons here.  Use XTAB again with different field separator (`--fs semicolon`):
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --icsv --ifs semicolon --oxtab cat data/colours.csv </b>
+<b>mlr --icsv --ifs semicolon --oxtab cat data/colours.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 KEY masterdata_colourcode_1
@@ -101,7 +101,7 @@ TR  Siyah
 Using the new field-separator, retry the cut:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --csv --fs semicolon cut -f KEY,PL,TO data/colours.csv </b>
+<b>mlr --csv --fs semicolon cut -f KEY,PL,TO data/colours.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 KEY;PL;TO

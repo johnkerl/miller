@@ -988,6 +988,7 @@ MILLER(1)                                                            MILLER(1)
 
        Options:
        -f {a,b,c}    Field names for distinct count.
+       -x {a,b,c}    Field names to exclude for distinct count: use each record's others instead.
        -n            Show only the number of distinct values. Not compatible with -u.
        -o {name}     Field name for output count. Default "count".
                      Ignored with -u.
@@ -2154,6 +2155,7 @@ MILLER(1)                                                            MILLER(1)
 
        Options:
        -g {d,e,f}    Group-by-field names for uniq counts.
+       -x {a,b,c}    Field names to exclude for uniq: use each record's others instead.
        -c            Show repeat counts in addition to unique values.
        -n            Show only the number of distinct values.
        -o {name}     Field name for output count. Default "count".
@@ -3685,5 +3687,5 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2023-12-19                         MILLER(1)
+                                  2023-12-23                         MILLER(1)
 </pre>
