@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/johnkerl/miller/pkg/cli"
@@ -61,6 +62,7 @@ func transformerReorderParseCLI(
 	argi++
 
 	var fieldNames []string = nil
+	doRegexes := false
 	putAtEnd := false
 	beforeFieldName := ""
 	afterFieldName := ""
@@ -81,6 +83,10 @@ func transformerReorderParseCLI(
 
 		} else if opt == "-f" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+
+		} else if opt == "-r" {
+			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			doRegexes = true
 
 		} else if opt == "-b" {
 			beforeFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
@@ -115,6 +121,7 @@ func transformerReorderParseCLI(
 
 	transformer, err := NewTransformerReorder(
 		fieldNames,
+		doRegexes,
 		putAtEnd,
 		beforeFieldName,
 		afterFieldName,
@@ -132,6 +139,7 @@ type TransformerReorder struct {
 	// input
 	fieldNames      []string
 	fieldNamesSet   map[string]bool
+	regexes         []*regexp.Regexp
 	beforeFieldName string
 	afterFieldName  string
 
@@ -141,6 +149,7 @@ type TransformerReorder struct {
 
 func NewTransformerReorder(
 	fieldNames []string,
+	doRegexes bool,
 	putAtEnd bool,
 	beforeFieldName string,
 	afterFieldName string,
@@ -162,6 +171,23 @@ func NewTransformerReorder(
 	} else {
 		tr.recordTransformerFunc = tr.reorderToStart
 		lib.ReverseStringList(tr.fieldNames)
+	}
+
+	if doRegexes {
+		tr.regexes = make([]*regexp.Regexp, len(fieldNames))
+		for i, regexString := range fieldNames {
+			// Handles "a.*b"i Miller case-insensitive-regex specification
+			regex, err := lib.CompileMillerRegex(regexString)
+			if err != nil {
+				fmt.Fprintf(
+					os.Stderr,
+					"%s %s: cannot compile regex [%s]\n",
+					"mlr", verbNameCut, regexString,
+				)
+				os.Exit(1)
+			}
+			tr.regexes[i] = regex
+		}
 	}
 
 	return tr, nil
@@ -188,10 +214,39 @@ func (tr *TransformerReorder) reorderToStart(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		for _, fieldName := range tr.fieldNames {
-			inrec.MoveToHead(fieldName)
+
+		if tr.regexes == nil {
+			for _, fieldName := range tr.fieldNames {
+				inrec.MoveToHead(fieldName)
+			}
+			outputRecordsAndContexts.PushBack(inrecAndContext)
+
+		} else {
+			outrec := mlrval.NewMlrmapAsRecord()
+			atEnds := list.New()
+			for pe := inrec.Head; pe != nil; pe = pe.Next {
+				found := false
+				for _, regex := range tr.regexes {
+					if regex.MatchString(pe.Key) {
+						outrec.PutReference(pe.Key, pe.Value)
+						found = true
+						break
+					}
+				}
+				if !found {
+					atEnds.PushBack(pe)
+				}
+			}
+
+			for atEnd := atEnds.Front(); atEnd != nil; atEnd = atEnd.Next() {
+				// Ownership transfer; no copy needed
+				pe := atEnd.Value.(*mlrval.MlrmapEntry)
+				outrec.PutReference(pe.Key, pe.Value)
+			}
+
+			outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+			outputRecordsAndContexts.PushBack(outrecAndContext)
 		}
-		outputRecordsAndContexts.PushBack(inrecAndContext)
 
 	} else {
 		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
@@ -207,10 +262,38 @@ func (tr *TransformerReorder) reorderToEnd(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		for _, fieldName := range tr.fieldNames {
-			inrec.MoveToTail(fieldName)
+		if tr.regexes == nil {
+			for _, fieldName := range tr.fieldNames {
+				inrec.MoveToTail(fieldName)
+			}
+			outputRecordsAndContexts.PushBack(inrecAndContext)
+
+		} else {
+			outrec := mlrval.NewMlrmapAsRecord()
+			atEnds := list.New()
+			for pe := inrec.Head; pe != nil; pe = pe.Next {
+				found := false
+				for _, regex := range tr.regexes {
+					if regex.MatchString(pe.Key) {
+						atEnds.PushBack(pe)
+						found = true
+						break
+					}
+				}
+				if !found {
+					outrec.PutReference(pe.Key, pe.Value)
+				}
+			}
+
+			for atEnd := atEnds.Front(); atEnd != nil; atEnd = atEnd.Next() {
+				// Ownership transfer; no copy needed
+				pe := atEnd.Value.(*mlrval.MlrmapEntry)
+				outrec.PutReference(pe.Key, pe.Value)
+			}
+
+			outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+			outputRecordsAndContexts.PushBack(outrecAndContext)
 		}
-		outputRecordsAndContexts.PushBack(inrecAndContext)
 	} else {
 		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
@@ -240,8 +323,12 @@ func (tr *TransformerReorder) reorderBefore(
 			if pe.Key == tr.beforeFieldName {
 				break
 			}
-			if !tr.fieldNamesSet[pe.Key] {
-				outrec.PutReference(pe.Key, pe.Value)
+			if tr.regexes == nil {
+				if !tr.fieldNamesSet[pe.Key] {
+					outrec.PutReference(pe.Key, pe.Value)
+				}
+			} else {
+				// XXX TO DO
 			}
 		}
 
@@ -258,14 +345,15 @@ func (tr *TransformerReorder) reorderBefore(
 		}
 
 		for ; pe != nil; pe = pe.Next {
-			if pe.Key != tr.beforeFieldName && !tr.fieldNamesSet[pe.Key] {
-				outrec.PutReference(pe.Key, pe.Value)
+			if tr.regexes == nil {
+				if pe.Key != tr.beforeFieldName && !tr.fieldNamesSet[pe.Key] {
+					outrec.PutReference(pe.Key, pe.Value)
+				}
+			} else {
+				// XXX TO DO
 			}
 		}
 
-		for _, fieldName := range tr.fieldNames {
-			inrec.MoveToHead(fieldName)
-		}
 		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 
 	} else {
@@ -320,9 +408,6 @@ func (tr *TransformerReorder) reorderAfter(
 			}
 		}
 
-		for _, fieldName := range tr.fieldNames {
-			inrec.MoveToHead(fieldName)
-		}
 		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 
 	} else {
