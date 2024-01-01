@@ -1209,7 +1209,7 @@ capitalize  (class=string #args=1) Convert string's first character to uppercase
 
 ### clean_whitespace
 <pre class="pre-non-highlight-non-pair">
-clean_whitespace  (class=string #args=1) Same as collapse_whitespace and strip.
+clean_whitespace  (class=string #args=1) Same as collapse_whitespace and strip, followed by type inference.
 </pre>
 
 

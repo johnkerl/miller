@@ -2312,7 +2312,7 @@ MILLER(1)                                                            MILLER(1)
         (class=math #args=1) Ceiling: nearest integer at or above.
 
    1mclean_whitespace0m
-        (class=string #args=1) Same as collapse_whitespace and strip.
+        (class=string #args=1) Same as collapse_whitespace and strip, followed by type inference.
 
    1mcollapse_whitespace0m
         (class=string #args=1) Strip repeated whitespace from string.

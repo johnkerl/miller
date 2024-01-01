@@ -3100,7 +3100,7 @@ Map example: apply({"a":1, "b":3, "c":5}, func(k,v) {return {toupper(k): v ** 2}
 .RS 0
 .\}
 .nf
- (class=string #args=1) Same as collapse_whitespace and strip.
+ (class=string #args=1) Same as collapse_whitespace and strip, followed by type inference.
 .fi
 .if n \{\
 .RE
