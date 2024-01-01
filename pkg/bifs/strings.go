@@ -344,11 +344,12 @@ func BIF_capitalize(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ----------------------------------------------------------------
 func BIF_clean_whitespace(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return BIF_strip(
+	mv := BIF_strip(
 		BIF_collapse_whitespace_regexp(
 			input1, _whitespace_regexp,
 		),
 	)
+	return mlrval.FromInferredType(mv.String())
 }
 
 // ================================================================

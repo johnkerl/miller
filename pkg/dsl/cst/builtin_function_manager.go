@@ -355,7 +355,7 @@ used within subsequent DSL statements. See also "Regular expressions" at ` + lib
 		{
 			name:  "strmatchx",
 			class: FUNC_CLASS_STRING,
-			help:  `Extended information for whether the stringable first argument matches the regular-expression second argument. Regex captures are provided in the return-value map; \1, \2, etc. are not set, in constrast to the ` + "`=~` operator. As well, while the `=~` operator limits matches to \\1 through \\9, an arbitrary number are supported here.",
+			help:  `Extended information for whether the stringable first argument matches the regular-expression second argument. Regex captures are provided in the return-value map; \1, \2, etc. are not set, in contrast to the ` + "`=~` operator. As well, while the `=~` operator limits matches to \\1 through \\9, an arbitrary number are supported here.",
 			examples: []string{
 				`strmatchx("a", "abc") returns:`,
 				`  {`,
@@ -444,7 +444,7 @@ used within subsequent DSL statements. See also "Regular expressions" at ` + lib
 		{
 			name:      "clean_whitespace",
 			class:     FUNC_CLASS_STRING,
-			help:      "Same as collapse_whitespace and strip.",
+			help:      "Same as collapse_whitespace and strip, followed by type inference.",
 			unaryFunc: bifs.BIF_clean_whitespace,
 		},
 
