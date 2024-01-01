@@ -1364,7 +1364,7 @@ strmatch(12345, "34") is true
 
 ### strmatchx
 <pre class="pre-non-highlight-non-pair">
-strmatchx  (class=string #args=2) Extended information for whether the stringable first argument matches the regular-expression second argument. Regex captures are provided in the return-value map; \1, \2, etc. are not set, in constrast to the `=~` operator. As well, while the `=~` operator limits matches to \1 through \9, an arbitrary number are supported here.
+strmatchx  (class=string #args=2) Extended information for whether the stringable first argument matches the regular-expression second argument. Regex captures are provided in the return-value map; \1, \2, etc. are not set, in contrast to the `=~` operator. As well, while the `=~` operator limits matches to \1 through \9, an arbitrary number are supported here.
 Examples:
 strmatchx("a", "abc") returns:
   {
