@@ -74,7 +74,7 @@ func (mlrmap *Mlrmap) PutReferenceMaybeDedupe(key string, value *Mlrval, dedupe 
 		return key, nil
 	}
 
-	for i := 2; i < 1000; i++ {
+	for i := 2; ; i++ {
 		newKey := key + "_" + strconv.Itoa(i)
 		pe := mlrmap.findEntry(newKey)
 		if pe == nil {
@@ -82,7 +82,6 @@ func (mlrmap *Mlrmap) PutReferenceMaybeDedupe(key string, value *Mlrval, dedupe 
 			return newKey, nil
 		}
 	}
-	return key, fmt.Errorf("record has too many input fields named \"%s\"", key)
 }
 
 // PutCopy copies the key and value (deep-copying in case the value is array/map).
