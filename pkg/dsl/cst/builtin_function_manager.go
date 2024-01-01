@@ -444,7 +444,7 @@ used within subsequent DSL statements. See also "Regular expressions" at ` + lib
 		{
 			name:      "clean_whitespace",
 			class:     FUNC_CLASS_STRING,
-			help:      "Same as collapse_whitespace and strip.",
+			help:      "Same as collapse_whitespace and strip, followed by type inference.",
 			unaryFunc: bifs.BIF_clean_whitespace,
 		},
 
