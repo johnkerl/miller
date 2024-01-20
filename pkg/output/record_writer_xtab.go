@@ -45,10 +45,10 @@ func (writer *RecordWriterXTAB) Write(
 	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
-) {
+) error {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {
-		return
+		return nil
 	}
 
 	maxKeyLength := 1
@@ -64,6 +64,8 @@ func (writer *RecordWriterXTAB) Write(
 	} else {
 		writer.writeWithLeftAlignedValues(outrec, bufferedOutputStream, outputIsStdout, maxKeyLength)
 	}
+
+	return nil
 }
 
 func (writer *RecordWriterXTAB) writeWithLeftAlignedValues(

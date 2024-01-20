@@ -37,10 +37,10 @@ func (writer *RecordWriterTSV) Write(
 	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
-) {
+) error {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {
-		return
+		return nil
 	}
 
 	if outrec.IsEmpty() {
@@ -50,7 +50,7 @@ func (writer *RecordWriterTSV) Write(
 		joinedHeader := ""
 		writer.lastJoinedHeader = &joinedHeader
 		writer.justWroteEmptyLine = true
-		return
+		return nil
 	}
 
 	needToPrintHeader := false
@@ -101,4 +101,6 @@ func (writer *RecordWriterTSV) Write(
 	bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 
 	writer.justWroteEmptyLine = false
+
+	return nil
 }

@@ -39,7 +39,7 @@ func (writer *RecordWriterJSON) Write(
 	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
-) {
+) error {
 	if outrec != nil && writer.jvQuoteAll {
 		outrec.StringifyValuesRecursively()
 	}
@@ -49,6 +49,7 @@ func (writer *RecordWriterJSON) Write(
 	} else {
 		writer.writeWithoutListWrap(outrec, bufferedOutputStream, outputIsStdout)
 	}
+	return nil
 }
 
 // ----------------------------------------------------------------

@@ -21,10 +21,10 @@ func (writer *RecordWriterNIDX) Write(
 	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
-) {
+) error {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {
-		return
+		return nil
 	}
 
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
@@ -34,4 +34,6 @@ func (writer *RecordWriterNIDX) Write(
 		}
 	}
 	bufferedOutputStream.WriteString(writer.writerOptions.ORS)
+
+	return nil
 }

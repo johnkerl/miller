@@ -20,5 +20,5 @@ type IRecordWriter interface {
 		outrec *mlrval.Mlrmap,
 		bufferedOutputStream *bufio.Writer,
 		outputIsStdout bool,
-	)
+	) error
 }

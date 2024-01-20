@@ -94,7 +94,11 @@ func channelWriterHandleBatch(
 			}
 
 			if record != nil {
-				recordWriter.Write(record, bufferedOutputStream, outputIsStdout)
+				err := recordWriter.Write(record, bufferedOutputStream, outputIsStdout)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+					return true, true
+				}
 			}
 
 			outputString := recordAndContext.OutputString
@@ -111,8 +115,13 @@ func channelWriterHandleBatch(
 			// queued up. For example, PPRINT needs to see all same-schema
 			// records before printing any, since it needs to compute max width
 			// down columns.
-			recordWriter.Write(nil, bufferedOutputStream, outputIsStdout)
-			return true, false
+			err := recordWriter.Write(nil, bufferedOutputStream, outputIsStdout)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+				return true, true
+			} else {
+				return true, false
+			}
 		}
 	}
 	return false, false

@@ -31,9 +31,9 @@ func (writer *RecordWriterMarkdown) Write(
 	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
-) {
+) error {
 	if outrec == nil { // end of record stream
-		return
+		return nil
 	}
 
 	currentJoinedHeader := outrec.GetKeysJoined()
@@ -73,4 +73,6 @@ func (writer *RecordWriterMarkdown) Write(
 		bufferedOutputStream.WriteString(" |")
 	}
 	bufferedOutputStream.WriteString(writer.writerOptions.ORS)
+
+	return nil
 }

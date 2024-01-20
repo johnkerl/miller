@@ -3,6 +3,7 @@ package output
 import (
 	"bufio"
 	"fmt"
+	"strings"
 
 	csv "github.com/johnkerl/miller/pkg/go-csv"
 
@@ -15,7 +16,8 @@ type RecordWriterCSV struct {
 	ofs0              byte // Go's CSV library only lets its 'Comma' be a single character
 	csvWriter         *csv.Writer
 	needToPrintHeader bool
-	firstFieldCount   int64
+	firstRecordKeys   []string
+	firstRecordNF     int64
 	quoteAll          bool // For double-quote around all fields
 }
 
@@ -30,7 +32,8 @@ func NewRecordWriterCSV(writerOptions *cli.TWriterOptions) (*RecordWriterCSV, er
 		writerOptions:     writerOptions,
 		csvWriter:         nil, // will be set on first Write() wherein we have the output stream
 		needToPrintHeader: !writerOptions.HeaderlessOutput,
-		firstFieldCount:   -1,
+		firstRecordKeys:   nil,
+		firstRecordNF:     -1,
 		quoteAll:          writerOptions.CSVQuoteAll,
 	}
 	return writer, nil
@@ -40,10 +43,10 @@ func (writer *RecordWriterCSV) Write(
 	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
-) {
+) error {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {
-		return
+		return nil
 	}
 
 	if writer.csvWriter == nil {
@@ -51,8 +54,9 @@ func (writer *RecordWriterCSV) Write(
 		writer.csvWriter.Comma = rune(writer.writerOptions.OFS[0]) // xxx temp
 	}
 
-	if writer.firstFieldCount == -1 {
-		writer.firstFieldCount = outrec.FieldCount
+	if writer.firstRecordKeys == nil {
+		writer.firstRecordKeys = outrec.GetKeys()
+		writer.firstRecordNF = int64(len(writer.firstRecordKeys))
 	}
 
 	if writer.needToPrintHeader {
@@ -66,21 +70,30 @@ func (writer *RecordWriterCSV) Write(
 		writer.needToPrintHeader = false
 	}
 
-	outputNF := outrec.FieldCount
-	if outputNF < writer.firstFieldCount {
-		outputNF = writer.firstFieldCount
+	var outputNF int64 = outrec.FieldCount
+	if outputNF < writer.firstRecordNF {
+		outputNF = writer.firstRecordNF
 	}
 
 	fields := make([]string, outputNF)
 	var i int64 = 0
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
+		if i < writer.firstRecordNF && pe.Key != writer.firstRecordKeys[i] {
+			return fmt.Errorf(
+				"CSV schema change: first keys \"%s\"; current keys \"%s\"",
+				strings.Join(writer.firstRecordKeys, writer.writerOptions.OFS),
+				strings.Join(outrec.GetKeys(), writer.writerOptions.OFS),
+			)
+		}
 		fields[i] = pe.Value.String()
 		i++
 	}
 
-	for ; i < writer.firstFieldCount; i++ {
+	for ; i < outputNF; i++ {
 		fields[i] = ""
 	}
 
 	writer.WriteCSVRecordMaybeColorized(fields, bufferedOutputStream, outputIsStdout, false, writer.quoteAll)
+
+	return nil
 }

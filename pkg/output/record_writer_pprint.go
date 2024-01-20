@@ -37,7 +37,7 @@ func (writer *RecordWriterPPRINT) Write(
 	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
-) {
+) error {
 	// Group records by have-same-schema or not. Pretty-print each
 	// homoegeneous sublist, or "batch".
 	//
@@ -83,6 +83,8 @@ func (writer *RecordWriterPPRINT) Write(
 				bufferedOutputStream, outputIsStdout)
 		}
 	}
+
+	return nil
 }
 
 // ----------------------------------------------------------------
