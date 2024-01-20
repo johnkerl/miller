@@ -383,7 +383,7 @@ Since Miller 5.0.0, you can use `--barred` or `--barred-output` with pprint outp
 +-----+-----+---+----------+----------+
 </pre>
 
-Since Miller 6.11.0, you can use `--barred-input` with pprint output format:
+Since Miller 6.11.0, you can use `--barred-input` with pprint input format:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -o pprint --barred cat data/small | mlr -i pprint --barred-input -o json filter '$b == "pan"'</b>

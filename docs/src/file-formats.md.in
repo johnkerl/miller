@@ -159,7 +159,7 @@ GENMD-RUN-COMMAND
 mlr --opprint --barred cat data/small
 GENMD-EOF
 
-Since Miller 6.11.0, you can use `--barred-input` with pprint output format:
+Since Miller 6.11.0, you can use `--barred-input` with pprint input format:
 
 GENMD-RUN-COMMAND
 mlr -o pprint --barred cat data/small | mlr -i pprint --barred-input -o json filter '$b == "pan"'
