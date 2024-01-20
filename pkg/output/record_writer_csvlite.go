@@ -29,10 +29,10 @@ func (writer *RecordWriterCSVLite) Write(
 	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
-) {
+) error {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {
-		return
+		return nil
 	}
 
 	if outrec.IsEmpty() {
@@ -42,7 +42,7 @@ func (writer *RecordWriterCSVLite) Write(
 		joinedHeader := ""
 		writer.lastJoinedHeader = &joinedHeader
 		writer.justWroteEmptyLine = true
-		return
+		return nil
 	}
 
 	needToPrintHeader := false
@@ -79,4 +79,6 @@ func (writer *RecordWriterCSVLite) Write(
 	bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 
 	writer.justWroteEmptyLine = false
+
+	return nil
 }

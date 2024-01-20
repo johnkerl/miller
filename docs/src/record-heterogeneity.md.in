@@ -180,13 +180,12 @@ GENMD-EOF
 CSV and pretty-print formats expect rectangular structure. But Miller lets you
 process non-rectangular using CSV and pretty-print.
 
-Miller simply prints a newline and a new header when there is a schema change
--- where by _schema_ we mean simply the list of record keys in the order they
-are encountered. When there is no schema change, you get CSV per se as a
-special case. Likewise, Miller reads heterogeneous CSV or pretty-print input
-the same way. The difference between CSV and CSV-lite is that the former is
-[RFC-4180-compliant](file-formats.md#csvtsvasvusvetc), while the latter readily
-handles heterogeneous data (which is non-compliant). For example:
+For CSV-lite and TSV-lite, Miller simply prints a newline and a new header when there is a schema
+change -- where by _schema_ we mean simply the list of record keys in the order they are
+encountered. When there is no schema change, you get CSV per se as a special case. Likewise, Miller
+reads heterogeneous CSV or pretty-print input the same way. The difference between CSV and CSV-lite
+is that the former is [RFC-4180-compliant](file-formats.md#csvtsvasvusvetc), while the latter
+readily handles heterogeneous data (which is non-compliant). For example:
 
 GENMD-RUN-COMMAND
 cat data/het.json
@@ -200,10 +199,20 @@ GENMD-RUN-COMMAND
 mlr --ijson --opprint group-like data/het.json
 GENMD-EOF
 
-Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes (no intervening blank line and new header line) as seen above -- you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`).
+GENMD-RUN-COMMAND
+mlr --ijson --ocsvlite group-like data/het.json
+GENMD-EOF
 
 GENMD-RUN-COMMAND-TOLERATING-ERROR
-mlr --csv --ragged cat data/het/ragged.csv
+mlr --ijson --ocsv group-like data/het.json
+GENMD-EOF
+
+Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if
+there are implicit header changes (no intervening blank line and new header line) as seen above --
+you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`).
+
+GENMD-RUN-COMMAND
+mlr --csv --allow-ragged-csv-input cat data/het/ragged.csv
 GENMD-EOF
 
 ## Processing heterogeneous data

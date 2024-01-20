@@ -375,13 +375,12 @@ record_count=150,resource=/path/to/second/file
 CSV and pretty-print formats expect rectangular structure. But Miller lets you
 process non-rectangular using CSV and pretty-print.
 
-Miller simply prints a newline and a new header when there is a schema change
--- where by _schema_ we mean simply the list of record keys in the order they
-are encountered. When there is no schema change, you get CSV per se as a
-special case. Likewise, Miller reads heterogeneous CSV or pretty-print input
-the same way. The difference between CSV and CSV-lite is that the former is
-[RFC-4180-compliant](file-formats.md#csvtsvasvusvetc), while the latter readily
-handles heterogeneous data (which is non-compliant). For example:
+For CSV-lite and TSV-lite, Miller simply prints a newline and a new header when there is a schema
+change -- where by _schema_ we mean simply the list of record keys in the order they are
+encountered. When there is no schema change, you get CSV per se as a special case. Likewise, Miller
+reads heterogeneous CSV or pretty-print input the same way. The difference between CSV and CSV-lite
+is that the former is [RFC-4180-compliant](file-formats.md#csvtsvasvusvetc), while the latter
+readily handles heterogeneous data (which is non-compliant). For example:
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/het.json</b>
@@ -446,19 +445,43 @@ record_count resource
 150          /path/to/second/file
 </pre>
 
-Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes (no intervening blank line and new header line) as seen above -- you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`).
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --ocsvlite group-like data/het.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+resource,loadsec,ok
+/path/to/file,0.45,true
+/path/to/second/file,0.32,true
+/some/other/path,0.97,false
+
+record_count,resource
+100,/path/to/file
+150,/path/to/second/file
+</pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --csv --ragged cat data/het/ragged.csv</b>
+<b>mlr --ijson --ocsv group-like data/het.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+resource,loadsec,ok
+/path/to/file,0.45,true
+/path/to/second/file,0.32,true
+/some/other/path,0.97,false
+mlr: CSV schema change: first keys "resource,loadsec,ok"; current keys "record_count,resource"
+mlr: exiting due to data error.
+</pre>
+
+Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if
+there are implicit header changes (no intervening blank line and new header line) as seen above --
+you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`).
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv --allow-ragged-csv-input cat data/het/ragged.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a,b,c
 1,2,3
-
-a,b
-4,5
-
-a,b,c,4
+4,5,
 7,8,9,10
 </pre>
 

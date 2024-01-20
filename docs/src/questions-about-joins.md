@@ -118,9 +118,7 @@ However, if we ask for left-unpaireds, since there's no `color` column, we get a
 id,code,color
 4,ff0000,red
 2,00ff00,green
-
-id,code
-3,0000ff
+3,0000ff,
 </pre>
 
 To fix this, we can use **unsparsify**:

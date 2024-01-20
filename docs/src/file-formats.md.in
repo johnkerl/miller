@@ -42,6 +42,31 @@ In particular, no encode/decode of  `\r`, `\n`, `\t`, or `\\` is done.
 
 * CSV-lite allows changing FS and/or RS to any values, perhaps multi-character.
 
+* CSV-lite and TSV-lite handle schema changes ("schema" meaning "ordered list of field names in a given record") by adding a newline and re-emitting the header. CSV and TSV, by contrast, do the following:
+  * If there are too few keys, but these match the header, empty fields are emitted.
+  * If there are too many keys, but these match the header up to the number of header fields, the extra fields are emitted.
+  * If keys don't match the header, this is an error.
+
+GENMD-RUN-COMMAND
+cat data/under-over.json
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --ijson --ocsvlite cat data/under-over.json
+GENMD-EOF
+
+GENMD-RUN-COMMAND-TOLERATING-ERROR
+mlr --ijson --ocsvlite cat data/key-change.json
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --ijson --ocsv cat data/under-over.json
+GENMD-EOF
+
+GENMD-RUN-COMMAND-TOLERATING-ERROR
+mlr --ijson --ocsv cat data/key-change.json
+GENMD-EOF
+
 * In short, use-cases for CSV-lite and TSV-lite are often found when dealing with CSV/TSV files which are formatted in some non-standard way -- you have a little more flexibility available to you. (As an example of this flexibility: ASV and USV are nothing more than CSV-lite with different values for FS and RS.)
 
 CSV, TSV, CSV-lite, and TSV-lite have in common the `--implicit-csv-header` flag for input and the `--headerless-csv-output` flag for output.

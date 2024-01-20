@@ -1,0 +1,1 @@
+mlr -i json -o tsv cat ${CASEDIR}/input.json
