@@ -494,10 +494,21 @@ var PPRINTOnlyFlagSection = FlagSection{
 		},
 
 		{
-			name: "--barred",
-			help: "Prints a border around PPRINT output (not available for input).",
+			name:     "--barred",
+			altNames: []string{"--barred-output"},
+			help:     "Prints a border around PPRINT output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.BarredPprintOutput = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--barred-input",
+			help: "When used in conjunction with --pprint, accepts barred input.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.BarredPprintInput = true
+				options.ReaderOptions.IFS = "|"
 				*pargi += 1
 			},
 		},

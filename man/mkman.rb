@@ -19,7 +19,7 @@ def main
   # Live code-generation needs to be using mlr from *this* tree, not from
   # somewhere else in the PATH.
   unless File.executable?('../mlr')
-    $stderr.puts "#{$0}: Need ../../mlr to exist: please check 'make build' in ../.."
+    $stderr.puts "#{$0}: Need ../mlr to exist: please check 'make build' in ../.."
     exit 1
   end
   `../mlr --version`
