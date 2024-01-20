@@ -366,7 +366,7 @@ Note that while Miller is a line-at-a-time processor and retains input lines in 
 
 See [Record Heterogeneity](record-heterogeneity.md) for how Miller handles changes of field names within a single data stream.
 
-For output only (this isn't supported in the input-scanner as of 5.0.0) you can use `--barred` with pprint output format:
+Since Miller 5.0.0, you can use `--barred` or `--barred-output` with pprint output format:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint --barred cat data/small</b>
@@ -381,6 +381,37 @@ For output only (this isn't supported in the input-scanner as of 5.0.0) you can 
 | eks | wye | 4 | 0.381399 | 0.134188 |
 | wye | pan | 5 | 0.573288 | 0.863624 |
 +-----+-----+---+----------+----------+
+</pre>
+
+Since Miller 6.11.0, you can use `--barred-input` with pprint output format:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -o pprint --barred cat data/small | mlr -i pprint --barred-input -o json filter '$b == "pan"'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "a": "pan",
+  "b": "pan",
+  "i": 1,
+  "x": 0.346791,
+  "y": 0.726802
+},
+{
+  "a": "eks",
+  "b": "pan",
+  "i": 2,
+  "x": 0.758679,
+  "y": 0.522151
+},
+{
+  "a": "wye",
+  "b": "pan",
+  "i": 5,
+  "x": 0.573288,
+  "y": 0.863624
+}
+]
 </pre>
 
 ## Markdown tabular

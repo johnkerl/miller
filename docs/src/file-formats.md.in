@@ -153,10 +153,16 @@ Note that while Miller is a line-at-a-time processor and retains input lines in 
 
 See [Record Heterogeneity](record-heterogeneity.md) for how Miller handles changes of field names within a single data stream.
 
-For output only (this isn't supported in the input-scanner as of 5.0.0) you can use `--barred` with pprint output format:
+Since Miller 5.0.0, you can use `--barred` or `--barred-output` with pprint output format:
 
 GENMD-RUN-COMMAND
 mlr --opprint --barred cat data/small
+GENMD-EOF
+
+Since Miller 6.11.0, you can use `--barred-input` with pprint output format:
+
+GENMD-RUN-COMMAND
+mlr -o pprint --barred cat data/small | mlr -i pprint --barred-input -o json filter '$b == "pan"'
 GENMD-EOF
 
 ## Markdown tabular
