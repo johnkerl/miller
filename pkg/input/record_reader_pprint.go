@@ -22,6 +22,7 @@ import (
 	"container/list"
 	"fmt"
 	"io"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -31,10 +32,67 @@ import (
 	"github.com/johnkerl/miller/pkg/types"
 )
 
-// recordBatchGetterCSV points to either an explicit-CSV-header or
-// implicit-CSV-header record-batch getter.
-type recordBatchGetterCSV func(
-	reader *RecordReaderCSVLite,
+func NewRecordReaderPPRINT(
+	readerOptions *cli.TReaderOptions,
+	recordsPerBatch int64,
+) (IRecordReader, error) {
+	if readerOptions.BarredPprintInput {
+		// Implemented in this file
+
+		// XXX TEMP
+		readerOptions.IFS = "|"
+		readerOptions.AllowRepeatIFS = false
+
+		reader := &RecordReaderPprintBarred{
+			readerOptions:    readerOptions,
+			recordsPerBatch:  recordsPerBatch,
+			separatorMatcher: regexp.MustCompile(`^\+[-+]*\+`),
+			fieldSplitter:    newFieldSplitter(readerOptions),
+		}
+		if reader.readerOptions.UseImplicitCSVHeader {
+			reader.recordBatchGetter = getRecordBatchImplicitPprintHeader
+		} else {
+			reader.recordBatchGetter = getRecordBatchExplicitPprintHeader
+		}
+		return reader, nil
+
+	} else {
+		// Use the CSVLite record-reader, which is implemented in another file,
+		// with multiple spaces instead of commas
+		reader := &RecordReaderCSVLite{
+			readerOptions:   readerOptions,
+			recordsPerBatch: recordsPerBatch,
+			fieldSplitter:   newFieldSplitter(readerOptions),
+
+			useVoidRep: true,
+			voidRep:    "-",
+		}
+		// XXX RENAME THERE
+		if reader.readerOptions.UseImplicitCSVHeader {
+			reader.recordBatchGetter = getRecordBatchImplicitCSVHeader
+		} else {
+			reader.recordBatchGetter = getRecordBatchExplicitCSVHeader
+		}
+		return reader, nil
+	}
+}
+
+type RecordReaderPprintBarred struct {
+	readerOptions   *cli.TReaderOptions
+	recordsPerBatch int64 // distinct from readerOptions.RecordsPerBatch for join/repl
+
+	separatorMatcher  *regexp.Regexp
+	fieldSplitter     iFieldSplitter
+	recordBatchGetter recordBatchGetterPprint
+
+	inputLineNumber int64
+	headerStrings   []string
+}
+
+// recordBatchGetterPprint points to either an explicit-PPRINT-header or
+// implicit-PPRINT-header record-batch getter.
+type recordBatchGetterPprint func(
+	reader *RecordReaderPprintBarred,
 	linesChannel <-chan *list.List,
 	filename string,
 	context *types.Context,
@@ -44,41 +102,7 @@ type recordBatchGetterCSV func(
 	eof bool,
 )
 
-type RecordReaderCSVLite struct {
-	readerOptions   *cli.TReaderOptions
-	recordsPerBatch int64 // distinct from readerOptions.RecordsPerBatch for join/repl
-
-	fieldSplitter     iFieldSplitter
-	recordBatchGetter recordBatchGetterCSV
-
-	inputLineNumber int64
-	headerStrings   []string
-
-	useVoidRep bool
-	voidRep    string // For pprint output, empty strings are mapped to "-"; this is for reading them back in
-}
-
-func NewRecordReaderCSVLite(
-	readerOptions *cli.TReaderOptions,
-	recordsPerBatch int64,
-) (*RecordReaderCSVLite, error) {
-	reader := &RecordReaderCSVLite{
-		readerOptions:   readerOptions,
-		recordsPerBatch: recordsPerBatch,
-		fieldSplitter:   newFieldSplitter(readerOptions),
-
-		useVoidRep: false,
-		voidRep:    "",
-	}
-	if reader.readerOptions.UseImplicitCSVHeader {
-		reader.recordBatchGetter = getRecordBatchImplicitCSVHeader
-	} else {
-		reader.recordBatchGetter = getRecordBatchExplicitCSVHeader
-	}
-	return reader, nil
-}
-
-func (reader *RecordReaderCSVLite) Read(
+func (reader *RecordReaderPprintBarred) Read(
 	filenames []string,
 	context types.Context,
 	readerChannel chan<- *list.List, // list of *types.RecordAndContext
@@ -131,7 +155,7 @@ func (reader *RecordReaderCSVLite) Read(
 	readerChannel <- types.NewEndOfStreamMarkerList(&context)
 }
 
-func (reader *RecordReaderCSVLite) processHandle(
+func (reader *RecordReaderPprintBarred) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
@@ -159,8 +183,8 @@ func (reader *RecordReaderCSVLite) processHandle(
 	}
 }
 
-func getRecordBatchExplicitCSVHeader(
-	reader *RecordReaderCSVLite,
+func getRecordBatchExplicitPprintHeader(
+	reader *RecordReaderPprintBarred,
 	linesChannel <-chan *list.List,
 	filename string,
 	context *types.Context,
@@ -182,13 +206,6 @@ func getRecordBatchExplicitCSVHeader(
 
 		reader.inputLineNumber++
 
-		// Strip CSV BOM
-		if reader.inputLineNumber == 1 {
-			if strings.HasPrefix(line, CSV_BOM) {
-				line = strings.Replace(line, CSV_BOM, "", 1)
-			}
-		}
-
 		// Check for comments-in-data feature
 		// TODO: function-pointer this away
 		if reader.readerOptions.CommentHandling != cli.CommentsAreData {
@@ -209,7 +226,30 @@ func getRecordBatchExplicitCSVHeader(
 			continue
 		}
 
-		fields := reader.fieldSplitter.Split(line)
+		// Example input:
+		// +-----+-----+----+---------------------+---------------------+
+		// | a   | b   | i  | x                   | y                   |
+		// +-----+-----+----+---------------------+---------------------+
+		// | pan | pan | 1  | 0.3467901443380824  | 0.7268028627434533  |
+		// | eks | pan | 2  | 0.7586799647899636  | 0.5221511083334797  |
+		// +-----+-----+----+---------------------+---------------------+
+
+		// Skip lines like
+		// +-----+-----+----+---------------------+---------------------+
+		if reader.separatorMatcher.MatchString(line) {
+			continue
+		}
+
+		// Skip the leading and trailing pipes
+		paddedFields := reader.fieldSplitter.Split(line)
+		npad := len(paddedFields)
+		fields := make([]string, npad-2)
+		for i, _ := range paddedFields {
+			if i == 0 || i == npad-1 {
+				continue
+			}
+			fields[i-1] = strings.TrimSpace(paddedFields[i])
+		}
 
 		if reader.headerStrings == nil {
 			reader.headerStrings = fields
@@ -217,7 +257,7 @@ func getRecordBatchExplicitCSVHeader(
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
 				err := fmt.Errorf(
-					"mlr: CSV header/data length mismatch %d != %d "+
+					"mlr: PPRINT-barred header/data length mismatch %d != %d "+
 						"at filename %s line  %d.\n",
 					len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
 				)
@@ -228,9 +268,6 @@ func getRecordBatchExplicitCSVHeader(
 			record := mlrval.NewMlrmapAsRecord()
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				for i, field := range fields {
-					if reader.useVoidRep && field == reader.voidRep {
-						field = ""
-					}
 					value := mlrval.FromDeferredType(field)
 					_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
 					if err != nil {
@@ -245,9 +282,6 @@ func getRecordBatchExplicitCSVHeader(
 				var i int64
 				for i = 0; i < n; i++ {
 					field := fields[i]
-					if reader.useVoidRep && field == reader.voidRep {
-						field = ""
-					}
 					value := mlrval.FromDeferredType(field)
 					_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
 					if err != nil {
@@ -277,14 +311,15 @@ func getRecordBatchExplicitCSVHeader(
 
 			context.UpdateForInputRecord()
 			recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
+
 		}
 	}
 
 	return recordsAndContexts, false
 }
 
-func getRecordBatchImplicitCSVHeader(
-	reader *RecordReaderCSVLite,
+func getRecordBatchImplicitPprintHeader(
+	reader *RecordReaderPprintBarred,
 	linesChannel <-chan *list.List,
 	filename string,
 	context *types.Context,
@@ -320,18 +355,36 @@ func getRecordBatchImplicitCSVHeader(
 			}
 		}
 
-		// This is how to do a chomp:
-		line = strings.TrimRight(line, reader.readerOptions.IRS)
-
-		line = strings.TrimRight(line, "\r")
-
 		if line == "" {
 			// Reset to new schema
 			reader.headerStrings = nil
 			continue
 		}
 
-		fields := reader.fieldSplitter.Split(line)
+		// Example input:
+		// +-----+-----+----+---------------------+---------------------+
+		// | a   | b   | i  | x                   | y                   |
+		// +-----+-----+----+---------------------+---------------------+
+		// | pan | pan | 1  | 0.3467901443380824  | 0.7268028627434533  |
+		// | eks | pan | 2  | 0.7586799647899636  | 0.5221511083334797  |
+		// +-----+-----+----+---------------------+---------------------+
+
+		// Skip lines like
+		// +-----+-----+----+---------------------+---------------------+
+		if reader.separatorMatcher.MatchString(line) {
+			continue
+		}
+
+		// Skip the leading and trailing pipes
+		paddedFields := reader.fieldSplitter.Split(line)
+		npad := len(paddedFields)
+		fields := make([]string, npad-2)
+		for i, _ := range paddedFields {
+			if i == 0 || i == npad-1 {
+				continue
+			}
+			fields[i-1] = strings.TrimSpace(paddedFields[i])
+		}
 
 		if reader.headerStrings == nil {
 			n := len(fields)
@@ -354,9 +407,6 @@ func getRecordBatchImplicitCSVHeader(
 		record := mlrval.NewMlrmapAsRecord()
 		if !reader.readerOptions.AllowRaggedCSVInput {
 			for i, field := range fields {
-				if reader.useVoidRep && field == reader.voidRep {
-					field = ""
-				}
 				value := mlrval.FromDeferredType(field)
 				_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
 				if err != nil {
@@ -371,9 +421,6 @@ func getRecordBatchImplicitCSVHeader(
 			var i int64
 			for i = 0; i < n; i++ {
 				field := fields[i]
-				if reader.useVoidRep && field == reader.voidRep {
-					field = ""
-				}
 				value := mlrval.FromDeferredType(field)
 				_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
 				if err != nil {
@@ -394,7 +441,11 @@ func getRecordBatchImplicitCSVHeader(
 			if nh > nd {
 				// if header longer than data: use "" values
 				for i = nd; i < nh; i++ {
-					_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], mlrval.VOID.Copy(), dedupeFieldNames)
+					_, err := record.PutReferenceMaybeDedupe(
+						reader.headerStrings[i],
+						mlrval.VOID.Copy(),
+						dedupeFieldNames,
+					)
 					if err != nil {
 						errorChannel <- err
 						return

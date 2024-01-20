@@ -57,6 +57,7 @@ type TReaderOptions struct {
 	AllowRaggedCSVInput  bool
 	CSVLazyQuotes        bool
 	CSVTrimLeadingSpace  bool
+	BarredPprintInput    bool
 
 	CommentHandling TCommentHandling
 	CommentString   string
