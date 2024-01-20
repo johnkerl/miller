@@ -762,6 +762,9 @@ var FileFormatFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.ReaderOptions.InputFileFormat = args[*pargi+1]
+				if options.ReaderOptions.InputFileFormat == "md" {
+					options.ReaderOptions.InputFileFormat = "markdown" // alias
+				}
 				*pargi += 2
 			},
 		},
@@ -823,6 +826,9 @@ var FileFormatFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.WriterOptions.OutputFileFormat = args[*pargi+1]
+				if options.WriterOptions.OutputFileFormat == "md" {
+					options.WriterOptions.OutputFileFormat = "markdown" // alias
+				}
 				*pargi += 2
 			},
 		},
@@ -896,8 +902,9 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--imd",
-			help: "Use markdown-tabular format for input data.",
+			name:     "--imd",
+			altNames: []string{"--imarkdown"},
+			help:     "Use markdown-tabular format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "markdown"
 				*pargi += 1
@@ -905,8 +912,9 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--omd",
-			help: "Use markdown-tabular format for output data.",
+			name:     "--omd",
+			altNames: []string{"--omarkdown"},
+			help:     "Use markdown-tabular format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1

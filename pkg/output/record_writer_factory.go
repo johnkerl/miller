@@ -16,6 +16,8 @@ func Create(writerOptions *cli.TWriterOptions) (IRecordWriter, error) {
 		return NewRecordWriterDKVP(writerOptions)
 	case "json":
 		return NewRecordWriterJSON(writerOptions)
+	case "md":
+		return NewRecordWriterMarkdown(writerOptions)
 	case "markdown":
 		return NewRecordWriterMarkdown(writerOptions)
 	case "nidx":
