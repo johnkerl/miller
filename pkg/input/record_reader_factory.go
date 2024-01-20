@@ -18,6 +18,8 @@ func Create(readerOptions *cli.TReaderOptions, recordsPerBatch int64) (IRecordRe
 		return NewRecordReaderJSON(readerOptions, recordsPerBatch)
 	case "nidx":
 		return NewRecordReaderNIDX(readerOptions, recordsPerBatch)
+	case "markdown":
+		return NewRecordReaderMarkdown(readerOptions, recordsPerBatch)
 	case "pprint":
 		return NewRecordReaderPPRINT(readerOptions, recordsPerBatch)
 	case "tsv":

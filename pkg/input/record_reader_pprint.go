@@ -1,23 +1,5 @@
 package input
 
-// Multi-file cases:
-//
-// a,a        a,b        c          d
-// -- FILE1:  -- FILE1:  -- FILE1:  -- FILE1:
-// a,b,c      a,b,c      a,b,c      a,b,c
-// 1,2,3      1,2,3      1,2,3      1,2,3
-// 4,5,6      4,5,6      4,5,6      4,5,6
-// -- FILE2:  -- FILE2:
-// a,b,c      d,e,f,g    a,b,c      d,e,f
-// 7,8,9      3,4,5,6    7,8,9      3,4,5
-// --OUTPUT:  --OUTPUT:  --OUTPUT:  --OUTPUT:
-// a,b,c      a,b,c      a,b,c      a,b,c
-// 1,2,3      1,2,3      1,2,3      1,2,3
-// 4,5,6      4,5,6      4,5,6      4,5,6
-// 7,8,9                 7,8,9
-//            d,e,f,g               d,e,f
-//            3,4,5,6               3,4,5
-
 import (
 	"container/list"
 	"fmt"
@@ -39,14 +21,13 @@ func NewRecordReaderPPRINT(
 	if readerOptions.BarredPprintInput {
 		// Implemented in this file
 
-		// XXX TEMP
 		readerOptions.IFS = "|"
 		readerOptions.AllowRepeatIFS = false
 
 		reader := &RecordReaderPprintBarred{
 			readerOptions:    readerOptions,
 			recordsPerBatch:  recordsPerBatch,
-			separatorMatcher: regexp.MustCompile(`^\+[-+]*\+`),
+			separatorMatcher: regexp.MustCompile(`^\+[-+]*\+$`),
 			fieldSplitter:    newFieldSplitter(readerOptions),
 		}
 		if reader.readerOptions.UseImplicitHeader {
@@ -236,12 +217,18 @@ func getRecordBatchExplicitPprintHeader(
 		// Skip lines like
 		// +-----+-----+----+---------------------+---------------------+
 		if reader.separatorMatcher.MatchString(line) {
+		////if reader.inputLineNumber == 2 {
+			fmt.Printf("MATCH \"%s\"\n", line)
 			continue
 		}
+		fmt.Printf("NO MATCH \"%s\"\n", line)
 
 		// Skip the leading and trailing pipes
 		paddedFields := reader.fieldSplitter.Split(line)
 		npad := len(paddedFields)
+		if npad < 2 {
+			continue
+		}
 		fields := make([]string, npad-2)
 		for i, _ := range paddedFields {
 			if i == 0 || i == npad-1 {
