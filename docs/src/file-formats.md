@@ -130,6 +130,74 @@ In particular, no encode/decode of  `\r`, `\n`, `\t`, or `\\` is done.
 
 * CSV-lite allows changing FS and/or RS to any values, perhaps multi-character.
 
+* CSV-lite and TSV-lite handle schema changes ("schema" meaning "ordered list of field names in a given record") by adding a newline and re-emitting the header. CSV and TSV, by contrast, do the following:
+  * If there are too few keys, but these match the header, empty fields are emitted.
+  * If there are too many keys, but these match the header up to the number of header fields, the extra fields are emitted.
+  * If keys don't match the header, this is an error.
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/under-over.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+  { "a": 1, "b": 2, "c": 3 },
+  { "a": 4, "b": 5, "c": 6, "d": 7 },
+  { "a": 7, "b": 8 },
+  { "a": 9, "b": 10, "c": 11 }
+]
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --ocsvlite cat data/under-over.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c
+1,2,3
+
+a,b,c,d
+4,5,6,7
+
+a,b
+7,8
+
+a,b,c
+9,10,11
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --ocsvlite cat data/key-change.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c
+1,2,3
+4,5,6
+
+a,X,c
+7,8,9
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --ocsv cat data/under-over.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c
+1,2,3
+4,5,6,7
+7,8,
+9,10,11
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --ocsv cat data/key-change.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c
+1,2,3
+4,5,6
+mlr: CSV schema change: first keys "a,b,c"; current keys "a,X,c"
+mlr: exiting due to data error.
+</pre>
+
 * In short, use-cases for CSV-lite and TSV-lite are often found when dealing with CSV/TSV files which are formatted in some non-standard way -- you have a little more flexibility available to you. (As an example of this flexibility: ASV and USV are nothing more than CSV-lite with different values for FS and RS.)
 
 CSV, TSV, CSV-lite, and TSV-lite have in common the `--implicit-csv-header` flag for input and the `--headerless-csv-output` flag for output.

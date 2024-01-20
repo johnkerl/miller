@@ -12,11 +12,10 @@ import (
 )
 
 type RecordWriterTSV struct {
-	writerOptions *cli.TWriterOptions
-	// For reporting schema changes: we print a newline and the new header
-	lastJoinedHeader *string
-	// Only write one blank line for schema changes / blank input lines
-	justWroteEmptyLine bool
+	writerOptions     *cli.TWriterOptions
+	needToPrintHeader bool
+	firstRecordKeys   []string
+	firstRecordNF     int64
 }
 
 func NewRecordWriterTSV(writerOptions *cli.TWriterOptions) (*RecordWriterTSV, error) {
@@ -27,9 +26,10 @@ func NewRecordWriterTSV(writerOptions *cli.TWriterOptions) (*RecordWriterTSV, er
 		return nil, fmt.Errorf("for CSV, ORS cannot be altered")
 	}
 	return &RecordWriterTSV{
-		writerOptions:      writerOptions,
-		lastJoinedHeader:   nil,
-		justWroteEmptyLine: false,
+		writerOptions:     writerOptions,
+		needToPrintHeader: !writerOptions.HeaderlessOutput,
+		firstRecordKeys:   nil,
+		firstRecordNF:     -1,
 	}, nil
 }
 
@@ -43,36 +43,22 @@ func (writer *RecordWriterTSV) Write(
 		return nil
 	}
 
-	if outrec.IsEmpty() {
-		if !writer.justWroteEmptyLine {
-			bufferedOutputStream.WriteString(writer.writerOptions.ORS)
-		}
-		joinedHeader := ""
-		writer.lastJoinedHeader = &joinedHeader
-		writer.justWroteEmptyLine = true
-		return nil
+	if writer.firstRecordKeys == nil {
+		writer.firstRecordKeys = outrec.GetKeys()
+		writer.firstRecordNF = int64(len(writer.firstRecordKeys))
 	}
 
-	needToPrintHeader := false
-	joinedHeader := strings.Join(outrec.GetKeys(), ",")
-	if writer.lastJoinedHeader == nil || *writer.lastJoinedHeader != joinedHeader {
-		if writer.lastJoinedHeader != nil {
-			if !writer.justWroteEmptyLine {
-				bufferedOutputStream.WriteString(writer.writerOptions.ORS)
-			}
-			writer.justWroteEmptyLine = true
+	if writer.needToPrintHeader {
+		fields := make([]string, outrec.FieldCount)
+		i := 0
+		for pe := outrec.Head; pe != nil; pe = pe.Next {
+			fields[i] = pe.Key
+			i++
 		}
-		writer.lastJoinedHeader = &joinedHeader
-		needToPrintHeader = true
-	}
-
-	if needToPrintHeader && !writer.writerOptions.HeaderlessOutput {
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			bufferedOutputStream.WriteString(
 				colorizer.MaybeColorizeKey(
-					lib.TSVEncodeField(
-						pe.Key,
-					),
+					lib.TSVEncodeField(pe.Key),
 					outputIsStdout,
 				),
 			)
@@ -83,24 +69,44 @@ func (writer *RecordWriterTSV) Write(
 		}
 
 		bufferedOutputStream.WriteString(writer.writerOptions.ORS)
+
+		writer.needToPrintHeader = false
 	}
 
+	var outputNF int64 = outrec.FieldCount
+	if outputNF < writer.firstRecordNF {
+		outputNF = writer.firstRecordNF
+	}
+
+	fields := make([]string, outputNF)
+	var i int64 = 0
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		bufferedOutputStream.WriteString(
-			colorizer.MaybeColorizeValue(
-				lib.TSVEncodeField(
-					pe.Value.String(),
-				),
-				outputIsStdout,
-			),
+		if i < writer.firstRecordNF && pe.Key != writer.firstRecordKeys[i] {
+			return fmt.Errorf(
+				"TSV schema change: first keys \"%s\"; current keys \"%s\"",
+				strings.Join(writer.firstRecordKeys, writer.writerOptions.OFS),
+				strings.Join(outrec.GetKeys(), writer.writerOptions.OFS),
+			)
+		}
+		fields[i] = colorizer.MaybeColorizeValue(
+			lib.TSVEncodeField(pe.Value.String()),
+			outputIsStdout,
 		)
-		if pe.Next != nil {
+		i++
+	}
+
+	for ; i < outputNF; i++ {
+		fields[i] = ""
+	}
+
+	for j, field := range fields {
+		if j > 0 {
 			bufferedOutputStream.WriteString(writer.writerOptions.OFS)
 		}
+		bufferedOutputStream.WriteString(field)
 	}
-	bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 
-	writer.justWroteEmptyLine = false
+	bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 
 	return nil
 }
