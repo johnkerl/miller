@@ -53,11 +53,11 @@ type TReaderOptions struct {
 	irsWasSpecified            bool
 	allowRepeatIFSWasSpecified bool
 
-	UseImplicitCSVHeader bool
-	AllowRaggedCSVInput  bool
-	CSVLazyQuotes        bool
-	CSVTrimLeadingSpace  bool
-	BarredPprintInput    bool
+	UseImplicitHeader   bool
+	AllowRaggedCSVInput bool
+	CSVLazyQuotes       bool
+	CSVTrimLeadingSpace bool
+	BarredPprintInput   bool
 
 	CommentHandling TCommentHandling
 	CommentString   string
@@ -96,7 +96,7 @@ type TWriterOptions struct {
 	opsWasSpecified bool
 	orsWasSpecified bool
 
-	HeaderlessCSVOutput      bool
+	HeaderlessOutput         bool
 	BarredPprintOutput       bool
 	RightAlignedPPRINTOutput bool
 	RightAlignedXTABOutput   bool
@@ -214,7 +214,7 @@ func DefaultWriterOptions() TWriterOptions {
 		FLATSEP:            ".",
 		FlushOnEveryRecord: true,
 
-		HeaderlessCSVOutput: false,
+		HeaderlessOutput: false,
 
 		WrapJSONOutputInOuterList: true,
 		JSONOutputMultiline:       true,

@@ -70,7 +70,7 @@ func NewRecordReaderCSVLite(
 		useVoidRep: false,
 		voidRep:    "",
 	}
-	if reader.readerOptions.UseImplicitCSVHeader {
+	if reader.readerOptions.UseImplicitHeader {
 		reader.recordBatchGetter = getRecordBatchImplicitCSVHeader
 	} else {
 		reader.recordBatchGetter = getRecordBatchExplicitCSVHeader

@@ -2159,7 +2159,7 @@ var CSVTSVOnlyFlagSection = FlagSection{
 			altNames: []string{"--no-implicit-tsv-header"},
 			help:     "Opposite of `--implicit-csv-header`. This is the default anyway -- the main use is for the flags to `mlr join` if you have main file(s) which are headerless but you want to join in on a file which does have a CSV/TSV header. Then you could use `mlr --csv --implicit-csv-header join --no-implicit-csv-header -l your-join-in-with-header.csv ... your-headerless.csv`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.UseImplicitCSVHeader = false
+				options.ReaderOptions.UseImplicitHeader = false
 				*pargi += 1
 			},
 		},
@@ -2179,7 +2179,7 @@ var CSVTSVOnlyFlagSection = FlagSection{
 			altNames: []string{"--headerless-csv-input", "--hi", "--implicit-tsv-header"},
 			help:     "Use 1,2,3,... as field labels, rather than from line 1 of input files. Tip: combine with `label` to recreate missing headers.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.UseImplicitCSVHeader = true
+				options.ReaderOptions.UseImplicitHeader = true
 				*pargi += 1
 			},
 		},
@@ -2189,7 +2189,7 @@ var CSVTSVOnlyFlagSection = FlagSection{
 			altNames: []string{"--ho", "--headerless-tsv-output"},
 			help:     "Print only CSV/TSV data lines; do not print CSV/TSV header lines.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.HeaderlessCSVOutput = true
+				options.WriterOptions.HeaderlessOutput = true
 				*pargi += 1
 			},
 		},
@@ -2198,8 +2198,8 @@ var CSVTSVOnlyFlagSection = FlagSection{
 			name: "-N",
 			help: "Keystroke-saver for `--implicit-csv-header --headerless-csv-output`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.UseImplicitCSVHeader = true
-				options.WriterOptions.HeaderlessCSVOutput = true
+				options.ReaderOptions.UseImplicitHeader = true
+				options.WriterOptions.HeaderlessOutput = true
 				*pargi += 1
 			},
 		},

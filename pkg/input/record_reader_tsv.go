@@ -52,7 +52,7 @@ func NewRecordReaderTSV(
 		recordsPerBatch: recordsPerBatch,
 		fieldSplitter:   newFieldSplitter(readerOptions),
 	}
-	if reader.readerOptions.UseImplicitCSVHeader {
+	if reader.readerOptions.UseImplicitHeader {
 		reader.recordBatchGetter = getRecordBatchImplicitTSVHeader
 	} else {
 		reader.recordBatchGetter = getRecordBatchExplicitTSVHeader

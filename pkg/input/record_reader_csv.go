@@ -101,7 +101,7 @@ func (reader *RecordReaderCSV) processHandle(
 	// Reset state for start of next input file
 	reader.filename = filename
 	reader.rowNumber = 0
-	reader.needHeader = !reader.readerOptions.UseImplicitCSVHeader
+	reader.needHeader = !reader.readerOptions.UseImplicitHeader
 	reader.header = nil
 
 	csvReader := csv.NewReader(NewBOMStrippingReader(handle))
