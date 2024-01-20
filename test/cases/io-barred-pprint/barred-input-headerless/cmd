@@ -1,0 +1,1 @@
+mlr --hi --i pprint --barred-input -o json test/input/abixy.tbl
