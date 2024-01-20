@@ -19,9 +19,7 @@ Quick links:
 This is simply a copy of what you should see on running `man mlr` at a command prompt, once Miller is installed on your system.
 
 <pre class="pre-non-highlight-non-pair">
-MILLER(1)                                                            MILLER(1)
-
-
+4mMILLER24m(1)                                                            4mMILLER24m(1)
 
 1mNAME0m
        Miller -- like awk, sed, cut, join, and sort for name-indexed data such
@@ -697,8 +695,10 @@ MILLER(1)                                                            MILLER(1)
 1mPPRINT-ONLY FLAGS0m
        These are flags which are applicable to PPRINT format.
 
-       --barred                 Prints a border around PPRINT output (not available
-                                for input).
+       --barred or --barred-output
+                                Prints a border around PPRINT output.
+       --barred-input           When used in conjunction with --pprint, accepts
+                                barred input.
        --right                  Right-justifies all fields for PPRINT output.
 
 1mPROFILING FLAGS0m
@@ -807,7 +807,7 @@ MILLER(1)                                                            MILLER(1)
                markdown " "    N/A    "\n"
                nidx     " "    N/A    "\n"
                pprint   " "    N/A    "\n"
-               tsv      "  "    N/A    "\n"
+               tsv      "     "    N/A    "\n"
                xtab     "\n"   " "    "\n\n"
 
        --fs {string}            Specify FS for input and output.
@@ -3687,7 +3687,5 @@ MILLER(1)                                                            MILLER(1)
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-
-
-                                  2024-01-01                         MILLER(1)
+                                  2024-01-20                         4mMILLER24m(1)
 </pre>

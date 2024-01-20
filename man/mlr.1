@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2024-01-01
+.\"      Date: 2024-01-20
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2024-01-01" "\ \&" "\ \&"
+.TH "MILLER" "1" "2024-01-20" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -811,8 +811,10 @@ those can be joined with a "-", like "red-bold", "bold-170", "bold-underline", e
 .nf
 These are flags which are applicable to PPRINT format.
 
---barred                 Prints a border around PPRINT output (not available
-                         for input).
+--barred or --barred-output
+                         Prints a border around PPRINT output.
+--barred-input           When used in conjunction with --pprint, accepts
+                         barred input.
 --right                  Right-justifies all fields for PPRINT output.
 .fi
 .if n \{\
