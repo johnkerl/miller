@@ -77,7 +77,7 @@ func (writer *RecordWriterCSV) Write(
 		needToPrintHeader = true
 	}
 
-	if needToPrintHeader && !writer.writerOptions.HeaderlessCSVOutput {
+	if needToPrintHeader && !writer.writerOptions.HeaderlessOutput {
 		fields := make([]string, outrec.FieldCount)
 		i := 0
 		for pe := outrec.Head; pe != nil; pe = pe.Next {

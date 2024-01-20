@@ -66,7 +66,7 @@ func (writer *RecordWriterTSV) Write(
 		needToPrintHeader = true
 	}
 
-	if needToPrintHeader && !writer.writerOptions.HeaderlessCSVOutput {
+	if needToPrintHeader && !writer.writerOptions.HeaderlessOutput {
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			bufferedOutputStream.WriteString(
 				colorizer.MaybeColorizeKey(

@@ -49,7 +49,7 @@ func NewRecordReaderPPRINT(
 			separatorMatcher: regexp.MustCompile(`^\+[-+]*\+`),
 			fieldSplitter:    newFieldSplitter(readerOptions),
 		}
-		if reader.readerOptions.UseImplicitCSVHeader {
+		if reader.readerOptions.UseImplicitHeader {
 			reader.recordBatchGetter = getRecordBatchImplicitPprintHeader
 		} else {
 			reader.recordBatchGetter = getRecordBatchExplicitPprintHeader
@@ -67,8 +67,7 @@ func NewRecordReaderPPRINT(
 			useVoidRep: true,
 			voidRep:    "-",
 		}
-		// XXX RENAME THERE
-		if reader.readerOptions.UseImplicitCSVHeader {
+		if reader.readerOptions.UseImplicitHeader {
 			reader.recordBatchGetter = getRecordBatchImplicitCSVHeader
 		} else {
 			reader.recordBatchGetter = getRecordBatchExplicitCSVHeader

@@ -155,7 +155,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 		outrec := e.Value.(*mlrval.Mlrmap)
 
 		// Print header line
-		if onFirst && !writer.writerOptions.HeaderlessCSVOutput {
+		if onFirst && !writer.writerOptions.HeaderlessOutput {
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
 				if !writer.writerOptions.RightAlignedPPRINTOutput { // left-align
 					if pe.Next != nil {
@@ -257,7 +257,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 		outrec := e.Value.(*mlrval.Mlrmap)
 
 		// Print header line
-		if onFirst && !writer.writerOptions.HeaderlessCSVOutput {
+		if onFirst && !writer.writerOptions.HeaderlessOutput {
 			bufferedOutputStream.WriteString(horizontalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
 				bufferedOutputStream.WriteString(horizontalBars[pe.Key])
