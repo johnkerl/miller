@@ -1,0 +1,1 @@
+mlr --hi -i markdown -o json cat test/input/abixy.md

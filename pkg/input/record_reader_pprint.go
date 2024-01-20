@@ -24,7 +24,7 @@ func NewRecordReaderPPRINT(
 		readerOptions.IFS = "|"
 		readerOptions.AllowRepeatIFS = false
 
-		reader := &RecordReaderPprintBarred{
+		reader := &RecordReaderPprintBarredOrMarkdown{
 			readerOptions:    readerOptions,
 			recordsPerBatch:  recordsPerBatch,
 			separatorMatcher: regexp.MustCompile(`^\+[-+]*\+$`),
@@ -57,7 +57,7 @@ func NewRecordReaderPPRINT(
 	}
 }
 
-type RecordReaderPprintBarred struct {
+type RecordReaderPprintBarredOrMarkdown struct {
 	readerOptions   *cli.TReaderOptions
 	recordsPerBatch int64 // distinct from readerOptions.RecordsPerBatch for join/repl
 
@@ -72,7 +72,7 @@ type RecordReaderPprintBarred struct {
 // recordBatchGetterPprint points to either an explicit-PPRINT-header or
 // implicit-PPRINT-header record-batch getter.
 type recordBatchGetterPprint func(
-	reader *RecordReaderPprintBarred,
+	reader *RecordReaderPprintBarredOrMarkdown,
 	linesChannel <-chan *list.List,
 	filename string,
 	context *types.Context,
@@ -82,7 +82,7 @@ type recordBatchGetterPprint func(
 	eof bool,
 )
 
-func (reader *RecordReaderPprintBarred) Read(
+func (reader *RecordReaderPprintBarredOrMarkdown) Read(
 	filenames []string,
 	context types.Context,
 	readerChannel chan<- *list.List, // list of *types.RecordAndContext
@@ -135,7 +135,7 @@ func (reader *RecordReaderPprintBarred) Read(
 	readerChannel <- types.NewEndOfStreamMarkerList(&context)
 }
 
-func (reader *RecordReaderPprintBarred) processHandle(
+func (reader *RecordReaderPprintBarredOrMarkdown) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
@@ -164,7 +164,7 @@ func (reader *RecordReaderPprintBarred) processHandle(
 }
 
 func getRecordBatchExplicitPprintHeader(
-	reader *RecordReaderPprintBarred,
+	reader *RecordReaderPprintBarredOrMarkdown,
 	linesChannel <-chan *list.List,
 	filename string,
 	context *types.Context,
@@ -217,11 +217,8 @@ func getRecordBatchExplicitPprintHeader(
 		// Skip lines like
 		// +-----+-----+----+---------------------+---------------------+
 		if reader.separatorMatcher.MatchString(line) {
-		////if reader.inputLineNumber == 2 {
-			fmt.Printf("MATCH \"%s\"\n", line)
 			continue
 		}
-		fmt.Printf("NO MATCH \"%s\"\n", line)
 
 		// Skip the leading and trailing pipes
 		paddedFields := reader.fieldSplitter.Split(line)
@@ -305,7 +302,7 @@ func getRecordBatchExplicitPprintHeader(
 }
 
 func getRecordBatchImplicitPprintHeader(
-	reader *RecordReaderPprintBarred,
+	reader *RecordReaderPprintBarredOrMarkdown,
 	linesChannel <-chan *list.List,
 	filename string,
 	context *types.Context,
