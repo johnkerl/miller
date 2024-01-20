@@ -408,7 +408,7 @@ PPRINT: pretty-printed tabular
 | 4     5   6         | Record 2: "apple":"4", "bat":"5", "cog":"6"
 +---------------------+
 
-Markdown tabular (supported for output only):
+Markdown tabular:
 +-----------------------+
 | | apple | bat | cog | |
 | | ---   | --- | --- | |

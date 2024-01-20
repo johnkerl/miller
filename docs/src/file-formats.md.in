@@ -177,7 +177,8 @@ which renders like this when dropped into various web tools (e.g. github comment
 
 ![pix/omd.png](pix/omd.png)
 
-As of Miller 4.3.0, markdown format is supported only for output, not input.
+As of Miller 4.3.0, markdown format is supported only for output, not input; as of Miller 6.11.0, markdown format
+is supported for input as well.
 
 ## XTAB: Vertical tabular
 

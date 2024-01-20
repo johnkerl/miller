@@ -157,6 +157,7 @@ are overridden in all cases by setting output format to `format2`.
 * `--igen`: Ignore input files and instead generate sequential numeric input using --gen-field-name, --gen-start, --gen-step, and --gen-stop values. See also the seqgen verb, which is more useful/intuitive.
 * `--ijson`: Use JSON format for input data.
 * `--ijsonl`: Use JSON Lines format for input data.
+* `--imd or --imarkdown`: Use markdown-tabular format for input data.
 * `--inidx`: Use NIDX format for input data.
 * `--io {format name}`: Use format name for input and output data. For example: `--io csv` is the same as `--csv`.
 * `--ipprint`: Use PPRINT format for input data.
@@ -173,7 +174,7 @@ are overridden in all cases by setting output format to `format2`.
 * `--odkvp`: Use DKVP format for output data.
 * `--ojson`: Use JSON format for output data.
 * `--ojsonl`: Use JSON Lines format for output data.
-* `--omd`: Use markdown-tabular format for output data.
+* `--omd or --omarkdown`: Use markdown-tabular format for output data.
 * `--onidx`: Use NIDX format for output data.
 * `--opprint`: Use PPRINT format for output data.
 * `--otsv`: Use TSV format for output data.
