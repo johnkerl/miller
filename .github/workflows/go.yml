@@ -25,8 +25,8 @@ jobs:
     - name: Build
       run: make build
 
-    - name: Test
-      run: make check
+    - name: Unit tests
+      run: make unit-test
 
     - name: Regression tests
       # We run these with a convoluted path to ensure the tests don't
