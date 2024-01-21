@@ -1,0 +1,1 @@
+mlr --n2x reorder -r 3,9,8 -e test/input/reorder-regex.nidx

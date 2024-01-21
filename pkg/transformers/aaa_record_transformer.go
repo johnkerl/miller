@@ -27,6 +27,12 @@ type RecordTransformerFunc func(
 	outputDownstreamDoneChannel chan<- bool,
 )
 
+// Used within some verbs
+type RecordTransformerHelperFunc func(
+	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+)
+
 type TransformerUsageFunc func(
 	ostream *os.File,
 )
