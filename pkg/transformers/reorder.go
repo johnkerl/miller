@@ -370,45 +370,32 @@ func (tr *TransformerReorder) reorderBeforeOrAfterWithRegex(
 		return
 	}
 
-	outrec := mlrval.NewMlrmapAsRecord()
-	pe := inrec.Head
+	matchingFieldNamesSet := lib.NewOrderedMap()
+	for pe := inrec.Head; pe != nil; pe = pe.Next {
+		for _, regex := range tr.regexes {
+			if regex.MatchString(pe.Key) {
+				if pe.Key != tr.centerFieldName {
+					matchingFieldNamesSet.Put(pe.Key, pe.Value)
+					break
+				}
+			}
+		}
+	}
 
 	// We use outrec.PutReference not output.PutCopy since inrec will be GC'ed
-
-	for ; pe != nil; pe = pe.Next {
+	outrec := mlrval.NewMlrmapAsRecord()
+	for pe := inrec.Head; pe != nil; pe = pe.Next {
 		if pe.Key == tr.centerFieldName {
-			break
-		}
-		if !tr.fieldNamesSet[pe.Key] {
-			outrec.PutReference(pe.Key, pe.Value)
-		}
-	}
-
-	if !tr.putAfter {
-		for _, fieldName := range tr.fieldNames {
-			value := inrec.Get(fieldName)
-			if value != nil {
-				outrec.PutReference(fieldName, value)
+			if tr.putAfter {
+				outrec.PutReference(pe.Key, pe.Value)
 			}
-		}
-	}
-
-	value := inrec.Get(tr.centerFieldName)
-	if value != nil {
-		outrec.PutReference(tr.centerFieldName, value)
-	}
-
-	if tr.putAfter {
-		for _, fieldName := range tr.fieldNames {
-			value := inrec.Get(fieldName)
-			if value != nil {
-				outrec.PutReference(fieldName, value)
+			for pf := matchingFieldNamesSet.Head; pf != nil; pf = pf.Next {
+				outrec.PutReference(pf.Key, pf.Value.(*mlrval.Mlrval))
 			}
-		}
-	}
-
-	for ; pe != nil; pe = pe.Next {
-		if pe.Key != tr.centerFieldName && !tr.fieldNamesSet[pe.Key] {
+			if !tr.putAfter {
+				outrec.PutReference(pe.Key, pe.Value)
+			}
+		} else if !matchingFieldNamesSet.Has(pe.Key) {
 			outrec.PutReference(pe.Key, pe.Value)
 		}
 	}
