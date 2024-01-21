@@ -63,9 +63,8 @@ func transformerReorderParseCLI(
 
 	var fieldNames []string = nil
 	doRegexes := false
-	putAtEnd := false
-	beforeFieldName := ""
-	afterFieldName := ""
+	putAfter := false
+	centerFieldName := ""
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
@@ -83,25 +82,23 @@ func transformerReorderParseCLI(
 
 		} else if opt == "-f" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			doRegexes = false
 
 		} else if opt == "-r" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			doRegexes = true
 
 		} else if opt == "-b" {
-			beforeFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
-			afterFieldName = ""
-			putAtEnd = false
+			centerFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			putAfter = false
 
 		} else if opt == "-a" {
-			afterFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
-			beforeFieldName = ""
-			putAtEnd = false
+			centerFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			putAfter = true
 
 		} else if opt == "-e" {
-			putAtEnd = true
-			beforeFieldName = ""
-			afterFieldName = ""
+			putAfter = true
+			centerFieldName = ""
 
 		} else {
 			transformerReorderUsage(os.Stderr)
@@ -122,9 +119,8 @@ func transformerReorderParseCLI(
 	transformer, err := NewTransformerReorder(
 		fieldNames,
 		doRegexes,
-		putAtEnd,
-		beforeFieldName,
-		afterFieldName,
+		putAfter,
+		centerFieldName,
 	)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -140,37 +136,48 @@ type TransformerReorder struct {
 	fieldNames      []string
 	fieldNamesSet   map[string]bool
 	regexes         []*regexp.Regexp
-	beforeFieldName string
-	afterFieldName  string
+	centerFieldName string
+	putAfter        bool
 
 	// state
-	recordTransformerFunc RecordTransformerFunc
+	recordTransformerFunc RecordTransformerHelperFunc
 }
 
 func NewTransformerReorder(
 	fieldNames []string,
 	doRegexes bool,
-	putAtEnd bool,
-	beforeFieldName string,
-	afterFieldName string,
+	putAfter bool,
+	centerFieldName string,
 ) (*TransformerReorder, error) {
 
 	tr := &TransformerReorder{
 		fieldNames:      fieldNames,
 		fieldNamesSet:   lib.StringListToSet(fieldNames),
-		beforeFieldName: beforeFieldName,
-		afterFieldName:  afterFieldName,
+		centerFieldName: centerFieldName,
+		putAfter:        putAfter,
 	}
 
-	if putAtEnd {
-		tr.recordTransformerFunc = tr.reorderToEnd
-	} else if beforeFieldName != "" {
-		tr.recordTransformerFunc = tr.reorderBefore
-	} else if afterFieldName != "" {
-		tr.recordTransformerFunc = tr.reorderAfter
+	if centerFieldName == "" {
+		if putAfter {
+			if doRegexes {
+				tr.recordTransformerFunc = tr.reorderToEndWithRegex
+			} else {
+				tr.recordTransformerFunc = tr.reorderToEndNoRegex
+			}
+		} else {
+			if doRegexes {
+				tr.recordTransformerFunc = tr.reorderToStartWithRegex
+			} else {
+				tr.recordTransformerFunc = tr.reorderToStartNoRegex
+				lib.ReverseStringList(tr.fieldNames)
+			}
+		}
 	} else {
-		tr.recordTransformerFunc = tr.reorderToStart
-		lib.ReverseStringList(tr.fieldNames)
+		if doRegexes {
+			tr.recordTransformerFunc = tr.reorderBeforeOrAfterWithRegex
+		} else {
+			tr.recordTransformerFunc = tr.reorderBeforeOrAfterNoRegex
+		}
 	}
 
 	if doRegexes {
@@ -193,8 +200,6 @@ func NewTransformerReorder(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerReorder) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
@@ -202,215 +207,211 @@ func (tr *TransformerReorder) Transform(
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-}
-
-// ----------------------------------------------------------------
-func (tr *TransformerReorder) reorderToStart(
-	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
-	inputDownstreamDoneChannel <-chan bool,
-	outputDownstreamDoneChannel chan<- bool,
-) {
 	if !inrecAndContext.EndOfStream {
-		inrec := inrecAndContext.Record
-
-		if tr.regexes == nil {
-			for _, fieldName := range tr.fieldNames {
-				inrec.MoveToHead(fieldName)
-			}
-			outputRecordsAndContexts.PushBack(inrecAndContext)
-
-		} else {
-			outrec := mlrval.NewMlrmapAsRecord()
-			atEnds := list.New()
-			for pe := inrec.Head; pe != nil; pe = pe.Next {
-				found := false
-				for _, regex := range tr.regexes {
-					if regex.MatchString(pe.Key) {
-						outrec.PutReference(pe.Key, pe.Value)
-						found = true
-						break
-					}
-				}
-				if !found {
-					atEnds.PushBack(pe)
-				}
-			}
-
-			for atEnd := atEnds.Front(); atEnd != nil; atEnd = atEnd.Next() {
-				// Ownership transfer; no copy needed
-				pe := atEnd.Value.(*mlrval.MlrmapEntry)
-				outrec.PutReference(pe.Key, pe.Value)
-			}
-
-			outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
-			outputRecordsAndContexts.PushBack(outrecAndContext)
-		}
-
+		tr.recordTransformerFunc(
+			inrecAndContext,
+			outputRecordsAndContexts,
+		)
 	} else {
 		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
 }
 
-// ----------------------------------------------------------------
-func (tr *TransformerReorder) reorderToEnd(
+func (tr *TransformerReorder) reorderToStartNoRegex(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
-	inputDownstreamDoneChannel <-chan bool,
-	outputDownstreamDoneChannel chan<- bool,
 ) {
-	if !inrecAndContext.EndOfStream {
-		inrec := inrecAndContext.Record
-		if tr.regexes == nil {
-			for _, fieldName := range tr.fieldNames {
-				inrec.MoveToTail(fieldName)
-			}
-			outputRecordsAndContexts.PushBack(inrecAndContext)
-
-		} else {
-			outrec := mlrval.NewMlrmapAsRecord()
-			atEnds := list.New()
-			for pe := inrec.Head; pe != nil; pe = pe.Next {
-				found := false
-				for _, regex := range tr.regexes {
-					if regex.MatchString(pe.Key) {
-						atEnds.PushBack(pe)
-						found = true
-						break
-					}
-				}
-				if !found {
-					outrec.PutReference(pe.Key, pe.Value)
-				}
-			}
-
-			for atEnd := atEnds.Front(); atEnd != nil; atEnd = atEnd.Next() {
-				// Ownership transfer; no copy needed
-				pe := atEnd.Value.(*mlrval.MlrmapEntry)
-				outrec.PutReference(pe.Key, pe.Value)
-			}
-
-			outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
-			outputRecordsAndContexts.PushBack(outrecAndContext)
-		}
-	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+	inrec := inrecAndContext.Record
+	for _, fieldName := range tr.fieldNames {
+		inrec.MoveToHead(fieldName)
 	}
+	outputRecordsAndContexts.PushBack(inrecAndContext)
 }
 
-// ----------------------------------------------------------------
-func (tr *TransformerReorder) reorderBefore(
+func (tr *TransformerReorder) reorderToStartWithRegex(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
-	inputDownstreamDoneChannel <-chan bool,
-	outputDownstreamDoneChannel chan<- bool,
 ) {
-	if !inrecAndContext.EndOfStream {
-		inrec := inrecAndContext.Record
-		if inrec.Get(tr.beforeFieldName) == nil {
-			outputRecordsAndContexts.PushBack(inrecAndContext)
-			return
-		}
+	inrec := inrecAndContext.Record
 
-		outrec := mlrval.NewMlrmapAsRecord()
-		pe := inrec.Head
-
-		// * inrec will be GC'ed
-		// * We will use outrec.PutReference not output.PutCopy since inrec will be GC'ed
-
-		for ; pe != nil; pe = pe.Next {
-			if pe.Key == tr.beforeFieldName {
+	outrec := mlrval.NewMlrmapAsRecord()
+	atEnds := list.New()
+	for pe := inrec.Head; pe != nil; pe = pe.Next {
+		found := false
+		for _, regex := range tr.regexes {
+			if regex.MatchString(pe.Key) {
+				outrec.PutReference(pe.Key, pe.Value)
+				found = true
 				break
 			}
-			if tr.regexes == nil {
-				if !tr.fieldNamesSet[pe.Key] {
-					outrec.PutReference(pe.Key, pe.Value)
-				}
-			} else {
-				// XXX TO DO
+		}
+		if !found {
+			atEnds.PushBack(pe)
+		}
+	}
+
+	for atEnd := atEnds.Front(); atEnd != nil; atEnd = atEnd.Next() {
+		// Ownership transfer; no copy needed
+		pe := atEnd.Value.(*mlrval.MlrmapEntry)
+		outrec.PutReference(pe.Key, pe.Value)
+	}
+
+	outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+	outputRecordsAndContexts.PushBack(outrecAndContext)
+}
+
+func (tr *TransformerReorder) reorderToEndNoRegex(
+	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+) {
+	inrec := inrecAndContext.Record
+	for _, fieldName := range tr.fieldNames {
+		inrec.MoveToTail(fieldName)
+	}
+	outputRecordsAndContexts.PushBack(inrecAndContext)
+
+}
+
+func (tr *TransformerReorder) reorderToEndWithRegex(
+	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+) {
+	inrec := inrecAndContext.Record
+	outrec := mlrval.NewMlrmapAsRecord()
+	atEnds := list.New()
+	for pe := inrec.Head; pe != nil; pe = pe.Next {
+		found := false
+		for _, regex := range tr.regexes {
+			if regex.MatchString(pe.Key) {
+				atEnds.PushBack(pe)
+				found = true
+				break
 			}
 		}
+		if !found {
+			outrec.PutReference(pe.Key, pe.Value)
+		}
+	}
 
+	for atEnd := atEnds.Front(); atEnd != nil; atEnd = atEnd.Next() {
+		// Ownership transfer; no copy needed
+		pe := atEnd.Value.(*mlrval.MlrmapEntry)
+		outrec.PutReference(pe.Key, pe.Value)
+	}
+
+	outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+	outputRecordsAndContexts.PushBack(outrecAndContext)
+}
+
+func (tr *TransformerReorder) reorderBeforeOrAfterNoRegex(
+	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+) {
+	inrec := inrecAndContext.Record
+	if inrec.Get(tr.centerFieldName) == nil {
+		outputRecordsAndContexts.PushBack(inrecAndContext)
+		return
+	}
+
+	outrec := mlrval.NewMlrmapAsRecord()
+	pe := inrec.Head
+
+	// We use outrec.PutReference not output.PutCopy since inrec will be GC'ed
+
+	for ; pe != nil; pe = pe.Next {
+		if pe.Key == tr.centerFieldName {
+			break
+		}
+		if !tr.fieldNamesSet[pe.Key] {
+			outrec.PutReference(pe.Key, pe.Value)
+		}
+	}
+
+	if !tr.putAfter {
 		for _, fieldName := range tr.fieldNames {
 			value := inrec.Get(fieldName)
 			if value != nil {
 				outrec.PutReference(fieldName, value)
 			}
 		}
-
-		value := inrec.Get(tr.beforeFieldName)
-		if value != nil {
-			outrec.PutReference(tr.beforeFieldName, value)
-		}
-
-		for ; pe != nil; pe = pe.Next {
-			if tr.regexes == nil {
-				if pe.Key != tr.beforeFieldName && !tr.fieldNamesSet[pe.Key] {
-					outrec.PutReference(pe.Key, pe.Value)
-				}
-			} else {
-				// XXX TO DO
-			}
-		}
-
-		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
-
-	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
-}
 
-// ----------------------------------------------------------------
-func (tr *TransformerReorder) reorderAfter(
-	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
-	inputDownstreamDoneChannel <-chan bool,
-	outputDownstreamDoneChannel chan<- bool,
-) {
-	if !inrecAndContext.EndOfStream {
-		inrec := inrecAndContext.Record
-		if inrec.Get(tr.afterFieldName) == nil {
-			outputRecordsAndContexts.PushBack(inrecAndContext)
-			return
-		}
+	value := inrec.Get(tr.centerFieldName)
+	if value != nil {
+		outrec.PutReference(tr.centerFieldName, value)
+	}
 
-		outrec := mlrval.NewMlrmapAsRecord()
-		pe := inrec.Head
-
-		// * inrec will be GC'ed
-		// * We will use outrec.PutReference not output.PutCopy since inrec will be GC'ed
-
-		for ; pe != nil; pe = pe.Next {
-			if pe.Key == tr.afterFieldName {
-				break
-			}
-			if !tr.fieldNamesSet[pe.Key] {
-				outrec.PutReference(pe.Key, pe.Value)
-			}
-		}
-
-		value := inrec.Get(tr.afterFieldName)
-		if value != nil {
-			outrec.PutReference(tr.afterFieldName, value)
-		}
-
+	if tr.putAfter {
 		for _, fieldName := range tr.fieldNames {
 			value := inrec.Get(fieldName)
 			if value != nil {
 				outrec.PutReference(fieldName, value)
 			}
 		}
+	}
 
-		for ; pe != nil; pe = pe.Next {
-			if pe.Key != tr.afterFieldName && !tr.fieldNamesSet[pe.Key] {
-				outrec.PutReference(pe.Key, pe.Value)
+	for ; pe != nil; pe = pe.Next {
+		if pe.Key != tr.centerFieldName && !tr.fieldNamesSet[pe.Key] {
+			outrec.PutReference(pe.Key, pe.Value)
+		}
+	}
+
+	outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
+
+}
+
+func (tr *TransformerReorder) reorderBeforeOrAfterWithRegex(
+	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+) {
+	inrec := inrecAndContext.Record
+	if inrec.Get(tr.centerFieldName) == nil {
+		outputRecordsAndContexts.PushBack(inrecAndContext)
+		return
+	}
+
+	outrec := mlrval.NewMlrmapAsRecord()
+	pe := inrec.Head
+
+	// We use outrec.PutReference not output.PutCopy since inrec will be GC'ed
+
+	for ; pe != nil; pe = pe.Next {
+		if pe.Key == tr.centerFieldName {
+			break
+		}
+		if !tr.fieldNamesSet[pe.Key] {
+			outrec.PutReference(pe.Key, pe.Value)
+		}
+	}
+
+	if !tr.putAfter {
+		for _, fieldName := range tr.fieldNames {
+			value := inrec.Get(fieldName)
+			if value != nil {
+				outrec.PutReference(fieldName, value)
 			}
 		}
-
-		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
-
-	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
+
+	value := inrec.Get(tr.centerFieldName)
+	if value != nil {
+		outrec.PutReference(tr.centerFieldName, value)
+	}
+
+	if tr.putAfter {
+		for _, fieldName := range tr.fieldNames {
+			value := inrec.Get(fieldName)
+			if value != nil {
+				outrec.PutReference(fieldName, value)
+			}
+		}
+	}
+
+	for ; pe != nil; pe = pe.Next {
+		if pe.Key != tr.centerFieldName && !tr.fieldNamesSet[pe.Key] {
+			outrec.PutReference(pe.Key, pe.Value)
+		}
+	}
+
+	outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 }
