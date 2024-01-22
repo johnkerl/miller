@@ -184,22 +184,11 @@ func transformerSubsParseCLI(
 	return transformer
 }
 
-type TransformerGsub struct {
+type TransformerSubs struct {
 	fieldNames []string
 	oldText    *mlrval.Mlrval
 	newText    *mlrval.Mlrval
-}
-
-type TransformerSub struct {
-	fieldNames []string
-	oldText    *mlrval.Mlrval
-	newText    *mlrval.Mlrval
-}
-
-type TransformerSsub struct {
-	fieldNames []string
-	oldText    *mlrval.Mlrval
-	newText    *mlrval.Mlrval
+	subber     bifs.TernaryFunc
 }
 
 func NewTransformerSub(
@@ -207,10 +196,11 @@ func NewTransformerSub(
 	oldText string,
 	newText string,
 ) (IRecordTransformer, error) {
-	tr := &TransformerSub{
+	tr := &TransformerSubs{
 		fieldNames: fieldNames,
 		oldText:    mlrval.FromString(oldText),
 		newText:    mlrval.FromString(newText),
+		subber:     bifs.BIF_sub,
 	}
 	return tr, nil
 }
@@ -220,10 +210,11 @@ func NewTransformerGsub(
 	oldText string,
 	newText string,
 ) (IRecordTransformer, error) {
-	tr := &TransformerGsub{
+	tr := &TransformerSubs{
 		fieldNames: fieldNames,
 		oldText:    mlrval.FromString(oldText),
 		newText:    mlrval.FromString(newText),
+		subber:     bifs.BIF_gsub,
 	}
 	return tr, nil
 }
@@ -233,15 +224,16 @@ func NewTransformerSsub(
 	oldText string,
 	newText string,
 ) (IRecordTransformer, error) {
-	tr := &TransformerSsub{
+	tr := &TransformerSubs{
 		fieldNames: fieldNames,
 		oldText:    mlrval.FromString(oldText),
 		newText:    mlrval.FromString(newText),
+		subber:     bifs.BIF_ssub,
 	}
 	return tr, nil
 }
 
-func (tr *TransformerSub) Transform(
+func (tr *TransformerSubs) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
@@ -258,63 +250,7 @@ func (tr *TransformerSub) Transform(
 				continue
 			}
 
-			newValue := bifs.BIF_sub(oldValue, tr.oldText, tr.newText)
-
-			inrec.PutReference(fieldName, newValue)
-		}
-
-		outputRecordsAndContexts.PushBack(inrecAndContext)
-	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
-	}
-}
-
-func (tr *TransformerGsub) Transform(
-	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
-	inputDownstreamDoneChannel <-chan bool,
-	outputDownstreamDoneChannel chan<- bool,
-) {
-	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-
-	if !inrecAndContext.EndOfStream {
-		inrec := inrecAndContext.Record
-
-		for _, fieldName := range tr.fieldNames {
-			oldValue := inrec.Get(fieldName)
-			if oldValue == nil {
-				continue
-			}
-
-			newValue := bifs.BIF_gsub(oldValue, tr.oldText, tr.newText)
-
-			inrec.PutReference(fieldName, newValue)
-		}
-
-		outputRecordsAndContexts.PushBack(inrecAndContext)
-	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
-	}
-}
-
-func (tr *TransformerSsub) Transform(
-	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
-	inputDownstreamDoneChannel <-chan bool,
-	outputDownstreamDoneChannel chan<- bool,
-) {
-	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-
-	if !inrecAndContext.EndOfStream {
-		inrec := inrecAndContext.Record
-
-		for _, fieldName := range tr.fieldNames {
-			oldValue := inrec.Get(fieldName)
-			if oldValue == nil {
-				continue
-			}
-
-			newValue := bifs.BIF_ssub(oldValue, tr.oldText, tr.newText)
+			newValue := tr.subber(oldValue, tr.oldText, tr.newText)
 
 			inrec.PutReference(fieldName, newValue)
 		}
