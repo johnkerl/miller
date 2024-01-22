@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/johnkerl/miller/pkg/bifs"
@@ -77,6 +78,7 @@ func transformerSsubUsage(
 type subConstructorFunc func(
 	fieldNames []string,
 	doAllFieldNames bool,
+	doRegexes bool,
 	oldText string,
 	newText string,
 ) (IRecordTransformer, error)
@@ -115,6 +117,7 @@ func transformerSsubParseCLI(
 	return transformerSubsParseCLI(pargi, argc, args, opts, doConstruct, transformerSsubUsage, NewTransformerSsub)
 }
 
+// transformerSubsParseCLI is a shared CLI-parser for the sub, gsub, and ssub verbs.
 func transformerSubsParseCLI(
 	pargi *int,
 	argc int,
@@ -133,11 +136,9 @@ func transformerSubsParseCLI(
 	// Parse local flags
 	var fieldNames []string = nil
 	doAllFieldNames := false
+	doRegexes := false
 	var oldText string
 	var newText string
-	// TODO:
-	// * -r for regexes
-	// * -a for all
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
@@ -155,9 +156,15 @@ func transformerSubsParseCLI(
 
 		} else if opt == "-a" {
 			doAllFieldNames = true
+			doRegexes = false
+			fieldNames = nil
+
+		} else if opt == "-r" {
+			doRegexes = true
 
 		} else if opt == "-f" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			doAllFieldNames = false
 		} else {
 			usageFunc(os.Stderr)
 			os.Exit(1)
@@ -187,6 +194,7 @@ func transformerSubsParseCLI(
 	transformer, err := constructorFunc(
 		fieldNames,
 		doAllFieldNames,
+		doRegexes,
 		oldText,
 		newText,
 	)
@@ -199,59 +207,73 @@ func transformerSubsParseCLI(
 }
 
 type TransformerSubs struct {
-	fieldNames      []string
-	fieldNamesSet   map[string]bool
-	doAllFieldNames bool
-	oldText         *mlrval.Mlrval
-	newText         *mlrval.Mlrval
-	fieldAcceptor   fieldAcceptorFunc
-	subber          bifs.TernaryFunc
+	fieldNamesSet map[string]bool  // for -f
+	regexes       []*regexp.Regexp // for -r
+	oldText       *mlrval.Mlrval
+	newText       *mlrval.Mlrval
+	fieldAcceptor fieldAcceptorFunc // for -f, -r, -a
+	subber        bifs.TernaryFunc  // for sub, gsub, ssub
 }
 
 func NewTransformerSub(
 	fieldNames []string,
 	doAllFieldNames bool,
+	doRegexes bool,
 	oldText string,
 	newText string,
 ) (IRecordTransformer, error) {
-	return NewTransformerSubs(fieldNames, doAllFieldNames, oldText, newText, safe_sub)
+	return NewTransformerSubs(fieldNames, doAllFieldNames, doRegexes, oldText, newText, safe_sub)
 }
 
 func NewTransformerGsub(
 	fieldNames []string,
 	doAllFieldNames bool,
+	doRegexes bool,
 	oldText string,
 	newText string,
 ) (IRecordTransformer, error) {
-	return NewTransformerSubs(fieldNames, doAllFieldNames, oldText, newText, safe_gsub)
+	return NewTransformerSubs(fieldNames, doAllFieldNames, doRegexes, oldText, newText, safe_gsub)
 }
 
 func NewTransformerSsub(
 	fieldNames []string,
 	doAllFieldNames bool,
+	doRegexes bool,
 	oldText string,
 	newText string,
 ) (IRecordTransformer, error) {
-	return NewTransformerSubs(fieldNames, doAllFieldNames, oldText, newText, safe_ssub)
+	return NewTransformerSubs(fieldNames, doAllFieldNames, doRegexes, oldText, newText, safe_ssub)
 }
 
 func NewTransformerSubs(
 	fieldNames []string,
 	doAllFieldNames bool,
+	doRegexes bool,
 	oldText string,
 	newText string,
 	subber bifs.TernaryFunc,
 ) (IRecordTransformer, error) {
 	tr := &TransformerSubs{
-		fieldNames:      fieldNames,
-		fieldNamesSet:   lib.StringListToSet(fieldNames),
-		doAllFieldNames: doAllFieldNames,
-		oldText:         mlrval.FromString(oldText),
-		newText:         mlrval.FromString(newText),
-		subber:          subber,
+		fieldNamesSet: lib.StringListToSet(fieldNames),
+		oldText:       mlrval.FromString(oldText),
+		newText:       mlrval.FromString(newText),
+		subber:        subber,
 	}
 	if doAllFieldNames {
 		tr.fieldAcceptor = tr.fieldAcceptorAll
+	} else if doRegexes {
+		tr.fieldAcceptor = tr.fieldAcceptorByRegexes
+
+		tr.regexes = make([]*regexp.Regexp, len(fieldNames))
+		for i, regexString := range fieldNames {
+			// Handles "a.*b"i Miller case-insensitive-regex specification
+			regex, err := lib.CompileMillerRegex(regexString)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "%s %s: cannot compile regex [%s]\n", "mlr", verbNameCut, regexString)
+				os.Exit(1)
+			}
+			tr.regexes[i] = regex
+		}
 	} else {
 		tr.fieldAcceptor = tr.fieldAcceptorByNames
 	}
@@ -268,30 +290,44 @@ func (tr *TransformerSubs) Transform(
 
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
+		// Run sub, gsub, or ssub on the user-specified field names
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if tr.fieldAcceptor(pe.Key) {
 				pe.Value = tr.subber(pe.Value, tr.oldText, tr.newText)
 			}
 		}
-		outputRecordsAndContexts.PushBack(inrecAndContext)
-
-	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
 	}
+	// Including emit of end-of-stream marker
+	outputRecordsAndContexts.PushBack(inrecAndContext)
 }
 
+// fieldAcceptorByNames implements -f
 func (tr *TransformerSubs) fieldAcceptorByNames(
 	fieldName string,
 ) bool {
 	return tr.fieldNamesSet[fieldName]
 }
 
+// fieldAcceptorByNames implements -r
+func (tr *TransformerSubs) fieldAcceptorByRegexes(
+	fieldName string,
+) bool {
+	for _, regex := range tr.regexes {
+		if regex.MatchString(fieldName) {
+			return true
+		}
+	}
+	return false
+}
+
+// fieldAcceptorByNames implements -a
 func (tr *TransformerSubs) fieldAcceptorAll(
 	fieldName string,
 ) bool {
 	return true
 }
 
+// safe_sub implements sub, but doesn't produce error-type on non-string input.
 func safe_sub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		return bifs.BIF_sub(input1, input2, input3)
@@ -300,6 +336,7 @@ func safe_sub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
+// safe_gsub implements gsub, but doesn't produce error-type on non-string input.
 func safe_gsub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		return bifs.BIF_gsub(input1, input2, input3)
@@ -308,6 +345,7 @@ func safe_gsub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
+// safe_ssub implements ssub, but doesn't produce error-type on non-string input.
 func safe_ssub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		return bifs.BIF_ssub(input1, input2, input3)
