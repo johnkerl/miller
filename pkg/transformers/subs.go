@@ -8,6 +8,7 @@ import (
 
 	"github.com/johnkerl/miller/pkg/bifs"
 	"github.com/johnkerl/miller/pkg/cli"
+	"github.com/johnkerl/miller/pkg/lib"
 	"github.com/johnkerl/miller/pkg/mlrval"
 	"github.com/johnkerl/miller/pkg/types"
 )
@@ -75,9 +76,14 @@ func transformerSsubUsage(
 
 type subConstructorFunc func(
 	fieldNames []string,
+	doAllFieldNames bool,
 	oldText string,
 	newText string,
 ) (IRecordTransformer, error)
+
+type fieldAcceptorFunc func(
+	fieldName string,
+) bool
 
 func transformerSubParseCLI(
 	pargi *int,
@@ -126,8 +132,12 @@ func transformerSubsParseCLI(
 
 	// Parse local flags
 	var fieldNames []string = nil
+	doAllFieldNames := false
 	var oldText string
 	var newText string
+	// TODO:
+	// * -r for regexes
+	// * -a for all
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
@@ -143,6 +153,9 @@ func transformerSubsParseCLI(
 			usageFunc(os.Stdout)
 			os.Exit(0)
 
+		} else if opt == "-a" {
+			doAllFieldNames = true
+
 		} else if opt == "-f" {
 			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 		} else {
@@ -151,7 +164,7 @@ func transformerSubsParseCLI(
 		}
 	}
 
-	if fieldNames == nil {
+	if fieldNames == nil && !doAllFieldNames {
 		usageFunc(os.Stderr)
 		os.Exit(1)
 	}
@@ -173,6 +186,7 @@ func transformerSubsParseCLI(
 
 	transformer, err := constructorFunc(
 		fieldNames,
+		doAllFieldNames,
 		oldText,
 		newText,
 	)
@@ -185,50 +199,61 @@ func transformerSubsParseCLI(
 }
 
 type TransformerSubs struct {
-	fieldNames []string
-	oldText    *mlrval.Mlrval
-	newText    *mlrval.Mlrval
-	subber     bifs.TernaryFunc
+	fieldNames      []string
+	fieldNamesSet   map[string]bool
+	doAllFieldNames bool
+	oldText         *mlrval.Mlrval
+	newText         *mlrval.Mlrval
+	fieldAcceptor   fieldAcceptorFunc
+	subber          bifs.TernaryFunc
 }
 
 func NewTransformerSub(
 	fieldNames []string,
+	doAllFieldNames bool,
 	oldText string,
 	newText string,
 ) (IRecordTransformer, error) {
-	tr := &TransformerSubs{
-		fieldNames: fieldNames,
-		oldText:    mlrval.FromString(oldText),
-		newText:    mlrval.FromString(newText),
-		subber:     bifs.BIF_sub,
-	}
-	return tr, nil
+	return NewTransformerSubs(fieldNames, doAllFieldNames, oldText, newText, safe_sub)
 }
 
 func NewTransformerGsub(
 	fieldNames []string,
+	doAllFieldNames bool,
 	oldText string,
 	newText string,
 ) (IRecordTransformer, error) {
-	tr := &TransformerSubs{
-		fieldNames: fieldNames,
-		oldText:    mlrval.FromString(oldText),
-		newText:    mlrval.FromString(newText),
-		subber:     bifs.BIF_gsub,
-	}
-	return tr, nil
+	return NewTransformerSubs(fieldNames, doAllFieldNames, oldText, newText, safe_gsub)
 }
 
 func NewTransformerSsub(
 	fieldNames []string,
+	doAllFieldNames bool,
 	oldText string,
 	newText string,
 ) (IRecordTransformer, error) {
+	return NewTransformerSubs(fieldNames, doAllFieldNames, oldText, newText, safe_ssub)
+}
+
+func NewTransformerSubs(
+	fieldNames []string,
+	doAllFieldNames bool,
+	oldText string,
+	newText string,
+	subber bifs.TernaryFunc,
+) (IRecordTransformer, error) {
 	tr := &TransformerSubs{
-		fieldNames: fieldNames,
-		oldText:    mlrval.FromString(oldText),
-		newText:    mlrval.FromString(newText),
-		subber:     bifs.BIF_ssub,
+		fieldNames:      fieldNames,
+		fieldNamesSet:   lib.StringListToSet(fieldNames),
+		doAllFieldNames: doAllFieldNames,
+		oldText:         mlrval.FromString(oldText),
+		newText:         mlrval.FromString(newText),
+		subber:          subber,
+	}
+	if doAllFieldNames {
+		tr.fieldAcceptor = tr.fieldAcceptorAll
+	} else {
+		tr.fieldAcceptor = tr.fieldAcceptorByNames
 	}
 	return tr, nil
 }
@@ -243,20 +268,50 @@ func (tr *TransformerSubs) Transform(
 
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-
-		for _, fieldName := range tr.fieldNames {
-			oldValue := inrec.Get(fieldName)
-			if oldValue == nil {
-				continue
+		for pe := inrec.Head; pe != nil; pe = pe.Next {
+			if tr.fieldAcceptor(pe.Key) {
+				pe.Value = tr.subber(pe.Value, tr.oldText, tr.newText)
 			}
-
-			newValue := tr.subber(oldValue, tr.oldText, tr.newText)
-
-			inrec.PutReference(fieldName, newValue)
 		}
-
 		outputRecordsAndContexts.PushBack(inrecAndContext)
+
 	} else {
 		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
+	}
+}
+
+func (tr *TransformerSubs) fieldAcceptorByNames(
+	fieldName string,
+) bool {
+	return tr.fieldNamesSet[fieldName]
+}
+
+func (tr *TransformerSubs) fieldAcceptorAll(
+	fieldName string,
+) bool {
+	return true
+}
+
+func safe_sub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.IsString() {
+		return bifs.BIF_sub(input1, input2, input3)
+	} else {
+		return input1
+	}
+}
+
+func safe_gsub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.IsString() {
+		return bifs.BIF_gsub(input1, input2, input3)
+	} else {
+		return input1
+	}
+}
+
+func safe_ssub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.IsString() {
+		return bifs.BIF_ssub(input1, input2, input3)
+	} else {
+		return input1
 	}
 }
