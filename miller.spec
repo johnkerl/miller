@@ -36,7 +36,7 @@ make install
 %{_mandir}/man1/mlr.1*
 
 %changelog
-* Tue Jan 23 2023 John Kerl <kerl.john.r@gmail.com> - 6.11.0-1
+* Tue Jan 23 2024 John Kerl <kerl.john.r@gmail.com> - 6.11.0-1
 - 6.11.0 release
 
 * Wed Dec 13 2023 John Kerl <kerl.john.r@gmail.com> - 6.10.0-1
