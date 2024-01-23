@@ -19,7 +19,9 @@ Quick links:
 This is simply a copy of what you should see on running `man mlr` at a command prompt, once Miller is installed on your system.
 
 <pre class="pre-non-highlight-non-pair">
-4mMILLER24m(1)                                                            4mMILLER24m(1)
+MILLER(1)                                                            MILLER(1)
+
+
 
 1mNAME0m
        Miller -- like awk, sed, cut, join, and sort for name-indexed data such
@@ -48,7 +50,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        insertion-ordered hash map.  This encompasses a variety of data
        formats, including but not limited to the familiar CSV, TSV, and JSON.
        (Miller can handle positionally-indexed data as a special case.) This
-       manpage documents mlr 6.10.0-dev.
+       manpage documents mlr 6.11.0.
 
 1mEXAMPLES0m
        mlr --icsv --opprint cat example.csv
@@ -808,7 +810,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                markdown " "    N/A    "\n"
                nidx     " "    N/A    "\n"
                pprint   " "    N/A    "\n"
-               tsv      "     "    N/A    "\n"
+               tsv      "  "    N/A    "\n"
                xtab     "\n"   " "    "\n\n"
 
        --fs {string}            Specify FS for input and output.
@@ -3688,5 +3690,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2024-01-20                         4mMILLER24m(1)
+
+
+                                  2024-01-23                         MILLER(1)
 </pre>
