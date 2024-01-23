@@ -14,9 +14,9 @@ In this example I am using version 6.2.0 to 6.3.0; of course that will change fo
 
 * If Go version is being updated: edit all three of
 
-  * `go.mod`
-  * `.github/workflows/go.yml`
-  * `.github/workflows/release.yml`
+    * `go.mod`
+    * `.github/workflows/go.yml`
+    * `.github/workflows/release.yml`
 
 * Create the release tarball:
 
