@@ -24,7 +24,8 @@ If your `mlr version` says something like `Miller v5.10.2` or `mlr 6.0.0`, witho
 | Release | Docs                                                                | Release notes |
 |---------|---------------------------------------------------------------------|---------------|
 main      | [main branch](https://miller.readthedocs.io/en/main)                | N/A |
-6.10.0     | [Miller 6.10.0](https://miller.readthedocs.io/en/6.10.0)           | [Add --files option; bugfixes; use Go 1.110](https://github.com/johnkerl/miller/releases/tag/v6.10.0) |
+6.11.0     | [Miller 6.11.0](https://miller.readthedocs.io/en/6.11.0)           | [CSV/TSV auto-unsparsify, regex-fieldname support for reorder/sub/ssub/gsub, strmatch DSL function, and more](https://github.com/johnkerl/miller/releases/tag/v6.11.0) |
+6.10.0     | [Miller 6.10.0](https://miller.readthedocs.io/en/6.10.0)           | [Add --files option; bugfixes; use Go 1.19](https://github.com/johnkerl/miller/releases/tag/v6.10.0) |
 6.9.0     | [Miller 6.9.0](https://miller.readthedocs.io/en/6.9.0)              | [Nanosecond timestamps, ZSTD compression, improved data-error handling, and more](https://github.com/johnkerl/miller/releases/tag/v6.9.0) |
 6.8.0     | [Miller 6.8.0](https://miller.readthedocs.io/en/6.8.0)              | [New case verb, index DSL function, and more](https://github.com/johnkerl/miller/releases/tag/v6.8.0) |
 6.7.0     | [Miller 6.7.0](https://miller.readthedocs.io/en/6.7.0)              | [New leftpad/rightpad DSL functions, unspace verb, and more](https://github.com/johnkerl/miller/releases/tag/v6.7.0) |
