@@ -1,1 +1,0 @@
-mlr --d2p --from test/input/abixy ssub -f a,b e X
