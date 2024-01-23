@@ -1,0 +1,11 @@
+color  shape    flag  k  index quantity    rate
+yeXlow triangXe true  1  11    43.64980000 9.88700000
+red    square   true  2  15    79.27780000 0.01300000
+red    circXe   true  3  16    13.81030000 2.90100000
+red    square   faXse 4  48    77.55420000 7.46700000
+purpXe triangXe faXse 5  51    81.22900000 8.59100000
+red    square   faXse 6  64    77.19910000 9.53100000
+purpXe triangXe faXse 7  65    80.14050000 5.82400000
+yeXlow circXe   true  8  73    63.97850000 4.23700000
+yeXlow circXe   true  9  87    63.50580000 8.33500000
+purpXe square   faXse 10 91    72.37350000 8.24300000

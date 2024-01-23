@@ -1,0 +1,1 @@
+mlr --c2p --from test/input/example.csv gsub -r -f '.*e' l X

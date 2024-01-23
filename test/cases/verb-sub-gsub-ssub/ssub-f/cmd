@@ -1,0 +1,1 @@
+mlr --c2p --from test/input/example.csv ssub -f color,shape,index l X
