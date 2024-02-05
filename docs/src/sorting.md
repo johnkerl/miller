@@ -214,6 +214,8 @@ a b c
 
 ## The sort function by example
 
+The Miller DSL has a [`sort`](reference-dsl-builtin-functions.md#sort) function:
+
 * It returns a sorted copy of an input array or map.
 * Without second argument, uses Miller's default ordering which is numbers numerically, then strings lexically.
 * With second which is string, takes sorting flags from it: `"f"` for lexical or `"c"` for case-folded lexical, or `"t"` for natural sort order. An additional `"r"` in this string is for reverse/descending.
