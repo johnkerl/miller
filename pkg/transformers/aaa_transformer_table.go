@@ -62,6 +62,7 @@ var TRANSFORMER_LOOKUP_TABLE = []TransformerSetup{
 	SkipTrivialRecordsSetup,
 	SortSetup,
 	SortWithinRecordsSetup,
+	SparsifySetup,
 	SplitSetup,
 	SsubSetup,
 	Stats1Setup,

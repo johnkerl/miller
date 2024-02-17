@@ -995,6 +995,12 @@ GENMD-RUN-COMMAND
 mlr --ijson --opprint sort-within-records data/sort-within-records.json
 GENMD-EOF
 
+## sparsify
+
+GENMD-RUN-COMMAND
+mlr sparsify --help
+GENMD-EOF
+
 ## split
 
 GENMD-RUN-COMMAND
