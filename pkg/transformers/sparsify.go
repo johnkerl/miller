@@ -38,9 +38,7 @@ specified value). Only makes sense with output format not being CSV or TSV.
 	fmt.Fprintf(o, "-h|--help  Show this message.\n")
 
 	fmt.Fprint(o,
-		`Example: if the input is two records, one being 'a=1,b=2' and the other
-being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
-'a=,b=3,c=4'.
+		`Example: if input is a=1,b=,c=3 then output is a=1,c=3.
 `)
 }
 

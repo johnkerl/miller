@@ -3140,9 +3140,7 @@ Options:
 -f {a,b,c} Specify field names to be operated on; any other fields won't be
            modified. The default is to modify all fields.
 -h|--help  Show this message.
-Example: if the input is two records, one being 'a=1,b=2' and the other
-being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
-'a=,b=3,c=4'.
+Example: if input is a=1,b=,c=3 then output is a=1,c=3.
 </pre>
 
 ## split
