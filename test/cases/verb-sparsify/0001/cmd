@@ -1,0 +1,1 @@
+mlr --c2j --from test/input/sparsify-input.csv sparsify
