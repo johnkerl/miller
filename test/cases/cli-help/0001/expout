@@ -989,6 +989,18 @@ Options:
 -h|--help Show this message.
 
 ================================================================
+sparsify
+Usage: mlr sparsify [options]
+Unsets fields for which the key is the empty string (or, optionally, another
+specified value). Only makes sense with output format not being CSV or TSV.
+Options:
+-s {filler string} What values to remove. Defaults to the empty string.
+-f {a,b,c} Specify field names to be operated on; any other fields won't be
+           modified. The default is to modify all fields.
+-h|--help  Show this message.
+Example: if input is a=1,b=,c=3 then output is a=1,c=3.
+
+================================================================
 split
 Usage: mlr split [options] {filename}
 Options:
