@@ -19,9 +19,7 @@ Quick links:
 This is simply a copy of what you should see on running `man mlr` at a command prompt, once Miller is installed on your system.
 
 <pre class="pre-non-highlight-non-pair">
-MILLER(1)                                                            MILLER(1)
-
-
+4mMILLER24m(1)                                                            4mMILLER24m(1)
 
 1mNAME0m
        Miller -- like awk, sed, cut, join, and sort for name-indexed data such
@@ -199,9 +197,9 @@ MILLER(1)                                                            MILLER(1)
        json-parse json-stringify join label latin1-to-utf8 least-frequent
        merge-fields most-frequent nest nothing put regularize remove-empty-columns
        rename reorder repeat reshape sample sec2gmtdate sec2gmt seqgen shuffle
-       skip-trivial-records sort sort-within-records split ssub stats1 stats2 step
-       sub summary tac tail tee template top utf8-to-latin1 unflatten uniq unspace
-       unsparsify
+       skip-trivial-records sort sort-within-records sparsify split ssub stats1
+       stats2 step sub summary tac tail tee template top utf8-to-latin1 unflatten
+       uniq unspace unsparsify
 
 1mFUNCTION LIST0m
        abs acos acosh antimode any append apply arrayify asin asinh asserting_absent
@@ -810,7 +808,7 @@ MILLER(1)                                                            MILLER(1)
                markdown " "    N/A    "\n"
                nidx     " "    N/A    "\n"
                pprint   " "    N/A    "\n"
-               tsv      "  "    N/A    "\n"
+               tsv      "     "    N/A    "\n"
                xtab     "\n"   " "    "\n\n"
 
        --fs {string}            Specify FS for input and output.
@@ -1839,6 +1837,17 @@ MILLER(1)                                                            MILLER(1)
        Options:
        -r        Recursively sort subobjects/submaps, e.g. for JSON input.
        -h|--help Show this message.
+
+   1msparsify0m
+       Usage: mlr sparsify [options]
+       Unsets fields for which the key is the empty string (or, optionally, another
+       specified value). Only makes sense with output format not being CSV or TSV.
+       Options:
+       -s {filler string} What values to remove. Defaults to the empty string.
+       -f {a,b,c} Specify field names to be operated on; any other fields won't be
+                  modified. The default is to modify all fields.
+       -h|--help  Show this message.
+       Example: if input is a=1,b=,c=3 then output is a=1,c=3.
 
    1msplit0m
        Usage: mlr split [options] {filename}
@@ -3690,7 +3699,5 @@ MILLER(1)                                                            MILLER(1)
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-
-
-                                  2024-01-23                         MILLER(1)
+                                  2024-02-18                         4mMILLER24m(1)
 </pre>
