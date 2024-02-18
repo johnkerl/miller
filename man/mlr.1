@@ -3338,9 +3338,14 @@ $* = fmtifnum($*, "%.6f") formats numeric fields in the current record, leaving 
 .RS 0
 .\}
 .nf
- (class=conversion #args=2) Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'. This function recurses on array and map values.
-Example:
-$x = fmtnum($x, "%.6f")
+ (class=conversion #args=2) Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'. Miller-specific extension: "%_d" and "%_f" for comma-separated thousands. This function recurses on array and map values.
+Examples:
+$y = fmtnum($x, "%.6f")
+$o = fmtnum($n, "%d")
+$o = fmtnum($n, "%12d")
+$y = fmtnum($x, "%.6_f")
+$o = fmtnum($n, "%_d")
+$o = fmtnum($n, "%12_d")
 .fi
 .if n \{\
 .RE
