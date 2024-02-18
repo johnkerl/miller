@@ -2,8 +2,12 @@ package mlrval
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
+
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 )
 
 //----------------------------------------------------------------
@@ -103,9 +107,14 @@ func newFormatter(
 	goFormatString = strings.ReplaceAll(goFormatString, "le", "e")
 	goFormatString = strings.ReplaceAll(goFormatString, "lg", "g")
 
-	// MIller 5 and below required C format strings compatible with 64-bit ints
+	// Miller 5 and below required C format strings compatible with 64-bit ints
 	// and double-precision floats: e.g. "%08lld" and "%9.6lf". For Miller 6,
-	// We must still accept these for backward compatibility.
+	// we must still accept these for backward compatibility.
+	if strings.HasSuffix(goFormatString, "_d") {
+		// Special sub-case of "d"; must be checked first
+		n := len(goFormatString)
+		return newFormatterToSeparatedInt(goFormatString[:n-2] + "d"), nil
+	}
 	if strings.HasSuffix(goFormatString, "d") {
 		return newFormatterToInt(goFormatString), nil
 	}
@@ -113,6 +122,11 @@ func newFormatter(
 		return newFormatterToInt(goFormatString), nil
 	}
 
+	if strings.HasSuffix(goFormatString, "_f") {
+		// Special sub-case of "f"; must be checked first
+		n := len(goFormatString)
+		return newFormatterToSeparatedFloat(goFormatString[:n-2] + "f"), nil
+	}
 	if strings.HasSuffix(goFormatString, "f") {
 		return newFormatterToFloat(goFormatString), nil
 	}
@@ -160,6 +174,81 @@ func (formatter *formatterToFloat) Format(mv *Mlrval) *Mlrval {
 
 func (formatter *formatterToFloat) FormatFloat(floatValue float64) string {
 	return fmt.Sprintf(formatter.goFormatString, floatValue)
+}
+
+// ----------------------------------------------------------------
+
+func getLanguageTag() language.Tag {
+	v, ok := os.LookupEnv("LANG")
+	if ok {
+		return language.Make(v)
+	} else {
+		return language.Make("en")
+	}
+}
+
+// ----------------------------------------------------------------
+
+type formatterToSeparatedInt struct {
+	goFormatString string
+	printer        *message.Printer
+}
+
+func newFormatterToSeparatedInt(goFormatString string) IFormatter {
+	return &formatterToSeparatedInt{
+		goFormatString: goFormatString,
+		printer:        message.NewPrinter(getLanguageTag()),
+	}
+}
+
+func (formatter *formatterToSeparatedInt) Format(mv *Mlrval) *Mlrval {
+	intValue, isInt := mv.GetIntValue()
+	if isInt {
+		formatted := formatter.printer.Sprintf(formatter.goFormatString, intValue)
+		return TryFromIntString(formatted)
+	}
+	floatValue, isFloat := mv.GetFloatValue()
+	if isFloat {
+		formatted := formatter.printer.Sprintf(formatter.goFormatString, int(floatValue))
+		return TryFromIntString(formatted)
+	}
+	return mv
+}
+
+func (formatter *formatterToSeparatedInt) FormatFloat(floatValue float64) string {
+	return formatter.printer.Sprintf(formatter.goFormatString, int(floatValue))
+}
+
+// ----------------------------------------------------------------
+
+type formatterToSeparatedFloat struct {
+	goFormatString string
+	printer        *message.Printer
+}
+
+func newFormatterToSeparatedFloat(goFormatString string) IFormatter {
+	return &formatterToSeparatedFloat{
+		goFormatString: goFormatString,
+		printer:        message.NewPrinter(getLanguageTag()),
+	}
+}
+
+func (formatter *formatterToSeparatedFloat) Format(mv *Mlrval) *Mlrval {
+	floatValue, isFloat := mv.GetFloatValue()
+	if isFloat {
+		formatted := formatter.printer.Sprintf(formatter.goFormatString, floatValue)
+		return TryFromFloatString(formatted)
+	}
+	intValue, isInt := mv.GetIntValue()
+	if isInt {
+		formatted := formatter.printer.Sprintf(formatter.goFormatString, float64(intValue))
+		return TryFromFloatString(formatted)
+	}
+	return mv
+}
+
+func (formatter *formatterToSeparatedFloat) FormatFloat(floatValue float64) string {
+	return formatter.printer.Sprintf(formatter.goFormatString, floatValue)
 }
 
 // ----------------------------------------------------------------

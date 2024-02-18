@@ -2416,9 +2416,14 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        $* = fmtifnum($*, "%.6f") formats numeric fields in the current record, leaving non-numeric ones alone
 
    1mfmtnum0m
-        (class=conversion #args=2) Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'. This function recurses on array and map values.
-       Example:
-       $x = fmtnum($x, "%.6f")
+        (class=conversion #args=2) Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'. Miller-specific extension: "%_d" and "%_f" for comma-separated thousands. This function recurses on array and map values.
+       Examples:
+       $y = fmtnum($x, "%.6f")
+       $o = fmtnum($n, "%d")
+       $o = fmtnum($n, "%12d")
+       $y = fmtnum($x, "%.6_f")
+       $o = fmtnum($n, "%_d")
+       $o = fmtnum($n, "%12_d")
 
    1mfold0m
         (class=higher-order-functions #args=3) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is taken from the third argument.
