@@ -137,7 +137,7 @@ func (reader *RecordReaderXTAB) processHandle(
 // start or end of file. A single stanza, once parsed, will become a single
 // record.
 func channelizedStanzaScanner(
-	lineReader ILineReader,
+	lineReader *TLineReader,
 	readerOptions *cli.TReaderOptions,
 	stanzasChannel chan<- *list.List, // list of list of string
 	downstreamDoneChannel <-chan bool, // for mlr head

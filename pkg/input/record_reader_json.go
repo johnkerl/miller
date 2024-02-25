@@ -202,7 +202,7 @@ func (reader *RecordReaderJSON) processHandle(
 // JSONCommentEnabledReader implements io.Reader to strip comment lines
 // off of CSV data.
 type JSONCommentEnabledReader struct {
-	lineReader    ILineReader
+	lineReader    *TLineReader
 	readerOptions *cli.TReaderOptions
 	context       *types.Context    // Needed for channelized stdout-printing logic
 	readerChannel chan<- *list.List // list of *types.RecordAndContext
