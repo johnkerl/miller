@@ -144,9 +144,9 @@ func (reader *RecordReaderCSVLite) processHandle(
 	reader.headerStrings = nil
 
 	recordsPerBatch := reader.recordsPerBatch
-	lineScanner := NewLineScanner(handle, reader.readerOptions.IRS)
+	lineReader := NewLineReader(handle, reader.readerOptions.IRS)
 	linesChannel := make(chan *list.List, recordsPerBatch)
-	go channelizedLineScanner(lineScanner, linesChannel, downstreamDoneChannel, recordsPerBatch)
+	go channelizedLineReader(lineReader, linesChannel, downstreamDoneChannel, recordsPerBatch)
 
 	for {
 		recordsAndContexts, eof := reader.recordBatchGetter(reader, linesChannel, filename, context, errorChannel)

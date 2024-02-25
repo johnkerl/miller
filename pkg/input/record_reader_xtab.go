@@ -1,7 +1,6 @@
 package input
 
 import (
-	"bufio"
 	"container/list"
 	"fmt"
 	"io"
@@ -105,10 +104,10 @@ func (reader *RecordReaderXTAB) processHandle(
 	recordsPerBatch := reader.recordsPerBatch
 
 	// XTAB uses repeated IFS, rather than IRS, to delimit records
-	lineScanner := NewLineScanner(handle, reader.readerOptions.IFS)
+	lineReader := NewLineReader(handle, reader.readerOptions.IFS)
 
 	stanzasChannel := make(chan *list.List, recordsPerBatch)
-	go channelizedStanzaScanner(lineScanner, reader.readerOptions, stanzasChannel, downstreamDoneChannel,
+	go channelizedStanzaScanner(lineReader, reader.readerOptions, stanzasChannel, downstreamDoneChannel,
 		recordsPerBatch)
 
 	for {
@@ -137,7 +136,7 @@ func (reader *RecordReaderXTAB) processHandle(
 // start or end of file. A single stanza, once parsed, will become a single
 // record.
 func channelizedStanzaScanner(
-	lineScanner *bufio.Scanner,
+	lineReader ILineReader,
 	readerOptions *cli.TReaderOptions,
 	stanzasChannel chan<- *list.List, // list of list of string
 	downstreamDoneChannel <-chan bool, // for mlr head
@@ -150,8 +149,8 @@ func channelizedStanzaScanner(
 	stanzas := list.New()
 	stanza := newStanza()
 
-	for lineScanner.Scan() {
-		line := lineScanner.Text()
+	for lineReader.Scan() {
+		line := lineReader.Text()
 
 		// Check for comments-in-data feature
 		// TODO: function-pointer this away
