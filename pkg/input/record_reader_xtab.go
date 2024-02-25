@@ -137,7 +137,7 @@ func (reader *RecordReaderXTAB) processHandle(
 // start or end of file. A single stanza, once parsed, will become a single
 // record.
 func channelizedStanzaScanner(
-	lineReader *TLineReader,
+	lineReader ILineReader,
 	readerOptions *cli.TReaderOptions,
 	stanzasChannel chan<- *list.List, // list of list of string
 	downstreamDoneChannel <-chan bool, // for mlr head
@@ -152,12 +152,14 @@ func channelizedStanzaScanner(
 
 	for {
 		line, err := lineReader.Read()
-		if err == io.EOF {
-			break
-		}
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr: %#v\n", err)
-			break
+			if lib.IsEOF(err) {
+				done = true
+				break
+			} else {
+				fmt.Fprintf(os.Stderr, "mlr: %#v\n", err)
+				break
+			}
 		}
 
 		// Check for comments-in-data feature

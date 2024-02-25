@@ -202,7 +202,7 @@ func (reader *RecordReaderJSON) processHandle(
 // JSONCommentEnabledReader implements io.Reader to strip comment lines
 // off of CSV data.
 type JSONCommentEnabledReader struct {
-	lineReader    *TLineReader
+	lineReader    ILineReader
 	readerOptions *cli.TReaderOptions
 	context       *types.Context    // Needed for channelized stdout-printing logic
 	readerChannel chan<- *list.List // list of *types.RecordAndContext
@@ -233,12 +233,14 @@ func (bsr *JSONCommentEnabledReader) Read(p []byte) (n int, err error) {
 		return bsr.populateFromLine(p), nil
 	}
 
+	done := false
+
 	// Loop until we can get a non-comment line to pass on, or end of file.
-	for {
+	for !done {
 		// EOF
 		line, err := bsr.lineReader.Read()
 		if err != nil {
-			return 0, err // includes io.EOF
+			return 0, err
 		}
 
 		// Non-comment line
@@ -255,7 +257,12 @@ func (bsr *JSONCommentEnabledReader) Read(p []byte) (n int, err error) {
 			ell.PushBack(types.NewOutputString(line+"\n", bsr.context))
 			bsr.readerChannel <- ell
 		}
+
+		if done {
+			break
+		}
 	}
+	return 0, nil
 }
 
 // populateFromLine is a helper for Read. It takes a full line from the
