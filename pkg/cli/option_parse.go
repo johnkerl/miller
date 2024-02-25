@@ -8,6 +8,7 @@ package cli
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -29,7 +30,7 @@ import (
 //   - IFS/IPS can have escapes like "\x1f" which aren't valid regex literals
 //     so we unhex them. For example, from "\x1f" -- the four bytes '\', 'x', '1', 'f'
 //     -- to the single byte with hex code 0x1f.
-func FinalizeReaderOptions(readerOptions *TReaderOptions) {
+func FinalizeReaderOptions(readerOptions *TReaderOptions) error {
 
 	readerOptions.IFS = lib.UnhexStringLiteral(readerOptions.IFS)
 	readerOptions.IPS = lib.UnhexStringLiteral(readerOptions.IPS)
@@ -57,12 +58,17 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) {
 	readerOptions.IFS = lib.UnbackslashStringLiteral(readerOptions.IFS)
 	readerOptions.IPS = lib.UnbackslashStringLiteral(readerOptions.IPS)
 	readerOptions.IRS = lib.UnbackslashStringLiteral(readerOptions.IRS)
+
+	if readerOptions.IRS == "" {
+		return errors.New("empty IRS")
+	}
+	return nil
 }
 
 // FinalizeWriterOptions unbackslashes OPS, OFS, and ORS.  This is because
 // because the '\n' at the command line which is Go "\\n" (a backslash and an
 // n) needs to become the single newline character., and likewise for "\t", etc.
-func FinalizeWriterOptions(writerOptions *TWriterOptions) {
+func FinalizeWriterOptions(writerOptions *TWriterOptions) error {
 	if !writerOptions.ofsWasSpecified {
 		writerOptions.OFS = defaultFSes[writerOptions.OutputFileFormat]
 	}
@@ -84,6 +90,8 @@ func FinalizeWriterOptions(writerOptions *TWriterOptions) {
 	writerOptions.OFS = lib.UnbackslashStringLiteral(writerOptions.OFS)
 	writerOptions.OPS = lib.UnbackslashStringLiteral(writerOptions.OPS)
 	writerOptions.ORS = lib.UnbackslashStringLiteral(writerOptions.ORS)
+
+	return nil
 }
 
 // ================================================================

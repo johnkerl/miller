@@ -306,8 +306,14 @@ func parseCommandLinePassTwo(
 		return nil, nil, err
 	}
 
-	cli.FinalizeReaderOptions(&options.ReaderOptions)
-	cli.FinalizeWriterOptions(&options.WriterOptions)
+	err = cli.FinalizeReaderOptions(&options.ReaderOptions)
+	if err != nil {
+		return nil, nil, err
+	}
+	err = cli.FinalizeWriterOptions(&options.WriterOptions)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	// Set an optional global formatter for floating-point values
 	if options.WriterOptions.FPOFMT != "" {

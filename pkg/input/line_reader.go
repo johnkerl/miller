@@ -24,12 +24,17 @@ type TLineReader struct {
 func NewLineReader(handle io.Reader, irs string) *TLineReader {
 	underlying := bufio.NewReader(handle)
 
-	// XXX TEMP
+	// Not worth complicating the API by adding an error return.
+	// Empty IRS is checked elsewhere.
+	if len(irs) < 1 {
+		panic("Empty IRS")
+	}
+
 	return &TLineReader{
 		underlying: underlying,
 		irs:        irs,
 		irs_len:    len(irs),
-		end_irs:    irs[0],
+		end_irs:    irs[len(irs)-1],
 	}
 }
 
