@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"fmt"
 	"io"
+	"os"
 	"regexp"
 	"strings"
 
@@ -149,8 +150,17 @@ func channelizedStanzaScanner(
 	stanzas := list.New()
 	stanza := newStanza()
 
-	for lineReader.Scan() {
-		line := lineReader.Text()
+	for {
+		line, err := lineReader.Read()
+		if err != nil {
+			if lib.IsEOF(err) {
+				done = true
+				break
+			} else {
+				fmt.Fprintf(os.Stderr, "mlr: %#v\n", err)
+				break
+			}
+		}
 
 		// Check for comments-in-data feature
 		// TODO: function-pointer this away

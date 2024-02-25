@@ -82,6 +82,7 @@ var SEPARATOR_REGEX_NAMES_TO_VALUES = map[string]string{
 // E.g. if IFS isn't specified, it's space for NIDX and comma for DKVP, etc.
 
 var defaultFSes = map[string]string{
+	"gen":      ",",
 	"csv":      ",",
 	"csvlite":  ",",
 	"dkvp":     ",",
@@ -94,6 +95,7 @@ var defaultFSes = map[string]string{
 }
 
 var defaultPSes = map[string]string{
+	"gen":      "N/A",
 	"csv":      "N/A",
 	"csvlite":  "N/A",
 	"dkvp":     "=",
@@ -106,6 +108,7 @@ var defaultPSes = map[string]string{
 }
 
 var defaultRSes = map[string]string{
+	"gen":      "\n",
 	"csv":      "\n",
 	"csvlite":  "\n",
 	"dkvp":     "\n",
@@ -118,6 +121,7 @@ var defaultRSes = map[string]string{
 }
 
 var defaultAllowRepeatIFSes = map[string]bool{
+	"gen":      false,
 	"csv":      false,
 	"csvlite":  false,
 	"dkvp":     false,

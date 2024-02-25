@@ -233,13 +233,15 @@ func (bsr *JSONCommentEnabledReader) Read(p []byte) (n int, err error) {
 		return bsr.populateFromLine(p), nil
 	}
 
+	done := false
+
 	// Loop until we can get a non-comment line to pass on, or end of file.
-	for {
+	for !done {
 		// EOF
-		if !bsr.lineReader.Scan() {
-			return 0, io.EOF
+		line, err := bsr.lineReader.Read()
+		if err != nil {
+			return 0, err
 		}
-		line := bsr.lineReader.Text()
 
 		// Non-comment line
 		if !strings.HasPrefix(line, bsr.readerOptions.CommentString) {
@@ -255,7 +257,12 @@ func (bsr *JSONCommentEnabledReader) Read(p []byte) (n int, err error) {
 			ell.PushBack(types.NewOutputString(line+"\n", bsr.context))
 			bsr.readerChannel <- ell
 		}
+
+		if done {
+			break
+		}
 	}
+	return 0, nil
 }
 
 // populateFromLine is a helper for Read. It takes a full line from the
