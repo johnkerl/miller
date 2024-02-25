@@ -13,8 +13,7 @@ import (
 )
 
 type ILineReader interface {
-	Scan() (bool, error)
-	Text() string
+	Read() (string, error) // includes io.EOF as non-error "error" case
 }
 
 type TLineReader struct {
@@ -22,8 +21,6 @@ type TLineReader struct {
 	full_irs     string
 	full_irs_len int
 	end_irs      byte
-	staged       string
-	eof          bool
 }
 
 // NewLineReader handles reading lines which may be delimited by multi-line separators,
@@ -37,7 +34,6 @@ func NewLineReader(handle io.Reader, irs string) *TLineReader {
 		full_irs:     irs,
 		full_irs_len: len(irs),
 		end_irs:      irs[0],
-		eof:          false,
 	}
 }
 
@@ -85,41 +81,17 @@ func NewLineReader(handle io.Reader, irs string) *TLineReader {
 //		underlying.Split(recordSplitter)
 //	}
 
-// XXX ERR RET
-func (r *TLineReader) Scan() (bool, error) {
+func (r *TLineReader) Read() (string, error) {
 	line, err := r.underlying.ReadString(r.end_irs)
-	if err == nil {
-		r.staged = line
-		// XXX CHOMP
-		if strings.HasSuffix(line, r.full_irs) {
-			r.staged = line[:len(line)-r.full_irs_len]
-		}
-		r.eof = false
-		return true, nil
-	} else if err == io.EOF {
-		r.staged = ""
-		r.eof = true
-		return false, nil
-	} else {
-		return false, err
+	if err != nil {
+		return "", err
 	}
-}
 
-func (r *TLineReader) Text() string {
-	if r.eof {
-		panic("PORT ME TOO")
+	if strings.HasSuffix(line, r.full_irs) {
+		line = line[:len(line)-r.full_irs_len]
 	}
-	return r.staged
+	return line, nil
 }
-
-//		if err != nil {
-//			fmt.Printf("ERR %v\n", err)
-//			break
-//		}
-//		fmt.Printf("line len %d\n", len(line))
-//	}
-//	fmt.Println("AFTER LOOP")
-//}
 
 // TODO: comment copiously
 //
@@ -137,8 +109,8 @@ func channelizedLineReader(
 	lines := list.New()
 
 	for {
-		eof, err := lineReader.Scan()
-		if eof {
+		line, err := lineReader.Read()
+		if err == io.EOF {
 			break
 		}
 		if err != nil {
@@ -148,7 +120,7 @@ func channelizedLineReader(
 
 		i++
 
-		lines.PushBack(lineReader.Text())
+		lines.PushBack(line)
 
 		// See if downstream processors will be ignoring further data (e.g. mlr
 		// head).  If so, stop reading. This makes 'mlr head hugefile' exit

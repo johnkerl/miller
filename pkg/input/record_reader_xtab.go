@@ -151,15 +151,14 @@ func channelizedStanzaScanner(
 	stanza := newStanza()
 
 	for {
-		eof, err := lineReader.Scan()
-		if eof {
+		line, err := lineReader.Read()
+		if err == io.EOF {
 			break
 		}
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "mlr: %#v\n", err)
 			break
 		}
-		line := lineReader.Text()
 
 		// Check for comments-in-data feature
 		// TODO: function-pointer this away

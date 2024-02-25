@@ -236,14 +236,10 @@ func (bsr *JSONCommentEnabledReader) Read(p []byte) (n int, err error) {
 	// Loop until we can get a non-comment line to pass on, or end of file.
 	for {
 		// EOF
-		eof, err := bsr.lineReader.Scan()
-		if eof {
-			return 0, io.EOF
-		}
+		line, err := bsr.lineReader.Read()
 		if err != nil {
-			return 0, err
+			return 0, err // includes io.EOF
 		}
-		line := bsr.lineReader.Text()
 
 		// Non-comment line
 		if !strings.HasPrefix(line, bsr.readerOptions.CommentString) {
