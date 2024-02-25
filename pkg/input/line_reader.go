@@ -6,21 +6,24 @@ package input
 import (
 	"bufio"
 	"container/list"
+	"fmt"
 	"io"
+	"os"
 	"strings"
 )
 
 type ILineReader interface {
-	Scan() bool
+	Scan() (bool, error)
 	Text() string
 }
 
 type TLineReader struct {
-	underlying *bufio.Reader
-	full_irs string
-	end_irs byte
-	staged string
-	eof bool
+	underlying   *bufio.Reader
+	full_irs     string
+	full_irs_len int
+	end_irs      byte
+	staged       string
+	eof          bool
 }
 
 // NewLineReader handles reading lines which may be delimited by multi-line separators,
@@ -28,8 +31,17 @@ type TLineReader struct {
 func NewLineReader(handle io.Reader, irs string) *TLineReader {
 	underlying := bufio.NewReader(handle)
 
-// XXX TO DO: handle the splitter which bufio.Scanner has but bufio.Reader lacks
+	// XXX TEMP
+	return &TLineReader{
+		underlying:   underlying,
+		full_irs:     irs,
+		full_irs_len: len(irs),
+		end_irs:      irs[0],
+		eof:          false,
+	}
+}
 
+// XXX TO DO: handle the splitter which bufio.Scanner has but bufio.Reader lacks
 //	if irs == "\n" || irs == "\r\n" {
 //		// Handled by default scanner.
 //	} else {
@@ -73,34 +85,23 @@ func NewLineReader(handle io.Reader, irs string) *TLineReader {
 //		underlying.Split(recordSplitter)
 //	}
 
-	// XXX TEMP
-	return &TLineReader{
-		underlying: underlying,
-		full_irs: irs,
-		end_irs: irs[0],
-		eof: false,
-	}
-}
-
 // XXX ERR RET
-func (r *TLineReader) Scan() bool {
+func (r *TLineReader) Scan() (bool, error) {
 	line, err := r.underlying.ReadString(r.end_irs)
 	if err == nil {
 		r.staged = line
 		// XXX CHOMP
 		if strings.HasSuffix(line, r.full_irs) {
-			n := len(line)
-			// XXX CACHE THIS LEN
-			r.staged = line[:n-len(r.full_irs)]
+			r.staged = line[:len(line)-r.full_irs_len]
 		}
 		r.eof = false
-		return true
+		return true, nil
 	} else if err == io.EOF {
 		r.staged = ""
 		r.eof = true
-		return false
+		return false, nil
 	} else {
-		panic("PORT ME")
+		return false, err
 	}
 }
 
@@ -120,7 +121,6 @@ func (r *TLineReader) Text() string {
 //	fmt.Println("AFTER LOOP")
 //}
 
-
 // TODO: comment copiously
 //
 // Lines are written to the channel with their trailing newline (or whatever
@@ -136,7 +136,16 @@ func channelizedLineReader(
 
 	lines := list.New()
 
-	for lineReader.Scan() {
+	for {
+		eof, err := lineReader.Scan()
+		if eof {
+			break
+		}
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "mlr: %#v\n", err)
+			break
+		}
+
 		i++
 
 		lines.PushBack(lineReader.Text())
