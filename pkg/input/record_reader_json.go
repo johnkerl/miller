@@ -1,7 +1,6 @@
 package input
 
 import (
-	"bufio"
 	"container/list"
 	"fmt"
 	"io"
@@ -203,7 +202,7 @@ func (reader *RecordReaderJSON) processHandle(
 // JSONCommentEnabledReader implements io.Reader to strip comment lines
 // off of CSV data.
 type JSONCommentEnabledReader struct {
-	lineScanner   *bufio.Scanner
+	lineReader    ILineReader
 	readerOptions *cli.TReaderOptions
 	context       *types.Context    // Needed for channelized stdout-printing logic
 	readerChannel chan<- *list.List // list of *types.RecordAndContext
@@ -220,7 +219,7 @@ func NewJSONCommentEnabledReader(
 	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 ) *JSONCommentEnabledReader {
 	return &JSONCommentEnabledReader{
-		lineScanner:   bufio.NewScanner(underlying),
+		lineReader:    NewLineReader(underlying, "\n"),
 		readerOptions: readerOptions,
 		context:       types.NewNilContext(),
 		readerChannel: readerChannel,
@@ -237,10 +236,10 @@ func (bsr *JSONCommentEnabledReader) Read(p []byte) (n int, err error) {
 	// Loop until we can get a non-comment line to pass on, or end of file.
 	for {
 		// EOF
-		if !bsr.lineScanner.Scan() {
+		if !bsr.lineReader.Scan() {
 			return 0, io.EOF
 		}
-		line := bsr.lineScanner.Text()
+		line := bsr.lineReader.Text()
 
 		// Non-comment line
 		if !strings.HasPrefix(line, bsr.readerOptions.CommentString) {

@@ -14,64 +14,77 @@ type ILineReader interface {
 	Text() string
 }
 
-// NewLineScanner handles read lines which may be delimited by multi-line separators,
+type TLineReader struct {
+	scanner *bufio.Scanner
+}
+
+// NewLineReader handles reading lines which may be delimited by multi-line separators,
 // e.g. "\xe2\x90\x9e" for USV.
-func NewLineScanner(handle io.Reader, irs string) *bufio.Scanner {
+func NewLineReader(handle io.Reader, irs string) *TLineReader {
 	scanner := bufio.NewScanner(handle)
 
-	// Handled by default scanner.
 	if irs == "\n" || irs == "\r\n" {
-		return scanner
-	}
+		// Handled by default scanner.
+	} else {
+		irsbytes := []byte(irs)
+		irslen := len(irsbytes)
 
-	irsbytes := []byte(irs)
-	irslen := len(irsbytes)
-
-	// Custom splitter
-	recordSplitter := func(
-		data []byte,
-		atEOF bool,
-	) (
-		advance int,
-		token []byte,
-		err error,
-	) {
-		datalen := len(data)
-		end := datalen - irslen
-		for i := 0; i <= end; i++ {
-			if data[i] == irsbytes[0] {
-				match := true
-				for j := 1; j < irslen; j++ {
-					if data[i+j] != irsbytes[j] {
-						match = false
-						break
+		// Custom splitter
+		recordSplitter := func(
+			data []byte,
+			atEOF bool,
+		) (
+			advance int,
+			token []byte,
+			err error,
+		) {
+			datalen := len(data)
+			end := datalen - irslen
+			for i := 0; i <= end; i++ {
+				if data[i] == irsbytes[0] {
+					match := true
+					for j := 1; j < irslen; j++ {
+						if data[i+j] != irsbytes[j] {
+							match = false
+							break
+						}
+					}
+					if match {
+						return i + irslen, data[:i], nil
 					}
 				}
-				if match {
-					return i + irslen, data[:i], nil
-				}
 			}
+			if !atEOF {
+				return 0, nil, nil
+			}
+			// There is one final token to be delivered, which may be the empty string.
+			// Returning bufio.ErrFinalToken here tells Scan there are no more tokens after this
+			// but does not trigger an error to be returned from Scan itself.
+			return 0, data, bufio.ErrFinalToken
 		}
-		if !atEOF {
-			return 0, nil, nil
-		}
-		// There is one final token to be delivered, which may be the empty string.
-		// Returning bufio.ErrFinalToken here tells Scan there are no more tokens after this
-		// but does not trigger an error to be returned from Scan itself.
-		return 0, data, bufio.ErrFinalToken
+
+		scanner.Split(recordSplitter)
 	}
 
-	scanner.Split(recordSplitter)
+	return &TLineReader{
+		scanner: scanner,
+	}
+}
 
-	return scanner
+func (r *TLineReader) Scan() bool {
+	return r.scanner.Scan()
+}
+
+func (r *TLineReader) Text() string {
+	return r.scanner.Text()
 }
 
 // TODO: comment copiously
 //
 // Lines are written to the channel with their trailing newline (or whatever
 // IRS) stripped off. So, callers get "a=1,b=2" rather than "a=1,b=2\n".
-func channelizedLineScanner(
-	lineScanner *bufio.Scanner,
+func channelizedLineReader(
+	lineReader ILineReader,
 	linesChannel chan<- *list.List,
 	downstreamDoneChannel <-chan bool, // for mlr head
 	recordsPerBatch int64,
@@ -81,10 +94,10 @@ func channelizedLineScanner(
 
 	lines := list.New()
 
-	for lineScanner.Scan() {
+	for lineReader.Scan() {
 		i++
 
-		lines.PushBack(lineScanner.Text())
+		lines.PushBack(lineReader.Text())
 
 		// See if downstream processors will be ignoring further data (e.g. mlr
 		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
