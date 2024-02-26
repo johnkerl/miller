@@ -58,7 +58,7 @@ package mlrval
 // Both these figures are for just doing mlr cat. At the moment I'm leaving this
 // default-on pending more profiling on more complex record-processing operations
 // such as mlr sort.
-var hashRecords = false
+var hashRecords = true
 
 func HashRecords(onOff bool) {
 	hashRecords = onOff
