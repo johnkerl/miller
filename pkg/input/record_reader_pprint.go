@@ -98,16 +98,16 @@ func (reader *RecordReaderPprintBarredOrMarkdown) Read(
 			)
 			if err != nil {
 				errorChannel <- err
-				return
+			} else {
+				reader.processHandle(
+					handle,
+					"(stdin)",
+					&context,
+					readerChannel,
+					errorChannel,
+					downstreamDoneChannel,
+				)
 			}
-			reader.processHandle(
-				handle,
-				"(stdin)",
-				&context,
-				readerChannel,
-				errorChannel,
-				downstreamDoneChannel,
-			)
 		} else {
 			for _, filename := range filenames {
 				handle, err := lib.OpenFileForRead(
@@ -118,17 +118,17 @@ func (reader *RecordReaderPprintBarredOrMarkdown) Read(
 				)
 				if err != nil {
 					errorChannel <- err
-					return
+				} else {
+					reader.processHandle(
+						handle,
+						filename,
+						&context,
+						readerChannel,
+						errorChannel,
+						downstreamDoneChannel,
+					)
+					handle.Close()
 				}
-				reader.processHandle(
-					handle,
-					filename,
-					&context,
-					readerChannel,
-					errorChannel,
-					downstreamDoneChannel,
-				)
-				handle.Close()
 			}
 		}
 	}

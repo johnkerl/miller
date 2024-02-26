@@ -71,8 +71,9 @@ func (reader *RecordReaderXTAB) Read(
 			)
 			if err != nil {
 				errorChannel <- err
+			} else {
+				reader.processHandle(handle, "(stdin)", &context, readerChannel, errorChannel, downstreamDoneChannel)
 			}
-			reader.processHandle(handle, "(stdin)", &context, readerChannel, errorChannel, downstreamDoneChannel)
 		} else {
 			for _, filename := range filenames {
 				handle, err := lib.OpenFileForRead(
