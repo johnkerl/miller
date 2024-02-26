@@ -10,8 +10,8 @@
 //
 // * It keeps a doubly-linked list of key-value pairs.
 //
-// * By default, no hash functions are computed when the map is written to or
-//   read from.
+// * With hash-records set to false, no hash functions are computed when the map
+//   is written to or read from.
 //
 // * Gets are implemented by sequential scan through the list: given a key,
 //   the key-value pairs are scanned through until a match is (or is not) found.
@@ -19,6 +19,10 @@
 // * Performance improvement of 25% percent over hash-mapping from key to entry
 //   was found in the Go implementation. Test data was million-line CSV and
 //   DKVP, with a dozen columns or so.
+//
+// * However, with higher column-count (see https://github.com/johnkerl/miller/issues/1506
+//   and https://github.com/johnkerl/miller/pull/1507), non-hashing becomes
+//   a substantial penalty.
 //
 // Note however that an auxiliary constructor is provided which does use
 // a key-to-entry hashmap in place of linear search for get/put/has/delete.
@@ -53,12 +57,11 @@
 
 package mlrval
 
-// For the C port having this off was a noticeable performance improvement (10-15%).
-// For the Go port having it off is a less-noticeable performance improvement (5%).
-// Both these figures are for just doing mlr cat. At the moment I'm leaving this
-// default-on pending more profiling on more complex record-processing operations
-// such as mlr sort.
-var hashRecords = false
+// As noted above, hashing has a minor penalty for low column count: computing
+// hashmaps takes more time than is saved later on. But for higher column-count,
+// non-hashing has a huge penalty.  Therefore we default to on. And users can
+// use `mlr --no-hash-records` or `mlr --hash-records` to flip the behavior.
+var hashRecords = true
 
 func HashRecords(onOff bool) {
 	hashRecords = onOff
@@ -70,9 +73,7 @@ type Mlrmap struct {
 	Head       *MlrmapEntry
 	Tail       *MlrmapEntry
 
-	// Surprisingly, using this costs about 25% for cat/cut/etc tests
-	// on million-line data files (CSV, DKVP) with a dozen or so columns.
-	// So, the constructor allows callsites to use it, or not.
+	// This can be nil if hashRecords is off.
 	keysToEntries map[string]*MlrmapEntry
 }
 
