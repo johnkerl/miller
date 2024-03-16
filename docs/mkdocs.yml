@@ -118,3 +118,4 @@ nav:
 markdown_extensions:
 - toc:
       permalink: true
+
