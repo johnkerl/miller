@@ -274,8 +274,6 @@ array will have [null-gaps](reference-main-arrays.md) in it:
     "value": 54
   }
 ]
-[
-]
 </pre>
 
 You can index `@records` by `@count` rather than `NR` to get a contiguous array:
