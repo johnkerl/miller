@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2024-02-18
+.\"      Date: 2024-03-16
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2024-02-18" "\ \&" "\ \&"
+.TH "MILLER" "1" "2024-03-16" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -936,6 +936,7 @@ Notes about all other separators:
         csv      ","    N/A    "\en"
         csvlite  ","    N/A    "\en"
         dkvp     ","    "="    "\en"
+        gen      ","    N/A    "\en"
         json     N/A    N/A    N/A
         markdown " "    N/A    "\en"
         nidx     " "    N/A    "\en"
@@ -1314,6 +1315,10 @@ Options:
 .\}
 .nf
 Usage: mlr filter [options] {DSL expression}
+Lets you use a domain-specific language to progamatically filter which
+stream records will be output.
+See also: https://miller.readthedocs.io/en/latest/reference-verbs
+
 Options:
 -f {file name} File containing a DSL expression (see examples below). If the filename
    is a directory, all *.mlr files in that directory are loaded.
@@ -1899,6 +1904,9 @@ Options:
 .\}
 .nf
 Usage: mlr put [options] {DSL expression}
+Lets you use a domain-specific language to progamatically alter stream records.
+See also: https://miller.readthedocs.io/en/latest/reference-verbs
+
 Options:
 -f {file name} File containing a DSL expression (see examples below). If the filename
    is a directory, all *.mlr files in that directory are loaded.

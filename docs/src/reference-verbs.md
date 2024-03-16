@@ -970,6 +970,10 @@ a,b,c
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr filter [options] {DSL expression}
+Lets you use a domain-specific language to progamatically filter which
+stream records will be output.
+See also: https://miller.readthedocs.io/en/latest/reference-verbs
+
 Options:
 -f {file name} File containing a DSL expression (see examples below). If the filename
    is a directory, all *.mlr files in that directory are loaded.
@@ -2301,6 +2305,9 @@ Options:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr put [options] {DSL expression}
+Lets you use a domain-specific language to progamatically alter stream records.
+See also: https://miller.readthedocs.io/en/latest/reference-verbs
+
 Options:
 -f {file name} File containing a DSL expression (see examples below). If the filename
    is a directory, all *.mlr files in that directory are loaded.
