@@ -477,6 +477,7 @@ Notes about all other separators:
         csv      ","    N/A    "\n"
         csvlite  ","    N/A    "\n"
         dkvp     ","    "="    "\n"
+        gen      ","    N/A    "\n"
         json     N/A    N/A    N/A
         markdown " "    N/A    "\n"
         nidx     " "    N/A    "\n"

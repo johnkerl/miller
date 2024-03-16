@@ -52,6 +52,14 @@ func transformerPutOrFilterUsage(
 	verb string,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {DSL expression}\n", "mlr", verb)
+	if verb == "put" {
+		fmt.Fprintf(o, "Lets you use a domain-specific language to progamatically alter stream records.\n")
+	} else if verb == "filter" {
+		fmt.Fprintf(o, "Lets you use a domain-specific language to progamatically filter which\n")
+		fmt.Fprintf(o, "stream records will be output.\n")
+	}
+	fmt.Fprintf(o, "See also: https://miller.readthedocs.io/en/latest/reference-verbs\n")
+	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o,
 		`-f {file name} File containing a DSL expression (see examples below). If the filename

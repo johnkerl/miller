@@ -804,6 +804,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                csv      ","    N/A    "\n"
                csvlite  ","    N/A    "\n"
                dkvp     ","    "="    "\n"
+               gen      ","    N/A    "\n"
                json     N/A    N/A    N/A
                markdown " "    N/A    "\n"
                nidx     " "    N/A    "\n"
@@ -1072,6 +1073,10 @@ This is simply a copy of what you should see on running `man mlr` at a command p
 
    1mfilter0m
        Usage: mlr filter [options] {DSL expression}
+       Lets you use a domain-specific language to progamatically filter which
+       stream records will be output.
+       See also: https://miller.readthedocs.io/en/latest/reference-verbs
+
        Options:
        -f {file name} File containing a DSL expression (see examples below). If the filename
           is a directory, all *.mlr files in that directory are loaded.
@@ -1525,6 +1530,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
 
    1mput0m
        Usage: mlr put [options] {DSL expression}
+       Lets you use a domain-specific language to progamatically alter stream records.
+       See also: https://miller.readthedocs.io/en/latest/reference-verbs
+
        Options:
        -f {file name} File containing a DSL expression (see examples below). If the filename
           is a directory, all *.mlr files in that directory are loaded.
@@ -3704,5 +3712,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2024-02-18                         4mMILLER24m(1)
+                                  2024-03-16                         4mMILLER24m(1)
 </pre>
