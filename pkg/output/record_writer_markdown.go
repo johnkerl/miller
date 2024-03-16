@@ -7,6 +7,7 @@ import (
 	"github.com/johnkerl/miller/pkg/cli"
 	"github.com/johnkerl/miller/pkg/colorizer"
 	"github.com/johnkerl/miller/pkg/mlrval"
+	"github.com/johnkerl/miller/pkg/types"
 )
 
 type RecordWriterMarkdown struct {
@@ -29,6 +30,7 @@ func NewRecordWriterMarkdown(writerOptions *cli.TWriterOptions) (*RecordWriterMa
 // ----------------------------------------------------------------
 func (writer *RecordWriterMarkdown) Write(
 	outrec *mlrval.Mlrmap,
+	_ *types.Context,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) error {

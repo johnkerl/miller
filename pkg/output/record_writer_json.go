@@ -7,6 +7,7 @@ import (
 
 	"github.com/johnkerl/miller/pkg/cli"
 	"github.com/johnkerl/miller/pkg/mlrval"
+	"github.com/johnkerl/miller/pkg/types"
 )
 
 // ----------------------------------------------------------------
@@ -17,7 +18,7 @@ type RecordWriterJSON struct {
 	jvQuoteAll     bool
 
 	// State:
-	onFirst bool
+	wroteAnyRecords bool
 }
 
 // ----------------------------------------------------------------
@@ -27,16 +28,17 @@ func NewRecordWriterJSON(writerOptions *cli.TWriterOptions) (*RecordWriterJSON, 
 		jsonFormatting = mlrval.JSON_MULTILINE
 	}
 	return &RecordWriterJSON{
-		writerOptions:  writerOptions,
-		jsonFormatting: jsonFormatting,
-		jvQuoteAll:     writerOptions.JVQuoteAll,
-		onFirst:        true,
+		writerOptions:   writerOptions,
+		jsonFormatting:  jsonFormatting,
+		jvQuoteAll:      writerOptions.JVQuoteAll,
+		wroteAnyRecords: false,
 	}, nil
 }
 
 // ----------------------------------------------------------------
 func (writer *RecordWriterJSON) Write(
 	outrec *mlrval.Mlrmap,
+	context *types.Context,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) error {
@@ -45,9 +47,9 @@ func (writer *RecordWriterJSON) Write(
 	}
 
 	if writer.writerOptions.WrapJSONOutputInOuterList {
-		writer.writeWithListWrap(outrec, bufferedOutputStream, outputIsStdout)
+		writer.writeWithListWrap(outrec, context, bufferedOutputStream, outputIsStdout)
 	} else {
-		writer.writeWithoutListWrap(outrec, bufferedOutputStream, outputIsStdout)
+		writer.writeWithoutListWrap(outrec, context, bufferedOutputStream, outputIsStdout)
 	}
 	return nil
 }
@@ -55,11 +57,12 @@ func (writer *RecordWriterJSON) Write(
 // ----------------------------------------------------------------
 func (writer *RecordWriterJSON) writeWithListWrap(
 	outrec *mlrval.Mlrmap,
+	context *types.Context,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
 	if outrec != nil { // Not end of record stream
-		if writer.onFirst {
+		if !writer.wroteAnyRecords {
 			bufferedOutputStream.WriteString("[\n")
 		}
 
@@ -71,25 +74,32 @@ func (writer *RecordWriterJSON) writeWithListWrap(
 			os.Exit(1)
 		}
 
-		if !writer.onFirst {
+		if writer.wroteAnyRecords {
 			bufferedOutputStream.WriteString(",\n")
 		}
 
 		bufferedOutputStream.WriteString(s)
 
-		writer.onFirst = false
+		writer.wroteAnyRecords = true
 
 	} else { // End of record stream
-		if writer.onFirst { // zero records in the entire output stream
-			bufferedOutputStream.WriteString("[")
+
+		if !writer.wroteAnyRecords {
+			if context.JSONHadBrackets {
+				bufferedOutputStream.WriteString("[")
+				bufferedOutputStream.WriteString("\n]\n")
+			}
+		} else {
+			bufferedOutputStream.WriteString("\n]\n")
 		}
-		bufferedOutputStream.WriteString("\n]\n")
+
 	}
 }
 
 // ----------------------------------------------------------------
 func (writer *RecordWriterJSON) writeWithoutListWrap(
 	outrec *mlrval.Mlrmap,
+	_ *types.Context,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {

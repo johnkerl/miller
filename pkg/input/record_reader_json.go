@@ -17,6 +17,8 @@ import (
 type RecordReaderJSON struct {
 	readerOptions   *cli.TReaderOptions
 	recordsPerBatch int64 // distinct from readerOptions.RecordsPerBatch for join/repl
+	// XXX 1513
+	sawBrackets bool
 }
 
 func NewRecordReaderJSON(
@@ -65,6 +67,7 @@ func (reader *RecordReaderJSON) Read(
 			}
 		}
 	}
+	context.JSONHadBrackets = reader.sawBrackets
 	readerChannel <- types.NewEndOfStreamMarkerList(&context)
 }
 
@@ -137,6 +140,9 @@ func (reader *RecordReaderJSON) processHandle(
 			}
 
 		} else if mlrval.IsArray() {
+
+			reader.sawBrackets = true
+
 			records := mlrval.GetArray()
 			if records == nil {
 				errorChannel <- fmt.Errorf("internal coding error detected in JSON record-reader")

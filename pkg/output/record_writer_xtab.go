@@ -8,6 +8,7 @@ import (
 	"github.com/johnkerl/miller/pkg/cli"
 	"github.com/johnkerl/miller/pkg/colorizer"
 	"github.com/johnkerl/miller/pkg/mlrval"
+	"github.com/johnkerl/miller/pkg/types"
 )
 
 // ----------------------------------------------------------------
@@ -43,6 +44,7 @@ func NewRecordWriterXTAB(writerOptions *cli.TWriterOptions) (*RecordWriterXTAB, 
 
 func (writer *RecordWriterXTAB) Write(
 	outrec *mlrval.Mlrmap,
+	_ *types.Context,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) error {

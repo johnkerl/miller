@@ -9,6 +9,7 @@ import (
 	"github.com/johnkerl/miller/pkg/colorizer"
 	"github.com/johnkerl/miller/pkg/lib"
 	"github.com/johnkerl/miller/pkg/mlrval"
+	"github.com/johnkerl/miller/pkg/types"
 )
 
 type RecordWriterTSV struct {
@@ -35,6 +36,7 @@ func NewRecordWriterTSV(writerOptions *cli.TWriterOptions) (*RecordWriterTSV, er
 
 func (writer *RecordWriterTSV) Write(
 	outrec *mlrval.Mlrmap,
+	_ *types.Context,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) error {
