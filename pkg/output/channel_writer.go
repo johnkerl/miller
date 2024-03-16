@@ -66,6 +66,7 @@ func channelWriterHandleBatch(
 
 		if !recordAndContext.EndOfStream {
 			record := recordAndContext.Record
+			context := &recordAndContext.Context
 
 			// XXX more
 			// XXX also make sure this results in exit 1 & goroutine cleanup
@@ -94,7 +95,7 @@ func channelWriterHandleBatch(
 			}
 
 			if record != nil {
-				err := recordWriter.Write(record, bufferedOutputStream, outputIsStdout)
+				err := recordWriter.Write(record, context, bufferedOutputStream, outputIsStdout)
 				if err != nil {
 					fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 					return true, true
@@ -115,7 +116,8 @@ func channelWriterHandleBatch(
 			// queued up. For example, PPRINT needs to see all same-schema
 			// records before printing any, since it needs to compute max width
 			// down columns.
-			err := recordWriter.Write(nil, bufferedOutputStream, outputIsStdout)
+			context := &recordAndContext.Context
+			err := recordWriter.Write(nil, context, bufferedOutputStream, outputIsStdout)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				return true, true

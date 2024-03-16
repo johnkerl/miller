@@ -4,6 +4,7 @@ import (
 	"bufio"
 
 	"github.com/johnkerl/miller/pkg/mlrval"
+	"github.com/johnkerl/miller/pkg/types"
 )
 
 // IRecordWriter is the abstract interface for all record-writers.  They are
@@ -18,6 +19,7 @@ import (
 type IRecordWriter interface {
 	Write(
 		outrec *mlrval.Mlrmap,
+		context *types.Context,
 		bufferedOutputStream *bufio.Writer,
 		outputIsStdout bool,
 	) error

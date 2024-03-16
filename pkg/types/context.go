@@ -99,6 +99,9 @@ type Context struct {
 	// NF int
 	NR  int64
 	FNR int64
+
+	// XXX 1513
+	JSONHadBrackets bool
 }
 
 // TODO: comment: Remember command-line values to pass along to CST evaluators.

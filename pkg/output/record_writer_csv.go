@@ -9,6 +9,7 @@ import (
 
 	"github.com/johnkerl/miller/pkg/cli"
 	"github.com/johnkerl/miller/pkg/mlrval"
+	"github.com/johnkerl/miller/pkg/types"
 )
 
 type RecordWriterCSV struct {
@@ -41,6 +42,7 @@ func NewRecordWriterCSV(writerOptions *cli.TWriterOptions) (*RecordWriterCSV, er
 
 func (writer *RecordWriterCSV) Write(
 	outrec *mlrval.Mlrmap,
+	_ *types.Context,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) error {
