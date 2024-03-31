@@ -134,6 +134,40 @@ type TWriterOptions struct {
 	// (all but JSON) -- unless the user explicitly asks to suppress that.
 	AutoFlatten bool
 
+	// Default CSV/TSV:
+	//   a=1,b=2,c=3
+	//   a=4,b=5
+	// leads to
+	//   a,b,c
+	//   1 2,3
+	//   4,5, <-- note trailing empty field
+	// and
+	//   a=1,b=2,c=3
+	//   d=4,e=5
+	// leads to
+	//   fatal error
+	//
+	// With this flag:
+	//   a=1,b=2,c=3
+	//   a=4,b=5
+	// leads to
+	//   a,b,c
+	//   1 2,3
+	//
+	//   a,b
+	//   4,5
+	//
+	// and
+	//   a=1,b=2,c=3
+	//   d=4,e=5
+	// leads to
+	//   a,b,c
+	//   1,2,3
+	//
+	//   d,e
+	//   4,5
+	NoAutoUnsparsify bool
+
 	// For floating-point numbers: "" means use the Go default.
 	FPOFMT string
 

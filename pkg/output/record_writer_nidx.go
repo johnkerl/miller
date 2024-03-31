@@ -24,8 +24,8 @@ func (writer *RecordWriterNIDX) Write(
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) error {
-	// End of record stream: nothing special for this output format
 	if outrec == nil {
+		// End of record stream: nothing special for this output format
 		return nil
 	}
 
