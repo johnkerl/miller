@@ -460,7 +460,7 @@ var JSONOnlyFlagSection = FlagSection{
 
 		{
 			name: "--no-jlistwrap",
-			help: "Wrap JSON output in outermost `[ ]`. This is the default for JSON Lines output format.",
+			help: "Do not wrap JSON output in outermost `[ ]`. This is the default for JSON Lines output format.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.WrapJSONOutputInOuterList = false
 				*pargi += 1
