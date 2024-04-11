@@ -2393,8 +2393,8 @@ var CSVTSVOnlyFlagSection = FlagSection{
 		},
 
 		{
-			name:     "--no-auto-unsparsify",
-			help:     "For CSV/TSV output: if the record keys change from one row to another, emit a blank line and a new header line. This is non-compliant with RFC 4180 but it helpful for heterogeneous data.",
+			name: "--no-auto-unsparsify",
+			help: "For CSV/TSV output: if the record keys change from one row to another, emit a blank line and a new header line. This is non-compliant with RFC 4180 but it helpful for heterogeneous data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.NoAutoUnsparsify = true
 				*pargi += 1

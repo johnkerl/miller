@@ -19,7 +19,9 @@ Quick links:
 This is simply a copy of what you should see on running `man mlr` at a command prompt, once Miller is installed on your system.
 
 <pre class="pre-non-highlight-non-pair">
-4mMILLER24m(1)                                                            4mMILLER24m(1)
+MILLER(1)                                                            MILLER(1)
+
+
 
 1mNAME0m
        Miller -- like awk, sed, cut, join, and sort for name-indexed data such
@@ -338,6 +340,10 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                                 recreate missing headers.
        --lazy-quotes            Accepts quotes appearing in unquoted fields, and
                                 non-doubled quotes appearing in quoted fields.
+       --no-auto-unsparsify     For CSV/TSV output: if the record keys change from
+                                one row to another, emit a blank line and a new
+                                header line. This is non-compliant with RFC 4180 but
+                                it helpful for heterogeneous data.
        --no-implicit-csv-header or --no-implicit-tsv-header
                                 Opposite of `--implicit-csv-header`. This is the
                                 default anyway -- the main use is for the flags to
@@ -468,8 +474,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        --jvstack                Put one key-value pair per line for JSON output
                                 (multi-line output). This is the default for JSON
                                 output format.
-       --no-jlistwrap           Wrap JSON output in outermost `[ ]`. This is the
-                                default for JSON Lines output format.
+       --no-jlistwrap           Do not wrap JSON output in outermost `[ ]`. This is
+                                the default for JSON Lines output format.
        --no-jvstack             Put objects/arrays all on one line for JSON output.
                                 This is the default for JSON Lines output format.
 
@@ -809,7 +815,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                markdown " "    N/A    "\n"
                nidx     " "    N/A    "\n"
                pprint   " "    N/A    "\n"
-               tsv      "     "    N/A    "\n"
+               tsv      "  "    N/A    "\n"
                xtab     "\n"   " "    "\n\n"
 
        --fs {string}            Specify FS for input and output.
@@ -3712,5 +3718,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2024-03-16                         4mMILLER24m(1)
+
+
+                                  2024-04-11                         MILLER(1)
 </pre>
