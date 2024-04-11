@@ -460,7 +460,7 @@ var JSONOnlyFlagSection = FlagSection{
 
 		{
 			name: "--no-jlistwrap",
-			help: "Wrap JSON output in outermost `[ ]`. This is the default for JSON Lines output format.",
+			help: "Do not wrap JSON output in outermost `[ ]`. This is the default for JSON Lines output format.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.WrapJSONOutputInOuterList = false
 				*pargi += 1
@@ -2388,6 +2388,15 @@ var CSVTSVOnlyFlagSection = FlagSection{
 			help:     "If a data line has fewer fields than the header line, fill remaining keys with empty string. If a data line has more fields than the header line, use integer field labels as in the implicit-header case.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.AllowRaggedCSVInput = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--no-auto-unsparsify",
+			help: "For CSV/TSV output: if the record keys change from one row to another, emit a blank line and a new header line. This is non-compliant with RFC 4180 but it helpful for heterogeneous data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.NoAutoUnsparsify = true
 				*pargi += 1
 			},
 		},

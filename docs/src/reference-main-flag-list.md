@@ -123,6 +123,7 @@ These are flags which are applicable to CSV format.
 * `--headerless-csv-output or --ho or --headerless-tsv-output`: Print only CSV/TSV data lines; do not print CSV/TSV header lines.
 * `--implicit-csv-header or --headerless-csv-input or --hi or --implicit-tsv-header`: Use 1,2,3,... as field labels, rather than from line 1 of input files. Tip: combine with `label` to recreate missing headers.
 * `--lazy-quotes`: Accepts quotes appearing in unquoted fields, and non-doubled quotes appearing in quoted fields.
+* `--no-auto-unsparsify`: For CSV/TSV output: if the record keys change from one row to another, emit a blank line and a new header line. This is non-compliant with RFC 4180 but it helpful for heterogeneous data.
 * `--no-implicit-csv-header or --no-implicit-tsv-header`: Opposite of `--implicit-csv-header`. This is the default anyway -- the main use is for the flags to `mlr join` if you have main file(s) which are headerless but you want to join in on a file which does have a CSV/TSV header. Then you could use `mlr --csv --implicit-csv-header join --no-implicit-csv-header -l your-join-in-with-header.csv ... your-headerless.csv`.
 * `--quote-all`: Force double-quoting of CSV fields.
 * `-N`: Keystroke-saver for `--implicit-csv-header --headerless-csv-output`.
@@ -234,7 +235,7 @@ These are flags which are applicable to JSON output format.
 * `--jlistwrap or --jl`: Wrap JSON output in outermost `[ ]`. This is the default for JSON output format.
 * `--jvquoteall`: Force all JSON values -- recursively into lists and object -- to string.
 * `--jvstack`: Put one key-value pair per line for JSON output (multi-line output). This is the default for JSON output format.
-* `--no-jlistwrap`: Wrap JSON output in outermost `[ ]`. This is the default for JSON Lines output format.
+* `--no-jlistwrap`: Do not wrap JSON output in outermost `[ ]`. This is the default for JSON Lines output format.
 * `--no-jvstack`: Put objects/arrays all on one line for JSON output. This is the default for JSON Lines output format.
 
 ## Legacy flags
