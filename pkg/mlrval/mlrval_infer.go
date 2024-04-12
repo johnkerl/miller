@@ -34,7 +34,7 @@ func SetInferrerOctalAsInt() {
 	packageLevelInferrer = inferWithOctalAsInt
 }
 
-// SetInferrerStringOnly is for mlr -A.
+// SetInferrerIntAsFloat is for mlr -F.
 func SetInferrerIntAsFloat() {
 	packageLevelInferrer = inferWithIntAsFloat
 }
