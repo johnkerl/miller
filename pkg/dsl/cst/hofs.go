@@ -875,7 +875,7 @@ func sortAF(
 	return mlrval.FromArray(outputArray)
 }
 
-// sortAF implements sort on arrays with callback UDF.
+// sortMF implements sort on arrays with callback UDF.
 func sortMF(
 	input1 *mlrval.Mlrval,
 	input2 *mlrval.Mlrval,
