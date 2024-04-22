@@ -308,7 +308,7 @@ func (tr *TransformerSubs) fieldAcceptorByNames(
 	return tr.fieldNamesSet[fieldName]
 }
 
-// fieldAcceptorByNames implements -r
+// fieldAcceptorByRegexes implements -r
 func (tr *TransformerSubs) fieldAcceptorByRegexes(
 	fieldName string,
 ) bool {
@@ -320,7 +320,7 @@ func (tr *TransformerSubs) fieldAcceptorByRegexes(
 	return false
 }
 
-// fieldAcceptorByNames implements -a
+// fieldAcceptorAll implements -a
 func (tr *TransformerSubs) fieldAcceptorAll(
 	fieldName string,
 ) bool {

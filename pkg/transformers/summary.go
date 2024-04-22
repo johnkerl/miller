@@ -427,7 +427,7 @@ func (tr *TransformerSummary) emitTransposed(
 
 // ----------------------------------------------------------------
 
-// maybeEmitPercentileNameTransposed is a helper method for emitTransposed,
+// maybeEmitAccumulatorTransposed is a helper method for emitTransposed,
 // for "count", "sum", "mean", etc.
 func (tr *TransformerSummary) maybeEmitAccumulatorTransposed(
 	oracs *list.List, // list of *types.RecordAndContext
