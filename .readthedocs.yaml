@@ -17,3 +17,5 @@ python:
 
 mkdocs:
   configuration: docs/mkdocs.yml
+
+formats: all
