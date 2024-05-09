@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2024-04-11
+.\"      Date: 2024-05-09
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2024-04-11" "\ \&" "\ \&"
+.TH "MILLER" "1" "2024-05-09" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -251,7 +251,7 @@ nsec2gmt nsec2gmtdate nsec2localdate nsec2localtime null_count os percentile
 percentiles pow qnorm reduce regextract regextract_or_else rightpad round
 roundm rstrip sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime
 select sgn sha1 sha256 sha512 sin sinh skewness sort sort_collection splita
-splitax splitkv splitkvx splitnv splitnvx sqrt ssub stddev strfntime
+splitax splitkv splitkvx splitnv splitnvx sqrt ssub stat stddev strfntime
 strfntime_local strftime strftime_local string strip strlen strmatch strmatchx
 strpntime strpntime_local strptime strptime_local sub substr substr0 substr1
 sum sum2 sum3 sum4 sysntime system systime systimeint tan tanh tolower toupper
@@ -4599,6 +4599,24 @@ splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
  (class=string #args=3) Like sub but does no regexing. No characters are special.
 Example:
 ssub("abc.def", ".", "X") gives "abcXdef"
+.fi
+.if n \{\
+.RE
+.SS "stat"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=system #args=1) Returns a map containing information about the provided path: "name" with string value, "size" as decimal int value, "mode" as octal int value, "modtime" as int-valued epoch seconds, and "isdir" as boolean value.
+Examples:
+stat("./mlr") gives {
+  "name": "mlr",
+  "size": 38391584,
+  "mode": 0755,
+  "modtime": 1715207874,
+  "isdir": false
+}
+stat("./mlr")["size"] gives 38391584
 .fi
 .if n \{\
 .RE

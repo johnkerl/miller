@@ -1,0 +1,12 @@
+[
+{
+  "path": "test/cases/dsl-stat/0001/input.csv",
+  "name": "input.csv",
+  "isdir": false
+},
+{
+  "path": "test/cases/dsl-stat/0001/",
+  "name": "0001",
+  "isdir": true
+}
+]

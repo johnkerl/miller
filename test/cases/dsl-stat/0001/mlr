@@ -1,0 +1,3 @@
+s = stat($path);
+$name  = s["name"];
+$isdir = s["isdir"];

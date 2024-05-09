@@ -2488,6 +2488,23 @@ Run a command via executable, path, args and environment, yielding its stdout mi
 		},
 
 		{
+			name:      "stat",
+			class:     FUNC_CLASS_SYSTEM,
+			help:      `Returns a map containing information about the provided path: "name" with string value, "size" as decimal int value, "mode" as octal int value, "modtime" as int-valued epoch seconds, and "isdir" as boolean value.`,
+			unaryFunc: bifs.BIF_stat,
+			examples: []string{
+				`stat("./mlr") gives {`,
+				`  "name": "mlr",`,
+				`  "size": 38391584,`,
+				`  "mode": 0755,`,
+				`  "modtime": 1715207874,`,
+				`  "isdir": false`,
+				`}`,
+				`stat("./mlr")["size"] gives 38391584`,
+			},
+		},
+
+		{
 			name:     "version",
 			class:    FUNC_CLASS_SYSTEM,
 			help:     `Returns the Miller version as a string.`,
