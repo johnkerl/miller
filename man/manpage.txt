@@ -204,7 +204,7 @@ MILLER(1)                                                            MILLER(1)
        percentiles pow qnorm reduce regextract regextract_or_else rightpad round
        roundm rstrip sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime
        select sgn sha1 sha256 sha512 sin sinh skewness sort sort_collection splita
-       splitax splitkv splitkvx splitnv splitnvx sqrt ssub stddev strfntime
+       splitax splitkv splitkvx splitnv splitnvx sqrt ssub stat stddev strfntime
        strfntime_local strftime strftime_local string strip strlen strmatch strmatchx
        strpntime strpntime_local strptime strptime_local sub substr substr0 substr1
        sum sum2 sum3 sum4 sysntime system systime systimeint tan tanh tolower toupper
@@ -2969,6 +2969,18 @@ MILLER(1)                                                            MILLER(1)
        Example:
        ssub("abc.def", ".", "X") gives "abcXdef"
 
+   1mstat0m
+        (class=system #args=1) Returns a map containing information about the provided path: "name" with string value, "size" as decimal int value, "mode" as octal int value, "modtime" as int-valued epoch seconds, and "isdir" as boolean value.
+       Examples:
+       stat("./mlr") gives {
+         "name": "mlr",
+         "size": 38391584,
+         "mode": 0755,
+         "modtime": 1715207874,
+         "isdir": false
+       }
+       stat("./mlr")["size"] gives 38391584
+
    1mstddev0m
         (class=stats #args=1) Returns the sample standard deviation of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
        Example:
@@ -3699,4 +3711,4 @@ MILLER(1)                                                            MILLER(1)
 
 
 
-                                  2024-04-11                         MILLER(1)
+                                  2024-05-09                         MILLER(1)
