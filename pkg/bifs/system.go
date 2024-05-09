@@ -102,3 +102,25 @@ func BIF_exec(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	outputString := strings.TrimRight(string(outputBytes), "\n")
 	return mlrval.FromString(outputString)
 }
+
+func BIF_stat(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	if !input1.IsStringOrVoid() {
+		return mlrval.FromNotStringError("system", input1)
+	}
+	path := input1.AcquireStringValue()
+
+	fileInfo, err := os.Stat(path)
+
+	if err != nil {
+		return mlrval.FromError(err)
+	}
+
+	output := mlrval.NewMlrmap()
+	output.PutReference("name", mlrval.FromString(fileInfo.Name()))
+	output.PutReference("size", mlrval.FromInt(fileInfo.Size()))
+	output.PutReference("mode", mlrval.FromIntShowingOctal(int64(fileInfo.Mode())))
+	output.PutReference("modtime", mlrval.FromInt(fileInfo.ModTime().UTC().Unix()))
+	output.PutReference("isdir", mlrval.FromBool(fileInfo.IsDir()))
+
+	return mlrval.FromMap(output)
+}

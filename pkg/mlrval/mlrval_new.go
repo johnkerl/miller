@@ -197,6 +197,15 @@ func FromInt(input int64) *Mlrval {
 	}
 }
 
+func FromIntShowingOctal(input int64) *Mlrval {
+	return &Mlrval{
+		mvtype:        MT_INT,
+		printrepValid: true,
+		printrep:      fmt.Sprintf("0%o", input),
+		intf:          input,
+	}
+}
+
 // TryFromIntString is used by the mlrval Formatter (fmtnum DSL function,
 // format-values verb, etc).  Each mlrval has printrep and a printrepValid for
 // its original string, then a type-code like MT_INT or MT_FLOAT, and
