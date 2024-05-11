@@ -555,6 +555,7 @@ Options:
   antimode Find least-frequently-occurring values for fields; first-found wins tie
   sum      Compute sums of specified fields
   mean     Compute averages (sample means) of specified fields
+  mad      Compute mean absolute deviation
   var      Compute sample variance of specified fields
   stddev   Compute sample standard deviation of specified fields
   meaneb   Estimate error bars for averages (assuming no sample autocorrelation)
@@ -1075,6 +1076,7 @@ Options:
   antimode Find least-frequently-occurring values for fields; first-found wins tie
   sum      Compute sums of specified fields
   mean     Compute averages (sample means) of specified fields
+  mad      Compute mean absolute deviation
   var      Compute sample variance of specified fields
   stddev   Compute sample standard deviation of specified fields
   meaneb   Estimate error bars for averages (assuming no sample autocorrelation)

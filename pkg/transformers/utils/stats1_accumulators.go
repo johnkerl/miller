@@ -72,6 +72,11 @@ var stats1AccumulatorInfos []stats1AccumulatorInfo = []stats1AccumulatorInfo{
 		"Compute averages (sample means) of specified fields",
 		NewStats1MeanAccumulator,
 	},
+	{
+		"mad",
+		"Compute mean absolute deviation",
+		NewStats1MeanAbsDevAccumulator,
+	},
 
 	{
 		"var",
@@ -502,6 +507,47 @@ func (acc *Stats1MeanAccumulator) Emit() *mlrval.Mlrval {
 func (acc *Stats1MeanAccumulator) Reset() {
 	acc.sum = mlrval.FromInt(0)
 	acc.count = 0
+}
+
+// ----------------------------------------------------------------
+type Stats1MeanAbsDevAccumulator struct {
+	samples []*mlrval.Mlrval
+}
+
+func NewStats1MeanAbsDevAccumulator() IStats1Accumulator {
+	return &Stats1MeanAbsDevAccumulator{
+		samples: make([]*mlrval.Mlrval, 0, 1000),
+	}
+}
+func (acc *Stats1MeanAbsDevAccumulator) Ingest(value *mlrval.Mlrval) {
+	if value.IsNumeric() {
+		acc.samples = append(acc.samples, value)
+	}
+}
+func (acc *Stats1MeanAbsDevAccumulator) Emit() *mlrval.Mlrval {
+	n := len(acc.samples)
+	if n == 0 {
+		return mlrval.VOID
+	}
+	mn := mlrval.FromInt(int64(n))
+
+	mean := mlrval.FromInt(0)
+	for i := 0; i < n; i++ {
+		mean = bifs.BIF_plus_binary(mean, acc.samples[i])
+	}
+	mean = bifs.BIF_divide(mean, mn)
+
+	meanAbsDev := mlrval.FromInt(0)
+	for i := 0; i < n; i++ {
+		diff := bifs.BIF_minus_binary(mean, acc.samples[i])
+		meanAbsDev = bifs.BIF_plus_binary(meanAbsDev, bifs.BIF_abs(diff))
+	}
+	meanAbsDev = bifs.BIF_divide(meanAbsDev, mn)
+
+	return meanAbsDev
+}
+func (acc *Stats1MeanAbsDevAccumulator) Reset() {
+	acc.samples = make([]*mlrval.Mlrval, 0, 1000)
 }
 
 // ----------------------------------------------------------------

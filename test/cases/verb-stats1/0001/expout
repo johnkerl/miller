@@ -5,6 +5,7 @@ i_min      1
 i_max      10
 i_antimode 1
 i_mode     1
+i_mad      2.50000000
 x_mean     0.45362938
 x_sum      4.53629384
 x_count    10
@@ -12,6 +13,7 @@ x_min      0.03144188
 x_max      0.75867996
 x_antimode 0.34679014
 x_mode     0.34679014
+x_mad      0.17005656
 y_mean     0.59445424
 y_sum      5.94454242
 y_count    10
@@ -19,3 +21,4 @@ y_min      0.13418874
 y_max      0.97618139
 y_antimode 0.72680286
 y_mode     0.72680286
+y_mad      0.25930133
