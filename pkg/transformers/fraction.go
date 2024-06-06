@@ -264,9 +264,12 @@ func (tr *TransformerFraction) Transform(
 						} else {
 							numerator = value
 						}
-
 						denominator := sumsForGroup[fractionFieldName]
-						if !mlrval.Equals(value, tr.zero) {
+
+						// Return 0 for 0/n
+						if mlrval.Equals(numerator, tr.zero) {
+							outputValue = tr.zero
+						} else if !mlrval.Equals(denominator, tr.zero) {
 							outputValue = bifs.BIF_divide(numerator, denominator)
 							outputValue = bifs.BIF_times(outputValue, tr.multiplier)
 						} else {
