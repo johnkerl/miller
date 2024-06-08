@@ -648,8 +648,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        How you can control colorization:
 
        * Suppression/unsuppression:
-           * Environment variable `export MLR_NO_COLOR=true` means don't color
-             even if stdout+TTY.
+           * Environment variable `export MLR_NO_COLOR=true` or `export NO_COLOR=true`
+              means don't color even if stdout+TTY.
            * Environment variable `export MLR_ALWAYS_COLOR=true` means do color
              even if not stdout+TTY.
              For example, you might want to use this when piping mlr output to `less -r`.
@@ -3730,5 +3730,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2024-05-11                         4mMILLER24m(1)
+                                  2024-06-08                         4mMILLER24m(1)
 </pre>
