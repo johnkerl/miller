@@ -106,6 +106,7 @@ func transformerSummaryUsage(
 	fmt.Fprintf(o, "-a {mean,sum,etc.} Use only the specified summarizers.\n")
 	fmt.Fprintf(o, "-x {mean,sum,etc.} Use all summarizers, except the specified ones.\n")
 	fmt.Fprintf(o, "--all              Use all available summarizers.\n")
+	fmt.Fprintf(o, "--transpose        Show output with field names as column names..\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 }
 
