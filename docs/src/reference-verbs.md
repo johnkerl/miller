@@ -3796,6 +3796,7 @@ Options:
 -a {mean,sum,etc.} Use only the specified summarizers.
 -x {mean,sum,etc.} Use all summarizers, except the specified ones.
 --all              Use all available summarizers.
+--transpose        Show output with field names as column names..
 -h|--help Show this message.
 </pre>
 
