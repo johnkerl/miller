@@ -2715,8 +2715,8 @@ Mechanisms for coloring:
 How you can control colorization:
 
 * Suppression/unsuppression:
-    * Environment variable ` + "`export MLR_NO_COLOR=true`" + ` means don't color
-      even if stdout+TTY.
+    * Environment variable ` + "`export MLR_NO_COLOR=true` or `export NO_COLOR=true`" + `
+	  means don't color even if stdout+TTY.
     * Environment variable ` + "`export MLR_ALWAYS_COLOR=true`" + ` means do color
       even if not stdout+TTY.
       For example, you might want to use this when piping mlr output to ` + "`less -r`" + `.

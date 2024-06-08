@@ -50,7 +50,7 @@ described below:
 
 * Suppression/unsuppression:
 
-    * `export MLR_NO_COLOR=true` means Miller won't color even when it normally would.
+    * `export MLR_NO_COLOR=true` or `export NO_COLOR=true` means Miller won't color even when it normally would.
     * `export MLR_ALWAYS_COLOR=true` means Miller will color even when it normally would not. For example, you might want to use this when piping `mlr` output to `less -r`.
     * Command-line flags `--no-color` or `-M`, `--always-color` or `-C`.
     * On Windows, replace `export` with `set`

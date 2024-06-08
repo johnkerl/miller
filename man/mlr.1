@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2024-05-11
+.\"      Date: 2024-06-08
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2024-05-11" "\ \&" "\ \&"
+.TH "MILLER" "1" "2024-06-08" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -756,8 +756,8 @@ Mechanisms for coloring:
 How you can control colorization:
 
 * Suppression/unsuppression:
-    * Environment variable `export MLR_NO_COLOR=true` means don't color
-      even if stdout+TTY.
+    * Environment variable `export MLR_NO_COLOR=true` or `export NO_COLOR=true`
+	  means don't color even if stdout+TTY.
     * Environment variable `export MLR_ALWAYS_COLOR=true` means do color
       even if not stdout+TTY.
       For example, you might want to use this when piping mlr output to `less -r`.
