@@ -198,7 +198,8 @@ var stdoutIsATTY = getStdoutIsATTY()
 // Read environment variables at startup time. These can be overridden
 // afterward using command-line flags.
 func init() {
-	if os.Getenv("MLR_NO_COLOR") != "" {
+	if os.Getenv("MLR_NO_COLOR") != "" || os.Getenv("NO_COLOR") != "" {
+		colorization = ColorizeOutputNever
 		colorization = ColorizeOutputNever
 	} else if os.Getenv("MLR_ALWAYS_COLOR") != "" {
 		colorization = ColorizeOutputAlways
