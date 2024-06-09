@@ -376,7 +376,7 @@ func parseCommandLinePassTwo(
 		recordTransformers = append(recordTransformers, transformer)
 	}
 
-	if cli.DecideFinalUnflatten(options) {
+	if cli.DecideFinalUnflatten(options, verbSequences) {
 		// E.g.  req.method=GET,req.path=/api/check becomes
 		// '{"req": {"method": "GET", "path": "/api/check"}}'
 		transformer, err := transformers.NewTransformerUnflatten(options.WriterOptions.FLATSEP, options, nil)
