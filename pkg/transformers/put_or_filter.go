@@ -247,14 +247,28 @@ func transformerPutOrFilterParseCLI(
 		} else if opt == "-f" {
 			// Get a DSL string from the user-specified filename
 			filename := cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
-			theseDSLStrings, err := lib.LoadStringsFromFileOrDir(filename, ".mlr")
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression from file \"%s\": ",
-					"mlr", verb, filename)
-				fmt.Println(err)
-				os.Exit(1)
+
+			// Miller has a two-pass command-line parser. If the user does
+			//   `mlr put -f foo.mlr`
+			// then that file can be parsed both times. But if the user does
+			//   `mlr put -f <( echo 'some expression goes here' )`
+			// that will read stdin. (The filename will come in as "dev/fd/63" or what have you.)
+			// But this file _cannot_ be read twice. So, if doConstruct==false -- we're
+			// on the first pass of the command-line parser -- don't bother to parse
+			// the DSL-contents file.
+			//
+			// See also https://github.com/johnkerl/miller/issues/1515
+
+			if doConstruct {
+				theseDSLStrings, err := lib.LoadStringsFromFileOrDir(filename, ".mlr")
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression from file \"%s\": ",
+						"mlr", verb, filename)
+					fmt.Println(err)
+					os.Exit(1)
+				}
+				dslStrings = append(dslStrings, theseDSLStrings...)
 			}
-			dslStrings = append(dslStrings, theseDSLStrings...)
 			haveDSLStringsHere = true
 
 		} else if opt == "-e" {
