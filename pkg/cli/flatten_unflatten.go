@@ -52,6 +52,10 @@ package cli
 // * If input is non-JSON and output is JSON:
 //   o Default is to auto-unflatten at output.
 //   o There is a --no-auto-unflatten for those who want it.
+//
+// * Overrriding these: if the last verb the user has explicitly provided is
+//   flatten, don't undo that by putting an unflatten right after.
+// 
 // ================================================================
 
 func DecideFinalFlatten(writerOptions *TWriterOptions) bool {
@@ -64,7 +68,22 @@ func DecideFinalFlatten(writerOptions *TWriterOptions) bool {
 	return false
 }
 
-func DecideFinalUnflatten(options *TOptions) bool {
+func DecideFinalUnflatten(
+	options *TOptions,
+    verbSequences [][]string,
+) bool {
+
+	numVerbs := len(verbSequences)
+	if numVerbs > 0 {
+		lastVerbSequence := verbSequences[numVerbs-1]
+		if len(lastVerbSequence) > 0 {
+			lastVerbName := lastVerbSequence[0]
+			if lastVerbName == "flatten" {
+				return false
+			}
+		}
+	}
+
 	ifmt := options.ReaderOptions.InputFileFormat
 	ofmt := options.WriterOptions.OutputFileFormat
 

@@ -156,7 +156,7 @@ func ReplMain(args []string) int {
 	// --auto-flatten is on by default. But if input and output formats are both JSON,
 	// then we don't need to actually do anything. See also mlrcli_parse.go.
 	options.WriterOptions.AutoFlatten = cli.DecideFinalFlatten(&options.WriterOptions)
-	options.WriterOptions.AutoUnflatten = cli.DecideFinalUnflatten(options)
+	options.WriterOptions.AutoUnflatten = cli.DecideFinalUnflatten(options, [][]string{})
 
 	recordOutputFileName := "(stdout)"
 	recordOutputStream := os.Stdout
