@@ -106,16 +106,22 @@ When `mlr` is invoked with the `--csv` or `--csvlite` option, key names are foun
 
 Miller has record separator `RS` and field separator `FS`, just as `awk` does. (See also the [separators page](reference-main-separators.md).)
 
-**TSV (tab-separated values):** `FS` is tab and `RS` is newline (or carriage return + linefeed for
-Windows).  On input, if fields have `\r`, `\n`, `\t`, or `\\`, those are decoded as carriage return,
-newline, tab, and backslash, respectively. On output, the reverse is done -- for example, if a field
-has an embedded newline, that newline is replaced by `\n`.
+**CSV (comma-separated values):** Miller's `--csv` flag supports [RFC-4180 CSV](https://tools.ietf.org/html/rfc4180).
+
+* This includes CRLF line-terminators by default, regardless of platform.
+* Any cell containing a comma or a carriage return within it must be double-quoted.
+
+**TSV (tab-separated values):** Miller's `--tsv` supports [IANA TSV](https://www.iana.org/assignments/media-types/text/tab-separated-values).
+
+* `FS` is tab and `RS` is newline (or carriage return + linefeed for Windows).
+* On input, if fields have `\r`, `\n`, `\t`, or `\\`, those are decoded as carriage return, newline, tab, and backslash, respectively.
+* On output, the reverse is done -- for example, if a field has an embedded newline, that newline is replaced by `\n`.
+* A tab within a cell must be encoded as `\t`.
+* A carriage return within a cell must be encoded as `\n`.
 
 **ASV (ASCII-separated values):** the flags `--asv`, `--iasv`, `--oasv`, `--asvlite`, `--iasvlite`, and `--oasvlite` are analogous except they use ASCII FS and RS `0x1f` and `0x1e`, respectively.
 
 **USV (Unicode-separated values):** likewise, the flags `--usv`, `--iusv`, `--ousv`, `--usvlite`, `--iusvlite`, and `--ousvlite` use Unicode FS and RS `U+241F` (UTF-8 `0x0xe2909f`) and `U+241E` (UTF-8 `0xe2909e`), respectively.
-
-Miller's `--csv` flag supports [RFC-4180 CSV](https://tools.ietf.org/html/rfc4180). This includes CRLF line-terminators by default, regardless of platform.
 
 Here are the differences between CSV and CSV-lite:
 
