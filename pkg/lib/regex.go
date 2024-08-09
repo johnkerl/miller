@@ -202,7 +202,7 @@ func regexCompiledSubOrGsub(
 	replacementCaptureMatrix [][]int,
 	breakOnFirst bool,
 ) string {
-	matrix := regex.FindAllSubmatchIndex([]byte(input), -1)
+	matrix := regex.FindAllStringSubmatchIndex(input, -1)
 	if matrix == nil || len(matrix) == 0 {
 		return input
 	}
@@ -290,7 +290,7 @@ func RegexCompiledMatchSimple(
 	input string,
 	regex *regexp.Regexp,
 ) bool {
-	return regex.Match([]byte(input))
+	return regex.MatchString(input)
 }
 
 // RegexStringMatchWithMapResults implements much of the `strmatchx` DSL function.  This returns
@@ -320,7 +320,7 @@ func RegexCompiledMatchWithMapResults(
 	starts := make([]int, 0, 10)
 	ends := make([]int, 0, 10)
 
-	matrix := regex.FindAllSubmatchIndex([]byte(input), -1)
+	matrix := regex.FindAllStringSubmatchIndex(input, -1)
 	if matrix == nil || len(matrix) == 0 {
 		return false, captures, starts, ends
 	}
@@ -406,7 +406,7 @@ func RegexCompiledMatchWithCaptures(
 	input string,
 	regex *regexp.Regexp,
 ) (bool, []string) {
-	matrix := regex.FindAllSubmatchIndex([]byte(input), -1)
+	matrix := regex.FindAllStringSubmatchIndex(input, -1)
 	if matrix == nil || len(matrix) == 0 {
 		// Set all captures to ""
 		return false, make([]string, 10)
@@ -474,7 +474,7 @@ func ReplacementHasCaptures(
 	matrix [][]int,
 ) {
 	if captureDetector.MatchString(replacement) {
-		return true, captureSplitter.FindAllSubmatchIndex([]byte(replacement), -1)
+		return true, captureSplitter.FindAllStringSubmatchIndex(replacement, -1)
 	} else {
 		return false, nil
 	}
