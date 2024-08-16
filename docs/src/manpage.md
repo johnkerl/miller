@@ -768,13 +768,13 @@ This is simply a copy of what you should see on running `man mlr` at a command p
          - To avoid backslashing, you can use any of the following names:
 
                  ascii_esc  = "\x1b"
-                 ascii_etx  = "\x04"
+                 ascii_etx  = "\x03"
                  ascii_fs   = "\x1c"
                  ascii_gs   = "\x1d"
-                 ascii_null = "\x01"
+                 ascii_null = "\x00"
                  ascii_rs   = "\x1e"
-                 ascii_soh  = "\x02"
-                 ascii_stx  = "\x03"
+                 ascii_soh  = "\x01"
+                 ascii_stx  = "\x02"
                  ascii_us   = "\x1f"
                  asv_fs     = "\x1f"
                  asv_rs     = "\x1e"
@@ -3731,5 +3731,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2024-06-09                         4mMILLER24m(1)
+                                  2024-08-16                         4mMILLER24m(1)
 </pre>

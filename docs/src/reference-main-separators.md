@@ -187,13 +187,13 @@ Many things we'd like to write as separators need to be escaped from the shell
 </pre>
 <pre class="pre-non-highlight-in-pair">
 ascii_esc  = "\x1b"
-ascii_etx  = "\x04"
+ascii_etx  = "\x03"
 ascii_fs   = "\x1c"
 ascii_gs   = "\x1d"
-ascii_null = "\x01"
+ascii_null = "\x00"
 ascii_rs   = "\x1e"
-ascii_soh  = "\x02"
-ascii_stx  = "\x03"
+ascii_soh  = "\x01"
+ascii_stx  = "\x02"
 ascii_us   = "\x1f"
 asv_fs     = "\x1f"
 asv_rs     = "\x1e"

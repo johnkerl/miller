@@ -55,7 +55,7 @@ package cli
 //
 // * Overrriding these: if the last verb the user has explicitly provided is
 //   flatten, don't undo that by putting an unflatten right after.
-// 
+//
 // ================================================================
 
 func DecideFinalFlatten(writerOptions *TWriterOptions) bool {
@@ -70,7 +70,7 @@ func DecideFinalFlatten(writerOptions *TWriterOptions) bool {
 
 func DecideFinalUnflatten(
 	options *TOptions,
-    verbSequences [][]string,
+	verbSequences [][]string,
 ) bool {
 
 	numVerbs := len(verbSequences)
