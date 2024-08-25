@@ -3731,5 +3731,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2024-08-16                         4mMILLER24m(1)
+                                  2024-08-25                         4mMILLER24m(1)
 </pre>

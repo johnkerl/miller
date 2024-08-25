@@ -352,9 +352,17 @@ func (mv *Mlrval) marshalJSONString(outputIsStdout bool) (string, error) {
 }
 
 // Wraps with double-quotes and escape-encoded JSON-special characters.
+//
+// Per https://www.json.org/json-en.html:
+//
+// * Escapes: \b \f \n \r \t \u
+// * Acceptable ranges: 0x20..0x10FFFF
+//
+// Since these are bytes here, we only need to check < 0x20, and special-case the five valid
+// escapes, and then \u the rest.
+
 func millerJSONEncodeString(input string) string {
 	var buffer bytes.Buffer
-
 	buffer.WriteByte('"')
 
 	for _, b := range []byte(input) {
@@ -362,15 +370,15 @@ func millerJSONEncodeString(input string) string {
 		case '\\':
 			buffer.WriteByte('\\')
 			buffer.WriteByte('\\')
-		case '\n':
-			buffer.WriteByte('\\')
-			buffer.WriteByte('n')
 		case '\b':
 			buffer.WriteByte('\\')
 			buffer.WriteByte('b')
 		case '\f':
 			buffer.WriteByte('\\')
 			buffer.WriteByte('f')
+		case '\n':
+			buffer.WriteByte('\\')
+			buffer.WriteByte('n')
 		case '\r':
 			buffer.WriteByte('\\')
 			buffer.WriteByte('r')
@@ -381,12 +389,16 @@ func millerJSONEncodeString(input string) string {
 			buffer.WriteByte('\\')
 			buffer.WriteByte('"')
 		default:
-			buffer.WriteByte(b)
+			if b < 0x20 {
+				s := fmt.Sprintf("\\u%04x", b)
+				buffer.WriteString(s)
+			} else {
+				buffer.WriteByte(b)
+			}
 		}
 	}
 
 	buffer.WriteByte('"')
-
 	return buffer.String()
 }
 
