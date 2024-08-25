@@ -805,7 +805,7 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 			for i := 0; i < n-1; i++ {
 				if continuationExpressionASTNode.Children[i].Type != dsl.NodeTypeAssignment {
 					return nil, fmt.Errorf(
-						"mlr: the non-final triple-for continutation statements must be assignments.",
+						"mlr: the non-final triple-for continuation statements must be assignments.",
 					)
 				}
 				precontinuationAssignment, err := root.BuildAssignmentNode(
@@ -822,11 +822,11 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 		if bareBooleanASTNode.Type != dsl.NodeTypeBareBoolean {
 			if n == 1 {
 				return nil, fmt.Errorf(
-					"mlr: the triple-for continutation statement must be a bare boolean.",
+					"mlr: the triple-for continuation statement must be a bare boolean.",
 				)
 			} else {
 				return nil, fmt.Errorf(
-					"mlr: the final triple-for continutation statement must be a bare boolean.",
+					"mlr: the final triple-for continuation statement must be a bare boolean.",
 				)
 			}
 		}

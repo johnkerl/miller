@@ -45,7 +45,7 @@ The `sort`, `head`, etc are called *verbs*. They're analogs of familiar command-
 <b>mlr --csv put '$rate = $units / $seconds' input.csv</b>
 </pre>
 
-which allow you to succintly express your own logic.
+which allow you to succinctly express your own logic.
 
 **Multiple domains:** People use Miller for data analysis, data science, software engineering, devops/system-administration, journalism, scientific research, and more.
 

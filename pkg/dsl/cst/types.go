@@ -58,7 +58,7 @@ type RootNode struct {
 type NodeBuilder func(astNode *dsl.ASTNode) (IEvaluable, error)
 
 // ----------------------------------------------------------------
-// This is for all statements and statemnt blocks within the CST.
+// This is for all statements and statement blocks within the CST.
 type IExecutable interface {
 	Execute(state *runtime.State) (*BlockExitPayload, error)
 }
