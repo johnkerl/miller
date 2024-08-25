@@ -53,7 +53,7 @@ package cli
 //   o Default is to auto-unflatten at output.
 //   o There is a --no-auto-unflatten for those who want it.
 //
-// * Overrriding these: if the last verb the user has explicitly provided is
+// * Overriding these: if the last verb the user has explicitly provided is
 //   flatten, don't undo that by putting an unflatten right after.
 //
 // ================================================================

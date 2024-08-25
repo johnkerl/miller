@@ -358,7 +358,7 @@ func (wb WorkaroundBuffer) String() string {
 // ----------------------------------------------------------------
 // BOM-stripping
 //
-// Some CSVs start with a "byte-order mark" which is the 3-byte sequene
+// Some CSVs start with a "byte-order mark" which is the 3-byte sequence
 // \xef\xbb\xbf".  Any file with such contents trips up csv.Reader:
 //
 // * If a header line is not double-quoted then we can simply look at the first
