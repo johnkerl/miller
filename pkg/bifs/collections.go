@@ -568,15 +568,16 @@ func BIF_splitnvx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // ----------------------------------------------------------------
 // splita("3,4,5", ",") -> [3,4,5]
 func BIF_splita(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	if !input1.IsStringOrVoid() {
-		return mlrval.FromNotStringError("splita", input1)
+	if !input1.IsLegit() {
+		return input1
 	}
+	input1String := input1.String()
 	if !input2.IsString() {
 		return mlrval.FromNotStringError("splita", input2)
 	}
 	fieldSeparator := input2.AcquireStringValue()
 
-	fields := lib.SplitString(input1.AcquireStringValue(), fieldSeparator)
+	fields := lib.SplitString(input1String, fieldSeparator)
 
 	arrayval := make([]*mlrval.Mlrval, len(fields))
 
@@ -592,16 +593,16 @@ func BIF_splita(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // BIF_splitax splits a string to an array, without type-inference:
 // e.g. splitax("3,4,5", ",") -> ["3","4","5"]
 func BIF_splitax(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	if !input1.IsStringOrVoid() {
-		return mlrval.FromNotStringError("splitax", input1)
+	if !input1.IsLegit() {
+		return input1
 	}
+	input1String := input1.String()
 	if !input2.IsString() {
 		return mlrval.FromNotStringError("splitax", input2)
 	}
-	input := input1.AcquireStringValue()
 	fieldSeparator := input2.AcquireStringValue()
 
-	return bif_splitax_helper(input, fieldSeparator)
+	return bif_splitax_helper(input1String, fieldSeparator)
 }
 
 // bif_splitax_helper is split out for the benefit of BIF_splitax and

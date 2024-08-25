@@ -1,6 +1,7 @@
-end {
+test/cases/dsl-split-join/0021/mlrend {
   print splita("3,4,5", ",");
   print splita("3,4", ",");
   print splita("3", ",");
+  print splita(3, ",");
   print splita("", ",");
 }
