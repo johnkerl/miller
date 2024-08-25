@@ -115,10 +115,11 @@ func openPrepipedHandleForRead(
 	if filename == "" { // stdin
 		command = prepipe
 	} else {
+		// Wrap in single quotes in case the filename has whitespace in it
 		if prepipeIsRaw {
-			command = prepipe + " " + escapedFilename
+			command = prepipe + " '" + escapedFilename + "'"
 		} else {
-			command = prepipe + " < " + escapedFilename
+			command = prepipe + " < '" + escapedFilename + "'"
 		}
 	}
 
