@@ -128,21 +128,24 @@ func openPrepipedHandleForRead(
 // Avoids shell-injection cases by replacing single-quote with backslash
 // single-quote and double-quote with backslack double-quote, then wrapping the
 // entire result in initial and final single-quote.
-//
-// TODO: test on Windows. Maybe needs move to pkg/platform.
+// Also wraps in single quotes in case the filename has whitespace in it
 func escapeFileNameForPopen(filename string) string {
 	var buffer bytes.Buffer
-	foundQuote := false
+	foundQuoteOrSpace := false
 	for _, c := range filename {
 		if c == '\'' || c == '"' {
 			buffer.WriteRune('\'')
 			buffer.WriteRune(c)
 			buffer.WriteRune('\'')
+			foundQuoteOrSpace = true
+		} else if c == ' ' {
+			buffer.WriteRune(c)
+			foundQuoteOrSpace = true
 		} else {
 			buffer.WriteRune(c)
 		}
 	}
-	if foundQuote {
+	if foundQuoteOrSpace {
 		return "'" + buffer.String() + "'"
 	} else {
 		return buffer.String()
