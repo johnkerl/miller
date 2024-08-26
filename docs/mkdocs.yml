@@ -8,6 +8,8 @@ theme:
     code: Lato Mono
   features:
     - navigation.top
+    - content.action.edit
+    - content.action.view
   custom_dir: overrides
 repo_url: https://github.com/johnkerl/miller
 repo_name: miller
