@@ -155,6 +155,10 @@ a=eks,b=wye,i=4,x=0.381399,y=0.134188
 a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
+!!! note
+
+    You can use positional field names only in `DSL` syntax, so only with the verbs `put` and `filter`.
+
 ## Out-of-stream variables
 
 These are prefixed with an at-sign, e.g. `@sum`.  Furthermore, unlike built-in variables and stream-record fields, they are maintained in an arbitrarily nested map: you can do `@sum += $quantity`, or `@sum[$color] += $quantity`, or `@sum[$color][$shape] += $quantity`. The keys for the multi-level map can be any expression which evaluates to string or integer: e.g.  `@sum[NR] = $a + $b`, `@sum[$a."-".$b] = $x`, etc.
