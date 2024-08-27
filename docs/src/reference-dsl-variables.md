@@ -157,7 +157,7 @@ a=wye,b=pan,i=5,x=0.573288,y=0.863624
 
 !!! note
 
-    You can use positional field names only in `DSL` syntax, so only with the verbs `put` and `filter`.
+    You can use positional field names only in the [Miller DSL](reference-dsl.md), i.e. only with the verbs `put` and `filter`.
 
 ## Out-of-stream variables
 
