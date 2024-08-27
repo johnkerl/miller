@@ -118,5 +118,9 @@ nav:
   - "What's new in Miller 6": "new-in-miller-6.md"
 
 markdown_extensions:
-- toc:
+  - toc:
       permalink: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
