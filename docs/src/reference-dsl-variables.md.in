@@ -80,6 +80,10 @@ GENMD-RUN-COMMAND
 mlr put '$[[[6]]] = "NEW"' data/small
 GENMD-EOF
 
+!!! note
+
+    You can use positional field names only in the [Miller DSL](reference-dsl.md), i.e. only with the verbs `put` and `filter`.
+
 ## Out-of-stream variables
 
 These are prefixed with an at-sign, e.g. `@sum`.  Furthermore, unlike built-in variables and stream-record fields, they are maintained in an arbitrarily nested map: you can do `@sum += $quantity`, or `@sum[$color] += $quantity`, or `@sum[$color][$shape] += $quantity`. The keys for the multi-level map can be any expression which evaluates to string or integer: e.g.  `@sum[NR] = $a + $b`, `@sum[$a."-".$b] = $x`, etc.
