@@ -237,10 +237,7 @@ img {
   --md-footer-fg-color: #eae2cb;
 }
 
-md-nav__link--active {
+.md-nav__link--active {
     text-decoration: underline;
 }
 
-md-nav__link--active {
-    text-decoration: underline;
-}
