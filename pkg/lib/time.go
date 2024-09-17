@@ -16,6 +16,9 @@ import (
 // statement does 'ENV["TZ"] = Asia/Istanbul'.
 func SetTZFromEnv() error {
 	tzenv := os.Getenv("TZ")
+	if tzenv == "" {
+		return nil
+	}
 	location, err := time.LoadLocation(tzenv)
 	if err != nil {
 		return fmt.Errorf("TZ environment variable appears malformed: \"%s\"", tzenv)
