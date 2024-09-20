@@ -403,7 +403,7 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 
 	if BuiltinFunctionManagerInstance.LookUp(functionName) != nil {
 		return fmt.Errorf(
-			"mlr: function named \"%s\" must not override a built-in function of the same name.",
+			`mlr: function named "%s" must not override a built-in function of the same name`,
 			functionName,
 		)
 	}
@@ -411,7 +411,7 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 	if !root.allowUDFUDSRedefinitions {
 		if root.udfManager.ExistsByName(functionName) {
 			return fmt.Errorf(
-				"mlr: function named \"%s\" has already been defined.",
+				`mlr: function named "%s" has already been defined`,
 				functionName,
 			)
 		}

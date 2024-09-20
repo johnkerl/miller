@@ -280,7 +280,7 @@ func (root *RootNode) buildPrintxStatementNode(
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
 				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
-				return nil, fmt.Errorf("mlr: unhandled redirector node type %s.", string(redirectorNode.Type))
+				return nil, fmt.Errorf("mlr: unhandled redirector node type %s", string(redirectorNode.Type))
 			}
 		}
 	}
@@ -356,7 +356,7 @@ func (node *PrintStatementNode) printToFileOrPipe(
 ) error {
 	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
-		return fmt.Errorf("mlr: output redirection yielded %s, not string.", redirectorTarget.GetTypeName())
+		return fmt.Errorf("mlr: output redirection yielded %s, not string", redirectorTarget.GetTypeName())
 	}
 	outputFileName := redirectorTarget.String()
 
