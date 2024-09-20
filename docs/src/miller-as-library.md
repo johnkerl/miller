@@ -50,8 +50,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/pkg/bifs"
-	"github.com/johnkerl/miller/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/bifs"
+	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
 func main() {
@@ -86,11 +86,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/johnkerl/miller/pkg/bifs"
-	"github.com/johnkerl/miller/pkg/cli"
-	"github.com/johnkerl/miller/pkg/input"
-	"github.com/johnkerl/miller/pkg/output"
-	"github.com/johnkerl/miller/pkg/types"
+	"github.com/johnkerl/miller/v6/pkg/bifs"
+	"github.com/johnkerl/miller/v6/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/input"
+	"github.com/johnkerl/miller/v6/pkg/output"
+	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
 // Put your record-processing logic here.

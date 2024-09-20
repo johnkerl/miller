@@ -8,7 +8,7 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/cli"
 )
 
-// go test -run=nonesuch -bench=. github.com/johnkerl/miller/pkg/input/...
+// go test -run=nonesuch -bench=. github.com/johnkerl/miller/v6/pkg/input/...
 
 func BenchmarkDKVPParse(b *testing.B) {
 	readerOptions := &cli.TReaderOptions{

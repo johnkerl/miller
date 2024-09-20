@@ -3,7 +3,7 @@
 // ================================================================
 
 /*
-go build github.com/johnkerl/miller/cmd/sizes
+go build github.com/johnkerl/miller/v6/cmd/sizes
 */
 
 package main

@@ -7,8 +7,8 @@ module github.com/johnkerl/miller/v6
 // executable would be 'miller' not 'mlr'.
 //
 // So we have cmd/mlr/main.go:
-// * go build   github.com/johnkerl/miller/cmd/mlr
-// * go install github.com/johnkerl/miller/cmd/mlr
+// * go build   github.com/johnkerl/miller/v6/cmd/mlr
+// * go install github.com/johnkerl/miller/v6/cmd/mlr
 
 // go get github.com/johnkerl/lumin@v1.0.0
 // Local development:

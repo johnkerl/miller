@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/johnkerl/miller/pkg/parsing/token"
+	"github.com/johnkerl/miller/v6/pkg/parsing/token"
 )
 
 type ErrorSymbol interface {
