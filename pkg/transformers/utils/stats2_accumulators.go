@@ -9,8 +9,8 @@ import (
 	"math"
 	"os"
 
-	"github.com/johnkerl/miller/pkg/lib"
-	"github.com/johnkerl/miller/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
 // ----------------------------------------------------------------

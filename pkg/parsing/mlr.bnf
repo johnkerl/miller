@@ -347,7 +347,7 @@ panic : '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
 // ================================================================
 
 // Import the AST/ASTNode types and functions
-<< import "github.com/johnkerl/miller/pkg/dsl" >>
+<< import "github.com/johnkerl/miller/v6/pkg/dsl" >>
 
 // ================================================================
 // TOP-LEVEL PRODUCTION RULE FOR THE MILLER DSL

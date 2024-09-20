@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/johnkerl/miller/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/cli"
 )
 
 // loadMlrrcOrDie rule: If $MLRRC is set, use it and only it.  Otherwise try

@@ -10,13 +10,13 @@ import (
 	"os"
 	"path"
 
-	"github.com/johnkerl/miller/pkg/auxents"
-	"github.com/johnkerl/miller/pkg/cli"
-	"github.com/johnkerl/miller/pkg/climain"
-	"github.com/johnkerl/miller/pkg/lib"
-	"github.com/johnkerl/miller/pkg/platform"
-	"github.com/johnkerl/miller/pkg/stream"
-	"github.com/johnkerl/miller/pkg/transformers"
+	"github.com/johnkerl/miller/v6/pkg/auxents"
+	"github.com/johnkerl/miller/v6/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/climain"
+	"github.com/johnkerl/miller/v6/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/platform"
+	"github.com/johnkerl/miller/v6/pkg/stream"
+	"github.com/johnkerl/miller/v6/pkg/transformers"
 )
 
 type MainReturn struct {

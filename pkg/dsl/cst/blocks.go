@@ -6,9 +6,9 @@
 package cst
 
 import (
-	"github.com/johnkerl/miller/pkg/dsl"
-	"github.com/johnkerl/miller/pkg/lib"
-	"github.com/johnkerl/miller/pkg/runtime"
+	"github.com/johnkerl/miller/v6/pkg/dsl"
+	"github.com/johnkerl/miller/v6/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
 // ----------------------------------------------------------------

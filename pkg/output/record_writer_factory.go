@@ -3,7 +3,7 @@ package output
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/cli"
 )
 
 func Create(writerOptions *cli.TWriterOptions) (IRecordWriter, error) {

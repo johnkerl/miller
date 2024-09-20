@@ -7,10 +7,10 @@ package cst
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/pkg/dsl"
-	"github.com/johnkerl/miller/pkg/lib"
-	"github.com/johnkerl/miller/pkg/parsing/token"
-	"github.com/johnkerl/miller/pkg/runtime"
+	"github.com/johnkerl/miller/v6/pkg/dsl"
+	"github.com/johnkerl/miller/v6/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/parsing/token"
+	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
 // ================================================================

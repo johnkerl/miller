@@ -6,9 +6,9 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/johnkerl/miller/pkg/mlrval"
-	"github.com/johnkerl/miller/pkg/platform"
-	"github.com/johnkerl/miller/pkg/version"
+	"github.com/johnkerl/miller/v6/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/platform"
+	"github.com/johnkerl/miller/v6/pkg/version"
 )
 
 func BIF_version() *mlrval.Mlrval {

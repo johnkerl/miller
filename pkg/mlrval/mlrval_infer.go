@@ -3,7 +3,7 @@ package mlrval
 import (
 	"strconv"
 
-	"github.com/johnkerl/miller/pkg/scan"
+	"github.com/johnkerl/miller/v6/pkg/scan"
 )
 
 // TODO: comment no infer-bool from data files. Always false in this path.

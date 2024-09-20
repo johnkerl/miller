@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/johnkerl/miller/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
 // WindowKeeper is a sliding-window container, nominally for use by mlr step,

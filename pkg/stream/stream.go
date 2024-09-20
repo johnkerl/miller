@@ -6,11 +6,11 @@ import (
 	"errors"
 	"io"
 
-	"github.com/johnkerl/miller/pkg/cli"
-	"github.com/johnkerl/miller/pkg/input"
-	"github.com/johnkerl/miller/pkg/output"
-	"github.com/johnkerl/miller/pkg/transformers"
-	"github.com/johnkerl/miller/pkg/types"
+	"github.com/johnkerl/miller/v6/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/input"
+	"github.com/johnkerl/miller/v6/pkg/output"
+	"github.com/johnkerl/miller/v6/pkg/transformers"
+	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
 // Since Go is concurrent, the context struct (AWK-like variables such as

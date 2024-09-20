@@ -6,10 +6,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/johnkerl/miller/pkg/bifs"
-	"github.com/johnkerl/miller/pkg/cli"
-	"github.com/johnkerl/miller/pkg/mlrval"
-	"github.com/johnkerl/miller/pkg/types"
+	"github.com/johnkerl/miller/v6/pkg/bifs"
+	"github.com/johnkerl/miller/v6/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
 // ----------------------------------------------------------------

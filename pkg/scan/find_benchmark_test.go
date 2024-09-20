@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-// go test -run=nonesuch -bench=. github.com/johnkerl/miller/pkg/scan/...
+// go test -run=nonesuch -bench=. github.com/johnkerl/miller/v6/pkg/scan/...
 
 func BenchmarkFromNormalCases(b *testing.B) {
 

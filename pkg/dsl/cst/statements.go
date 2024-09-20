@@ -8,7 +8,7 @@ package cst
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/pkg/dsl"
+	"github.com/johnkerl/miller/v6/pkg/dsl"
 )
 
 // ----------------------------------------------------------------

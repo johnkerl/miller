@@ -7,8 +7,8 @@ package mlrval
 import (
 	"bytes"
 
-	"github.com/johnkerl/miller/pkg/colorizer"
-	"github.com/johnkerl/miller/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/colorizer"
+	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
 // ----------------------------------------------------------------

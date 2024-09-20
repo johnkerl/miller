@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/johnkerl/miller/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
 // It's essential that we use mv.Type() not mv.mvtype, or use an Is...()

@@ -9,7 +9,7 @@ import (
 	"os"
 	"strings"
 
-	csv "github.com/johnkerl/miller/pkg/go-csv"
+	csv "github.com/johnkerl/miller/v6/pkg/go-csv"
 )
 
 // LoadStringsFromFileOrDir calls LoadStringFromFile if path exists and is a

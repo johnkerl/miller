@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/johnkerl/miller/pkg/terminals/regtest"
+	"github.com/johnkerl/miller/v6/pkg/terminals/regtest"
 )
 
 // TestRegression is a familiar entry point for regression testing.  Miller

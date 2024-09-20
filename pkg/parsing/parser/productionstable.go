@@ -2,7 +2,7 @@
 
 package parser
 
-import "github.com/johnkerl/miller/pkg/dsl"
+import "github.com/johnkerl/miller/v6/pkg/dsl"
 
 type (
 	ProdTab      [numProductions]ProdTabEntry

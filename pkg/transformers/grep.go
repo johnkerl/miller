@@ -7,8 +7,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/johnkerl/miller/pkg/cli"
-	"github.com/johnkerl/miller/pkg/types"
+	"github.com/johnkerl/miller/v6/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
 // ----------------------------------------------------------------

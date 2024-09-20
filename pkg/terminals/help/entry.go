@@ -10,14 +10,14 @@ import (
 
 	"github.com/mattn/go-isatty"
 
-	"github.com/johnkerl/miller/pkg/auxents"
-	"github.com/johnkerl/miller/pkg/bifs"
-	"github.com/johnkerl/miller/pkg/cli"
-	"github.com/johnkerl/miller/pkg/dsl/cst"
-	"github.com/johnkerl/miller/pkg/lib"
-	"github.com/johnkerl/miller/pkg/mlrval"
-	"github.com/johnkerl/miller/pkg/runtime"
-	"github.com/johnkerl/miller/pkg/transformers"
+	"github.com/johnkerl/miller/v6/pkg/auxents"
+	"github.com/johnkerl/miller/v6/pkg/bifs"
+	"github.com/johnkerl/miller/v6/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/dsl/cst"
+	"github.com/johnkerl/miller/v6/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/miller/v6/pkg/transformers"
 )
 
 // ================================================================

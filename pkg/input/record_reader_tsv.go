@@ -7,10 +7,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/johnkerl/miller/pkg/cli"
-	"github.com/johnkerl/miller/pkg/lib"
-	"github.com/johnkerl/miller/pkg/mlrval"
-	"github.com/johnkerl/miller/pkg/types"
+	"github.com/johnkerl/miller/v6/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
 // recordBatchGetterTSV points to either an explicit-TSV-header or

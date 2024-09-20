@@ -110,9 +110,9 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
   * To install: `make install`. This installs the executable `/usr/local/bin/mlr` and manual page `/usr/local/share/man/man1/mlr.1` (so you can do `man mlr`).
   * You can do `./configure --prefix=/some/install/path` before `make install` if you want to install somewhere other than `/usr/local`.
 * Without `make`:
-  * To build: `go build github.com/johnkerl/miller/cmd/mlr`.
-  * To run tests: `go test github.com/johnkerl/miller/pkg/...` and `mlr regtest`.
-  * To install: `go install github.com/johnkerl/miller/cmd/mlr` will install to _GOPATH_`/bin/mlr`.
+  * To build: `go build github.com/johnkerl/miller/v6/cmd/mlr`.
+  * To run tests: `go test github.com/johnkerl/miller/v6/pkg/...` and `mlr regtest`.
+  * To install: `go install github.com/johnkerl/miller/v6/cmd/mlr` will install to _GOPATH_`/bin/mlr`.
 * See also the doc page on [building from source](https://miller.readthedocs.io/en/latest/build).
 * For more developer information please see [README-dev.md](./README-dev.md).
 

@@ -5,7 +5,7 @@ import (
 	"math"
 	"strings"
 
-	"github.com/johnkerl/miller/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
 func BIF_dhms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {

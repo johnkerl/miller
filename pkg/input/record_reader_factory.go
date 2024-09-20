@@ -3,7 +3,7 @@ package input
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/cli"
 )
 
 func Create(readerOptions *cli.TReaderOptions, recordsPerBatch int64) (IRecordReader, error) {

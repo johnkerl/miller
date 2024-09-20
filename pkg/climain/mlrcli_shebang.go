@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/johnkerl/miller/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/lib"
 	shellquote "github.com/kballard/go-shellquote"
 )
 

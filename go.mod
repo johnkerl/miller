@@ -1,4 +1,4 @@
-module github.com/johnkerl/miller
+module github.com/johnkerl/miller/v6
 
 // The repo is 'miller' and the executable is 'mlr', going back many years and
 // predating the Go port.
@@ -7,8 +7,8 @@ module github.com/johnkerl/miller
 // executable would be 'miller' not 'mlr'.
 //
 // So we have cmd/mlr/main.go:
-// * go build   github.com/johnkerl/miller/cmd/mlr
-// * go install github.com/johnkerl/miller/cmd/mlr
+// * go build   github.com/johnkerl/miller/v6/cmd/mlr
+// * go install github.com/johnkerl/miller/v6/cmd/mlr
 
 // go get github.com/johnkerl/lumin@v1.0.0
 // Local development:

@@ -7,7 +7,7 @@ import (
 	"crypto/sha512"
 	"fmt"
 
-	"github.com/johnkerl/miller/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
 func BIF_md5(input1 *mlrval.Mlrval) *mlrval.Mlrval {

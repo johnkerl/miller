@@ -6,7 +6,7 @@
 package cst
 
 import (
-	"github.com/johnkerl/miller/pkg/types"
+	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
 // ----------------------------------------------------------------

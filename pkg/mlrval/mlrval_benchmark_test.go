@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-// go test -run=nonesuch -bench=. github.com/johnkerl/miller/pkg/mlrval/...
+// go test -run=nonesuch -bench=. github.com/johnkerl/miller/v6/pkg/mlrval/...
 
 func BenchmarkFromDeferredType(b *testing.B) {
 	for i := 0; i < b.N; i++ {

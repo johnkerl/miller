@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/johnkerl/miller/pkg/dsl"
-	"github.com/johnkerl/miller/pkg/lib"
-	"github.com/johnkerl/miller/pkg/mlrval"
-	"github.com/johnkerl/miller/pkg/runtime"
+	"github.com/johnkerl/miller/v6/pkg/dsl"
+	"github.com/johnkerl/miller/v6/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
 // ----------------------------------------------------------------

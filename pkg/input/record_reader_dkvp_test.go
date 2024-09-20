@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/johnkerl/miller/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/cli"
 )
 
 func TestRecordFromDKVPLine(t *testing.T) {

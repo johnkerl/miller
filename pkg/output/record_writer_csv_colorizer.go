@@ -47,7 +47,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/johnkerl/miller/pkg/colorizer"
+	"github.com/johnkerl/miller/v6/pkg/colorizer"
 )
 
 var errInvalidDelim = errors.New("csv: invalid field or comment delimiter")

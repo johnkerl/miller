@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/johnkerl/miller/pkg/bifs"
-	"github.com/johnkerl/miller/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/bifs"
+	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
 type PercentileKeeper struct {
