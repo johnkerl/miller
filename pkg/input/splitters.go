@@ -7,8 +7,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/johnkerl/miller/pkg/cli"
-	"github.com/johnkerl/miller/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
 // IPairSplitter splits a string into left and right, e.g. for IPS.

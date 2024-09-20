@@ -5,7 +5,7 @@ import (
 	"container/list"
 	"strconv"
 
-	"github.com/johnkerl/miller/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
 // Since Go is concurrent, the context struct (AWK-like variables such as

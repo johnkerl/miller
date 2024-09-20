@@ -25,14 +25,14 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/johnkerl/miller/pkg/cli"
-	"github.com/johnkerl/miller/pkg/dsl/cst"
-	"github.com/johnkerl/miller/pkg/input"
-	"github.com/johnkerl/miller/pkg/lib"
-	"github.com/johnkerl/miller/pkg/mlrval"
-	"github.com/johnkerl/miller/pkg/output"
-	"github.com/johnkerl/miller/pkg/runtime"
-	"github.com/johnkerl/miller/pkg/types"
+	"github.com/johnkerl/miller/v6/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/dsl/cst"
+	"github.com/johnkerl/miller/v6/pkg/input"
+	"github.com/johnkerl/miller/v6/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/output"
+	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
 // ----------------------------------------------------------------

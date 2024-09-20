@@ -3,7 +3,7 @@ package bifs
 import (
 	"math"
 
-	"github.com/johnkerl/miller/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
 func GetPercentileLinearlyInterpolated(

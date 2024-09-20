@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/johnkerl/miller/pkg/platform"
+	"github.com/johnkerl/miller/v6/pkg/platform"
 )
 
 // OpenOutboundHalfPipe returns a handle to a process. Writing to that handle

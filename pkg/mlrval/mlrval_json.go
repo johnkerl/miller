@@ -14,8 +14,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/johnkerl/miller/pkg/colorizer"
-	"github.com/johnkerl/miller/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/colorizer"
+	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
 const JSON_INDENT_STRING string = "  "

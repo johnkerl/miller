@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	parseError "github.com/johnkerl/miller/pkg/parsing/errors"
-	"github.com/johnkerl/miller/pkg/parsing/token"
+	parseError "github.com/johnkerl/miller/v6/pkg/parsing/errors"
+	"github.com/johnkerl/miller/v6/pkg/parsing/token"
 )
 
 const (

@@ -8,7 +8,7 @@ package types
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
 // ----------------------------------------------------------------

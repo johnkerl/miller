@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/johnkerl/miller/pkg/bifs"
-	"github.com/johnkerl/miller/pkg/cli"
-	"github.com/johnkerl/miller/pkg/input"
-	"github.com/johnkerl/miller/pkg/output"
-	"github.com/johnkerl/miller/pkg/types"
+	"github.com/johnkerl/miller/v6/pkg/bifs"
+	"github.com/johnkerl/miller/v6/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/input"
+	"github.com/johnkerl/miller/v6/pkg/output"
+	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
 // Put your record-processing logic here.
@@ -49,7 +49,7 @@ func custom_options() *cli.TOptions {
 func run_custom_processor(
 	fileNames []string,
 	options *cli.TOptions,
-	record_processor func (irac *types.RecordAndContext) (*types.RecordAndContext, error),
+	record_processor func(irac *types.RecordAndContext) (*types.RecordAndContext, error),
 ) error {
 	outputStream := os.Stdout
 	outputIsStdout := true

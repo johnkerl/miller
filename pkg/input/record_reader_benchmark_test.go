@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/johnkerl/miller/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/cli"
 )
 
 // go test -run=nonesuch -bench=. github.com/johnkerl/miller/pkg/input/...

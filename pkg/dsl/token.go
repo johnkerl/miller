@@ -3,7 +3,7 @@ package dsl
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/pkg/parsing/token"
+	"github.com/johnkerl/miller/v6/pkg/parsing/token"
 )
 
 // TokenToLocationInfo is used to track runtime errors back to source-code locations in DSL

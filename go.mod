@@ -1,4 +1,4 @@
-module github.com/johnkerl/miller
+module github.com/johnkerl/miller/v6
 
 // The repo is 'miller' and the executable is 'mlr', going back many years and
 // predating the Go port.

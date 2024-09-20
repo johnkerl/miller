@@ -3,7 +3,7 @@ package mlrval
 import (
 	"strconv"
 
-	"github.com/johnkerl/miller/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
 func (mv *Mlrval) GetArrayLength() (int, bool) {

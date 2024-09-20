@@ -8,8 +8,8 @@ package dsl
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/pkg/lib"
-	"github.com/johnkerl/miller/pkg/parsing/token"
+	"github.com/johnkerl/miller/v6/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/parsing/token"
 )
 
 // ----------------------------------------------------------------

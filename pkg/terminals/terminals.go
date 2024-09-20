@@ -10,10 +10,10 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/johnkerl/miller/pkg/terminals/help"
-	"github.com/johnkerl/miller/pkg/terminals/regtest"
-	"github.com/johnkerl/miller/pkg/terminals/repl"
-	"github.com/johnkerl/miller/pkg/version"
+	"github.com/johnkerl/miller/v6/pkg/terminals/help"
+	"github.com/johnkerl/miller/v6/pkg/terminals/regtest"
+	"github.com/johnkerl/miller/v6/pkg/terminals/repl"
+	"github.com/johnkerl/miller/v6/pkg/version"
 )
 
 // tTerminalMain is a function-pointer type for the entrypoint handler for a given terminal,

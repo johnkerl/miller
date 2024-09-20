@@ -74,13 +74,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/johnkerl/miller/pkg/cli"
-	"github.com/johnkerl/miller/pkg/lib"
-	"github.com/johnkerl/miller/pkg/mlrval"
-	"github.com/johnkerl/miller/pkg/terminals"
-	"github.com/johnkerl/miller/pkg/terminals/help"
-	"github.com/johnkerl/miller/pkg/transformers"
-	"github.com/johnkerl/miller/pkg/version"
+	"github.com/johnkerl/miller/v6/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/terminals"
+	"github.com/johnkerl/miller/v6/pkg/terminals/help"
+	"github.com/johnkerl/miller/v6/pkg/transformers"
+	"github.com/johnkerl/miller/v6/pkg/version"
 )
 
 // ParseCommandLine is the entrypoint for handling the Miller command line:

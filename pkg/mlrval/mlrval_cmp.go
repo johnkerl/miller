@@ -14,7 +14,7 @@
 package mlrval
 
 import (
-	"github.com/johnkerl/miller/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
 type CmpFuncBool func(input1, input2 *Mlrval) bool

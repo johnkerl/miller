@@ -6,7 +6,7 @@ package input
 import (
 	"container/list"
 
-	"github.com/johnkerl/miller/pkg/types"
+	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
 // Since Go is concurrent, the context struct (AWK-like variables such as

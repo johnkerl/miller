@@ -11,9 +11,9 @@ import (
 
 	"golang.org/x/term"
 
-	"github.com/johnkerl/miller/pkg/colorizer"
-	"github.com/johnkerl/miller/pkg/lib"
-	"github.com/johnkerl/miller/pkg/version"
+	"github.com/johnkerl/miller/v6/pkg/colorizer"
+	"github.com/johnkerl/miller/v6/pkg/lib"
+	"github.com/johnkerl/miller/v6/pkg/version"
 )
 
 const ENV_PRIMARY_PROMPT = "MLR_REPL_PS1"
