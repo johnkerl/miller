@@ -260,7 +260,6 @@ type TransformerStep struct {
 	// STATE
 
 	// Scratch space used per-record
-	valueFieldValues []mlrval.Mlrval
 	// Map from group-by field names to value-field names to stepper name to stepper object.  See
 	// the Transform method below for more details.
 	groups map[string]map[string]map[string]tStepper
