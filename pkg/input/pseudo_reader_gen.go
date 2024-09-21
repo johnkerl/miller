@@ -96,7 +96,7 @@ func (reader *PseudoReaderGen) process(
 			// avoid goroutine-scheduler thrash.
 			eof := false
 			select {
-			case _ = <-downstreamDoneChannel:
+			case <-downstreamDoneChannel:
 				eof = true
 				break
 			default:

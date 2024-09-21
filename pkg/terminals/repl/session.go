@@ -176,7 +176,7 @@ func (repl *Repl) handleSession(istream *os.File) error {
 		doneDraining := false
 		for {
 			select {
-			case _ = <-repl.appSignalNotificationChannel:
+			case <-repl.appSignalNotificationChannel:
 				line = "" // Ignore any partially-entered line -- a ^C should do that
 			default:
 				doneDraining = true

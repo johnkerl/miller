@@ -636,7 +636,7 @@ func bif_percentiles_impl(
 
 	outputs := make([]*mlrval.Mlrval, len(ps))
 
-	for i, _ := range ps {
+	for i := range ps {
 		p, ok := ps[i].GetNumericToFloatValue()
 		if !ok {
 			outputs[i] = type_error_named_argument(funcname, "numeric", "percentile", ps[i])
@@ -655,7 +655,7 @@ func bif_percentiles_impl(
 		return mlrval.FromArray(outputs)
 	} else {
 		m := mlrval.NewMlrmap()
-		for i, _ := range ps {
+		for i := range ps {
 			sp := ps[i].String()
 			m.PutCopy(sp, outputs[i])
 		}
