@@ -295,7 +295,7 @@ func parseCommandLinePassTwo(
 		rc := cli.FLAG_TABLE.Parse(args, argc, &argi, options)
 
 		// Should have been parsed OK in pass one.
-		lib.InternalCodingErrorIf(rc != true)
+		lib.InternalCodingErrorIf(!rc)
 		// Make sure we consumed the entire flag sequence as parsed by pass one.
 		lib.InternalCodingErrorIf(argi != argc)
 	}

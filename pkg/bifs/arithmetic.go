@@ -834,7 +834,7 @@ func min_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // a=F | min=a min=a
 // a=T | min=b min=b
 func min_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.AcquireBoolValue() == false {
+	if !input1.AcquireBoolValue() {
 		return input1
 	} else {
 		return input2
@@ -1004,7 +1004,7 @@ func max_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // a=F | max=a max=b
 // a=T | max=a max=b
 func max_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input2.AcquireBoolValue() == false {
+	if !input2.AcquireBoolValue() {
 		return input1
 	} else {
 		return input2

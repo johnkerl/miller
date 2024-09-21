@@ -134,7 +134,7 @@ func (node *IfChainNode) Execute(state *runtime.State) (*BlockExitPayload, error
 				dsl.TokenToLocationInfo(ifItem.conditionToken),
 			)
 		}
-		if boolValue == true {
+		if boolValue {
 			blockExitPayload, err := ifItem.statementBlockNode.Execute(state)
 			if err != nil {
 				return nil, err

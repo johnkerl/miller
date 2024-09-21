@@ -112,10 +112,10 @@ func (mv *Mlrval) IsBool() bool {
 }
 
 func (mv *Mlrval) IsTrue() bool {
-	return mv.Type() == MT_BOOL && mv.intf.(bool) == true
+	return mv.Type() == MT_BOOL && mv.intf.(bool)
 }
 func (mv *Mlrval) IsFalse() bool {
-	return mv.Type() == MT_BOOL && mv.intf.(bool) == false
+	return mv.Type() == MT_BOOL && !mv.intf.(bool)
 }
 
 func (mv *Mlrval) IsArray() bool {

@@ -64,7 +64,7 @@ func (node *WhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, err
 				dsl.TokenToLocationInfo(node.conditionToken),
 			)
 		}
-		if boolValue != true {
+		if !boolValue {
 			break
 		}
 		blockExitPayload, err := node.statementBlockNode.Execute(state)
@@ -161,7 +161,7 @@ func (node *DoWhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, e
 				dsl.TokenToLocationInfo(node.conditionToken),
 			)
 		}
-		if boolValue == false {
+		if !boolValue {
 			break
 		}
 	}

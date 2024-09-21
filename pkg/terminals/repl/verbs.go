@@ -566,7 +566,7 @@ func skipOrProcessRecord(
 	repl.runtimeState.Update(recordAndContext.Record, &recordAndContext.Context)
 
 	// End-of-stream marker
-	if recordAndContext.EndOfStream == true {
+	if recordAndContext.EndOfStream {
 		fmt.Println("End of record stream")
 		repl.readerChannel = nil
 		repl.errorChannel = nil

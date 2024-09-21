@@ -902,7 +902,7 @@ func (node *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload,
 					dsl.TokenToLocationInfo(node.continuationExpressionToken),
 				)
 			}
-			if boolValue == false {
+			if !boolValue {
 				break
 			}
 		}
