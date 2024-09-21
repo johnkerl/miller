@@ -104,7 +104,6 @@ func (root *RootNode) BuildStatementNode(
 
 	default:
 		return nil, fmt.Errorf("at CST BuildStatementNode: unhandled AST node %s", string(astNode.Type))
-		break
 	}
 	return statement, nil
 }
