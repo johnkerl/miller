@@ -495,6 +495,9 @@ func (root *RootNode) BuildUDF(
 		"function return value",
 		returnValueTypeName,
 	)
+	if err != nil {
+		return nil, err
+	}
 
 	lib.InternalCodingErrorIf(parameterListASTNode.Type != dsl.NodeTypeParameterList)
 	lib.InternalCodingErrorIf(parameterListASTNode.Children == nil)
