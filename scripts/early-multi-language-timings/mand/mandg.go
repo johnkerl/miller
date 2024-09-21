@@ -1,6 +1,7 @@
 package main
 
 import (
+	"C"
 	"fmt"
 )
 

@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func main() {
+func scanner() {
 	filename := os.Args[1]
 
 	handle, err := os.Open(filename)

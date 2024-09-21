@@ -88,13 +88,10 @@ func convert_csv_to_json(fileNames []string) error {
 		select {
 		case ierr := <-inputErrorChannel:
 			retval = ierr
-			break
 		case <-dataProcessingErrorChannel:
 			retval = errors.New("exiting due to data error") // details already printed
-			break
 		case <-doneWritingChannel:
 			done = true
-			break
 		}
 	}
 
@@ -103,7 +100,7 @@ func convert_csv_to_json(fileNames []string) error {
 	return retval
 }
 
-func main() {
+func main3() {
 	err := convert_csv_to_json(os.Args[1:])
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)

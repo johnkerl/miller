@@ -7,7 +7,7 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
-func main() {
+func main1() {
 	a := mlrval.FromInt(2)
 	b := mlrval.FromInt(60)
 	c := bifs.BIF_pow(a, b)

@@ -10,16 +10,16 @@ import (
 )
 
 // ----------------------------------------------------------------
-func main() {
+func main3() {
 	includeFields := strings.Split(os.Args[1], ",")
 	filenames := os.Args[2:]
 
 	ok := true
 	if len(filenames) == 0 {
-		ok = handle("-", includeFields) && ok
+		ok = handle3("-", includeFields) && ok
 	} else {
 		for _, arg := range filenames {
-			ok = handle(arg, includeFields) && ok
+			ok = handle3(arg, includeFields) && ok
 		}
 	}
 	if ok {
@@ -30,7 +30,7 @@ func main() {
 }
 
 // ----------------------------------------------------------------
-func handle(fileName string, includeFields []string) (ok bool) {
+func handle3(fileName string, includeFields []string) (ok bool) {
 	inputStream := os.Stdin
 	if fileName != "-" {
 		var err error
