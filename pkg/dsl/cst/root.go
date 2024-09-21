@@ -251,7 +251,7 @@ func (root *RootNode) regexProtectPrePass(ast *dsl.AST) {
 
 func (root *RootNode) regexProtectPrePassAux(astNode *dsl.ASTNode) {
 
-	if astNode.Children == nil || len(astNode.Children) == 0 {
+	if len(astNode.Children) == 0 {
 		return
 	}
 
