@@ -69,7 +69,7 @@ Options:
 	fmt.Fprintln(o,
 		"Example: mlr stats1 -a count,mode -f size -g shape")
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'")
+		"Example: mlr stats1 -a count,mode --fr '^[a-h].*$' --gr '^k.*$'")
 	fmt.Fprintln(o,
 		`        This computes count and mode statistics on all field names beginning
          with a through h, grouped by all field names starting with k.`)

@@ -1962,7 +1962,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
        Example: mlr stats1 -a count,mode -f size
        Example: mlr stats1 -a count,mode -f size -g shape
-       Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'
+       Example: mlr stats1 -a count,mode --fr '^[a-h].*$' --gr '^k.*$'
                This computes count and mode statistics on all field names beginning
                 with a through h, grouped by all field names starting with k.
 
@@ -3731,5 +3731,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2024-08-25                         4mMILLER24m(1)
+                                  2024-10-02                         4mMILLER24m(1)
 </pre>

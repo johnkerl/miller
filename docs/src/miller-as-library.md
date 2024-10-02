@@ -128,7 +128,7 @@ func custom_options() *cli.TOptions {
 func run_custom_processor(
 	fileNames []string,
 	options *cli.TOptions,
-	record_processor func (irac *types.RecordAndContext) (*types.RecordAndContext, error),
+	record_processor func(irac *types.RecordAndContext) (*types.RecordAndContext, error),
 ) error {
 	outputStream := os.Stdout
 	outputIsStdout := true
