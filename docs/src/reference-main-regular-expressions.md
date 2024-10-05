@@ -251,7 +251,8 @@ package syntax // import "regexp/syntax"
 
 Package syntax parses regular expressions into parse trees and compiles parse
 trees into programs. Most clients of regular expressions will use the facilities
-of package regexp (such as Compile and Match) instead of this package.
+of package regexp (such as regexp.Compile and regexp.Match) instead of this
+package.
 
 # Syntax
 
@@ -301,6 +302,7 @@ Grouping:
 
     (re)           numbered capturing group (submatch)
     (?P<name>re)   named & numbered capturing group (submatch)
+    (?<name>re)    named & numbered capturing group (submatch)
     (?:re)         non-capturing group
     (?flags)       set flags within current group; non-capturing
     (?flags:re)    set flags during re; non-capturing

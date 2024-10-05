@@ -8,6 +8,7 @@ If your `mlr version` says something like `Miller v5.10.2` or `mlr 6.0.0`, witho
 | Release | Docs                                                                | Release notes |
 |---------|---------------------------------------------------------------------|---------------|
 main      | [main branch](https://miller.readthedocs.io/en/main)                | N/A |
+6.13.0     | [Miller 6.13.0](https://miller.readthedocs.io/en/6.13.0)           | [File-stat DSL function, new stats accumulator, misc. bugfixes](https://github.com/johnkerl/miller/releases/tag/v6.13.0) |
 6.12.0     | [Miller 6.12.0](https://miller.readthedocs.io/en/6.12.0)           | [New sparsify verb, wide-table performance improvement, thousands separator for fmtnum function](https://github.com/johnkerl/miller/releases/tag/v6.12.0) |
 6.11.0     | [Miller 6.11.0](https://miller.readthedocs.io/en/6.11.0)           | [CSV/TSV auto-unsparsify, regex-fieldname support for reorder/sub/ssub/gsub, strmatch DSL function, and more](https://github.com/johnkerl/miller/releases/tag/v6.11.0) |
 6.10.0     | [Miller 6.10.0](https://miller.readthedocs.io/en/6.10.0)           | [Add --files option; bugfixes; use Go 1.19](https://github.com/johnkerl/miller/releases/tag/v6.10.0) |
