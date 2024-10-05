@@ -94,7 +94,7 @@ So, take this sum/count example as an indication of the kinds of things you can 
 Also inspired by [AWK](https://en.wikipedia.org/wiki/AWK), the Miller DSL has the following special [**context variables**](reference-dsl-variables.md#built-in-variables):
 
 * `FILENAME` -- the filename the current record came from. Especially useful in things like `mlr ... *.csv`.
-* `FILENUM` -- similarly, but integer 1,2,3,... rather than filenam.e
+* `FILENUM` -- similarly, but integer 1,2,3,... rather than filename.
 * `NF` -- the number of fields in the current record. Note that if you assign `$newcolumn = some value` then `NF` will increment.
 * `NR` -- starting from 1, counter of how many records processed so far.
 * `FNR` -- similar, but resets to 1 at the start of each file.
