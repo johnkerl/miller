@@ -970,7 +970,7 @@ a,b,c
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr filter [options] {DSL expression}
-Lets you use a domain-specific language to programatically filter which
+Lets you use a domain-specific language to programmatically filter which
 stream records will be output.
 See also: https://miller.readthedocs.io/en/latest/reference-verbs
 
@@ -2306,7 +2306,7 @@ Options:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr put [options] {DSL expression}
-Lets you use a domain-specific language to programatically alter stream records.
+Lets you use a domain-specific language to programmatically alter stream records.
 See also: https://miller.readthedocs.io/en/latest/reference-verbs
 
 Options:
