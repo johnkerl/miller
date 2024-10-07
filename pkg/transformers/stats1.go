@@ -312,7 +312,7 @@ func NewTransformerStats1(
 ) (*TransformerStats1, error) {
 	for _, name := range accumulatorNameList {
 		if !utils.ValidateStats1AccumulatorName(name) {
-			return nil, fmt.Errorf("mlr stats1: accumulator \"%s\" not found.", name)
+			return nil, fmt.Errorf(`mlr stats1: accumulator "%s" not found`, name)
 		}
 	}
 

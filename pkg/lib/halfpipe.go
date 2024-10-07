@@ -21,6 +21,9 @@ import (
 
 func OpenOutboundHalfPipe(commandString string) (*os.File, error) {
 	readPipe, writePipe, err := os.Pipe()
+	if err != nil {
+		return nil, err
+	}
 
 	var procAttr os.ProcAttr
 	procAttr.Files = []*os.File{
@@ -56,6 +59,9 @@ func OpenOutboundHalfPipe(commandString string) (*os.File, error) {
 
 func OpenInboundHalfPipe(commandString string) (*os.File, error) {
 	readPipe, writePipe, err := os.Pipe()
+	if err != nil {
+		return nil, err
+	}
 
 	var procAttr os.ProcAttr
 	procAttr.Files = []*os.File{

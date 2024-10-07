@@ -30,7 +30,7 @@ import (
 // If atEOF is true, however, data may be non-empty and, as always, holds
 // unprocessed text.
 
-func main() {
+func splitter() {
 	filename := os.Args[1]
 	handle, err := os.Open(filename)
 	if err != nil {

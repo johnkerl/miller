@@ -157,7 +157,7 @@ func (node *ASTNode) printParexOneLineAux() {
 
 // IsLeaf determines if an AST node is a leaf node.
 func (node *ASTNode) IsLeaf() bool {
-	return node.Children == nil || len(node.Children) == 0
+	return len(node.Children) == 0
 }
 
 // ChildrenAreAllLeaves determines if an AST node's children are all leaf nodes.

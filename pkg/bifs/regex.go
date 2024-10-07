@@ -147,7 +147,7 @@ func BIF_strmatchx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	captures_array := make([]*mlrval.Mlrval, len(captures))
 
 	if len(captures) > 0 {
-		for i, _ := range captures {
+		for i := range captures {
 			if i == 0 {
 				results.PutReference("full_capture", mlrval.FromString(captures[i]))
 			} else {
@@ -156,7 +156,7 @@ func BIF_strmatchx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		}
 
 		starts_array := make([]*mlrval.Mlrval, len(starts))
-		for i, _ := range starts {
+		for i := range starts {
 			if i == 0 {
 				results.PutReference("full_start", mlrval.FromInt(int64(starts[i])))
 			} else {
@@ -165,7 +165,7 @@ func BIF_strmatchx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		}
 
 		ends_array := make([]*mlrval.Mlrval, len(ends))
-		for i, _ := range ends {
+		for i := range ends {
 			if i == 0 {
 				results.PutReference("full_end", mlrval.FromInt(int64(ends[i])))
 			} else {

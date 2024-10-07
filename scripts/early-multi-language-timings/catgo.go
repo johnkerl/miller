@@ -8,15 +8,15 @@ import (
 )
 
 // ----------------------------------------------------------------
-func main() {
+func main1() {
 	args := os.Args[1:]
 
 	ok := true
 	if len(args) == 0 {
-		ok = handle("-") && ok
+		ok = handle1("-") && ok
 	} else {
 		for _, arg := range args {
-			ok = handle(arg) && ok
+			ok = handle1(arg) && ok
 		}
 	}
 	if ok {
@@ -27,7 +27,7 @@ func main() {
 }
 
 // ----------------------------------------------------------------
-func handle(fileName string) (ok bool) {
+func handle1(fileName string) (ok bool) {
 	inputStream := os.Stdin
 	if fileName != "-" {
 		var err error

@@ -260,7 +260,6 @@ type TransformerStep struct {
 	// STATE
 
 	// Scratch space used per-record
-	valueFieldValues []mlrval.Mlrval
 	// Map from group-by field names to value-field names to stepper name to stepper object.  See
 	// the Transform method below for more details.
 	groups map[string]map[string]map[string]tStepper
@@ -282,12 +281,12 @@ func NewTransformerStep(
 ) (*TransformerStep, error) {
 
 	if len(stepperInputs) == 0 || len(valueFieldNames) == 0 {
-		return nil, fmt.Errorf("mlr %s: -a and -f are both required arguments.", verbNameStep)
+		return nil, fmt.Errorf("mlr %s: -a and -f are both required arguments", verbNameStep)
 	}
 	if len(stringAlphas) != 0 && len(ewmaSuffixes) != 0 {
 		if len(ewmaSuffixes) != len(stringAlphas) {
 			return nil, fmt.Errorf(
-				"mlr %s: If -d and -o are provided, their values must have the same length.", verbNameStep,
+				"mlr %s: If -d and -o are provided, their values must have the same length", verbNameStep,
 			)
 		}
 	}

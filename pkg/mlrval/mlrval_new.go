@@ -289,7 +289,7 @@ func FromPrevalidatedFloatString(input string, floatval float64) *Mlrval {
 }
 
 func FromBool(input bool) *Mlrval {
-	if input == true {
+	if input {
 		return TRUE
 	} else {
 		return FALSE

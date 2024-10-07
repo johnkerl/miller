@@ -176,7 +176,7 @@ func (repl *Repl) handleSession(istream *os.File) error {
 		doneDraining := false
 		for {
 			select {
-			case _ = <-repl.appSignalNotificationChannel:
+			case <-repl.appSignalNotificationChannel:
 				line = "" // Ignore any partially-entered line -- a ^C should do that
 			default:
 				doneDraining = true
@@ -268,7 +268,7 @@ func (repl *Repl) closeBufferedOutputStream() error {
 	if repl.recordOutputStream != os.Stdout {
 		err := repl.recordOutputStream.Close()
 		if err != nil {
-			return fmt.Errorf("mlr repl: error on redirect close of %s: %v\n",
+			return fmt.Errorf("mlr repl: error on redirect close of %s: %v",
 				repl.recordOutputFileName, err,
 			)
 		}

@@ -244,7 +244,7 @@ func (root *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
 	if !root.allowUDFUDSRedefinitions {
 		if root.udsManager.ExistsByName(subroutineName) {
 			return fmt.Errorf(
-				"mlr: subroutine named \"%s\" has already been defined.",
+				`mlr: subroutine named "%s" has already been defined`,
 				subroutineName,
 			)
 		}

@@ -407,7 +407,7 @@ func (frame *StackFrame) defineTyped(
 		return nil
 	} else {
 		return fmt.Errorf(
-			"%s: variable %s has already been defined in the same scope.",
+			"%s: variable %s has already been defined in the same scope",
 			"mlr", stackVariable.name,
 		)
 	}
@@ -429,7 +429,7 @@ func (frame *StackFrame) setIndexed(
 			return frame.set(stackVariable, newval)
 		} else {
 			return fmt.Errorf(
-				"%s: map indices must be int or string; got %s.\n",
+				"%s: map indices must be int or string; got %s",
 				"mlr", leadingIndex.GetTypeName(),
 			)
 		}

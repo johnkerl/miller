@@ -2595,7 +2595,7 @@ func (manager *BuiltinFunctionManager) getBuiltinFunctionClasses() []string {
 	classesList := make([]string, 0)
 	for _, builtinFunctionInfo := range *manager.lookupTable {
 		class := string(builtinFunctionInfo.class)
-		if classesSeen[class] == false {
+		if !classesSeen[class] {
 			classesList = append(classesList, class)
 			classesSeen[class] = true
 		}

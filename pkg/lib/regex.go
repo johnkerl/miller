@@ -203,7 +203,7 @@ func regexCompiledSubOrGsub(
 	breakOnFirst bool,
 ) string {
 	matrix := regex.FindAllStringSubmatchIndex(input, -1)
-	if matrix == nil || len(matrix) == 0 {
+	if len(matrix) == 0 {
 		return input
 	}
 
@@ -321,7 +321,7 @@ func RegexCompiledMatchWithMapResults(
 	ends := make([]int, 0, 10)
 
 	matrix := regex.FindAllStringSubmatchIndex(input, -1)
-	if matrix == nil || len(matrix) == 0 {
+	if len(matrix) == 0 {
 		return false, captures, starts, ends
 	}
 
@@ -407,7 +407,7 @@ func RegexCompiledMatchWithCaptures(
 	regex *regexp.Regexp,
 ) (bool, []string) {
 	matrix := regex.FindAllStringSubmatchIndex(input, -1)
-	if matrix == nil || len(matrix) == 0 {
+	if len(matrix) == 0 {
 		// Set all captures to ""
 		return false, make([]string, 10)
 	}

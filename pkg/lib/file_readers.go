@@ -269,10 +269,10 @@ func IsUpdateableInPlace(
 	if strings.HasPrefix(filename, "http://") ||
 		strings.HasPrefix(filename, "https://") ||
 		strings.HasPrefix(filename, "file://") {
-		return fmt.Errorf("http://, https://, and file:// URLs are not updateable in place.")
+		return fmt.Errorf("http://, https://, and file:// URLs are not updateable in place")
 	}
 	if prepipe != "" {
-		return fmt.Errorf("input with --prepipe or --prepipex is not updateable in place.")
+		return fmt.Errorf("input with --prepipe or --prepipex is not updateable in place")
 	}
 	return nil
 }
@@ -314,7 +314,7 @@ func WrapOutputHandle(
 ) (io.WriteCloser, bool, error) {
 	switch inputFileEncoding {
 	case FileInputEncodingBzip2:
-		return fileWriteHandle, false, fmt.Errorf("bzip2 is not currently supported for in-place mode.")
+		return fileWriteHandle, false, fmt.Errorf("bzip2 is not currently supported for in-place mode")
 	case FileInputEncodingGzip:
 		return gzip.NewWriter(fileWriteHandle), true, nil
 	case FileInputEncodingZlib:

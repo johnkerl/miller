@@ -105,7 +105,7 @@ func (mv *Mlrval) UnmarshalJSON(inputBytes []byte) error {
 	decoder := json.NewDecoder(bytes.NewReader(inputBytes))
 	pmv, eof, err := MlrvalDecodeFromJSON(decoder)
 	if eof {
-		return fmt.Errorf("mlr: JSON parser: unexpected premature EOF.")
+		return fmt.Errorf("mlr: JSON parser: unexpected premature EOF")
 	}
 	if err != nil {
 		return err
@@ -119,7 +119,7 @@ func TryUnmarshalJSON(inputBytes []byte) (pmv *Mlrval, err error) {
 	decoder := json.NewDecoder(bytes.NewReader(inputBytes))
 	pmv, eof, err := MlrvalDecodeFromJSON(decoder)
 	if eof {
-		err = fmt.Errorf("mlr: JSON parser: unexpected premature EOF.")
+		err = fmt.Errorf("mlr: JSON parser: unexpected premature EOF")
 	}
 	return pmv, err
 }
@@ -188,7 +188,9 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 			)
 		}
 
-		mv := FromPending()
+		// Will be assigned as an array or a map
+		var mv *Mlrval
+
 		if isArray {
 			mv = FromEmptyArray()
 
@@ -196,14 +198,13 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 				element, eof, err := MlrvalDecodeFromJSON(decoder)
 				if eof {
 					// xxx constify
-					return nil, false, fmt.Errorf("mlr: JSON parser: unexpected premature EOF.")
+					return nil, false, fmt.Errorf("mlr: JSON parser: unexpected premature EOF")
 				}
 				if err != nil {
 					return nil, false, err
 				}
 				mv.ArrayAppend(element)
 			}
-
 		} else {
 			mv = FromEmptyMap()
 
@@ -211,7 +212,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 				key, eof, err := MlrvalDecodeFromJSON(decoder)
 				if eof {
 					// xxx constify
-					return nil, false, fmt.Errorf("mlr: JSON parser: unexpected premature EOF.")
+					return nil, false, fmt.Errorf("mlr: JSON parser: unexpected premature EOF")
 				}
 				if err != nil {
 					return nil, false, err
@@ -219,14 +220,14 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 				if !key.IsString() {
 					return nil, false, fmt.Errorf(
 						// TODO: print out what was gotten
-						"mlr JSON reader: object keys must be string-valued.",
+						"mlr JSON reader: object keys must be string-valued",
 					)
 				}
 
 				value, eof, err := MlrvalDecodeFromJSON(decoder)
 				if eof {
 					// xxx constify
-					return nil, false, fmt.Errorf("mlr: JSON parser: unexpected premature EOF.")
+					return nil, false, fmt.Errorf("mlr: JSON parser: unexpected premature EOF")
 				}
 				if err != nil {
 					return nil, false, err
@@ -245,7 +246,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 
 		endToken, err := decoder.Token()
 		if err == io.EOF {
-			return nil, false, fmt.Errorf("mlr: JSON parser: unexpected premature EOF.")
+			return nil, false, fmt.Errorf("mlr: JSON parser: unexpected premature EOF")
 		}
 		if err != nil {
 			return nil, false, err

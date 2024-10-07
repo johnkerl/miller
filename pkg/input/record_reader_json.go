@@ -99,7 +99,7 @@ func (reader *RecordReaderJSON) processHandle(
 		i++
 		if i%recordsPerBatch == 0 {
 			select {
-			case _ = <-downstreamDoneChannel:
+			case <-downstreamDoneChannel:
 				eof = true
 				break
 			default:
@@ -153,7 +153,7 @@ func (reader *RecordReaderJSON) processHandle(
 				if !mlrval.IsMap() {
 					// TODO: more context
 					errorChannel <- fmt.Errorf(
-						"valid but unmillerable JSON. Expected map (JSON object); got %s.",
+						"valid but unmillerable JSON. Expected map (JSON object); got %s",
 						mlrval.GetTypeName(),
 					)
 					return
@@ -174,7 +174,7 @@ func (reader *RecordReaderJSON) processHandle(
 
 		} else {
 			errorChannel <- fmt.Errorf(
-				"valid but unmillerable JSON. Expected map (JSON object); got %s.",
+				"valid but unmillerable JSON. Expected map (JSON object); got %s",
 				mlrval.GetTypeName(),
 			)
 			return
@@ -281,9 +281,7 @@ func (bsr *JSONCommentEnabledReader) Read(p []byte) (n int, err error) {
 func (bsr *JSONCommentEnabledReader) populateFromLine(p []byte) int {
 	numBytesWritten := 0
 	if len(bsr.lineBytes) < len(p) {
-		for i := 0; i < len(bsr.lineBytes); i++ {
-			p[i] = bsr.lineBytes[i]
-		}
+		copy(p, bsr.lineBytes)
 		numBytesWritten = len(bsr.lineBytes)
 		bsr.lineBytes = nil
 	} else {
