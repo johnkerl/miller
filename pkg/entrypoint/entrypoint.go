@@ -9,10 +9,12 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/auxents"
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/climain"
+	"github.com/johnkerl/miller/v6/pkg/completion"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/platform"
 	"github.com/johnkerl/miller/v6/pkg/stream"
@@ -24,6 +26,13 @@ type MainReturn struct {
 }
 
 func Main() MainReturn {
+
+	if len(os.Args) > 1 {
+		if strings.HasPrefix(os.Args[1], "_complete") {
+			completion.DoCompletion()
+			return MainReturn{PrintElapsedTime: false}
+		}
+	}
 	// Special handling for Windows so we can do things like:
 	//
 	//   mlr put '$a = $b . "cd \"efg\" hi"' foo.dat

@@ -31,6 +31,7 @@ func init() {
 		{"lecat", lecatMain},
 		{"termcvt", termcvtMain},
 		{"unhex", unhexMain},
+		{"completion", genCompletion},
 	}
 }
 
