@@ -507,7 +507,7 @@ be specified CSV as well unless you override with 'mlr --csv ... join --ijson -l
 Likewise, if you have 'mlr --csv --implicit-csv-header ...' then the join-in file will be
 expected to be headerless as well unless you put '--no-implicit-csv-header' after 'join'.
 Please use "mlr --usage-separator-options" for information on specifying separators.
-Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information
+Please see https://miller.readthedocs.io/en/latest/reference-verbs#join for more information
 including examples.
 
 ================================================================
