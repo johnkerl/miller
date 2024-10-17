@@ -1384,7 +1384,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Likewise, if you have 'mlr --csv --implicit-csv-header ...' then the join-in file will be
        expected to be headerless as well unless you put '--no-implicit-csv-header' after 'join'.
        Please use "mlr --usage-separator-options" for information on specifying separators.
-       Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information
+       Please see https://miller.readthedocs.io/en/latest/reference-verbs#join for more information
        including examples.
 
    1mlabel0m
@@ -3731,5 +3731,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2024-10-05                         4mMILLER24m(1)
+                                  2024-10-17                         4mMILLER24m(1)
 </pre>

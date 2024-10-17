@@ -130,7 +130,7 @@ func transformerJoinUsage(
 	fmt.Fprintf(o, "expected to be headerless as well unless you put '--no-implicit-csv-header' after 'join'.\n")
 	fmt.Fprintf(o, "Please use \"%s --usage-separator-options\" for information on specifying separators.\n",
 		"mlr")
-	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information\n")
+	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs#join for more information\n")
 	fmt.Fprintf(o, "including examples.\n")
 }
 
