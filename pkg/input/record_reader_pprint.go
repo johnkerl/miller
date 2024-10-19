@@ -227,7 +227,7 @@ func getRecordBatchExplicitPprintHeader(
 			continue
 		}
 		fields := make([]string, npad-2)
-		for i, _ := range paddedFields {
+		for i := range paddedFields {
 			if i == 0 || i == npad-1 {
 				continue
 			}
@@ -240,8 +240,7 @@ func getRecordBatchExplicitPprintHeader(
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
 				err := fmt.Errorf(
-					"mlr: PPRINT-barred header/data length mismatch %d != %d "+
-						"at filename %s line  %d.\n",
+					"mlr: PPRINT-barred header/data length mismatch %d != %d at filename %s line %d",
 					len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
 				)
 				errorChannel <- err
@@ -362,7 +361,7 @@ func getRecordBatchImplicitPprintHeader(
 		paddedFields := reader.fieldSplitter.Split(line)
 		npad := len(paddedFields)
 		fields := make([]string, npad-2)
-		for i, _ := range paddedFields {
+		for i := range paddedFields {
 			if i == 0 || i == npad-1 {
 				continue
 			}
@@ -378,8 +377,7 @@ func getRecordBatchImplicitPprintHeader(
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
 				err := fmt.Errorf(
-					"mlr: CSV header/data length mismatch %d != %d "+
-						"at filename %s line  %d.\n",
+					"mlr: CSV header/data length mismatch %d != %d at filename %s line %d",
 					len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
 				)
 				errorChannel <- err

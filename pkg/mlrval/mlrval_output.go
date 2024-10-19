@@ -87,7 +87,7 @@ func (mv *Mlrval) setPrintRep() {
 			mv.printrep = strconv.FormatFloat(mv.intf.(float64), 'f', -1, 64)
 
 		case MT_BOOL:
-			if mv.intf.(bool) == true {
+			if mv.intf.(bool) {
 				mv.printrep = "true"
 			} else {
 				mv.printrep = "false"
@@ -120,7 +120,7 @@ func (mv *Mlrval) StringifyValuesRecursively() {
 	switch mv.mvtype {
 
 	case MT_ARRAY:
-		for i, _ := range mv.intf.([]*Mlrval) {
+		for i := range mv.intf.([]*Mlrval) {
 			mv.intf.([]*Mlrval)[i].StringifyValuesRecursively()
 		}
 

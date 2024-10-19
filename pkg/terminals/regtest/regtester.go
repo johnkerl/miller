@@ -855,7 +855,7 @@ func (regtester *RegTester) loadEnvFile(
 		fields := strings.SplitN(line, "=", 2)
 		if len(fields) != 2 {
 			return nil, fmt.Errorf(
-				"mlr: could not parse line \"%s\" from file \"%s\".\n",
+				`mlr: could not parse line "%s" from file "%s"`,
 				line, filename,
 			)
 		}
@@ -892,7 +892,7 @@ func (regtester *RegTester) loadStringPairFile(
 		fields := strings.SplitN(line, " ", 2) // TODO: split on multi-space
 		if len(fields) != 2 {
 			return nil, fmt.Errorf(
-				"mlr: could not parse line \"%s\" from file \"%s\".\n",
+				`mlr: could not parse line "%s" from file "%s"`,
 				line, filename,
 			)
 		}

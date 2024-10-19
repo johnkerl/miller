@@ -104,6 +104,8 @@ func _zero1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // Return one (unary)
+//
+//lint:ignore U1000 util function might be used later
 func __one1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(1)
 }

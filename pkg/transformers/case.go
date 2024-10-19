@@ -157,7 +157,7 @@ func NewTransformerCase(
 		tr.caserFunc = cases.Title(language.Und).String
 	default:
 		return nil, fmt.Errorf(
-			"mlr %s: case option must be specified using one of -u, -l, -s, -t.",
+			"mlr %s: case option must be specified using one of -u, -l, -s, -t",
 			verbNameCase,
 		)
 	}

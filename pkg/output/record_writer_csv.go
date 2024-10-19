@@ -14,7 +14,6 @@ import (
 
 type RecordWriterCSV struct {
 	writerOptions     *cli.TWriterOptions
-	ofs0              byte // Go's CSV library only lets its 'Comma' be a single character
 	csvWriter         *csv.Writer
 	needToPrintHeader bool
 	firstRecordKeys   []string

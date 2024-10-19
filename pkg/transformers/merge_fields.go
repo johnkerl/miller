@@ -254,7 +254,7 @@ func NewTransformerMergeFields(
 	for _, accumulatorName := range accumulatorNameList {
 		if !utils.ValidateStats1AccumulatorName(accumulatorName) {
 			return nil, fmt.Errorf(
-				"mlr %s: accumulator \"%s\" not found.\n",
+				`mlr %s: accumulator "%s" not found`,
 				verbNameMergeFields, accumulatorName,
 			)
 		}

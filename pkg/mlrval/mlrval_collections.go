@@ -396,9 +396,9 @@ func putIndexedOnArray(
 		if inBounds {
 			(*baseArray)[zindex] = rvalue.Copy()
 		} else if mindex.intf.(int64) == 0 {
-			return errors.New("mlr: zero indices are not supported. Indices are 1-up.")
+			return errors.New("mlr: zero indices are not supported. Indices are 1-up")
 		} else if mindex.intf.(int64) < 0 {
-			return errors.New("mlr: Cannot use negative indices to auto-lengthen arrays.")
+			return errors.New("mlr: Cannot use negative indices to auto-lengthen arrays")
 		} else {
 			// Array is [a,b,c] with mindices 1,2,3. Length is 3. Zindices are 0,1,2.
 			// Given mindex is 4.
@@ -431,9 +431,9 @@ func putIndexedOnArray(
 			return (*baseArray)[zindex].PutIndexed(indices[1:], rvalue)
 
 		} else if mindex.intf.(int64) == 0 {
-			return errors.New("mlr: zero indices are not supported. Indices are 1-up.")
+			return errors.New("mlr: zero indices are not supported. Indices are 1-up")
 		} else if mindex.intf.(int64) < 0 {
-			return errors.New("mlr: Cannot use negative indices to auto-lengthen arrays.")
+			return errors.New("mlr: Cannot use negative indices to auto-lengthen arrays")
 		} else {
 			// Already allocated but needs to be longer
 			LengthenMlrvalArray(baseArray, int(mindex.intf.(int64)))
@@ -458,7 +458,7 @@ func (mv *Mlrval) RemoveIndexed(indices []*Mlrval) error {
 
 	} else {
 		return errors.New(
-			"mlr: cannot unset index variable which is neither map nor array.",
+			"mlr: cannot unset index variable which is neither map nor array",
 		)
 	}
 }
@@ -527,20 +527,20 @@ func removeIndexedOnArray(
 			rightSlice := (*baseArray)[zindex+1 : len((*baseArray))]
 			*baseArray = append(leftSlice, rightSlice...)
 		} else if mindex.intf.(int64) == 0 {
-			return errors.New("mlr: zero indices are not supported. Indices are 1-up.")
+			return errors.New("mlr: zero indices are not supported. Indices are 1-up")
 		} else {
 			// TODO: improve wording
-			return errors.New("mlr: array index out of bounds for unset.")
+			return errors.New("mlr: array index out of bounds for unset")
 		}
 	} else {
 		// More indices remain; recurse
 		if inBounds {
 			return (*baseArray)[zindex].RemoveIndexed(indices[1:])
 		} else if mindex.intf.(int64) == 0 {
-			return errors.New("mlr: zero indices are not supported. Indices are 1-up.")
+			return errors.New("mlr: zero indices are not supported. Indices are 1-up")
 		} else {
 			// TODO: improve wording
-			return errors.New("mlr: array index out of bounds for unset.")
+			return errors.New("mlr: array index out of bounds for unset")
 		}
 
 	}

@@ -130,11 +130,11 @@ func (node *IfChainNode) Execute(state *runtime.State) (*BlockExitPayload, error
 		boolValue, isBool := condition.GetBoolValue()
 		if !isBool {
 			return nil, fmt.Errorf(
-				"mlr: conditional expression did not evaluate to boolean%s.",
+				"mlr: conditional expression did not evaluate to boolean%s",
 				dsl.TokenToLocationInfo(ifItem.conditionToken),
 			)
 		}
-		if boolValue == true {
+		if boolValue {
 			blockExitPayload, err := ifItem.statementBlockNode.Execute(state)
 			if err != nil {
 				return nil, err

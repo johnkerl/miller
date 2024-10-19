@@ -295,7 +295,7 @@ func parseCommandLinePassTwo(
 		rc := cli.FLAG_TABLE.Parse(args, argc, &argi, options)
 
 		// Should have been parsed OK in pass one.
-		lib.InternalCodingErrorIf(rc != true)
+		lib.InternalCodingErrorIf(!rc)
 		// Make sure we consumed the entire flag sequence as parsed by pass one.
 		lib.InternalCodingErrorIf(argi != argc)
 	}
@@ -394,7 +394,7 @@ func parseCommandLinePassTwo(
 		options.FileNames = nil
 	}
 
-	if options.DoInPlace && (options.FileNames == nil || len(options.FileNames) == 0) {
+	if options.DoInPlace && len(options.FileNames) == 0 {
 		fmt.Fprintf(os.Stderr, "%s: -I option (in-place operation) requires input files.\n", "mlr")
 		os.Exit(1)
 	}

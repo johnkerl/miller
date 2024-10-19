@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func main() {
+func read_string() {
 	filename := os.Args[1]
 	handle, err := os.Open(filename)
 	if err != nil {

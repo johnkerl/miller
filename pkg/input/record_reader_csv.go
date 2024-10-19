@@ -158,7 +158,7 @@ func channelizedCSVRecordScanner(
 		// quickly, as it should.
 		if i%recordsPerBatch == 0 {
 			select {
-			case _ = <-downstreamDoneChannel:
+			case <-downstreamDoneChannel:
 				done = true
 				break
 			default:
@@ -244,8 +244,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				err := fmt.Errorf(
-					"mlr: CSV header/data length mismatch %d != %d "+
-						"at filename %s row %d.\n",
+					"mlr: CSV header/data length mismatch %d != %d at filename %s row %d",
 					nh, nd, reader.filename, reader.rowNumber,
 				)
 				errorChannel <- err

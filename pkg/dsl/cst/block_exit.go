@@ -70,7 +70,7 @@ func (root *RootNode) BuildReturnNode(astNode *dsl.ASTNode) (*ReturnNode, error)
 	} else {
 		lib.InternalCodingErrorIf(true)
 	}
-	return nil, fmt.Errorf("internal coding error: statement should not be reached.")
+	return nil, fmt.Errorf("internal coding error: statement should not be reached")
 }
 
 func (node *ReturnNode) Execute(state *runtime.State) (*BlockExitPayload, error) {

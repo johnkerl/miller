@@ -300,7 +300,7 @@ func NewPipeWriteOutputHandler(
 ) (*FileOutputHandler, error) {
 	writePipe, err := lib.OpenOutboundHalfPipe(commandString)
 	if err != nil {
-		return nil, fmt.Errorf("could not launch command \"%s\" for pipe-to.", commandString)
+		return nil, fmt.Errorf(`could not launch command "%s" for pipe-to`, commandString)
 	}
 
 	return newOutputHandlerCommon(
@@ -399,13 +399,11 @@ func (handler *FileOutputHandler) Close() (retval error) {
 		done := false
 		for !done {
 			select {
-			case _ = <-handler.recordErroredChannel:
+			case <-handler.recordErroredChannel:
 				done = true
 				retval = errors.New("exiting due to data error") // details already printed
-				break
-			case _ = <-handler.recordDoneChannel:
+			case <-handler.recordDoneChannel:
 				done = true
-				break
 			}
 		}
 	}

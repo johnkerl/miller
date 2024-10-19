@@ -45,11 +45,11 @@ func (root *RootNode) BuildAssignableNode(
 
 	case dsl.NodeTypeArrayOrMapPositionalNameAccess:
 		return nil, fmt.Errorf(
-			"mlr: '[[...]]' is allowed on assignment left-hand sides only when immediately preceded by '$'.",
+			"mlr: '[[...]]' is allowed on assignment left-hand sides only when immediately preceded by '$'",
 		)
 	case dsl.NodeTypeArrayOrMapPositionalValueAccess:
 		return nil, fmt.Errorf(
-			"mlr: '[[[...]]]' is allowed on assignment left-hand sides only when immediately preceded by '$'.",
+			"mlr: '[[[...]]]' is allowed on assignment left-hand sides only when immediately preceded by '$'",
 		)
 
 	case dsl.NodeTypeArrayOrMapIndexAccess:
@@ -106,7 +106,7 @@ func (node *DirectFieldValueLvalueNode) AssignIndexed(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return fmt.Errorf("there is no current record to assign to.")
+		return fmt.Errorf("there is no current record to assign to")
 	}
 
 	// AssignmentNode checks for absent, so we just assign whatever we get
@@ -205,7 +205,7 @@ func (node *IndirectFieldValueLvalueNode) AssignIndexed(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return fmt.Errorf("there is no current record to assign to.")
+		return fmt.Errorf("there is no current record to assign to")
 	}
 
 	lhsFieldName := node.lhsFieldNameExpression.Evaluate(state)
@@ -298,7 +298,7 @@ func (node *PositionalFieldNameLvalueNode) Assign(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return fmt.Errorf("there is no current record to assign to.")
+		return fmt.Errorf("there is no current record to assign to")
 	}
 
 	lhsFieldIndex := node.lhsFieldIndexExpression.Evaluate(state)
@@ -310,7 +310,7 @@ func (node *PositionalFieldNameLvalueNode) Assign(
 		return nil
 	} else {
 		return fmt.Errorf(
-			"mlr: positional index for $[[...]] assignment must be integer; got %s.",
+			"mlr: positional index for $[[...]] assignment must be integer; got %s",
 			lhsFieldIndex.GetTypeName(),
 		)
 	}
@@ -324,7 +324,7 @@ func (node *PositionalFieldNameLvalueNode) AssignIndexed(
 	// TODO: reconsider this if /when we decide to allow string-slice
 	// assignments.
 	return fmt.Errorf(
-		"mlr: $[[...]] = ... expressions are not indexable.",
+		"mlr: $[[...]] = ... expressions are not indexable",
 	)
 }
 
@@ -416,7 +416,7 @@ func (node *PositionalFieldValueLvalueNode) AssignIndexed(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return fmt.Errorf("there is no current record to assign to.")
+		return fmt.Errorf("there is no current record to assign to")
 	}
 
 	lhsFieldIndex := node.lhsFieldIndexExpression.Evaluate(state)
@@ -434,7 +434,7 @@ func (node *PositionalFieldValueLvalueNode) AssignIndexed(
 			return nil
 		} else {
 			return fmt.Errorf(
-				"mlr: positional index for $[[[...]]] assignment must be integer; got %s.",
+				"mlr: positional index for $[[[...]]] assignment must be integer; got %s",
 				lhsFieldIndex.GetTypeName(),
 			)
 		}
@@ -517,7 +517,7 @@ func (node *FullSrecLvalueNode) AssignIndexed(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return fmt.Errorf("there is no current record to assign to.")
+		return fmt.Errorf("there is no current record to assign to")
 	}
 
 	// AssignmentNode checks for absentness of the rvalue, so we just assign
@@ -787,7 +787,7 @@ func (root *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssig
 	if astNode.Children == nil { // untyped, like 'x = 3'
 		if root.strictMode {
 			return nil, fmt.Errorf(
-				"mlr: need typedecl such as \"var\", \"str\", \"num\", etc. for variable \"%s\" in strict mode",
+				`mlr: need typedecl such as "var", "str", "num", etc. for variable "%s" in strict mode`,
 				variableName,
 			)
 		}
@@ -1086,7 +1086,7 @@ func (node *EnvironmentVariableLvalueNode) Assign(
 
 	if !name.IsString() {
 		return fmt.Errorf(
-			"assignments to ENV[...] must have string names; got %s \"%s\"\n",
+			`assignments to ENV[...] must have string names; got %s "%s"`,
 			name.GetTypeName(),
 			name.String(),
 		)
@@ -1109,7 +1109,7 @@ func (node *EnvironmentVariableLvalueNode) AssignIndexed(
 	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
-	return fmt.Errorf("mlr: ENV[...] cannot be indexed.")
+	return fmt.Errorf("mlr: ENV[...] cannot be indexed")
 }
 
 func (node *EnvironmentVariableLvalueNode) Unassign(
@@ -1133,5 +1133,5 @@ func (node *EnvironmentVariableLvalueNode) UnassignIndexed(
 	state *runtime.State,
 ) {
 	// TODO: needs error return
-	//return errors.New("mlr: ENV[...] cannot be indexed.")
+	//return errors.New("mlr: ENV[...] cannot be indexed")
 }

@@ -201,7 +201,7 @@ func channelizedLineReader(
 		// quickly, as it should.
 		if i%recordsPerBatch == 0 {
 			select {
-			case _ = <-downstreamDoneChannel:
+			case <-downstreamDoneChannel:
 				done = true
 				break
 			default:

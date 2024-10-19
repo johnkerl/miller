@@ -73,7 +73,7 @@ func transformerPutOrFilterUsage(
 Since the expression pieces are simply concatenated, please be sure to use intervening
 semicolons to separate expressions.)
 
--s name=value: Predefines out-of-stream variable @name to have 
+-s name=value: Predefines out-of-stream variable @name to have
     Thus mlr put -s foo=97 '$column += @foo' is like
     mlr put 'begin {@foo = 97} $column += @foo'.
     The value part is subject to type-inferencing.
@@ -473,7 +473,7 @@ func NewTransformerPut(
 		for _, preset := range presets {
 			pair := strings.SplitN(preset, "=", 2)
 			if len(pair) != 2 {
-				return nil, fmt.Errorf("missing \"=\" in preset expression \"%s\".", preset)
+				return nil, fmt.Errorf(`missing "=" in preset expression "%s"`, preset)
 			}
 			key := pair[0]
 			svalue := pair[1]
@@ -542,7 +542,7 @@ func (tr *TransformerPut) Transform(
 
 		// If there were no input records then we never executed the
 		// begin-blocks. Do so now.
-		if tr.executedBeginBlocks == false {
+		if !tr.executedBeginBlocks {
 			err := tr.cstRootNode.ExecuteBeginBlocks(tr.runtimeState)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)

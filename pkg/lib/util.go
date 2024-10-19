@@ -14,7 +14,7 @@ func BooleanXOR(a, b bool) bool {
 }
 
 func BoolToInt(b bool) int64 {
-	if b == false {
+	if !b {
 		return 0
 	} else {
 		return 1

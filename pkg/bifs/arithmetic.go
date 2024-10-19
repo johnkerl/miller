@@ -834,7 +834,7 @@ func min_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // a=F | min=a min=a
 // a=T | min=b min=b
 func min_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.AcquireBoolValue() == false {
+	if !input1.AcquireBoolValue() {
 		return input1
 	} else {
 		return input2
@@ -946,7 +946,7 @@ func BIF_minlen_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	}
 	// Do the bulk arithmetic on native ints not Mlrvals, to avoid unnecessary allocation.
 	retval := lib.UTF8Strlen(mlrvals[0].OriginalString())
-	for i, _ := range mlrvals {
+	for i := range mlrvals {
 		clen := lib.UTF8Strlen(mlrvals[i].OriginalString())
 		if clen < retval {
 			retval = clen
@@ -1004,7 +1004,7 @@ func max_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // a=F | max=a max=b
 // a=T | max=a max=b
 func max_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input2.AcquireBoolValue() == false {
+	if !input2.AcquireBoolValue() {
 		return input1
 	} else {
 		return input2
@@ -1116,7 +1116,7 @@ func BIF_maxlen_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	}
 	// Do the bulk arithmetic on native ints not Mlrvals, to avoid unnecessary allocation.
 	retval := lib.UTF8Strlen(mlrvals[0].OriginalString())
-	for i, _ := range mlrvals {
+	for i := range mlrvals {
 		clen := lib.UTF8Strlen(mlrvals[i].OriginalString())
 		if clen > retval {
 			retval = clen

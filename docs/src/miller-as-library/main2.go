@@ -91,7 +91,6 @@ func run_custom_processor(
 
 		case ierr := <-inputErrorChannel:
 			retval = ierr
-			break
 
 		case iracs := <-readerChannel:
 			// Handle the record batch
@@ -104,7 +103,12 @@ func run_custom_processor(
 						done = true
 						break
 					}
-					recordWriter.Write(orac.Record, bufferedOutputStream, outputIsStdout)
+					recordWriter.Write(
+						orac.Record,
+						types.NewContext(),
+						bufferedOutputStream,
+						outputIsStdout,
+					)
 				}
 				if irac.OutputString != "" {
 					fmt.Fprintln(bufferedOutputStream, irac.OutputString)
@@ -113,7 +117,6 @@ func run_custom_processor(
 					done = true
 				}
 			}
-			break
 
 		}
 	}
@@ -123,7 +126,7 @@ func run_custom_processor(
 	return retval
 }
 
-func main() {
+func main2() {
 	options := custom_options()
 	err := run_custom_processor(os.Args[1:], options, custom_record_processor)
 	if err != nil {

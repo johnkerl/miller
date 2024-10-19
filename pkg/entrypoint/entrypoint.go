@@ -104,9 +104,7 @@ func processInPlace(
 
 	// Save off the file names from the command line.
 	fileNames := make([]string, len(originalOptions.FileNames))
-	for i, fileName := range originalOptions.FileNames {
-		fileNames[i] = fileName
-	}
+	copy(fileNames, originalOptions.FileNames)
 
 	for _, fileName := range fileNames {
 

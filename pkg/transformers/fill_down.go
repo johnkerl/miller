@@ -116,7 +116,6 @@ func transformerFillDownParseCLI(
 type TransformerFillDown struct {
 	// input
 	fillDownFieldNames []string
-	doAll              bool
 	onlyIfAbsent       bool
 
 	// state
