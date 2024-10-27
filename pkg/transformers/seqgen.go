@@ -156,7 +156,7 @@ func NewTransformerSeqgen(
 		if fstart == fstop {
 			doneComparator = bifs.BIF_equals
 		} else {
-			return nil, fmt.Errorf("mlr seqgen: step must not be zero unless start == stop.")
+			return nil, fmt.Errorf("mlr seqgen: step must not be zero unless start == stop")
 		}
 	}
 

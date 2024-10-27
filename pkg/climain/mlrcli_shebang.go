@@ -39,7 +39,7 @@ func maybeInterpolateDashS(args []string) ([]string, error) {
 		return args, nil
 	}
 	if len(args) < 3 {
-		return nil, fmt.Errorf("mlr: -s flag requires a filename after it.")
+		return nil, fmt.Errorf("mlr: -s flag requires a filename after it")
 	}
 
 	// mlr -s scriptfile input1.csv input2.csv

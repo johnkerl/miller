@@ -61,7 +61,7 @@ func (node *CondBlockNode) Execute(
 		boolValue = false
 	} else if !isBool {
 		return nil, fmt.Errorf(
-			"mlr: conditional expression did not evaluate to boolean%s.",
+			"mlr: conditional expression did not evaluate to boolean%s",
 			dsl.TokenToLocationInfo(node.conditionToken),
 		)
 	}

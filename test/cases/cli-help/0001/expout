@@ -202,7 +202,7 @@ Options:
 Since the expression pieces are simply concatenated, please be sure to use intervening
 semicolons to separate expressions.)
 
--s name=value: Predefines out-of-stream variable @name to have 
+-s name=value: Predefines out-of-stream variable @name to have
     Thus mlr put -s foo=97 '$column += @foo' is like
     mlr put 'begin {@foo = 97} $column += @foo'.
     The value part is subject to type-inferencing.
@@ -681,7 +681,7 @@ Options:
 Since the expression pieces are simply concatenated, please be sure to use intervening
 semicolons to separate expressions.)
 
--s name=value: Predefines out-of-stream variable @name to have 
+-s name=value: Predefines out-of-stream variable @name to have
     Thus mlr put -s foo=97 '$column += @foo' is like
     mlr put 'begin {@foo = 97} $column += @foo'.
     The value part is subject to type-inferencing.

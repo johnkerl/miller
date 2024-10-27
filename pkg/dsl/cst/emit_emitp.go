@@ -171,7 +171,7 @@ func (root *RootNode) buildEmitXStatementNode(
 
 		} else {
 			return nil, fmt.Errorf(
-				"mlr: unlashed-emit node types must be local variables, field names, oosvars, or maps; got %s.",
+				"mlr: unlashed-emit node types must be local variables, field names, oosvars, or maps; got %s",
 				childNode.Type,
 			)
 		}
@@ -181,7 +181,7 @@ func (root *RootNode) buildEmitXStatementNode(
 		for _, childNode := range emittablesNode.Children {
 			if !EMITX_NAMED_NODE_TYPES[childNode.Type] {
 				return nil, fmt.Errorf(
-					"mlr: lashed-emit node types must be local variables, field names, or oosvars; got %s.",
+					"mlr: lashed-emit node types must be local variables, field names, or oosvars; got %s",
 					childNode.Type,
 				)
 			}
@@ -271,7 +271,7 @@ func (root *RootNode) buildEmitXStatementNode(
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
 				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
-				return nil, fmt.Errorf("mlr: unhandled redirector node type %s.", string(redirectorNode.Type))
+				return nil, fmt.Errorf("mlr: unhandled redirector node type %s", string(redirectorNode.Type))
 			}
 		}
 	}
@@ -989,7 +989,7 @@ func (node *EmitXStatementNode) emitRecordToFileOrPipe(
 ) error {
 	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
-		return fmt.Errorf("mlr: output redirection yielded %s, not string.", redirectorTarget.GetTypeName())
+		return fmt.Errorf("mlr: output redirection yielded %s, not string", redirectorTarget.GetTypeName())
 	}
 	outputFileName := redirectorTarget.String()
 

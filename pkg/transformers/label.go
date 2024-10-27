@@ -104,7 +104,7 @@ func NewTransformerLabel(
 	for _, newName := range newNames {
 		_, ok := uniquenessChecker[newName]
 		if ok {
-			return nil, fmt.Errorf("mlr label: labels must be unique; got duplicate \"%s\"\n", newName)
+			return nil, fmt.Errorf(`mlr label: labels must be unique; got duplicate "%s"`, newName)
 		}
 		uniquenessChecker[newName] = true
 	}

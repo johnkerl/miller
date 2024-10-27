@@ -268,7 +268,7 @@ func (repl *Repl) closeBufferedOutputStream() error {
 	if repl.recordOutputStream != os.Stdout {
 		err := repl.recordOutputStream.Close()
 		if err != nil {
-			return fmt.Errorf("mlr repl: error on redirect close of %s: %v\n",
+			return fmt.Errorf("mlr repl: error on redirect close of %s: %v",
 				repl.recordOutputFileName, err,
 			)
 		}
