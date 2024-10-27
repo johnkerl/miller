@@ -199,7 +199,7 @@ func (node *DumpStatementNode) dumpToStderr(
 	outputString string,
 	state *runtime.State,
 ) error {
-	fmt.Fprintf(os.Stderr, outputString)
+	fmt.Fprint(os.Stderr, outputString)
 	return nil
 }
 

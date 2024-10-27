@@ -6,12 +6,15 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/colorizer"
 )
 
-const boldString = "\u001b[1m"
-const underlineString = "\u001b[4m"
-const reversedString = "\u001b[7m"
-const redString = "\u001b[1;31m"
-const blueString = "\u001b[1;34m"
-const defaultString = "\u001b[0m"
+const (
+	boldString     = "\u001b[1m"
+	reversedString = "\u001b[7m"
+	redString      = "\u001b[1;31m"
+	blueString     = "\u001b[1;34m"
+	defaultString  = "\u001b[0m"
+
+	// underlineString = "\u001b[4m"
+)
 
 func main() {
 	fmt.Printf("Hello, world!\n")
