@@ -120,7 +120,7 @@ func (mv *Mlrval) StringifyValuesRecursively() {
 	switch mv.mvtype {
 
 	case MT_ARRAY:
-		for i, _ := range mv.intf.([]*Mlrval) {
+		for i := range mv.intf.([]*Mlrval) {
 			mv.intf.([]*Mlrval)[i].StringifyValuesRecursively()
 		}
 

@@ -202,7 +202,7 @@ func channelizedStanzaScanner(
 		// quickly, as it should.
 		if numStanzasSeen%recordsPerBatch == 0 {
 			select {
-			case _ = <-downstreamDoneChannel:
+			case <-downstreamDoneChannel:
 				done = true
 				break
 			default:

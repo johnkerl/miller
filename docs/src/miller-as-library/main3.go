@@ -89,10 +89,10 @@ func convert_csv_to_json(fileNames []string) error {
 		case ierr := <-inputErrorChannel:
 			retval = ierr
 			break
-		case _ = <-dataProcessingErrorChannel:
+		case <-dataProcessingErrorChannel:
 			retval = errors.New("exiting due to data error") // details already printed
 			break
-		case _ = <-doneWritingChannel:
+		case <-doneWritingChannel:
 			done = true
 			break
 		}

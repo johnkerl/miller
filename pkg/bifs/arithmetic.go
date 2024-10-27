@@ -946,7 +946,7 @@ func BIF_minlen_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	}
 	// Do the bulk arithmetic on native ints not Mlrvals, to avoid unnecessary allocation.
 	retval := lib.UTF8Strlen(mlrvals[0].OriginalString())
-	for i, _ := range mlrvals {
+	for i := range mlrvals {
 		clen := lib.UTF8Strlen(mlrvals[i].OriginalString())
 		if clen < retval {
 			retval = clen
@@ -1116,7 +1116,7 @@ func BIF_maxlen_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	}
 	// Do the bulk arithmetic on native ints not Mlrvals, to avoid unnecessary allocation.
 	retval := lib.UTF8Strlen(mlrvals[0].OriginalString())
-	for i, _ := range mlrvals {
+	for i := range mlrvals {
 		clen := lib.UTF8Strlen(mlrvals[i].OriginalString())
 		if clen > retval {
 			retval = clen
