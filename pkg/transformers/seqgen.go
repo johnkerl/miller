@@ -192,9 +192,7 @@ func (tr *TransformerSeqgen) Transform(
 		case b := <-inputDownstreamDoneChannel:
 			outputDownstreamDoneChannel <- b
 			keepGoing = false
-			break
 		default:
-			break
 		}
 		if !keepGoing {
 			break
