@@ -394,7 +394,7 @@ func parseCommandLinePassTwo(
 		options.FileNames = nil
 	}
 
-	if options.DoInPlace && (options.FileNames == nil || len(options.FileNames) == 0) {
+	if options.DoInPlace && len(options.FileNames) == 0 {
 		fmt.Fprintf(os.Stderr, "%s: -I option (in-place operation) requires input files.\n", "mlr")
 		os.Exit(1)
 	}

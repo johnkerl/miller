@@ -29,7 +29,7 @@ func ValidateAST(
 
 	// They can do mlr put '': there are simply zero statements.
 	// But filter '' is an error.
-	if ast.RootNode.Children == nil || len(ast.RootNode.Children) == 0 {
+	if len(ast.RootNode.Children) == 0 {
 		if dslInstanceType == DSLInstanceTypeFilter {
 			return fmt.Errorf("mlr: filter statement must not be empty")
 		}
