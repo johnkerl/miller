@@ -95,13 +95,10 @@ func Stream(
 		select {
 		case ierr := <-inputErrorChannel:
 			retval = ierr
-			break
-		case _ = <-dataProcessingErrorChannel:
+		case <-dataProcessingErrorChannel:
 			retval = errors.New("exiting due to data error") // details already printed
-			break
-		case _ = <-doneWritingChannel:
+		case <-doneWritingChannel:
 			done = true
-			break
 		}
 	}
 

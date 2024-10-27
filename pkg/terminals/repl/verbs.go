@@ -442,11 +442,8 @@ func handleSkipOrProcessN(repl *Repl, n int64, processingNotSkipping bool) {
 	for i := int64(1); i <= n; i++ {
 		select {
 		case recordsAndContexts = <-repl.readerChannel:
-			break
 		case err = <-repl.errorChannel:
-			break
-		case _ = <-repl.appSignalNotificationChannel: // user typed control-C
-			break
+		case <-repl.appSignalNotificationChannel: // user typed control-C
 		}
 
 		if err != nil {
@@ -505,13 +502,11 @@ func handleSkipOrProcessUntil(repl *Repl, dslString string, processingNotSkippin
 		doubleBreak := false
 		select {
 		case recordsAndContexts = <-repl.readerChannel:
-			break
 		case err = <-repl.errorChannel:
-			break
-		case _ = <-repl.appSignalNotificationChannel: // user typed control-C
+		case <-repl.appSignalNotificationChannel: // user typed control-C
 			doubleBreak = true
-			break
 		}
+
 		if doubleBreak {
 			break
 		}
