@@ -246,7 +246,7 @@ func eq_b_aa(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	for i := range a {
 		eq := BIF_equals(a[i], b[i])
 		lib.InternalCodingErrorIf(eq.Type() != mlrval.MT_BOOL)
-		if eq.AcquireBoolValue() == false {
+		if !eq.AcquireBoolValue() {
 			return mlrval.FALSE
 		}
 	}

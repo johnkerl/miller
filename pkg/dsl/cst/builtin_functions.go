@@ -945,7 +945,7 @@ func (node *StandardTernaryOperatorNode) Evaluate(
 	}
 
 	// Short-circuit: defer evaluation unless needed
-	if boolValue == true {
+	if boolValue {
 		return node.b.Evaluate(state)
 	} else {
 		return node.c.Evaluate(state)
