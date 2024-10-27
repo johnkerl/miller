@@ -99,7 +99,7 @@ func (reader *RecordReaderJSON) processHandle(
 		i++
 		if i%recordsPerBatch == 0 {
 			select {
-			case _ = <-downstreamDoneChannel:
+			case <-downstreamDoneChannel:
 				eof = true
 				break
 			default:

@@ -227,7 +227,7 @@ func getRecordBatchExplicitPprintHeader(
 			continue
 		}
 		fields := make([]string, npad-2)
-		for i, _ := range paddedFields {
+		for i := range paddedFields {
 			if i == 0 || i == npad-1 {
 				continue
 			}
@@ -361,7 +361,7 @@ func getRecordBatchImplicitPprintHeader(
 		paddedFields := reader.fieldSplitter.Split(line)
 		npad := len(paddedFields)
 		fields := make([]string, npad-2)
-		for i, _ := range paddedFields {
+		for i := range paddedFields {
 			if i == 0 || i == npad-1 {
 				continue
 			}

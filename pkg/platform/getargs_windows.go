@@ -79,7 +79,7 @@ func GetArgs() []string {
 	//printArgs(retargs, "NEW")
 
 	globbed := make([]string, 0)
-	for i, _ := range retargs {
+	for i := range retargs {
 		// Expand things like *.csv
 		matches, err := filepath.Glob(retargs[i])
 		if matches != nil && err == nil {

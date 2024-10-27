@@ -183,7 +183,7 @@ func (tr *TransformerTee) Transform(
 	// But 'mlr cut -f foo then tee bar.txt then head -n 10' -- one does expect
 	// bar.txt to have all the output from cut.
 	select {
-	case _ = <-inputDownstreamDoneChannel:
+	case <-inputDownstreamDoneChannel:
 		// Do not write this to the coutputDownstreamDoneChannel, as other transformers do
 		break
 	default:
