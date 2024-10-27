@@ -153,7 +153,7 @@ func (reader *RecordReaderJSON) processHandle(
 				if !mlrval.IsMap() {
 					// TODO: more context
 					errorChannel <- fmt.Errorf(
-						"valid but unmillerable JSON. Expected map (JSON object); got %s.",
+						"valid but unmillerable JSON. Expected map (JSON object); got %s",
 						mlrval.GetTypeName(),
 					)
 					return
@@ -174,7 +174,7 @@ func (reader *RecordReaderJSON) processHandle(
 
 		} else {
 			errorChannel <- fmt.Errorf(
-				"valid but unmillerable JSON. Expected map (JSON object); got %s.",
+				"valid but unmillerable JSON. Expected map (JSON object); got %s",
 				mlrval.GetTypeName(),
 			)
 			return

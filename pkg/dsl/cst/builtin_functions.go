@@ -599,7 +599,7 @@ func (root *RootNode) BuildVariadicFunctionCallsiteNode(
 
 	if callsiteArity < builtinFunctionInfo.minimumVariadicArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s takes minimum argument count %d; got %d.\n",
+			"mlr: function %s takes minimum argument count %d; got %d",
 			builtinFunctionInfo.name,
 			builtinFunctionInfo.minimumVariadicArity,
 			callsiteArity,
@@ -609,7 +609,7 @@ func (root *RootNode) BuildVariadicFunctionCallsiteNode(
 	if builtinFunctionInfo.maximumVariadicArity != 0 {
 		if callsiteArity > builtinFunctionInfo.maximumVariadicArity {
 			return nil, fmt.Errorf(
-				"mlr: function %s takes maximum argument count %d; got %d.\n",
+				"mlr: function %s takes maximum argument count %d; got %d",
 				builtinFunctionInfo.name,
 				builtinFunctionInfo.maximumVariadicArity,
 				callsiteArity,
@@ -657,7 +657,7 @@ func (root *RootNode) BuildVariadicFunctionWithStateCallsiteNode(
 
 	if callsiteArity < builtinFunctionInfo.minimumVariadicArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s takes minimum argument count %d; got %d.\n",
+			"mlr: function %s takes minimum argument count %d; got %d",
 			builtinFunctionInfo.name,
 			builtinFunctionInfo.minimumVariadicArity,
 			callsiteArity,
@@ -667,7 +667,7 @@ func (root *RootNode) BuildVariadicFunctionWithStateCallsiteNode(
 	if builtinFunctionInfo.maximumVariadicArity != 0 {
 		if callsiteArity > builtinFunctionInfo.maximumVariadicArity {
 			return nil, fmt.Errorf(
-				"mlr: function %s takes maximum argument count %d; got %d.\n",
+				"mlr: function %s takes maximum argument count %d; got %d",
 				builtinFunctionInfo.name,
 				builtinFunctionInfo.maximumVariadicArity,
 				callsiteArity,

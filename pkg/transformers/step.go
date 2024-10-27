@@ -282,12 +282,12 @@ func NewTransformerStep(
 ) (*TransformerStep, error) {
 
 	if len(stepperInputs) == 0 || len(valueFieldNames) == 0 {
-		return nil, fmt.Errorf("mlr %s: -a and -f are both required arguments.", verbNameStep)
+		return nil, fmt.Errorf("mlr %s: -a and -f are both required arguments", verbNameStep)
 	}
 	if len(stringAlphas) != 0 && len(ewmaSuffixes) != 0 {
 		if len(ewmaSuffixes) != len(stringAlphas) {
 			return nil, fmt.Errorf(
-				"mlr %s: If -d and -o are provided, their values must have the same length.", verbNameStep,
+				"mlr %s: If -d and -o are provided, their values must have the same length", verbNameStep,
 			)
 		}
 	}
