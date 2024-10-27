@@ -37,7 +37,7 @@ func float_to_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func bool_to_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.AcquireBoolValue() == true {
+	if input1.AcquireBoolValue() {
 		return mlrval.FromInt(1)
 	} else {
 		return mlrval.FromInt(0)
@@ -92,7 +92,7 @@ func float_to_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func bool_to_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.AcquireBoolValue() == true {
+	if input1.AcquireBoolValue() {
 		return mlrval.FromInt(1)
 	} else {
 		return mlrval.FromInt(0)
@@ -146,7 +146,7 @@ func int_to_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func bool_to_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.AcquireBoolValue() == true {
+	if input1.AcquireBoolValue() {
 		return mlrval.FromFloat(1.0)
 	} else {
 		return mlrval.FromFloat(0.0)

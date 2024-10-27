@@ -265,7 +265,7 @@ func runSingleTransformerBatch(
 		// the output channel without involving the record-transformer, since
 		// there is no record to be transformed.
 
-		if inputRecordAndContext.EndOfStream == true || inputRecordAndContext.Record != nil {
+		if inputRecordAndContext.EndOfStream || inputRecordAndContext.Record != nil {
 			recordTransformer.Transform(
 				inputRecordAndContext,
 				outputRecordsAndContexts,

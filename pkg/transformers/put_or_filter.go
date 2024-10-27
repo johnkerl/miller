@@ -542,7 +542,7 @@ func (tr *TransformerPut) Transform(
 
 		// If there were no input records then we never executed the
 		// begin-blocks. Do so now.
-		if tr.executedBeginBlocks == false {
+		if !tr.executedBeginBlocks {
 			err := tr.cstRootNode.ExecuteBeginBlocks(tr.runtimeState)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)

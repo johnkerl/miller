@@ -66,7 +66,7 @@ func (node *CondBlockNode) Execute(
 		)
 	}
 
-	if boolValue == true {
+	if boolValue {
 		blockExitPayload, err := node.statementBlockNode.Execute(state)
 		if err != nil {
 			return nil, err
