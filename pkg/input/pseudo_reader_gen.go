@@ -113,7 +113,6 @@ func (reader *PseudoReaderGen) process(
 
 	if recordsAndContexts.Len() > 0 {
 		readerChannel <- recordsAndContexts
-		recordsAndContexts = list.New()
 	}
 }
 

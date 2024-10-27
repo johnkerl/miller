@@ -188,7 +188,9 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 			)
 		}
 
-		mv := FromPending()
+		// Will be assigned as an array or a map
+		var mv *Mlrval
+
 		if isArray {
 			mv = FromEmptyArray()
 
@@ -203,7 +205,6 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 				}
 				mv.ArrayAppend(element)
 			}
-
 		} else {
 			mv = FromEmptyMap()
 

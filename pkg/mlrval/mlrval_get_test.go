@@ -12,23 +12,23 @@ import (
 
 func TestGetString(t *testing.T) {
 	mv := FromInferredType("234")
-	stringval, ok := mv.GetStringValue()
+	_, ok := mv.GetStringValue()
 	assert.False(t, ok)
 
 	mv = FromDeferredType("234")
-	stringval, ok = mv.GetStringValue()
+	_, ok = mv.GetStringValue()
 	assert.False(t, ok)
 
 	mv = FromInferredType("234.5")
-	stringval, ok = mv.GetStringValue()
+	_, ok = mv.GetStringValue()
 	assert.False(t, ok)
 
 	mv = FromDeferredType("234.5")
-	stringval, ok = mv.GetStringValue()
+	_, ok = mv.GetStringValue()
 	assert.False(t, ok)
 
 	mv = FromInferredType("abc")
-	stringval, ok = mv.GetStringValue()
+	stringval, ok := mv.GetStringValue()
 	assert.Equal(t, "abc", stringval)
 	assert.True(t, ok)
 
@@ -60,33 +60,33 @@ func TestGetIntValue(t *testing.T) {
 	assert.True(t, ok)
 
 	mv = FromInferredType("123.4")
-	intval, ok = mv.GetIntValue()
+	_, ok = mv.GetIntValue()
 	assert.False(t, ok)
 
 	mv = FromDeferredType("123.4")
-	intval, ok = mv.GetIntValue()
+	_, ok = mv.GetIntValue()
 	assert.False(t, ok)
 
 	mv = FromInferredType("abc")
-	intval, ok = mv.GetIntValue()
+	_, ok = mv.GetIntValue()
 	assert.False(t, ok)
 
 	mv = FromDeferredType("abc")
-	intval, ok = mv.GetIntValue()
+	_, ok = mv.GetIntValue()
 	assert.False(t, ok)
 }
 
 func TestGetFloatValue(t *testing.T) {
 	mv := FromInferredType("234")
-	floatval, ok := mv.GetFloatValue()
+	_, ok := mv.GetFloatValue()
 	assert.False(t, ok)
 
 	mv = FromDeferredType("234")
-	floatval, ok = mv.GetFloatValue()
+	_, ok = mv.GetFloatValue()
 	assert.False(t, ok)
 
 	mv = FromInferredType("234.5")
-	floatval, ok = mv.GetFloatValue()
+	floatval, ok := mv.GetFloatValue()
 	assert.Equal(t, 234.5, floatval)
 	assert.True(t, ok)
 
@@ -96,11 +96,11 @@ func TestGetFloatValue(t *testing.T) {
 	assert.True(t, ok)
 
 	mv = FromInferredType("abc")
-	floatval, ok = mv.GetFloatValue()
+	_, ok = mv.GetFloatValue()
 	assert.False(t, ok)
 
 	mv = FromDeferredType("abc")
-	floatval, ok = mv.GetFloatValue()
+	_, ok = mv.GetFloatValue()
 	assert.False(t, ok)
 }
 
@@ -126,38 +126,38 @@ func TestGetNumericToFloatValue(t *testing.T) {
 	assert.True(t, ok)
 
 	mv = FromInferredType("abc")
-	floatval, ok = mv.GetNumericToFloatValue()
+	_, ok = mv.GetNumericToFloatValue()
 	assert.False(t, ok)
 
 	mv = FromDeferredType("abc")
-	floatval, ok = mv.GetNumericToFloatValue()
+	_, ok = mv.GetNumericToFloatValue()
 	assert.False(t, ok)
 }
 
 func TestGetBoolValue(t *testing.T) {
 	mv := FromInferredType("234")
-	boolval, ok := mv.GetBoolValue()
+	_, ok := mv.GetBoolValue()
 	assert.False(t, ok)
 
 	mv = FromDeferredType("234")
-	boolval, ok = mv.GetBoolValue()
+	_, ok = mv.GetBoolValue()
 	assert.False(t, ok)
 
 	mv = FromInferredType("abc")
-	boolval, ok = mv.GetBoolValue()
+	_, ok = mv.GetBoolValue()
 	assert.False(t, ok)
 
 	mv = FromDeferredType("abc")
-	boolval, ok = mv.GetBoolValue()
+	_, ok = mv.GetBoolValue()
 	assert.False(t, ok)
 
 	mv = FromInferredType("true")
-	boolval, ok = mv.GetBoolValue()
+	boolval, ok := mv.GetBoolValue()
 	assert.True(t, boolval)
 	assert.True(t, ok)
 
 	mv = FromDeferredType("false")
-	boolval, ok = mv.GetBoolValue()
+	_, ok = mv.GetBoolValue()
 	assert.False(t, ok, "from-data-file \"false\" should infer to string")
 }
 
