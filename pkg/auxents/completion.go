@@ -25,7 +25,7 @@ func genCompletion(args []string) int {
 	}
 
 	if args[0] != "bash" {
-		fmt.Println("Unsupported shell: %s\n", args[0])
+		fmt.Printlf("Unsupported shell: %s\n", args[0])
 		printUsage()
 		return 1
 	}
