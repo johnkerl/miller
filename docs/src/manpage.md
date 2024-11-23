@@ -1275,6 +1275,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        See also the `sub` and `ssub` verbs.
        Options:
        -f {a,b,c}  Field names to convert.
+       -r {regex}  Regular expression for field names to convert.
+       -a          Convert all field names.
        -h|--help   Show this message.
 
    1mhaving-fields0m
@@ -1910,6 +1912,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        the old string, like the `ssub` DSL function. See also the `gsub` and `sub` verbs.
        Options:
        -f {a,b,c}  Field names to convert.
+       -r {regex}  Regular expression for field names to convert.
+       -a          Convert all field names.
        -h|--help   Show this message.
 
    1mstats10m
@@ -2057,6 +2061,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        See also the `gsub` and `ssub` verbs.
        Options:
        -f {a,b,c}  Field names to convert.
+       -r {regex}  Regular expression for field names to convert.
+       -a          Convert all field names.
        -h|--help   Show this message.
 
    1msummary0m
@@ -3731,5 +3737,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2024-10-17                         4mMILLER24m(1)
+                                  2024-11-23                         4mMILLER24m(1)
 </pre>
