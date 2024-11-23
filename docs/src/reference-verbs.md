@@ -986,7 +986,7 @@ Options:
 Since the expression pieces are simply concatenated, please be sure to use intervening
 semicolons to separate expressions.)
 
--s name=value: Predefines out-of-stream variable @name to have 
+-s name=value: Predefines out-of-stream variable @name to have
     Thus mlr put -s foo=97 '$column += @foo' is like
     mlr put 'begin {@foo = 97} $column += @foo'.
     The value part is subject to type-inferencing.
@@ -1464,6 +1464,8 @@ for the old string and handling multiple matches, like the `gsub` DSL function.
 See also the `sub` and `ssub` verbs.
 Options:
 -f {a,b,c}  Field names to convert.
+-r {regex}  Regular expression for field names to convert.
+-a          Convert all field names.
 -h|--help   Show this message.
 </pre>
 
@@ -2321,7 +2323,7 @@ Options:
 Since the expression pieces are simply concatenated, please be sure to use intervening
 semicolons to separate expressions.)
 
--s name=value: Predefines out-of-stream variable @name to have 
+-s name=value: Predefines out-of-stream variable @name to have
     Thus mlr put -s foo=97 '$column += @foo' is like
     mlr put 'begin {@foo = 97} $column += @foo'.
     The value part is subject to type-inferencing.
@@ -3210,6 +3212,8 @@ Replaces old string with new string in specified field(s), without regex support
 the old string, like the `ssub` DSL function. See also the `gsub` and `sub` verbs.
 Options:
 -f {a,b,c}  Field names to convert.
+-r {regex}  Regular expression for field names to convert.
+-a          Convert all field names.
 -h|--help   Show this message.
 </pre>
 
@@ -3714,6 +3718,8 @@ for the old string and not handling multiple matches, like the `sub` DSL functio
 See also the `gsub` and `ssub` verbs.
 Options:
 -f {a,b,c}  Field names to convert.
+-r {regex}  Regular expression for field names to convert.
+-a          Convert all field names.
 -h|--help   Show this message.
 </pre>
 
