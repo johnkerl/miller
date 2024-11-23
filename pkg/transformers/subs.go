@@ -49,6 +49,8 @@ func transformerSubUsage(
 	fmt.Fprintf(o, "See also the `gsub` and `ssub` verbs.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c}  Field names to convert.\n")
+	fmt.Fprintf(o, "-r {regex}  Regular expression for field names to convert.\n")
+	fmt.Fprintf(o, "-a          Convert all field names.\n")
 	fmt.Fprintf(o, "-h|--help   Show this message.\n")
 }
 
@@ -61,6 +63,8 @@ func transformerGsubUsage(
 	fmt.Fprintf(o, "See also the `sub` and `ssub` verbs.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c}  Field names to convert.\n")
+	fmt.Fprintf(o, "-r {regex}  Regular expression for field names to convert.\n")
+	fmt.Fprintf(o, "-a          Convert all field names.\n")
 	fmt.Fprintf(o, "-h|--help   Show this message.\n")
 }
 
@@ -72,6 +76,8 @@ func transformerSsubUsage(
 	fmt.Fprintf(o, "the old string, like the `ssub` DSL function. See also the `gsub` and `sub` verbs.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c}  Field names to convert.\n")
+	fmt.Fprintf(o, "-r {regex}  Regular expression for field names to convert.\n")
+	fmt.Fprintf(o, "-a          Convert all field names.\n")
 	fmt.Fprintf(o, "-h|--help   Show this message.\n")
 }
 
