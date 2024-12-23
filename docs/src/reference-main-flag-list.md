@@ -195,14 +195,14 @@ are overridden in all cases by setting output format to `format2`.
 
 These flags control how Miller converts record values which are maps or arrays, when input is JSON and output is non-JSON (flattening) or input is non-JSON and output is JSON (unflattening).
 
-See the Flatten/unflatten doc page for more information.
+See the flatten/unflatten doc page https://miller.readthedocs.io/en/latest/flatten-unflatten for more information.
 
 
 **Flags:**
 
 * `--flatsep or --jflatsep {string}`: Separator for flattening multi-level JSON keys, e.g. `{"a":{"b":3}}` becomes `a:b => 3` for non-JSON formats. Defaults to `.`.
-* `--no-auto-flatten`: When output is non-JSON, suppress the default auto-flatten behavior. Default: if `$y = [7,8,9]` then this flattens to `y.1=7,y.2=8,y.3=9, and similarly for maps. With `--no-auto-flatten`, instead we get `$y=[1, 2, 3]`.
-* `--no-auto-unflatten`: When input non-JSON and output is JSON, suppress the default auto-unflatten behavior. Default: if the input has `y.1=7,y.2=8,y.3=9` then this unflattens to `$y=[7,8,9]`.  flattens to `y.1=7,y.2=8,y.3=9. With `--no-auto-flatten`, instead we get `${y.1}=7,${y.2}=8,${y.3}=9`.
+* `--no-auto-flatten`: When output is non-JSON, suppress the default auto-flatten behavior. Default: if `$y = [7,8,9]` then this flattens to `y.1=7,y.2=8,y.3=9`, and similarly for maps. With `--no-auto-flatten`, instead we get `$y=[1, 2, 3]`.
+* `--no-auto-unflatten`: When input is non-JSON and output is JSON, suppress the default auto-unflatten behavior. Default: if the input has `y.1=7,y.2=8,y.3=9` then this unflattens to `$y=[7,8,9]`.  With `--no-auto-flatten`, instead we get `${y.1}=7,${y.2}=8,${y.3}=9`.
 
 ## Format-conversion keystroke-saver flags
 

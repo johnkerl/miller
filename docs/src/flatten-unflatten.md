@@ -348,6 +348,59 @@ a.1,a.3,a.5
 ]
 </pre>
 
+## Non-inferencing cases
+
+An additional heuristic is that if a field name starts with a `.`, ends with
+a `.`, or has two or more consecutive `.` characters, no attempt is made
+to unflatten it on conversion from non-JSON to JSON.
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/flatten-dots.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b.,.c,.,d..e,f.g
+1,2,3,4,5,6
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --oxtab cat data/flatten-dots.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a    1
+b.   2
+.c   3
+.    4
+d..e 5
+f.g  6
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ojson cat data/flatten-dots.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "a": 1,
+  "b.": 2,
+  ".c": 3,
+  ".": 4,
+  "d..e": 5,
+  "f": {
+    "g": 6
+  }
+}
+]
+</pre>
+
+## Non-inferencing cases
+
+An additional heuristic is that if a field name starts with a `.`, ends with
+a `.`, or has two or more consecutive `.` characters, no attempt is made
+to unflatten it on conversion from non-JSON to JSON.
+
+## Manual control
+
+
 ## Manual control
 
 To see what our options are for manually controlling flattening and

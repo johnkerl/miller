@@ -403,7 +403,7 @@
 1mFLATTEN-UNFLATTEN FLAGS0m
        These flags control how Miller converts record values which are maps or arrays, when input is JSON and output is non-JSON (flattening) or input is non-JSON and output is JSON (unflattening).
 
-       See the Flatten/unflatten doc page for more information.
+       See the flatten/unflatten doc page https://miller.readthedocs.io/en/latest/flatten-unflatten for more information.
 
        --flatsep or --jflatsep {string}
                                 Separator for flattening multi-level JSON keys, e.g.
@@ -414,10 +414,10 @@
                                 then this flattens to `y.1=7,y.2=8,y.3=9, and
                                 similarly for maps. With `--no-auto-flatten`, instead
                                 we get `$y=[1, 2, 3]`.
-       --no-auto-unflatten      When input non-JSON and output is JSON, suppress the
-                                default auto-unflatten behavior. Default: if the
+       --no-auto-unflatten      When input is non-JSON and output is JSON, suppress
+                                the default auto-unflatten behavior. Default: if the
                                 input has `y.1=7,y.2=8,y.3=9` then this unflattens to
-                                `$y=[7,8,9]`. flattens to `y.1=7,y.2=8,y.3=9. With
+                                `$y=[7,8,9]`. flattens to `y.1=7,y.2=8,y.3=91. With
                                 `--no-auto-flatten`, instead we get
                                 `${y.1}=7,${y.2}=8,${y.3}=9`.
 
@@ -3716,4 +3716,4 @@
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2024-11-23                         4mMILLER24m(1)
+                                  2024-12-23                         4mMILLER24m(1)
