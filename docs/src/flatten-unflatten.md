@@ -392,15 +392,6 @@ f.g  6
 ]
 </pre>
 
-## Non-inferencing cases
-
-An additional heuristic is that if a field name starts with a `.`, ends with
-a `.`, or has two or more consecutive `.` characters, no attempt is made
-to unflatten it on conversion from non-JSON to JSON.
-
-## Manual control
-
-
 ## Manual control
 
 To see what our options are for manually controlling flattening and
