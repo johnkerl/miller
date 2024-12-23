@@ -13,3 +13,8 @@ empty1                      {}
 empty2                      []
 wrapper@empty3              {}
 wrapper@emtpy4              []
+x@y                         1
+@                           2
+x@                          3
+@y                          4
+x@@y                        5

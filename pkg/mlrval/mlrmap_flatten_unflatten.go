@@ -106,7 +106,18 @@ func (mlrmap *Mlrmap) isFlattenable() bool {
 // For mlr unflatten without -f. This undoes Unflatten.  This is for conversion
 // from non-JSON to JSON.  If there are fields x.a, x.b, x.c, etc. they're put
 // into a single field x with map-valued value keyed by "a", "b", "c".
-
+//
+// There is a heurtistic here though. Miller is (wildly) multi-format and needs
+// to accommodate all manner of data. In the JSON world, "." is the default
+// delimiter for nested data, and we're here to handle that. But in the R world,
+// "." is just like "_" in other languages: witness "data.frame" rather than
+// "data_frame". If the "." was intended as punctuation, in a say a field named
+// "a.b" with value 3, then unflatten-to-JSON will make `{"a": {"b": 3}}`.  This
+// is just our default behavior; users can use --no-auto-unflatten. Weirder
+// are field names like ".", ".x", "x.", "x..y", etc. The heuristic here
+// is that when we split on "." and any of the pieces around/between the dots
+// are empty string, we don't try to unflatten that field.
+//
 // Special case: if the resulting string keys are string representations of 1,
 // 2, 3, etc -- without gaps -- then the map is converted to an array.
 //
@@ -134,22 +145,38 @@ func (mlrmap *Mlrmap) CopyUnflattened(
 
 	// We'll come through this loop once for x.a, another for x.b, etc.
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
-		// Is the field name something dot something?
-		if strings.Contains(pe.Key, separator) {
-			arrayOfIndices := SplitAXHelper(pe.Key, separator)
-			arrayval := arrayOfIndices.intf.([]*Mlrval)
-			lib.InternalCodingErrorIf(len(arrayval) < 1)
-			// If the input field name was "x.a" then remember the "x".
-			baseIndex := arrayval[0].String()
-			affectedBaseIndices[baseIndex] = true
-			// Use PutIndexed to assign $x["a"] = 7, or $x["b"] = 8, etc.
-			other.PutIndexed(
-				CopyMlrvalArray(arrayval),
-				unflattenTerminal(pe.Value).Copy(),
-			)
-		} else {
+		// If there are no dots in the field name, treat it as a terminal.
+		if !strings.Contains(pe.Key, separator) {
 			other.PutReference(pe.Key, unflattenTerminal(pe.Value))
+			continue
 		}
+
+		arrayOfIndices := SplitAXHelper(pe.Key, separator)
+		arrayval := arrayOfIndices.intf.([]*Mlrval)
+		lib.InternalCodingErrorIf(len(arrayval) < 1)
+
+		// Check for "" in any of the split pieces; treat the field as terminal if so.
+		legitDots := true
+		for i, _ := range arrayval {
+			piece := arrayval[i].String()
+			if piece == "" {
+				legitDots = false
+				break
+			}
+		}
+		if !legitDots {
+			other.PutReference(pe.Key, unflattenTerminal(pe.Value))
+			continue
+		}
+
+		// If the input field name was "x.a" then remember the "x".
+		baseIndex := arrayval[0].String()
+		affectedBaseIndices[baseIndex] = true
+		// Use PutIndexed to assign $x["a"] = 7, or $x["b"] = 8, etc.
+		other.PutIndexed(
+			CopyMlrvalArray(arrayval),
+			unflattenTerminal(pe.Value).Copy(),
+		)
 	}
 
 	// Go through all the field names which were turned into maps -- e.g.  "x"

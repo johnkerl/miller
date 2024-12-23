@@ -156,6 +156,33 @@ GENMD-RUN-COMMAND
 mlr --c2j cat data/non-consecutive.csv
 GENMD-EOF
 
+## Non-inferencing cases
+
+An additional heuristic is that if a field name starts with a `.`, ends with
+a `.`, or has two or more consecutive `.` characters, no attempt is made
+to unflatten it on conversion from non-JSON to JSON.
+
+GENMD-RUN-COMMAND
+cat data/flatten-dots.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --oxtab cat data/flatten-dots.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson cat data/flatten-dots.csv
+GENMD-EOF
+
+## Non-inferencing cases
+
+An additional heuristic is that if a field name starts with a `.`, ends with
+a `.`, or has two or more consecutive `.` characters, no attempt is made
+to unflatten it on conversion from non-JSON to JSON.
+
+## Manual control
+
+
 ## Manual control
 
 To see what our options are for manually controlling flattening and
