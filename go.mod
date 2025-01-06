@@ -27,7 +27,7 @@ require (
 	github.com/pkg/profile v1.7.0
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/sys v0.29.0
-	golang.org/x/term v0.27.0
+	golang.org/x/term v0.28.0
 	golang.org/x/text v0.21.0
 )
 
