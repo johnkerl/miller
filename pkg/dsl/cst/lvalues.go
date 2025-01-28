@@ -6,6 +6,7 @@
 package cst
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -62,7 +63,7 @@ func (root *RootNode) BuildAssignableNode(
 		return root.BuildEnvironmentVariableLvalueNode(astNode)
 	}
 
-	return nil, fmt.Errorf(
+	return nil, errors.New(
 		"at CST BuildAssignableNode: unhandled AST node " + string(astNode.Type),
 	)
 }

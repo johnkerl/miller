@@ -5,6 +5,7 @@
 package cst
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/johnkerl/miller/v6/pkg/bifs"
@@ -78,7 +79,7 @@ func (root *RootNode) BuildMultipleArityFunctionCallsiteNode(
 		return root.BuildTernaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 	}
 
-	return nil, fmt.Errorf(
+	return nil, errors.New(
 		"at CST BuildMultipleArityFunctionCallsiteNode: function name not found: " +
 			builtinFunctionInfo.name,
 	)
