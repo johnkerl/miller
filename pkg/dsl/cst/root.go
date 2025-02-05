@@ -7,6 +7,7 @@ package cst
 
 import (
 	"container/list"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -163,7 +164,7 @@ func (root *RootNode) IngestAST(
 	err = nil
 
 	if ast.RootNode == nil {
-		return hadWarnings, fmt.Errorf("cannot build CST from nil AST root")
+		return hadWarnings, errors.New("cannot build CST from nil AST root")
 	}
 
 	// Check for things that are syntax errors but not done in the AST for
@@ -417,7 +418,7 @@ func (root *RootNode) resolveSubroutineCallsites() error {
 			return err
 		}
 		if uds == nil {
-			return fmt.Errorf("mlr: subroutine name not found: " + subroutineName)
+			return errors.New("mlr: subroutine name not found: " + subroutineName)
 		}
 
 		unresolvedSubroutineCallsite.uds = uds
