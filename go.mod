@@ -15,12 +15,13 @@ module github.com/johnkerl/miller/v6
 // replace github.com/johnkerl/lumin => /Users/kerl/git/johnkerl/lumin
 
 go 1.21
+toolchain go1.22.5
 
 require (
 	github.com/facette/natsort v0.0.0-20181210072756-2cd4dd1e2dcb
 	github.com/johnkerl/lumin v1.0.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
-	github.com/klauspost/compress v1.17.11
+	github.com/klauspost/compress v1.18.0
 	github.com/lestrrat-go/strftime v1.1.0
 	github.com/mattn/go-isatty v0.0.20
 	github.com/nine-lives-later/go-windows-terminal-sequences v1.0.4
