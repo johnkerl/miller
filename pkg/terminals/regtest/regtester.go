@@ -110,8 +110,8 @@ type RegTester struct {
 	casePassCount      int
 	caseFailCount      int
 
-	failDirNames      *list.List
-	failCaseNames     *list.List
+	failDirNames      []string
+	failCaseNames     []string
 	firstNFailsToShow int
 }
 
@@ -132,8 +132,8 @@ func NewRegTester(
 		directoryFailCount: 0,
 		casePassCount:      0,
 		caseFailCount:      0,
-		failDirNames:       list.New(),
-		failCaseNames:      list.New(),
+		failDirNames:       make([]string, 0),
+		failCaseNames:      make([]string, 0),
 		firstNFailsToShow:  firstNFailsToShow,
 	}
 }
@@ -182,13 +182,13 @@ func (regtester *RegTester) Execute(
 		regtester.executeSinglePath(path)
 	}
 
-	if regtester.failCaseNames.Len() > 0 && regtester.firstNFailsToShow > 0 {
+	if len(regtester.failCaseNames) > 0 && regtester.firstNFailsToShow > 0 {
 		fmt.Println()
 		fmt.Println("RERUNS OF FIRST FAILED CASE FILES:")
 		verbosityLevel := 3
 		i := 0
-		for e := regtester.failCaseNames.Front(); e != nil; e = e.Next() {
-			regtester.executeSingleCmdFile(e.Value.(string), verbosityLevel)
+		for _, e := range regtester.failCaseNames {
+			regtester.executeSingleCmdFile(e, verbosityLevel)
 			i++
 			if i >= regtester.firstNFailsToShow {
 				break
@@ -196,11 +196,11 @@ func (regtester *RegTester) Execute(
 		}
 	}
 
-	if !regtester.plainMode && regtester.failDirNames.Len() > 0 {
+	if !regtester.plainMode && len(regtester.failDirNames) > 0 {
 		fmt.Println()
 		fmt.Println("FAILED CASE DIRECTORIES:")
-		for e := regtester.failDirNames.Front(); e != nil; e = e.Next() {
-			fmt.Printf("  %s/\n", e.Value.(string))
+		for _, e := range regtester.failDirNames {
+			fmt.Printf("  %s/\n", e)
 		}
 	}
 
@@ -248,7 +248,7 @@ func (regtester *RegTester) executeSinglePath(
 				regtester.directoryPassCount++
 			} else {
 				regtester.directoryFailCount++
-				regtester.failDirNames.PushBack(path)
+				regtester.failDirNames = append(regtester.failDirNames, path)
 			}
 		}
 		return passed
@@ -260,7 +260,7 @@ func (regtester *RegTester) executeSinglePath(
 				regtester.casePassCount++
 			} else {
 				regtester.caseFailCount++
-				regtester.failCaseNames.PushBack(path)
+				regtester.failCaseNames = append(regtester.failCaseNames, path)
 			}
 			return passed
 		}
