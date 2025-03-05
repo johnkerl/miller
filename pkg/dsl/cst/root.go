@@ -6,7 +6,6 @@
 package cst
 
 import (
-	"container/list"
 	"errors"
 	"fmt"
 	"os"
@@ -37,9 +36,9 @@ func NewEmptyRoot(
 		udfManager:                    NewUDFManager(),
 		udsManager:                    NewUDSManager(),
 		allowUDFUDSRedefinitions:      false,
-		unresolvedFunctionCallsites:   list.New(),
-		unresolvedSubroutineCallsites: list.New(),
-		outputHandlerManagers:         list.New(),
+		unresolvedFunctionCallsites:   make([]*UDFCallsite, 0),
+		unresolvedSubroutineCallsites: make([]*UDSCallsite, 0),
+		outputHandlerManagers:         make([]output.OutputHandlerManager, 0),
 		recordWriterOptions:           recordWriterOptions,
 		dslInstanceType:               dslInstanceType,
 	}
@@ -364,11 +363,11 @@ func (root *RootNode) buildMainPass(ast *dsl.AST, isReplImmediate bool) error {
 // This is invoked within the buildMainPass call tree whenever a function is
 // called before it's defined.
 func (root *RootNode) rememberUnresolvedFunctionCallsite(udfCallsite *UDFCallsite) {
-	root.unresolvedFunctionCallsites.PushBack(udfCallsite)
+	root.unresolvedFunctionCallsites = append(root.unresolvedFunctionCallsites, udfCallsite)
 }
 
 func (root *RootNode) rememberUnresolvedSubroutineCallsite(udsCallsite *UDSCallsite) {
-	root.unresolvedSubroutineCallsites.PushBack(udsCallsite)
+	root.unresolvedSubroutineCallsites = append(root.unresolvedSubroutineCallsites, udsCallsite)
 }
 
 // After-pass after buildMainPass returns, in case a function was called before
@@ -381,10 +380,9 @@ func (root *RootNode) rememberUnresolvedSubroutineCallsite(udsCallsite *UDSCalls
 // So, our error message should reflect all those options.
 
 func (root *RootNode) resolveFunctionCallsites() error {
-	for root.unresolvedFunctionCallsites.Len() > 0 {
-		unresolvedFunctionCallsite := root.unresolvedFunctionCallsites.Remove(
-			root.unresolvedFunctionCallsites.Front(),
-		).(*UDFCallsite)
+	for len(root.unresolvedFunctionCallsites) > 0 {
+		unresolvedFunctionCallsite := root.unresolvedFunctionCallsites[0]
+		root.unresolvedFunctionCallsites = root.unresolvedFunctionCallsites[1:]
 
 		functionName := unresolvedFunctionCallsite.udf.signature.funcOrSubrName
 		callsiteArity := unresolvedFunctionCallsite.udf.signature.arity
@@ -405,10 +403,9 @@ func (root *RootNode) resolveFunctionCallsites() error {
 }
 
 func (root *RootNode) resolveSubroutineCallsites() error {
-	for root.unresolvedSubroutineCallsites.Len() > 0 {
-		unresolvedSubroutineCallsite := root.unresolvedSubroutineCallsites.Remove(
-			root.unresolvedSubroutineCallsites.Front(),
-		).(*UDSCallsite)
+	for len(root.unresolvedSubroutineCallsites) > 0 {
+		unresolvedSubroutineCallsite := root.unresolvedSubroutineCallsites[0]
+		root.unresolvedSubroutineCallsites = root.unresolvedSubroutineCallsites[1:]
 
 		subroutineName := unresolvedSubroutineCallsite.uds.signature.funcOrSubrName
 		callsiteArity := unresolvedSubroutineCallsite.uds.signature.arity
@@ -438,12 +435,11 @@ func (root *RootNode) resolveSubroutineCallsites() error {
 func (root *RootNode) RegisterOutputHandlerManager(
 	outputHandlerManager output.OutputHandlerManager,
 ) {
-	root.outputHandlerManagers.PushBack(outputHandlerManager)
+	root.outputHandlerManagers = append(root.outputHandlerManagers, outputHandlerManager)
 }
 
 func (root *RootNode) ProcessEndOfStream() {
-	for entry := root.outputHandlerManagers.Front(); entry != nil; entry = entry.Next() {
-		outputHandlerManager := entry.Value.(output.OutputHandlerManager)
+	for _, outputHandlerManager := range root.outputHandlerManagers {
 		errs := outputHandlerManager.Close()
 		if len(errs) != 0 {
 			for _, err := range errs {
@@ -501,8 +497,8 @@ func (root *RootNode) ExecuteREPLImmediate(state *runtime.State) (outrec *mlrval
 // This is the 'and then discarded' part of that.
 func (root *RootNode) ResetForREPL() {
 	root.replImmediateBlock = NewStatementBlockNode()
-	root.unresolvedFunctionCallsites = list.New()
-	root.unresolvedSubroutineCallsites = list.New()
+	root.unresolvedFunctionCallsites = make([]*UDFCallsite, 0)
+	root.unresolvedSubroutineCallsites = make([]*UDSCallsite, 0)
 }
 
 // This is for the REPL's context-printer command.

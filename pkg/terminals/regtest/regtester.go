@@ -56,7 +56,6 @@
 package regtest
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -110,8 +109,8 @@ type RegTester struct {
 	casePassCount      int
 	caseFailCount      int
 
-	failDirNames      *list.List
-	failCaseNames     *list.List
+	failDirNames      []string
+	failCaseNames     []string
 	firstNFailsToShow int
 }
 
@@ -132,8 +131,8 @@ func NewRegTester(
 		directoryFailCount: 0,
 		casePassCount:      0,
 		caseFailCount:      0,
-		failDirNames:       list.New(),
-		failCaseNames:      list.New(),
+		failDirNames:       make([]string, 0),
+		failCaseNames:      make([]string, 0),
 		firstNFailsToShow:  firstNFailsToShow,
 	}
 }
@@ -182,13 +181,13 @@ func (regtester *RegTester) Execute(
 		regtester.executeSinglePath(path)
 	}
 
-	if regtester.failCaseNames.Len() > 0 && regtester.firstNFailsToShow > 0 {
+	if len(regtester.failCaseNames) > 0 && regtester.firstNFailsToShow > 0 {
 		fmt.Println()
 		fmt.Println("RERUNS OF FIRST FAILED CASE FILES:")
 		verbosityLevel := 3
 		i := 0
-		for e := regtester.failCaseNames.Front(); e != nil; e = e.Next() {
-			regtester.executeSingleCmdFile(e.Value.(string), verbosityLevel)
+		for _, e := range regtester.failCaseNames {
+			regtester.executeSingleCmdFile(e, verbosityLevel)
 			i++
 			if i >= regtester.firstNFailsToShow {
 				break
@@ -196,11 +195,11 @@ func (regtester *RegTester) Execute(
 		}
 	}
 
-	if !regtester.plainMode && regtester.failDirNames.Len() > 0 {
+	if !regtester.plainMode && len(regtester.failDirNames) > 0 {
 		fmt.Println()
 		fmt.Println("FAILED CASE DIRECTORIES:")
-		for e := regtester.failDirNames.Front(); e != nil; e = e.Next() {
-			fmt.Printf("  %s/\n", e.Value.(string))
+		for _, e := range regtester.failDirNames {
+			fmt.Printf("  %s/\n", e)
 		}
 	}
 
@@ -248,7 +247,7 @@ func (regtester *RegTester) executeSinglePath(
 				regtester.directoryPassCount++
 			} else {
 				regtester.directoryFailCount++
-				regtester.failDirNames.PushBack(path)
+				regtester.failDirNames = append(regtester.failDirNames, path)
 			}
 		}
 		return passed
@@ -260,7 +259,7 @@ func (regtester *RegTester) executeSinglePath(
 				regtester.casePassCount++
 			} else {
 				regtester.caseFailCount++
-				regtester.failCaseNames.PushBack(path)
+				regtester.failCaseNames = append(regtester.failCaseNames, path)
 			}
 			return passed
 		}
@@ -478,8 +477,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 
 	// Copy any files requested by the test. (Most don't; some do, e.g. those
 	// which test the write-in-place logic of mlr -I.)
-	for pe := preCopySrcDestPairs.Front(); pe != nil; pe = pe.Next() {
-		pair := pe.Value.(stringPair)
+	for _, pair := range preCopySrcDestPairs {
 		src := pair.first
 		dst := pair.second
 		if verbosityLevel >= 3 {
@@ -564,8 +562,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 			}
 		}
 
-		for pe := postCompareExpectedActualPairs.Front(); pe != nil; pe = pe.Next() {
-			pair := pe.Value.(stringPair)
+		for _, pair := range postCompareExpectedActualPairs {
 			expectedFileName := pair.first
 			actualFileName := pair.second
 
@@ -686,8 +683,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 		// Compare any additional output files. Most test cases don't have
 		// these (just stdout/stderr), but some do: for example, those which
 		// test the tee verb/function.
-		for pe := postCompareExpectedActualPairs.Front(); pe != nil; pe = pe.Next() {
-			pair := pe.Value.(stringPair)
+		for _, pair := range postCompareExpectedActualPairs {
 			expectedFileName := pair.first
 			actualFileName := pair.second
 			ok, expectedContents, actualContents, err := regtester.compareFiles(expectedFileName, actualFileName, caseDir)
@@ -725,8 +721,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 		}
 
 		// Clean up any requested file-copies so that we're git-clean after the regression-test run.
-		for pe := preCopySrcDestPairs.Front(); pe != nil; pe = pe.Next() {
-			pair := pe.Value.(stringPair)
+		for _, pair := range preCopySrcDestPairs {
 			dst := pair.second
 			os.Remove(dst)
 			if verbosityLevel >= 3 {
@@ -735,8 +730,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 		}
 
 		// Clean up any extra output files so that we're git-clean after the regression-test run.
-		for pe := postCompareExpectedActualPairs.Front(); pe != nil; pe = pe.Next() {
-			pair := pe.Value.(stringPair)
+		for _, pair := range postCompareExpectedActualPairs {
 			actualFileName := pair.second
 			os.Remove(actualFileName)
 			if verbosityLevel >= 3 {
@@ -868,12 +862,13 @@ func (regtester *RegTester) loadEnvFile(
 func (regtester *RegTester) loadStringPairFile(
 	filename string,
 	caseDir string,
-) (*list.List, error) {
+) ([]stringPair, error) {
+	pairs := make([]stringPair, 0)
 	// If the file doesn't exist that's the normal case -- most cases do not
 	// have a .precopy or .postcmp file.
 	_, err := os.Stat(filename)
 	if os.IsNotExist(err) {
-		return list.New(), nil
+		return pairs, nil
 	}
 
 	// If the file does exist and isn't loadable, that's an error.
@@ -882,7 +877,7 @@ func (regtester *RegTester) loadStringPairFile(
 		return nil, err
 	}
 
-	pairs := list.New()
+	pairs = make([]stringPair, 0)
 	lines := strings.Split(contents, "\n")
 	for _, line := range lines {
 		line = strings.TrimSuffix(line, "\r")
@@ -897,7 +892,7 @@ func (regtester *RegTester) loadStringPairFile(
 			)
 		}
 		pair := stringPair{first: fields[0], second: fields[1]}
-		pairs.PushBack(pair)
+		pairs = append(pairs, pair)
 	}
 	return pairs, nil
 }

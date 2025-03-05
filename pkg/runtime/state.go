@@ -35,7 +35,7 @@ type State struct {
 	// This is necessary for the stateful semantics of `=~` and "\1", "\2", etc.
 	// Those are avoided when the user calls `matchx`, which is newer, and
 	// stateless. However, `=~` exists in the Miller DSL and we must support it.
-	regexCapturesByFrame *list.List // list of []string
+	regexCapturesByFrame [][]string
 
 	Options *cli.TOptions
 
@@ -46,8 +46,8 @@ type State struct {
 func NewEmptyState(options *cli.TOptions, strictMode bool) *State {
 
 	// See lib.MakeEmptyCaptures for context.
-	regexCapturesByFrame := list.New()
-	regexCapturesByFrame.PushFront(lib.MakeEmptyCaptures())
+	regexCapturesByFrame := make([][]string, 1)
+	regexCapturesByFrame[0] = lib.MakeEmptyCaptures()
 
 	oosvars := mlrval.NewMlrmap()
 	return &State{
@@ -72,25 +72,24 @@ func (state *State) Update(
 ) {
 	state.Inrec = inrec
 	state.Context = context
-	state.regexCapturesByFrame.Front().Value = lib.MakeEmptyCaptures()
+	state.regexCapturesByFrame[0] = lib.MakeEmptyCaptures()
 }
 
 func (state *State) SetRegexCaptures(
 	captures []string,
 ) {
-	state.regexCapturesByFrame.Front().Value = lib.CopyStringArray(captures)
+	state.regexCapturesByFrame[0] = lib.CopyStringArray(captures)
 }
 
 func (state *State) GetRegexCaptures() []string {
-	regexCaptures := state.regexCapturesByFrame.Front().Value.([]string)
+	regexCaptures := state.regexCapturesByFrame[0]
 	return lib.CopyStringArray(regexCaptures)
 }
 
 func (state *State) PushRegexCapturesFrame() {
-	state.regexCapturesByFrame.PushFront(lib.MakeEmptyCaptures())
+	state.regexCapturesByFrame = append([][]string{lib.MakeEmptyCaptures()}, state.regexCapturesByFrame...)
 }
 
 func (state *State) PopRegexCapturesFrame() {
-	// There is no PopFront
-	state.regexCapturesByFrame.Remove(state.regexCapturesByFrame.Front())
+	state.regexCapturesByFrame = state.regexCapturesByFrame[1:]
 }

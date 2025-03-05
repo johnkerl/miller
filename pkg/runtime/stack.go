@@ -26,7 +26,6 @@
 package runtime
 
 import (
-	"container/list"
 	"fmt"
 
 	"github.com/johnkerl/miller/v6/pkg/lib"
@@ -68,7 +67,7 @@ func (sv *StackVariable) GetName() string {
 
 type Stack struct {
 	// list of *StackFrameSet
-	stackFrameSets *list.List
+	stackFrameSets []*StackFrameSet
 
 	// Invariant: equal to the head of the stackFrameSets list. This is cached
 	// since all sets/gets in between frameset-push and frameset-pop will all
@@ -77,9 +76,9 @@ type Stack struct {
 }
 
 func NewStack() *Stack {
-	stackFrameSets := list.New()
+	stackFrameSets := make([]*StackFrameSet, 1)
 	head := newStackFrameSet()
-	stackFrameSets.PushFront(head)
+	stackFrameSets[0] = head
 	return &Stack{
 		stackFrameSets: stackFrameSets,
 		head:           head,
@@ -89,13 +88,13 @@ func NewStack() *Stack {
 // For when a user-defined function/subroutine is being entered
 func (stack *Stack) PushStackFrameSet() {
 	stack.head = newStackFrameSet()
-	stack.stackFrameSets.PushFront(stack.head)
+	stack.stackFrameSets = append([]*StackFrameSet{stack.head}, stack.stackFrameSets...)
 }
 
 // For when a user-defined function/subroutine is being exited
 func (stack *Stack) PopStackFrameSet() {
-	stack.stackFrameSets.Remove(stack.stackFrameSets.Front())
-	stack.head = stack.stackFrameSets.Front().Value.(*StackFrameSet)
+	stack.stackFrameSets = stack.stackFrameSets[1:]
+	stack.head = stack.stackFrameSets[0]
 }
 
 // ----------------------------------------------------------------
@@ -180,9 +179,8 @@ func (stack *Stack) UnsetIndexed(
 }
 
 func (stack *Stack) Dump() {
-	fmt.Printf("STACK FRAMESETS (count %d):\n", stack.stackFrameSets.Len())
-	for entry := stack.stackFrameSets.Front(); entry != nil; entry = entry.Next() {
-		stackFrameSet := entry.Value.(*StackFrameSet)
+	fmt.Printf("STACK FRAMESETS (count %d):\n", len(stack.stackFrameSets))
+	for _, stackFrameSet := range stack.stackFrameSets {
 		stackFrameSet.dump()
 	}
 }

@@ -5,11 +5,10 @@
 package cst
 
 import (
-	"container/list"
-
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/output"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
@@ -44,9 +43,9 @@ type RootNode struct {
 	udfManager                    *UDFManager
 	udsManager                    *UDSManager
 	allowUDFUDSRedefinitions      bool
-	unresolvedFunctionCallsites   *list.List
-	unresolvedSubroutineCallsites *list.List
-	outputHandlerManagers         *list.List
+	unresolvedFunctionCallsites   []*UDFCallsite
+	unresolvedSubroutineCallsites []*UDSCallsite
+	outputHandlerManagers         []output.OutputHandlerManager
 	recordWriterOptions           *cli.TWriterOptions
 	dslInstanceType               DSLInstanceType // put, filter, repl
 	strictMode                    bool
