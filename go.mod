@@ -15,7 +15,7 @@ module github.com/johnkerl/miller/v6
 // replace github.com/johnkerl/lumin => /Users/kerl/git/johnkerl/lumin
 
 go 1.21
-toolchain go1.23.7
+toolchain go1.21.13
 
 require (
 	github.com/facette/natsort v0.0.0-20181210072756-2cd4dd1e2dcb
