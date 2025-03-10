@@ -96,7 +96,7 @@ type TransformerBootstrap struct {
 
 func NewTransformerBootstrap(nout int64) (*TransformerBootstrap, error) {
 	tr := &TransformerBootstrap{
-		recordsAndContexts: list.New(),
+		recordsAndContexts: types.NewList[*types.RecordAndContext](int(100)), // XXX size
 		nout:               nout,
 	}
 	return tr, nil
