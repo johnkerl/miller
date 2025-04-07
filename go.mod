@@ -15,6 +15,7 @@ module github.com/johnkerl/miller/v6
 // replace github.com/johnkerl/lumin => /Users/kerl/git/johnkerl/lumin
 
 go 1.21
+toolchain go1.24.1
 
 require (
 	github.com/facette/natsort v0.0.0-20181210072756-2cd4dd1e2dcb
@@ -26,7 +27,7 @@ require (
 	github.com/nine-lives-later/go-windows-terminal-sequences v1.0.4
 	github.com/pkg/profile v1.7.0
 	github.com/stretchr/testify v1.10.0
-	golang.org/x/sys v0.30.0
+	golang.org/x/sys v0.32.0
 	golang.org/x/term v0.29.0
 	golang.org/x/text v0.22.0
 )
