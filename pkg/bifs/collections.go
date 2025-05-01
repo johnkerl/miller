@@ -373,7 +373,7 @@ func BIF_joink(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // joinv([3,4,5], ",") -> "3,4,5"
 // joinv({"a":3,"b":4,"c":5}, ",") -> "3,4,5"
 func BIF_joinv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	if !input2.IsString() {
+	if !input2.IsStringOrVoid() {
 		return mlrval.FromNotStringError("joinv", input2)
 	}
 	fieldSeparator := input2.AcquireStringValue()
