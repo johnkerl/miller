@@ -192,8 +192,8 @@ func parseCommandLinePassOne(
 			transformerSetup := transformers.LookUp(verb)
 			if transformerSetup == nil {
 				fmt.Fprintf(os.Stderr,
-					"%s: verb \"%s\" not found. Please use \"%s --help\" for a list.\n",
-					"mlr", verb, "mlr")
+					"mlr: verb \"%s\" not found. Please use \"mlr -l\" for a list.\n",
+					verb)
 				os.Exit(1)
 			}
 
