@@ -70,6 +70,7 @@ var TRANSFORMER_LOOKUP_TABLE = []TransformerSetup{
 	StepSetup,
 	SubSetup,
 	SummarySetup,
+	SurvSetup,
 	TacSetup,
 	TailSetup,
 	TeeSetup,
