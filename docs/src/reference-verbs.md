@@ -3857,6 +3857,21 @@ mean       -   -   5000.5 0.49860196816795804 0.5062057444929905
 median     pan pan 5001   0.5011592202840128  0.5060212582772865
 </pre>
 
+## surv
+
+<pre class="pre-highlight-in-pair">
+<b>mlr surv --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr surv -d {duration-field} -s {status-field}
+
+Estimate Kaplan-Meier survival curve (right-censored).
+Options:
+  -d {field}   Name of duration field (time-to-event or censoring).
+  -s {field}   Name of status field (0=censored, 1=event).
+  -h, --help   Show this message.
+</pre>
+
 ## tac
 
 <pre class="pre-highlight-in-pair">

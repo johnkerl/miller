@@ -72,7 +72,6 @@ func channelWriterHandleBatch(
 			// XXX also make sure this results in exit 1 & goroutine cleanup
 			if writerOptions.FailOnDataError && record != nil {
 				ok := true
-				fmt.Printf("AAA %#v", record)
 				for pe := record.Head; pe != nil; pe = pe.Next {
 					if pe.Value.IsError() {
 						context := recordAndContext.Context

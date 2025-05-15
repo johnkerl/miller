@@ -1161,6 +1161,12 @@ GENMD-RUN-COMMAND
 mlr --from data/medium --opprint summary --transpose -a mean,median,mode
 GENMD-EOF
 
+## surv
+
+GENMD-RUN-COMMAND
+mlr surv --help
+GENMD-EOF
+
 ## tac
 
 GENMD-RUN-COMMAND
