@@ -94,10 +94,20 @@ func ParseCommandLine(
 ) {
 	// mlr -s scriptfile {data-file names ...} means take the contents of
 	// scriptfile as if it were command-line items.
+
 	args, err = maybeInterpolateDashS(args)
 	if err != nil {
 		return nil, nil, err
 	}
+
+	// Expand "-xyz" into "-x -y -z" while leaving "--xyz" intact. This is a
+	// keystroke-saver for the user.
+	//
+	// This is OK to do globally here since Miller is quite consistent (in
+	// main, verbs, and auxents) that multi-character options start with two
+	// dashes, e.g. "--csv". (The sole exception is the sort verb's -nf/-nr
+	// which are handled specially there.)
+    args = lib.Getoptify(args)
 
 	// Pass one as described at the top of this file.
 	flagSequences, terminalSequence, verbSequences, dataFileNames := parseCommandLinePassOne(args)
