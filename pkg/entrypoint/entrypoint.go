@@ -36,15 +36,6 @@ func Main() MainReturn {
 	// otherwise, we only raw ANSI escape sequences like ←[0;30m  0←[0m ←[0;31m  1
 	platform.EnableAnsiEscapeSequences()
 
-	// Expand "-xyz" into "-x -y -z" while leaving "--xyz" intact. This is a
-	// keystroke-saver for the user.
-	//
-	// This is OK to do globally here since Miller is quite consistent (in
-	// main, verbs, and auxents) that multi-character options start with two
-	// dashes, e.g. "--csv". (The sole exception is the sort verb's -nf/-nr
-	// which are handled specially there.)
-	os.Args = lib.Getoptify(os.Args)
-
 	// 'mlr repl' or 'mlr lecat' or any other non-miller-per-se toolery which
 	// is delivered (for convenience) within the mlr executable. If argv[1] is
 	// found then this function will not return.

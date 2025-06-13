@@ -234,7 +234,7 @@ then fraction -f count
 
 Points:
 
-* Same as above, where the `#!` line isn't needed. (But you can include a `#!` line; `mlr -s` will simply see it as a comment line.).
+* Same as above, where the `#!` line isn't needed. (But you can include a `#!` line; `mlr -s` will simply see it as a comment line.)
 * As above, you don't need all the backslashing for line-continuations.
 * As above, you don't need the explicit `--` or `"$@"`.
 
