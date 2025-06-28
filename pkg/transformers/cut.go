@@ -1,10 +1,12 @@
 package transformers
 
 import (
+	"cmp"
 	"container/list"
 	"fmt"
 	"os"
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
@@ -36,7 +38,7 @@ func transformerCutUsage(
 	fmt.Fprintf(o, " -r Treat field names as regular expressions. \"ab\", \"a.*b\" will\n")
 	fmt.Fprintf(o, "   match any field name containing the substring \"ab\" or matching\n")
 	fmt.Fprintf(o, "   \"a.*b\", respectively; anchors of the form \"^ab$\", \"^a.*b$\" may\n")
-	fmt.Fprintf(o, "   be used. The -o flag is ignored when -r is present.\n")
+	fmt.Fprintf(o, "   be used.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 	fmt.Fprintf(o, "Examples:\n")
 	fmt.Fprintf(o, "  %s %s -f hostname,status\n", "mlr", verbNameCut)
@@ -129,6 +131,7 @@ type TransformerCut struct {
 	fieldNameSet  map[string]bool
 
 	doComplement bool
+	doArgOrder   bool
 	regexes      []*regexp.Regexp
 
 	recordTransformerFunc RecordTransformerFunc
@@ -142,6 +145,8 @@ func NewTransformerCut(
 ) (*TransformerCut, error) {
 
 	tr := &TransformerCut{}
+
+	tr.doArgOrder = doArgOrder
 
 	if !doRegexes {
 		tr.fieldNameList = fieldNames
@@ -257,6 +262,11 @@ func (tr *TransformerCut) exclude(
 	outputRecordsAndContexts.PushBack(inrecAndContext)
 }
 
+type entryIndex struct {
+	index int
+	entry *mlrval.MlrmapEntry
+}
+
 // ----------------------------------------------------------------
 func (tr *TransformerCut) processWithRegexes(
 	inrecAndContext *types.RecordAndContext,
@@ -267,11 +277,14 @@ func (tr *TransformerCut) processWithRegexes(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		newrec := mlrval.NewMlrmapAsRecord()
+		var entries []entryIndex
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			matchesAny := false
-			for _, regex := range tr.regexes {
+			var index int
+			for i, regex := range tr.regexes {
 				if regex.MatchString(pe.Key) {
 					matchesAny = true
+					index = i
 					break
 				}
 			}
@@ -279,7 +292,19 @@ func (tr *TransformerCut) processWithRegexes(
 			if matchesAny != tr.doComplement {
 				// Pointer-motion is OK since the inrec is being hereby discarded.
 				// We're simply transferring ownership to the newrec.
-				newrec.PutReference(pe.Key, pe.Value)
+				if tr.doArgOrder {
+					entries = append(entries, entryIndex{index, pe})
+				} else {
+					newrec.PutReference(pe.Key, pe.Value)
+				}
+			}
+		}
+		if tr.doArgOrder {
+			slices.SortStableFunc(entries, func(a, b entryIndex) int {
+				return cmp.Compare(a.index, b.index)
+			})
+			for _, ei := range entries {
+				newrec.PutReference(ei.entry.Key, ei.entry.Value)
 			}
 		}
 		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
