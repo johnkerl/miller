@@ -1009,7 +1009,7 @@ var FileFormatFlagSection = FlagSection{
 		{
 			name:     "--csv",
 			help:     "Use CSV format for input and output data.",
-			altNames: []string{"-c"},
+			altNames: []string{"-c", "--c2c"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "csv"
@@ -1030,7 +1030,7 @@ var FileFormatFlagSection = FlagSection{
 		{
 			name:     "--tsv",
 			help:     "Use TSV format for input and output data.",
-			altNames: []string{"-t"},
+			altNames: []string{"-t", "--t2t"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "tsv"
@@ -1093,8 +1093,9 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--dkvp",
-			help: "Use DKVP format for input and output data.",
+			name:     "--dkvp",
+			help:     "Use DKVP format for input and output data.",
+			altNames: []string{"--d2d"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "dkvp"
@@ -1105,7 +1106,7 @@ var FileFormatFlagSection = FlagSection{
 		{
 			name:     "--json",
 			help:     "Use JSON format for input and output data.",
-			altNames: []string{"-j"},
+			altNames: []string{"-j", "--j2j"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "json"
@@ -1116,8 +1117,9 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--jsonl",
-			help: "Use JSON Lines format for input and output data.",
+			name:     "--jsonl",
+			help:     "Use JSON Lines format for input and output data.",
+			altNames: []string{"--l2l"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "json"
@@ -1128,8 +1130,9 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--nidx",
-			help: "Use NIDX format for input and output data.",
+			name:     "--nidx",
+			help:     "Use NIDX format for input and output data.",
+			altNames: []string{"--n2n"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "nidx"
@@ -1138,8 +1141,9 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--xtab",
-			help: "Use XTAB format for input and output data.",
+			name:     "--xtab",
+			help:     "Use XTAB format for input and output data.",
+			altNames: []string{"--x2x"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "xtab"
@@ -1157,8 +1161,9 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--pprint",
-			help: "Use PPRINT format for input and output data.",
+			name:     "--pprint",
+			help:     "Use PPRINT format for input and output data.",
+			altNames: []string{"--p2p"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
@@ -1180,14 +1185,14 @@ JSON, JSON Lines, XTAB, PPRINT, and markdown, respectively.
 
 | In\out   | CSV   | TSV   | JSON   | JSONL  | DKVP   | NIDX   | XTAB   | PPRINT | Markdown |
 +----------+-------+-------+--------+--------+--------+--------+--------+--------+----------|
-| CSV      |       | --c2t | --c2j  | --c2l  | --c2d  | --c2n  | --c2x  | --c2p  | --c2m    |
-| TSV      | --t2c |       | --t2j  | --t2l  | --t2d  | --t2n  | --t2x  | --t2p  | --t2m    |
-| JSON     | --j2c | --j2t |        | --j2l  | --j2d  | --j2n  | --j2x  | --j2p  | --j2m    |
-| JSONL    | --l2c | --l2t |        |        | --l2d  | --l2n  | --l2x  | --l2p  | --l2m    |
-| DKVP     | --d2c | --d2t | --d2j  | --d2l  |        | --d2n  | --d2x  | --d2p  | --d2m    |
-| NIDX     | --n2c | --n2t | --n2j  | --n2l  | --n2d  |        | --n2x  | --n2p  | --n2m    |
-| XTAB     | --x2c | --x2t | --x2j  | --x2l  | --x2d  | --x2n  |        | --x2p  | --x2m    |
-| PPRINT   | --p2c | --p2t | --p2j  | --p2l  | --p2d  | --p2n  | --p2x  |        | --p2m    |
+| CSV      | --c2c | --c2t | --c2j  | --c2l  | --c2d  | --c2n  | --c2x  | --c2p  | --c2m    |
+| TSV      | --t2c | --t2t | --t2j  | --t2l  | --t2d  | --t2n  | --t2x  | --t2p  | --t2m    |
+| JSON     | --j2c | --j2t | --j2j  | --j2l  | --j2d  | --j2n  | --j2x  | --j2p  | --j2m    |
+| JSONL    | --l2c | --l2t | --l2j  | --l2l  | --l2d  | --l2n  | --l2x  | --l2p  | --l2m    |
+| DKVP     | --d2c | --d2t | --d2j  | --d2l  | --d2d  | --d2n  | --d2x  | --d2p  | --d2m    |
+| NIDX     | --n2c | --n2t | --n2j  | --n2l  | --n2d  | --n2n  | --n2x  | --n2p  | --n2m    |
+| XTAB     | --x2c | --x2t | --x2j  | --x2l  | --x2d  | --x2n  | --x2x  | --x2p  | --x2m    |
+| PPRINT   | --p2c | --p2t | --p2j  | --p2l  | --p2d  | --p2n  | --p2x  | --p2p  | --p2m    |
 | Markdown | --m2c | --m2t | --m2j  | --m2l  | --m2d  | --m2n  | --m2x  | --m2p  |          |`)
 }
 
