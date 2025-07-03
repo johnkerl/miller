@@ -1033,7 +1033,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
         -r Treat field names as regular expressions. "ab", "a.*b" will
           match any field name containing the substring "ab" or matching
           "a.*b", respectively; anchors of the form "^ab$", "^a.*b$" may
-          be used. The -o flag is ignored when -r is present.
+          be used.
        -h|--help Show this message.
        Examples:
          mlr cut -f hostname,status
