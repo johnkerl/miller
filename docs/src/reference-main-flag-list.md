@@ -144,9 +144,9 @@ are overridden in all cases by setting output format to `format2`.
 **Flags:**
 
 * `--asv or --asvlite`: Use ASV format for input and output data.
-* `--csv or -c`: Use CSV format for input and output data.
+* `--csv or -c or --c2c`: Use CSV format for input and output data.
 * `--csvlite`: Use CSV-lite format for input and output data.
-* `--dkvp`: Use DKVP format for input and output data.
+* `--dkvp or --d2d`: Use DKVP format for input and output data.
 * `--gen-field-name`: Specify field name for --igen. Defaults to "i".
 * `--gen-start`: Specify start value for --igen. Defaults to 1.
 * `--gen-step`: Specify step value for --igen. Defaults to 1.
@@ -166,9 +166,9 @@ are overridden in all cases by setting output format to `format2`.
 * `--itsvlite`: Use TSV-lite format for input data.
 * `--iusv or --iusvlite`: Use USV format for input data.
 * `--ixtab`: Use XTAB format for input data.
-* `--json or -j`: Use JSON format for input and output data.
-* `--jsonl`: Use JSON Lines format for input and output data.
-* `--nidx`: Use NIDX format for input and output data.
+* `--json or -j or --j2j`: Use JSON format for input and output data.
+* `--jsonl or --l2l`: Use JSON Lines format for input and output data.
+* `--nidx or --n2n`: Use NIDX format for input and output data.
 * `--oasv or --oasvlite`: Use ASV format for output data.
 * `--ocsv`: Use CSV format for output data.
 * `--ocsvlite`: Use CSV-lite format for output data.
@@ -182,11 +182,11 @@ are overridden in all cases by setting output format to `format2`.
 * `--otsvlite`: Use TSV-lite format for output data.
 * `--ousv or --ousvlite`: Use USV format for output data.
 * `--oxtab`: Use XTAB format for output data.
-* `--pprint`: Use PPRINT format for input and output data.
-* `--tsv or -t`: Use TSV format for input and output data.
+* `--pprint or --p2p`: Use PPRINT format for input and output data.
+* `--tsv or -t or --t2t`: Use TSV format for input and output data.
 * `--tsvlite`: Use TSV-lite format for input and output data.
 * `--usv or --usvlite`: Use USV format for input and output data.
-* `--xtab`: Use XTAB format for input and output data.
+* `--xtab or --x2x`: Use XTAB format for input and output data.
 * `--xvright`: Right-justify values for XTAB format.
 * `-i {format name}`: Use format name for input data. For example: `-i csv` is the same as `--icsv`.
 * `-o {format name}`: Use format name for output data.  For example: `-o csv` is the same as `--ocsv`.
@@ -210,17 +210,15 @@ The letters `c`, `t`, `j`, `d`, `n`, `x`, `p`, and `m` refer to formats CSV, TSV
 PPRINT, and markdown, respectively. Note that markdown format is available for
 output only.
 
-| In  out      | **CSV** | **TSV** | **JSON** | **JSONL** | **DKVP** | **NIDX** | **XTAB** | **PPRINT** | **Markdown** |
-|--------------|---------|---------|----------|-----------|----------|----------|----------|------------|--------------|
-| **CSV**      | --c2c   | --c2t   | --c2j    | --c2l     | --c2d    | --c2n    | --c2x    | --c2p      | --c2m        |
-| **TSV**      | --t2c   | --t2t   | --t2j    | --t2l     | --t2d    | --t2n    | --t2x    | --t2p      | --t2m        |
-| **JSON**     | --j2c   | --j2t   | --j2j    | --j2l     | --j2d    | --j2n    | --j2x    | --j2p      | --j2m        |
-| **JSONL**    | --l2c   | --l2t   | --l2j    | --l2l     | --l2d    | --l2n    | --l2x    | --l2p      | --l2m        |
-| **DKVP**     | --d2c   | --d2t   | --d2j    | --d2l     | --d2d    | --d2n    | --d2x    | --d2p      | --d2m        |
-| **NIDX**     | --n2c   | --n2t   | --n2j    | --n2l     | --n2d    | --n2n    | --n2x    | --n2p      | --n2m        |
-| **XTAB**     | --x2c   | --x2t   | --x2j    | --x2l     | --x2d    | --x2n    | --x2x    | --x2p      | --x2m        |
-| **PPRINT**   | --p2c   | --p2t   | --p2j    | --p2l     | --p2d    | --p2n    | --p2x    | --p2p      | --p2m        |
-| **Markdown** | --m2c   | --m2t   | --m2j    | --m2l     | --m2d    | --m2n    | --m2x    | --m2p      |              |
+| In  out   | **CSV** | **TSV** | **JSON** | **DKVP** | **NIDX** | **XTAB** | **PPRINT** | **Markdown** |
+|------------|---------|---------|----------|----------|----------|----------|------------|--------------|
+| **CSV**    |         | `--c2t` | `--c2j`  | `--c2d`  | `--c2n`  | `--c2x`  | `--c2p`    | `--c2m`      |
+| **TSV**    | `--t2c` |         | `--t2j`  | `--t2d`  | `--t2n`  | `--t2x`  | `--t2p`    | `--t2m`      |
+| **JSON**   | `--j2c` | `--j2t` |          | `--j2d`  | `--j2n`  | `--j2x`  | `--j2p`    | `--j2m`      |
+| **DKVP**   | `--d2c` | `--d2t` | `--d2j`  |          | `--d2n`  | `--d2x`  | `--d2p`    | `--d2m`      |
+| **NIDX**   | `--n2c` | `--n2t` | `--n2j`  | `--n2d`  |          | `--n2x`  | `--n2p`    | `--n2m`      |
+| **XTAB**   | `--x2c` | `--x2t` | `--x2j`  | `--x2d`  | `--x2n`  |          | `--x2p`    | `--x2m`      |
+| **PPRINT** | `--p2c` | `--p2t` | `--p2j`  | `--p2d`  | `--p2n`  | `--p2x`  |            | `--p2m`      |
 
 Additionally:
 

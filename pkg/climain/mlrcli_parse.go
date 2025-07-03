@@ -107,7 +107,7 @@ func ParseCommandLine(
 	// main, verbs, and auxents) that multi-character options start with two
 	// dashes, e.g. "--csv". (The sole exception is the sort verb's -nf/-nr
 	// which are handled specially there.)
-    args = lib.Getoptify(args)
+	args = lib.Getoptify(args)
 
 	// Pass one as described at the top of this file.
 	flagSequences, terminalSequence, verbSequences, dataFileNames := parseCommandLinePassOne(args)
