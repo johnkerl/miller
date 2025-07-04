@@ -5,7 +5,7 @@ You can install Miller for various platforms as follows.
 Download a binary:
 
 * You can get binaries for several platforms on the [releases page](https://github.com/johnkerl/miller/releases).
-* You can get latest (head) builds for Linux, MacOS, and Windows by visiting [https://github.com/johnkerl/miller/actions](https://github.com/johnkerl/miller/actions), selecting the latest build, and clicking _Artifacts_. (These are retained for 5 days after each commit.)
+* You can get the latest (head) builds for Linux, MacOS, and Windows by visiting [https://github.com/johnkerl/miller/actions](https://github.com/johnkerl/miller/actions), selecting the latest build, and clicking _Artifacts_. (These are retained for 5 days after each commit.)
 * See also the [build page](build.md) if you prefer to build from source.
 
 Using a package manager:
@@ -21,7 +21,7 @@ See also:
 * [@jauderho](https://github.com/jauderho)'s [docker images](https://hub.docker.com/r/jauderho/miller/tags) as discussed in [GitHub Discussions](https://github.com/johnkerl/miller/discussions/851#discussioncomment-1943255)
     * Example invocation: `docker run --rm -i jauderho/miller:latest --csv sort -f shape < ./example.csv`
 
-Note that the [Miller releases page](https://github.com/johnkerl/miller/releases), `brew`, `macports`, `chocolatey`, and `conda` tend to have current versions; `yum` and `apt-get` may have outdate versions depending on your platform.
+Note that the [Miller releases page](https://github.com/johnkerl/miller/releases), `brew`, `macports`, `chocolatey`, and `conda` tend to have current versions; `yum` and `apt-get` may have outdated versions depending on your platform.
 
 As a first check, you should be able to run `mlr --version` at your system's command prompt and see something like the following:
 
@@ -32,7 +32,7 @@ GENMD-EOF
 
 A note on documentation:
 
-* If you downloaded the Miller binary from a tagged release, or installed it using a package manager, you should see a version like `mlr 6.0.0` or `mlr 5.10.3` -- please see the [release docs page](release-docs.md) to find the documentation for your version.
+* If you downloaded the Miller binary from a tagged release or installed it using a package manager, you should see a version like `mlr 6.0.0` or `mlr 5.10.3` -- please see the [release docs page](release-docs.md) to find the documentation for your version.
 * If you installed from source or using a recent build artifact from GitHub Actions, you should see a version like `mlr 6.0.0-dev` -- [https://miller.readthedocs.io](https://miller.readthedocs.io) is the correct reference, since it contains information for the latest contributions to the [Miller repository](https://github.com/johnkerl/miller).
 
 As a second check, given [example.csv](./example.csv) you should be able to do
@@ -45,6 +45,6 @@ GENMD-RUN-COMMAND
 mlr --icsv --opprint cat example.csv
 GENMD-EOF
 
-If you run into issues on these checks, please check out the resources on the [community page](community.md) for help.
+If you encounter issues with these checks, please refer to the resources on the [community page](community.md) for help.
 
 Otherwise, let's go on to [Miller in 10 minutes](10min.md)!

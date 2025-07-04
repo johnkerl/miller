@@ -29,23 +29,15 @@ As of [Miller 6](new-in-miller-6.md) you can use
 intuitive operations on arrays and maps, as an alternative to things which
 would otherwise require for-loops.
 
-See also the [`get_keys`](reference-dsl-builtin-functions.md#get_keys) and
-[`get_values`](reference-dsl-builtin-functions.md#get_values) functions which,
-when given a map, return an array of its keys or an array of its values,
-respectively.
+See also the [`get_keys`](reference-dsl-builtin-functions.md#get_keys) and [`get_values`](reference-dsl-builtin-functions.md#get_values) functions which, when given a map, return an array of its keys or an array of its values, respectively.
 
 ## select
 
-The [`select`](reference-dsl-builtin-functions.md#select) function takes a map
-or array as its first argument and a function as second argument.  It includes
-each input element in the output if the function returns true.
+The [`select`](reference-dsl-builtin-functions.md#select) function takes a map or array as its first argument and a function as its second argument.  It includes each input element in the output if the function returns true.
 
-For arrays, that function should take one argument, for array element; for
-maps, it should take two, for map-element key and value. In either case it
-should return a boolean.
+For arrays, that function should take one argument, for an array element; for maps, it should take two, for a map element key and value. In either case, it should return a boolean.
 
-A perhaps helpful analogy: the `select` function is to arrays and maps as the
-[`filter`](reference-verbs.md#filter) is to records.
+A perhaps helpful analogy: the `select` function is to arrays and maps as the [`filter`](reference-verbs.md#filter) is to records.
 
 Array examples:
 
@@ -123,16 +115,11 @@ Values with last digit >= 5:
 
 ## apply
 
-The [`apply`](reference-dsl-builtin-functions.md#apply) function takes a map
-or array as its first argument and a function as second argument.  It applies
-the function to each element of the array or map.
+The [`apply`](reference-dsl-builtin-functions.md#apply) function takes a map or array as its first argument and a function as its second argument.  It applies the function to each element of the array or map.
 
-For arrays, the function should take one argument, for array element; it should
-return a new element. For maps, it should take two, for map-element key and
-value. It should return a new key-value pair (i.e. a single-entry map).
+For arrays, the function should take one argument, representing an array element, and return a new element. For maps, it should take two, for the map element key and value. It should return a new key-value pair (i.e., a single-entry map).
 
-A perhaps helpful analogy: the `apply` function is to arrays and maps as the
-[`put`](reference-verbs.md#put) is to records.
+A perhaps helpful analogy: the `apply` function is to arrays and maps as the [`put`](reference-verbs.md#put) is to records.
 
 Array examples:
 
@@ -232,17 +219,11 @@ Same, with upcased keys:
 
 ## reduce
 
-The [`reduce`](reference-dsl-builtin-functions.md#reduce) function takes a map
-or array as its first argument and a function as second argument. It accumulates entries into a final
-output -- for example, sum or product.
+The [`reduce`](reference-dsl-builtin-functions.md#reduce) function takes a map or array as its first argument and a function as its second argument. It accumulates entries into a final output, such as a sum or product.
 
-For arrays, the function should take two arguments, for accumulated value and
-array element; for maps, it should take four, for accumulated key and value
-and map-element key and value. In either case it should return the updated
-accumulator.
+For arrays, the function should take two arguments, for the accumulated value and the array element; for maps, it should take four, for the accumulated key and value, and the map-element key and value. In either case it should return the updated accumulator.
 
-The start value for the accumulator is the first element for arrays, or the
-first element's key-value pair for maps.
+The start value for the accumulator is the first element for arrays, or the first element's key-value pair for maps.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put '</b>
@@ -370,10 +351,7 @@ String-join of values:
 
 ## fold
 
-The [`fold`](reference-dsl-builtin-functions.md#fold) function is the same as
-`reduce`, except that instead of the starting value for the accumulation being
-taken from the first entry of the array/map, you specify it as the third
-argument.
+The [`fold`](reference-dsl-builtin-functions.md#fold) function is the same as `reduce`, except that instead of the starting value for the accumulation being taken from the first entry of the array/map, you specify it as the third argument.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put '</b>
@@ -469,22 +447,13 @@ Sum of values with fold and 1000000 initial value:
 
 ## sort
 
-The [`sort`](reference-dsl-builtin-functions.md#sort) function takes a map or
-array as its first argument, and it can take a function as second argument.
-Unlike the other higher-order functions, the second argument can be omitted
-when the natural ordering is desired -- ordered by array element for arrays, or by
-key for maps.
+The [`sort`](reference-dsl-builtin-functions.md#sort) function takes a map or array as its first argument, and it can take a function as its second argument. Unlike the other higher-order functions, the second argument can be omitted when the natural ordering is desired -- ordered by array element for arrays, or by key for maps.
 
-As a second option, character flags such as `r` for reverse or `c` for
-case-folded lexical sort can be supplied as the second argument.
+As a second option, character flags such as `r` for reverse or `c` for case-folded lexical sort can be supplied as the second argument.
 
 As a third option, a function can be supplied as the second argument.
 
-For arrays, that function should take two arguments `a` and `b`, returning a
-negative, zero, or positive number as `a<b`, `a==b`, or `a>b` respectively.
-For maps, the function should take four arguments `ak`, `av`, `bk`, and `bv`,
-again returning negative, zero, or positive, using `a` and `b`'s keys and
-values.
+For arrays, that function should take two arguments `a` and `b`, returning a negative, zero, or positive number as `a<b`, `a==b`, or `a>b` respectively. For maps, the function should take four arguments `ak`, `av`, `bk`, and `bv`, again returning negative, zero, or positive, using `a`'s and `b`'s keys and values.
 
 Array examples:
 
@@ -703,9 +672,7 @@ red    square   false 6 64    77.1991  9.5310
 
 ## Combined examples
 
-Using a paradigm from the [page on operating on all
-records](operating-on-all-records.md), we can retain a column from the input
-data as an array, then apply some higher-order functions to it:
+Using a paradigm from the [page on operating on all records](operating-on-all-records.md), we can retain a column from the input data as an array, then apply some higher-order functions to it:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --c2p cat example.csv</b>
@@ -776,7 +743,7 @@ Sorted, then cubed, then summed:
 
 ### Remember return
 
-From other languages it's easy to accidentally write
+From other languages, it's easy to write accidentally
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put 'end { print select([1,2,3,4,5], func (e) { e >= 3 })}'</b>
@@ -833,7 +800,7 @@ but this does:
 2187
 </pre>
 
-### Built-in functions currently unsupported as arguments
+### Built-in functions are currently unsupported as arguments
 
 [Built-in functions](reference-dsl-user-defined-functions.md) are, as of
 September 2021, a bit separate from [user-defined

@@ -22,15 +22,15 @@ You can **output** variable-values or expressions in **five ways**:
 
 * Use **emit1**/**emit**/**emitp**/**emitf** to send out-of-stream variables' current values to the output record stream, e.g.  `@sum += $x; emit1 @sum` which produces an extra record such as `sum=3.1648382`. These records, just like records from input file(s), participate in downstream [then-chaining](reference-main-then-chaining.md) to other verbs.
 
-* Use the **print** or **eprint** keywords which immediately print an expression *directly to standard output or standard error*, respectively. Note that `dump`, `edump`, `print`, and `eprint` don't output records which participate in `then`-chaining; rather, they're just immediate prints to stdout/stderr. The `printn` and `eprintn` keywords are the same except that they don't print final newlines. Additionally, you can print to a specified file instead of stdout/stderr.
+* Use the **print** or **eprint** keywords which immediately print an expression *directly to standard output or standard error*, respectively. Note that `dump`, `edump`, `print`, and `eprint` don't output records that participate in `then`-chaining; rather, they're just immediate prints to stdout/stderr. The `printn` and `eprintn` keywords are the same except that they don't print final newlines. Additionally, you can print to a specified file instead of stdout/stderr.
 
 * Use the **dump** or **edump** keywords, which *immediately print all out-of-stream variables as a JSON data structure to the standard output or standard error* (respectively).
 
-* Use **tee** which formats the current stream record (not just an arbitrary string as with **print**) to a specific file.
+* Use **tee**, which formats the current stream record (not just an arbitrary string as with **print**) to a specific file.
 
-For the first two options you are populating the output-records stream which feeds into the next verb in a `then`-chain (if any), or which otherwise is formatted for output using `--o...` flags.
+For the first two options, you are populating the output-records stream which feeds into the next verb in a `then`-chain (if any), or which otherwise is formatted for output using `--o...` flags.
 
-For the last three options you are sending output directly to standard output, standard error, or a file.
+For the last three options, you are sending output directly to standard output, standard error, or a file.
 
 ## Print statements
 
@@ -38,7 +38,7 @@ The `print` statement is perhaps self-explanatory, but with a few light caveats:
 
 * There are four variants: `print` goes to stdout with final newline, `printn` goes to stdout without final newline (you can include one using "\n" in your output string), `eprint` goes to stderr with final newline, and `eprintn` goes to stderr without final newline.
 
-* Output goes directly to stdout/stderr, respectively: data produced this way do not go downstream to the next verb in a `then`-chain. (Use `emit` for that.)
+* Output goes directly to stdout/stderr, respectively: data produced this way does not go downstream to the next verb in a `then`-chain. (Use `emit` for that.)
 
 * Print statements are for strings (`print "hello"`), or things which can be made into strings: numbers (`print 3`, `print $a + $b`), or concatenations thereof (`print "a + b = " . ($a + $b)`). Maps (in `$*`, map-valued out-of-stream or local variables, and map literals) as well as arrays are printed as JSON.
 
@@ -62,9 +62,9 @@ The `dump` statement is for printing expressions, including maps, directly to st
 
 * There are two variants: `dump` prints to stdout; `edump` prints to stderr.
 
-* Output goes directly to stdout/stderr, respectively: data produced this way do not go downstream to the next verb in a `then`-chain. (Use `emit` for that.)
+* Output goes directly to stdout/stderr, respectively: data produced this way does not go downstream to the next verb in a `then`-chain. (Use `emit` for that.)
 
-* You can use `dump` to output single strings, numbers, or expressions including map-valued data. Map-valued data are printed as JSON.
+* You can use `dump` to output single strings, numbers, or expressions including map-valued data. Map-valued data is printed as JSON.
 
 * If you use `dump` (or `edump`) with no arguments, you get a JSON structure representing the current values of all out-of-stream variables.
 
@@ -76,7 +76,7 @@ The `dump` statement is for printing expressions, including maps, directly to st
 
 Records produced by a `mlr put` go downstream to the next verb in your `then`-chain, if any, or otherwise to standard output.  If you want to additionally copy out records to files, you can do that using `tee`.
 
-The syntax is, by example:
+The syntax is, for example:
 
 <pre class="pre-highlight-non-pair">
 <b>mlr --from myfile.dat put 'tee > "tap.dat", $*' then sort -n index</b>
@@ -84,8 +84,7 @@ The syntax is, by example:
 
 First is `tee >`, then the filename expression (which can be an expression such as `"tap.".$a.".dat"`), then a comma, then `$*`. (Nothing else but `$*` is teeable.)
 
-You can also write to a variable file name -- for example, you can split a
-single file into multiple ones on field names:
+You can also write to a variable file name -- for example, you can split a single file into multiple ones on field names:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --csv cat example.csv</b>
@@ -324,26 +323,12 @@ There are four variants: `emit1`, `emitf`, `emit`, and `emitp`. These are used
 to insert new records into the record stream -- or, optionally, redirect them
 to files.
 
-Keep in mind that out-of-stream variables are a nested, multi-level
-[map](reference-main-maps.md) (directly viewable as JSON using `dump`), while
-Miller record values are as well during processing -- but records may be
-flattened down for output to tabular formats. See the page [Flatten/unflatten:
-JSON vs. tabular formats](flatten-unflatten.md) for more information.
+Keep in mind that out-of-stream variables are a nested, multi-level [map](reference-main-maps.md) (directly viewable as JSON using `dump`), while Miller record values are as well during processing -- but records may be flattened down for output to tabular formats. See the page [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md) for more information.
 
-* You can use `emit1` to emit any map-valued expression, including `$*`,
-  map-valued out-of-stream variables, the entire out-of-stream-variable
-  collection `@*`, map-valued local variables, map literals, or map-valued
-  function return values.
-* For `emit`, `emitp`, and `emitf`, you can emit map-valued local variables,
-  map-valued field attributes (with `$`), map-va out-of-stream variables (with
-  `@`), `$*`, `@*`, or map literals (with outermost `{...}`) -- but not arbitrary
-  expressions which evaluate to map (such as function return values).
+* You can use `emit1` to emit any map-valued expression, including `$*`, map-valued out-of-stream variables, the entire out-of-stream-variable collection `@*`, map-valued local variables, map literals, or map-valued function return values.
+* For `emit`, `emitp`, and `emitf`, you can emit map-valued local variables, map-valued field attributes (with `$`), map-va out-of-stream variables (with `@`), `$*`, `@*`, or map literals (with outermost `{...}`) -- but not arbitrary expressions which evaluate to map (such as function return values).
 
-The reason for this is part historical and part technical. As we'll see below,
-you can do lots of syntactical things with `emit`, `emitp`, and `emitf`,
-including printing them side-by-side, index them, redirect the output to files,
-etc. What this means syntactically is that Miller's parser needs to handle all
-sorts of commas, parentheses, and so on:
+The reason for this is partly historical and partly technical. As we'll see below, you can do lots of syntactical things with `emit`, `emitp`, and `emitf`, including printing them side-by-side, indexing them, redirecting the output to files, etc. What this means syntactically is that Miller's parser needs to handle all sorts of commas, parentheses, and so on:
 
 <pre class="pre-non-highlight-non-pair">
   emitf @count, @sum
@@ -352,12 +337,7 @@ sorts of commas, parentheses, and so on:
   # etc
 </pre>
 
-When we try to allow `emitf`/`emit`/`emitp` to handle arbitrary map-valued
-expressions, like `mapexcept($*, mymap)` and so on, this inserts more syntactic
-complexity in terms of commas, parentheses, and so on. The technical term is
-_LR-1 shift-reduce conflicts_, but we can simply think of this in terms of the
-parser not being able to efficiently disambiguate all the punctuational
-opportunities.
+When we try to allow `emitf`/`emit`/`emitp` to handle arbitrary map-valued expressions, like `mapexcept($*, mymap)` and so on, this inserts more syntactic complexity in terms of commas, parentheses, and so on. The technical term is _LR-1 shift-reduce conflicts_, but we can think of this in terms of the parser being unable to efficiently disambiguate all the punctuational opportunities.
 
 So, `emit1` can handle syntactic richness in the one thing being emitted;
 `emitf`, `emit`, and `emitp` can handle syntactic richness in the side-by-side
@@ -365,7 +345,7 @@ placement, indexing, and redirection.
 
 (Mnemonic: If all you want is to insert a new record into the record stream, `emit1` is probably the _one_ you want.)
 
-What this means is that if you want to emit an expression which evaluates to a map, you can do quite simply
+What this means is that if you want to emit an expression that evaluates to a map, you can do it quite simply:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --c2p --from example.csv put -q '</b>
@@ -386,7 +366,7 @@ id color  shape    flag  k  index quantity rate
 10 purple square   false 10 91    72.3735  8.2430
 </pre>
 
-And if you want indexing, redirects, etc., just assign to a temporary variable and use one of the other emit variants:
+And if you want indexing, redirects, etc., just assign to a temporary variable and use one of the other `emit` variants:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --c2p --from example.csv put -q '</b>
@@ -410,7 +390,7 @@ id color  shape    flag  k  index quantity rate
 
 ## Emitf statements
 
-Use **emitf** to output several out-of-stream variables side-by-side in the same output record. For `emitf` these mustn't have indexing using `@name[...]`. Example:
+Use **emitf** to output several out-of-stream variables side-by-side in the same output record. For `emitf`, these mustn't have indexing using `@name[...]`. Example:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put -q '</b>
@@ -426,7 +406,7 @@ count=5,x_sum=2.26476,y_sum=2.585083
 
 ## Emit statements
 
-Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get a simple key-value pair:
+Use **emit** to output an out-of-stream variable. If it's non-indexed, you'll get a simple key-value pair:
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/small</b>
@@ -455,7 +435,7 @@ a=wye,b=pan,i=5,x=0.573288,y=0.863624
 sum=2.26476
 </pre>
 
-If it's indexed then use as many names after `emit` as there are indices:
+If it's indexed, then use as many names after `emit` as there are indices:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a] += $x; end { dump }' data/small</b>
@@ -624,8 +604,7 @@ sum.wye.wye 0.204603
 sum.wye.pan 0.573288
 </pre>
 
-Use **--flatsep** to specify the character which joins multilevel
-keys for `emitp` (it defaults to a colon):
+Use **--flatsep** to specify the character that joins multilevel keys for `emitp` (it defaults to a colon):
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --flatsep / put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small</b>
@@ -703,11 +682,11 @@ hat hat 182.8535323148762  381     0.47993053101017374
 hat pan 168.5538067327806  363     0.4643355557376876
 </pre>
 
-What this does is walk through the first out-of-stream variable (`@x_sum` in this example) as usual, then for each keylist found (e.g. `pan,wye`), include the values for the remaining out-of-stream variables (here, `@x_count` and `@x_mean`). You should use this when all out-of-stream variables in the emit statement have **the same shape and the same keylists**.
+What this does is walk through the first out-of-stream variable (`@x_sum` in this example) as usual, then for each keylist found (e.g., `pan,wye`), include the values for the remaining out-of-stream variables (here, `@x_count` and `@x_mean`). You should use this when all out-of-stream variables in the emit statement have **the same shape and the same keylists**.
 
 ## Emit-all statements
 
-Use **emit all** (or `emit @*` which is synonymous) to output all out-of-stream variables. You can use the following idiom to get various accumulators output side-by-side (reminiscent of `mlr stats1`):
+Use **emit all** (or `emit @*`, which is synonymous) to output all out-of-stream variables. You can use the following idiom to get various accumulators' output side-by-side (reminiscent of `mlr stats1`):
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --from data/small --opprint put -q '</b>

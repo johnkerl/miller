@@ -21,7 +21,7 @@ mlr --opprint put '
 ' data/small data/small2
 GENMD-EOF
 
-Anything from a `#` character to end of line is a code comment.
+Anything from a `#` character to the end of the line is a code comment.
 
 GENMD-RUN-COMMAND
 mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' \
@@ -62,11 +62,11 @@ GENMD-RUN-COMMAND
 mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f($x, $y)'
 GENMD-EOF
 
-A suggested use-case here is defining functions in files, and calling them from command-line expressions.
+A suggested use case here is defining functions in files and calling them from command-line expressions.
 
-Another suggested use-case is putting default parameter values in files, e.g. using `begin{@count=is_present(@count)?@count:10}` in the file, where you can precede that using `begin{@count=40}` using `-e`.
+Another suggested use case is putting default parameter values in files, e.g., using `begin{@count=is_present(@count)?@count:10}` in the file, where you can precede that using `begin{@count=40}` using `-e`.
 
-Moreover, you can have one or more `-f` expressions (maybe one function per file, for example) and one or more `-e` expressions on the command line.  If you mix `-f` and `-e` then the expressions are evaluated in the order encountered.
+Moreover, you can have one or more `-f` expressions (maybe one function per file, for example) and one or more `-e` expressions on the command line.  If you mix `-f` and `-e`, then the expressions are evaluated in the order encountered.
 
 ## Semicolons, commas, newlines, and curly braces
 
@@ -84,7 +84,7 @@ GENMD-RUN-COMMAND
 echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}; $foo = "bar"'
 GENMD-EOF
 
-Semicolons are required between statements even if those statements are on separate lines.  **Newlines** are for your convenience but have no syntactic meaning: line endings do not terminate statements. For example, adjacent assignment statements must be separated by semicolons even if those statements are on separate lines:
+Semicolons are required between statements, even if those statements are on separate lines.  **Newlines** are for your convenience but have no syntactic meaning: line endings do not terminate statements. For example, adjacent assignment statements must be separated by semicolons even if those statements are on separate lines:
 
 GENMD-INCLUDE-ESCAPED(data/newline-example.txt)
 

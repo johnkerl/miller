@@ -18,7 +18,7 @@ Quick links:
 
 ## Pattern-action blocks
 
-These are reminiscent of `awk` syntax.  They can be used to allow assignments to be done only when appropriate -- e.g. for math-function domain restrictions, regex-matching, and so on:
+These are reminiscent of `awk` syntax.  They can be used to allow assignments to be done only when appropriate -- e.g., for math-function domain restrictions, regex-matching, and so on:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr cat data/put-gating-example-1.dkvp</b>
@@ -64,7 +64,7 @@ a=some other name
 a=xyz_789,b=left_xyz,c=right_789
 </pre>
 
-This produces heteregenous output which Miller, of course, has no problems with (see [Record Heterogeneity](record-heterogeneity.md)).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes `put` to evaluate the boolean expression (along with any side effects, namely, regex-captures `\1`, `\2`, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally:
+This produces heterogeneous output which Miller, of course, has no problems with (see [Record Heterogeneity](record-heterogeneity.md)).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes `put` to evaluate the boolean expression (along with any side effects, namely, regex-captures `\1`, `\2`, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint put '</b>
@@ -172,7 +172,7 @@ records](operating-on-all-records.md) for some options.
 
 ## For-loops
 
-While Miller's `while` and `do-while` statements are much as in many other languages, `for` loops are more idiosyncratic to Miller. They are loops over key-value pairs, whether in stream records, out-of-stream variables, local variables, or map-literals: more reminiscent of `foreach`, as in (for example) PHP. There are **for-loops over map keys** and **for-loops over key-value tuples**.  Additionally, Miller has a **C-style triple-for loop** with initialize, test, and update statements. Each is described below.
+While Miller's `while` and `do-while` statements are much like those in many other languages, `for` loops are more idiosyncratic to Miller. They are loops over key-value pairs, whether in stream records, out-of-stream variables, local variables, or map-literals: more reminiscent of `foreach`, as in (for example) PHP. There are **for-loops over map keys** and **for-loops over key-value tuples**.  Additionally, Miller has a **C-style triple-for loop** with initialize, test, and update statements. Each is described below.
 
 As with `while` and `do-while`, a `break` or `continue` within nested control structures will propagate to the innermost loop enclosing them, if any, and a `break` or `continue` outside a loop is a syntax error that will be flagged as soon as the expression is parsed, before any input records are ingested.
 
@@ -260,11 +260,9 @@ value: true valuetype: bool
 
 ### Key-value for-loops
 
-For [maps](reference-main-maps.md), the first loop variable is the key and the
-second is the value; for [arrays](reference-main-arrays.md), the first loop
-variable is the (1-up) array index and the second is the value.
+For [maps](reference-main-maps.md), the first loop variable is the key, and the second is the value. For [arrays](reference-main-arrays.md), the first loop variable is the (1-based) array index, and the second is the value.
 
-Single-level keys may be gotten at using either `for(k,v)` or `for((k),v)`; multi-level keys may be gotten at using `for((k1,k2,k3),v)` and so on.  The `v` variable will be bound to a scalar value (non-array/non-map) if the map stops at that level, or to a map-valued or array-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
+Single-level keys may be obtained using either `for(k,v)` or `for((k),v)`; multi-level keys may be obtained using `for((k1,k2,k3),v)` and so on.  The `v` variable will be bound to a scalar value (non-array/non-map) if the map stops at that level, or to a map-valued or array-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/for-srec-example.tbl</b>
@@ -333,7 +331,7 @@ eks wye 4 0.381399 0.134188 4.515587           18.062348
 wye pan 5 0.573288 0.863624 6.4369119999999995 25.747647999999998
 </pre>
 
-It can be confusing to modify the stream record while iterating over a copy of it, so instead you might find it simpler to use a local variable in the loop and only update the stream record after the loop:
+It can be confusing to modify the stream record while iterating over a copy of it, so instead, you might find it simpler to use a local variable in the loop and only update the stream record after the loop:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --from data/small --opprint put '</b>
@@ -355,7 +353,7 @@ eks wye 4 0.381399 0.134188 4.515587
 wye pan 5 0.573288 0.863624 6.4369119999999995
 </pre>
 
-You can also start iterating on sub-maps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-map as it was before the loop started.  The sub-map is specified by square-bracketed indices after `in`, and additional deeper indices are bound to loop key-variables. The terminal values are bound to the loop value-variable whenever the keys are not too shallow. The value-variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:
+You can also start iterating on sub-maps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-map as it was before the loop started.  The sub-map is specified by square-bracketed indices after `in`, and additional deeper indices are bound to loop key variables. The terminal values are bound to the loop value variable whenever the keys are not too shallow. The value variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:
 
 <pre class="pre-non-highlight-non-pair">
 # Parentheses are optional for single key:
@@ -516,15 +514,15 @@ wye pan 5 0.573288 0.863624 15   31
 
 Notes:
 
-* In `for (start; continuation; update) { body }`, the start, continuation, and update statements may be empty, single statements, or multiple comma-separated statements. If the continuation is empty (e.g. `for(i=1;;i+=1)`) it defaults to true.
+* In `for (start; continuation; update) { body }`, the start, continuation, and update statements may be empty, single statements, or multiple comma-separated statements. If the continuation is empty (e.g. `for(i=1;;i+=1)`), it defaults to true.
 
 * In particular, you may use `$`-variables and/or `@`-variables in the start, continuation, and/or update steps (as well as the body, of course).
 
-* The typedecls such as `int` or `num` are optional.  If a typedecl is provided (for a local variable), it binds a variable scoped to the for-loop regardless of whether a same-name variable is present in outer scope. If a typedecl is not provided, then the variable is scoped to the for-loop if no same-name variable is present in outer scope, or if a same-name variable is present in outer scope then it is modified.
+* The typedecls such as `int` or `num` are optional.  If a typedecl is provided (for a local variable), it binds a variable scoped to the for-loop regardless of whether a same-name variable is present in the outer scope. If a typedecl is not provided, then the variable is scoped to the for-loop if no same-name variable is present in the outer scope, or if a same-name variable is present in the outer scope, then it is modified.
 
 * Miller has no `++` or `--` operators.
 
-* As with all `for`/`if`/`while` statements in Miller, the curly braces are required even if the body is a single statement, or empty.
+* As with all `for`/`if`/`while` statements in Miller, the curly braces are required even if the body is a single statement or empty.
 
 ## Begin/end blocks
 
