@@ -40,7 +40,7 @@ In this example I am using version 6.2.0 to 6.3.0; of course that will change fo
     * This creates `miller-6.3.0.tar.gz` which we'll upload to GitHub, the URL of which will be in our `miller.spec`
     * Prepare the source RPM following [README-RPM.md](https://github.com/johnkerl/miller/blob/main/README-RPM.md).
 
-* Create the Github release tag:
+* Create the GitHub release tag:
 
     * Don't forget the `v` in `v6.3.0`
     * Write the release notes -- save as a pre-release until below

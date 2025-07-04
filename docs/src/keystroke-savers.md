@@ -18,7 +18,7 @@ Quick links:
 
 ## Short format specifiers, including --c2p
 
-In our examples so far we've often made use of `mlr --icsv --opprint` or `mlr --icsv --ojson`. These are such frequently occurring patterns that they have short options like `--c2p` and `--c2j`:
+In our examples so far, we've often made use of `mlr --icsv --opprint` or `mlr --icsv --ojson`. These are such frequently occurring patterns that they have short options like `--c2p` and `--c2j`:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --c2p head -n 2 example.csv</b>
@@ -59,7 +59,7 @@ You can get the full list [here](file-formats.md#data-conversion-keystroke-saver
 
 ## File names up front, including --from
 
-Already we saw that you can put the filename first using `--from`. When you're interacting with your data at the command line, this makes it easier to up-arrow and append to the previous command:
+Already, we saw that you can put the filename first using `--from`. When you're interacting with your data at the command line, this makes it easier to up-arrow and append to the previous command:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --c2p --from example.csv sort -nr index then head -n 3</b>
@@ -110,7 +110,7 @@ I think `mlr --csv ...` explains itself better than `mlr -c ...`. Nonetheless, t
 
 ## .mlrrc file
 
-If you want the default file format for Miller to be CSV, you can simply put `--csv` on a line by itself in your `~/.mlrrc` file. Then instead of `mlr --csv cat example.csv` you can just do `mlr cat example.csv`. This is just a personal default, though, so `mlr --opprint cat example.csv` will use default CSV format for input, and PPRINT (tabular) for output.
+If you want the default file format for Miller to be CSV, you can put `--csv` on a line by itself in your `~/.mlrrc` file. Then, instead of `mlr --csv cat example.csv` you can just do `mlr cat example.csv`. This is just a personal default, though, so `mlr --opprint cat example.csv` will use default CSV format for input, and PPRINT (tabular) for output.
 
 You can read more about this at the [Customization](customization.md) page.
 
@@ -126,6 +126,6 @@ fraction -f count \
 filename-which-varies.csv
 </pre>
 
-Typing this out can get a bit old, if the only thing that changes for you is the filename.
+Typing this out can get a bit old if the only thing that changes for you is the filename.
 
 See [Scripting with Miller](scripting.md) for some keystroke-saving options.

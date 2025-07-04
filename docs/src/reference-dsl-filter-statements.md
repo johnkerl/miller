@@ -36,7 +36,7 @@ red,square,true,2,15,79.2778,0.0130
 red,circle,true,3,16,13.8103,2.9010
 </pre>
 
-The former, of course, is a little easier to type. For another example:
+The former is a little easier to type. For another example:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --csv put '@running_sum += $quantity; filter @running_sum > 500' example.csv</b>

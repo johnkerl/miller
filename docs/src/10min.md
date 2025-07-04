@@ -20,7 +20,7 @@ Quick links:
 
 Let's take a quick look at some of the most useful Miller verbs -- file-format-aware, name-index-empowered equivalents of standard system commands.
 
-For most of this section we'll use our [example.csv](./example.csv).
+For most of this section, we'll use our [example.csv](./example.csv).
 
 `mlr cat` is like system `cat` (or `type` on Windows) -- it passes the data through unmodified:
 

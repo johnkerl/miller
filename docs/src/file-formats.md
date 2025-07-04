@@ -20,7 +20,7 @@ Miller handles name-indexed data using several formats: some you probably know
 by name, such as CSV, TSV, JSON, and JSON Lines -- and other formats you're likely already
 seeing and using in your structured data.
 
-Additionally, Miller gives you the option of including comments within your data.
+Additionally, Miller gives you the option to include comments within your data.
 
 ## Examples
 
@@ -102,13 +102,13 @@ NIDX: implicitly numerically indexed (Unix-toolkit style)
 
 ## CSV/TSV/ASV/USV/etc.
 
-When `mlr` is invoked with the `--csv` or `--csvlite` option, key names are found on the first record and values are taken from subsequent records.  This includes the case of CSV-formatted files.  See [Record Heterogeneity](record-heterogeneity.md) for how Miller handles changes of field names within a single data stream.
+When `mlr` is invoked with the `--csv` or `--csvlite` option, key names are found on the first record, and values are taken from subsequent records.  This includes the case of CSV-formatted files.  See [Record Heterogeneity](record-heterogeneity.md) for how Miller handles changes of field names within a single data stream.
 
 Miller has record separator `RS` and field separator `FS`, just as `awk` does. (See also the [separators page](reference-main-separators.md).)
 
 **CSV (comma-separated values):** Miller's `--csv` flag supports [RFC-4180 CSV](https://tools.ietf.org/html/rfc4180).
 
-* This includes CRLF line-terminators by default, regardless of platform.
+* This includes CRLF line terminators by default, regardless of platform.
 * Any cell containing a comma or a carriage return within it must be double-quoted.
 
 **TSV (tab-separated values):** Miller's `--tsv` supports [IANA TSV](https://www.iana.org/assignments/media-types/text/tab-separated-values).
@@ -131,8 +131,8 @@ Here are the differences between CSV and CSV-lite:
 
 * CSV does not allow heterogeneous data; CSV-lite does (see also [Record Heterogeneity](record-heterogeneity.md)).
 
-* TSV-lite is simply CSV-lite with field separator set to tab instead of comma.
-In particular, no encode/decode of  `\r`, `\n`, `\t`, or `\\` is done.
+* TSV-lite is simply CSV-lite with the field separator set to tab instead of a comma.
+In particular, no encoding/decoding of  `\r`, `\n`, `\t`, or `\\` is done.
 
 * CSV-lite allows changing FS and/or RS to any values, perhaps multi-character.
 
@@ -208,21 +208,21 @@ mlr: exiting due to data error.
 
 CSV, TSV, CSV-lite, and TSV-lite have in common the `--implicit-csv-header` flag for input and the `--headerless-csv-output` flag for output.
 
-See also the [`--lazy-quotes` flag](reference-main-flag-list.md#csv-only-flags) which can help with CSV files which are not fully compliant with RFC-4180.
+See also the [`--lazy-quotes` flag](reference-main-flag-list.md#csv-only-flags), which can help with CSV files that are not fully compliant with RFC-4180.
 
 ## JSON
 
 [JSON](https://json.org) is a format which supports scalars (numbers, strings,
-boolean, etc.) as well as "objects" (maps) and "arrays" (lists), while Miller
+booleans, etc.) as well as "objects" (maps) and "arrays" (lists), while Miller
 is a tool for handling **tabular data** only.  By *tabular JSON* I mean the
 data is either a sequence of one or more objects, or an array consisting of one
 or more objects.  Miller treats JSON objects as name-indexed records.
 
 This means Miller cannot (and should not) handle arbitrary JSON.  In practice,
-though, Miller can handle single JSON objects as well as list of them. The only
-kinds of JSON that are unmillerable are single scalars (e.g. file contents `3`)
-and arrays of non-object (e.g. file contents `[1,2,3,4,5]`).  Check out
-[jq](https://stedolan.github.io/jq/) for a tool which handles all valid JSON.
+though, Miller can handle single JSON objects as well as lists of them. The only
+kinds of JSON that are unmillerable are single scalars (e.g., file contents `3`)
+and arrays of non-object (e.g., file contents `[1,2,3,4,5]`).  Check out
+[jq](https://stedolan.github.io/jq/) for a tool that handles all valid JSON.
 
 In short, if you have tabular data represented in JSON -- lists of objects,
 either with or without outermost `[...]` -- [then Miller can handle that for
@@ -336,7 +336,7 @@ input as well as output in JSON format, JSON structure is preserved throughout t
 ]
 </pre>
 
-But if the input format is JSON and the output format is not (or vice versa) then key-concatenation applies:
+But if the input format is JSON and the output format is not (or vice versa), then key-concatenation applies:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --ijson --opprint head -n 4 data/json-example-2.json</b>
@@ -355,7 +355,7 @@ Use `--jflatsep yourseparatorhere` to specify the string used for key concatenat
 
 ### JSON-in-CSV
 
-It's quite common to have CSV data which contains stringified JSON as a column.
+It's quite common to have CSV data that contains stringified JSON as a column.
 See the [JSON parse and stringify section](reference-main-data-types.md#json-parse-and-stringify) for ways to
 decode these in Miller.
 
@@ -410,7 +410,7 @@ records; using `--ojsonl`, you get no outermost `[...]`, and one line per record
 
 ## PPRINT: Pretty-printed tabular
 
-Miller's pretty-print format is like CSV, but column-aligned.  For example, compare
+Miller's pretty-print format is similar to CSV, but with column alignment.  For example, compare
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --ocsv cat data/small</b>
@@ -436,7 +436,7 @@ eks wye 4 0.381399 0.134188
 wye pan 5 0.573288 0.863624
 </pre>
 
-Note that while Miller is a line-at-a-time processor and retains input lines in memory only where necessary (e.g. for sort), pretty-print output requires it to accumulate all input lines (so that it can compute maximum column widths) before producing any output. This has two consequences: (a) pretty-print output won't work on `tail -f` contexts, where Miller will be waiting for an end-of-file marker which never arrives; (b) pretty-print output for large files is constrained by available machine memory.
+Note that while Miller is a line-at-a-time processor and retains input lines in memory only where necessary (e.g., for sort), pretty-print output requires it to accumulate all input lines (so that it can compute maximum column widths) before producing any output. This has two consequences: (a) Pretty-print output will not work in `tail -f` contexts, where Miller will be waiting for an end-of-file marker that never arrives; (b) Pretty-print output for large files is constrained by the available machine memory.
 
 See [Record Heterogeneity](record-heterogeneity.md) for how Miller handles changes of field names within a single data stream.
 
@@ -505,7 +505,7 @@ Markdown format looks like this:
 | wye | pan | 5 | 0.573288 | 0.863624 |
 </pre>
 
-which renders like this when dropped into various web tools (e.g. github comments):
+which renders like this when dropped into various web tools (e.g. github.comments):
 
 ![pix/omd.png](pix/omd.png)
 
@@ -594,7 +594,7 @@ a=eks,b=wye,i=4,x=0.381399,y=0.134188
 a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
-Such data are easy to generate, e.g. in Ruby with
+Such data is easy to generate, e.g., in Ruby with
 
 <pre class="pre-non-highlight-non-pair">
 puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}"
@@ -616,7 +616,7 @@ logger.log("type=3,user=$USER,date=$date\n");
 
 Fields lacking an IPS will have positional index (starting at 1) used as the key, as in NIDX format. For example, `dish=7,egg=8,flint` is parsed as `"dish" => "7", "egg" => "8", "3" => "flint"` and `dish,egg,flint` is parsed as `"1" => "dish", "2" => "egg", "3" => "flint"`.
 
-As discussed in [Record Heterogeneity](record-heterogeneity.md), Miller handles changes of field names within the same data stream. But using DKVP format this is particularly natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts of lines such as
+As discussed in [Record Heterogeneity](record-heterogeneity.md), Miller handles changes of field names within the same data stream. But using DKVP format, this is particularly natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts of lines such as
 
 <pre class="pre-non-highlight-non-pair">
 resource=/path/to/file,loadsec=0.45,ok=true
@@ -624,10 +624,9 @@ record_count=100, resource=/path/to/file
 resource=/some/other/path,loadsec=0.97,ok=false
 </pre>
 
-etc. and I just log them as needed. Then later, I can use `grep`, `mlr --opprint group-like`, etc.
-to analyze my logs.
+etc., and I log them as needed. Then later, I can use `grep`, `mlr --opprint group-like`, etc. to analyze my logs.
 
-See the [separators page](reference-main-separators.md) regarding how to specify separators other than the default equals-sign and comma.
+See the [separators page](reference-main-separators.md) regarding how to specify separators other than the default equals sign and comma.
 
 ## NIDX: Index-numbered (toolkit style)
 
@@ -730,7 +729,7 @@ JSON, JSON Lines, XTAB, PPRINT, and markdown, respectively.
 
 ## Comments in data
 
-You can include comments within your data files, and either have them ignored, or passed directly through to the standard output as soon as they are encountered:
+You can include comments within your data files, and either have them ignored or passed directly through to the standard output as soon as they are encountered:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr help comments-in-data-flags</b>

@@ -63,7 +63,7 @@ hat wye 10002 0.321507044286237609 0.568893318795083758 5  9  4   2       data/s
 pan zee 10003 0.272054845593895200 0.425789896597056627 5  10 5   2       data/small2
 </pre>
 
-Anything from a `#` character to end of line is a code comment.
+Anything from a `#` character to the end of the line is a code comment.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' \</b>
@@ -147,11 +147,11 @@ a=eks,b=wye,i=4,x=0.381399,y=0.134188,xy=0.40431623334340655
 a=wye,b=pan,i=5,x=0.573288,y=0.863624,xy=1.036583592538489
 </pre>
 
-A suggested use-case here is defining functions in files, and calling them from command-line expressions.
+A suggested use case here is defining functions in files and calling them from command-line expressions.
 
-Another suggested use-case is putting default parameter values in files, e.g. using `begin{@count=is_present(@count)?@count:10}` in the file, where you can precede that using `begin{@count=40}` using `-e`.
+Another suggested use case is putting default parameter values in files, e.g., using `begin{@count=is_present(@count)?@count:10}` in the file, where you can precede that using `begin{@count=40}` using `-e`.
 
-Moreover, you can have one or more `-f` expressions (maybe one function per file, for example) and one or more `-e` expressions on the command line.  If you mix `-f` and `-e` then the expressions are evaluated in the order encountered.
+Moreover, you can have one or more `-f` expressions (maybe one function per file, for example) and one or more `-e` expressions on the command line.  If you mix `-f` and `-e`, then the expressions are evaluated in the order encountered.
 
 ## Semicolons, commas, newlines, and curly braces
 
@@ -180,7 +180,7 @@ x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
 x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
 </pre>
 
-Semicolons are required between statements even if those statements are on separate lines.  **Newlines** are for your convenience but have no syntactic meaning: line endings do not terminate statements. For example, adjacent assignment statements must be separated by semicolons even if those statements are on separate lines:
+Semicolons are required between statements, even if those statements are on separate lines.  **Newlines** are for your convenience but have no syntactic meaning: line endings do not terminate statements. For example, adjacent assignment statements must be separated by semicolons even if those statements are on separate lines:
 
 <pre class="pre-non-highlight-non-pair">
 mlr put '

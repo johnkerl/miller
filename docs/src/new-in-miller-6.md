@@ -24,43 +24,23 @@ TL;DRs: [install](installing-miller.md), [binaries](https://github.com/johnkerl/
 
 ### Performance
 
-Performance is on par with Miller 5 for simple processing, and is far better than Miller 5 for
-complex processing chains -- the latter due to improved multicore utilization. CSV I/O is notably
-improved.  See the [Performance benchmarks](#performance-benchmarks) section at the bottom of this
-page for details.
+Performance is on par with Miller 5 for simple processing, and is far better than Miller 5 for complex processing chains -- the latter due to improved multicore utilization. CSV I/O is notably improved.  See the [Performance benchmarks](#performance-benchmarks) section at the bottom of this page for details.
 
 ### Documentation improvements
 
 Documentation (what you're reading here) and online help (`mlr --help`) have been completely reworked.
 
-In the initial release, the focus was convincing users already familiar with
-`awk`/`grep`/`cut` that Miller was a viable alternative -- but over time it's
-become clear that many Miller users aren't expert with those tools. The focus
-has shifted toward a higher quantity of more introductory/accessible material
-for command-line data processing.
+In the initial release, the focus was on convincing users already familiar with `awk`, `grep`, and `cut` that Miller was a viable alternative; however, over time, it has become clear that many Miller users aren't experts with those tools. The focus has shifted toward a higher quantity of more introductory/accessible material for command-line data processing.
 
-Similarly, the FAQ/recipe material has been expanded to include more, and
-simpler, use-cases including resolved questions from
-[Miller Issues](https://github.com/johnkerl/miller/issues)
-and
-[Miller Discussions](https://github.com/johnkerl/miller/discussions);
-more complex/niche material has been pushed farther down. The long reference
-pages have been split up into separate pages. (See also
-[Structure of these documents](structure-of-these-documents.md).)
+Similarly, the FAQ/recipe material has been expanded to include more, and simpler, use-cases, including resolved questions from [Miller Issues](https://github.com/johnkerl/miller/issues) and [Miller Discussions](https://github.com/johnkerl/miller/discussions); more complex/niche material has been pushed farther down. The lengthy reference pages have been divided into separate pages. (See also [Structure of these documents](structure-of-these-documents.md).)
 
-One of the main feedback themes from the 2021 Miller User Survey was that some
-things should be easier to find. Namely, on each doc page there's now a banner
-across the top with things that should be one click away from the landing page
-(or any page): command-line flags, verbs, functions, glossary/acronyms, and a
-finder for docs by release.
+One of the main feedback themes from the 2021 Miller User Survey was that some things should be easier to find. Namely, on each doc page, there's now a banner across the top with things that should be one click away from the landing page (or any page): command-line flags, verbs, functions, glossary/acronyms, and a finder for docs by release.
 
-Since CSV is overwhelmingly the most popular data format for Miller, it is
-now discussed first, and more examples use CSV.
+Since CSV is overwhelmingly the most popular data format for Miller, it is now discussed first, and more examples use CSV.
 
 ### Improved Windows experience
 
-Stronger support for Windows (with or without MSYS2), with a couple of
-exceptions.  See [Miller on Windows](miller-on-windows.md) for more information.
+Stronger support for Windows (with or without MSYS2), with a couple of exceptions.  See [Miller on Windows](miller-on-windows.md) for more information.
 
 Binaries are reliably available using GitHub Actions: see also [Installation](installing-miller.md).
 
@@ -89,9 +69,7 @@ Parse error on token ">" at line 63 column 7.
 
 ### Scripting
 
-Scripting is now easier -- support for `#!` with `sh`, as always, along with now support for `#!` with `mlr -s`. For
-Windows, `mlr -s` can also be used.  These help reduce backslash-clutter and let you do more while typing less.
-See the [scripting page](scripting.md).
+Scripting is now easier -- support for `#!` with `sh`, as always, along with now support for `#!` with `mlr -s`. For Windows, `mlr -s` can also be used.  These help reduce backslash clutter and let you do more while typing less. See the [scripting page](scripting.md).
 
 ### REPL
 
@@ -143,7 +121,7 @@ the `TZ` environment variable. Please see [DSL datetime/timezone functions](refe
 
 ### In-process support for compressed input
 
-In addition to `--prepipe gunzip`, you can now use the `--gzin` flag. In fact, if your files end in `.gz` you don't even need to do that -- Miller will autodetect by file extension and automatically uncompress `mlr --csv cat foo.csv.gz`. Similarly for `.z`, `.bz2`, and `.zst` files.  Please see the page on [Compressed data](reference-main-compressed-data.md) for more information.
+In addition to `--prepipe gunzip`, you can now use the `--gzin` flag. In fact, if your files end in `.gz` you don't even need to do that -- Miller will autodetect by file extension and automatically uncompress `mlr --csv cat foo.csv.gz`. Similarly, for `.z`, `.bz2`, and `.zst` files.  Please refer to the page on [Compressed Data](reference-main-compressed-data.md) for more information.
 
 ### Support for reading web URLs
 
@@ -171,9 +149,7 @@ purple,triangle,false,7,65,80.1405,5.8240
 
 ### Improved JSON / JSON Lines support, and arrays
 
-Arrays are now supported in Miller's `put`/`filter` programming language, as
-described in the [Arrays reference](reference-main-arrays.md). (Also, `array` is
-now a keyword so this is no longer usable as a local-variable or UDF name.)
+Arrays are now supported in Miller's `put`/`filter` programming language, as described in the [Arrays reference](reference-main-arrays.md). (Also, `array` is now a keyword, so this is no longer usable as a local variable or UDF name.)
 
 JSON support is improved:
 
@@ -196,24 +172,13 @@ See also the [Arrays reference](reference-main-arrays.md) for more information.
 
 ### Improved numeric conversion
 
-The most central part of Miller 6 is a deep refactor of how data values are parsed
-from file contents, how types are inferred, and how they're converted back to
-text into output files.
+The most central part of Miller 6 is a deep refactor of how data values are parsed from file contents, how types are inferred, and how they're converted back to text into output files.
 
 This was all initiated by [https://github.com/johnkerl/miller/issues/151](https://github.com/johnkerl/miller/issues/151).
 
-In Miller 5 and below, all values were stored as strings, then only converted
-to int/float as-needed, for example when a particular field was referenced in
-the `stats1` or `put` verbs. This led to awkwardnesses such as the `-S`
-and `-F` flags for `put` and `filter`.
+In Miller 5 and below, all values were stored as strings, then only converted to int/float as needed, for example, when a particular field was referenced in the `stats1` or `put` verbs. This led to awkwardnesses such as the `-S` and `-F` flags for `put` and `filter`.
 
-In Miller 6, things parseable as int/float are treated as such from the moment
-the input data is read, and these are passed along through the verb chain.  All
-values are typed from when they're read, and their types are passed along.
-Meanwhile the original string representation of each value is also retained. If
-a numeric field isn't modified during the processing chain, it's printed out
-the way it arrived. Also, quoted values in JSON strings are flagged as being
-strings throughout the processing chain.
+In Miller 6, values parseable as integers or floating-point numbers are treated as such from the moment the input data is read, and these are passed along through the verb chain.  All values are typed from when they're read, and their types are passed along. Meanwhile, the original string representation of each value is also retained. If a numeric field isn't modified during the processing chain, it's printed out the way it arrived. Additionally, quoted values in JSON strings are consistently flagged as strings throughout the processing chain.
 
 For example (see [https://github.com/johnkerl/miller/issues/178](https://github.com/johnkerl/miller/issues/178)) you can now do
 
@@ -242,30 +207,21 @@ For example (see [https://github.com/johnkerl/miller/issues/178](https://github.
 
 ### Deduping of repeated field names
 
-By default, field names are deduped for all file formats except JSON / JSON Lines. So if you
-have an input record with `x=8,x=9` then the second field's key is renamed to
-`x_2` and so on -- the record scans as `x=8,x_2=9`. Use `mlr
---no-dedupe-field-names` to suppress this, and have the record be scanned as
-`x=9`.
+By default, field names are deduplicated for all file formats except JSON / JSON Lines. So if you have an input record with `x=8,x=9`, then the second field's key is renamed to `x_2` and so on -- the record scans as `x=8,x_2=9`. Use `mlr --no-dedupe-field-names` to suppress this, and have the record be scanned as `x=9`.
 
-For JSON and JSON Lines, the last duplicated key in an input record is always retained,
-regardless of `mlr --no-dedupe-field-names`: `{"x":8,"x":9}` scans as if it
-were `{"x":9}`.
+For JSON and JSON Lines, the last duplicated key in an input record is always retained, regardless of `mlr --no-dedupe-field-names`: `{"x":8,"x":9}` scans as if it were `{"x":9}`.
 
 ### Regex support for IFS and IPS
 
-You can now split fields on whitespace when whitespace is a mix of tabs and
-spaces.  As well, you can use regular expressions for the input field-separator
-and the input pair-separator.  Please see the section on
-[multi-character and regular-expression separators](reference-main-separators.md#multi-character-and-regular-expression-separators).
+You can now split fields on whitespace when whitespace is a mix of tabs and spaces.  As well, you can use regular expressions for the input field-separator and the input pair-separator.  Please see the section on [multi-character and regular-expression separators](reference-main-separators.md#multi-character-and-regular-expression-separators).
 
-In particular, for NIDX format, the default IFS now allows splitting on one or more of space or tab.
+In particular, for NIDX format, the default `IFS` now allows splitting on one or more of space or tab.
 
 ### Case-folded sorting options
 
-The [sort](reference-verbs.md#sort) verb now accepts `-c` and `-cr` options for case-folded ascending/descending sort, respetively.
+The [sort](reference-verbs.md#sort) verb now accepts `-c` and `-cr` options for case-folded ascending/descending sort, respectively.
 
-### New DSL functions / operators
+### New DSL functions and operators
 
 * Higher-order functions [`select`](reference-dsl-builtin-functions.md#select), [`apply`](reference-dsl-builtin-functions.md#apply), [`reduce`](reference-dsl-builtin-functions.md#reduce), [`fold`](reference-dsl-builtin-functions.md#fold), and [`sort`](reference-dsl-builtin-functions.md#sort).  See the [sorting page](sorting.md) and the [higher-order-functions page](reference-dsl-higher-order-functions.md) for more information.
 
@@ -293,30 +249,30 @@ The following differences are rather technical. If they don't sound familiar to 
 
 ### Line endings
 
-The `--auto` flag is now ignored. Before, if a file had CR/LF (Windows-style) line endings on input (on any platform), it would have the same on output; likewise, LF (Unix-style) line endings. Now, files with CR/LF or LF line endings are processed on any platform, but the output line-ending is for the platform. E.g. reading CR/LF files on Linux will now produce LF output.
+The `--auto` flag is now ignored. Before, if a file had CR/LF (Windows-style) line endings on input (on any platform), it would have the same on output; likewise, LF (Unix-style) line endings. Now, files with CR/LF or LF line endings are processed on any platform, but the output line ending is for the platform. E.g., reading CR/LF files on Linux will now produce LF output.
 
 ### IFS and IPS as regular expressions
 
-IFS and IPS can be regular expressions now. Please see the section on [multi-character and regular-expression separators](reference-main-separators.md#multi-character-and-regular-expression-separators).
+IFS and IPS can now be regular expressions. Please see the section on [multi-character and regular-expression separators](reference-main-separators.md#multi-character-and-regular-expression-separators).
 
 ### JSON and JSON Lines formatting
 
 * `--jknquoteint` and `jquoteall` are ignored; they were workarounds for the (now much-improved) type-inference and type-tracking in Miller 6.
 * `--json-fatal-arrays-on-input`, `--json-map-arrays-on-input`, and `--json-skip-arrays-on-input` are ignored; Miller 6 now supports arrays fully.
 * See also `mlr help legacy-flags` or the [legacy-flags reference](reference-main-flag-list.md#legacy-flags).
-* Miller 5 accepted input records either with or without enclosing `[...]`; on output, by default it produced single-line records without outermost `[...]`.  Miller 5 let you customize output formatting using `--jvstack` (multi-line records) and `--jlistwrap` (write outermost `[...]`). _Thus, Miller 5's JSON output format, with default flags, was in fact [JSON Lines](file-formats.md#json-lines) all along._
+* Miller 5 accepted input records either with or without enclosing `[...]`; on output, by default, it produced single-line records without outermost `[...]`.  Miller 5 lets you customize output formatting using `--jvstack` (multi-line records) and `--jlistwrap` (write outermost `[...]`). _Thus, Miller 5's JSON output format, with default flags, was in fact [JSON Lines](file-formats.md#json-lines) all along._
 * In Miller 6, [JSON Lines](file-formats.md#json-lines) is acknowledged explicitly.
 * On input, your records are accepted whether or not they have outermost `[...]`, and regardless of line breaks, whether the specified input format is JSON or JSON Lines. (This is similar to [jq](https://stedolan.github.io/jq/).)
 * With `--ojson`, output records are written multiline (pretty-printed), with outermost `[...]`.
 * With `--ojsonl`, output records are written single-line, without outermost `[...]`.
 * This makes `--jvstack` and `--jlistwrap` unnecessary. However, if you want outermost `[...]` with single-line records, you can use `--ojson --no-jvstack`.
-* Miller 5 tolerated trailing commas, which are not compliant with the JSON specification: for example, `{"x":1,"y":2,}`. Miller 6 uses a JSON parser which is compliant with the JSON specification and does not accept trailing commas.
+* Miller 5 tolerated trailing commas, which are not compliant with the JSON specification: for example, `{"x":1,"y":2,}`. Miller 6 uses a JSON parser that is compliant with the JSON specification and does not accept trailing commas.
 
 ### Type-inference
 
 * The `-S` and `-F` flags to `mlr put` and `mlr filter` are ignored, since type-inference is no longer done in `mlr put` and `mlr filter`, but rather, when records are first read. You can use `mlr -S` and `mlr -A`, respectively, instead to control type-inference within the record-readers.
 * Octal numbers like `0123` and `07` are type-inferred as string. Use `mlr -O` to infer them as octal integers. Note that `08` and `09` will then infer as decimal integers.
-* Any numbers prefix with `0o`, e.g. `0o377`, are already treated as octal regardless of `mlr -O` -- `mlr -O` only affects how leading-zero integers are handled.
+* Any numbers prefixed with `0o`, e.g. `0o377`, are already treated as octal, regardless of `mlr -O` -- `mlr -O` only affects how leading-zero integers are handled.
 * See also the [miscellaneous-flags reference](reference-main-flag-list.md#miscellaneous-flags).
 
 ### Emit statements
@@ -341,13 +297,12 @@ This works in Miller 6 (and worked in Miller 5 as well) and is supported:
 input=1
 </pre>
 
-Please see the [section on emit statements](reference-dsl-output-statements.md#emit1-and-emitemitpemitf)
-for more information.
+Please see the [section on emit statements](reference-dsl-output-statements.md#emit1-and-emitemitpemitf) for more information.
 
 ## Developer-specific aspects
 
 * Miller has been ported from C to Go. Developer notes: [https://github.com/johnkerl/miller/blob/main/README-dev.md](https://github.com/johnkerl/miller/blob/main/README-dev.md).
-* Regression testing has been completely reworked, including regression-testing now running fully on Windows (alongside Linux and Mac) [on each GitHub commit](https://github.com/johnkerl/miller/actions).
+* Regression testing has been completely reworked, including regression-testing now running fully on Windows (alongside Linux and Mac) [on each github.commit](https://github.com/johnkerl/miller/actions).
 
 ## Performance benchmarks
 

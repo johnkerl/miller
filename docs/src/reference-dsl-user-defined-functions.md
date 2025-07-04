@@ -16,7 +16,7 @@ Quick links:
 </div>
 # DSL user-defined functions
 
-As of Miller 5.0.0 you can define your own functions, as well as subroutines.
+As of Miller 5.0.0, you can define your own functions, as well as subroutines.
 
 ## User-defined functions
 
@@ -49,7 +49,7 @@ wye pan 5 0.573288 0.863624 211.38663947090302 120
 
 Properties of user-defined functions:
 
-* Function bodies start with `func` and a parameter list, defined outside of `begin`, `end`, or other `func` or `subr` blocks. (I.e. the Miller DSL has no nested functions.)
+* Function bodies start with `func` and a parameter list, defined outside of `begin`, `end`, or other `func` or `subr` blocks. (I.e., the Miller DSL has no nested functions.)
 
 * A function (uniqified by its name) may not be redefined: either by redefining a user-defined function, or by redefining a built-in function. However, functions and subroutines have separate namespaces: you can define a subroutine `log` (for logging messages to stderr, say) which does not clash with the mathematical `log` (logarithm) function.
 
@@ -61,7 +61,7 @@ Properties of user-defined functions:
 
 * When a return value is not implicitly returned, this results in a return value of [absent-null](reference-main-null-data.md). (In the example above, if there were records for which the argument to `f` is non-numeric, the assignments would be skipped.) See also the [null-data reference page](reference-main-null-data.md).
 
-* See the section on [Local variables](reference-dsl-variables.md#local-variables) for information on scope and extent of arguments, as well as for information on the use of local variables within functions.
+* See the section on [Local variables](reference-dsl-variables.md#local-variables) for information on the scope and extent of arguments, as well as for information on the use of local variables within functions.
 
 * See the section on [Expressions from files](reference-dsl-syntax.md#expressions-from-files) for information on the use of `-f` and `-e` flags.
 
@@ -103,7 +103,7 @@ numcalls=15
 
 Properties of user-defined subroutines:
 
-* Subroutine bodies start with `subr` and a parameter list, defined outside of `begin`, `end`, or other `func` or `subr` blocks. (I.e. the Miller DSL has no nested subroutines.)
+* Subroutine bodies start with `subr` and a parameter list, defined outside of `begin`, `end`, or other `func` or `subr` blocks. (I.e., the Miller DSL has no nested subroutines.)
 
 * A subroutine (uniqified by its name) may not be redefined. However, functions and subroutines have separate namespaces: you can define a subroutine `log` which does not clash with the mathematical `log` function.
 
@@ -115,7 +115,7 @@ Properties of user-defined subroutines:
 
 * Argument values may be reassigned: they are not read-only.
 
-* See the section on [local variables](reference-dsl-variables.md#local-variables) for information on scope and extent of arguments, as well as for information on the use of local variables within functions.
+* See the section on [local variables](reference-dsl-variables.md#local-variables) for information on the scope and extent of arguments, as well as for information on the use of local variables within functions.
 
 * See the section on [Expressions from files](reference-dsl-syntax.md#expressions-from-files) for information on the use of `-f` and `-e` flags.
 
@@ -123,15 +123,11 @@ Properties of user-defined subroutines:
 
 Subroutines cannot return values, and they are invoked by the keyword `call`.
 
-In hindsight, subroutines needn't have been invented. If `foo` is a function
-then you can write `foo(1,2,3)` while ignoring its return value, and that plays
-the role of subroutine quite well.
+In hindsight, subroutines needn't have been invented. If `foo is a function, then you can write `foo(1,2,3)` while ignoring its return value, and that plays the role of a subroutine quite well.
 
 ## Loading a library of functions
 
-If you have a file with UDFs you use frequently, say `my-udfs.mlr`, you can use
-`--load` or `--mload` to define them for your Miller scripts. For example, in
-your shell,
+If you have a file with UDFs you use frequently, say `my-udfs.mlr`, you can use `--load` or `--mload` to define them for your Miller scripts. For example, in your shell,
 
 <pre class="pre-highlight-non-pair">
 <b>alias mlr='mlr --load ~/my-functions.mlr'</b>
@@ -149,8 +145,7 @@ See the [miscellaneous-flags page](reference-main-flag-list.md#miscellaneous-fla
 
 You can define unnamed functions and assign them to variables, or pass them to functions.
 
-See also the [page on higher-order functions](reference-dsl-higher-order-functions.md)
-for more information on
+See also the [page on higher-order functions](reference-dsl-higher-order-functions.md) for more information on
 [`select`](reference-dsl-builtin-functions.md#select),
 [`apply`](reference-dsl-builtin-functions.md#apply),
 [`reduce`](reference-dsl-builtin-functions.md#reduce),
@@ -209,9 +204,7 @@ purple square   false 10 91    72.3735  8.2430 purple:square above
 
 Note that you need a semicolon after the closing curly brace of the function literal.
 
-Unlike named functions, function literals (also known as unnamed functions)
-have access to local variables defined in their enclosing scope. That's
-so you can do things like this:
+Unlike named functions, function literals (also known as unnamed functions) have access to local variables defined in their enclosing scope. That's so you can do things like this:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --c2p --from example.csv put '</b>

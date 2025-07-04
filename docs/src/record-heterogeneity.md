@@ -16,12 +16,11 @@ Quick links:
 </div>
 # Record-heterogeneity
 
-We think of CSV tables as rectangular: if there are 17 columns in the header
-then there are 17 columns for every row, else the data have a formatting error.
+We think of CSV tables as rectangular: if there are 17 columns in the header, then there are 17 columns for every row, else the data has a formatting error.
 
 But heterogeneous data abound -- log-file entries, JSON documents, no-SQL
 databases such as MongoDB, etc. -- not to mention **data-cleaning
-opportunities** we'll look at in this page. Miller offers several ways to
+opportunities** we'll look at on this page. Miller offers several ways to
 handle data heterogeneity.
 
 ## Terminology, examples, and solutions
@@ -56,7 +55,7 @@ It has three records (written here using JSON Lines formatting):
 
 Here every row has the same keys, in the same order: `a,b,c`.
 
-These are also sometimes called **rectangular** since if we pretty-print them we get a nice rectangle:
+These are also sometimes called **rectangular** since if we pretty-print them, we get a nice rectangle:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint cat data/het/hom.csv</b>
@@ -94,7 +93,7 @@ a,b,c
 This example is still homogeneous, though: every row has the same keys, in the same order: `a,b,c`.
 Empty values don't make the data heterogeneous.
 
-Note however that we can use the [`fill-empty`](reference-verbs.md#fill-empty) verb to make these
+Note, however, that we can use the [`fill-empty`](reference-verbs.md#fill-empty) verb to make these
 values non-empty, if we like:
 
 <pre class="pre-highlight-in-pair">
@@ -109,7 +108,7 @@ filler 8      9
 
 ### Ragged data
 
-Next let's look at non-well-formed CSV files. For a third example:
+Next, let's look at non-well-formed CSV files. For a third example:
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/het/ragged.csv</b>
@@ -132,14 +131,9 @@ a,b,c
 mlr: mlr: CSV header/data length mismatch 3 != 2 at filename data/het/ragged.csv row 3.
 </pre>
 
-There are two kinds of raggedness here. Since CSVs form records by zipping the
-keys from the header line together with the values from each data line, the
-second record has a missing value for key `c` (which ought to be fillable),
-while the third record has a value `10` with no key for it.
+There are two kinds of raggedness here. Since CSVs form records by zipping the keys from the header line, together with the values from each data line, the second record has a missing value for key `c` (which ought to be fillable), while the third record has a value `10` with no key for it.
 
-Using the [`--allow-ragged-csv-input` flag](reference-main-flag-list.md#csv-only-flags)
-we can fill values in too-short rows, and provide a key (column number starting
-with 1) for too-long rows:
+Using the [`--allow-ragged-csv-input` flag](reference-main-flag-list.md#csv-only-flags), we can fill values in too-short rows and provide a key (column number starting with 1) for too-long rows:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson --allow-ragged-csv-input cat data/het/ragged.csv</b>
@@ -186,7 +180,7 @@ This kind of data arises often in practice. One reason is that, while many
 programming languages (including the Miller DSL) [preserve insertion
 order](reference-main-maps.md#insertion-order-is-preserved) in maps; others do
 not. So someone might have written `{"a":4,"b":5,"c":6}` in the source code,
-but the data may not have printed that way into a given data file.
+but the data may not have been printed that way into a given data file.
 
 We can use the [`regularize`](reference-verbs.md#regularize) or
 [`sort-within-records`](reference-verbs.md#sort-within-records) verb to order
@@ -203,13 +197,13 @@ the keys:
 
 The `regularize` verb tries to re-order subsequent rows to look like the first
 (whatever order that is); the `sort-within-records` verb simply uses
-alphabetical order (which is the same in the above example where the first
+alphabetical order (which is the same in the above example, where the first
 record has keys in the order `a,b,c`).
 
 ### Sparse data
 
 Here's another frequently occurring situation -- quite often, systems will log
-data for items which are present, but won't log data for items which aren't.
+data for items that are present, but won't log data for items that aren't.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --json cat data/het/sparse.json</b>
@@ -236,8 +230,7 @@ data for items which are present, but won't log data for items which aren't.
 
 This data is called **sparse** (from the [data-storage term](https://en.wikipedia.org/wiki/Sparse_matrix)).
 
-We can use the [`unsparsify`](reference-verbs.md#unsparsify) verb to make sure
-every record has the same keys:
+We can use the [`unsparsify`](reference-verbs.md#unsparsify) verb to make sure every record has the same keys:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --json unsparsify data/het/sparse.json</b>
@@ -282,12 +275,11 @@ xy55.east -       /dev/sda1 failover true
 
 ## Reading and writing heterogeneous data
 
-In the previous sections we saw different kinds of data heterogeneity, and ways
-to transform the data to make it homogeneous.
+In the previous sections, we saw different kinds of data heterogeneity and ways to transform the data to make it homogeneous.
 
 ### Non-rectangular file formats: JSON, XTAB, NIDX, DKVP
 
-For these formats, record-heterogeneity comes naturally:
+For these formats, record heterogeneity comes naturally:
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/het/sparse.json</b>
@@ -371,11 +363,11 @@ record_count=150,resource=/path/to/second/file
 
 ### Rectangular file formats: CSV and pretty-print
 
-CSV and pretty-print formats expect rectangular structure. But Miller lets you
+CSV and pretty-print formats expect a rectangular structure. But Miller lets you
 process non-rectangular using CSV and pretty-print.
 
-For CSV-lite and TSV-lite, Miller simply prints a newline and a new header when there is a schema
-change -- where by _schema_ we mean simply the list of record keys in the order they are
+For CSV-lite and TSV-lite, Miller prints a newline and a new header when there is a schema
+change -- where by _schema_ we mean the list of record keys in the order they are
 encountered. When there is no schema change, you get CSV per se as a special case. Likewise, Miller
 reads heterogeneous CSV or pretty-print input the same way. The difference between CSV and CSV-lite
 is that the former is [RFC-4180-compliant](file-formats.md#csvtsvasvusvetc), while the latter
@@ -470,9 +462,7 @@ mlr: CSV schema change: first keys "resource,loadsec,ok"; current keys "record_c
 mlr: exiting due to data error.
 </pre>
 
-Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if
-there are implicit header changes (no intervening blank line and new header line) as seen above --
-you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`).
+Miller handles explicit header changes as shown. If your CSV input contains ragged data -- if there are implicit header changes (no intervening blank line and new header line) as seen above -- you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`).
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --csv --allow-ragged-csv-input cat data/het/ragged.csv</b>
@@ -487,11 +477,11 @@ a,b,c
 ## Processing heterogeneous data
 
 Above we saw how to make heterogeneous data homogeneous, and then how to print heterogeneous data.
-As for other processing, record-heterogeneity is not a problem for Miller.
+As for other processing, record heterogeneity is not a problem for Miller.
 
 Miller operates on specified fields and takes the rest along: for example, if
-you are sorting on the `count` field then all records in the input stream must
-have a `count` field but the other fields can vary, and moreover the sorted-on
+you are sorting on the `count` field, then all records in the input stream must
+have a `count` field, but the other fields can vary---and moreover the sorted-on
 field name(s) don't need to be in the same position on each line:
 
 <pre class="pre-highlight-in-pair">
