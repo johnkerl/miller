@@ -8,31 +8,31 @@ TL;DRs: [install](installing-miller.md), [binaries](https://github.com/johnkerl/
 
 ### Performance
 
-Performance is on par with Miller 5 for simple processing, and is far better than Miller 5 for complex processing chains -- the latter due to improved multicore utilization. CSV I/O is notably improved.  See the [Performance benchmarks](#performance-benchmarks) section at the bottom of this page for details. 
+Performance is on par with Miller 5 for simple processing, and is far better than Miller 5 for complex processing chains -- the latter due to improved multicore utilization. CSV I/O is notably improved.  See the [Performance benchmarks](#performance-benchmarks) section at the bottom of this page for details.
 
-### Documentation improvements 
+### Documentation improvements
 
 Documentation (what you're reading here) and online help (`mlr --help`) have been completely reworked.
 
-In the initial release, the focus was on convincing users already familiar with `awk`, `grep`, and `cut` that Miller was a viable alternative; however, over time, it has become clear that many Miller users aren't experts with those tools. The focus has shifted toward a higher quantity of more introductory/accessible material for command-line data processing. 
+In the initial release, the focus was on convincing users already familiar with `awk`, `grep`, and `cut` that Miller was a viable alternative; however, over time, it has become clear that many Miller users aren't experts with those tools. The focus has shifted toward a higher quantity of more introductory/accessible material for command-line data processing.
 
-Similarly, the FAQ/recipe material has been expanded to include more, and simpler, use-cases, including resolved questions from [Miller Issues](https://github.com/johnkerl/miller/issues) and [Miller Discussions](https://github.com/johnkerl/miller/discussions); more complex/niche material has been pushed farther down. The lengthy reference pages have been divided into separate pages. (See also [Structure of these documents](structure-of-these-documents.md).) 
+Similarly, the FAQ/recipe material has been expanded to include more, and simpler, use-cases, including resolved questions from [Miller Issues](https://github.com/johnkerl/miller/issues) and [Miller Discussions](https://github.com/johnkerl/miller/discussions); more complex/niche material has been pushed farther down. The lengthy reference pages have been divided into separate pages. (See also [Structure of these documents](structure-of-these-documents.md).)
 
-One of the main feedback themes from the 2021 Miller User Survey was that some things should be easier to find. Namely, on each doc page, there's now a banner across the top with things that should be one click away from the landing page (or any page): command-line flags, verbs, functions, glossary/acronyms, and a finder for docs by release. 
+One of the main feedback themes from the 2021 Miller User Survey was that some things should be easier to find. Namely, on each doc page, there's now a banner across the top with things that should be one click away from the landing page (or any page): command-line flags, verbs, functions, glossary/acronyms, and a finder for docs by release.
 
-Since CSV is overwhelmingly the most popular data format for Miller, it is now discussed first, and more examples use CSV. 
+Since CSV is overwhelmingly the most popular data format for Miller, it is now discussed first, and more examples use CSV.
 
-### Improved Windows experience 
+### Improved Windows experience
 
-Stronger support for Windows (with or without MSYS2), with a couple of exceptions.  See [Miller on Windows](miller-on-windows.md) for more information. 
+Stronger support for Windows (with or without MSYS2), with a couple of exceptions.  See [Miller on Windows](miller-on-windows.md) for more information.
 
-Binaries are reliably available using GitHub Actions: see also [Installation](installing-miller.md). 
+Binaries are reliably available using GitHub Actions: see also [Installation](installing-miller.md).
 
-### Output colorization 
+### Output colorization
 
-Miller uses separate, customizable colors for keys and values whenever the output is to a terminal. See [Output Colorization](output-colorization.md). 
+Miller uses separate, customizable colors for keys and values whenever the output is to a terminal. See [Output Colorization](output-colorization.md).
 
-### Improved command-line parsing 
+### Improved command-line parsing
 
 Miller 6 has getoptish command-line parsing ([pull request 467](https://github.com/johnkerl/miller/pull/467)):
 
@@ -141,15 +141,15 @@ See also the [Arrays reference](reference-main-arrays.md) for more information.
 
 ### Improved numeric conversion
 
-The most central part of Miller 6 is a deep refactor of how data values are parsed from file contents, how types are inferred, and how they're converted back to text into output files. 
+The most central part of Miller 6 is a deep refactor of how data values are parsed from file contents, how types are inferred, and how they're converted back to text into output files.
 
-This was all initiated by [https://github.com/johnkerl/miller/issues/151](https://github.com/johnkerl/miller/issues/151). 
+This was all initiated by [https://github.com/johnkerl/miller/issues/151](https://github.com/johnkerl/miller/issues/151).
 
-In Miller 5 and below, all values were stored as strings, then only converted to int/float as needed, for example, when a particular field was referenced in the `stats1` or `put` verbs. This led to awkwardnesses such as the `-S` and `-F` flags for `put` and `filter`. 
+In Miller 5 and below, all values were stored as strings, then only converted to int/float as needed, for example, when a particular field was referenced in the `stats1` or `put` verbs. This led to awkwardnesses such as the `-S` and `-F` flags for `put` and `filter`.
 
-In Miller 6, values parseable as integers or floating-point numbers are treated as such from the moment the input data is read, and these are passed along through the verb chain.  All values are typed from when they're read, and their types are passed along. Meanwhile, the original string representation of each value is also retained. If a numeric field isn't modified during the processing chain, it's printed out the way it arrived. Additionally, quoted values in JSON strings are consistently flagged as strings throughout the processing chain. 
+In Miller 6, values parseable as integers or floating-point numbers are treated as such from the moment the input data is read, and these are passed along through the verb chain.  All values are typed from when they're read, and their types are passed along. Meanwhile, the original string representation of each value is also retained. If a numeric field isn't modified during the processing chain, it's printed out the way it arrived. Additionally, quoted values in JSON strings are consistently flagged as strings throughout the processing chain.
 
-For example (see [https://github.com/johnkerl/miller/issues/178](https://github.com/johnkerl/miller/issues/178)) you can now do 
+For example (see [https://github.com/johnkerl/miller/issues/178](https://github.com/johnkerl/miller/issues/178)) you can now do
 
 GENMD-RUN-COMMAND
 echo '{ "a": "0123" }' | mlr --json cat
@@ -161,19 +161,19 @@ GENMD-EOF
 
 ### Deduping of repeated field names
 
-By default, field names are deduplicated for all file formats except JSON / JSON Lines. So if you have an input record with `x=8,x=9`, then the second field's key is renamed to `x_2` and so on -- the record scans as `x=8,x_2=9`. Use `mlr --no-dedupe-field-names` to suppress this, and have the record be scanned as `x=9`. 
+By default, field names are deduplicated for all file formats except JSON / JSON Lines. So if you have an input record with `x=8,x=9`, then the second field's key is renamed to `x_2` and so on -- the record scans as `x=8,x_2=9`. Use `mlr --no-dedupe-field-names` to suppress this, and have the record be scanned as `x=9`.
 
-For JSON and JSON Lines, the last duplicated key in an input record is always retained, regardless of `mlr --no-dedupe-field-names`: `{"x":8,"x":9}` scans as if it were `{"x":9}`. 
+For JSON and JSON Lines, the last duplicated key in an input record is always retained, regardless of `mlr --no-dedupe-field-names`: `{"x":8,"x":9}` scans as if it were `{"x":9}`.
 
 ### Regex support for IFS and IPS
 
-You can now split fields on whitespace when whitespace is a mix of tabs and spaces.  As well, you can use regular expressions for the input field-separator and the input pair-separator.  Please see the section on [multi-character and regular-expression separators](reference-main-separators.md#multi-character-and-regular-expression-separators). 
+You can now split fields on whitespace when whitespace is a mix of tabs and spaces.  As well, you can use regular expressions for the input field-separator and the input pair-separator.  Please see the section on [multi-character and regular-expression separators](reference-main-separators.md#multi-character-and-regular-expression-separators).
 
-In particular, for NIDX format, the default `IFS` now allows splitting on one or more of space or tab. 
+In particular, for NIDX format, the default `IFS` now allows splitting on one or more of space or tab.
 
 ### Case-folded sorting options
 
-The [sort](reference-verbs.md#sort) verb now accepts `-c` and `-cr` options for case-folded ascending/descending sort, respectively. 
+The [sort](reference-verbs.md#sort) verb now accepts `-c` and `-cr` options for case-folded ascending/descending sort, respectively.
 
 ### New DSL functions and operators
 
