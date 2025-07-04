@@ -10,7 +10,7 @@ GENMD-RUN-COMMAND
 mlr --csv put 'filter NR==2 || NR==3' example.csv
 GENMD-EOF
 
-The former, of course, is a little easier to type. For another example:
+The former is a little easier to type. For another example:
 
 GENMD-RUN-COMMAND
 mlr --csv put '@running_sum += $quantity; filter @running_sum > 500' example.csv
