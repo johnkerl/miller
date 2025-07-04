@@ -32,7 +32,7 @@ In this example I am using version 6.2.0 to 6.3.0; of course that will change fo
     * Thanks to [PR 822](https://github.com/johnkerl/miller/pull/822) which introduces [goreleaser](https://github.com/johnkerl/miller/blob/main/.goreleaser.yml) there are versions for many platforms auto-built and auto-attached to the GitHub release.
     * Attach the release tarball and SRPM. Double-check assets were successfully uploaded.
     * Publish the release in pre-release mode, until all CI jobs finish successfully. Note that gorelease will create and attach the rest of the binaries.
-    * Before marking the release as public, download an executable from among the generated binaries and make sure its `mlr version` prints what you expect -- else, restart this process.
+    * Before marking the release as public, download an executable from among the generated binaries and make sure its `mlr version` prints what you expect -- else, restart this process. MacOS: `xattr -d com.apple.quarantine ./mlr` first.
     * Then mark the release as public.
 
 * Build the release-specific docs:
