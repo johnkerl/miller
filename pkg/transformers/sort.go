@@ -357,7 +357,7 @@ func (tr *TransformerSort) Transform(
 
 		if tr.doMoveToHead {
 			n := len(tr.groupByFieldNames)
-			for i := n-1; i >= 0; i-- {
+			for i := n - 1; i >= 0; i-- {
 				inrec.MoveToHead(tr.groupByFieldNames[i])
 			}
 		}
