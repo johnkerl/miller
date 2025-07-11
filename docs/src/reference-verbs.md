@@ -2960,6 +2960,7 @@ Options:
 -nf {comma-separated field names}  Same as -n
 -nr {comma-separated field names}  Numerical descending; nulls sort first
 -t  {comma-separated field names}  Natural ascending
+-b                                 Move sort fields to start of record, as in reorder -b
 -tr|-rt {comma-separated field names}  Natural descending
 -h|--help Show this message.
 
@@ -4133,7 +4134,7 @@ There are two main ways to use `mlr uniq`: the first way is with `-g` to specify
 <b>wc -l data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-   10079 data/colored-shapes.csv
+10079 data/colored-shapes.csv
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -4290,7 +4291,7 @@ color=purple,shape=square,flag=0
 <b>wc -l data/repeats.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-      57 data/repeats.dkvp
+57 data/repeats.dkvp
 </pre>
 
 <pre class="pre-highlight-in-pair">

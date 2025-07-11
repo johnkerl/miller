@@ -26,7 +26,7 @@ Vertical-tabular format is good for a quick look at CSV data layout -- seeing wh
 <b>wc -l data/flins.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-   36635 data/flins.csv
+36635 data/flins.csv
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -227,7 +227,7 @@ Peek at the data:
 <b>wc -l data/colored-shapes.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-   10078 data/colored-shapes.dkvp
+10078 data/colored-shapes.dkvp
 </pre>
 
 <pre class="pre-highlight-in-pair">

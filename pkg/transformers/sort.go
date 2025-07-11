@@ -83,6 +83,7 @@ func transformerSortUsage(
 	fmt.Fprintf(o, "-nf {comma-separated field names}  Same as -n\n")
 	fmt.Fprintf(o, "-nr {comma-separated field names}  Numerical descending; nulls sort first\n")
 	fmt.Fprintf(o, "-t  {comma-separated field names}  Natural ascending\n")
+	fmt.Fprintf(o, "-b                                 Move sort fields to start of record, as in reorder -b\n")
 	fmt.Fprintf(o, "-tr|-rt {comma-separated field names}  Natural descending\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 	fmt.Fprintf(o, "\n")
@@ -107,6 +108,7 @@ func transformerSortParseCLI(
 
 	groupByFieldNames := make([]string, 0)
 	comparatorFuncs := make([]mlrval.CmpFuncInt, 0)
+	doMoveToHead := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
@@ -255,6 +257,9 @@ func transformerSortParseCLI(
 				comparatorFuncs = append(comparatorFuncs, mlrval.NumericDescendingComparator)
 			}
 
+		} else if opt == "-b" {
+			doMoveToHead = true
+
 		} else {
 			transformerSortUsage(os.Stderr)
 			os.Exit(1)
@@ -274,6 +279,7 @@ func transformerSortParseCLI(
 	transformer, err := NewTransformerSort(
 		groupByFieldNames,
 		comparatorFuncs,
+		doMoveToHead,
 	)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -304,6 +310,7 @@ type TransformerSort struct {
 	// -- Input
 	groupByFieldNames []string
 	comparatorFuncs   []mlrval.CmpFuncInt
+	doMoveToHead      bool
 
 	// -- State
 	// Map from string to *list.List:
@@ -316,11 +323,13 @@ type TransformerSort struct {
 func NewTransformerSort(
 	groupByFieldNames []string,
 	comparatorFuncs []mlrval.CmpFuncInt,
+	doMoveToHead bool,
 ) (*TransformerSort, error) {
 
 	tr := &TransformerSort{
 		groupByFieldNames: groupByFieldNames,
 		comparatorFuncs:   comparatorFuncs,
+		doMoveToHead:      doMoveToHead,
 
 		recordListsByGroup: lib.NewOrderedMap(),
 		groupHeads:         lib.NewOrderedMap(),
@@ -345,6 +354,13 @@ func (tr *TransformerSort) Transform(
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
+
+		if tr.doMoveToHead {
+			n := len(tr.groupByFieldNames)
+			for i := n - 1; i >= 0; i-- {
+				inrec.MoveToHead(tr.groupByFieldNames[i])
+			}
+		}
 
 		groupingKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(
 			tr.groupByFieldNames,

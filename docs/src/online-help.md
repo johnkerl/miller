@@ -230,6 +230,7 @@ Options:
 -nf {comma-separated field names}  Same as -n
 -nr {comma-separated field names}  Numerical descending; nulls sort first
 -t  {comma-separated field names}  Natural ascending
+-b                                 Move sort fields to start of record, as in reorder -b
 -tr|-rt {comma-separated field names}  Natural descending
 -h|--help Show this message.
 

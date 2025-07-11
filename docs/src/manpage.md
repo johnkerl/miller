@@ -1837,6 +1837,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        -nf {comma-separated field names}  Same as -n
        -nr {comma-separated field names}  Numerical descending; nulls sort first
        -t  {comma-separated field names}  Natural ascending
+       -b                                 Move sort fields to start of record, as in reorder -b
        -tr|-rt {comma-separated field names}  Natural descending
        -h|--help Show this message.
 
@@ -3745,5 +3746,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2025-07-04                         4mMILLER24m(1)
+                                  2025-07-11                         4mMILLER24m(1)
 </pre>
