@@ -125,7 +125,7 @@ with the exception that the `min` and `max` functions are special: if one argume
 x=,y=3,a=3,b=
 </pre>
 
-Likewise, empty works like 0 for addition and subtraction, and multiplication:
+Likewise, empty works like 0 for addition and subtraction, and like 1 for multiplication:
 
 <pre class="pre-highlight-in-pair">
 <b>echo 'x=,y=3' | mlr put '$a = $x + $y; $b = $x - $y; $c = $x * $y'</b>
