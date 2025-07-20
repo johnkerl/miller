@@ -53,11 +53,12 @@ type TReaderOptions struct {
 	irsWasSpecified            bool
 	allowRepeatIFSWasSpecified bool
 
-	UseImplicitHeader   bool
-	AllowRaggedCSVInput bool
-	CSVLazyQuotes       bool
-	CSVTrimLeadingSpace bool
-	BarredPprintInput   bool
+	UseImplicitHeader    bool
+	AllowRaggedCSVInput  bool
+	CSVLazyQuotes        bool
+	CSVTrimLeadingSpace  bool
+	BarredPprintInput    bool
+	IncrementImplicitKey bool
 
 	CommentHandling TCommentHandling
 	CommentString   string
