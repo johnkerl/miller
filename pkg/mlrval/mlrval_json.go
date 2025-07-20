@@ -13,6 +13,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"strconv"
 
 	"github.com/johnkerl/miller/v6/pkg/colorizer"
 	"github.com/johnkerl/miller/v6/pkg/lib"
@@ -406,7 +407,16 @@ func millerJSONEncodeString(input string) string {
 // ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONInt(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_INT)
-	return colorizer.MaybeColorizeValue(mv.String(), outputIsStdout), nil
+	// Other formats would use mv.String(): for example, if the user used hex
+	// format, we would emit whatever they set. However, for JSON, we are
+	// required to disrespect the user's formatting, and only emit decimal.
+	// See also https://github.com/johnkerl/miller/issues/1761.
+	ival, ok := mv.GetIntValue()
+	if !ok {
+		panic("Internal coding error: int-typed mlrval denied int access")
+	}
+	s := strconv.FormatInt(ival, 10)
+	return colorizer.MaybeColorizeValue(s, outputIsStdout), nil
 }
 
 // ----------------------------------------------------------------
