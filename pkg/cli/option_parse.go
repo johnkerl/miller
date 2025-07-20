@@ -104,6 +104,7 @@ var FLAG_TABLE = FlagTable{
 		&CSVTSVOnlyFlagSection,
 		&JSONOnlyFlagSection,
 		&PPRINTOnlyFlagSection,
+		&DKVPOnlyFlagSection,
 		&CompressedDataFlagSection,
 		&CommentsInDataFlagSection,
 		&OutputColorizationFlagSection,
@@ -517,6 +518,31 @@ var PPRINTOnlyFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.BarredPprintInput = true
 				options.ReaderOptions.IFS = "|"
+				*pargi += 1
+			},
+		},
+	},
+}
+
+// ================================================================
+// DKVP-ONLY FLAGS
+
+func DKVPOnlyPrintInfo() {
+	fmt.Println("These are flags which are applicable to DKVP format.")
+}
+
+func init() { DKVPOnlyFlagSection.Sort() }
+
+var DKVPOnlyFlagSection = FlagSection{
+	name:        "DKVP-only flags",
+	infoPrinter: DKVPOnlyPrintInfo,
+	flags: []Flag{
+
+		{
+			name: "--incr-key",
+			help: "Without this option, keyless DKVP fields are keyed by field number.  For example: `a=10,b=20,30,d=40,50` is ingested as `$a=10,$b=20,$3=30,$d=40,$5=50`.  With this option, they're keyed by a running counter of keyless fields.  For example: `a=10,b=20,30,d=40,50` is ingested as `$a=10,$b=20,$1=30,$d=40,$2=50`.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.BarredPprintOutput = true
 				*pargi += 1
 			},
 		},
