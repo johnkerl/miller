@@ -128,6 +128,15 @@ These are flags which are applicable to CSV format.
 * `--quote-all`: Force double-quoting of CSV fields.
 * `-N`: Keystroke-saver for `--implicit-csv-header --headerless-csv-output`.
 
+## DKVP-only flags
+
+These are flags which are applicable to DKVP format.
+
+
+**Flags:**
+
+* `--incr-key`: Without this option, keyless DKVP fields are keyed by field number.  For example: `a=10,b=20,30,d=40,50` is ingested as `$a=10,$b=20,$3=30,$d=40,$5=50`.  With this option, they're keyed by a running counter of keyless fields.  For example: `a=10,b=20,30,d=40,50` is ingested as `$a=10,$b=20,$1=30,$d=40,$2=50`.
+
 ## File-format flags
 
 See the File formats doc page, and or `mlr help file-formats`, for more

@@ -55,6 +55,7 @@ Flags:
   mlr help comments-in-data-flags
   mlr help compressed-data-flags
   mlr help csv/tsv-only-flags
+  mlr help dkvp-only-flags
   mlr help file-format-flags
   mlr help flatten-unflatten-flags
   mlr help format-conversion-keystroke-saver-flags
