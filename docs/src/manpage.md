@@ -145,6 +145,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
          mlr help comments-in-data-flags
          mlr help compressed-data-flags
          mlr help csv/tsv-only-flags
+         mlr help dkvp-only-flags
          mlr help file-format-flags
          mlr help flatten-unflatten-flags
          mlr help format-conversion-keystroke-saver-flags
@@ -355,6 +356,16 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        --quote-all              Force double-quoting of CSV fields.
        -N                       Keystroke-saver for `--implicit-csv-header
                                 --headerless-csv-output`.
+
+1mDKVP-ONLY FLAGS0m
+       These are flags which are applicable to DKVP format.
+
+       --incr-key               Without this option, keyless DKVP fields are keyed by
+                                field number. For example: `a=10,b=20,30,d=40,50` is
+                                ingested as `$a=10,$b=20,$3=30,$d=40,$5=50`. With
+                                this option, they're keyed by a running counter of
+                                keyless fields. For example: `a=10,b=20,30,d=40,50`
+                                is ingested as `$a=10,$b=20,$1=30,$d=40,$2=50`.
 
 1mFILE-FORMAT FLAGS0m
        See the File formats doc page, and or `mlr help file-formats`, for more
@@ -3746,5 +3757,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2025-07-11                         4mMILLER24m(1)
+                                  2025-07-20                         4mMILLER24m(1)
 </pre>

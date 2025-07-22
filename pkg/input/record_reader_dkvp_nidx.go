@@ -14,7 +14,7 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// splitter_DKVP_NIDX is a function type for the one bit of code differing
+// line_splitter_DKVP_NIDX is a function type for the one bit of code differing
 // between the DKVP reader and the NIDX reader, namely, how it splits lines.
 type line_splitter_DKVP_NIDX func(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrmap, error)
 
@@ -169,25 +169,42 @@ func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrm
 
 	pairs := reader.fieldSplitter.Split(line)
 
+	// Without --incr-key:
+	//   echo 'a,z=b,c' | mlr cat gives 1=a,z=b,3=c
+	//   I.e. implicit keys are taken from the 1-up field counter.
+	// With it:
+	//   echo 'a,z=b,c' | mlr cat gives 1=a,z=b,2=c
+	//   I.e. implicit keys are taken from a 1-up count of fields lacking explicit keys.
+	incr_key := 0
+
 	for i, pair := range pairs {
 		kv := reader.pairSplitter.Split(pair)
 
 		if len(kv) == 0 || (len(kv) == 1 && kv[0] == "") {
 			// Ignore. This is expected when splitting with repeated IFS.
 		} else if len(kv) == 1 {
-			// E.g the pair has no equals sign: "a" rather than "a=1" or
+			// E.g. the pair has no equals sign: "a" rather than "a=1" or
 			// "a=".  Here we use the positional index as the key. This way
 			// DKVP is a generalization of NIDX.
-			key := strconv.Itoa(i + 1) // Miller userspace indices are 1-up
+			//
+			// Also: recall that Miller userspace indices are 1-up.
+			var int_key int
+			if reader.readerOptions.IncrementImplicitKey {
+				int_key = incr_key
+			} else {
+				int_key = i
+			}
+			str_key := strconv.Itoa(int_key + 1)
+			incr_key++
 			value := mlrval.FromDeferredType(kv[0])
-			_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
+			_, err := record.PutReferenceMaybeDedupe(str_key, value, dedupeFieldNames)
 			if err != nil {
 				return nil, err
 			}
 		} else {
-			key := kv[0]
+			str_key := kv[0]
 			value := mlrval.FromDeferredType(kv[1])
-			_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
+			_, err := record.PutReferenceMaybeDedupe(str_key, value, dedupeFieldNames)
 			if err != nil {
 				return nil, err
 			}
@@ -204,9 +221,9 @@ func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrm
 	var i int = 0
 	for _, value := range values {
 		i++
-		key := strconv.Itoa(i)
+		str_key := strconv.Itoa(i)
 		mval := mlrval.FromDeferredType(value)
-		record.PutReference(key, mval)
+		record.PutReference(str_key, mval)
 	}
 	return record, nil
 }

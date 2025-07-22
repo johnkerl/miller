@@ -1,7 +1,7 @@
 [
 {
   "hostname": "localhost",
-  "pid": 0x3039,
+  "pid": 12345,
   "req": {
     "id": 6789,
     "method": "GET",
