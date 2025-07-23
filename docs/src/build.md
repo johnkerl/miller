@@ -18,7 +18,7 @@ Quick links:
 
 Please also see [Installation](installing-miller.md) for information about pre-built executables.
 
-You will need to first install Go version 1.15 or higher: please see [https://go.dev](https://go.dev).
+You will need to first install Go ([this version](https://github.com/johnkerl/miller/blob/main/go.mod#L17)): please see [https://go.dev](https://go.dev).
 
 ## Miller license
 
