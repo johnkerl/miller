@@ -132,6 +132,13 @@ func processFileInPlace(
 		return err
 	}
 
+	// Get the original file's mode so we can preserve it.
+	fileInfo, err := os.Stat(fileName)
+	if err != nil {
+		return err
+	}
+	originalMode := fileInfo.Mode()
+
 	containingDirectory := path.Dir(fileName)
 	// Names like ./mlr-in-place-2148227797 and ./mlr-in-place-1792078347,
 	// as revealed by printing handle.Name().
@@ -183,5 +190,12 @@ func processFileInPlace(
 		os.Remove(tempFileName)
 		return err
 	}
+
+	// Set the mode to match the original.
+	err = os.Chmod(fileName, originalMode)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
