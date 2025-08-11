@@ -50,7 +50,7 @@ func Main() MainReturn {
 	if !options.DoInPlace {
 		err = processToStdout(options, recordTransformers)
 	} else {
-		err = processInPlace(options)
+		err = processFilesInPlace(options)
 	}
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "mlr: %v.\n", err)
@@ -73,7 +73,7 @@ func processToStdout(
 }
 
 // ----------------------------------------------------------------
-// processInPlace is in-place processing without mlr -I.
+// processFilesInPlace is in-place processing without mlr -I.
 //
 // For in-place mode, reconstruct the transformers on each input file. E.g.
 // 'mlr -I head -n 2 foo bar' should do head -n 2 on foo as well as on bar.
@@ -85,7 +85,7 @@ func processToStdout(
 // frequently used code path, this would likely lead to latent bugs. So this
 // approach leads to greater code stability.
 
-func processInPlace(
+func processFilesInPlace(
 	originalOptions *cli.TOptions,
 ) error {
 	// This should have been already checked by the CLI parser when validating
@@ -98,79 +98,104 @@ func processInPlace(
 	copy(fileNames, originalOptions.FileNames)
 
 	for _, fileName := range fileNames {
-
-		if _, err := os.Stat(fileName); os.IsNotExist(err) {
-			return err
-		}
-
-		// Reconstruct the transformers for each file name, and allocate
-		// reader, mappers, and writer individually for each file name.  This
-		// way CSV headers appear in each file, head -n 10 puts 10 rows for
-		// each output file, and so on.
-		options, recordTransformers, err := climain.ParseCommandLine(os.Args)
+		err := processFileInPlace(fileName, originalOptions)
 		if err != nil {
 			return err
 		}
+	}
+	return nil
+}
 
-		// We can't in-place update http://, https://, etc. Also, anything with
-		// --prepipe or --prepipex, we won't try to guess how to invert that
-		// command to produce re-compressed output.
-		err = lib.IsUpdateableInPlace(fileName, options.ReaderOptions.Prepipe)
-		if err != nil {
-			return err
-		}
+func processFileInPlace(
+	fileName string,
+	originalOptions *cli.TOptions,
+) error {
 
-		containingDirectory := path.Dir(fileName)
-		// Names like ./mlr-in-place-2148227797 and ./mlr-in-place-1792078347,
-		// as revealed by printing handle.Name().
-		handle, err := os.CreateTemp(containingDirectory, "mlr-in-place-")
-		if err != nil {
-			return err
-		}
-		tempFileName := handle.Name()
+	if _, err := os.Stat(fileName); os.IsNotExist(err) {
+		return err
+	}
 
-		// If the input file is compressed and we'll be doing in-process
-		// decompression as we read the input file, try to do in-process
-		// compression as we write the output.
-		inputFileEncoding := lib.FindInputEncoding(fileName, options.ReaderOptions.FileInputEncoding)
+	// Reconstruct the transformers for each file name, and allocate
+	// reader, mappers, and writer individually for each file name.  This
+	// way CSV headers appear in each file, head -n 10 puts 10 rows for
+	// each output file, and so on.
+	options, recordTransformers, err := climain.ParseCommandLine(os.Args)
+	if err != nil {
+		return err
+	}
 
-		// Get a handle with, perhaps, a recompression wrapper around it.
-		wrappedHandle, isNew, err := lib.WrapOutputHandle(handle, inputFileEncoding)
-		if err != nil {
-			os.Remove(tempFileName)
-			return err
-		}
+	// We can't in-place update http://, https://, etc. Also, anything with
+	// --prepipe or --prepipex, we won't try to guess how to invert that
+	// command to produce re-compressed output.
+	err = lib.IsUpdateableInPlace(fileName, options.ReaderOptions.Prepipe)
+	if err != nil {
+		return err
+	}
 
-		// Run the Miller processing stream from the input file to the temp-output file.
-		err = stream.Stream([]string{fileName}, options, recordTransformers, wrappedHandle, false)
-		if err != nil {
-			os.Remove(tempFileName)
-			return err
-		}
+	// Get the original file's mode so we can preserve it.
+	fileInfo, err := os.Stat(fileName)
+	if err != nil {
+		return err
+	}
+	originalMode := fileInfo.Mode()
 
-		// Close the recompressor handle, if any recompression is being applied.
-		if isNew {
-			err = wrappedHandle.Close()
-			if err != nil {
-				os.Remove(tempFileName)
-				return err
-			}
-		}
+	containingDirectory := path.Dir(fileName)
+	// Names like ./mlr-in-place-2148227797 and ./mlr-in-place-1792078347,
+	// as revealed by printing handle.Name().
+	handle, err := os.CreateTemp(containingDirectory, "mlr-in-place-")
+	if err != nil {
+		return err
+	}
+	tempFileName := handle.Name()
 
-		// Close the handle to the output file. This may force final writes, so
-		// it must be error-checked.
-		err = handle.Close()
-		if err != nil {
-			os.Remove(tempFileName)
-			return err
-		}
+	// If the input file is compressed and we'll be doing in-process
+	// decompression as we read the input file, try to do in-process
+	// compression as we write the output.
+	inputFileEncoding := lib.FindInputEncoding(fileName, options.ReaderOptions.FileInputEncoding)
 
-		// Rename the temp-output file on top of the input file.
-		err = os.Rename(tempFileName, fileName)
+	// Get a handle with, perhaps, a recompression wrapper around it.
+	wrappedHandle, isNew, err := lib.WrapOutputHandle(handle, inputFileEncoding)
+	if err != nil {
+		os.Remove(tempFileName)
+		return err
+	}
+
+	// Run the Miller processing stream from the input file to the temp-output file.
+	err = stream.Stream([]string{fileName}, options, recordTransformers, wrappedHandle, false)
+	if err != nil {
+		os.Remove(tempFileName)
+		return err
+	}
+
+	// Close the recompressor handle, if any recompression is being applied.
+	if isNew {
+		err = wrappedHandle.Close()
 		if err != nil {
 			os.Remove(tempFileName)
 			return err
 		}
 	}
+
+	// Close the handle to the output file. This may force final writes, so
+	// it must be error-checked.
+	err = handle.Close()
+	if err != nil {
+		os.Remove(tempFileName)
+		return err
+	}
+
+	// Rename the temp-output file on top of the input file.
+	err = os.Rename(tempFileName, fileName)
+	if err != nil {
+		os.Remove(tempFileName)
+		return err
+	}
+
+	// Set the mode to match the original.
+	err = os.Chmod(fileName, originalMode)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
