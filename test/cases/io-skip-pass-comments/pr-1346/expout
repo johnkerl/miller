@@ -1,0 +1,5 @@
+field1,field2
+a,b
+# that was the first record
+c,d
+# that was the second record, and there is no more data
