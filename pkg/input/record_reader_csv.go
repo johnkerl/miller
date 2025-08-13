@@ -1,7 +1,6 @@
 package input
 
 import (
-	"bytes"
 	"container/list"
 	"fmt"
 	"io"
@@ -109,6 +108,14 @@ func (reader *RecordReaderCSV) processHandle(
 	csvReader.Comma = rune(reader.ifs0)
 	csvReader.LazyQuotes = reader.csvLazyQuotes
 	csvReader.TrimLeadingSpace = reader.csvTrimLeadingSpace
+
+	if reader.readerOptions.CommentHandling != cli.CommentsAreData {
+		if len(reader.readerOptions.CommentString) == 1 {
+			// Use our modified fork of the go-csv package
+			csvReader.Comment = rune(reader.readerOptions.CommentString[0])
+		}
+	}
+
 	csvRecordsChannel := make(chan *list.List, recordsPerBatch)
 	go channelizedCSVRecordScanner(csvReader, csvRecordsChannel, downstreamDoneChannel, errorChannel,
 		recordsPerBatch)
@@ -318,40 +325,15 @@ func (reader *RecordReaderCSV) maybeConsumeComment(
 		// However, sadly, bytes.Buffer does not implement io.Writer because
 		// its Write method has pointer receiver. So we have a WorkaroundBuffer
 		// struct below which has non-pointer receiver.
-		buffer := NewWorkaroundBuffer()
-		csvWriter := csv.NewWriter(buffer)
-		csvWriter.Comma = rune(reader.ifs0)
-		csvWriter.Write(csvRecord)
-		csvWriter.Flush()
-		recordsAndContexts.PushBack(types.NewOutputString(buffer.String(), context))
+
+		// Contract with our fork of the go-csv CSV Reader
+		lib.InternalCodingErrorIf(len(csvRecord) != 1)
+		recordsAndContexts.PushBack(types.NewOutputString(csvRecord[0], context))
+
 	} else /* reader.readerOptions.CommentHandling == cli.SkipComments */ {
 		// discard entirely
 	}
 	return false
-}
-
-// ----------------------------------------------------------------
-// As noted above: wraps a bytes.Buffer, whose Write method has pointer
-// receiver, in a struct with non-pointer receiver so that it implements
-// io.Writer.
-
-type WorkaroundBuffer struct {
-	pbuffer *bytes.Buffer
-}
-
-func NewWorkaroundBuffer() WorkaroundBuffer {
-	var buffer bytes.Buffer
-	return WorkaroundBuffer{
-		pbuffer: &buffer,
-	}
-}
-
-func (wb WorkaroundBuffer) Write(p []byte) (n int, err error) {
-	return wb.pbuffer.Write(p)
-}
-
-func (wb WorkaroundBuffer) String() string {
-	return wb.pbuffer.String()
 }
 
 // ----------------------------------------------------------------
