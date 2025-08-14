@@ -48,7 +48,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        insertion-ordered hash map.  This encompasses a variety of data
        formats, including but not limited to the familiar CSV, TSV, and JSON.
        (Miller can handle positionally-indexed data as a special case.) This
-       manpage documents mlr 6.14.0-dev.
+       manpage documents mlr 6.15.0.
 
 1mEXAMPLES0m
        mlr --icsv --opprint cat example.csv
@@ -3757,5 +3757,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2025-07-20                         4mMILLER24m(1)
+                                  2025-08-14                         4mMILLER24m(1)
 </pre>
