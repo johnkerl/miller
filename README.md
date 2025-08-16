@@ -46,9 +46,7 @@ key-value-pair data in a variety of data formats.
 * [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 
 # Installing
-
 There's a good chance you can get Miller pre-built for your system:
-
 [![Ubuntu](https://img.shields.io/badge/distros-ubuntu-db4923.svg)](https://launchpad.net/ubuntu/+source/miller)
 [![Ubuntu 16.04 LTS](https://img.shields.io/badge/distros-ubuntu1604lts-db4923.svg)](https://launchpad.net/ubuntu/xenial/+package/miller)
 [![Fedora](https://img.shields.io/badge/distros-fedora-173b70.svg)](https://packages.fedoraproject.org/pkgs/miller/miller/)
@@ -62,6 +60,9 @@ There's a good chance you can get Miller pre-built for your system:
 [![FreeBSD](https://img.shields.io/badge/distros-freebsd-8c0707.svg)](https://www.freshports.org/textproc/miller/)
 
 [![Anaconda](https://img.shields.io/badge/distros-anaconda-63ad41.svg)](https://anaconda.org/conda-forge/miller/)
+
+[![Snap](https://snapcraft.io/)](https://snapcraft.io/)
+
 [![Homebrew/MacOSX](https://img.shields.io/badge/distros-homebrew-ba832b.svg)](https://formulae.brew.sh/formula/miller)
 [![MacPorts/MacOSX](https://img.shields.io/badge/distros-macports-1376ec.svg)](https://www.macports.org/ports.php?by=name&substr=miller)
 [![Chocolatey](https://img.shields.io/badge/distros-chocolatey-red.svg)](https://chocolatey.org/packages/miller)
@@ -69,7 +70,7 @@ There's a good chance you can get Miller pre-built for your system:
 
 |OS|Installation command|
 |---|---|
-|Linux|`yum install miller`<br/> `apt-get install miller`|
+|Linux|`yum install miller`<br/> `apt-get install miller`<br/> `snap install miller`|
 |Mac|`brew install miller`<br/>`port install miller`|
 |Windows|`choco install miller`<br/>`winget install Miller.Miller`<br/>`scoop install main/miller`|
 
