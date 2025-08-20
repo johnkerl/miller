@@ -1465,7 +1465,7 @@ See also the `sub` and `ssub` verbs.
 Options:
 -f {a,b,c}  Field names to convert.
 -r {regex}  Regular expression for field names to convert.
--a          Convert all field names.
+-a          Convert all fields.
 -h|--help   Show this message.
 </pre>
 
@@ -3214,7 +3214,7 @@ the old string, like the `ssub` DSL function. See also the `gsub` and `sub` verb
 Options:
 -f {a,b,c}  Field names to convert.
 -r {regex}  Regular expression for field names to convert.
--a          Convert all field names.
+-a          Convert all fields.
 -h|--help   Show this message.
 </pre>
 
@@ -3720,7 +3720,7 @@ See also the `gsub` and `ssub` verbs.
 Options:
 -f {a,b,c}  Field names to convert.
 -r {regex}  Regular expression for field names to convert.
--a          Convert all field names.
+-a          Convert all fields.
 -h|--help   Show this message.
 </pre>
 

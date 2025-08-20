@@ -1288,7 +1288,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Options:
        -f {a,b,c}  Field names to convert.
        -r {regex}  Regular expression for field names to convert.
-       -a          Convert all field names.
+       -a          Convert all fields.
        -h|--help   Show this message.
 
    1mhaving-fields0m
@@ -1926,7 +1926,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Options:
        -f {a,b,c}  Field names to convert.
        -r {regex}  Regular expression for field names to convert.
-       -a          Convert all field names.
+       -a          Convert all fields.
        -h|--help   Show this message.
 
    1mstats10m
@@ -2075,7 +2075,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Options:
        -f {a,b,c}  Field names to convert.
        -r {regex}  Regular expression for field names to convert.
-       -a          Convert all field names.
+       -a          Convert all fields.
        -h|--help   Show this message.
 
    1msummary0m
@@ -3759,5 +3759,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2025-08-15                         4mMILLER24m(1)
+                                  2025-08-20                         4mMILLER24m(1)
 </pre>
