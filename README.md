@@ -96,6 +96,7 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 [![Multi-platform build status](https://github.com/johnkerl/miller/actions/workflows/go.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/go.yml)
 [![CodeQL status](https://github.com/johnkerl/miller/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/codeql-analysis.yml)
 [![Codespell status](https://github.com/johnkerl/miller/actions/workflows/codespell.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/codespell.yml)
+[![🧪 Snap Builds](https://github.com/kz6fittycent/miller/actions/workflows/test-snap-can-build.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/test-snap-can-build.yml)
 <!--
 [![Release status](https://github.com/johnkerl/miller/actions/workflows/release.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/release.yml)
 -->
