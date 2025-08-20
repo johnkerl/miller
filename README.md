@@ -47,21 +47,18 @@ key-value-pair data in a variety of data formats.
 
 # Installing
 There's a good chance you can get Miller pre-built for your system:
+
 [![Ubuntu](https://img.shields.io/badge/distros-ubuntu-db4923.svg)](https://launchpad.net/ubuntu/+source/miller)
 [![Ubuntu 16.04 LTS](https://img.shields.io/badge/distros-ubuntu1604lts-db4923.svg)](https://launchpad.net/ubuntu/xenial/+package/miller)
 [![Fedora](https://img.shields.io/badge/distros-fedora-173b70.svg)](https://packages.fedoraproject.org/pkgs/miller/miller/)
 [![Debian](https://img.shields.io/badge/distros-debian-c70036.svg)](https://packages.debian.org/stable/miller)
 [![Gentoo](https://img.shields.io/badge/distros-gentoo-4e4371.svg)](https://packages.gentoo.org/packages/sys-apps/miller)
-
 [![Pro-Linux](https://img.shields.io/badge/distros-prolinux-3a679d.svg)](http://www.pro-linux.de/cgi-bin/DBApp/check.cgi?ShowApp..20427.100)
 [![Arch Linux](https://img.shields.io/badge/distros-archlinux-1792d0.svg)](https://aur.archlinux.org/packages/miller-git)
-
 [![NetBSD](https://img.shields.io/badge/distros-netbsd-f26711.svg)](http://pkgsrc.se/textproc/miller)
 [![FreeBSD](https://img.shields.io/badge/distros-freebsd-8c0707.svg)](https://www.freshports.org/textproc/miller/)
-
 [![Anaconda](https://img.shields.io/badge/distros-anaconda-63ad41.svg)](https://anaconda.org/conda-forge/miller/)
-
-[![Snap](https://snapcraft.io/)](https://snapcraft.io/)
+[![Snap](https://snapcraft.io/miller)](https://snapcraft.io/miller)
 
 [![Homebrew/MacOSX](https://img.shields.io/badge/distros-homebrew-ba832b.svg)](https://formulae.brew.sh/formula/miller)
 [![MacPorts/MacOSX](https://img.shields.io/badge/distros-macports-1376ec.svg)](https://www.macports.org/ports.php?by=name&substr=miller)
@@ -96,7 +93,7 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 [![Multi-platform build status](https://github.com/johnkerl/miller/actions/workflows/go.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/go.yml)
 [![CodeQL status](https://github.com/johnkerl/miller/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/codeql-analysis.yml)
 [![Codespell status](https://github.com/johnkerl/miller/actions/workflows/codespell.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/codespell.yml)
-[![🧪 Snap Builds](https://github.com/kz6fittycent/miller/actions/workflows/test-snap-can-build.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/test-snap-can-build.yml)
+[![🧪 Snap Builds](https://github.com/johnkerl/miller/actions/workflows/test-snap-can-build.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/test-snap-can-build.yml)
 <!--
 [![Release status](https://github.com/johnkerl/miller/actions/workflows/release.yml/badge.svg)](https://github.com/johnkerl/miller/actions/workflows/release.yml)
 -->
