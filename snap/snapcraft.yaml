@@ -36,7 +36,6 @@ apps:
     command: usr/local/bin/mlr
     plugs:
       - home
-      - network
 
 parts: 
   miller:
