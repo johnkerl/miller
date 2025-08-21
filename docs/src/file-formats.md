@@ -757,12 +757,14 @@ Notes:
                          within the input.
 --pass-comments-with {string}
                          Immediately print commented lines within input, with
-                         specified prefix.
+                         specified prefix. For CSV input format, the prefix
+                         must be a single character.
 --skip-comments          Ignore commented lines (prefixed by `#`) within the
                          input.
 --skip-comments-with {string}
                          Ignore commented lines within input, with specified
-                         prefix.
+                         prefix. For CSV input format, the prefix must be a
+                         single character.
 </pre>
 
 Examples:

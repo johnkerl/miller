@@ -47,7 +47,6 @@ key-value-pair data in a variety of data formats.
 
 # Installing
 There's a good chance you can get Miller pre-built for your system:
-
 [![Ubuntu](https://img.shields.io/badge/distros-ubuntu-db4923.svg)](https://launchpad.net/ubuntu/+source/miller)
 [![Ubuntu 16.04 LTS](https://img.shields.io/badge/distros-ubuntu1604lts-db4923.svg)](https://launchpad.net/ubuntu/xenial/+package/miller)
 [![Fedora](https://img.shields.io/badge/distros-fedora-173b70.svg)](https://packages.fedoraproject.org/pkgs/miller/miller/)
@@ -58,7 +57,7 @@ There's a good chance you can get Miller pre-built for your system:
 [![NetBSD](https://img.shields.io/badge/distros-netbsd-f26711.svg)](http://pkgsrc.se/textproc/miller)
 [![FreeBSD](https://img.shields.io/badge/distros-freebsd-8c0707.svg)](https://www.freshports.org/textproc/miller/)
 [![Anaconda](https://img.shields.io/badge/distros-anaconda-63ad41.svg)](https://anaconda.org/conda-forge/miller/)
-[![Snap](https://snapcraft.io/miller)](https://snapcraft.io/miller)
+[![Snap](https://snapcraft.io/miller)](https://snapcraft.io/mlr)
 [![Homebrew/MacOSX](https://img.shields.io/badge/distros-homebrew-ba832b.svg)](https://formulae.brew.sh/formula/miller)
 [![MacPorts/MacOSX](https://img.shields.io/badge/distros-macports-1376ec.svg)](https://www.macports.org/ports.php?by=name&substr=miller)
 [![Chocolatey](https://img.shields.io/badge/distros-chocolatey-red.svg)](https://chocolatey.org/packages/miller)

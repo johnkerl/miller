@@ -1,0 +1,1 @@
+mlr --csv --skip-comments-with '##' cat test/input/pr-1787.csv

@@ -39,6 +39,11 @@ func NewRecordReaderCSV(
 	if len(readerOptions.IFS) != 1 {
 		return nil, fmt.Errorf("for CSV, IFS can only be a single character")
 	}
+	if readerOptions.CommentHandling != cli.CommentsAreData {
+		if len(readerOptions.CommentString) != 1 {
+			return nil, fmt.Errorf("for CSV, the comment prefix must be a single character")
+		}
+	}
 	return &RecordReaderCSV{
 		readerOptions:       readerOptions,
 		ifs0:                readerOptions.IFS[0],
@@ -326,7 +331,7 @@ func (reader *RecordReaderCSV) maybeConsumeComment(
 		// its Write method has pointer receiver. So we have a WorkaroundBuffer
 		// struct below which has non-pointer receiver.
 
-		// Contract with our fork of the go-csv CSV Reader
+		// Contract with our fork of the go-csv CSV Reader, and, our own constructor.
 		lib.InternalCodingErrorIf(len(csvRecord) != 1)
 		recordsAndContexts.PushBack(types.NewOutputString(csvRecord[0], context))
 
