@@ -50,7 +50,7 @@ func transformerSubUsage(
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c}  Field names to convert.\n")
 	fmt.Fprintf(o, "-r {regex}  Regular expression for field names to convert.\n")
-	fmt.Fprintf(o, "-a          Convert all field names.\n")
+	fmt.Fprintf(o, "-a          Convert all fields.\n")
 	fmt.Fprintf(o, "-h|--help   Show this message.\n")
 }
 
@@ -64,7 +64,7 @@ func transformerGsubUsage(
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c}  Field names to convert.\n")
 	fmt.Fprintf(o, "-r {regex}  Regular expression for field names to convert.\n")
-	fmt.Fprintf(o, "-a          Convert all field names.\n")
+	fmt.Fprintf(o, "-a          Convert all fields.\n")
 	fmt.Fprintf(o, "-h|--help   Show this message.\n")
 }
 
@@ -77,7 +77,7 @@ func transformerSsubUsage(
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c}  Field names to convert.\n")
 	fmt.Fprintf(o, "-r {regex}  Regular expression for field names to convert.\n")
-	fmt.Fprintf(o, "-a          Convert all field names.\n")
+	fmt.Fprintf(o, "-a          Convert all fields.\n")
 	fmt.Fprintf(o, "-h|--help   Show this message.\n")
 }
 
