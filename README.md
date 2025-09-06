@@ -114,7 +114,7 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 * Without `make`:
   * To build: `go build github.com/johnkerl/miller/v6/cmd/mlr`.
   * To run tests: `go test github.com/johnkerl/miller/v6/pkg/...` and `mlr regtest`.
-  * To install: `go install github.com/johnkerl/miller/v6/cmd/mlr` will install to _GOPATH_`/bin/mlr`.
+  * To install: `go install github.com/johnkerl/miller/v6/cmd/mlr@latest` will install to _GOPATH_`/bin/mlr`.
 * See also the doc page on [building from source](https://miller.readthedocs.io/en/latest/build).
 * For more developer information please see [README-dev.md](./README-dev.md).
 
