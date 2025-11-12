@@ -979,9 +979,7 @@ var FileFormatFlagSection = FlagSection{
 			name: "--ojsonl",
 			help: "Use JSON Lines format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.OutputFileFormat = "json"
-				options.WriterOptions.WrapJSONOutputInOuterList = false
-				options.WriterOptions.JSONOutputMultiline = false
+				options.WriterOptions.OutputFileFormat = "jsonl"
 				*pargi += 1
 			},
 		},
@@ -1148,9 +1146,7 @@ var FileFormatFlagSection = FlagSection{
 			altNames: []string{"--l2l"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
-				options.WriterOptions.OutputFileFormat = "json"
-				options.WriterOptions.WrapJSONOutputInOuterList = false
-				options.WriterOptions.JSONOutputMultiline = false
+				options.WriterOptions.OutputFileFormat = "jsonl"
 				*pargi += 1
 			},
 		},

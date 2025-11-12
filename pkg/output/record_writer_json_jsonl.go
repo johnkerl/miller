@@ -36,6 +36,19 @@ func NewRecordWriterJSON(writerOptions *cli.TWriterOptions) (*RecordWriterJSON, 
 }
 
 // ----------------------------------------------------------------
+func NewRecordWriterJSONLines(writerOptions *cli.TWriterOptions) (*RecordWriterJSON, error) {
+	wopt := *writerOptions
+	wopt.WrapJSONOutputInOuterList = false
+	wopt.JSONOutputMultiline = false
+	return &RecordWriterJSON{
+		writerOptions:   &wopt,
+		jsonFormatting:  mlrval.JSON_SINGLE_LINE,
+		jvQuoteAll:      writerOptions.JVQuoteAll,
+		wroteAnyRecords: false,
+	}, nil
+}
+
+// ----------------------------------------------------------------
 func (writer *RecordWriterJSON) Write(
 	outrec *mlrval.Mlrmap,
 	context *types.Context,
