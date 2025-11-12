@@ -29,7 +29,7 @@ require (
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/sys v0.38.0
 	golang.org/x/term v0.36.0
-	golang.org/x/text v0.30.0
+	golang.org/x/text v0.31.0
 )
 
 require (
@@ -39,7 +39,7 @@ require (
 	github.com/google/pprof v0.0.0-20211214055906-6f57359322fd // indirect
 	github.com/kshedden/dstream v0.0.0-20190512025041-c4c410631beb // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	golang.org/x/tools v0.37.0 // indirect
+	golang.org/x/tools v0.38.0 // indirect
 	gonum.org/v1/gonum v0.16.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
