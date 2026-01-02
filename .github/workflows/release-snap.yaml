@@ -1,0 +1,26 @@
+name: Release
+on: 
+  push:
+    tags:
+      - v*
+  workflow_dispatch:
+
+jobs:
+  snap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build snap
+        uses: snapcore/action-build@v1
+        id: build
+
+      - name: Publish to Snap Store
+        uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_TOKEN }}
+        with:
+          snap: ${{ steps.build.outputs.snap }}
+          # release: stable  # or edge, beta, candidate
+          release: stable
