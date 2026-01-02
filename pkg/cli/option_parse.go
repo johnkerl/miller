@@ -979,9 +979,7 @@ var FileFormatFlagSection = FlagSection{
 			name: "--ojsonl",
 			help: "Use JSON Lines format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.OutputFileFormat = "json"
-				options.WriterOptions.WrapJSONOutputInOuterList = false
-				options.WriterOptions.JSONOutputMultiline = false
+				options.WriterOptions.OutputFileFormat = "jsonl"
 				*pargi += 1
 			},
 		},
@@ -1148,9 +1146,7 @@ var FileFormatFlagSection = FlagSection{
 			altNames: []string{"--l2l"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
-				options.WriterOptions.OutputFileFormat = "json"
-				options.WriterOptions.WrapJSONOutputInOuterList = false
-				options.WriterOptions.JSONOutputMultiline = false
+				options.WriterOptions.OutputFileFormat = "jsonl"
 				*pargi += 1
 			},
 		},
@@ -2678,7 +2674,7 @@ var CommentsInDataFlagSection = FlagSection{
 		{
 			name: "--skip-comments-with",
 			arg:  "{string}",
-			help: "Ignore commented lines within input, with specified prefix.",
+			help: "Ignore commented lines within input, with specified prefix. For CSV input format, the prefix must be a single character.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.ReaderOptions.CommentString = args[*pargi+1]
@@ -2700,7 +2696,7 @@ var CommentsInDataFlagSection = FlagSection{
 		{
 			name: "--pass-comments-with",
 			arg:  "{string}",
-			help: "Immediately print commented lines within input, with specified prefix.",
+			help: "Immediately print commented lines within input, with specified prefix. For CSV input format, the prefix must be a single character.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.ReaderOptions.CommentString = args[*pargi+1]

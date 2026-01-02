@@ -47,7 +47,6 @@ key-value-pair data in a variety of data formats.
 
 # Installing
 There's a good chance you can get Miller pre-built for your system:
-
 [![Ubuntu](https://img.shields.io/badge/distros-ubuntu-db4923.svg)](https://launchpad.net/ubuntu/+source/miller)
 [![Ubuntu 16.04 LTS](https://img.shields.io/badge/distros-ubuntu1604lts-db4923.svg)](https://launchpad.net/ubuntu/xenial/+package/miller)
 [![Fedora](https://img.shields.io/badge/distros-fedora-173b70.svg)](https://packages.fedoraproject.org/pkgs/miller/miller/)
@@ -111,7 +110,7 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 * Without `make`:
   * To build: `go build github.com/johnkerl/miller/v6/cmd/mlr`.
   * To run tests: `go test github.com/johnkerl/miller/v6/pkg/...` and `mlr regtest`.
-  * To install: `go install github.com/johnkerl/miller/v6/cmd/mlr` will install to _GOPATH_`/bin/mlr`.
+  * To install: `go install github.com/johnkerl/miller/v6/cmd/mlr@latest` will install to _GOPATH_`/bin/mlr`.
 * See also the doc page on [building from source](https://miller.readthedocs.io/en/latest/build).
 * For more developer information please see [README-dev.md](./README-dev.md).
 

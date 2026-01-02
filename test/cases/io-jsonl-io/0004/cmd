@@ -1,1 +1,1 @@
-mlr --ojsonl cat test/input/json-output-options.dkvp
+mlr -o jsonl cat test/input/json-output-options.dkvp
