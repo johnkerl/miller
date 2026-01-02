@@ -1,17 +1,21 @@
 name: miller
-adopt-info: miller
+base: core24
+version: git
 summary: Miller is like awk, sed, cut, join and sort
 description: |
   Miller is like awk, sed, cut, join, and sort for data formats such as CSV, TSV, JSON, JSON Lines, and positionally-indexed.
 
+grade: stable
+confinement: strict
+
+adopt-info: miller
+
+website: https://github.com/johnkerl/miller/issues
 contact: https://github.com/johnkerl/miller/issues
 issues: https://github.com/johnkerl/miller/issues
 source-code: https://github.com/johnkerl/miller
 
 license: BSD-2-Clause
-base: core24
-grade: stable
-confinement: strict
 compression: lzo
 
 platforms:
