@@ -14,7 +14,7 @@ Using a package manager:
 * MacOS: `brew update` and `brew install miller`, or `sudo port selfupdate` and `sudo port install miller`, depending on your preference of [Homebrew](https://brew.sh) or [MacPorts](https://macports.org).
 * Windows: `choco install miller` using [Chocolatey](https://chocolatey.org).
 * Note: Miller 6 was released 2022-01-09; [several platforms](https://github.com/johnkerl/miller/blob/main/README-versions.md) may have Miller 5 available.
-* As of Miller 6.16.0, you can do `snap install miller`. Note however that the executable is named `miller`, _not_ `mlr`.
+* As of Miller 6.16.0, you can do `snap install miller`. Note however that the executable is named `miller`, _not_ `mlr`. See also [https://snapcraft.io/miller](https://snapcraft.io/miller).
 
 See also:
 
