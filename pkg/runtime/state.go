@@ -54,7 +54,9 @@ func NewEmptyState(options *cli.TOptions, strictMode bool) *State {
 		Inrec:                nil,
 		Context:              nil,
 		Oosvars:              oosvars,
-		FilterExpression:     mlrval.TRUE,
+		// XXX
+		//FilterExpression:     mlrval.TRUE,
+		FilterExpression:     mlrval.NULL,
 		Stack:                NewStack(),
 		regexCapturesByFrame: regexCapturesByFrame,
 
