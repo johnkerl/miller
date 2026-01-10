@@ -1,5 +1,5 @@
 module two
 
-go 1.16
+go 1.24
 
-require github.com/goccmack/gocc v0.0.0-20210322175033-34358ebe5808 // indirect
+toolchain go1.24.5

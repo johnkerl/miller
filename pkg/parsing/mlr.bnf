@@ -7,7 +7,7 @@
 // GRAMMAR FOR THE MILLER DOMAIN-SPECIFIC LANGUAGE
 //
 // This is the Miller DSL's BNF grammar, using the awesome GOCC tool framework
-// from https://github.com/goccmack/gocc.
+// from https://github.com/goccmack/gocc (forked at https://github.com/johnkerl/gocc).
 //
 // The first section is lexical elements and the second section is syntactical
 // elements. These are the analogs of lex and yacc, respectively, using a
