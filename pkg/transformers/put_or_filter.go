@@ -364,7 +364,10 @@ func transformerPutOrFilterParseCLI(
 		dslInstanceType = cst.DSLInstanceTypeFilter
 	}
 
+	doFilter := (verb == "filter")
+
 	transformer, err := NewTransformerPut(
+		doFilter,
 		dslStrings,
 		dslInstanceType,
 		presets,
@@ -390,6 +393,7 @@ func transformerPutOrFilterParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerPut struct {
+	doFilter             bool // false for the put verb, true for the filter verb
 	cstRootNode          *cst.RootNode
 	runtimeState         *runtime.State
 	callCount            int
@@ -399,6 +403,7 @@ type TransformerPut struct {
 }
 
 func NewTransformerPut(
+	doFilter bool, // false for the put verb, true for the filter verb
 	dslStrings []string,
 	dslInstanceType cst.DSLInstanceType,
 	presets []string,
@@ -483,6 +488,7 @@ func NewTransformerPut(
 	}
 
 	return &TransformerPut{
+		doFilter:             doFilter,
 		cstRootNode:          cstRootNode,
 		runtimeState:         runtimeState,
 		callCount:            0,
@@ -527,10 +533,37 @@ func (tr *TransformerPut) Transform(
 		}
 
 		if !tr.suppressOutputRecord {
+			// The tr.runtimeState.FilterExpression defaults to null. It evaluates to null
+			// for assignment statements, etc.
+			// * If the verb is put, then tr.runtimeState.FilterExpression will get set to
+			//   something only when a filter DSL statement is encountered.
+			// * If the verb is filter, then we insist that the expression evaluate to either
+			//   boolean, or absent. The latter is for Miller's record-heterogeneity guarantees,
+			//   e.g. mlr filter '$x > 10' for records not having a $x.
+
 			filterBool, isBool := tr.runtimeState.FilterExpression.GetBoolValue()
-			if !isBool {
-				filterBool = false
+
+			if tr.doFilter {
+				// This is mlr filter
+				if !isBool {
+					if tr.runtimeState.FilterExpression.IsAbsent() {
+						filterBool = false
+					} else {
+						fmt.Fprintf(os.Stderr,
+							"Filter expression did not evaluate to boolean: got %s value %s",
+							tr.runtimeState.FilterExpression.String(),
+							tr.runtimeState.FilterExpression.GetTypeName(),
+						)
+						os.Exit(1)
+					}
+				}
+			} else {
+				// This is mlr put.
+				if !isBool {
+					filterBool = true
+				}
 			}
+
 			wantToEmit := lib.BooleanXOR(filterBool, tr.invertFilter)
 			if wantToEmit {
 				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &context))
