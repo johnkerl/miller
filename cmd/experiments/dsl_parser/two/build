@@ -28,9 +28,9 @@ mkdir -p $dir
 # ----------------------------------------------------------------
 # Run the parser-generator
 
-# Build the bin/gocc executable:
-go get github.com/goccmack/gocc
-#go get github.com/johnkerl/gocc
+# Build the bin/gocc executable (use my fork for performance):
+# go get github.com/goccmack/gocc
+go get github.com/johnkerl/gocc
 bingocc="$GOPATH/bin/gocc"
 if [ ! -x "$bingocc" ]; then
   exit 1

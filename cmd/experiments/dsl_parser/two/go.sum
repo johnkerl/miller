@@ -1,5 +1,5 @@
-github.com/goccmack/gocc v0.0.0-20210322175033-34358ebe5808 h1:MBgZdx/wBJWTR2Q79mQfP6c8uXdQiu5JowfEz3KhFac=
-github.com/goccmack/gocc v0.0.0-20210322175033-34358ebe5808/go.mod h1:dWhnuKE5wcnGTExA2DH6Iicu21YnWwOPMrc/GyhtbCk=
+github.com/johnkerl/gocc v0.0.0-20210322175033-34358ebe5808 h1:MBgZdx/wBJWTR2Q79mQfP6c8uXdQiu5JowfEz3KhFac=
+github.com/johnkerl/gocc v0.0.0-20210322175033-34358ebe5808/go.mod h1:dWhnuKE5wcnGTExA2DH6Iicu21YnWwOPMrc/GyhtbCk=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
