@@ -1558,13 +1558,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `FullSrec : full_srec	<< dsl.NewASTNode(X[0], dsl.NodeTypeFullSrec) >>`,
+		String:     `FullSrec : full_srec	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFullSrec) >>`,
 		Id:         "FullSrec",
 		NTType:     34,
 		Index:      109,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeFullSrec)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFullSrec)
 		},
 	},
 	ProdTabEntry{
@@ -1628,123 +1628,123 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `FullOosvar : full_oosvar	<< dsl.NewASTNode(X[0], dsl.NodeTypeFullOosvar) >>`,
+		String:     `FullOosvar : full_oosvar	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFullOosvar) >>`,
 		Id:         "FullOosvar",
 		NTType:     39,
 		Index:      116,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeFullOosvar)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFullOosvar)
 		},
 	},
 	ProdTabEntry{
-		String:     `FullOosvar : all	<< dsl.NewASTNode(X[0], dsl.NodeTypeFullOosvar) >>`,
+		String:     `FullOosvar : all	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFullOosvar) >>`,
 		Id:         "FullOosvar",
 		NTType:     39,
 		Index:      117,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeFullOosvar)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFullOosvar)
 		},
 	},
 	ProdTabEntry{
-		String:     `LocalVariable : non_sigil_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeLocalVariable) >>`,
+		String:     `LocalVariable : non_sigil_name	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeLocalVariable) >>`,
 		Id:         "LocalVariable",
 		NTType:     40,
 		Index:      118,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeLocalVariable)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeLocalVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : arr	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : arr	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      119,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : bool	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : bool	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      120,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : float	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : float	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      121,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : int	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : int	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      122,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : map	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : map	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      123,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : num	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : num	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      124,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : str	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : str	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      125,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : var	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : var	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      126,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : funct	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : funct	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      127,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
@@ -2848,77 +2848,77 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : regex_case_insensitive	<< dsl.NewASTNode(X[0], dsl.NodeTypeRegexCaseInsensitive) >>`,
+		String:     `MlrvalOrFunction : regex_case_insensitive	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeRegexCaseInsensitive) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      217,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeRegexCaseInsensitive)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeRegexCaseInsensitive)
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : int_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeIntLiteral) >>`,
+		String:     `MlrvalOrFunction : int_literal	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeIntLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      218,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeIntLiteral)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeIntLiteral)
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : float_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeFloatLiteral) >>`,
+		String:     `MlrvalOrFunction : float_literal	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFloatLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      219,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeFloatLiteral)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFloatLiteral)
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : boolean_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeBoolLiteral) >>`,
+		String:     `MlrvalOrFunction : boolean_literal	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeBoolLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      220,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeBoolLiteral)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeBoolLiteral)
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : null_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeNullLiteral) >>`,
+		String:     `MlrvalOrFunction : null_literal	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeNullLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      221,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeNullLiteral)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeNullLiteral)
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : inf_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeFloatLiteral) >>`,
+		String:     `MlrvalOrFunction : inf_literal	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFloatLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      222,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeFloatLiteral)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFloatLiteral)
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : nan_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeFloatLiteral) >>`,
+		String:     `MlrvalOrFunction : nan_literal	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFloatLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      223,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeFloatLiteral)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFloatLiteral)
 		},
 	},
 	ProdTabEntry{
-		String: `MlrvalOrFunction : const_M_PI	<< dsl.NewASTNode(
+		String: `MlrvalOrFunction : const_M_PI	<< dsl.NewASTNodeTerminal(
       X[0],
       dsl.NodeTypeConstant,
     ) >>`,
@@ -2927,14 +2927,14 @@ var productionsTable = ProdTab{
 		Index:      224,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(
+			return dsl.NewASTNodeTerminal(
 				X[0],
 				dsl.NodeTypeConstant,
 			)
 		},
 	},
 	ProdTabEntry{
-		String: `MlrvalOrFunction : const_M_E	<< dsl.NewASTNode(
+		String: `MlrvalOrFunction : const_M_E	<< dsl.NewASTNodeTerminal(
       X[0],
       dsl.NodeTypeConstant,
     ) >>`,
@@ -2943,20 +2943,20 @@ var productionsTable = ProdTab{
 		Index:      225,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(
+			return dsl.NewASTNodeTerminal(
 				X[0],
 				dsl.NodeTypeConstant,
 			)
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : panic	<< dsl.NewASTNode(X[0], dsl.NodeTypePanic) >>`,
+		String:     `MlrvalOrFunction : panic	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypePanic) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      226,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypePanic)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypePanic)
 		},
 	},
 	ProdTabEntry{
@@ -3190,123 +3190,123 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_IPS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_IPS	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      241,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_IFS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_IFS	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      242,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_IRS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_IRS	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      243,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_OPS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_OPS	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      244,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_OFS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_OFS	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      245,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_ORS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_ORS	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      246,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_FLATSEP	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_FLATSEP	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      247,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_NF	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_NF	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      248,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_NR	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_NR	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      249,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_FNR	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_FNR	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      250,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_FILENAME	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_FILENAME	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      251,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_FILENUM	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_FILENUM	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      252,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
@@ -4436,13 +4436,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `UntypedFuncOrSubrParameterName : non_sigil_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeParameterName) >>`,
+		String:     `UntypedFuncOrSubrParameterName : non_sigil_name	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeParameterName) >>`,
 		Id:         "UntypedFuncOrSubrParameterName",
 		NTType:     108,
 		Index:      334,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeParameterName)
+			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeParameterName)
 		},
 	},
 	ProdTabEntry{

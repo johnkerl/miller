@@ -1125,7 +1125,7 @@ PositionalFieldValue
 
 FullSrec
   : full_srec
-  << dsl.NewASTNode($0, dsl.NodeTypeFullSrec) >>
+  << dsl.NewASTNodeTerminal($0, dsl.NodeTypeFullSrec) >>
 ;
 
 // ----------------------------------------------------------------
@@ -1160,44 +1160,44 @@ BracedOosvarValue
 
 FullOosvar
   : full_oosvar
-  << dsl.NewASTNode($0, dsl.NodeTypeFullOosvar) >>
+  << dsl.NewASTNodeTerminal($0, dsl.NodeTypeFullOosvar) >>
   | all
-  << dsl.NewASTNode($0, dsl.NodeTypeFullOosvar) >>
+  << dsl.NewASTNodeTerminal($0, dsl.NodeTypeFullOosvar) >>
 ;
 
 // ----------------------------------------------------------------
 LocalVariable
   : non_sigil_name
-    << dsl.NewASTNode($0, dsl.NodeTypeLocalVariable) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeLocalVariable) >>
 ;
 
 Typedecl
   : arr
-    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
 
   | bool
-    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
 
   | float
-    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
 
   | int
-    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
 
   | map
-    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
 
   | num
-    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
 
   | str
-    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
 
   | var
-    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
 
   | funct
-    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
 ;
 
 // ----------------------------------------------------------------
@@ -1577,40 +1577,40 @@ MlrvalOrFunction
     << dsl.NewASTNodeStripDoubleQuotePair($0, dsl.NodeTypeStringLiteral) >>
 
   | regex_case_insensitive
-    << dsl.NewASTNode($0, dsl.NodeTypeRegexCaseInsensitive) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeRegexCaseInsensitive) >>
 
   | int_literal
-    << dsl.NewASTNode($0, dsl.NodeTypeIntLiteral) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeIntLiteral) >>
 
   | float_literal
-    << dsl.NewASTNode($0, dsl.NodeTypeFloatLiteral) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeFloatLiteral) >>
 
   | boolean_literal
-    << dsl.NewASTNode($0, dsl.NodeTypeBoolLiteral) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeBoolLiteral) >>
 
   | null_literal
-    << dsl.NewASTNode($0, dsl.NodeTypeNullLiteral) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeNullLiteral) >>
 
   | inf_literal
-    << dsl.NewASTNode($0, dsl.NodeTypeFloatLiteral) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeFloatLiteral) >>
 
   | nan_literal
-    << dsl.NewASTNode($0, dsl.NodeTypeFloatLiteral) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeFloatLiteral) >>
 
   | const_M_PI
-    << dsl.NewASTNode(
+    << dsl.NewASTNodeTerminal(
       $0,
       dsl.NodeTypeConstant,
     ) >>
 
   | const_M_E
-    << dsl.NewASTNode(
+    << dsl.NewASTNodeTerminal(
       $0,
       dsl.NodeTypeConstant,
     ) >>
 
   | panic
-    << dsl.NewASTNode($0, dsl.NodeTypePanic) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypePanic) >>
 ;
 
 // ================================================================
@@ -1766,21 +1766,21 @@ MapLiteralKeyValuePair
 MlrvalOrFunction : ContextVariable ;
 
 ContextVariable
-  : ctx_IPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | ctx_IFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | ctx_IRS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  : ctx_IPS << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
+  | ctx_IFS << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
+  | ctx_IRS << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
 
-  | ctx_OPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | ctx_OFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | ctx_ORS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | ctx_FLATSEP << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | ctx_OPS << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
+  | ctx_OFS << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
+  | ctx_ORS << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
+  | ctx_FLATSEP << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
 
-  | ctx_NF  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | ctx_NR  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | ctx_FNR << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | ctx_NF  << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
+  | ctx_NR  << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
+  | ctx_FNR << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
 
-  | ctx_FILENAME << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | ctx_FILENUM  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | ctx_FILENAME << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
+  | ctx_FILENUM  << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
 ;
 
 // ----------------------------------------------------------------
@@ -2401,7 +2401,7 @@ FuncOrSubrParameter
 
 UntypedFuncOrSubrParameterName
   : non_sigil_name
-    << dsl.NewASTNode($0, dsl.NodeTypeParameterName) >>
+    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeParameterName) >>
 ;
 
 TypedFuncOrSubrParameterName

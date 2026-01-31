@@ -31,7 +31,7 @@ func NewAST(iroot interface{}) (*AST, error) {
 }
 
 // ----------------------------------------------------------------
-func NewASTNode(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
+func NewASTNodeTerminal(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
 	return NewASTNodeNestable(itok, nodeType), nil
 }
 
