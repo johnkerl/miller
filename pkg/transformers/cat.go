@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -165,7 +164,7 @@ func NewTransformerCat(
 
 func (tr *TransformerCat) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -181,7 +180,7 @@ func (tr *TransformerCat) Transform(
 // ----------------------------------------------------------------
 func (tr *TransformerCat) simpleCat(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -193,13 +192,13 @@ func (tr *TransformerCat) simpleCat(
 			inrecAndContext.Record.PrependCopy("filenum", mlrval.FromInt(inrecAndContext.Context.FILENUM))
 		}
 	}
-	outputRecordsAndContexts.PushBack(inrecAndContext)
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerCat) countersUngrouped(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -216,13 +215,13 @@ func (tr *TransformerCat) countersUngrouped(
 			inrec.PrependCopy("filenum", mlrval.FromInt(inrecAndContext.Context.FILENUM))
 		}
 	}
-	outputRecordsAndContexts.PushBack(inrecAndContext)
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerCat) countersGrouped(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -255,5 +254,5 @@ func (tr *TransformerCat) countersGrouped(
 			inrec.PrependCopy("filenum", mlrval.FromInt(inrecAndContext.Context.FILENUM))
 		}
 	}
-	outputRecordsAndContexts.PushBack(inrecAndContext)
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }

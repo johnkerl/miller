@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -198,7 +197,7 @@ func NewTransformerHistogram(
 
 func (tr *TransformerHistogram) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -209,7 +208,7 @@ func (tr *TransformerHistogram) Transform(
 // ----------------------------------------------------------------
 func (tr *TransformerHistogram) transformNonAuto(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -217,7 +216,7 @@ func (tr *TransformerHistogram) transformNonAuto(
 		tr.ingestNonAuto(inrecAndContext)
 	} else {
 		tr.emitNonAuto(&inrecAndContext.Context, outputRecordsAndContexts)
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
 }
 
@@ -250,7 +249,7 @@ func (tr *TransformerHistogram) ingestNonAuto(
 
 func (tr *TransformerHistogram) emitNonAuto(
 	endOfStreamContext *types.Context,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	countFieldNames := make(map[string]string)
 	for _, valueFieldName := range tr.valueFieldNames {
@@ -275,14 +274,14 @@ func (tr *TransformerHistogram) emitNonAuto(
 			)
 		}
 
-		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, endOfStreamContext))
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(outrec, endOfStreamContext))
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerHistogram) transformAuto(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -290,7 +289,7 @@ func (tr *TransformerHistogram) transformAuto(
 		tr.ingestAuto(inrecAndContext)
 	} else {
 		tr.emitAuto(&inrecAndContext.Context, outputRecordsAndContexts)
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
 }
 
@@ -309,7 +308,7 @@ func (tr *TransformerHistogram) ingestAuto(
 
 func (tr *TransformerHistogram) emitAuto(
 	endOfStreamContext *types.Context,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	haveLoHi := false
 	lo := 0.0
@@ -381,6 +380,6 @@ func (tr *TransformerHistogram) emitAuto(
 			)
 		}
 
-		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, endOfStreamContext))
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(outrec, endOfStreamContext))
 	}
 }

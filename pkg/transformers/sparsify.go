@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -128,7 +127,7 @@ func NewTransformerSparsify(
 
 func (tr *TransformerSparsify) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -142,13 +141,13 @@ func (tr *TransformerSparsify) Transform(
 			outputDownstreamDoneChannel,
 		)
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
 }
 
 func (tr *TransformerSparsify) transformAll(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -163,13 +162,13 @@ func (tr *TransformerSparsify) transformAll(
 	}
 
 	outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
-	outputRecordsAndContexts.PushBack(outrecAndContext)
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, outrecAndContext)
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerSparsify) transformSome(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -188,5 +187,5 @@ func (tr *TransformerSparsify) transformSome(
 	}
 
 	outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
-	outputRecordsAndContexts.PushBack(outrecAndContext)
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, outrecAndContext)
 }

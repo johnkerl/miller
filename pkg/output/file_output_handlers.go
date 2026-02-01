@@ -14,7 +14,6 @@ package output
 
 import (
 	"bufio"
-	"container/list"
 	"errors"
 	"fmt"
 	"io"
@@ -216,7 +215,7 @@ type FileOutputHandler struct {
 	// print and dump variants call WriteString.
 	recordWriterOptions  *cli.TWriterOptions
 	recordWriter         IRecordWriter
-	recordOutputChannel  chan *list.List // list of *types.RecordAndContext
+	recordOutputChannel  chan []*types.RecordAndContext // list of *types.RecordAndContext
 	recordDoneChannel    chan bool
 	recordErroredChannel chan bool
 }
@@ -352,9 +351,7 @@ func (handler *FileOutputHandler) WriteRecordAndContext(
 	}
 
 	// TODO: myybe refactor to batch better
-	ell := list.New()
-	ell.PushBack(outrecAndContext)
-	handler.recordOutputChannel <- ell
+	handler.recordOutputChannel <- []*types.RecordAndContext{outrecAndContext}
 	return nil
 }
 
@@ -369,7 +366,7 @@ func (handler *FileOutputHandler) setUpRecordWriter() error {
 	}
 	handler.recordWriter = recordWriter
 
-	handler.recordOutputChannel = make(chan *list.List, 1) // list of *types.RecordAndContext
+	handler.recordOutputChannel = make(chan []*types.RecordAndContext, 1) // list of *types.RecordAndContext
 	handler.recordDoneChannel = make(chan bool, 1)
 	handler.recordErroredChannel = make(chan bool, 1)
 

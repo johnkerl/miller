@@ -3,7 +3,6 @@
 package input
 
 import (
-	"container/list"
 	"io"
 	"strconv"
 	"strings"
@@ -55,7 +54,7 @@ func NewRecordReaderNIDX(
 func (reader *RecordReaderDKVPNIDX) Read(
 	filenames []string,
 	context types.Context,
-	readerChannel chan<- *list.List, // list of *types.RecordAndContext
+	readerChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -95,7 +94,7 @@ func (reader *RecordReaderDKVPNIDX) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	readerChannel chan<- *list.List,
+	readerChannel chan<- []*types.RecordAndContext,
 	errorChannel chan<- error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -103,12 +102,12 @@ func (reader *RecordReaderDKVPNIDX) processHandle(
 	recordsPerBatch := reader.recordsPerBatch
 
 	lineReader := NewLineReader(handle, reader.readerOptions.IRS)
-	linesChannel := make(chan *list.List, recordsPerBatch)
+	linesChannel := make(chan []string, recordsPerBatch)
 	go channelizedLineReader(lineReader, linesChannel, downstreamDoneChannel, recordsPerBatch)
 
 	for {
 		recordsAndContexts, eof := reader.getRecordBatch(linesChannel, errorChannel, context)
-		if recordsAndContexts.Len() > 0 {
+		if len(recordsAndContexts) > 0 {
 			readerChannel <- recordsAndContexts
 		}
 		if eof {
@@ -119,29 +118,28 @@ func (reader *RecordReaderDKVPNIDX) processHandle(
 
 // TODO: comment copiously we're trying to handle slow/fast/short/long reads: tail -f, smallfile, bigfile.
 func (reader *RecordReaderDKVPNIDX) getRecordBatch(
-	linesChannel <-chan *list.List,
+	linesChannel <-chan []string,
 	errorChannel chan<- error,
 	context *types.Context,
 ) (
-	recordsAndContexts *list.List,
+	recordsAndContexts []*types.RecordAndContext,
 	eof bool,
 ) {
-	recordsAndContexts = list.New()
+	recordsAndContexts = make([]*types.RecordAndContext, 0)
 
 	lines, more := <-linesChannel
 	if !more {
 		return recordsAndContexts, true
 	}
 
-	for e := lines.Front(); e != nil; e = e.Next() {
-		line := e.Value.(string)
+	for _, line := range lines {
 
 		// Check for comments-in-data feature
 		// TODO: function-pointer this away
 		if reader.readerOptions.CommentHandling != cli.CommentsAreData {
 			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
 				if reader.readerOptions.CommentHandling == cli.PassComments {
-					recordsAndContexts.PushBack(types.NewOutputString(line+"\n", context))
+					recordsAndContexts = append(recordsAndContexts, types.NewOutputString(line+"\n", context))
 					continue
 				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 					continue
@@ -157,7 +155,7 @@ func (reader *RecordReaderDKVPNIDX) getRecordBatch(
 		}
 		context.UpdateForInputRecord()
 		recordAndContext := types.NewRecordAndContext(record, context)
-		recordsAndContexts.PushBack(recordAndContext)
+		recordsAndContexts = append(recordsAndContexts, recordAndContext)
 	}
 
 	return recordsAndContexts, false

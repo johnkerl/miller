@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 
@@ -149,7 +148,7 @@ func NewTransformerSec2GMT(
 
 func (tr *TransformerSec2GMT) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -169,9 +168,9 @@ func (tr *TransformerSec2GMT) Transform(
 				}
 			}
 		}
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 
 	} else { // End of record stream
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
 }

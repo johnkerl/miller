@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"regexp"
@@ -221,7 +220,7 @@ func NewTransformerHavingFields(
 
 func (tr *TransformerHavingFields) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -232,7 +231,7 @@ func (tr *TransformerHavingFields) Transform(
 // ----------------------------------------------------------------
 func (tr *TransformerHavingFields) transformHavingFieldsAtLeast(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -243,20 +242,20 @@ func (tr *TransformerHavingFields) transformHavingFieldsAtLeast(
 			if tr.fieldNameSet[pe.Key] {
 				numFound++
 				if numFound == tr.numFieldNames {
-					outputRecordsAndContexts.PushBack(inrecAndContext)
+					*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 					return
 				}
 			}
 		}
 
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }
 
 func (tr *TransformerHavingFields) transformHavingFieldsWhichAre(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -270,15 +269,15 @@ func (tr *TransformerHavingFields) transformHavingFieldsWhichAre(
 				return
 			}
 		}
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }
 
 func (tr *TransformerHavingFields) transformHavingFieldsAtMost(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -289,16 +288,16 @@ func (tr *TransformerHavingFields) transformHavingFieldsAtMost(
 				return
 			}
 		}
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerHavingFields) transformHavingAllFieldsMatching(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -309,15 +308,15 @@ func (tr *TransformerHavingFields) transformHavingAllFieldsMatching(
 				return
 			}
 		}
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }
 
 func (tr *TransformerHavingFields) transformHavingAnyFieldsMatching(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -325,18 +324,18 @@ func (tr *TransformerHavingFields) transformHavingAnyFieldsMatching(
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if tr.regex.MatchString(pe.Key) {
-				outputRecordsAndContexts.PushBack(inrecAndContext)
+				*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 				return
 			}
 		}
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }
 
 func (tr *TransformerHavingFields) transformHavingNoFieldsMatching(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -347,8 +346,8 @@ func (tr *TransformerHavingFields) transformHavingNoFieldsMatching(
 				return
 			}
 		}
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }

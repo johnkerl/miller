@@ -186,7 +186,7 @@ func (node *DumpStatementNode) dumpToStdout(
 	//
 	// The output channel is always non-nil, except for the Miller REPL.
 	if state.OutputRecordsAndContexts != nil {
-		state.OutputRecordsAndContexts.PushBack(types.NewOutputString(outputString, state.Context))
+		*state.OutputRecordsAndContexts = append(*state.OutputRecordsAndContexts, types.NewOutputString(outputString, state.Context))
 	} else {
 		fmt.Println(outputString)
 	}

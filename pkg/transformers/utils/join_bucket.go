@@ -5,15 +5,14 @@
 package utils
 
 import (
-	"container/list"
-
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
+	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
 // ----------------------------------------------------------------
 type JoinBucket struct {
 	leftFieldValues    []*mlrval.Mlrval
-	RecordsAndContexts *list.List
+	RecordsAndContexts []*types.RecordAndContext
 	WasPaired          bool
 }
 
@@ -22,7 +21,7 @@ func NewJoinBucket(
 ) *JoinBucket {
 	return &JoinBucket{
 		leftFieldValues:    leftFieldValues,
-		RecordsAndContexts: list.New(),
+		RecordsAndContexts: make([]*types.RecordAndContext, 0),
 		WasPaired:          false,
 	}
 }

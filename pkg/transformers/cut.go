@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"cmp"
-	"container/list"
 	"fmt"
 	"os"
 	"regexp"
@@ -186,7 +185,7 @@ func NewTransformerCut(
 
 func (tr *TransformerCut) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -198,7 +197,7 @@ func (tr *TransformerCut) Transform(
 // mlr cut -f a,b,c
 func (tr *TransformerCut) includeWithInputOrder(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -213,9 +212,9 @@ func (tr *TransformerCut) includeWithInputOrder(
 			}
 		}
 		outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
-		outputRecordsAndContexts.PushBack(outrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, outrecAndContext)
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }
 
@@ -223,7 +222,7 @@ func (tr *TransformerCut) includeWithInputOrder(
 // mlr cut -o -f a,b,c
 func (tr *TransformerCut) includeWithArgOrder(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -237,9 +236,9 @@ func (tr *TransformerCut) includeWithArgOrder(
 			}
 		}
 		outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
-		outputRecordsAndContexts.PushBack(outrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, outrecAndContext)
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }
 
@@ -247,7 +246,7 @@ func (tr *TransformerCut) includeWithArgOrder(
 // mlr cut -x -f a,b,c
 func (tr *TransformerCut) exclude(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -259,7 +258,7 @@ func (tr *TransformerCut) exclude(
 			}
 		}
 	}
-	outputRecordsAndContexts.PushBack(inrecAndContext)
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }
 
 type entryIndex struct {
@@ -270,7 +269,7 @@ type entryIndex struct {
 // ----------------------------------------------------------------
 func (tr *TransformerCut) processWithRegexes(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -307,8 +306,8 @@ func (tr *TransformerCut) processWithRegexes(
 				newrec.PutReference(ei.entry.Key, ei.entry.Value)
 			}
 		}
-		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }

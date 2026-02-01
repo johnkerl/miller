@@ -5,7 +5,6 @@ package input
 
 import (
 	"bufio"
-	"container/list"
 	"io"
 	"strings"
 
@@ -172,14 +171,14 @@ func (r *MultiIRSLineReader) Read() (string, error) {
 // IRS) stripped off. So, callers get "a=1,b=2" rather than "a=1,b=2\n".
 func channelizedLineReader(
 	lineReader ILineReader,
-	linesChannel chan<- *list.List,
+	linesChannel chan<- []string,
 	downstreamDoneChannel <-chan bool, // for mlr head
 	recordsPerBatch int64,
 ) {
 	i := int64(0)
 	done := false
 
-	lines := list.New()
+	lines := make([]string, 0, recordsPerBatch)
 
 	for {
 		line, err := lineReader.Read()
@@ -194,7 +193,7 @@ func channelizedLineReader(
 
 		i++
 
-		lines.PushBack(line)
+		lines = append(lines, line)
 
 		// See if downstream processors will be ignoring further data (e.g. mlr
 		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
@@ -211,7 +210,7 @@ func channelizedLineReader(
 				break
 			}
 			linesChannel <- lines
-			lines = list.New()
+			lines = make([]string, 0, recordsPerBatch)
 		}
 
 		if done {

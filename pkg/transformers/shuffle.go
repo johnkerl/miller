@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -81,13 +80,13 @@ func transformerShuffleParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerShuffle struct {
-	recordsAndContexts *list.List
+	recordsAndContexts []*types.RecordAndContext
 }
 
 func NewTransformerShuffle() (*TransformerShuffle, error) {
 
 	tr := &TransformerShuffle{
-		recordsAndContexts: list.New(),
+		recordsAndContexts: make([]*types.RecordAndContext, 0),
 	}
 
 	return tr, nil
@@ -97,21 +96,20 @@ func NewTransformerShuffle() (*TransformerShuffle, error) {
 
 func (tr *TransformerShuffle) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	// Not end of input stream: retain the record, and emit nothing until end of stream.
 	if !inrecAndContext.EndOfStream {
-		tr.recordsAndContexts.PushBack(inrecAndContext)
+		tr.recordsAndContexts = append(tr.recordsAndContexts, inrecAndContext)
 
 	} else { // end of record stream
 		// Knuth shuffle:
 		// * Initial permutation is identity.
 		// * Make a pseudorandom permutation using pseudorandom swaps in the image map.
-		// TODO: Go list Len() maxes at 2^31. We should track this ourselves in an int64.
-		n := int64(tr.recordsAndContexts.Len())
+		n := int64(len(tr.recordsAndContexts))
 		images := make([]int64, n)
 		for i := int64(0); i < n; i++ {
 			images[i] = i
@@ -130,25 +128,17 @@ func (tr *TransformerShuffle) Transform(
 			numUnused--
 		}
 
-		// Move the record-pointers from linked list to array.
-		array := make([]*types.RecordAndContext, n)
-		for i := int64(0); i < n; i++ {
-			head := tr.recordsAndContexts.Front()
-			if head == nil {
-				break
-			}
-			array[i] = head.Value.(*types.RecordAndContext)
-			tr.recordsAndContexts.Remove(head)
-		}
+		// Move the record-pointers from slice to array.
+		array := tr.recordsAndContexts
 
 		// Transfer from input array to output list. Because permutations are one-to-one maps,
 		// all input records have ownership transferred exactly once. So, there are no
 		// records to copy here.
 		for i := int64(0); i < n; i++ {
-			outputRecordsAndContexts.PushBack(array[images[i]])
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, array[images[i]])
 		}
 
 		// Emit the stream-terminating null record
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }

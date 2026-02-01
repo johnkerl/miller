@@ -2,7 +2,6 @@ package stream
 
 import (
 	"bufio"
-	"container/list"
 	"errors"
 	"io"
 
@@ -62,8 +61,8 @@ func Stream(
 	}
 
 	// Set up the reader-to-transformer and transformer-to-writer channels.
-	readerChannel := make(chan *list.List, 2) // list of *types.RecordAndContext
-	writerChannel := make(chan *list.List, 1) // list of *types.RecordAndContext
+	readerChannel := make(chan []*types.RecordAndContext, 2) // list of *types.RecordAndContext
+	writerChannel := make(chan []*types.RecordAndContext, 1) // list of *types.RecordAndContext
 
 	// We're done when a fatal error is registered on input (file not found,
 	// etc) or when the record-writer has written all its output. We use

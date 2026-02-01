@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"bytes"
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -151,7 +150,7 @@ type TransformerBar struct {
 	oobString          string
 	blankString        string
 	bars               []string
-	recordsForAutoMode *list.List
+	recordsForAutoMode []*types.RecordAndContext
 
 	recordTransformerFunc RecordTransformerFunc
 }
@@ -194,7 +193,7 @@ func NewTransformerBar(
 
 	if doAuto {
 		tr.recordTransformerFunc = tr.processAuto
-		tr.recordsForAutoMode = list.New()
+		tr.recordsForAutoMode = make([]*types.RecordAndContext, 0)
 	} else {
 		tr.recordTransformerFunc = tr.processNoAuto
 		tr.recordsForAutoMode = nil
@@ -207,7 +206,7 @@ func NewTransformerBar(
 
 func (tr *TransformerBar) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -218,7 +217,7 @@ func (tr *TransformerBar) Transform(
 // ----------------------------------------------------------------
 func (tr *TransformerBar) processNoAuto(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -244,21 +243,21 @@ func (tr *TransformerBar) processNoAuto(
 			inrec.PutReference(fieldName, mlrval.FromString(tr.bars[idx]))
 		}
 
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerBar) processAuto(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	if !inrecAndContext.EndOfStream {
-		tr.recordsForAutoMode.PushBack(inrecAndContext.Copy())
+		tr.recordsForAutoMode = append(tr.recordsForAutoMode, inrecAndContext.Copy())
 		return
 	}
 
@@ -271,9 +270,8 @@ func (tr *TransformerBar) processAuto(
 
 		// The first pass computes lo and hi from the data
 		onFirst := true
-		for e := tr.recordsForAutoMode.Front(); e != nil; e = e.Next() {
-			recordAndContexts := e.Value.(*types.RecordAndContext)
-			record := recordAndContexts.Record
+		for _, recordAndContext := range tr.recordsForAutoMode {
+			record := recordAndContext.Record
 			mvalue := record.Get(fieldName)
 			if mvalue == nil {
 				continue
@@ -301,8 +299,7 @@ func (tr *TransformerBar) processAuto(
 		slo := fmt.Sprintf("%g", lo)
 		shi := fmt.Sprintf("%g", hi)
 
-		for e := tr.recordsForAutoMode.Front(); e != nil; e = e.Next() {
-			recordAndContext := e.Value.(*types.RecordAndContext)
+		for _, recordAndContext := range tr.recordsForAutoMode {
 			record := recordAndContext.Record
 			mvalue := record.Get(fieldName)
 			if mvalue == nil {
@@ -333,10 +330,9 @@ func (tr *TransformerBar) processAuto(
 		}
 	}
 
-	for e := tr.recordsForAutoMode.Front(); e != nil; e = e.Next() {
-		recordAndContext := e.Value.(*types.RecordAndContext)
-		outputRecordsAndContexts.PushBack(recordAndContext)
+	for _, recordAndContext := range tr.recordsForAutoMode {
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, recordAndContext)
 	}
 
-	outputRecordsAndContexts.PushBack(inrecAndContext) // Emit the end-of-stream marker
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // Emit the end-of-stream marker
 }

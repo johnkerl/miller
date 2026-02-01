@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"bytes"
-	"container/list"
 	"fmt"
 	"os"
 	"regexp"
@@ -353,7 +352,7 @@ func NewTransformerStats1(
 // the end-of-stream marker.
 func (tr *TransformerStats1) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -367,7 +366,7 @@ func (tr *TransformerStats1) Transform(
 
 func (tr *TransformerStats1) handleInputRecord(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	inrec := inrecAndContext.Record
 
@@ -408,7 +407,7 @@ func (tr *TransformerStats1) handleInputRecord(
 			level2,
 			inrec,
 		)
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }
 
@@ -581,10 +580,10 @@ func (tr *TransformerStats1) matchValueFieldName(
 
 func (tr *TransformerStats1) handleEndOfRecordStream(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	if tr.doIterativeStats {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 		return
 	}
 
@@ -602,10 +601,10 @@ func (tr *TransformerStats1) handleEndOfRecordStream(
 			newrec,
 		)
 
-		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 	}
 
-	outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 }
 
 func (tr *TransformerStats1) emitIntoOutputRecord(

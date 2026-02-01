@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -77,29 +76,29 @@ func transformerTacParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerTac struct {
-	recordsAndContexts *list.List
+	recordsAndContexts []*types.RecordAndContext
 }
 
 func NewTransformerTac() (*TransformerTac, error) {
 	return &TransformerTac{
-		recordsAndContexts: list.New(),
+		recordsAndContexts: make([]*types.RecordAndContext, 0),
 	}, nil
 }
 
 func (tr *TransformerTac) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
-		tr.recordsAndContexts.PushFront(inrecAndContext)
+		tr.recordsAndContexts = append(tr.recordsAndContexts, inrecAndContext)
 	} else {
 		// end of stream
-		for e := tr.recordsAndContexts.Front(); e != nil; e = e.Next() {
-			outputRecordsAndContexts.PushBack(e.Value.(*types.RecordAndContext))
+		for i := len(tr.recordsAndContexts) - 1; i >= 0; i-- {
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, tr.recordsAndContexts[i])
 		}
-		outputRecordsAndContexts.PushBack(types.NewEndOfStreamMarker(&inrecAndContext.Context))
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewEndOfStreamMarker(&inrecAndContext.Context))
 	}
 }

@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -94,7 +93,7 @@ func NewTransformerRegularize() (*TransformerRegularize, error) {
 
 func (tr *TransformerRegularize) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -107,16 +106,16 @@ func (tr *TransformerRegularize) Transform(
 		previousSortedFieldNames := tr.sortedToOriginal[currentSortedFieldNamesJoined]
 		if previousSortedFieldNames == nil {
 			tr.sortedToOriginal[currentSortedFieldNamesJoined] = currentFieldNames
-			outputRecordsAndContexts.PushBack(inrecAndContext)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 		} else {
 			outrec := mlrval.NewMlrmapAsRecord()
 			for _, fieldName := range previousSortedFieldNames {
 				outrec.PutReference(fieldName, inrec.Get(fieldName)) // inrec will be GC'ed
 			}
 			outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
-			outputRecordsAndContexts.PushBack(outrecAndContext)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, outrecAndContext)
 		}
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
 }

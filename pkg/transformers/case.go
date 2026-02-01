@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -177,7 +176,7 @@ func caseSentenceFunc(input string) string {
 
 func (tr *TransformerCase) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -190,13 +189,13 @@ func (tr *TransformerCase) Transform(
 			outputDownstreamDoneChannel,
 		)
 	} else { // end of record stream
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }
 
 func (tr *TransformerCase) transformKeysOnly(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	_ <-chan bool,
 	__ chan<- bool,
 ) {
@@ -211,12 +210,12 @@ func (tr *TransformerCase) transformKeysOnly(
 			newrec.PutReference(pe.Key, pe.Value)
 		}
 	}
-	outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 }
 
 func (tr *TransformerCase) transformValuesOnly(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	_ <-chan bool,
 	__ chan<- bool,
 ) {
@@ -229,12 +228,12 @@ func (tr *TransformerCase) transformValuesOnly(
 			}
 		}
 	}
-	outputRecordsAndContexts.PushBack(types.NewRecordAndContext(inrec, &inrecAndContext.Context))
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(inrec, &inrecAndContext.Context))
 }
 
 func (tr *TransformerCase) transformKeysAndValues(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	_ <-chan bool,
 	__ chan<- bool,
 ) {
@@ -254,5 +253,5 @@ func (tr *TransformerCase) transformKeysAndValues(
 			newrec.PutReference(pe.Key, pe.Value)
 		}
 	}
-	outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 }

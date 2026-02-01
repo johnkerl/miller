@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -78,14 +77,14 @@ func transformerGroupLikeParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerGroupLike struct {
-	// map from string to *list.List
-	recordListsByGroup *lib.OrderedMap[*list.List]
+	// map from string to record slices
+	recordListsByGroup *lib.OrderedMap[*[]*types.RecordAndContext]
 }
 
 func NewTransformerGroupLike() (*TransformerGroupLike, error) {
 
 	tr := &TransformerGroupLike{
-		recordListsByGroup: lib.NewOrderedMap[*list.List](),
+		recordListsByGroup: lib.NewOrderedMap[*[]*types.RecordAndContext](),
 	}
 
 	return tr, nil
@@ -95,7 +94,7 @@ func NewTransformerGroupLike() (*TransformerGroupLike, error) {
 
 func (tr *TransformerGroupLike) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -107,19 +106,20 @@ func (tr *TransformerGroupLike) Transform(
 
 		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
 		if recordListForGroup == nil { // first time
-			recordListForGroup = list.New()
+			records := make([]*types.RecordAndContext, 0)
+			recordListForGroup = &records
 			tr.recordListsByGroup.Put(groupingKey, recordListForGroup)
 		}
 
-		recordListForGroup.PushBack(inrecAndContext)
+		*recordListForGroup = append(*recordListForGroup, inrecAndContext)
 
 	} else {
 		for outer := tr.recordListsByGroup.Head; outer != nil; outer = outer.Next {
 			recordListForGroup := outer.Value
-			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
-				outputRecordsAndContexts.PushBack(inner.Value.(*types.RecordAndContext))
+			for _, recordAndContext := range *recordListForGroup {
+				*outputRecordsAndContexts = append(*outputRecordsAndContexts, recordAndContext)
 			}
 		}
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
 }

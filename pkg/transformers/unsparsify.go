@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -108,7 +107,7 @@ func transformerUnsparsifyParseCLI(
 // ----------------------------------------------------------------
 type TransformerUnsparsify struct {
 	fillerMlrval          *mlrval.Mlrval
-	recordsAndContexts    *list.List
+	recordsAndContexts    []*types.RecordAndContext
 	fieldNamesSeen        *lib.OrderedMap[string]
 	recordTransformerFunc RecordTransformerFunc
 }
@@ -125,7 +124,7 @@ func NewTransformerUnsparsify(
 
 	tr := &TransformerUnsparsify{
 		fillerMlrval:       mlrval.FromString(fillerString),
-		recordsAndContexts: list.New(),
+		recordsAndContexts: make([]*types.RecordAndContext, 0),
 		fieldNamesSeen:     fieldNamesSeen,
 	}
 
@@ -142,7 +141,7 @@ func NewTransformerUnsparsify(
 
 func (tr *TransformerUnsparsify) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -153,7 +152,7 @@ func (tr *TransformerUnsparsify) Transform(
 // ----------------------------------------------------------------
 func (tr *TransformerUnsparsify) transformNonStreaming(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -165,10 +164,9 @@ func (tr *TransformerUnsparsify) transformNonStreaming(
 				tr.fieldNamesSeen.Put(key, key)
 			}
 		}
-		tr.recordsAndContexts.PushBack(inrecAndContext)
+		tr.recordsAndContexts = append(tr.recordsAndContexts, inrecAndContext)
 	} else {
-		for e := tr.recordsAndContexts.Front(); e != nil; e = e.Next() {
-			outrecAndContext := e.Value.(*types.RecordAndContext)
+		for _, outrecAndContext := range tr.recordsAndContexts {
 			outrec := outrecAndContext.Record
 
 			newrec := mlrval.NewMlrmapAsRecord()
@@ -181,17 +179,17 @@ func (tr *TransformerUnsparsify) transformNonStreaming(
 				}
 			}
 
-			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &outrecAndContext.Context))
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(newrec, &outrecAndContext.Context))
 		}
 
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerUnsparsify) transformStreaming(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -204,9 +202,9 @@ func (tr *TransformerUnsparsify) transformStreaming(
 			}
 		}
 
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
 }

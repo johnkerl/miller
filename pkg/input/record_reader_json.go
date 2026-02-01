@@ -1,7 +1,6 @@
 package input
 
 import (
-	"container/list"
 	"fmt"
 	"io"
 	"strings"
@@ -34,7 +33,7 @@ func NewRecordReaderJSON(
 func (reader *RecordReaderJSON) Read(
 	filenames []string,
 	context types.Context,
-	readerChannel chan<- *list.List, // list of *types.RecordAndContext
+	readerChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -75,7 +74,7 @@ func (reader *RecordReaderJSON) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	readerChannel chan<- *list.List, // list of *types.RecordAndContext
+	readerChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -87,7 +86,7 @@ func (reader *RecordReaderJSON) processHandle(
 		handle = NewJSONCommentEnabledReader(handle, reader.readerOptions, readerChannel)
 	}
 	decoder := json.NewDecoder(handle)
-	recordsAndContexts := list.New()
+	recordsAndContexts := make([]*types.RecordAndContext, 0, recordsPerBatch)
 
 	eof := false
 	i := int64(0)
@@ -132,11 +131,11 @@ func (reader *RecordReaderJSON) processHandle(
 				return
 			}
 			context.UpdateForInputRecord()
-			recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
+			recordsAndContexts = append(recordsAndContexts, types.NewRecordAndContext(record, context))
 
-			if int64(recordsAndContexts.Len()) >= recordsPerBatch {
+			if int64(len(recordsAndContexts)) >= recordsPerBatch {
 				readerChannel <- recordsAndContexts
-				recordsAndContexts = list.New()
+				recordsAndContexts = make([]*types.RecordAndContext, 0, recordsPerBatch)
 			}
 
 		} else if mlrval.IsArray() {
@@ -164,11 +163,11 @@ func (reader *RecordReaderJSON) processHandle(
 					return
 				}
 				context.UpdateForInputRecord()
-				recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
+				recordsAndContexts = append(recordsAndContexts, types.NewRecordAndContext(record, context))
 
-				if int64(recordsAndContexts.Len()) >= recordsPerBatch {
+				if int64(len(recordsAndContexts)) >= recordsPerBatch {
 					readerChannel <- recordsAndContexts
-					recordsAndContexts = list.New()
+					recordsAndContexts = make([]*types.RecordAndContext, 0, recordsPerBatch)
 				}
 			}
 
@@ -181,7 +180,7 @@ func (reader *RecordReaderJSON) processHandle(
 		}
 	}
 
-	if recordsAndContexts.Len() > 0 {
+	if len(recordsAndContexts) > 0 {
 		readerChannel <- recordsAndContexts
 	}
 }
@@ -211,8 +210,8 @@ func (reader *RecordReaderJSON) processHandle(
 type JSONCommentEnabledReader struct {
 	lineReader    ILineReader
 	readerOptions *cli.TReaderOptions
-	context       *types.Context    // Needed for channelized stdout-printing logic
-	readerChannel chan<- *list.List // list of *types.RecordAndContext
+	context       *types.Context                   // Needed for channelized stdout-printing logic
+	readerChannel chan<- []*types.RecordAndContext // list of *types.RecordAndContext
 
 	// In case a line was ingested which was longer than the read-buffer passed
 	// to us, in which case we need to split up that line and return it over
@@ -223,7 +222,7 @@ type JSONCommentEnabledReader struct {
 func NewJSONCommentEnabledReader(
 	underlying io.Reader,
 	readerOptions *cli.TReaderOptions,
-	readerChannel chan<- *list.List, // list of *types.RecordAndContext
+	readerChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 ) *JSONCommentEnabledReader {
 	return &JSONCommentEnabledReader{
 		lineReader:    NewLineReader(underlying, "\n"),
@@ -260,9 +259,10 @@ func (bsr *JSONCommentEnabledReader) Read(p []byte) (n int, err error) {
 		if bsr.readerOptions.CommentHandling == cli.PassComments {
 			// Insert the string into the record-output stream, so that goroutine can
 			// print it, resulting in deterministic output-ordering.
-			ell := list.New()
-			ell.PushBack(types.NewOutputString(line+"\n", bsr.context))
-			bsr.readerChannel <- ell
+			recordsAndContexts := []*types.RecordAndContext{
+				types.NewOutputString(line+"\n", bsr.context),
+			}
+			bsr.readerChannel <- recordsAndContexts
 		}
 
 		if done {

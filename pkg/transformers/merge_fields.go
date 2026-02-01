@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"regexp"
@@ -312,7 +311,7 @@ func NewTransformerMergeFields(
 
 func (tr *TransformerMergeFields) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -323,12 +322,12 @@ func (tr *TransformerMergeFields) Transform(
 // ----------------------------------------------------------------
 func (tr *TransformerMergeFields) transformByNameList(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	if inrecAndContext.EndOfStream {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 		return
 	}
 
@@ -368,18 +367,18 @@ func (tr *TransformerMergeFields) transformByNameList(
 		inrec.PutReference(key, value)
 	}
 
-	outputRecordsAndContexts.PushBack(inrecAndContext)
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerMergeFields) transformByNameRegex(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	if inrecAndContext.EndOfStream {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 		return
 	}
 
@@ -443,7 +442,7 @@ func (tr *TransformerMergeFields) transformByNameRegex(
 		inrec.PutReference(key, value)
 	}
 
-	outputRecordsAndContexts.PushBack(inrecAndContext)
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }
 
 // ----------------------------------------------------------------
@@ -455,12 +454,12 @@ func (tr *TransformerMergeFields) transformByNameRegex(
 
 func (tr *TransformerMergeFields) transformByCollapsing(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	if inrecAndContext.EndOfStream {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 		return
 	}
 
@@ -549,5 +548,5 @@ func (tr *TransformerMergeFields) transformByCollapsing(
 		}
 	}
 
-	outputRecordsAndContexts.PushBack(inrecAndContext)
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }

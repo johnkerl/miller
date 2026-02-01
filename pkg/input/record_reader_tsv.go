@@ -1,7 +1,6 @@
 package input
 
 import (
-	"container/list"
 	"fmt"
 	"io"
 	"strconv"
@@ -17,12 +16,12 @@ import (
 // implicit-TSV-header record-batch getter.
 type recordBatchGetterTSV func(
 	reader *RecordReaderTSV,
-	linesChannel <-chan *list.List,
+	linesChannel <-chan []string,
 	filename string,
 	context *types.Context,
 	errorChannel chan error,
 ) (
-	recordsAndContexts *list.List,
+	recordsAndContexts []*types.RecordAndContext,
 	eof bool,
 )
 
@@ -63,7 +62,7 @@ func NewRecordReaderTSV(
 func (reader *RecordReaderTSV) Read(
 	filenames []string,
 	context types.Context,
-	readerChannel chan<- *list.List, // list of *types.RecordAndContext
+	readerChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -117,7 +116,7 @@ func (reader *RecordReaderTSV) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	readerChannel chan<- *list.List, // list of *types.RecordAndContext
+	readerChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -127,12 +126,12 @@ func (reader *RecordReaderTSV) processHandle(
 
 	recordsPerBatch := reader.recordsPerBatch
 	lineReader := NewLineReader(handle, reader.readerOptions.IRS)
-	linesChannel := make(chan *list.List, recordsPerBatch)
+	linesChannel := make(chan []string, recordsPerBatch)
 	go channelizedLineReader(lineReader, linesChannel, downstreamDoneChannel, recordsPerBatch)
 
 	for {
 		recordsAndContexts, eof := reader.recordBatchGetter(reader, linesChannel, filename, context, errorChannel)
-		if recordsAndContexts.Len() > 0 {
+		if len(recordsAndContexts) > 0 {
 			readerChannel <- recordsAndContexts
 		}
 		if eof {
@@ -143,15 +142,15 @@ func (reader *RecordReaderTSV) processHandle(
 
 func getRecordBatchExplicitTSVHeader(
 	reader *RecordReaderTSV,
-	linesChannel <-chan *list.List,
+	linesChannel <-chan []string,
 	filename string,
 	context *types.Context,
 	errorChannel chan error,
 ) (
-	recordsAndContexts *list.List,
+	recordsAndContexts []*types.RecordAndContext,
 	eof bool,
 ) {
-	recordsAndContexts = list.New()
+	recordsAndContexts = make([]*types.RecordAndContext, 0)
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	lines, more := <-linesChannel
@@ -159,8 +158,7 @@ func getRecordBatchExplicitTSVHeader(
 		return recordsAndContexts, true
 	}
 
-	for e := lines.Front(); e != nil; e = e.Next() {
-		line := e.Value.(string)
+	for _, line := range lines {
 
 		reader.inputLineNumber++
 
@@ -169,7 +167,7 @@ func getRecordBatchExplicitTSVHeader(
 		if reader.readerOptions.CommentHandling != cli.CommentsAreData {
 			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
 				if reader.readerOptions.CommentHandling == cli.PassComments {
-					recordsAndContexts.PushBack(types.NewOutputString(line+"\n", context))
+					recordsAndContexts = append(recordsAndContexts, types.NewOutputString(line+"\n", context))
 					continue
 				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 					continue
@@ -240,7 +238,7 @@ func getRecordBatchExplicitTSVHeader(
 			}
 
 			context.UpdateForInputRecord()
-			recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
+			recordsAndContexts = append(recordsAndContexts, types.NewRecordAndContext(record, context))
 		}
 	}
 
@@ -249,15 +247,15 @@ func getRecordBatchExplicitTSVHeader(
 
 func getRecordBatchImplicitTSVHeader(
 	reader *RecordReaderTSV,
-	linesChannel <-chan *list.List,
+	linesChannel <-chan []string,
 	filename string,
 	context *types.Context,
 	errorChannel chan error,
 ) (
-	recordsAndContexts *list.List,
+	recordsAndContexts []*types.RecordAndContext,
 	eof bool,
 ) {
-	recordsAndContexts = list.New()
+	recordsAndContexts = make([]*types.RecordAndContext, 0)
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	lines, more := <-linesChannel
@@ -265,8 +263,7 @@ func getRecordBatchImplicitTSVHeader(
 		return recordsAndContexts, true
 	}
 
-	for e := lines.Front(); e != nil; e = e.Next() {
-		line := e.Value.(string)
+	for _, line := range lines {
 
 		reader.inputLineNumber++
 
@@ -275,7 +272,7 @@ func getRecordBatchImplicitTSVHeader(
 		if reader.readerOptions.CommentHandling != cli.CommentsAreData {
 			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
 				if reader.readerOptions.CommentHandling == cli.PassComments {
-					recordsAndContexts.PushBack(types.NewOutputString(line+"\n", context))
+					recordsAndContexts = append(recordsAndContexts, types.NewOutputString(line+"\n", context))
 					continue
 				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 					continue
@@ -363,7 +360,7 @@ func getRecordBatchImplicitTSVHeader(
 		}
 
 		context.UpdateForInputRecord()
-		recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
+		recordsAndContexts = append(recordsAndContexts, types.NewRecordAndContext(record, context))
 	}
 
 	return recordsAndContexts, false

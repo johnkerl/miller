@@ -1,7 +1,6 @@
 package input
 
 import (
-	"container/list"
 	"fmt"
 	"io"
 	"strconv"
@@ -56,7 +55,7 @@ func NewRecordReaderCSV(
 func (reader *RecordReaderCSV) Read(
 	filenames []string,
 	context types.Context,
-	readerChannel chan<- *list.List, // list of *types.RecordAndContext
+	readerChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -96,7 +95,7 @@ func (reader *RecordReaderCSV) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	readerChannel chan<- *list.List, // list of *types.RecordAndContext
+	readerChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -121,13 +120,13 @@ func (reader *RecordReaderCSV) processHandle(
 		}
 	}
 
-	csvRecordsChannel := make(chan *list.List, recordsPerBatch)
+	csvRecordsChannel := make(chan [][]string, recordsPerBatch)
 	go channelizedCSVRecordScanner(csvReader, csvRecordsChannel, downstreamDoneChannel, errorChannel,
 		recordsPerBatch)
 
 	for {
 		recordsAndContexts, eof := reader.getRecordBatch(csvRecordsChannel, errorChannel, context)
-		if recordsAndContexts.Len() > 0 {
+		if len(recordsAndContexts) > 0 {
 			readerChannel <- recordsAndContexts
 		}
 		if eof {
@@ -139,7 +138,7 @@ func (reader *RecordReaderCSV) processHandle(
 // TODO: comment
 func channelizedCSVRecordScanner(
 	csvReader *csv.Reader,
-	csvRecordsChannel chan<- *list.List,
+	csvRecordsChannel chan<- [][]string,
 	downstreamDoneChannel <-chan bool, // for mlr head
 	errorChannel chan error,
 	recordsPerBatch int64,
@@ -147,7 +146,7 @@ func channelizedCSVRecordScanner(
 	i := int64(0)
 	done := false
 
-	csvRecords := list.New()
+	csvRecords := make([][]string, 0, recordsPerBatch)
 
 	for {
 		i++
@@ -163,7 +162,7 @@ func channelizedCSVRecordScanner(
 			break
 		}
 
-		csvRecords.PushBack(csvRecord)
+		csvRecords = append(csvRecords, csvRecord)
 
 		// See if downstream processors will be ignoring further data (e.g. mlr
 		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
@@ -180,7 +179,7 @@ func channelizedCSVRecordScanner(
 				break
 			}
 			csvRecordsChannel <- csvRecords
-			csvRecords = list.New()
+			csvRecords = make([][]string, 0, recordsPerBatch)
 		}
 
 		if done {
@@ -193,14 +192,14 @@ func channelizedCSVRecordScanner(
 
 // TODO: comment copiously we're trying to handle slow/fast/short/long reads: tail -f, smallfile, bigfile.
 func (reader *RecordReaderCSV) getRecordBatch(
-	csvRecordsChannel <-chan *list.List,
+	csvRecordsChannel <-chan [][]string,
 	errorChannel chan error,
 	context *types.Context,
 ) (
-	recordsAndContexts *list.List,
+	recordsAndContexts []*types.RecordAndContext,
 	eof bool,
 ) {
-	recordsAndContexts = list.New()
+	recordsAndContexts = make([]*types.RecordAndContext, 0)
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	csvRecords, more := <-csvRecordsChannel
@@ -208,11 +207,10 @@ func (reader *RecordReaderCSV) getRecordBatch(
 		return recordsAndContexts, true
 	}
 
-	for e := csvRecords.Front(); e != nil; e = e.Next() {
-		csvRecord := e.Value.([]string)
+	for _, csvRecord := range csvRecords {
 
 		if reader.needHeader {
-			isData := reader.maybeConsumeComment(csvRecord, context, recordsAndContexts)
+			isData := reader.maybeConsumeComment(csvRecord, context, &recordsAndContexts)
 			if !isData {
 				continue
 			}
@@ -223,7 +221,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 			continue
 		}
 
-		isData := reader.maybeConsumeComment(csvRecord, context, recordsAndContexts)
+		isData := reader.maybeConsumeComment(csvRecord, context, &recordsAndContexts)
 		if !isData {
 			continue
 		}
@@ -291,7 +289,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 
 		context.UpdateForInputRecord()
 
-		recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
+		recordsAndContexts = append(recordsAndContexts, types.NewRecordAndContext(record, context))
 	}
 
 	return recordsAndContexts, false
@@ -302,7 +300,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 func (reader *RecordReaderCSV) maybeConsumeComment(
 	csvRecord []string,
 	context *types.Context,
-	recordsAndContexts *list.List, // list of *types.RecordAndContext
+	recordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) bool {
 	if reader.readerOptions.CommentHandling == cli.CommentsAreData {
 		// Nothing is to be construed as a comment
@@ -333,7 +331,7 @@ func (reader *RecordReaderCSV) maybeConsumeComment(
 
 		// Contract with our fork of the go-csv CSV Reader, and, our own constructor.
 		lib.InternalCodingErrorIf(len(csvRecord) != 1)
-		recordsAndContexts.PushBack(types.NewOutputString(csvRecord[0], context))
+		*recordsAndContexts = append(*recordsAndContexts, types.NewOutputString(csvRecord[0], context))
 
 	} else /* reader.readerOptions.CommentHandling == cli.SkipComments */ {
 		// discard entirely

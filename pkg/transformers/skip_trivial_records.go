@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -89,7 +88,7 @@ func NewTransformerSkipTrivialRecords() (*TransformerSkipTrivialRecords, error) 
 
 func (tr *TransformerSkipTrivialRecords) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -105,10 +104,10 @@ func (tr *TransformerSkipTrivialRecords) Transform(
 		}
 
 		if hasAny {
-			outputRecordsAndContexts.PushBack(inrecAndContext)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 		}
 
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }

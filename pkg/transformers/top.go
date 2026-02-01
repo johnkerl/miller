@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -174,7 +173,7 @@ func NewTransformerTop(
 
 func (tr *TransformerTop) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -238,7 +237,7 @@ func (tr *TransformerTop) ingest(
 // ----------------------------------------------------------------
 func (tr *TransformerTop) emit(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	for pa := tr.groups.Head; pa != nil; pa = pa.Next {
 		groupingKey := pa.Key
@@ -252,7 +251,7 @@ func (tr *TransformerTop) emit(
 			for pb := secondLevel.Head; pb != nil; pb = pb.Next {
 				topKeeper := pb.Value
 				for i := int64(0); i < topKeeper.GetSize(); i++ {
-					outputRecordsAndContexts.PushBack(topKeeper.TopRecordsAndContexts[i].Copy())
+					*outputRecordsAndContexts = append(*outputRecordsAndContexts, topKeeper.TopRecordsAndContexts[i].Copy())
 				}
 			}
 
@@ -281,10 +280,10 @@ func (tr *TransformerTop) emit(
 					}
 				}
 
-				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+				*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 			}
 		}
 	}
 
-	outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
 }

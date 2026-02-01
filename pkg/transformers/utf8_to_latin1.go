@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -91,7 +90,7 @@ func NewTransformerUTF8ToLatin1() (*TransformerUTF8ToLatin1, error) {
 
 func (tr *TransformerUTF8ToLatin1) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -111,9 +110,9 @@ func (tr *TransformerUTF8ToLatin1) Transform(
 			}
 		}
 
-		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(inrec, &inrecAndContext.Context))
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(inrec, &inrecAndContext.Context))
 
 	} else { // end of record stream
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }

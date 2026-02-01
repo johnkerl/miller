@@ -57,13 +57,13 @@ func BenchmarkXTABParse(b *testing.B) {
 	assert.Nil(b, err)
 
 	stanza := newStanza()
-	stanza.dataLines.PushBack("color    yellow")
-	stanza.dataLines.PushBack("shape    triangle")
-	stanza.dataLines.PushBack("flag     true")
-	stanza.dataLines.PushBack("k        1")
-	stanza.dataLines.PushBack("index    11")
-	stanza.dataLines.PushBack("quantity 43.6498")
-	stanza.dataLines.PushBack("rate     9.8870")
+	stanza.dataLines = append(stanza.dataLines, "color    yellow")
+	stanza.dataLines = append(stanza.dataLines, "shape    triangle")
+	stanza.dataLines = append(stanza.dataLines, "flag     true")
+	stanza.dataLines = append(stanza.dataLines, "k        1")
+	stanza.dataLines = append(stanza.dataLines, "index    11")
+	stanza.dataLines = append(stanza.dataLines, "quantity 43.6498")
+	stanza.dataLines = append(stanza.dataLines, "rate     9.8870")
 
 	for i := 0; i < b.N; i++ {
 		_, _ = reader.recordFromXTABLines(stanza.dataLines)

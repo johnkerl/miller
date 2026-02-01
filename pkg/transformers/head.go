@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -143,7 +142,7 @@ func NewTransformerHead(
 
 func (tr *TransformerHead) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -153,30 +152,30 @@ func (tr *TransformerHead) Transform(
 
 func (tr *TransformerHead) transformUnkeyed(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	if !inrecAndContext.EndOfStream {
 		tr.unkeyedRecordCount++
 		if tr.unkeyedRecordCount <= tr.headCount {
-			outputRecordsAndContexts.PushBack(inrecAndContext)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 		} else if !tr.wroteDownstreamDone {
 			// Signify to data producers upstream that we'll ignore further
 			// data, so as far as we're concerned they can stop sending it. See
 			// ChainTransformer.
-			//TODO: maybe remove: outputRecordsAndContexts.PushBack(types.NewEndOfStreamMarker(&inrecAndContext.Context))
+			//TODO: maybe remove: *outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewEndOfStreamMarker(&inrecAndContext.Context))
 			outputDownstreamDoneChannel <- true
 			tr.wroteDownstreamDone = true
 		}
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }
 
 func (tr *TransformerHead) transformKeyed(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -198,10 +197,10 @@ func (tr *TransformerHead) transformKeyed(
 		}
 
 		if count <= tr.headCount {
-			outputRecordsAndContexts.PushBack(inrecAndContext)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 		}
 
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }

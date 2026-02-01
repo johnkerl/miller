@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -78,13 +77,13 @@ func transformerRemoveEmptyColumnsParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerRemoveEmptyColumns struct {
-	recordsAndContexts      *list.List
+	recordsAndContexts      []*types.RecordAndContext
 	namesWithNonEmptyValues map[string]bool
 }
 
 func NewTransformerRemoveEmptyColumns() (*TransformerRemoveEmptyColumns, error) {
 	tr := &TransformerRemoveEmptyColumns{
-		recordsAndContexts:      list.New(),
+		recordsAndContexts:      make([]*types.RecordAndContext, 0),
 		namesWithNonEmptyValues: make(map[string]bool),
 	}
 	return tr, nil
@@ -94,14 +93,14 @@ func NewTransformerRemoveEmptyColumns() (*TransformerRemoveEmptyColumns, error) 
 
 func (tr *TransformerRemoveEmptyColumns) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		tr.recordsAndContexts.PushBack(inrecAndContext)
+		tr.recordsAndContexts = append(tr.recordsAndContexts, inrecAndContext)
 
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if !pe.Value.IsVoid() {
@@ -111,8 +110,7 @@ func (tr *TransformerRemoveEmptyColumns) Transform(
 
 	} else { // end of record stream
 
-		for e := tr.recordsAndContexts.Front(); e != nil; e = e.Next() {
-			outrecAndContext := e.Value.(*types.RecordAndContext)
+		for _, outrecAndContext := range tr.recordsAndContexts {
 			outrec := outrecAndContext.Record
 
 			newrec := mlrval.NewMlrmapAsRecord()
@@ -125,9 +123,9 @@ func (tr *TransformerRemoveEmptyColumns) Transform(
 				}
 			}
 
-			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &outrecAndContext.Context))
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(newrec, &outrecAndContext.Context))
 		}
 
-		outputRecordsAndContexts.PushBack(inrecAndContext) // Emit the stream-terminating null record
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // Emit the stream-terminating null record
 	}
 }

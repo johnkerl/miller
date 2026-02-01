@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -106,7 +105,7 @@ func NewTransformerSortWithinRecords(
 
 func (tr *TransformerSortWithinRecords) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -117,7 +116,7 @@ func (tr *TransformerSortWithinRecords) Transform(
 // ----------------------------------------------------------------
 func (tr *TransformerSortWithinRecords) transformNonrecursively(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -125,13 +124,13 @@ func (tr *TransformerSortWithinRecords) transformNonrecursively(
 		inrec := inrecAndContext.Record
 		inrec.SortByKey()
 	}
-	outputRecordsAndContexts.PushBack(inrecAndContext) // including end-of-stream marker
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // including end-of-stream marker
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerSortWithinRecords) transformRecursively(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -139,5 +138,5 @@ func (tr *TransformerSortWithinRecords) transformRecursively(
 		inrec := inrecAndContext.Record
 		inrec.SortByKeyRecursively()
 	}
-	outputRecordsAndContexts.PushBack(inrecAndContext) // including end-of-stream marker
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // including end-of-stream marker
 }

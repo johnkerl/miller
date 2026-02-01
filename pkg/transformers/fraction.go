@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"errors"
 	"fmt"
 	"os"
@@ -132,7 +131,7 @@ type TransformerFraction struct {
 	groupByFieldNames  []string
 	doCumu             bool
 
-	recordsAndContexts *list.List
+	recordsAndContexts []*types.RecordAndContext
 	// Two-level map: Group-by field names are the first keyset;
 	// fraction field names are keys into the second.
 	sums  map[string]map[string]*mlrval.Mlrval
@@ -151,7 +150,7 @@ func NewTransformerFraction(
 	doCumu bool,
 ) (*TransformerFraction, error) {
 
-	recordsAndContexts := list.New()
+	recordsAndContexts := make([]*types.RecordAndContext, 0)
 	sums := make(map[string]map[string]*mlrval.Mlrval)
 	cumus := make(map[string]map[string]*mlrval.Mlrval)
 
@@ -192,7 +191,7 @@ func NewTransformerFraction(
 
 func (tr *TransformerFraction) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -201,7 +200,7 @@ func (tr *TransformerFraction) Transform(
 		inrec := inrecAndContext.Record
 
 		// Append records into a single output list (so that this verb is order-preserving).
-		tr.recordsAndContexts.PushBack(inrecAndContext)
+		tr.recordsAndContexts = append(tr.recordsAndContexts, inrecAndContext)
 
 		// Accumulate sums of fraction-field values grouped by group-by field names
 		groupingKey, hasAll := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
@@ -234,13 +233,7 @@ func (tr *TransformerFraction) Transform(
 		// Iterate over the retained records, decorating them with fraction fields.
 		endOfStreamContext := inrecAndContext.Context
 
-		for {
-			element := tr.recordsAndContexts.Front()
-			if element == nil {
-				break
-			}
-			tr.recordsAndContexts.Remove(element)
-			recordAndContext := element.Value.(*types.RecordAndContext)
+		for _, recordAndContext := range tr.recordsAndContexts {
 			outrec := recordAndContext.Record
 
 			groupingKey, hasAll := outrec.GetSelectedValuesJoined(tr.groupByFieldNames)
@@ -292,8 +285,9 @@ func (tr *TransformerFraction) Transform(
 				}
 			}
 
-			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &endOfStreamContext))
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(outrec, &endOfStreamContext))
 		}
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		tr.recordsAndContexts = tr.recordsAndContexts[:0]
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
 }

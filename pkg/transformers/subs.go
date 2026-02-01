@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"regexp"
@@ -288,7 +287,7 @@ func NewTransformerSubs(
 
 func (tr *TransformerSubs) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -304,7 +303,7 @@ func (tr *TransformerSubs) Transform(
 		}
 	}
 	// Including emit of end-of-stream marker
-	outputRecordsAndContexts.PushBack(inrecAndContext)
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }
 
 // fieldAcceptorByNames implements -f

@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -159,7 +158,7 @@ func NewTransformerRepeat(
 
 func (tr *TransformerRepeat) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -170,26 +169,26 @@ func (tr *TransformerRepeat) Transform(
 // ----------------------------------------------------------------
 func (tr *TransformerRepeat) repeatByCount(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	if !inrecAndContext.EndOfStream {
 		for i := int64(0); i < tr.repeatCount; i++ {
-			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(
 				inrecAndContext.Record.Copy(),
 				&inrecAndContext.Context,
 			))
 		}
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerRepeat) repeatByFieldName(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -203,13 +202,13 @@ func (tr *TransformerRepeat) repeatByFieldName(
 			return
 		}
 		for i := 0; i < int(repeatCount); i++ {
-			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(
 				inrecAndContext.Record.Copy(),
 				&inrecAndContext.Context,
 			))
 		}
 
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }

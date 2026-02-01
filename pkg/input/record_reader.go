@@ -3,11 +3,7 @@
 
 package input
 
-import (
-	"container/list"
-
-	"github.com/johnkerl/miller/v6/pkg/types"
-)
+import "github.com/johnkerl/miller/v6/pkg/types"
 
 // Since Go is concurrent, the context struct (AWK-like variables such as
 // FILENAME, NF, NF, FNR, etc.) needs to be duplicated and passed through the
@@ -19,7 +15,7 @@ type IRecordReader interface {
 	Read(
 		filenames []string,
 		initialContext types.Context,
-		readerChannel chan<- *list.List, // list of *types.RecordAndContext
+		readerChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 		errorChannel chan error,
 		downstreamDoneChannel <-chan bool, // for mlr head
 	)
