@@ -16,8 +16,7 @@ import (
 type RecordReaderJSON struct {
 	readerOptions   *cli.TReaderOptions
 	recordsPerBatch int64 // distinct from readerOptions.RecordsPerBatch for join/repl
-	// XXX 1513
-	sawBrackets bool
+	sawBrackets     bool
 }
 
 func NewRecordReaderJSON(
