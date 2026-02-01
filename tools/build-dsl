@@ -28,6 +28,7 @@ if [ $# -eq 1 ]; then
 fi
 
 # Build the bin/gocc executable (use my fork for performance):
+go get     github.com/johnkerl/gocc
 go install github.com/johnkerl/gocc
 go mod tidy
 bingocc="$HOME/go/bin/gocc"

@@ -123,7 +123,7 @@ func (t *Token) Int64Value() (int64, error) {
 func (t *Token) UTF8Rune() (rune, error) {
 	r, _ := utf8.DecodeRune(t.Lit)
 	if r == utf8.RuneError {
-		err := fmt.Errorf("invalid rune")
+		err := fmt.Errorf("Invalid rune")
 		return r, err
 	}
 	return r, nil
