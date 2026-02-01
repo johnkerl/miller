@@ -178,13 +178,6 @@ func (stack *Stack) UnsetIndexed(
 	stack.head.unsetIndexed(stackVariable, indices)
 }
 
-func (stack *Stack) Dump() {
-	fmt.Printf("STACK FRAMESETS (count %d):\n", len(stack.stackFrameSets))
-	for _, stackFrameSet := range stack.stackFrameSets {
-		stackFrameSet.dump()
-	}
-}
-
 // ================================================================
 // STACKFRAMESET METHODS
 
@@ -208,16 +201,6 @@ func (frameset *StackFrameSet) pushStackFrame() {
 
 func (frameset *StackFrameSet) popStackFrame() {
 	frameset.stackFrames = frameset.stackFrames[0 : len(frameset.stackFrames)-1]
-}
-
-func (frameset *StackFrameSet) dump() {
-	fmt.Printf("  STACK FRAMES (count %d):\n", len(frameset.stackFrames))
-	for _, stackFrame := range frameset.stackFrames {
-		fmt.Printf("    VARIABLES (count %d):\n", len(stackFrame.vars))
-		for _, v := range stackFrame.vars {
-			fmt.Printf("      %-16s %s\n", v.GetName(), v.ValueString())
-		}
-	}
 }
 
 // Returns nil on no-such

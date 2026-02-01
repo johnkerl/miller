@@ -154,18 +154,3 @@ func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
 		)
 	}
 }
-
-// ----------------------------------------------------------------
-func (keeper *PercentileKeeper) Dump() {
-	fmt.Printf("percentile_keeper dump:\n")
-	for i, datum := range keeper.data {
-		ival, ok := datum.GetIntValue()
-		if ok {
-			fmt.Printf("[%02d] %d\n", i, ival)
-		}
-		fval, ok := datum.GetFloatValue()
-		if ok {
-			fmt.Printf("[%02d] %.8f\n", i, fval)
-		}
-	}
-}

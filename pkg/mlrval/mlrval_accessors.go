@@ -88,12 +88,3 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 
 	return *FromMap(retval)
 }
-
-// Increment is used by stats1.
-func (mv *Mlrval) Increment() {
-	if mv.mvtype == MT_INT {
-		mv.intf = mv.intf.(int64) + 1
-	} else if mv.mvtype == MT_FLOAT {
-		mv.intf = mv.intf.(float64) + 1.0
-	}
-}

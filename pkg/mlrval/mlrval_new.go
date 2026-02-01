@@ -125,10 +125,6 @@ func FromNotCollectionError(funcname string, v *Mlrval) *Mlrval {
 	return FromNotNamedTypeError(funcname, v, "array or map")
 }
 
-func FromNotFunctionError(funcname string, v *Mlrval) *Mlrval {
-	return FromNotNamedTypeError(funcname, v, "function")
-}
-
 func FromNotNamedTypeError(funcname string, v *Mlrval, expected_type_name string) *Mlrval {
 	return FromError(
 		fmt.Errorf(
@@ -179,13 +175,6 @@ func (mv *Mlrval) SetFromString(input string) *Mlrval {
 	} else {
 		mv.mvtype = MT_STRING
 	}
-	return mv
-}
-
-func (mv *Mlrval) SetFromVoid() *Mlrval {
-	mv.printrep = ""
-	mv.printrepValid = true
-	mv.mvtype = MT_VOID
 	return mv
 }
 
@@ -305,15 +294,6 @@ func FromBoolString(input string) *Mlrval {
 		lib.InternalCodingErrorIf(true)
 		return nil // not reached
 	}
-}
-
-// TODO: comment
-func (mv *Mlrval) SetFromPrevalidatedBoolString(input string, boolval bool) *Mlrval {
-	mv.printrep = input
-	mv.printrepValid = true
-	mv.intf = boolval
-	mv.mvtype = MT_BOOL
-	return mv
 }
 
 // The user-defined function is of type 'interface{}' here to avoid what would

@@ -1,19 +1,6 @@
 package mlrval
 
-import (
-	"bytes"
-	"fmt"
-	"os"
-)
-
-// ----------------------------------------------------------------
-func (mlrmap *Mlrmap) Print() {
-	mlrmap.Fprint(os.Stdout)
-	os.Stdout.WriteString("\n")
-}
-func (mlrmap *Mlrmap) Fprint(file *os.File) {
-	(*file).WriteString(mlrmap.ToDKVPString())
-}
+import "bytes"
 
 func (mlrmap *Mlrmap) ToDKVPString() string {
 	var buffer bytes.Buffer // stdio is non-buffered in Go, so buffer for ~5x speed increase
@@ -48,22 +35,5 @@ func (mlrmap Mlrmap) String() string {
 		return "Mlrmap: could not not marshal self to JSON"
 	} else {
 		return string(bytes) + "\n"
-	}
-}
-
-// ----------------------------------------------------------------
-func (mlrmap *Mlrmap) Dump() {
-	fmt.Printf("FIELD COUNT: %d\n", mlrmap.FieldCount)
-	fmt.Printf("HEAD:        %p\n", mlrmap.Head)
-	fmt.Printf("TAIL:        %p\n", mlrmap.Tail)
-	fmt.Printf("KEYS TO ENTRIES:\n")
-	for k, e := range mlrmap.keysToEntries {
-		fmt.Printf("  %-10s %#v\n", k, e)
-	}
-	fmt.Printf("LIST:\n")
-	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
-		fmt.Printf("  key: \"%s\" value: %-20s prev:%p self:%p next:%p\n",
-			pe.Key, pe.Value.String(), pe.Prev, pe, pe.Next,
-		)
 	}
 }

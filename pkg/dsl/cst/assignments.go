@@ -46,16 +46,6 @@ type AssignmentNode struct {
 	rvalueNode IEvaluable
 }
 
-func NewAssignmentNode(
-	lvalueNode IAssignable,
-	rvalueNode IEvaluable,
-) *AssignmentNode {
-	return &AssignmentNode{
-		lvalueNode: lvalueNode,
-		rvalueNode: rvalueNode,
-	}
-}
-
 func (node *AssignmentNode) Execute(
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
@@ -94,14 +84,6 @@ func (root *RootNode) BuildUnsetNode(
 // ----------------------------------------------------------------
 type UnsetNode struct {
 	lvalueNodes []IAssignable
-}
-
-func NewUnsetNode(
-	lvalueNodes []IAssignable,
-) *UnsetNode {
-	return &UnsetNode{
-		lvalueNodes: lvalueNodes,
-	}
 }
 
 func (node *UnsetNode) Execute(state *runtime.State) (*BlockExitPayload, error) {

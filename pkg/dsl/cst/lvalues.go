@@ -934,55 +934,6 @@ func (root *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable,
 	return NewIndexedLvalueNode(baseLvalue, indexEvaluables), nil
 }
 
-// BuildDottedLvalueNode is basically the same as BuildIndexedLvalueNode except
-// at the syntax level:
-// 'mymap["x"]["y"]' is the same as 'mymap.x.y'.
-func (root *RootNode) BuildDottedLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDotOperator)
-	lib.InternalCodingErrorIf(astNode == nil)
-
-	var baseLvalue IAssignable = nil
-	indexEvaluables := make([]IEvaluable, 0)
-	var err error = nil
-
-	// $ mlr -n put -v '$x.a.b=3'
-	// DSL EXPRESSION:
-	// $x.a.b=3
-	// AST:
-	// * statement block
-	//     * assignment "="
-	//         * dot operator "."
-	//             * dot operator "."
-	//                 * direct field value "x"
-	//                 * local variable "a"
-	//             * local variable "b"
-	//         * int literal "3"
-
-	// In the AST, the indices come in last-shallowest, down to first-deepest,
-	// then the base Lvalue.
-	walkerNode := astNode
-	for {
-		if walkerNode.Type == dsl.NodeTypeDotOperator {
-			lib.InternalCodingErrorIf(walkerNode == nil)
-			lib.InternalCodingErrorIf(len(walkerNode.Children) != 2)
-			indexEvaluable, err := root.BuildEvaluableNode(walkerNode.Children[1])
-			walkerNode.Children[1].Print()
-			if err != nil {
-				return nil, err
-			}
-			indexEvaluables = append([]IEvaluable{indexEvaluable}, indexEvaluables...)
-			walkerNode = walkerNode.Children[0]
-		} else {
-			baseLvalue, err = root.BuildAssignableNode(walkerNode)
-			if err != nil {
-				return nil, err
-			}
-			break
-		}
-	}
-	return NewIndexedLvalueNode(baseLvalue, indexEvaluables), nil
-}
-
 func NewIndexedLvalueNode(
 	baseLvalue IAssignable,
 	indexEvaluables []IEvaluable,

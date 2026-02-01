@@ -72,16 +72,8 @@ func NewTypeGatedMlrvalVariable(
 	}, nil
 }
 
-func (tvar *TypeGatedMlrvalVariable) GetName() string {
-	return tvar.typeGatedMlrvalName.Name
-}
-
 func (tvar *TypeGatedMlrvalVariable) GetValue() *mlrval.Mlrval {
 	return tvar.value
-}
-
-func (tvar *TypeGatedMlrvalVariable) ValueString() string {
-	return tvar.value.String()
 }
 
 func (tvar *TypeGatedMlrvalVariable) Assign(value *mlrval.Mlrval) error {

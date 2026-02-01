@@ -929,7 +929,3 @@ func (mlrmap *Mlrmap) GetFirstPair() *Mlrmap {
 	pair.PutCopy(mlrmap.Head.Key, mlrmap.Head.Value)
 	return pair
 }
-
-func (mlrmap *Mlrmap) IsSinglePair() bool {
-	return mlrmap.FieldCount == 1
-}
