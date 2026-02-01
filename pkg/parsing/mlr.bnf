@@ -355,7 +355,7 @@ panic : '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
 // ----------------------------------------------------------------
 Root
   : StatementBlock
-   << dsl.NewAST($0) >>
+   << dsl.NewASTWithErrorReturn($0) >>
 ;
 
 // ----------------------------------------------------------------
@@ -516,7 +516,7 @@ Unset
   : unset FcnArgs
     <<
       dsl.AdoptChildren(
-        dsl.NewASTNodeNestable(
+        dsl.NewASTNodeTerminal(
           $0,
           dsl.NodeTypeUnset,
         ),
@@ -624,9 +624,9 @@ PrintStatement
         dsl.NodeTypePrintStatement,
       []interface{}{
         // print
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no printable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -639,7 +639,7 @@ PrintStatement
         dsl.NodeTypePrintStatement,
       []interface{}{
         // print
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no printable
         $1,
       }
@@ -656,7 +656,7 @@ PrintStatement
         // print
         $1,
         // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -687,9 +687,9 @@ PrintnStatement
         dsl.NodeTypePrintnStatement,
       []interface{}{
         // printn
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no printable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -702,7 +702,7 @@ PrintnStatement
         dsl.NodeTypePrintnStatement,
       []interface{}{
         // printn
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no printable
         $1,
       }
@@ -719,7 +719,7 @@ PrintnStatement
         // printn
         $1,
         // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -750,9 +750,9 @@ EprintStatement
         dsl.NodeTypeEprintStatement,
       []interface{}{
         // eprint
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -767,7 +767,7 @@ EprintStatement
         // eprint
         $1,
         // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -783,9 +783,9 @@ EprintnStatement
         dsl.NodeTypeEprintnStatement,
       []interface{}{
         // eprint
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -800,7 +800,7 @@ EprintnStatement
         // eprintn
         $1,
         // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -816,9 +816,9 @@ DumpStatement
         dsl.NodeTypeDumpStatement,
       []interface{}{
         // dump
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no dumpable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -831,7 +831,7 @@ DumpStatement
         dsl.NodeTypeDumpStatement,
       []interface{}{
         // dump
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no dumpable
         $1,
       }
@@ -848,7 +848,7 @@ DumpStatement
         // dump
         $1,
         // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -879,9 +879,9 @@ EdumpStatement
         dsl.NodeTypeEdumpStatement,
       []interface{}{
         // edump
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no dumpable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -896,7 +896,7 @@ EdumpStatement
         // edump
         $1,
         // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -934,7 +934,7 @@ EmitFStatement
         // emitf
         $1,
         // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -1035,9 +1035,9 @@ EmitStatement
         // emit
         $1,
         // Emittable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -1052,7 +1052,7 @@ EmitStatement
         // emit
       $3,
         // Emittable
-      dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no keys
       $1,
       }
@@ -1069,9 +1069,9 @@ EmitStatement
         // emit
         $2,
         // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -1086,7 +1086,7 @@ EmitStatement
         // emit
         $4,
         // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no keys
         $1,
       }
@@ -1105,7 +1105,7 @@ EmitStatement
         // emittable
         $3,
         // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -1139,7 +1139,7 @@ EmitStatement
         // emittable
         $5,
         // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -1174,9 +1174,9 @@ EmitPStatement
         // emitp
         $1,
         // emittable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -1191,7 +1191,7 @@ EmitPStatement
         // emitp
       $3,
         // emittable
-      dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no keys
       $1,
       }
@@ -1208,9 +1208,9 @@ EmitPStatement
         // emitp
         $2,
         // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -1225,7 +1225,7 @@ EmitPStatement
         // emitp
         $4,
         // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
         // no keys
         $1,
       }
@@ -1244,7 +1244,7 @@ EmitPStatement
         // emittable
         $3,
         // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -1278,7 +1278,7 @@ EmitPStatement
         // emittable
         $5,
         // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
       }
       ))
     >>
@@ -1431,7 +1431,7 @@ PositionalFieldValue
 
 FullSrec
   : full_srec
-  << dsl.NewASTNodeTerminal($0, dsl.NodeTypeFullSrec) >>
+  << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeFullSrec) >>
 ;
 
 // ----------------------------------------------------------------
@@ -1472,44 +1472,44 @@ BracedOosvarValue
 
 FullOosvar
   : full_oosvar
-  << dsl.NewASTNodeTerminal($0, dsl.NodeTypeFullOosvar) >>
+  << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeFullOosvar) >>
   | all
-  << dsl.NewASTNodeTerminal($0, dsl.NodeTypeFullOosvar) >>
+  << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeFullOosvar) >>
 ;
 
 // ----------------------------------------------------------------
 LocalVariable
   : non_sigil_name
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeLocalVariable) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeLocalVariable) >>
 ;
 
 Typedecl
   : arr
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl) >>
 
   | bool
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl) >>
 
   | float
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl) >>
 
   | int
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl) >>
 
   | map
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl) >>
 
   | num
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl) >>
 
   | str
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl) >>
 
   | var
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl) >>
 
   | funct
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeTypedecl) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl) >>
 ;
 
 // ----------------------------------------------------------------
@@ -2210,40 +2210,40 @@ MlrvalOrFunction
     << dsl.NewASTNodeStripDoubleQuotePair($0, dsl.NodeTypeStringLiteral) >>
 
   | regex_case_insensitive
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeRegexCaseInsensitive) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeRegexCaseInsensitive) >>
 
   | int_literal
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeIntLiteral) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeIntLiteral) >>
 
   | float_literal
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeFloatLiteral) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeFloatLiteral) >>
 
   | boolean_literal
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeBoolLiteral) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeBoolLiteral) >>
 
   | null_literal
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeNullLiteral) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeNullLiteral) >>
 
   | inf_literal
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeFloatLiteral) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeFloatLiteral) >>
 
   | nan_literal
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeFloatLiteral) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeFloatLiteral) >>
 
   | const_M_PI
-    << dsl.NewASTNodeTerminal(
+    << dsl.NewASTNodeTerminalWithErrorReturn(
       $0,
       dsl.NodeTypeConstant,
     ) >>
 
   | const_M_E
-    << dsl.NewASTNodeTerminal(
+    << dsl.NewASTNodeTerminalWithErrorReturn(
       $0,
       dsl.NodeTypeConstant,
     ) >>
 
   | panic
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypePanic) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypePanic) >>
 ;
 
 // ================================================================
@@ -2277,7 +2277,7 @@ ArrayLiteral
     //     * StringLiteral "b"
     <<
       dsl.AdoptChildren(
-        dsl.NewASTNodeNestable(
+        dsl.NewASTNodeTerminal(
           dsl.NewASTToken("[]", $0),
           dsl.NodeTypeArrayLiteral,
         ),
@@ -2355,7 +2355,7 @@ MapLiteral
     //         * IntLiteral "2"
     <<
       dsl.AdoptChildren(
-        dsl.NewASTNodeNestable(
+        dsl.NewASTNodeTerminal(
           dsl.NewASTToken("{}", $0),
           dsl.NodeTypeMapLiteral,
         ),
@@ -2411,21 +2411,21 @@ MapLiteralKeyValuePair
 MlrvalOrFunction : ContextVariable ;
 
 ContextVariable
-  : ctx_IPS << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
-  | ctx_IFS << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
-  | ctx_IRS << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
+  : ctx_IPS << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable) >>
+  | ctx_IFS << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable) >>
+  | ctx_IRS << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable) >>
 
-  | ctx_OPS << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
-  | ctx_OFS << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
-  | ctx_ORS << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
-  | ctx_FLATSEP << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
+  | ctx_OPS << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable) >>
+  | ctx_OFS << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable) >>
+  | ctx_ORS << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable) >>
+  | ctx_FLATSEP << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable) >>
 
-  | ctx_NF  << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
-  | ctx_NR  << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
-  | ctx_FNR << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
+  | ctx_NF  << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable) >>
+  | ctx_NR  << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable) >>
+  | ctx_FNR << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable) >>
 
-  | ctx_FILENAME << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
-  | ctx_FILENUM  << dsl.NewASTNodeTerminal($0, dsl.NodeTypeContextVariable) >>
+  | ctx_FILENAME << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable) >>
+  | ctx_FILENUM  << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable) >>
 ;
 
 // ----------------------------------------------------------------
@@ -2449,7 +2449,7 @@ ENV
     $0,
     dsl.NodeTypeEnvironmentVariable,
     []interface{}{
-      dsl.NewASTNodeNestable($2, dsl.NodeTypeStringLiteral),
+      dsl.NewASTNodeTerminal($2, dsl.NodeTypeStringLiteral),
     }
     )) >>
 ;
@@ -2522,7 +2522,7 @@ ArraySliceAccess
     dsl.NodeTypeArraySliceAccess,
     []interface{}{
       $0,
-      dsl.NewASTNodeNestable(
+      dsl.NewASTNodeTerminal(
         $2,
         dsl.NodeTypeArraySliceEmptyLowerIndex,
       ),
@@ -2537,7 +2537,7 @@ ArraySliceAccess
     []interface{}{
       $0,
       $2,
-      dsl.NewASTNodeNestable(
+      dsl.NewASTNodeTerminal(
         $3,
         dsl.NodeTypeArraySliceEmptyUpperIndex,
       ),
@@ -2550,11 +2550,11 @@ ArraySliceAccess
     dsl.NodeTypeArraySliceAccess,
     []interface{}{
       $0,
-      dsl.NewASTNodeNestable(
+      dsl.NewASTNodeTerminal(
         $2,
         dsl.NodeTypeArraySliceEmptyLowerIndex,
       ),
-      dsl.NewASTNodeNestable(
+      dsl.NewASTNodeTerminal(
         $2,
         dsl.NodeTypeArraySliceEmptyUpperIndex,
       ),
@@ -2594,7 +2594,7 @@ FunctionCallsite
     //     * StringLiteral "b"
     <<
       dsl.AdoptChildren(
-        dsl.NewASTNodeNestable(
+        dsl.NewASTNodeTerminal(
           $0,
           dsl.NodeTypeFunctionCallsite,
         ),
@@ -2670,7 +2670,7 @@ SubroutineCallsite
     //     * StringLiteral "b"
     <<
       dsl.AdoptChildren(
-        dsl.NewASTNodeNestable(
+        dsl.NewASTNodeTerminal(
           $1,
           dsl.NodeTypeSubroutineCallsite,
         ),
@@ -3213,7 +3213,7 @@ FuncOrSubrParameter
 
 UntypedFuncOrSubrParameterName
   : non_sigil_name
-    << dsl.NewASTNodeTerminal($0, dsl.NodeTypeParameterName) >>
+    << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeParameterName) >>
 ;
 
 TypedFuncOrSubrParameterName

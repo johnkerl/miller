@@ -13,14 +13,14 @@ import (
 )
 
 // This is for the GOCC/BNF parser, which produces an AST
-func NewAST(iroot interface{}) (*AST, error) {
+func NewASTWithErrorReturn(iroot interface{}) (*AST, error) {
 	return &AST{
 		RootNode: iroot.(*ASTNode),
 	}, nil
 }
 
 // ----------------------------------------------------------------
-func NewASTNodeNestable(itok interface{}, nodeType TNodeType) *ASTNode {
+func NewASTNodeTerminal(itok interface{}, nodeType TNodeType) *ASTNode {
 	var tok *token.Token = nil
 	if itok != nil {
 		tok = itok.(*token.Token)
@@ -72,22 +72,8 @@ func WithErrorReturn(iparent interface{}) (*ASTNode, error) {
 }
 
 // ----------------------------------------------------------------
-func NewASTNodeTerminal(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
+func NewASTNodeTerminalWithErrorReturn(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
 	return NewASTNode(itok, nodeType, nil), nil
-}
-
-// For handling empty expressions.
-func NewASTNodeEmptyNestable(nodeType TNodeType) *ASTNode {
-	return &ASTNode{
-		Token:    nil,
-		Type:     nodeType,
-		Children: nil,
-	}
-}
-
-// For handling empty expressions.
-func NewASTNodeEmpty(nodeType TNodeType) (*ASTNode, error) {
-	return NewASTNodeEmptyNestable(nodeType), nil
 }
 
 // Strips the leading '$' from field names, or '@' from oosvar names. Not done
@@ -101,7 +87,7 @@ func NewASTNodeStripDollarOrAtSign(itok interface{}, nodeType TNodeType) (*ASTNo
 		Lit:  oldToken.Lit[1:],
 		Pos:  oldToken.Pos,
 	}
-	return NewASTNodeNestable(newToken, nodeType), nil
+	return NewASTNodeTerminal(newToken, nodeType), nil
 }
 
 // Strips the leading '${' and trailing '}' from braced field names, or '@{'
@@ -122,7 +108,7 @@ func NewASTNodeStripDollarOrAtSignAndCurlyBraces(
 		Lit:  oldToken.Lit[2 : n-1],
 		Pos:  oldToken.Pos,
 	}
-	return NewASTNodeNestable(newToken, nodeType), nil
+	return NewASTNodeTerminal(newToken, nodeType), nil
 }
 
 // Likewise for the leading/trailing double quotes on string literals.  Also,
@@ -141,7 +127,7 @@ func NewASTNodeStripDoubleQuotePair(
 		Lit:  []byte(contents),
 		Pos:  oldToken.Pos,
 	}
-	return NewASTNodeNestable(newToken, nodeType), nil
+	return NewASTNodeTerminal(newToken, nodeType), nil
 }
 
 func NewASTNodeZary(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
@@ -149,7 +135,7 @@ func NewASTNodeZary(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
 }
 
 func NewASTNodeUnaryNestable(itok, childA interface{}, nodeType TNodeType) *ASTNode {
-	parent := NewASTNodeNestable(itok, nodeType)
+	parent := NewASTNodeTerminal(itok, nodeType)
 	convertToUnary(parent, childA)
 	return parent
 }
@@ -160,7 +146,7 @@ func NewASTNodeUnary(itok, childA interface{}, nodeType TNodeType) (*ASTNode, er
 
 // Signature: Token Node Node Type
 func NewASTNodeBinaryNestable(itok, childA, childB interface{}, nodeType TNodeType) *ASTNode {
-	parent := NewASTNodeNestable(itok, nodeType)
+	parent := NewASTNodeTerminal(itok, nodeType)
 	convertToBinary(parent, childA, childB)
 	return parent
 }
@@ -179,7 +165,7 @@ func NewASTNodeTernary(itok, childA, childB, childC interface{}, nodeType TNodeT
 func NewASTNodeQuaternary(
 	itok, childA, childB, childC, childD interface{}, nodeType TNodeType,
 ) (*ASTNode, error) {
-	parent := NewASTNodeNestable(itok, nodeType)
+	parent := NewASTNodeTerminal(itok, nodeType)
 	convertToQuaternary(parent, childA, childB, childC, childD)
 	return parent, nil
 }

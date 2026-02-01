@@ -30,13 +30,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `Root : StatementBlock	<< dsl.NewAST(X[0]) >>`,
+		String:     `Root : StatementBlock	<< dsl.NewASTWithErrorReturn(X[0]) >>`,
 		Id:         "Root",
 		NTType:     1,
 		Index:      1,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewAST(X[0])
+			return dsl.NewASTWithErrorReturn(X[0])
 		},
 	},
 	ProdTabEntry{
@@ -371,7 +371,7 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Unset : unset FcnArgs	<< dsl.AdoptChildren(
-        dsl.NewASTNodeNestable(
+        dsl.NewASTNodeTerminal(
           X[0],
           dsl.NodeTypeUnset,
         ),
@@ -383,7 +383,7 @@ var productionsTable = ProdTab{
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return dsl.AdoptChildren(
-				dsl.NewASTNodeNestable(
+				dsl.NewASTNodeTerminal(
 					X[0],
 					dsl.NodeTypeUnset,
 				),
@@ -494,8 +494,8 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `PrintStatement : print	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypePrintStatement, []interface{}{// print
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no printable
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "PrintStatement",
 		NTType:     13,
 		Index:      46,
@@ -503,14 +503,14 @@ var productionsTable = ProdTab{
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypePrintStatement, []interface{}{// print
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no printable
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
 		String: `PrintStatement : print Redirector	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // redirect
         dsl.NodeTypePrintStatement, []interface{}{// print
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no printable
         X[1]})) >>`,
 		Id:         "PrintStatement",
 		NTType:     13,
@@ -519,7 +519,7 @@ var productionsTable = ProdTab{
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // redirect
 				dsl.NodeTypePrintStatement, []interface{}{// print
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no printable
 				X[1]}))
 		},
 	},
@@ -527,7 +527,7 @@ var productionsTable = ProdTab{
 		String: `PrintStatement : print FcnArgs	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypePrintStatement, []interface{}{// print
         X[1], // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "PrintStatement",
 		NTType:     13,
 		Index:      48,
@@ -536,7 +536,7 @@ var productionsTable = ProdTab{
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypePrintStatement, []interface{}{// print
 				X[1], // printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
@@ -558,8 +558,8 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `PrintnStatement : printn	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypePrintnStatement, []interface{}{// printn
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no printable
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "PrintnStatement",
 		NTType:     14,
 		Index:      50,
@@ -567,14 +567,14 @@ var productionsTable = ProdTab{
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypePrintnStatement, []interface{}{// printn
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no printable
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
 		String: `PrintnStatement : printn Redirector	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // redirect
         dsl.NodeTypePrintnStatement, []interface{}{// printn
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no printable
         X[1]})) >>`,
 		Id:         "PrintnStatement",
 		NTType:     14,
@@ -583,7 +583,7 @@ var productionsTable = ProdTab{
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // redirect
 				dsl.NodeTypePrintnStatement, []interface{}{// printn
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no printable
 				X[1]}))
 		},
 	},
@@ -591,7 +591,7 @@ var productionsTable = ProdTab{
 		String: `PrintnStatement : printn FcnArgs	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypePrintnStatement, []interface{}{// printn
         X[1], // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "PrintnStatement",
 		NTType:     14,
 		Index:      52,
@@ -600,7 +600,7 @@ var productionsTable = ProdTab{
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypePrintnStatement, []interface{}{// printn
 				X[1], // printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
@@ -622,8 +622,8 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `EprintStatement : eprint	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypeEprintStatement, []interface{}{// eprint
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no printables
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "EprintStatement",
 		NTType:     15,
 		Index:      54,
@@ -631,15 +631,15 @@ var productionsTable = ProdTab{
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypeEprintStatement, []interface{}{// eprint
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no printables
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
 		String: `EprintStatement : eprint FcnArgs	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypeEprintStatement, []interface{}{// eprint
         X[1], // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "EprintStatement",
 		NTType:     15,
 		Index:      55,
@@ -648,14 +648,14 @@ var productionsTable = ProdTab{
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypeEprintStatement, []interface{}{// eprint
 				X[1], // printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
 		String: `EprintnStatement : eprintn	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypeEprintnStatement, []interface{}{// eprint
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no printables
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "EprintnStatement",
 		NTType:     16,
 		Index:      56,
@@ -663,15 +663,15 @@ var productionsTable = ProdTab{
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypeEprintnStatement, []interface{}{// eprint
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no printables
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
 		String: `EprintnStatement : eprintn FcnArgs	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypeEprintnStatement, []interface{}{// eprintn
         X[1], // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "EprintnStatement",
 		NTType:     16,
 		Index:      57,
@@ -680,14 +680,14 @@ var productionsTable = ProdTab{
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypeEprintnStatement, []interface{}{// eprintn
 				X[1], // printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
 		String: `DumpStatement : dump	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypeDumpStatement, []interface{}{// dump
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no dumpable
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "DumpStatement",
 		NTType:     17,
 		Index:      58,
@@ -695,14 +695,14 @@ var productionsTable = ProdTab{
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypeDumpStatement, []interface{}{// dump
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no dumpable
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
 		String: `DumpStatement : dump Redirector	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // redirect
         dsl.NodeTypeDumpStatement, []interface{}{// dump
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no dumpable
         X[1]})) >>`,
 		Id:         "DumpStatement",
 		NTType:     17,
@@ -711,7 +711,7 @@ var productionsTable = ProdTab{
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // redirect
 				dsl.NodeTypeDumpStatement, []interface{}{// dump
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no dumpable
 				X[1]}))
 		},
 	},
@@ -719,7 +719,7 @@ var productionsTable = ProdTab{
 		String: `DumpStatement : dump FcnArgs	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypeDumpStatement, []interface{}{// dump
         X[1], // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "DumpStatement",
 		NTType:     17,
 		Index:      60,
@@ -728,7 +728,7 @@ var productionsTable = ProdTab{
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypeDumpStatement, []interface{}{// dump
 				X[1], // printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
@@ -750,8 +750,8 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `EdumpStatement : edump	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypeEdumpStatement, []interface{}{// edump
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no dumpable
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "EdumpStatement",
 		NTType:     18,
 		Index:      62,
@@ -759,15 +759,15 @@ var productionsTable = ProdTab{
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypeEdumpStatement, []interface{}{// edump
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no dumpable
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
 		String: `EdumpStatement : edump FcnArgs	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypeEdumpStatement, []interface{}{// edump
         X[1], // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "EdumpStatement",
 		NTType:     18,
 		Index:      63,
@@ -776,7 +776,7 @@ var productionsTable = ProdTab{
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypeEdumpStatement, []interface{}{// edump
 				X[1], // printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
@@ -793,7 +793,7 @@ var productionsTable = ProdTab{
 		String: `EmitFStatement : emitf EmittableList	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypeEmitFStatement, []interface{}{// emitf
         X[1], // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "EmitFStatement",
 		NTType:     20,
 		Index:      65,
@@ -802,7 +802,7 @@ var productionsTable = ProdTab{
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypeEmitFStatement, []interface{}{// emitf
 				X[1], // emittables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
@@ -839,8 +839,8 @@ var productionsTable = ProdTab{
 		String: `EmitStatement : emit EmittableAsList	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypeEmitStatement, []interface{}{// emit
         X[1], // Emittable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "EmitStatement",
 		NTType:     22,
 		Index:      68,
@@ -849,15 +849,15 @@ var productionsTable = ProdTab{
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypeEmitStatement, []interface{}{// emit
 				X[1], // Emittable
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
 		String: `EmitStatement : emit Redirector "," EmittableAsList	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // redirect
       dsl.NodeTypeEmitStatement, []interface{}{// emit
       X[3], // Emittable
-      dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+      dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
       X[1]})) >>`,
 		Id:         "EmitStatement",
 		NTType:     22,
@@ -867,7 +867,7 @@ var productionsTable = ProdTab{
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // redirect
 				dsl.NodeTypeEmitStatement, []interface{}{// emit
 				X[3], // Emittable
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
 				X[1]}))
 		},
 	},
@@ -875,8 +875,8 @@ var productionsTable = ProdTab{
 		String: `EmitStatement : emit "(" EmittableList ")"	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypeEmitStatement, []interface{}{// emit
         X[2], // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "EmitStatement",
 		NTType:     22,
 		Index:      70,
@@ -885,15 +885,15 @@ var productionsTable = ProdTab{
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypeEmitStatement, []interface{}{// emit
 				X[2], // emittables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
 		String: `EmitStatement : emit Redirector "," "(" EmittableList ")"	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // redirect
         dsl.NodeTypeEmitStatement, []interface{}{// emit
         X[4], // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
         X[1]})) >>`,
 		Id:         "EmitStatement",
 		NTType:     22,
@@ -903,7 +903,7 @@ var productionsTable = ProdTab{
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // redirect
 				dsl.NodeTypeEmitStatement, []interface{}{// emit
 				X[4], // emittables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
 				X[1]}))
 		},
 	},
@@ -912,7 +912,7 @@ var productionsTable = ProdTab{
         dsl.NodeTypeEmitStatement, []interface{}{// emit
         X[1], // emittable
         X[3], // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "EmitStatement",
 		NTType:     22,
 		Index:      72,
@@ -922,7 +922,7 @@ var productionsTable = ProdTab{
 				dsl.NodeTypeEmitStatement, []interface{}{// emit
 				X[1], // emittable
 				X[3], // keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
@@ -948,7 +948,7 @@ var productionsTable = ProdTab{
         dsl.NodeTypeEmitStatement, []interface{}{// emit
         X[2], // emittable
         X[5], // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "EmitStatement",
 		NTType:     22,
 		Index:      74,
@@ -958,7 +958,7 @@ var productionsTable = ProdTab{
 				dsl.NodeTypeEmitStatement, []interface{}{// emit
 				X[2], // emittable
 				X[5], // keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
@@ -983,8 +983,8 @@ var productionsTable = ProdTab{
 		String: `EmitPStatement : emitp EmittableAsList	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypeEmitPStatement, []interface{}{// emitp
         X[1], // emittable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "EmitPStatement",
 		NTType:     23,
 		Index:      76,
@@ -993,15 +993,15 @@ var productionsTable = ProdTab{
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypeEmitPStatement, []interface{}{// emitp
 				X[1], // emittable
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
 		String: `EmitPStatement : emitp Redirector "," EmittableAsList	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // redirect
       dsl.NodeTypeEmitPStatement, []interface{}{// emitp
       X[3], // emittable
-      dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+      dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
       X[1]})) >>`,
 		Id:         "EmitPStatement",
 		NTType:     23,
@@ -1011,7 +1011,7 @@ var productionsTable = ProdTab{
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // redirect
 				dsl.NodeTypeEmitPStatement, []interface{}{// emitp
 				X[3], // emittable
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
 				X[1]}))
 		},
 	},
@@ -1019,8 +1019,8 @@ var productionsTable = ProdTab{
 		String: `EmitPStatement : emitp "(" EmittableList ")"	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
         dsl.NodeTypeEmitPStatement, []interface{}{// emitp
         X[2], // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "EmitPStatement",
 		NTType:     23,
 		Index:      78,
@@ -1029,15 +1029,15 @@ var productionsTable = ProdTab{
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // no redirect
 				dsl.NodeTypeEmitPStatement, []interface{}{// emitp
 				X[2], // emittables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
 		String: `EmitPStatement : emitp Redirector "," "(" EmittableList ")"	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], // redirect
         dsl.NodeTypeEmitPStatement, []interface{}{// emitp
         X[4], // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
         X[1]})) >>`,
 		Id:         "EmitPStatement",
 		NTType:     23,
@@ -1047,7 +1047,7 @@ var productionsTable = ProdTab{
 			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], // redirect
 				dsl.NodeTypeEmitPStatement, []interface{}{// emitp
 				X[4], // emittables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
 				X[1]}))
 		},
 	},
@@ -1056,7 +1056,7 @@ var productionsTable = ProdTab{
         dsl.NodeTypeEmitPStatement, []interface{}{// emitp
         X[1], // emittable
         X[3], // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "EmitPStatement",
 		NTType:     23,
 		Index:      80,
@@ -1066,7 +1066,7 @@ var productionsTable = ProdTab{
 				dsl.NodeTypeEmitPStatement, []interface{}{// emitp
 				X[1], // emittable
 				X[3], // keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
@@ -1092,7 +1092,7 @@ var productionsTable = ProdTab{
         dsl.NodeTypeEmitPStatement, []interface{}{// emitp
         X[2], // emittable
         X[5], // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})) >>`,
+        dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)})) >>`,
 		Id:         "EmitPStatement",
 		NTType:     23,
 		Index:      82,
@@ -1102,7 +1102,7 @@ var productionsTable = ProdTab{
 				dsl.NodeTypeEmitPStatement, []interface{}{// emitp
 				X[2], // emittable
 				X[5], // keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}))
+				dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp)}))
 		},
 	},
 	ProdTabEntry{
@@ -1386,13 +1386,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `FullSrec : full_srec	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFullSrec) >>`,
+		String:     `FullSrec : full_srec	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeFullSrec) >>`,
 		Id:         "FullSrec",
 		NTType:     34,
 		Index:      109,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFullSrec)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeFullSrec)
 		},
 	},
 	ProdTabEntry{
@@ -1456,123 +1456,123 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `FullOosvar : full_oosvar	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFullOosvar) >>`,
+		String:     `FullOosvar : full_oosvar	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeFullOosvar) >>`,
 		Id:         "FullOosvar",
 		NTType:     39,
 		Index:      116,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFullOosvar)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeFullOosvar)
 		},
 	},
 	ProdTabEntry{
-		String:     `FullOosvar : all	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFullOosvar) >>`,
+		String:     `FullOosvar : all	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeFullOosvar) >>`,
 		Id:         "FullOosvar",
 		NTType:     39,
 		Index:      117,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFullOosvar)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeFullOosvar)
 		},
 	},
 	ProdTabEntry{
-		String:     `LocalVariable : non_sigil_name	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeLocalVariable) >>`,
+		String:     `LocalVariable : non_sigil_name	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeLocalVariable) >>`,
 		Id:         "LocalVariable",
 		NTType:     40,
 		Index:      118,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeLocalVariable)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeLocalVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : arr	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : arr	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      119,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : bool	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : bool	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      120,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : float	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : float	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      121,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : int	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : int	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      122,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : map	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : map	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      123,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : num	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : num	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      124,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : str	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : str	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      125,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : var	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : var	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      126,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
-		String:     `Typedecl : funct	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl) >>`,
+		String:     `Typedecl : funct	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     41,
 		Index:      127,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeTypedecl)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeTypedecl)
 		},
 	},
 	ProdTabEntry{
@@ -2474,77 +2474,77 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : regex_case_insensitive	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeRegexCaseInsensitive) >>`,
+		String:     `MlrvalOrFunction : regex_case_insensitive	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeRegexCaseInsensitive) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      217,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeRegexCaseInsensitive)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeRegexCaseInsensitive)
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : int_literal	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeIntLiteral) >>`,
+		String:     `MlrvalOrFunction : int_literal	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeIntLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      218,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeIntLiteral)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeIntLiteral)
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : float_literal	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFloatLiteral) >>`,
+		String:     `MlrvalOrFunction : float_literal	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeFloatLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      219,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFloatLiteral)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeFloatLiteral)
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : boolean_literal	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeBoolLiteral) >>`,
+		String:     `MlrvalOrFunction : boolean_literal	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeBoolLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      220,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeBoolLiteral)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeBoolLiteral)
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : null_literal	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeNullLiteral) >>`,
+		String:     `MlrvalOrFunction : null_literal	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeNullLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      221,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeNullLiteral)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeNullLiteral)
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : inf_literal	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFloatLiteral) >>`,
+		String:     `MlrvalOrFunction : inf_literal	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeFloatLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      222,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFloatLiteral)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeFloatLiteral)
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : nan_literal	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFloatLiteral) >>`,
+		String:     `MlrvalOrFunction : nan_literal	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeFloatLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      223,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeFloatLiteral)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeFloatLiteral)
 		},
 	},
 	ProdTabEntry{
-		String: `MlrvalOrFunction : const_M_PI	<< dsl.NewASTNodeTerminal(
+		String: `MlrvalOrFunction : const_M_PI	<< dsl.NewASTNodeTerminalWithErrorReturn(
       X[0],
       dsl.NodeTypeConstant,
     ) >>`,
@@ -2553,14 +2553,14 @@ var productionsTable = ProdTab{
 		Index:      224,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(
+			return dsl.NewASTNodeTerminalWithErrorReturn(
 				X[0],
 				dsl.NodeTypeConstant,
 			)
 		},
 	},
 	ProdTabEntry{
-		String: `MlrvalOrFunction : const_M_E	<< dsl.NewASTNodeTerminal(
+		String: `MlrvalOrFunction : const_M_E	<< dsl.NewASTNodeTerminalWithErrorReturn(
       X[0],
       dsl.NodeTypeConstant,
     ) >>`,
@@ -2569,20 +2569,20 @@ var productionsTable = ProdTab{
 		Index:      225,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(
+			return dsl.NewASTNodeTerminalWithErrorReturn(
 				X[0],
 				dsl.NodeTypeConstant,
 			)
 		},
 	},
 	ProdTabEntry{
-		String:     `MlrvalOrFunction : panic	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypePanic) >>`,
+		String:     `MlrvalOrFunction : panic	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypePanic) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      226,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypePanic)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypePanic)
 		},
 	},
 	ProdTabEntry{
@@ -2607,7 +2607,7 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ArrayLiteral : "[" ArrayLiteralElements "]"	<< dsl.AdoptChildren(
-        dsl.NewASTNodeNestable(
+        dsl.NewASTNodeTerminal(
           dsl.NewASTToken("[]", X[0]),
           dsl.NodeTypeArrayLiteral,
         ),
@@ -2619,7 +2619,7 @@ var productionsTable = ProdTab{
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return dsl.AdoptChildren(
-				dsl.NewASTNodeNestable(
+				dsl.NewASTNodeTerminal(
 					dsl.NewASTToken("[]", X[0]),
 					dsl.NodeTypeArrayLiteral,
 				),
@@ -2685,7 +2685,7 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MapLiteral : "{" MapLiteralKeyValuePairs "}"	<< dsl.AdoptChildren(
-        dsl.NewASTNodeNestable(
+        dsl.NewASTNodeTerminal(
           dsl.NewASTToken("{}", X[0]),
           dsl.NodeTypeMapLiteral,
         ),
@@ -2697,7 +2697,7 @@ var productionsTable = ProdTab{
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return dsl.AdoptChildren(
-				dsl.NewASTNodeNestable(
+				dsl.NewASTNodeTerminal(
 					dsl.NewASTToken("{}", X[0]),
 					dsl.NodeTypeMapLiteral,
 				),
@@ -2762,123 +2762,123 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_IPS	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_IPS	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      241,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_IFS	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_IFS	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      242,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_IRS	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_IRS	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      243,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_OPS	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_OPS	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      244,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_OFS	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_OFS	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      245,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_ORS	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_ORS	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      246,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_FLATSEP	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_FLATSEP	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      247,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_NF	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_NF	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      248,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_NR	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_NR	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      249,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_FNR	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_FNR	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      250,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_FILENAME	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_FILENAME	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      251,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String:     `ContextVariable : ctx_FILENUM	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable) >>`,
+		String:     `ContextVariable : ctx_FILENUM	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     68,
 		Index:      252,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeContextVariable)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
@@ -2902,13 +2902,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ENV : env "." non_sigil_name	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], dsl.NodeTypeEnvironmentVariable, []interface{}{dsl.NewASTNodeNestable(X[2], dsl.NodeTypeStringLiteral)})) >>`,
+		String: `ENV : env "." non_sigil_name	<< dsl.WithErrorReturn(dsl.NewASTNode(X[0], dsl.NodeTypeEnvironmentVariable, []interface{}{dsl.NewASTNodeTerminal(X[2], dsl.NodeTypeStringLiteral)})) >>`,
 		Id:         "ENV",
 		NTType:     69,
 		Index:      255,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], dsl.NodeTypeEnvironmentVariable, []interface{}{dsl.NewASTNodeNestable(X[2], dsl.NodeTypeStringLiteral)}))
+			return dsl.WithErrorReturn(dsl.NewASTNode(X[0], dsl.NodeTypeEnvironmentVariable, []interface{}{dsl.NewASTNodeTerminal(X[2], dsl.NodeTypeStringLiteral)}))
 		},
 	},
 	ProdTabEntry{
@@ -2992,7 +2992,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ArraySliceAccess : MlrvalOrFunction "[" ":" Rvalue "]"	<< dsl.WithErrorReturn(dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], dsl.NewASTNodeNestable(
+		String: `ArraySliceAccess : MlrvalOrFunction "[" ":" Rvalue "]"	<< dsl.WithErrorReturn(dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], dsl.NewASTNodeTerminal(
         X[2],
         dsl.NodeTypeArraySliceEmptyLowerIndex,
       ), X[3]})) >>`,
@@ -3001,14 +3001,14 @@ var productionsTable = ProdTab{
 		Index:      264,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.WithErrorReturn(dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], dsl.NewASTNodeNestable(
+			return dsl.WithErrorReturn(dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], dsl.NewASTNodeTerminal(
 					X[2],
 					dsl.NodeTypeArraySliceEmptyLowerIndex,
 				), X[3]}))
 		},
 	},
 	ProdTabEntry{
-		String: `ArraySliceAccess : MlrvalOrFunction "[" Rvalue ":" "]"	<< dsl.WithErrorReturn(dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], X[2], dsl.NewASTNodeNestable(
+		String: `ArraySliceAccess : MlrvalOrFunction "[" Rvalue ":" "]"	<< dsl.WithErrorReturn(dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], X[2], dsl.NewASTNodeTerminal(
         X[3],
         dsl.NodeTypeArraySliceEmptyUpperIndex,
       )})) >>`,
@@ -3017,17 +3017,17 @@ var productionsTable = ProdTab{
 		Index:      265,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.WithErrorReturn(dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], X[2], dsl.NewASTNodeNestable(
+			return dsl.WithErrorReturn(dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], X[2], dsl.NewASTNodeTerminal(
 					X[3],
 					dsl.NodeTypeArraySliceEmptyUpperIndex,
 				)}))
 		},
 	},
 	ProdTabEntry{
-		String: `ArraySliceAccess : MlrvalOrFunction "[" ":" "]"	<< dsl.WithErrorReturn(dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], dsl.NewASTNodeNestable(
+		String: `ArraySliceAccess : MlrvalOrFunction "[" ":" "]"	<< dsl.WithErrorReturn(dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], dsl.NewASTNodeTerminal(
         X[2],
         dsl.NodeTypeArraySliceEmptyLowerIndex,
-      ), dsl.NewASTNodeNestable(
+      ), dsl.NewASTNodeTerminal(
         X[2],
         dsl.NodeTypeArraySliceEmptyUpperIndex,
       )})) >>`,
@@ -3036,10 +3036,10 @@ var productionsTable = ProdTab{
 		Index:      266,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.WithErrorReturn(dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], dsl.NewASTNodeNestable(
+			return dsl.WithErrorReturn(dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], dsl.NewASTNodeTerminal(
 					X[2],
 					dsl.NodeTypeArraySliceEmptyLowerIndex,
-				), dsl.NewASTNodeNestable(
+				), dsl.NewASTNodeTerminal(
 					X[2],
 					dsl.NodeTypeArraySliceEmptyUpperIndex,
 				)}))
@@ -3067,7 +3067,7 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `FunctionCallsite : FunctionName "(" FcnArgs ")"	<< dsl.AdoptChildren(
-        dsl.NewASTNodeNestable(
+        dsl.NewASTNodeTerminal(
           X[0],
           dsl.NodeTypeFunctionCallsite,
         ),
@@ -3079,7 +3079,7 @@ var productionsTable = ProdTab{
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return dsl.AdoptChildren(
-				dsl.NewASTNodeNestable(
+				dsl.NewASTNodeTerminal(
 					X[0],
 					dsl.NodeTypeFunctionCallsite,
 				),
@@ -3165,7 +3165,7 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `SubroutineCallsite : call SubroutineName "(" FcnArgs ")"	<< dsl.AdoptChildren(
-        dsl.NewASTNodeNestable(
+        dsl.NewASTNodeTerminal(
           X[1],
           dsl.NodeTypeSubroutineCallsite,
         ),
@@ -3177,7 +3177,7 @@ var productionsTable = ProdTab{
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return dsl.AdoptChildren(
-				dsl.NewASTNodeNestable(
+				dsl.NewASTNodeTerminal(
 					X[1],
 					dsl.NodeTypeSubroutineCallsite,
 				),
@@ -3834,13 +3834,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `UntypedFuncOrSubrParameterName : non_sigil_name	<< dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeParameterName) >>`,
+		String:     `UntypedFuncOrSubrParameterName : non_sigil_name	<< dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeParameterName) >>`,
 		Id:         "UntypedFuncOrSubrParameterName",
 		NTType:     108,
 		Index:      334,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTerminal(X[0], dsl.NodeTypeParameterName)
+			return dsl.NewASTNodeTerminalWithErrorReturn(X[0], dsl.NodeTypeParameterName)
 		},
 	},
 	ProdTabEntry{

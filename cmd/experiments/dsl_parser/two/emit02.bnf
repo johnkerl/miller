@@ -21,7 +21,7 @@ emit : 'e' 'm' 'i' 't' ;
 // ----------------------------------------------------------------
 Root
   : EmitStatement
-   << dsl.NewAST($0) >>
+   << dsl.NewASTWithErrorReturn($0) >>
 ;
 
 // ----------------------------------------------------------------
@@ -50,7 +50,7 @@ EmitStatement
       $0,
       dsl.NodeTypeEmitStatement,
       []interface{}{
-        dsl.NewASTNodeNestable(
+        dsl.NewASTNodeTerminal(
           $1,
         ),
       }
