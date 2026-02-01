@@ -11,6 +11,7 @@ package mlrval
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"strconv"
@@ -27,6 +28,8 @@ const (
 	JSON_SINGLE_LINE = 1
 	JSON_MULTILINE   = 2
 )
+
+var prematureEofError error = errors.New("mlr: JSON parser: unexpected premature EOF")
 
 // ================================================================
 // The JSON decoder (https://golang.org/pkg/encoding/json/#Decoder) is quite
@@ -198,8 +201,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 			for decoder.More() {
 				element, eof, err := MlrvalDecodeFromJSON(decoder)
 				if eof {
-					// xxx constify
-					return nil, false, fmt.Errorf("mlr: JSON parser: unexpected premature EOF")
+					return nil, false, prematureEofError
 				}
 				if err != nil {
 					return nil, false, err
@@ -212,8 +214,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 			for decoder.More() {
 				key, eof, err := MlrvalDecodeFromJSON(decoder)
 				if eof {
-					// xxx constify
-					return nil, false, fmt.Errorf("mlr: JSON parser: unexpected premature EOF")
+					return nil, false, prematureEofError
 				}
 				if err != nil {
 					return nil, false, err
@@ -227,8 +228,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 
 				value, eof, err := MlrvalDecodeFromJSON(decoder)
 				if eof {
-					// xxx constify
-					return nil, false, fmt.Errorf("mlr: JSON parser: unexpected premature EOF")
+					return nil, false, prematureEofError
 				}
 				if err != nil {
 					return nil, false, err
