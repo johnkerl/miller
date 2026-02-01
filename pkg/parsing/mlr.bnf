@@ -2135,7 +2135,7 @@ PowTerm
   dsl.NodeTypeOperator,
   []interface{}{
     $0,
-    dsl.NewASTNodeUnaryNestable( $2, $3, dsl.NodeTypeOperator,),
+    dsl.NewASTNode( $2, dsl.NodeTypeOperator, []interface{}{$3}),
   }
   ))
     >>
@@ -2147,10 +2147,10 @@ PowTerm
       dsl.NodeTypeOperator,
       []interface{}{
         $0,
-        dsl.NewASTNodeUnaryNestable(
+        dsl.NewASTNode(
           $2,
-          $3,
           dsl.NodeTypeOperator,
+          []interface{}{$3},
         ),
       }
       ))
