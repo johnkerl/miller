@@ -370,7 +370,7 @@ func (tr *TransformerReorder) reorderBeforeOrAfterWithRegex(
 		return
 	}
 
-	matchingFieldNamesSet := lib.NewOrderedMap()
+	matchingFieldNamesSet := lib.NewOrderedMap[*mlrval.Mlrval]()
 	for pe := inrec.Head; pe != nil; pe = pe.Next {
 		for _, regex := range tr.regexes {
 			if regex.MatchString(pe.Key) {
@@ -390,7 +390,7 @@ func (tr *TransformerReorder) reorderBeforeOrAfterWithRegex(
 				outrec.PutReference(pe.Key, pe.Value)
 			}
 			for pf := matchingFieldNamesSet.Head; pf != nil; pf = pf.Next {
-				outrec.PutReference(pf.Key, pf.Value.(*mlrval.Mlrval))
+				outrec.PutReference(pf.Key, pf.Value)
 			}
 			if !tr.putAfter {
 				outrec.PutReference(pe.Key, pe.Value)

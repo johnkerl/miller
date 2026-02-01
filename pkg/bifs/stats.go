@@ -265,12 +265,12 @@ func bif_mode_or_antimode(
 	// Do not use a Go map[string]int as that makes the output in the case of ties
 	// (e.g. input = [3,3,4,4]) non-determinstic. That's bad for unit tests and also
 	// simply bad UX.
-	counts := lib.NewOrderedMap()
+	counts := lib.NewOrderedMap[int]()
 
 	// We use stringification to detect uniqueness. Yet we want the output to be typed,
 	// e.g. mode of an array of ints should be an int, not a string. Here we store
 	// a reference to one representative for each equivalence class.
-	reps := lib.NewOrderedMap()
+	reps := lib.NewOrderedMap[*mlrval.Mlrval]()
 
 	if collection.IsArray() {
 		a := collection.AcquireArrayValue()
@@ -280,7 +280,7 @@ func bif_mode_or_antimode(
 		for _, e := range a {
 			valueString := e.OriginalString()
 			if counts.Has(valueString) {
-				counts.Put(valueString, counts.Get(valueString).(int)+1)
+				counts.Put(valueString, counts.Get(valueString)+1)
 			} else {
 				counts.Put(valueString, 1)
 				reps.Put(valueString, e)
@@ -294,7 +294,7 @@ func bif_mode_or_antimode(
 		for pe := m.Head; pe != nil; pe = pe.Next {
 			valueString := pe.Value.OriginalString()
 			if counts.Has(valueString) {
-				counts.Put(valueString, counts.Get(valueString).(int)+1)
+				counts.Put(valueString, counts.Get(valueString)+1)
 			} else {
 				counts.Put(valueString, 1)
 				reps.Put(valueString, pe.Value)
@@ -306,16 +306,15 @@ func bif_mode_or_antimode(
 	maxv := -1
 	for pf := counts.Head; pf != nil; pf = pf.Next {
 		k := pf.Key
-		v := pf.Value.(int)
+		v := pf.Value
 		if first || cmp(v, maxv) {
 			maxk = k
 			maxv = v
 			first = false
 		}
 	}
-	// OrderedMap has interface{} values, so dereference as Mlrval. Then, copy the Mlrval
-	// so we're not returning a pointer to input data.
-	return reps.Get(maxk).(*mlrval.Mlrval).Copy()
+	// Copy the Mlrval so we're not returning a pointer to input data.
+	return reps.Get(maxk).Copy()
 }
 
 func BIF_sum(collection *mlrval.Mlrval) *mlrval.Mlrval {

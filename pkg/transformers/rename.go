@@ -134,7 +134,7 @@ type tRegexAndReplacement struct {
 }
 
 type TransformerRename struct {
-	oldToNewNames          *lib.OrderedMap
+	oldToNewNames          *lib.OrderedMap[string]
 	regexesAndReplacements *list.List
 	doGsub                 bool
 	recordTransformerFunc  RecordTransformerFunc
@@ -149,7 +149,7 @@ func NewTransformerRename(
 		return nil, fmt.Errorf("mlr rename: names string must have even length")
 	}
 
-	oldToNewNames := lib.NewOrderedMap()
+	oldToNewNames := lib.NewOrderedMap[string]()
 	n := len(names)
 	for i := 0; i < n; i += 2 {
 		oldName := names[i]
@@ -168,7 +168,7 @@ func NewTransformerRename(
 		for pe := oldToNewNames.Head; pe != nil; pe = pe.Next {
 			regexString := pe.Key
 			regex := lib.CompileMillerRegexOrDie(regexString)
-			replacement := pe.Value.(string)
+			replacement := pe.Value
 			_, replacementCaptureMatrix := lib.ReplacementHasCaptures(replacement)
 			regexAndReplacement := tRegexAndReplacement{
 				regex:                    regex,
@@ -208,7 +208,7 @@ func (tr *TransformerRename) transformWithoutRegexes(
 
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if tr.oldToNewNames.Has(pe.Key) {
-				newName := tr.oldToNewNames.Get(pe.Key).(string)
+				newName := tr.oldToNewNames.Get(pe.Key)
 				inrec.Rename(pe.Key, newName)
 			}
 

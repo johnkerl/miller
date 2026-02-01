@@ -295,7 +295,7 @@ type TransformerJoin struct {
 
 	// For unsorted/half-streaming input
 	ingested                         bool
-	leftBucketsByJoinFieldValues     *lib.OrderedMap
+	leftBucketsByJoinFieldValues     *lib.OrderedMap[*utils.JoinBucket]
 	leftUnpairableRecordsAndContexts *list.List
 
 	// For sorted/doubly-streaming input
@@ -334,7 +334,7 @@ func NewTransformerJoin(
 		// Half-streaming (default) case: ingest entire left file first.
 
 		tr.leftUnpairableRecordsAndContexts = list.New()
-		tr.leftBucketsByJoinFieldValues = lib.NewOrderedMap()
+		tr.leftBucketsByJoinFieldValues = lib.NewOrderedMap[*utils.JoinBucket]()
 		tr.recordTransformerFunc = tr.transformHalfStreaming
 
 	} else {
@@ -395,13 +395,12 @@ func (tr *TransformerJoin) transformHalfStreaming(
 			tr.opts.rightJoinFieldNames,
 		)
 		if hasAllJoinKeys {
-			iLeftBucket := tr.leftBucketsByJoinFieldValues.Get(groupingKey)
-			if iLeftBucket == nil {
+			leftBucket := tr.leftBucketsByJoinFieldValues.Get(groupingKey)
+			if leftBucket == nil {
 				if tr.opts.emitRightUnpairables {
 					outputRecordsAndContexts.PushBack(inrecAndContext)
 				}
 			} else {
-				leftBucket := iLeftBucket.(*utils.JoinBucket)
 				leftBucket.WasPaired = true
 				if tr.opts.emitPairables {
 					tr.formAndEmitPairs(
@@ -537,13 +536,12 @@ func (tr *TransformerJoin) ingestLeftFile() {
 				tr.opts.leftJoinFieldNames,
 			)
 			if ok {
-				iBucket := tr.leftBucketsByJoinFieldValues.Get(groupingKey)
-				if iBucket == nil { // New key-field-value: new bucket and hash-map entry
+				bucket := tr.leftBucketsByJoinFieldValues.Get(groupingKey)
+				if bucket == nil { // New key-field-value: new bucket and hash-map entry
 					bucket := utils.NewJoinBucket(leftFieldValues)
 					bucket.RecordsAndContexts.PushBack(leftrecAndContext)
 					tr.leftBucketsByJoinFieldValues.Put(groupingKey, bucket)
 				} else { // Previously seen key-field-value: append record to bucket
-					bucket := iBucket.(*utils.JoinBucket)
 					bucket.RecordsAndContexts.PushBack(leftrecAndContext)
 				}
 			} else {
@@ -639,7 +637,7 @@ func (tr *TransformerJoin) emitLeftUnpairedBuckets(
 	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 ) {
 	for pe := tr.leftBucketsByJoinFieldValues.Head; pe != nil; pe = pe.Next {
-		bucket := pe.Value.(*utils.JoinBucket)
+		bucket := pe.Value
 		if !bucket.WasPaired {
 			for pf := bucket.RecordsAndContexts.Front(); pf != nil; pf = pf.Next() {
 				recordAndContext := pf.Value.(*types.RecordAndContext)
