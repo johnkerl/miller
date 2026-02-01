@@ -19,7 +19,6 @@ func NewASTWithErrorReturn(iroot interface{}) (*AST, error) {
 	}, nil
 }
 
-// ----------------------------------------------------------------
 func NewASTNodeTerminal(itok interface{}, nodeType TNodeType) *ASTNode {
 	var tok *token.Token = nil
 	if itok != nil {

@@ -38,66 +38,55 @@ Root
 EmitStatement
   : emit Emittable
     <<
-      dsl.WithErrorReturn(dsl.NewASTNode(
-      $0,
-      dsl.NodeTypeEmitStatement,
-      []interface{}{
-        $1,
-      }
-      ))
-      /*
-      dsl.WithErrorReturn(dsl.NewASTNode(
-      $0,
-      dsl.NodeTypeEmitStatement,
-      []interface{}{
-        dsl.NewASTNodeTerminal(
-          $1,
-        ),
-      }
-      ))
-      */
+      dsl.NewASTNodeWithErrorReturn(
+          $0,
+          dsl.NodeTypeEmitStatement,
+          []interface{}{
+            $1,
+          },
+      )
     >>
 
   | emit "(" EmittableList ")"
-    << dsl.WithErrorReturn(dsl.NewASTNode(
-    $0,
-    dsl.NodeTypeEmitStatement,
-    []interface{}{
-      $2,
-    }
-    )) >>
+    << dsl.NewASTNodeWithErrorReturn(
+        $0,
+        dsl.NodeTypeEmitStatement,
+        []interface{}{
+          $2,
+        },
+        ) >>
 
   | emit Emittable "," EmitKeys
-    << dsl.WithErrorReturn(dsl.NewASTNode(
-    $0,
-    dsl.NodeTypeEmitStatement,
-    []interface{}{
-      $1,
-      $3,
-    }
-    )) >>
+    << dsl.NewASTNodeWithErrorReturn(
+        $0,
+        dsl.NodeTypeEmitStatement,
+        []interface{}{
+          $1,
+          $3,
+        },
+    ) >>
 
   | emit "(" EmittableList ")" "," EmitKeys
-    << dsl.WithErrorReturn(dsl.NewASTNode(
-    $0,
-    dsl.NodeTypeEmitStatement,
-    []interface{}{
-      $2,
-      $5,
-    }
-    )) >>
+    << dsl.NewASTNodeWithErrorReturn(
+        $0,
+        dsl.NodeTypeEmitStatement,
+        []interface{}{
+          $2,
+          $5,
+        },
+    ) >>
 ;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 EmittableList
   : Emittable
-    << dsl.WithErrorReturn(dsl.NewASTNode(
-    nil,
-    dsl.NodeTypeEmittableList,
-    []interface{}{
-      $0,
-    }
-    )) >>
+    << dsl.NewASTNodeWithErrorReturn(
+        nil,
+        dsl.NodeTypeEmittableList,
+        []interface{}{
+          $0,
+        }
+    ) >>
 
   // Allow trailing final comma, especially for multiline statements
   | Emittable "," EmittableList
@@ -115,13 +104,13 @@ Emittable
 EmitKeys
 
   : Rvalue
-    << dsl.WithErrorReturn(dsl.NewASTNode(
-    nil,
-    dsl.NodeTypeEmitKeys,
-    []interface{}{
-      $0,
-    }
-    )) >>
+    << dsl.NewASTNodeWithErrorReturn(
+        nil,
+        dsl.NodeTypeEmitKeys,
+        []interface{}{
+          $0,
+        },
+    ) >>
 
   | Rvalue "," EmitKeys
     << dsl.PrependChild(
@@ -134,54 +123,54 @@ EmitKeys
 // ----------------------------------------------------------------
 Rvalue
   : Literal
-    << dsl.WithErrorReturn(dsl.NewASTNode(
-    nil,
-    dsl.NodeTypeStringLiteral,
-    []interface{}{
-      $0,
-    }
-    )) >>
+    << dsl.NewASTNodeWithErrorReturn(
+        nil,
+        dsl.NodeTypeStringLiteral,
+        []interface{}{
+          $0,
+        },
+    ) >>
   | "(" Literal ")"
-    << dsl.WithErrorReturn(dsl.NewASTNode(
-    nil,
-    dsl.NodeTypeStringLiteral,
-    []interface{}{
-      $1,
-    }
-    )) >>
+    << dsl.NewASTNodeWithErrorReturn(
+        nil,
+        dsl.NodeTypeStringLiteral,
+        []interface{}{
+          $1,
+        },
+    ) >>
   | "[" Literal "]"
-    << dsl.WithErrorReturn(dsl.NewASTNode(
-    nil,
-    dsl.NodeTypeStringLiteral,
-    []interface{}{
-      $1,
-    }
+    << dsl.NewASTNodeWithErrorReturn(
+        nil,
+        dsl.NodeTypeStringLiteral,
+        []interface{}{
+          $1,
+        },
     )) >>
   | "[" Literal "," Literal "]"
-    << dsl.WithErrorReturn(dsl.NewASTNode(
-    nil,
-    dsl.NodeTypeStringLiteral,
-    []interface{}{
-      $1,
-      $2,
-    }
+    << dsl.NewASTNodeWithErrorReturn(
+        nil,
+        dsl.NodeTypeStringLiteral,
+        []interface{}{
+          $1,
+          $2,
+        },
     )) >>
 ;
 
 Literal
-  : "x" << dsl.WithErrorReturn(dsl.NewASTNode(
-  $0,
-  dsl.NodeTypeStringLiteral,
-  []interface{}{}
-  )) >>
-  | "y" << dsl.WithErrorReturn(dsl.NewASTNode(
-  $0,
-  dsl.NodeTypeStringLiteral,
-  []interface{}{}
-  )) >>
-  | "z" << dsl.WithErrorReturn(dsl.NewASTNode(
-  $0,
-  dsl.NodeTypeStringLiteral,
-  []interface{}{}
-  )) >>
+  : "x" << dsl.NewASTNodeWithErrorReturn(
+      $0,
+      dsl.NodeTypeStringLiteral,
+      []interface{}{},
+      ) >>
+  | "y" << dsl.NewASTNodeWithErrorReturn(
+      $0,
+      dsl.NodeTypeStringLiteral,
+      []interface{}{},
+      ) >>
+  | "z" << dsl.NewASTNodeWithErrorReturn(
+      $0,
+      dsl.NodeTypeStringLiteral,
+      []interface{}{},
+      )) >>
 ;
