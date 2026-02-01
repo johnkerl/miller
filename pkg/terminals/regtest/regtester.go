@@ -464,7 +464,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 	// Set any case-specific environment variables before running the case.
 	for pe := envKeyValuePairs.Head; pe != nil; pe = pe.Next {
 		key := pe.Key
-		value := pe.Value.(string)
+		value := pe.Value
 		if verbosityLevel >= 3 {
 			fmt.Printf("SETENV %s=%s\n", key, value)
 		}
@@ -825,12 +825,12 @@ func (regtester *RegTester) compareFiles(
 func (regtester *RegTester) loadEnvFile(
 	filename string,
 	caseDir string,
-) (*lib.OrderedMap, error) {
+) (*lib.OrderedMap[string], error) {
 	// If the file doesn't exist that's the normal case -- most cases do not
 	// have a .env file.
 	_, err := os.Stat(filename)
 	if os.IsNotExist(err) {
-		return lib.NewOrderedMap(), nil
+		return lib.NewOrderedMap[string](), nil
 	}
 
 	// If the file does exist and isn't loadable, that's an error.
@@ -839,7 +839,7 @@ func (regtester *RegTester) loadEnvFile(
 		return nil, err
 	}
 
-	keyValuePairs := lib.NewOrderedMap()
+	keyValuePairs := lib.NewOrderedMap[string]()
 	lines := strings.Split(contents, "\n")
 	for _, line := range lines {
 		line = strings.TrimSuffix(line, "\r")

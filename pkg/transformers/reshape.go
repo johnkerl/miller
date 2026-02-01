@@ -233,7 +233,7 @@ type TransformerReshape struct {
 	// for long-to-wide:
 	splitOutKeyFieldName            string
 	splitOutValueFieldName          string
-	otherKeysToOtherValuesToBuckets *lib.OrderedMap
+	otherKeysToOtherValuesToBuckets *lib.OrderedMap[*lib.OrderedMap[*tReshapeBucket]]
 
 	recordTransformerFunc RecordTransformerFunc
 }
@@ -255,7 +255,7 @@ func NewTransformerReshape(
 
 		splitOutKeyFieldName:            splitOutKeyFieldName,
 		splitOutValueFieldName:          splitOutValueFieldName,
-		otherKeysToOtherValuesToBuckets: lib.NewOrderedMap(),
+		otherKeysToOtherValuesToBuckets: lib.NewOrderedMap[*lib.OrderedMap[*tReshapeBucket]](),
 	}
 
 	if inputFieldRegexStrings != nil {
@@ -403,24 +403,22 @@ func (tr *TransformerReshape) longToWide(
 
 		// Don't unset tr.fieldName in the record, so we can implode in-place at the end.
 		otherKeysJoined := inrec.GetKeysJoined()
-		var otherValuesToBuckets *lib.OrderedMap = nil
+		var otherValuesToBuckets *lib.OrderedMap[*tReshapeBucket] = nil
 
 		iOtherValuesToBuckets := tr.otherKeysToOtherValuesToBuckets.Get(otherKeysJoined)
 		if iOtherValuesToBuckets == nil {
-			otherValuesToBuckets = lib.NewOrderedMap()
+			otherValuesToBuckets = lib.NewOrderedMap[*tReshapeBucket]()
 			tr.otherKeysToOtherValuesToBuckets.Put(otherKeysJoined, otherValuesToBuckets)
 		} else {
-			otherValuesToBuckets = iOtherValuesToBuckets.(*lib.OrderedMap)
+			otherValuesToBuckets = iOtherValuesToBuckets
 		}
 
 		otherValuesJoined := inrec.GetValuesJoined()
 		var bucket *tReshapeBucket = nil
-		iBucket := otherValuesToBuckets.Get(otherValuesJoined)
-		if iBucket == nil {
+		bucket = otherValuesToBuckets.Get(otherValuesJoined)
+		if bucket == nil {
 			bucket = newReshapeBucket(inrec)
 			otherValuesToBuckets.Put(otherValuesJoined, bucket)
-		} else {
-			bucket = iBucket.(*tReshapeBucket)
 		}
 
 		bucket.pairs.PutCopy(splitOutKeyFieldValue.String(), splitOutValueFieldValue)
@@ -428,9 +426,9 @@ func (tr *TransformerReshape) longToWide(
 	} else {
 
 		for pe := tr.otherKeysToOtherValuesToBuckets.Head; pe != nil; pe = pe.Next {
-			otherValuesToBuckets := pe.Value.(*lib.OrderedMap)
+			otherValuesToBuckets := pe.Value
 			for pf := otherValuesToBuckets.Head; pf != nil; pf = pf.Next {
-				bucket := pf.Value.(*tReshapeBucket)
+				bucket := pf.Value
 				outrec := bucket.representative
 				bucket.representative = nil // ownership transfer
 

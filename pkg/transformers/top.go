@@ -143,7 +143,7 @@ type TransformerTop struct {
 
 	// Two-level map from grouping key (string of joined-together group-by field values),
 	// to string value-field name, to *utils.TopKeeper
-	groups                           *lib.OrderedMap
+	groups                           *lib.OrderedMap[*lib.OrderedMap[*utils.TopKeeper]]
 	groupingKeysToGroupByFieldValues map[string][]*mlrval.Mlrval
 }
 
@@ -165,7 +165,7 @@ func NewTransformerTop(
 		doMax:             doMax,
 		outputFieldName:   outputFieldName,
 
-		groups:                           lib.NewOrderedMap(),
+		groups:                           lib.NewOrderedMap[*lib.OrderedMap[*utils.TopKeeper]](),
 		groupingKeysToGroupByFieldValues: make(map[string][]*mlrval.Mlrval),
 	}
 
@@ -200,13 +200,13 @@ func (tr *TransformerTop) ingest(
 		return
 	}
 	iSecondLevel := tr.groups.Get(groupingKey)
-	var secondLevel *lib.OrderedMap = nil
+	var secondLevel *lib.OrderedMap[*utils.TopKeeper] = nil
 	if iSecondLevel == nil {
-		secondLevel = lib.NewOrderedMap()
+		secondLevel = lib.NewOrderedMap[*utils.TopKeeper]()
 		tr.groups.Put(groupingKey, secondLevel)
 		tr.groupingKeysToGroupByFieldValues[groupingKey] = groupByFieldValues
 	} else {
-		secondLevel = iSecondLevel.(*lib.OrderedMap)
+		secondLevel = iSecondLevel
 	}
 
 	// for "x", "y" and "1", "2"
@@ -220,7 +220,7 @@ func (tr *TransformerTop) ingest(
 			topKeeper = utils.NewTopKeeper(tr.topCount, tr.doMax)
 			secondLevel.Put(valueFieldName, topKeeper)
 		} else {
-			topKeeper = iTopKeeper.(*utils.TopKeeper)
+			topKeeper = iTopKeeper
 		}
 
 		var maybeRecordAndContext *types.RecordAndContext = nil
@@ -242,7 +242,7 @@ func (tr *TransformerTop) emit(
 ) {
 	for pa := tr.groups.Head; pa != nil; pa = pa.Next {
 		groupingKey := pa.Key
-		secondLevel := pa.Value.(*lib.OrderedMap)
+		secondLevel := pa.Value
 		groupByFieldValues := tr.groupingKeysToGroupByFieldValues[groupingKey]
 
 		// Above we required that there be only one value field in the
@@ -250,7 +250,7 @@ func (tr *TransformerTop) emit(
 		// once, which would need a change in the format presented as output.
 		if tr.showFullRecords {
 			for pb := secondLevel.Head; pb != nil; pb = pb.Next {
-				topKeeper := pb.Value.(*utils.TopKeeper)
+				topKeeper := pb.Value
 				for i := int64(0); i < topKeeper.GetSize(); i++ {
 					outputRecordsAndContexts.PushBack(topKeeper.TopRecordsAndContexts[i].Copy())
 				}
@@ -270,7 +270,7 @@ func (tr *TransformerTop) emit(
 				// for "x", "y"
 				for pb := secondLevel.Head; pb != nil; pb = pb.Next {
 					valueFieldName := pb.Key
-					topKeeper := pb.Value.(*utils.TopKeeper)
+					topKeeper := pb.Value
 					key := valueFieldName + "_top"
 					if i < topKeeper.GetSize() {
 						newrec.PutReference(tr.outputFieldName, mlrval.FromInt(i+1))

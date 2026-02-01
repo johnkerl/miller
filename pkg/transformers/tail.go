@@ -110,7 +110,7 @@ type TransformerTail struct {
 
 	// state
 	// map from string to *list.List
-	recordListsByGroup *lib.OrderedMap
+	recordListsByGroup *lib.OrderedMap[*list.List]
 }
 
 func NewTransformerTail(
@@ -122,7 +122,7 @@ func NewTransformerTail(
 		tailCount:         tailCount,
 		groupByFieldNames: groupByFieldNames,
 
-		recordListsByGroup: lib.NewOrderedMap(),
+		recordListsByGroup: lib.NewOrderedMap[*list.List](),
 	}
 
 	return tr, nil
@@ -145,12 +145,11 @@ func (tr *TransformerTail) Transform(
 			return
 		}
 
-		irecordListForGroup := tr.recordListsByGroup.Get(groupingKey)
-		if irecordListForGroup == nil { // first time
-			irecordListForGroup = list.New()
-			tr.recordListsByGroup.Put(groupingKey, irecordListForGroup)
+		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
+		if recordListForGroup == nil { // first time
+			recordListForGroup = list.New()
+			tr.recordListsByGroup.Put(groupingKey, recordListForGroup)
 		}
-		recordListForGroup := irecordListForGroup.(*list.List)
 
 		recordListForGroup.PushBack(inrecAndContext)
 		for int64(recordListForGroup.Len()) > tr.tailCount {
@@ -159,7 +158,7 @@ func (tr *TransformerTail) Transform(
 
 	} else {
 		for outer := tr.recordListsByGroup.Head; outer != nil; outer = outer.Next {
-			recordListForGroup := outer.Value.(*list.List)
+			recordListForGroup := outer.Value
 			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
 				outputRecordsAndContexts.PushBack(inner.Value.(*types.RecordAndContext))
 			}

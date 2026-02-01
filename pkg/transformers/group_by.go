@@ -93,7 +93,7 @@ type TransformerGroupBy struct {
 
 	// state
 	// map from string to *list.List
-	recordListsByGroup *lib.OrderedMap
+	recordListsByGroup *lib.OrderedMap[*list.List]
 }
 
 func NewTransformerGroupBy(
@@ -103,7 +103,7 @@ func NewTransformerGroupBy(
 	tr := &TransformerGroupBy{
 		groupByFieldNames: groupByFieldNames,
 
-		recordListsByGroup: lib.NewOrderedMap(),
+		recordListsByGroup: lib.NewOrderedMap[*list.List](),
 	}
 
 	return tr, nil
@@ -132,11 +132,11 @@ func (tr *TransformerGroupBy) Transform(
 			tr.recordListsByGroup.Put(groupingKey, recordListForGroup)
 		}
 
-		recordListForGroup.(*list.List).PushBack(inrecAndContext)
+		recordListForGroup.PushBack(inrecAndContext)
 
 	} else {
 		for outer := tr.recordListsByGroup.Head; outer != nil; outer = outer.Next {
-			recordListForGroup := outer.Value.(*list.List)
+			recordListForGroup := outer.Value
 			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
 				outputRecordsAndContexts.PushBack(inner.Value.(*types.RecordAndContext))
 			}

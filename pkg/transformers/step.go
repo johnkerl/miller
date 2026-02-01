@@ -269,7 +269,7 @@ type TransformerStep struct {
 
 	// Ordered map from stringified pointer to recordAndContext, to *tStepLogEntry,
 	// as described in comments at the top of this file.
-	log *lib.OrderedMap
+	log *lib.OrderedMap[*tStepLogEntry]
 }
 
 func NewTransformerStep(
@@ -312,7 +312,7 @@ func NewTransformerStep(
 		maxNumRecordsForward:  maxNumRecordsForward,
 		groups:                make(map[string]map[string]map[string]tStepper),
 		windowKeepers:         make(map[string]*utils.TWindowKeeper),
-		log:                   lib.NewOrderedMap(),
+		log:                   lib.NewOrderedMap[*tStepLogEntry](),
 	}
 
 	return tr, nil
@@ -363,7 +363,7 @@ func (tr *TransformerStep) Transform(
 		// As described in comments at the top of this file: process through all delayed-input
 		// records for shift_lead, forward-sliding-window, etc. steppers.
 		for pe := tr.log.Head; pe != nil; pe = pe.Next {
-			logEntry := pe.Value.(*tStepLogEntry)
+			logEntry := pe.Value
 			// Shift by one -- if 'current' is the 9th record and 'next' is 10th, and there's no
 			// 11th, 'current' becomes the 10th and the 'next' becomes nil.
 			logEntry.windowKeeper.Ingest(nil)

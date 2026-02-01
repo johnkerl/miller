@@ -215,7 +215,7 @@ func transformerSummaryParseCLI(
 type tFieldSummary struct {
 	// Needs lib.OrderedMap, not map[string]int64, for deterministic regression-test output.
 	// This is a map (a set really) rather than a single value in case of heterogeneous data.
-	fieldTypesMap *lib.OrderedMap
+	fieldTypesMap *lib.OrderedMap[int64]
 
 	accumulators map[string]utils.IStats1Accumulator
 
@@ -224,7 +224,7 @@ type tFieldSummary struct {
 
 func newFieldSummary() *tFieldSummary {
 	fieldSummary := &tFieldSummary{
-		fieldTypesMap: lib.NewOrderedMap(),
+		fieldTypesMap: lib.NewOrderedMap[int64](),
 
 		accumulators: make(map[string]utils.IStats1Accumulator),
 
@@ -253,7 +253,7 @@ func newFieldSummary() *tFieldSummary {
 }
 
 type TransformerSummary struct {
-	fieldSummaries    *lib.OrderedMap
+	fieldSummaries    *lib.OrderedMap[*tFieldSummary]
 	summarizerNames   map[string]bool
 	hasAnyPercentiles bool
 	transposeOutput   bool
@@ -265,7 +265,7 @@ func NewTransformerSummary(
 ) (*TransformerSummary, error) {
 
 	tr := &TransformerSummary{
-		fieldSummaries:  lib.NewOrderedMap(),
+		fieldSummaries:  lib.NewOrderedMap[*tFieldSummary](),
 		summarizerNames: make(map[string]bool),
 		transposeOutput: transposeOutput,
 	}
@@ -316,24 +316,19 @@ func (tr *TransformerSummary) ingest(
 	for pe := inrec.Head; pe != nil; pe = pe.Next {
 		fieldName := pe.Key
 
-		iFieldSummary := tr.fieldSummaries.Get(fieldName)
-		var fieldSummary *tFieldSummary
-		if iFieldSummary == nil {
+		fieldSummary := tr.fieldSummaries.Get(fieldName)
+		if fieldSummary == nil {
 			fieldSummary = newFieldSummary()
 			tr.fieldSummaries.Put(fieldName, fieldSummary)
-		} else {
-			fieldSummary = iFieldSummary.(*tFieldSummary)
 		}
 
 		if tr.summarizerNames["field_type"] {
-			// Go generics would be grand to put into lib.OrderedMap, but not all platforms
-			// are on recent enough Go compiler versions.
 			typeName := pe.Value.GetTypeName()
-			iValue := fieldSummary.fieldTypesMap.Get(typeName)
-			if iValue == nil {
+			iValue, ok := fieldSummary.fieldTypesMap.GetWithCheck(typeName)
+			if !ok {
 				fieldSummary.fieldTypesMap.Put(typeName, int64(1))
 			} else {
-				fieldSummary.fieldTypesMap.Put(typeName, iValue.(int64)+1)
+				fieldSummary.fieldTypesMap.Put(typeName, iValue+1)
 			}
 		}
 
@@ -357,7 +352,7 @@ func (tr *TransformerSummary) emit(
 	for pe := tr.fieldSummaries.Head; pe != nil; pe = pe.Next {
 		newrec := mlrval.NewMlrmapAsRecord()
 		fieldName := pe.Key
-		fieldSummary := pe.Value.(*tFieldSummary)
+		fieldSummary := pe.Value
 
 		newrec.PutCopy("field_name", mlrval.FromString(fieldName))
 
@@ -402,7 +397,7 @@ func (tr *TransformerSummary) emitTransposed(
 		newrec := mlrval.NewMlrmapAsRecord()
 		newrec.PutCopy("field_name", mlrval.FromString("field_type"))
 		for pe := tr.fieldSummaries.Head; pe != nil; pe = pe.Next {
-			fieldSummary := pe.Value.(*tFieldSummary)
+			fieldSummary := pe.Value
 			fieldTypesList := make([]string, fieldSummary.fieldTypesMap.FieldCount)
 			i := 0
 			for pf := fieldSummary.fieldTypesMap.Head; pf != nil; pf = pf.Next {
@@ -439,7 +434,7 @@ func (tr *TransformerSummary) maybeEmitAccumulatorTransposed(
 		newrec := mlrval.NewMlrmapAsRecord()
 		newrec.PutCopy("field_name", mlrval.FromString(summarizerName))
 		for pe := tr.fieldSummaries.Head; pe != nil; pe = pe.Next {
-			fieldSummary := pe.Value.(*tFieldSummary)
+			fieldSummary := pe.Value
 			newrec.PutCopy(pe.Key, fieldSummary.accumulators[summarizerName].Emit())
 		}
 		oracs.PushBack(types.NewRecordAndContext(newrec, octx))
@@ -457,7 +452,7 @@ func (tr *TransformerSummary) maybeEmitPercentileNameTransposed(
 		newrec := mlrval.NewMlrmapAsRecord()
 		newrec.PutCopy("field_name", mlrval.FromString(summarizerName))
 		for pe := tr.fieldSummaries.Head; pe != nil; pe = pe.Next {
-			fieldSummary := pe.Value.(*tFieldSummary)
+			fieldSummary := pe.Value
 			newrec.PutCopy(pe.Key, fieldSummary.percentileKeeper.EmitNamed(summarizerName))
 		}
 		oracs.PushBack(types.NewRecordAndContext(newrec, octx))

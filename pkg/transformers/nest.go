@@ -246,7 +246,7 @@ type TransformerNest struct {
 	regex *regexp.Regexp
 
 	// For implode across records
-	otherKeysToOtherValuesToBuckets *lib.OrderedMap
+	otherKeysToOtherValuesToBuckets *lib.OrderedMap[*lib.OrderedMap[*tNestBucket]]
 
 	recordTransformerFunc RecordTransformerFunc
 }
@@ -281,7 +281,7 @@ func NewTransformerNest(
 	tr.regex = regex
 
 	// For implode across records
-	tr.otherKeysToOtherValuesToBuckets = lib.NewOrderedMap()
+	tr.otherKeysToOtherValuesToBuckets = lib.NewOrderedMap[*lib.OrderedMap[*tNestBucket]]()
 
 	if doExplode {
 		if doPairs {
@@ -547,23 +547,21 @@ func (tr *TransformerNest) implodeValueAcrossRecords(
 
 		// Don't unset tr.fieldName in the record, so we can implode in-place at the end.
 		otherKeysJoined := inrec.GetKeysJoinedExcept(originalEntry)
-		var otherValuesToBuckets *lib.OrderedMap = nil
+		var otherValuesToBuckets *lib.OrderedMap[*tNestBucket] = nil
 		iOtherValuesToBuckets := tr.otherKeysToOtherValuesToBuckets.Get(otherKeysJoined)
 		if iOtherValuesToBuckets == nil {
-			otherValuesToBuckets = lib.NewOrderedMap()
+			otherValuesToBuckets = lib.NewOrderedMap[*tNestBucket]()
 			tr.otherKeysToOtherValuesToBuckets.Put(otherKeysJoined, otherValuesToBuckets)
 		} else {
-			otherValuesToBuckets = iOtherValuesToBuckets.(*lib.OrderedMap)
+			otherValuesToBuckets = iOtherValuesToBuckets
 		}
 
 		otherValuesJoined := inrec.GetValuesJoinedExcept(originalEntry)
 		var bucket *tNestBucket = nil
-		iBucket := otherValuesToBuckets.Get(otherValuesJoined)
-		if iBucket == nil {
+		bucket = otherValuesToBuckets.Get(otherValuesJoined)
+		if bucket == nil {
 			bucket = newNestBucket(inrec)
 			otherValuesToBuckets.Put(otherValuesJoined, bucket)
-		} else {
-			bucket = iBucket.(*tNestBucket)
 		}
 
 		pair := mlrval.NewMlrmapAsRecord()
@@ -573,10 +571,10 @@ func (tr *TransformerNest) implodeValueAcrossRecords(
 	} else { // end of input stream
 
 		for pe := tr.otherKeysToOtherValuesToBuckets.Head; pe != nil; pe = pe.Next {
-			otherValuesToBuckets := pe.Value.(*lib.OrderedMap)
+			otherValuesToBuckets := pe.Value
 			for pf := otherValuesToBuckets.Head; pf != nil; pf = pf.Next {
 				var buffer bytes.Buffer
-				bucket := pf.Value.(*tNestBucket)
+				bucket := pf.Value
 				outrec := bucket.representative
 				bucket.representative = nil // ownership transfer
 
