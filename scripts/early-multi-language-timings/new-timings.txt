@@ -1,0 +1,24 @@
+
+bash ./new-timings.sh
+TIME IN SECONDS 9.691 -- ./catc
+TIME IN SECONDS 8.137 -- ./catc0
+TIME IN SECONDS 0.005 -- ./catm
+TIME IN SECONDS 12.975 -- ./catrust
+TIME IN SECONDS 52.282 -- ./catrust2
+TIME IN SECONDS 7.488 -- ./ff1
+TIME IN SECONDS 4.646 -- ./ff2
+TIME IN SECONDS 6.932 -- ./ff3
+TIME IN SECONDS 6.412 -- ./catgo
+
+TIME IN SECONDS 0.005 -- ./catm
+TIME IN SECONDS 4.646 -- ./ff2
+TIME IN SECONDS 6.412 -- ./catgo
+TIME IN SECONDS 6.932 -- ./ff3
+TIME IN SECONDS 7.488 -- ./ff1
+TIME IN SECONDS 8.137 -- ./catc0
+TIME IN SECONDS 9.691 -- ./catc
+TIME IN SECONDS 12.975 -- ./catrust
+TIME IN SECONDS 52.282 -- ./catrust2
+
+$ justtime mlr cat ~/tmp/big > /dev/null
+TIME IN SECONDS 79.106 -- mlr cat /Users/kerl/tmp/big
