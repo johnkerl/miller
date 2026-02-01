@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -296,7 +295,7 @@ type TransformerJoin struct {
 	// For unsorted/half-streaming input
 	ingested                         bool
 	leftBucketsByJoinFieldValues     *lib.OrderedMap[*utils.JoinBucket]
-	leftUnpairableRecordsAndContexts *list.List
+	leftUnpairableRecordsAndContexts []*types.RecordAndContext
 
 	// For sorted/doubly-streaming input
 	joinBucketKeeper *utils.JoinBucketKeeper
@@ -333,7 +332,7 @@ func NewTransformerJoin(
 	if opts.allowUnsortedInput {
 		// Half-streaming (default) case: ingest entire left file first.
 
-		tr.leftUnpairableRecordsAndContexts = list.New()
+		tr.leftUnpairableRecordsAndContexts = make([]*types.RecordAndContext, 0)
 		tr.leftBucketsByJoinFieldValues = lib.NewOrderedMap[*utils.JoinBucket]()
 		tr.recordTransformerFunc = tr.transformHalfStreaming
 
@@ -361,7 +360,7 @@ func NewTransformerJoin(
 
 func (tr *TransformerJoin) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -375,7 +374,7 @@ func (tr *TransformerJoin) Transform(
 // matching each right record against those.
 func (tr *TransformerJoin) transformHalfStreaming(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -398,7 +397,7 @@ func (tr *TransformerJoin) transformHalfStreaming(
 			leftBucket := tr.leftBucketsByJoinFieldValues.Get(groupingKey)
 			if leftBucket == nil {
 				if tr.opts.emitRightUnpairables {
-					outputRecordsAndContexts.PushBack(inrecAndContext)
+					*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 				}
 			} else {
 				leftBucket.WasPaired = true
@@ -411,7 +410,7 @@ func (tr *TransformerJoin) transformHalfStreaming(
 				}
 			}
 		} else if tr.opts.emitRightUnpairables {
-			outputRecordsAndContexts.PushBack(inrecAndContext)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 		}
 
 	} else { // end of record stream
@@ -419,14 +418,14 @@ func (tr *TransformerJoin) transformHalfStreaming(
 			tr.emitLeftUnpairedBuckets(outputRecordsAndContexts)
 			tr.emitLeftUnpairables(outputRecordsAndContexts)
 		}
-		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerJoin) transformDoublyStreaming(
 	rightRecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -451,7 +450,7 @@ func (tr *TransformerJoin) transformDoublyStreaming(
 		lefts := keeper.JoinBucket.RecordsAndContexts // keystroke-saver
 
 		if !isPaired && tr.opts.emitRightUnpairables {
-			outputRecordsAndContexts.PushBack(rightRecAndContext)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, rightRecAndContext)
 		}
 
 		if isPaired && tr.opts.emitPairables && lefts != nil {
@@ -465,7 +464,7 @@ func (tr *TransformerJoin) transformDoublyStreaming(
 			keeper.OutputAndReleaseLeftUnpaireds(outputRecordsAndContexts)
 		}
 
-		outputRecordsAndContexts.PushBack(rightRecAndContext) // emit end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, rightRecAndContext) // emit end-of-stream marker
 	}
 }
 
@@ -495,7 +494,7 @@ func (tr *TransformerJoin) ingestLeftFile() {
 	initialContext.UpdateForStartOfFile(tr.opts.leftFileName)
 
 	// Set up channels for the record-reader.
-	readerChannel := make(chan *list.List, 2) // list of *types.RecordAndContext
+	readerChannel := make(chan []*types.RecordAndContext, 2) // list of *types.RecordAndContext
 	errorChannel := make(chan error, 1)
 	downstreamDoneChannel := make(chan bool, 1)
 
@@ -518,8 +517,8 @@ func (tr *TransformerJoin) ingestLeftFile() {
 
 		case leftrecsAndContexts := <-readerChannel:
 			// TODO: temp for batch-reader refactor
-			lib.InternalCodingErrorIf(leftrecsAndContexts.Len() != 1)
-			leftrecAndContext := leftrecsAndContexts.Front().Value.(*types.RecordAndContext)
+			lib.InternalCodingErrorIf(len(leftrecsAndContexts) != 1)
+			leftrecAndContext := leftrecsAndContexts[0]
 			leftrecAndContext.Record = utils.KeepLeftFieldNames(leftrecAndContext.Record, tr.leftKeepFieldNameSet)
 
 			if leftrecAndContext.EndOfStream {
@@ -539,13 +538,13 @@ func (tr *TransformerJoin) ingestLeftFile() {
 				bucket := tr.leftBucketsByJoinFieldValues.Get(groupingKey)
 				if bucket == nil { // New key-field-value: new bucket and hash-map entry
 					bucket := utils.NewJoinBucket(leftFieldValues)
-					bucket.RecordsAndContexts.PushBack(leftrecAndContext)
+					bucket.RecordsAndContexts = append(bucket.RecordsAndContexts, leftrecAndContext)
 					tr.leftBucketsByJoinFieldValues.Put(groupingKey, bucket)
 				} else { // Previously seen key-field-value: append record to bucket
-					bucket.RecordsAndContexts.PushBack(leftrecAndContext)
+					bucket.RecordsAndContexts = append(bucket.RecordsAndContexts, leftrecAndContext)
 				}
 			} else {
-				tr.leftUnpairableRecordsAndContexts.PushBack(leftrecAndContext)
+				tr.leftUnpairableRecordsAndContexts = append(tr.leftUnpairableRecordsAndContexts, leftrecAndContext)
 			}
 		}
 	}
@@ -556,15 +555,14 @@ func (tr *TransformerJoin) ingestLeftFile() {
 // the doubly-streaming/sorted join.
 
 func (tr *TransformerJoin) formAndEmitPairs(
-	leftRecordsAndContexts *list.List,
+	leftRecordsAndContexts []*types.RecordAndContext,
 	rightRecordAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	////fmt.Println("-- pairs start") // VERBOSE
 	// Loop over each to-be-paired-with record from the left file.
-	for pe := leftRecordsAndContexts.Front(); pe != nil; pe = pe.Next() {
+	for _, leftRecordAndContext := range leftRecordsAndContexts {
 		////fmt.Println("-- pairs pe") // VERBOSE
-		leftRecordAndContext := pe.Value.(*types.RecordAndContext)
 		leftrec := leftRecordAndContext.Record
 		rightrec := rightRecordAndContext.Record
 
@@ -608,7 +606,7 @@ func (tr *TransformerJoin) formAndEmitPairs(
 		outrecAndContext := types.NewRecordAndContext(outrec, &context)
 
 		// Emit the new joined record on the downstream channel
-		outputRecordsAndContexts.PushBack(outrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, outrecAndContext)
 	}
 	////fmt.Println("-- pairs end") // VERBOSE
 }
@@ -624,24 +622,22 @@ func (tr *TransformerJoin) formAndEmitPairs(
 // in the second category.
 
 func (tr *TransformerJoin) emitLeftUnpairables(
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	// Loop over each to-be-paired-with record from the left file.
-	for pe := tr.leftUnpairableRecordsAndContexts.Front(); pe != nil; pe = pe.Next() {
-		leftRecordAndContext := pe.Value.(*types.RecordAndContext)
-		outputRecordsAndContexts.PushBack(leftRecordAndContext)
+	for _, leftRecordAndContext := range tr.leftUnpairableRecordsAndContexts {
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, leftRecordAndContext)
 	}
 }
 
 func (tr *TransformerJoin) emitLeftUnpairedBuckets(
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	for pe := tr.leftBucketsByJoinFieldValues.Head; pe != nil; pe = pe.Next {
 		bucket := pe.Value
 		if !bucket.WasPaired {
-			for pf := bucket.RecordsAndContexts.Front(); pf != nil; pf = pf.Next() {
-				recordAndContext := pf.Value.(*types.RecordAndContext)
-				outputRecordsAndContexts.PushBack(recordAndContext)
+			for _, recordAndContext := range bucket.RecordsAndContexts {
+				*outputRecordsAndContexts = append(*outputRecordsAndContexts, recordAndContext)
 			}
 		}
 	}

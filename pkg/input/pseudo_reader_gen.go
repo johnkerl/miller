@@ -1,7 +1,6 @@
 package input
 
 import (
-	"container/list"
 	"fmt"
 
 	"github.com/johnkerl/miller/v6/pkg/bifs"
@@ -28,7 +27,7 @@ func NewPseudoReaderGen(
 func (reader *PseudoReaderGen) Read(
 	filenames []string, // ignored
 	context types.Context,
-	readerChannel chan<- *list.List, // list of *types.RecordAndContext
+	readerChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -38,7 +37,7 @@ func (reader *PseudoReaderGen) Read(
 
 func (reader *PseudoReaderGen) process(
 	context *types.Context,
-	readerChannel chan<- *list.List, // list of *types.RecordAndContext
+	readerChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -71,7 +70,7 @@ func (reader *PseudoReaderGen) process(
 	key := reader.readerOptions.GeneratorOptions.FieldName
 	value := start.Copy()
 
-	recordsAndContexts := list.New()
+	recordsAndContexts := make([]*types.RecordAndContext, 0, recordsPerBatch)
 
 	eof := false
 	for !eof {
@@ -84,11 +83,11 @@ func (reader *PseudoReaderGen) process(
 		record.PutCopy(key, value)
 
 		context.UpdateForInputRecord()
-		recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
+		recordsAndContexts = append(recordsAndContexts, types.NewRecordAndContext(record, context))
 
-		if int64(recordsAndContexts.Len()) >= recordsPerBatch {
+		if int64(len(recordsAndContexts)) >= recordsPerBatch {
 			readerChannel <- recordsAndContexts
-			recordsAndContexts = list.New()
+			recordsAndContexts = make([]*types.RecordAndContext, 0, recordsPerBatch)
 
 			// See if downstream processors will be ignoring further data (e.g.
 			// mlr head).  If so, stop reading. This makes 'mlr head hugefile'
@@ -111,7 +110,7 @@ func (reader *PseudoReaderGen) process(
 		value = bifs.BIF_plus_binary(value, step)
 	}
 
-	if recordsAndContexts.Len() > 0 {
+	if len(recordsAndContexts) > 0 {
 		readerChannel <- recordsAndContexts
 	}
 }

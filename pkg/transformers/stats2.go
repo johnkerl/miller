@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -194,7 +193,7 @@ type TransformerStats2 struct {
 
 	// For hold-and-fit:
 	// ordered map from grouping-key to list of RecordAndContext
-	recordGroups *lib.OrderedMap[*list.List]
+	recordGroups *lib.OrderedMap[*[]*types.RecordAndContext]
 }
 
 func NewTransformerStats2(
@@ -221,7 +220,7 @@ func NewTransformerStats2(
 		accumulatorFactory:               utils.NewStats2AccumulatorFactory(),
 		namedAccumulators:                lib.NewOrderedMap[*lib.OrderedMap[*lib.OrderedMap[utils.IStats2Accumulator]]](),
 		groupingKeysToGroupByFieldValues: lib.NewOrderedMap[[]*mlrval.Mlrval](),
-		recordGroups:                     lib.NewOrderedMap[*list.List](),
+		recordGroups:                     lib.NewOrderedMap[*[]*types.RecordAndContext](),
 	}
 	return tr, nil
 }
@@ -265,7 +264,7 @@ func NewTransformerStats2(
 
 func (tr *TransformerStats2) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -276,7 +275,7 @@ func (tr *TransformerStats2) Transform(
 
 		if tr.doIterativeStats {
 			// The input record is modified in this case, with new fields appended
-			outputRecordsAndContexts.PushBack(inrecAndContext)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 		}
 		// if tr.doHoldAndFit, the input record is held by the ingestor
 
@@ -288,7 +287,7 @@ func (tr *TransformerStats2) Transform(
 				tr.emit(outputRecordsAndContexts, &inrecAndContext.Context)
 			}
 		}
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
 }
 
@@ -316,10 +315,11 @@ func (tr *TransformerStats2) ingest(
 	if tr.doHoldAndFit { // Retain the input record in memory, for fitting and delivery at end of stream
 		groupToRecords := tr.recordGroups.Get(groupingKey)
 		if groupToRecords == nil {
-			groupToRecords = list.New()
+			records := make([]*types.RecordAndContext, 0)
+			groupToRecords = &records
 			tr.recordGroups.Put(groupingKey, groupToRecords)
 		}
-		groupToRecords.PushBack(inrecAndContext)
+		*groupToRecords = append(*groupToRecords, inrecAndContext)
 	}
 
 	// for [["x","y"]]
@@ -382,7 +382,7 @@ func (tr *TransformerStats2) ingest(
 
 // ----------------------------------------------------------------
 func (tr *TransformerStats2) emit(
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	context *types.Context,
 ) {
 	for pa := tr.namedAccumulators.Head; pa != nil; pa = pa.Next {
@@ -415,7 +415,7 @@ func (tr *TransformerStats2) emit(
 			}
 		}
 
-		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, context))
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(outrec, context))
 	}
 }
 
@@ -433,15 +433,16 @@ func (tr *TransformerStats2) populateRecord(
 }
 
 func (tr *TransformerStats2) fit(
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	for pa := tr.namedAccumulators.Head; pa != nil; pa = pa.Next {
 		groupingKey := pa.Key
 		groupToValueFields := pa.Value
 		recordsAndContexts := tr.recordGroups.Get(groupingKey)
-
-		for recordsAndContexts.Front() != nil {
-			recordAndContext := recordsAndContexts.Remove(recordsAndContexts.Front()).(*types.RecordAndContext)
+		if recordsAndContexts == nil {
+			continue
+		}
+		for _, recordAndContext := range *recordsAndContexts {
 			record := recordAndContext.Record
 
 			// For "x","y"
@@ -468,7 +469,8 @@ func (tr *TransformerStats2) fit(
 				}
 			}
 
-			outputRecordsAndContexts.PushBack(recordAndContext)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, recordAndContext)
 		}
+		*recordsAndContexts = (*recordsAndContexts)[:0]
 	}
 }

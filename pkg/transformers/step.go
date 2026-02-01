@@ -68,7 +68,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -350,7 +349,7 @@ func NewTransformerStep(
 
 func (tr *TransformerStep) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -370,7 +369,7 @@ func (tr *TransformerStep) Transform(
 			tr.handleDrainRecord(logEntry, outputRecordsAndContexts)
 		}
 
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 		return
 	}
 }
@@ -381,7 +380,7 @@ func (tr *TransformerStep) Transform(
 // delayed-input records in the order in which they were received.
 func (tr *TransformerStep) handleRecord(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	inrec := inrecAndContext.Record
 
@@ -390,7 +389,7 @@ func (tr *TransformerStep) handleRecord(
 	// Grouping key is "s,t"
 	groupingKey, gok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 	if !gok { // current record doesn't have fields to be stepped; pass it along
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 		return
 	}
 
@@ -455,7 +454,7 @@ func (tr *TransformerStep) handleRecord(
 
 	if windowKeeper.Get(0) != nil {
 		outrecAndContext := windowKeeper.Get(0).(*types.RecordAndContext)
-		outputRecordsAndContexts.PushBack(outrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, outrecAndContext)
 		tr.removeFromLog(outrecAndContext)
 	}
 }
@@ -466,7 +465,7 @@ func (tr *TransformerStep) handleRecord(
 // delayed-input records in the order in which they were received.
 func (tr *TransformerStep) handleDrainRecord(
 	logEntry *tStepLogEntry,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	inrecAndContext := logEntry.recordAndContext
 	inrec := inrecAndContext.Record
@@ -496,7 +495,7 @@ func (tr *TransformerStep) handleDrainRecord(
 
 	if windowKeeper.Get(0) != nil {
 		outrecAndContext := windowKeeper.Get(0).(*types.RecordAndContext)
-		outputRecordsAndContexts.PushBack(outrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, outrecAndContext)
 	}
 }
 

@@ -108,7 +108,6 @@
 package utils
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -126,7 +125,7 @@ type JoinBucketKeeper struct {
 	// For streaming through the left-side file
 	recordReader  input.IRecordReader
 	context       *types.Context
-	readerChannel <-chan *list.List // list of *types.RecordAndContext
+	readerChannel <-chan []*types.RecordAndContext // list of *types.RecordAndContext
 	errorChannel  chan error
 	// TODO: merge with leof flag
 	recordReaderDone bool
@@ -152,7 +151,7 @@ type JoinBucketKeeper struct {
 
 	peekRecordAndContext *types.RecordAndContext
 	JoinBucket           *JoinBucket
-	leftUnpaireds        *list.List
+	leftUnpaireds        []*types.RecordAndContext
 
 	leof  bool
 	state tJoinBucketKeeperState
@@ -181,7 +180,7 @@ func NewJoinBucketKeeper(
 	initialContext.UpdateForStartOfFile(leftFileName)
 
 	// Set up channels for the record-reader
-	readerChannel := make(chan *list.List, 2) // list of *types.RecordAndContext
+	readerChannel := make(chan []*types.RecordAndContext, 2) // list of *types.RecordAndContext
 	errorChannel := make(chan error, 1)
 	downstreamDoneChannel := make(chan bool, 1)
 
@@ -201,7 +200,7 @@ func NewJoinBucketKeeper(
 
 		JoinBucket:           NewJoinBucket(nil),
 		peekRecordAndContext: nil,
-		leftUnpaireds:        list.New(),
+		leftUnpaireds:        make([]*types.RecordAndContext, 0),
 
 		leof:  false,
 		state: LEFT_STATE_0_PREFILL,
@@ -289,7 +288,7 @@ func (keeper *JoinBucketKeeper) FindJoinBucket(
 				}
 
 				// TODO: privatize more
-				if keeper.JoinBucket.RecordsAndContexts.Len() > 0 {
+				if len(keeper.JoinBucket.RecordsAndContexts) > 0 {
 					cmp := compareLexically(
 						keeper.JoinBucket.leftFieldValues,
 						rightFieldValues,
@@ -344,7 +343,7 @@ func (keeper *JoinBucketKeeper) prepareForFirstJoinBucket() {
 		if keeper.peekRecordAndContext.Record.HasSelectedKeys(keeper.leftJoinFieldNames) {
 			break
 		}
-		keeper.leftUnpaireds.PushBack(keeper.peekRecordAndContext)
+		keeper.leftUnpaireds = append(keeper.leftUnpaireds, keeper.peekRecordAndContext)
 	}
 
 	if keeper.peekRecordAndContext == nil {
@@ -374,7 +373,7 @@ func (keeper *JoinBucketKeeper) prepareForNewJoinBucket(
 	rightFieldValues []*mlrval.Mlrval,
 ) {
 	if !keeper.JoinBucket.WasPaired {
-		moveRecordsAndContexts(keeper.leftUnpaireds, keeper.JoinBucket.RecordsAndContexts)
+		moveRecordsAndContexts(&keeper.leftUnpaireds, &keeper.JoinBucket.RecordsAndContexts)
 	}
 	keeper.JoinBucket = NewJoinBucket(nil)
 
@@ -401,7 +400,7 @@ func (keeper *JoinBucketKeeper) prepareForNewJoinBucket(
 	// Keep seeking and filling the bucket until = or >; this may or may not
 	// end up being a match.
 	for {
-		keeper.leftUnpaireds.PushBack(keeper.peekRecordAndContext)
+		keeper.leftUnpaireds = append(keeper.leftUnpaireds, keeper.peekRecordAndContext)
 		keeper.peekRecordAndContext = nil
 
 		for {
@@ -416,7 +415,7 @@ func (keeper *JoinBucketKeeper) prepareForNewJoinBucket(
 			if peekRec.HasSelectedKeys(keeper.leftJoinFieldNames) {
 				break
 			}
-			keeper.leftUnpaireds.PushBack(keeper.peekRecordAndContext)
+			keeper.leftUnpaireds = append(keeper.leftUnpaireds, keeper.peekRecordAndContext)
 		}
 
 		// Double break from double for-loop
@@ -470,7 +469,7 @@ func (keeper *JoinBucketKeeper) fillNextJoinBucket() {
 	}
 
 	keeper.JoinBucket.leftFieldValues = mlrval.CopyMlrvalArray(peekFieldValues)
-	keeper.JoinBucket.RecordsAndContexts.PushBack(keeper.peekRecordAndContext)
+	keeper.JoinBucket.RecordsAndContexts = append(keeper.JoinBucket.RecordsAndContexts, keeper.peekRecordAndContext)
 	keeper.JoinBucket.WasPaired = false
 
 	keeper.peekRecordAndContext = nil
@@ -497,9 +496,9 @@ func (keeper *JoinBucketKeeper) fillNextJoinBucket() {
 			if cmp != 0 {
 				break
 			}
-			keeper.JoinBucket.RecordsAndContexts.PushBack(keeper.peekRecordAndContext)
+			keeper.JoinBucket.RecordsAndContexts = append(keeper.JoinBucket.RecordsAndContexts, keeper.peekRecordAndContext)
 		} else {
-			keeper.leftUnpaireds.PushBack(keeper.peekRecordAndContext)
+			keeper.leftUnpaireds = append(keeper.leftUnpaireds, keeper.peekRecordAndContext)
 		}
 		keeper.peekRecordAndContext = nil
 	}
@@ -510,13 +509,13 @@ func (keeper *JoinBucketKeeper) fillNextJoinBucket() {
 func (keeper *JoinBucketKeeper) markRemainingsAsUnpaired() {
 	// 1. Any records already in keeper.JoinBucket.records (current bucket)
 	if !keeper.JoinBucket.WasPaired {
-		moveRecordsAndContexts(keeper.leftUnpaireds, keeper.JoinBucket.RecordsAndContexts)
+		moveRecordsAndContexts(&keeper.leftUnpaireds, &keeper.JoinBucket.RecordsAndContexts)
 	}
 	keeper.JoinBucket.RecordsAndContexts = nil
 
 	// 2. Peek-record, if any
 	if keeper.peekRecordAndContext != nil {
-		keeper.leftUnpaireds.PushBack(keeper.peekRecordAndContext)
+		keeper.leftUnpaireds = append(keeper.leftUnpaireds, keeper.peekRecordAndContext)
 		keeper.peekRecordAndContext = nil
 	}
 
@@ -526,36 +525,26 @@ func (keeper *JoinBucketKeeper) markRemainingsAsUnpaired() {
 		if keeper.peekRecordAndContext == nil {
 			break
 		}
-		keeper.leftUnpaireds.PushBack(keeper.peekRecordAndContext)
+		keeper.leftUnpaireds = append(keeper.leftUnpaireds, keeper.peekRecordAndContext)
 	}
 }
 
 // ----------------------------------------------------------------
 // TODO: comment
 func (keeper *JoinBucketKeeper) OutputAndReleaseLeftUnpaireds(
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
-	for {
-		element := keeper.leftUnpaireds.Front()
-		if element == nil {
-			break
-		}
-		recordAndContext := element.Value.(*types.RecordAndContext)
-		outputRecordsAndContexts.PushBack(recordAndContext)
-		keeper.leftUnpaireds.Remove(element)
+	for len(keeper.leftUnpaireds) > 0 {
+		recordAndContext := keeper.leftUnpaireds[0]
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, recordAndContext)
+		keeper.leftUnpaireds = keeper.leftUnpaireds[1:]
 	}
 }
 
 func (keeper *JoinBucketKeeper) ReleaseLeftUnpaireds(
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
-	for {
-		element := keeper.leftUnpaireds.Front()
-		if element == nil {
-			break
-		}
-		keeper.leftUnpaireds.Remove(element)
-	}
+	keeper.leftUnpaireds = keeper.leftUnpaireds[:0]
 }
 
 // ================================================================
@@ -576,8 +565,8 @@ func (keeper *JoinBucketKeeper) readRecord() *types.RecordAndContext {
 		os.Exit(1)
 	case leftrecsAndContexts := <-keeper.readerChannel:
 		// TODO: temp
-		lib.InternalCodingErrorIf(leftrecsAndContexts.Len() != 1)
-		leftrecAndContext := leftrecsAndContexts.Front().Value.(*types.RecordAndContext)
+		lib.InternalCodingErrorIf(len(leftrecsAndContexts) != 1)
+		leftrecAndContext := leftrecsAndContexts[0]
 		leftrecAndContext.Record = KeepLeftFieldNames(leftrecAndContext.Record, keeper.leftKeepFieldNameSet)
 		if leftrecAndContext.EndOfStream { // end-of-stream marker
 			keeper.recordReaderDone = true
@@ -594,17 +583,11 @@ func (keeper *JoinBucketKeeper) readRecord() *types.RecordAndContext {
 // Pops everything off second-argument list and push to first-argument list.
 
 func moveRecordsAndContexts(
-	destination *list.List,
-	source *list.List,
+	destination *[]*types.RecordAndContext,
+	source *[]*types.RecordAndContext,
 ) {
-	for {
-		element := source.Front()
-		if element == nil {
-			break
-		}
-		destination.PushBack(element.Value.(*types.RecordAndContext))
-		source.Remove(element)
-	}
+	*destination = append(*destination, (*source)...)
+	*source = (*source)[:0]
 }
 
 // ----------------------------------------------------------------

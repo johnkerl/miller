@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -105,7 +104,7 @@ type TransformerCountSimilar struct {
 	counterFieldName  string
 
 	// State:
-	recordListsByGroup *lib.OrderedMap[*list.List] // map from string to *list.List
+	recordListsByGroup *lib.OrderedMap[*[]*types.RecordAndContext] // map from string to records
 }
 
 // ----------------------------------------------------------------
@@ -116,7 +115,7 @@ func NewTransformerCountSimilar(
 	tr := &TransformerCountSimilar{
 		groupByFieldNames:  groupByFieldNames,
 		counterFieldName:   counterFieldName,
-		recordListsByGroup: lib.NewOrderedMap[*list.List](),
+		recordListsByGroup: lib.NewOrderedMap[*[]*types.RecordAndContext](),
 	}
 	return tr, nil
 }
@@ -125,7 +124,7 @@ func NewTransformerCountSimilar(
 
 func (tr *TransformerCountSimilar) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -140,26 +139,26 @@ func (tr *TransformerCountSimilar) Transform(
 
 		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
 		if recordListForGroup == nil { // first time
-			recordListForGroup = list.New()
+			records := make([]*types.RecordAndContext, 0)
+			recordListForGroup = &records
 			tr.recordListsByGroup.Put(groupingKey, recordListForGroup)
 		}
 
-		recordListForGroup.PushBack(inrecAndContext)
+		*recordListForGroup = append(*recordListForGroup, inrecAndContext)
 	} else {
 
 		for outer := tr.recordListsByGroup.Head; outer != nil; outer = outer.Next {
 			recordListForGroup := outer.Value
 			// TODO: make 64-bit friendly
-			groupSize := recordListForGroup.Len()
+			groupSize := len(*recordListForGroup)
 			mgroupSize := mlrval.FromInt(int64(groupSize))
-			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
-				recordAndContext := inner.Value.(*types.RecordAndContext)
+			for _, recordAndContext := range *recordListForGroup {
 				recordAndContext.Record.PutCopy(tr.counterFieldName, mgroupSize)
 
-				outputRecordsAndContexts.PushBack(recordAndContext)
+				*outputRecordsAndContexts = append(*outputRecordsAndContexts, recordAndContext)
 			}
 		}
 
-		outputRecordsAndContexts.PushBack(inrecAndContext) // Emit the stream-terminating null record
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // Emit the stream-terminating null record
 	}
 }

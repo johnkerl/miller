@@ -2,7 +2,6 @@ package output
 
 import (
 	"bufio"
-	"container/list"
 	"fmt"
 	"os"
 
@@ -11,7 +10,7 @@ import (
 )
 
 func ChannelWriter(
-	writerChannel <-chan *list.List, // list of *types.RecordAndContext
+	writerChannel <-chan []*types.RecordAndContext, // list of *types.RecordAndContext
 	recordWriter IRecordWriter,
 	writerOptions *cli.TWriterOptions,
 	doneChannel chan<- bool,
@@ -45,16 +44,14 @@ func ChannelWriter(
 // TODO: comment
 // Returns true on end of record stream
 func channelWriterHandleBatch(
-	recordsAndContexts *list.List,
+	recordsAndContexts []*types.RecordAndContext,
 	recordWriter IRecordWriter,
 	writerOptions *cli.TWriterOptions,
 	dataProcessingErrorChannel chan<- bool,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) (done bool, errored bool) {
-	for e := recordsAndContexts.Front(); e != nil; e = e.Next() {
-		recordAndContext := e.Value.(*types.RecordAndContext)
-
+	for _, recordAndContext := range recordsAndContexts {
 		// Three things can come through:
 		// * End-of-stream marker
 		// * Non-nil records to be printed

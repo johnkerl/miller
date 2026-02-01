@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -500,7 +499,7 @@ func NewTransformerPut(
 
 func (tr *TransformerPut) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -566,7 +565,7 @@ func (tr *TransformerPut) Transform(
 
 			wantToEmit := lib.BooleanXOR(filterBool, tr.invertFilter)
 			if wantToEmit {
-				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &context))
+				*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(outrec, &context))
 			}
 		}
 
@@ -594,6 +593,6 @@ func (tr *TransformerPut) Transform(
 		// indicator.
 		tr.cstRootNode.ProcessEndOfStream()
 
-		outputRecordsAndContexts.PushBack(types.NewEndOfStreamMarker(&context))
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewEndOfStreamMarker(&context))
 	}
 }

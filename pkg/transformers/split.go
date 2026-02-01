@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"net/url"
 	"os"
@@ -273,7 +272,7 @@ func NewTransformerSplit(
 
 func (tr *TransformerSplit) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -284,7 +283,7 @@ func (tr *TransformerSplit) Transform(
 
 func (tr *TransformerSplit) splitModUngrouped(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -299,13 +298,13 @@ func (tr *TransformerSplit) splitModUngrouped(
 		}
 
 		if tr.emitDownstream {
-			outputRecordsAndContexts.PushBack(inrecAndContext)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 		}
 
 		tr.ungroupedCounter++
 
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 		errs := tr.outputHandlerManager.Close()
 		if len(errs) > 0 {
 			for _, err := range errs {
@@ -318,7 +317,7 @@ func (tr *TransformerSplit) splitModUngrouped(
 
 func (tr *TransformerSplit) splitSizeUngrouped(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -356,13 +355,13 @@ func (tr *TransformerSplit) splitSizeUngrouped(
 		}
 
 		if tr.emitDownstream {
-			outputRecordsAndContexts.PushBack(inrecAndContext)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 		}
 
 		tr.ungroupedCounter++
 
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 
 		if tr.outputHandler != nil {
 			err := tr.outputHandler.Close()
@@ -376,7 +375,7 @@ func (tr *TransformerSplit) splitSizeUngrouped(
 
 func (tr *TransformerSplit) splitGrouped(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -395,11 +394,11 @@ func (tr *TransformerSplit) splitGrouped(
 		}
 
 		if tr.emitDownstream {
-			outputRecordsAndContexts.PushBack(inrecAndContext)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 		}
 
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
 
 		errs := tr.outputHandlerManager.Close()
 		if len(errs) > 0 {

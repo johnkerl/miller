@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"regexp"
@@ -202,7 +201,7 @@ func NewTransformerReorder(
 
 func (tr *TransformerReorder) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -213,29 +212,29 @@ func (tr *TransformerReorder) Transform(
 			outputRecordsAndContexts,
 		)
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
 }
 
 func (tr *TransformerReorder) reorderToStartNoRegex(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	inrec := inrecAndContext.Record
 	for _, fieldName := range tr.fieldNames {
 		inrec.MoveToHead(fieldName)
 	}
-	outputRecordsAndContexts.PushBack(inrecAndContext)
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }
 
 func (tr *TransformerReorder) reorderToStartWithRegex(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	inrec := inrecAndContext.Record
 
 	outrec := mlrval.NewMlrmapAsRecord()
-	atEnds := list.New()
+	atEnds := make([]*mlrval.MlrmapEntry, 0)
 	for pe := inrec.Head; pe != nil; pe = pe.Next {
 		found := false
 		for _, regex := range tr.regexes {
@@ -246,44 +245,43 @@ func (tr *TransformerReorder) reorderToStartWithRegex(
 			}
 		}
 		if !found {
-			atEnds.PushBack(pe)
+			atEnds = append(atEnds, pe)
 		}
 	}
 
-	for atEnd := atEnds.Front(); atEnd != nil; atEnd = atEnd.Next() {
+	for _, pe := range atEnds {
 		// Ownership transfer; no copy needed
-		pe := atEnd.Value.(*mlrval.MlrmapEntry)
 		outrec.PutReference(pe.Key, pe.Value)
 	}
 
 	outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
-	outputRecordsAndContexts.PushBack(outrecAndContext)
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, outrecAndContext)
 }
 
 func (tr *TransformerReorder) reorderToEndNoRegex(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	inrec := inrecAndContext.Record
 	for _, fieldName := range tr.fieldNames {
 		inrec.MoveToTail(fieldName)
 	}
-	outputRecordsAndContexts.PushBack(inrecAndContext)
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 
 }
 
 func (tr *TransformerReorder) reorderToEndWithRegex(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	inrec := inrecAndContext.Record
 	outrec := mlrval.NewMlrmapAsRecord()
-	atEnds := list.New()
+	atEnds := make([]*mlrval.MlrmapEntry, 0)
 	for pe := inrec.Head; pe != nil; pe = pe.Next {
 		found := false
 		for _, regex := range tr.regexes {
 			if regex.MatchString(pe.Key) {
-				atEnds.PushBack(pe)
+				atEnds = append(atEnds, pe)
 				found = true
 				break
 			}
@@ -293,23 +291,22 @@ func (tr *TransformerReorder) reorderToEndWithRegex(
 		}
 	}
 
-	for atEnd := atEnds.Front(); atEnd != nil; atEnd = atEnd.Next() {
+	for _, pe := range atEnds {
 		// Ownership transfer; no copy needed
-		pe := atEnd.Value.(*mlrval.MlrmapEntry)
 		outrec.PutReference(pe.Key, pe.Value)
 	}
 
 	outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
-	outputRecordsAndContexts.PushBack(outrecAndContext)
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, outrecAndContext)
 }
 
 func (tr *TransformerReorder) reorderBeforeOrAfterNoRegex(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	inrec := inrecAndContext.Record
 	if inrec.Get(tr.centerFieldName) == nil {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 		return
 	}
 
@@ -356,17 +353,17 @@ func (tr *TransformerReorder) reorderBeforeOrAfterNoRegex(
 		}
 	}
 
-	outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 
 }
 
 func (tr *TransformerReorder) reorderBeforeOrAfterWithRegex(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	inrec := inrecAndContext.Record
 	if inrec.Get(tr.centerFieldName) == nil {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 		return
 	}
 
@@ -400,5 +397,5 @@ func (tr *TransformerReorder) reorderBeforeOrAfterWithRegex(
 		}
 	}
 
-	outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 }

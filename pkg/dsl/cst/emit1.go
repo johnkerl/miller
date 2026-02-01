@@ -66,7 +66,7 @@ func (node *Emit1StatementNode) Execute(state *runtime.State) (*BlockExitPayload
 	}
 
 	if state.OutputRecordsAndContexts != nil {
-		state.OutputRecordsAndContexts.PushBack(types.NewRecordAndContext(valueAsMap, state.Context))
+		*state.OutputRecordsAndContexts = append(*state.OutputRecordsAndContexts, types.NewRecordAndContext(valueAsMap, state.Context))
 	} else {
 		fmt.Println(valueAsMap.String())
 	}

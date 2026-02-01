@@ -6,7 +6,6 @@ package repl
 
 import (
 	"bufio"
-	"container/list"
 	"os"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
@@ -14,6 +13,7 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/input"
 	"github.com/johnkerl/miller/v6/pkg/output"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
 // ================================================================
@@ -46,7 +46,7 @@ type Repl struct {
 
 	options *cli.TOptions
 
-	readerChannel         chan *list.List // list of *types.RecordAndContext
+	readerChannel         chan []*types.RecordAndContext // list of *types.RecordAndContext
 	errorChannel          chan error
 	downstreamDoneChannel chan bool
 	recordReader          input.IRecordReader

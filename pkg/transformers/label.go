@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -120,7 +119,7 @@ func NewTransformerLabel(
 
 func (tr *TransformerLabel) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -129,5 +128,5 @@ func (tr *TransformerLabel) Transform(
 		inrec := inrecAndContext.Record
 		inrec.Label(tr.newNames)
 	}
-	outputRecordsAndContexts.PushBack(inrecAndContext) // including end-of-stream marker
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // including end-of-stream marker
 }

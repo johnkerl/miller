@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -292,7 +291,7 @@ func NewTransformerSummary(
 
 func (tr *TransformerSummary) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -346,7 +345,7 @@ func (tr *TransformerSummary) ingest(
 
 func (tr *TransformerSummary) emit(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 
 	for pe := tr.fieldSummaries.Head; pe != nil; pe = pe.Next {
@@ -380,15 +379,15 @@ func (tr *TransformerSummary) emit(
 			}
 		}
 
-		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 	}
 
-	outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 }
 
 func (tr *TransformerSummary) emitTransposed(
 	inrecAndContext *types.RecordAndContext,
-	oracs *list.List, // list of *types.RecordAndContext
+	oracs *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	octx := &inrecAndContext.Context
 
@@ -407,7 +406,7 @@ func (tr *TransformerSummary) emitTransposed(
 			}
 			newrec.PutCopy(pe.Key, mlrval.FromString(strings.Join(fieldTypesList, "-")))
 		}
-		oracs.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+		*oracs = append(*oracs, types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 	}
 
 	for _, info := range allSummarizerInfos {
@@ -418,7 +417,7 @@ func (tr *TransformerSummary) emitTransposed(
 		}
 	}
 
-	oracs.PushBack(inrecAndContext) // end-of-stream marker
+	*oracs = append(*oracs, inrecAndContext) // end-of-stream marker
 }
 
 // ----------------------------------------------------------------
@@ -426,7 +425,7 @@ func (tr *TransformerSummary) emitTransposed(
 // maybeEmitAccumulatorTransposed is a helper method for emitTransposed,
 // for "count", "sum", "mean", etc.
 func (tr *TransformerSummary) maybeEmitAccumulatorTransposed(
-	oracs *list.List, // list of *types.RecordAndContext
+	oracs *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	octx *types.Context,
 	summarizerName string,
 ) {
@@ -437,14 +436,14 @@ func (tr *TransformerSummary) maybeEmitAccumulatorTransposed(
 			fieldSummary := pe.Value
 			newrec.PutCopy(pe.Key, fieldSummary.accumulators[summarizerName].Emit())
 		}
-		oracs.PushBack(types.NewRecordAndContext(newrec, octx))
+		*oracs = append(*oracs, types.NewRecordAndContext(newrec, octx))
 	}
 }
 
 // maybeEmitPercentileNameTransposed is a helper method for emitTransposed,
 // for "median", "iqr", "uof", etc.
 func (tr *TransformerSummary) maybeEmitPercentileNameTransposed(
-	oracs *list.List, // list of *types.RecordAndContext
+	oracs *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	octx *types.Context,
 	summarizerName string,
 ) {
@@ -455,6 +454,6 @@ func (tr *TransformerSummary) maybeEmitPercentileNameTransposed(
 			fieldSummary := pe.Value
 			newrec.PutCopy(pe.Key, fieldSummary.percentileKeeper.EmitNamed(summarizerName))
 		}
-		oracs.PushBack(types.NewRecordAndContext(newrec, octx))
+		*oracs = append(*oracs, types.NewRecordAndContext(newrec, octx))
 	}
 }

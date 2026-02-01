@@ -1,11 +1,11 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
+	"os"
+
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/types"
-	"os"
 )
 
 // ================================================================
@@ -143,18 +143,18 @@ import (
 // subdivides goroutines for each transformer in the chain, with intermediary
 // channels between them.
 func ChainTransformer(
-	readerRecordChannel <-chan *list.List, // list of *types.RecordAndContext
+	readerRecordChannel <-chan []*types.RecordAndContext, // list of *types.RecordAndContext
 	readerDownstreamDoneChannel chan<- bool, // for mlr head -- see also stream.go
 	recordTransformers []IRecordTransformer, // not *recordTransformer since this is an interface
-	writerRecordChannel chan<- *list.List, // list of *types.RecordAndContext
+	writerRecordChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	options *cli.TOptions,
 ) {
 	i := 0
 	n := len(recordTransformers)
 
-	intermediateRecordChannels := make([]chan *list.List, n-1) // list of *types.RecordAndContext
+	intermediateRecordChannels := make([]chan []*types.RecordAndContext, n-1) // list of *types.RecordAndContext
 	for i = 0; i < n-1; i++ {
-		intermediateRecordChannels[i] = make(chan *list.List, 1) // list of *types.RecordAndContext
+		intermediateRecordChannels[i] = make(chan []*types.RecordAndContext, 1) // list of *types.RecordAndContext
 	}
 
 	intermediateDownstreamDoneChannels := make([]chan bool, n)
@@ -199,8 +199,8 @@ func ChainTransformer(
 func runSingleTransformer(
 	recordTransformer IRecordTransformer,
 	isFirstInChain bool,
-	inputRecordChannel <-chan *list.List, // list of *types.RecordAndContext
-	outputRecordChannel chan<- *list.List, // list of *types.RecordAndContext
+	inputRecordChannel <-chan []*types.RecordAndContext, // list of *types.RecordAndContext
+	outputRecordChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 	options *cli.TOptions,
@@ -224,20 +224,18 @@ func runSingleTransformer(
 // TODO: comment
 // Returns true on end of record stream
 func runSingleTransformerBatch(
-	inputRecordsAndContexts *list.List, // list of types.RecordAndContext
+	inputRecordsAndContexts []*types.RecordAndContext, // list of types.RecordAndContext
 	recordTransformer IRecordTransformer,
 	isFirstInChain bool,
-	outputRecordChannel chan<- *list.List, // list of *types.RecordAndContext
+	outputRecordChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 	options *cli.TOptions,
 ) bool {
-	outputRecordsAndContexts := list.New()
+	outputRecordsAndContexts := make([]*types.RecordAndContext, 0, len(inputRecordsAndContexts))
 	done := false
 
-	for e := inputRecordsAndContexts.Front(); e != nil; e = e.Next() {
-		inputRecordAndContext := e.Value.(*types.RecordAndContext)
-
+	for _, inputRecordAndContext := range inputRecordsAndContexts {
 		// --nr-progress-mod
 		// TODO: function-pointer this away to reduce instruction count in the
 		// normal case which it isn't used at all. No need to test if {static thing} != 0
@@ -268,14 +266,14 @@ func runSingleTransformerBatch(
 		if inputRecordAndContext.EndOfStream || inputRecordAndContext.Record != nil {
 			recordTransformer.Transform(
 				inputRecordAndContext,
-				outputRecordsAndContexts,
+				&outputRecordsAndContexts,
 				// TODO: maybe refactor these out of each transformer.
 				// And/or maybe poll them once per batch not once per record.
 				inputDownstreamDoneChannel,
 				outputDownstreamDoneChannel,
 			)
 		} else {
-			outputRecordsAndContexts.PushBack(inputRecordAndContext)
+			outputRecordsAndContexts = append(outputRecordsAndContexts, inputRecordAndContext)
 		}
 
 		if inputRecordAndContext.EndOfStream {

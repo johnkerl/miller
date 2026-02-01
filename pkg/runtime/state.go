@@ -7,8 +7,6 @@
 package runtime
 
 import (
-	"container/list"
-
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
@@ -21,7 +19,7 @@ type State struct {
 	Oosvars                  *mlrval.Mlrmap
 	FilterExpression         *mlrval.Mlrval
 	Stack                    *Stack
-	OutputRecordsAndContexts *list.List // list of *types.RecordAndContext
+	OutputRecordsAndContexts *[]*types.RecordAndContext // list of *types.RecordAndContext
 
 	// For holding "\0".."\9" between where they are set via things like
 	// '$x =~ "(..)_(...)"', and interpolated via things like '$y = "\2:\1"'.

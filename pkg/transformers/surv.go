@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -114,7 +113,7 @@ func NewTransformerSurv(durationField, statusField string) IRecordTransformer {
 // Transform processes each record or emits results at end-of-stream.
 func (tr *TransformerSurv) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List,
+	outputRecordsAndContexts *[]*types.RecordAndContext,
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -139,7 +138,7 @@ func (tr *TransformerSurv) Transform(
 		// Compute survival using kshedden/statmodel
 		n := len(tr.times)
 		if n == 0 {
-			outputRecordsAndContexts.PushBack(inrecAndContext)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 			return
 		}
 		durations := tr.times
@@ -166,8 +165,8 @@ func (tr *TransformerSurv) Transform(
 			newrec := mlrval.NewMlrmapAsRecord()
 			newrec.PutCopy("time", mlrval.FromFloat(t))
 			newrec.PutCopy("survival", mlrval.FromFloat(survProbs[i]))
-			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 		}
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }

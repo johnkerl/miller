@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"regexp"
@@ -155,7 +154,7 @@ func NewTransformerGrep(
 
 func (tr *TransformerGrep) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -171,14 +170,14 @@ func (tr *TransformerGrep) Transform(
 		matches := tr.regexp.MatchString(inrecAsString)
 		if tr.invert {
 			if !matches {
-				outputRecordsAndContexts.PushBack(inrecAndContext)
+				*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 			}
 		} else {
 			if matches {
-				outputRecordsAndContexts.PushBack(inrecAndContext)
+				*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 			}
 		}
 	} else {
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }

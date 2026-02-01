@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -128,7 +127,7 @@ func NewTransformerSample(
 
 func (tr *TransformerSample) Transform(
 	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
@@ -151,13 +150,13 @@ func (tr *TransformerSample) Transform(
 		for pe := tr.bucketsByGroup.Head; pe != nil; pe = pe.Next {
 			sampleBucket := pe.Value
 			for i := int64(0); i < sampleBucket.nused; i++ {
-				outputRecordsAndContexts.PushBack(sampleBucket.recordsAndContexts[i])
+				*outputRecordsAndContexts = append(*outputRecordsAndContexts, sampleBucket.recordsAndContexts[i])
 
 			}
 		}
 
 		// Emit the stream-terminating null record
-		outputRecordsAndContexts.PushBack(inrecAndContext)
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
 }
 

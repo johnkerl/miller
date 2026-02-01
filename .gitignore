@@ -2,8 +2,11 @@
 
 .sw?
 .*.sw?
-tags
 *~
+/.vscode
+
+tags
+
 push2
 data/.gitignore
 
