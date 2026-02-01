@@ -379,7 +379,7 @@ func (tr *TransformerStats1) handleInputRecord(
 	if tr.doRegexGroupByFieldNames {
 		groupingKey, groupByFieldValues, ok = tr.getGroupByFieldNamesWithRegexes(inrec)
 	} else {
-		groupingKey, groupByFieldValues, ok = tr.getGroupByFieldNamesWithoutRegexes(inrec)
+		groupingKey, ok = tr.getGroupingKeyWithoutRegexes(inrec)
 	}
 	if !ok {
 		return
@@ -392,7 +392,15 @@ func (tr *TransformerStats1) handleInputRecord(
 		// E.g. if grouping by "color" and "shape", and the current record has
 		// color=blue, shape=circle, then groupByFieldValues is the map
 		// {"color": "blue", "shape": "circle"}.
+		if !tr.doRegexGroupByFieldNames {
+			groupByFieldValues, ok = tr.buildGroupByFieldValuesWithoutRegexes(inrec)
+			if !ok {
+				return
+			}
+		}
 		tr.groupingKeysToGroupByFieldValues[groupingKey] = groupByFieldValues
+	} else if tr.doIterativeStats && !tr.doRegexGroupByFieldNames {
+		groupByFieldValues = tr.groupingKeysToGroupByFieldValues[groupingKey]
 	}
 
 	if tr.doRegexValueFieldNames {
@@ -416,23 +424,30 @@ func (tr *TransformerStats1) handleInputRecord(
 // b=blue, then groupingKey is the string "circle,blue".  For grouping without
 // regexed group-by field names, the group-by field names/values are the same
 // on every record.
-func (tr *TransformerStats1) getGroupByFieldNamesWithoutRegexes(
+func (tr *TransformerStats1) getGroupingKeyWithoutRegexes(
 	inrec *mlrval.Mlrmap,
 ) (
 	groupingKey string,
+	ok bool,
+) {
+	return inrec.GetSelectedValuesJoined(tr.groupByFieldNameList)
+}
+
+func (tr *TransformerStats1) buildGroupByFieldValuesWithoutRegexes(
+	inrec *mlrval.Mlrmap,
+) (
 	groupByFieldValues *lib.OrderedMap[*mlrval.Mlrval], // OrderedMap[string]*mlrval.Mlrval,
 	ok bool,
 ) {
-	var groupByFieldValuesArray []*mlrval.Mlrval
-	groupingKey, groupByFieldValuesArray, ok = inrec.GetSelectedValuesAndJoined(tr.groupByFieldNameList)
+	groupByFieldValuesArray, ok := inrec.GetSelectedValues(tr.groupByFieldNameList)
 	if !ok {
-		return groupingKey, nil, false
+		return nil, false
 	}
 	groupByFieldValues = lib.NewOrderedMap[*mlrval.Mlrval]()
 	for i, groupByFieldValue := range groupByFieldValuesArray {
 		groupByFieldValues.Put(tr.groupByFieldNameList[i], groupByFieldValue)
 	}
-	return groupingKey, groupByFieldValues, ok
+	return groupByFieldValues, true
 }
 
 // E.g. if grouping by "a" and "b", and the current record has a=circle,
