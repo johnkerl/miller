@@ -2723,19 +2723,6 @@ func (manager *BuiltinFunctionManager) showSingleUsage(
 	}
 }
 
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsageApproximate(
-	text string,
-) bool {
-	found := false
-	for _, builtinFunctionInfo := range *manager.lookupTable {
-		if strings.Contains(builtinFunctionInfo.name, text) {
-			fmt.Printf("  %s\n", builtinFunctionInfo.name)
-			found = true
-		}
-	}
-	return found
-}
-
 func describeNargs(info *BuiltinFunctionInfo) string {
 	if info.hasMultipleArities {
 		pieces := make([]string, 0)

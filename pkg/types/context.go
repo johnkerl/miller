@@ -145,11 +145,6 @@ func (context *Context) UpdateForInputRecord() {
 	context.FNR++
 }
 
-func (context *Context) Copy() *Context {
-	other := *context
-	return &other
-}
-
 func (context *Context) GetStatusString() string {
 
 	var buffer bytes.Buffer // stdio is non-buffered in Go, so buffer for speed increase

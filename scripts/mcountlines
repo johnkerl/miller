@@ -1,10 +1,12 @@
 #!/bin/bash
 
+echo "LINES:"
 wc -l \
   $(find pkg -name '*.go' | grep -v pkg/parsing) pkg/parsing/mlr.bnf \
 | sort -n
 
 echo
+echo "CHARACTERS:"
 wc -c \
   $(find pkg -name '*.go' | grep -v pkg/parsing) pkg/parsing/mlr.bnf \
 | sort -n \

@@ -51,9 +51,9 @@ func NewEmptyState(options *cli.TOptions, strictMode bool) *State {
 
 	oosvars := mlrval.NewMlrmap()
 	return &State{
-		Inrec:                nil,
-		Context:              nil,
-		Oosvars:              oosvars,
+		Inrec:   nil,
+		Context: nil,
+		Oosvars: oosvars,
 		// XXX
 		//FilterExpression:     mlrval.TRUE,
 		FilterExpression:     mlrval.NULL,

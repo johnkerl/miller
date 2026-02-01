@@ -70,8 +70,6 @@ package mlrval
 
 import (
 	"errors"
-	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/johnkerl/miller/v6/pkg/lib"
@@ -96,57 +94,12 @@ func (mv *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 }
 
 // ----------------------------------------------------------------
-// TODO: make this return error so caller can do 'if err == nil { ... }'
-func (mv *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
-	if !mv.IsArray() {
-		fmt.Fprintf(
-			os.Stderr,
-			"mlr: expected array as indexed item in ArrayPut; got %s\n",
-			mv.GetTypeName(),
-		)
-		os.Exit(1)
-	}
-	if !mindex.IsInt() {
-		// TODO: need to be careful about semantics here.
-		// Silent no-ops are not good UX ...
-		fmt.Fprintf(
-			os.Stderr,
-			"mlr: expected int as index item ArrayPut; got %s\n",
-			mindex.GetTypeName(),
-		)
-		os.Exit(1)
-	}
-
-	arrayval := mv.intf.([]*Mlrval)
-	ok := arrayPutAliased(&arrayval, int(mindex.intf.(int64)), value)
-	if !ok {
-		fmt.Fprintf(
-			os.Stderr,
-			"mlr: array index %d out of bounds %d..%d\n",
-			mindex.intf.(int64), 1, len(arrayval),
-		)
-		os.Exit(1)
-	}
-	mv.intf = arrayval
-}
-
-// ----------------------------------------------------------------
 func arrayGetAliased(array *[]*Mlrval, mindex int) *Mlrval {
 	zindex, ok := UnaliasArrayIndex(array, mindex)
 	if ok {
 		return (*array)[zindex]
 	} else {
 		return nil
-	}
-}
-
-func arrayPutAliased(array *[]*Mlrval, mindex int, value *Mlrval) bool {
-	zindex, ok := UnaliasArrayIndex(array, mindex)
-	if ok {
-		(*array)[zindex] = value.Copy()
-		return true
-	} else {
-		return false
 	}
 }
 

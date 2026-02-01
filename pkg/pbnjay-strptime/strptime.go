@@ -82,21 +82,6 @@ func ParseLocation(value, format string, location *time.Location) (time.Time, er
 	return strptime_tz(value, format, _ignoreUnsupported, true, location)
 }
 
-// ParseStrict returns ErrFormatUnsupported for unsupported formats strings, but is otherwise
-// identical to Parse.
-func ParseStrict(value, format string) (time.Time, error) {
-	return strptime_tz(value, format, _ignoreUnsupported, false, nil)
-}
-
-// MustParse is a wrapper for Parse which panics on any error.
-func MustParse(value, format string) time.Time {
-	t, err := strptime_tz(value, format, true, false, nil)
-	if err != nil {
-		panic(err)
-	}
-	return t
-}
-
 // Check verifies that format is a fully-supported strptime format string for this implementation.
 // Not used by Miller.
 func Check(format string) error {
