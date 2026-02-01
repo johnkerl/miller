@@ -12,41 +12,74 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/parsing/token"
 )
 
-// ----------------------------------------------------------------
-// xxx comment interface{} everywhere vs. true types due to gocc polymorphism API.
-// and, line-count for casts here vs in the BNF:
-//
-// Statement :
-//   md_token_field_name md_token_assign md_token_number
-//
-// Statement :
-//   md_token_field_name md_token_assign md_token_number
-//     << dsl.NewASTNodeTernary("foo", $0, $1, $2) >> ;
-
 // This is for the GOCC/BNF parser, which produces an AST
-func NewAST(iroot interface{}) (*AST, error) {
+func NewASTWithErrorReturn(iroot interface{}) (*AST, error) {
 	return &AST{
 		RootNode: iroot.(*ASTNode),
 	}, nil
 }
 
-// ----------------------------------------------------------------
-func NewASTNodeTerminal(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
-	return NewASTNodeNestable(itok, nodeType), nil
-}
-
-// For handling empty expressions.
-func NewASTNodeEmptyNestable(nodeType TNodeType) *ASTNode {
+func NewASTNodeTerminal(itok interface{}, nodeType TNodeType) *ASTNode {
+	var tok *token.Token = nil
+	if itok != nil {
+		tok = itok.(*token.Token)
+	}
 	return &ASTNode{
-		Token:    nil,
+		Token:    tok,
 		Type:     nodeType,
 		Children: nil,
 	}
 }
 
-// For handling empty expressions.
-func NewASTNodeEmpty(nodeType TNodeType) (*ASTNode, error) {
-	return NewASTNodeEmptyNestable(nodeType), nil
+// NewASTNode is the ASTNode constructor. If children is non-nil and length 0, a
+// zary node is created. (Example: a function call with zero arguments.) If
+// children is nil, a terminal node is created. (Example: a string or integer
+// literal.)
+func NewASTNode(
+	itok interface{},
+	nodeType TNodeType,
+	children []interface{},
+) *ASTNode {
+
+	var tok *token.Token = nil
+	if itok != nil {
+		tok = itok.(*token.Token)
+	}
+
+	node := &ASTNode{
+		Token:    tok,
+		Type:     nodeType,
+		Children: nil,
+	}
+
+	if children == nil {
+		return node
+	}
+
+	n := len(children)
+	node.Children = make([]*ASTNode, n)
+	for i, child := range children {
+		node.Children[i] = child.(*ASTNode)
+	}
+	return node
+}
+
+// Pass-through expressions in the grammar sometimes need to be turned from
+// (ASTNode) to (ASTNode, error). This is for GOCC.
+func WithErrorReturn(iparent interface{}) (*ASTNode, error) {
+	return iparent.(*ASTNode), nil
+}
+
+func NewASTNodeWithErrorReturn(
+	itok interface{},
+	nodeType TNodeType,
+	children []interface{},
+) (*ASTNode, error) {
+	return WithErrorReturn(NewASTNode(itok, nodeType, children))
+}
+
+func NewASTNodeTerminalWithErrorReturn(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
+	return WithErrorReturn(NewASTNode(itok, nodeType, nil))
 }
 
 // Strips the leading '$' from field names, or '@' from oosvar names. Not done
@@ -60,7 +93,7 @@ func NewASTNodeStripDollarOrAtSign(itok interface{}, nodeType TNodeType) (*ASTNo
 		Lit:  oldToken.Lit[1:],
 		Pos:  oldToken.Pos,
 	}
-	return NewASTNodeNestable(newToken, nodeType), nil
+	return NewASTNodeTerminal(newToken, nodeType), nil
 }
 
 // Strips the leading '${' and trailing '}' from braced field names, or '@{'
@@ -81,7 +114,7 @@ func NewASTNodeStripDollarOrAtSignAndCurlyBraces(
 		Lit:  oldToken.Lit[2 : n-1],
 		Pos:  oldToken.Pos,
 	}
-	return NewASTNodeNestable(newToken, nodeType), nil
+	return NewASTNodeTerminal(newToken, nodeType), nil
 }
 
 // Likewise for the leading/trailing double quotes on string literals.  Also,
@@ -100,158 +133,48 @@ func NewASTNodeStripDoubleQuotePair(
 		Lit:  []byte(contents),
 		Pos:  oldToken.Pos,
 	}
-	return NewASTNodeNestable(newToken, nodeType), nil
+	return NewASTNodeTerminal(newToken, nodeType), nil
 }
 
-// xxx comment why grammar use
-func NewASTNodeNestable(itok interface{}, nodeType TNodeType) *ASTNode {
-	var tok *token.Token = nil
-	if itok != nil {
-		tok = itok.(*token.Token)
-	}
-	return &ASTNode{
-		Token:    tok,
-		Type:     nodeType,
-		Children: nil,
-	}
-}
-
-func NewASTNodeZary(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
-	parent := NewASTNodeNestable(itok, nodeType)
-	convertToZary(parent)
-	return parent, nil
-}
-
-func NewASTNodeUnaryNestable(itok, childA interface{}, nodeType TNodeType) *ASTNode {
-	parent := NewASTNodeNestable(itok, nodeType)
-	convertToUnary(parent, childA)
-	return parent
-}
-
-func NewASTNodeUnary(itok, childA interface{}, nodeType TNodeType) (*ASTNode, error) {
-	return NewASTNodeUnaryNestable(itok, childA, nodeType), nil
-}
-
-// Signature: Token Node Node Type
-func NewASTNodeBinaryNestable(itok, childA, childB interface{}, nodeType TNodeType) *ASTNode {
-	parent := NewASTNodeNestable(itok, nodeType)
-	convertToBinary(parent, childA, childB)
-	return parent
-}
-
-// Signature: Token Node Node Type
-func NewASTNodeBinary(
-	itok, childA, childB interface{}, nodeType TNodeType,
-) (*ASTNode, error) {
-	return NewASTNodeBinaryNestable(itok, childA, childB, nodeType), nil
-}
-
-func NewASTNodeTernary(itok, childA, childB, childC interface{}, nodeType TNodeType) (*ASTNode, error) {
-	parent := NewASTNodeNestable(itok, nodeType)
-	convertToTernary(parent, childA, childB, childC)
-	return parent, nil
-}
-
-func NewASTNodeQuaternary(
-	itok, childA, childB, childC, childD interface{}, nodeType TNodeType,
-) (*ASTNode, error) {
-	parent := NewASTNodeNestable(itok, nodeType)
-	convertToQuaternary(parent, childA, childB, childC, childD)
-	return parent, nil
-}
-
-// Pass-through expressions in the grammar sometimes need to be turned from
-// (ASTNode) to (ASTNode, error)
-func Nestable(iparent interface{}) (*ASTNode, error) {
-	return iparent.(*ASTNode), nil
-}
-
-func convertToZary(iparent interface{}) {
-	parent := iparent.(*ASTNode)
-	children := make([]*ASTNode, 0)
-	parent.Children = children
-}
-
-// xxx inline this. can be a one-liner.
-func convertToUnary(iparent interface{}, childA interface{}) {
-	parent := iparent.(*ASTNode)
-	children := make([]*ASTNode, 1)
-	children[0] = childA.(*ASTNode)
-	parent.Children = children
-}
-
-func convertToBinary(iparent interface{}, childA, childB interface{}) {
-	parent := iparent.(*ASTNode)
-	children := make([]*ASTNode, 2)
-	children[0] = childA.(*ASTNode)
-	children[1] = childB.(*ASTNode)
-	parent.Children = children
-}
-
-func convertToTernary(iparent interface{}, childA, childB, childC interface{}) {
-	parent := iparent.(*ASTNode)
-	children := make([]*ASTNode, 3)
-	children[0] = childA.(*ASTNode)
-	children[1] = childB.(*ASTNode)
-	children[2] = childC.(*ASTNode)
-	parent.Children = children
-}
-
-func convertToQuaternary(iparent interface{}, childA, childB, childC, childD interface{}) {
-	parent := iparent.(*ASTNode)
-	children := make([]*ASTNode, 4)
-	children[0] = childA.(*ASTNode)
-	children[1] = childB.(*ASTNode)
-	children[2] = childC.(*ASTNode)
-	children[3] = childD.(*ASTNode)
-	parent.Children = children
-}
-
-func PrependChild(iparent interface{}, ichild interface{}) (*ASTNode, error) {
+func WithChildPrepended(iparent interface{}, ichild interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	child := ichild.(*ASTNode)
 	if parent.Children == nil {
-		convertToUnary(iparent, ichild)
+		parent.Children = []*ASTNode{child}
 	} else {
 		parent.Children = append([]*ASTNode{child}, parent.Children...)
 	}
 	return parent, nil
 }
 
-func PrependTwoChildren(iparent interface{}, ichildA, ichildB interface{}) (*ASTNode, error) {
+func WithTwoChildrenPreprended(iparent interface{}, ichildA, ichildB interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	childA := ichildA.(*ASTNode)
 	childB := ichildB.(*ASTNode)
 	if parent.Children == nil {
-		convertToBinary(iparent, ichildA, ichildB)
+		parent.Children = []*ASTNode{childA, childB}
 	} else {
 		parent.Children = append([]*ASTNode{childA, childB}, parent.Children...)
 	}
 	return parent, nil
 }
 
-func AppendChild(iparent interface{}, child interface{}) (*ASTNode, error) {
+func WithChildAppended(iparent interface{}, child interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	if parent.Children == nil {
-		convertToUnary(iparent, child)
+		parent.Children = []*ASTNode{child.(*ASTNode)}
 	} else {
 		parent.Children = append(parent.Children, child.(*ASTNode))
 	}
 	return parent, nil
 }
 
-func AdoptChildren(iparent interface{}, ichild interface{}) (*ASTNode, error) {
+func WithChildrenAdopted(iparent interface{}, ichild interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	child := ichild.(*ASTNode)
 	parent.Children = child.Children
 	child.Children = nil
 	return parent, nil
-}
-
-// TODO: comment
-func Wrap(inode interface{}) (*ASTNode, error) {
-	node := inode.(*ASTNode)
-	return node, nil
 }
 
 func (node *ASTNode) CheckArity(

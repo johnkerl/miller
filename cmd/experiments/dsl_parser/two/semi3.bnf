@@ -14,7 +14,7 @@
 // ----------------------------------------------------------------
 Root
   : StatementBlock
-   << dsl.NewAST($0) >>
+   << dsl.NewASTWithErrorReturn($0) >>
 ;
 
 // ================================================================
@@ -22,10 +22,14 @@ StatementBlock
 
   // Empty statement. This allows for 'mlr put ""', as well as repeated semicolons.
   : empty
-    << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNodeWithErrorReturn(
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{},
+    ) >>
 
   | NonEmptyStatementBlock
-    << dsl.Wrap($0) >>
+    << dsl.WithErrorReturn($0) >>
 ;
 
 // ----------------------------------------------------------------
@@ -34,25 +38,37 @@ NonEmptyStatementBlock
 
   // Things not ending in a curly brace, like assignments -- and also do-while.
   : BracelessStatement
-    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNodeWithErrorReturn(
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{
+              $0,
+        },
+    ) >>
 
   // Things ending in a curly brace, like for/do/while, begin/end, and pattern-action blocks
   | BracefulStatement
-    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNodeWithErrorReturn(
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{
+          $0,
+        },
+    ) >>
 
   // ---------------------- Recursive rules
 
   // So statements can start with a semicolon
   | ";" StatementBlock
-    << dsl.Wrap($1) >>
+    << dsl.NewASTNodeWithErrorReturn(
 
   // Normal case for sequential statements like '$x=1; $y=2'
   | BracelessStatement ";" StatementBlock
-    <<dsl.PrependChild($2, $0) >>
+    <<dsl.WithChildPrepended($2, $0) >>
 
   // For 'begin {...} ; $x=1'
   | BracefulStatement ";" StatementBlock
-    <<dsl.PrependChild($2, $0) >>
+    <<dsl.WithChildPrepended($2, $0) >>
 
   // These are for things like 'begin {...} begin {...} ...' -- where people
   // shouldn't have to put semicolons after the closing curly braces.
@@ -62,32 +78,50 @@ NonEmptyStatementBlock
   // we are effectively getting lookahead-by-two.)
   //
   // | BracefulStatement StatementBlock
-  //    <<dsl.PrependChild($1, $0) >>
+  //    <<dsl.WithChildPrepended($1, $0) >>
 
   // E.g. 'begin {...} begin {...} $x=1'
   | BracefulStatement BracefulStatement StatementBlock
-    <<dsl.PrependTwoChildren($2, $0, $1) >>
+    <<dsl.WithTwoChildrenPreprended($2, $0, $1) >>
 
   // E.g. 'begin {...} $x=1'
   | BracefulStatement BracelessStatement
-    << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNodeWithErrorReturn(
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{
+          $0,
+          $1,
+        },
+    ) >>
 
   // E.g. 'begin {...} $x=1 ;'
   | BracefulStatement BracelessStatement ";"
-    << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNodeWithErrorReturn(
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{
+          $0,
+          $1,
+        },
+    ) >>
 
   | BracefulStatement BracelessStatement ";" NonEmptyStatementBlock
-    <<dsl.PrependTwoChildren($3, $0, $1) >>
+    <<dsl.WithTwoChildrenPreprended($3, $0, $1) >>
 ;
 
 // ----------------------------------------------------------------
 BracelessStatement
   : "x"
-    << dsl.NewASTNodeZary($0, dsl.NodeTypeBareBoolean) >>
+    << dsl.NewASTNodeWithErrorReturn(
+        $0,
+        dsl.NodeTypeBareBoolean,
+        []interface{}{},
+    ) >>
 ;
 
 // ----------------------------------------------------------------
 BracefulStatement
   : "{" StatementBlock "}"
-    << dsl.Wrap($1) >>
+    << dsl.NewASTNodeWithErrorReturn(
 ;

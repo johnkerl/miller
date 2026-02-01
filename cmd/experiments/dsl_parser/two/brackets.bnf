@@ -33,7 +33,7 @@ string_literal : '"' {_string_literal_element} '"' ;
 // ----------------------------------------------------------------
 Root
   : StringLiteral
-   << dsl.NewAST($0) >>
+   << dsl.NewASTWithErrorReturn($0) >>
 ;
 
 StringLiteral

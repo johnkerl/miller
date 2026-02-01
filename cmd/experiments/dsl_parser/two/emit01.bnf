@@ -21,7 +21,7 @@ emit : 'e' 'm' 'i' 't' ;
 // ----------------------------------------------------------------
 Root
   : EmitStatement
-   << dsl.NewAST($0) >>
+   << dsl.NewASTWithErrorReturn($0) >>
 ;
 
 // ----------------------------------------------------------------
@@ -36,29 +36,57 @@ Root
 // parser/AST logic simpler.
 EmitStatement
   : emit Rvalue
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitStatement) >>
+    << dsl.NewASTNodeWithErrorReturn(
+    	$0,
+    	dsl.NodeTypeEmitStatement,
+    	[]interface{}{
+      	$1,
+    	}
+    ) >>
 
   | emit Rvalue "," EmitArgs
-    << dsl.NewASTNodeBinary($0, $1, $3, dsl.NodeTypeEmitStatement) >>
+    << dsl.NewASTNodeWithErrorReturn(
+    	$0,
+    	dsl.NodeTypeEmitStatement,
+    	[]interface{}{
+      	$1,
+      	$3,
+    	}
+    ) >>
 
   | emit "(" EmitArgs ")"
-    << dsl.NewASTNodeUnary($0, $2, dsl.NodeTypeEmitStatement) >>
+    << dsl.NewASTNodeWithErrorReturn(
+      $0,
+      dsl.NodeTypeEmitStatement,
+      []interface{}{
+        $2,
+      }
+    ) >>
 
   | emit "(" EmitArgs ")" "," EmitArgs
-    << dsl.NewASTNodeBinary($0, $2, $5, dsl.NodeTypeEmitStatement) >>
+    << dsl.NewASTNodeWithErrorReturn(
+        $0,
+        dsl.NodeTypeEmitStatement,
+        []interface{}{
+          $2,
+          $5,
+        }
+    ) >>
 ;
 
 // ----------------------------------------------------------------
 EmitArgs
   : Rvalue
-    << dsl.NewASTNodeUnary(
-      nil,
-      $0,
-      dsl.NodeTypeFunctionCallsite,
+    << dsl.NewASTNodeWithErrorReturn(
+        nil,
+        dsl.NodeTypeFunctionCallsite,
+        []interface{}{
+          $0,
+        }
     ) >>
 
   | Rvalue "," EmitArgs
-    << dsl.PrependChild(
+    << dsl.WithChildPrepended(
       $2,
       $0,
     ) >>
@@ -67,23 +95,27 @@ EmitArgs
 // ----------------------------------------------------------------
 FcnArgs
   : Rvalue
-    << dsl.NewASTNodeUnary(
-      nil,
-      $0,
-      dsl.NodeTypeFunctionCallsite,
+    << dsl.NewASTNodeWithErrorReturn(
+        nil,
+        dsl.NodeTypeFunctionCallsite,
+        []interface{}{
+          $0,
+        }
     ) >>
 
   // Allow trailing final comma, especially for multiline statements
   | Rvalue ","
-    << dsl.NewASTNodeUnary(
-      nil,
-      $0,
-      dsl.NodeTypeFunctionCallsite,
+    << dsl.NewASTNodeWithErrorReturn(
+        nil,
+        dsl.NodeTypeFunctionCallsite,
+        []interface{}{
+          $0,
+        }
     ) >>
 
   // Allow trailing final comma, especially for multiline statements
   | Rvalue "," FcnArgs
-    << dsl.PrependChild(
+    << dsl.WithChildPrepended(
       $2,
       $0,
     ) >>
@@ -97,7 +129,19 @@ Rvalue
 ;
 
 Literal
-  : "x" << dsl.NewASTNodeZary($0, dsl.NodeTypeStringLiteral) >>
-  | "y" << dsl.NewASTNodeZary($0, dsl.NodeTypeStringLiteral) >>
-  | "z" << dsl.NewASTNodeZary($0, dsl.NodeTypeStringLiteral) >>
+  : "x" << dsl.NewASTNodeWithErrorReturn(
+      $0,
+      dsl.NodeTypeStringLiteral,
+      []interface{}{},
+      ) >>
+  | "y" << dsl.NewASTNodeWithErrorReturn(
+      $0,
+      dsl.NodeTypeStringLiteral,
+      []interface{}{},
+      ) >>
+  | "z" << dsl.NewASTNodeWithErrorReturn(
+      $0,
+      dsl.NodeTypeStringLiteral,
+      []interface{}{},
+      ) >>
 ;
