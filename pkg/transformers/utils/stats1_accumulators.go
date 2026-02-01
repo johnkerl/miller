@@ -351,40 +351,40 @@ func (acc *Stats1NullCountAccumulator) Reset() {
 // Here, 4.1 and 4.10 are counted as distinct values.
 type Stats1DistinctCountAccumulator struct {
 	// Needs lib.OrderedMap, not map[string]int64, for deterministic output.
-	distincts *lib.OrderedMap
+	distincts *lib.OrderedMap[int64]
 }
 
 func NewStats1DistinctCountAccumulator() IStats1Accumulator {
 	return &Stats1DistinctCountAccumulator{
-		distincts: lib.NewOrderedMap(),
+		distincts: lib.NewOrderedMap[int64](),
 	}
 }
 func (acc *Stats1DistinctCountAccumulator) Ingest(value *mlrval.Mlrval) {
 	valueString := value.OriginalString()
-	iValue := acc.distincts.Get(valueString)
-	if iValue == nil {
+	iValue, ok := acc.distincts.GetWithCheck(valueString)
+	if !ok {
 		acc.distincts.Put(valueString, int64(1))
 	} else {
-		acc.distincts.Put(valueString, iValue.(int64)+1)
+		acc.distincts.Put(valueString, iValue+1)
 	}
 }
 func (acc *Stats1DistinctCountAccumulator) Emit() *mlrval.Mlrval {
 	return mlrval.FromInt(acc.distincts.FieldCount)
 }
 func (acc *Stats1DistinctCountAccumulator) Reset() {
-	acc.distincts = lib.NewOrderedMap()
+	acc.distincts = lib.NewOrderedMap[int64]()
 }
 
 // ----------------------------------------------------------------
 type Stats1ModeAccumulator struct {
 	// Needs to be an ordered map to guarantee Miller's semantics that
 	// first-found breaks ties.
-	countsByValue *lib.OrderedMap
+	countsByValue *lib.OrderedMap[int64]
 }
 
 func NewStats1ModeAccumulator() IStats1Accumulator {
 	return &Stats1ModeAccumulator{
-		countsByValue: lib.NewOrderedMap(),
+		countsByValue: lib.NewOrderedMap[int64](),
 	}
 }
 func (acc *Stats1ModeAccumulator) Ingest(value *mlrval.Mlrval) {
@@ -393,7 +393,7 @@ func (acc *Stats1ModeAccumulator) Ingest(value *mlrval.Mlrval) {
 	if !ok {
 		acc.countsByValue.Put(key, int64(1))
 	} else {
-		acc.countsByValue.Put(key, iPrevious.(int64)+1)
+		acc.countsByValue.Put(key, iPrevious+1)
 	}
 }
 func (acc *Stats1ModeAccumulator) Emit() *mlrval.Mlrval {
@@ -404,7 +404,7 @@ func (acc *Stats1ModeAccumulator) Emit() *mlrval.Mlrval {
 	var maxCount = int64(0)
 	for pe := acc.countsByValue.Head; pe != nil; pe = pe.Next {
 		value := pe.Key
-		count := pe.Value.(int64)
+		count := pe.Value
 		if maxValue == "" || count > maxCount {
 			maxValue = value
 			maxCount = count
@@ -413,19 +413,19 @@ func (acc *Stats1ModeAccumulator) Emit() *mlrval.Mlrval {
 	return mlrval.FromString(maxValue)
 }
 func (acc *Stats1ModeAccumulator) Reset() {
-	acc.countsByValue = lib.NewOrderedMap()
+	acc.countsByValue = lib.NewOrderedMap[int64]()
 }
 
 // ----------------------------------------------------------------
 type Stats1AntimodeAccumulator struct {
 	// Needs to be an ordered map to guarantee Miller's semantics that
 	// first-found breaks ties.
-	countsByValue *lib.OrderedMap
+	countsByValue *lib.OrderedMap[int64]
 }
 
 func NewStats1AntimodeAccumulator() IStats1Accumulator {
 	return &Stats1AntimodeAccumulator{
-		countsByValue: lib.NewOrderedMap(),
+		countsByValue: lib.NewOrderedMap[int64](),
 	}
 }
 func (acc *Stats1AntimodeAccumulator) Ingest(value *mlrval.Mlrval) {
@@ -434,7 +434,7 @@ func (acc *Stats1AntimodeAccumulator) Ingest(value *mlrval.Mlrval) {
 	if !ok {
 		acc.countsByValue.Put(key, int64(1))
 	} else {
-		acc.countsByValue.Put(key, iPrevious.(int64)+1)
+		acc.countsByValue.Put(key, iPrevious+1)
 	}
 }
 func (acc *Stats1AntimodeAccumulator) Emit() *mlrval.Mlrval {
@@ -445,7 +445,7 @@ func (acc *Stats1AntimodeAccumulator) Emit() *mlrval.Mlrval {
 	var minCount = int64(0)
 	for pe := acc.countsByValue.Head; pe != nil; pe = pe.Next {
 		value := pe.Key
-		count := pe.Value.(int64)
+		count := pe.Value
 		if minValue == "" || count < minCount {
 			minValue = value
 			minCount = count
@@ -454,7 +454,7 @@ func (acc *Stats1AntimodeAccumulator) Emit() *mlrval.Mlrval {
 	return mlrval.FromString(minValue)
 }
 func (acc *Stats1AntimodeAccumulator) Reset() {
-	acc.countsByValue = lib.NewOrderedMap()
+	acc.countsByValue = lib.NewOrderedMap[int64]()
 }
 
 // ----------------------------------------------------------------

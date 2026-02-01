@@ -109,7 +109,7 @@ func transformerUnsparsifyParseCLI(
 type TransformerUnsparsify struct {
 	fillerMlrval          *mlrval.Mlrval
 	recordsAndContexts    *list.List
-	fieldNamesSeen        *lib.OrderedMap
+	fieldNamesSeen        *lib.OrderedMap[string]
 	recordTransformerFunc RecordTransformerFunc
 }
 
@@ -118,7 +118,7 @@ func NewTransformerUnsparsify(
 	specifiedFieldNames []string,
 ) (*TransformerUnsparsify, error) {
 
-	fieldNamesSeen := lib.NewOrderedMap()
+	fieldNamesSeen := lib.NewOrderedMap[string]()
 	for _, specifiedFieldName := range specifiedFieldNames {
 		fieldNamesSeen.Put(specifiedFieldName, specifiedFieldName)
 	}

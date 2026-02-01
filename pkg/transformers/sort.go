@@ -314,9 +314,9 @@ type TransformerSort struct {
 
 	// -- State
 	// Map from string to *list.List:
-	recordListsByGroup *lib.OrderedMap
+	recordListsByGroup *lib.OrderedMap[*list.List]
 	// Map from string to []*lib.Mlrval:
-	groupHeads *lib.OrderedMap
+	groupHeads *lib.OrderedMap[[]*mlrval.Mlrval]
 	spillGroup *list.List // e.g. sort by field "a" -- this is for records lacking a field named "a"
 }
 
@@ -331,8 +331,8 @@ func NewTransformerSort(
 		comparatorFuncs:   comparatorFuncs,
 		doMoveToHead:      doMoveToHead,
 
-		recordListsByGroup: lib.NewOrderedMap(),
-		groupHeads:         lib.NewOrderedMap(),
+		recordListsByGroup: lib.NewOrderedMap[*list.List](),
+		groupHeads:         lib.NewOrderedMap[[]*mlrval.Mlrval](),
 		spillGroup:         list.New(),
 	}
 
@@ -377,7 +377,7 @@ func (tr *TransformerSort) Transform(
 			tr.groupHeads.Put(groupingKey, selectedValues)
 		}
 
-		recordListForGroup.(*list.List).PushBack(inrecAndContext)
+		recordListForGroup.PushBack(inrecAndContext)
 
 	} else { // End of record stream
 
@@ -415,8 +415,7 @@ func (tr *TransformerSort) Transform(
 
 		// Now output the groups
 		for _, groupingKeyAndMlrvals := range groupingKeysAndMlrvals {
-			iRecordsInGroup := tr.recordListsByGroup.Get(groupingKeyAndMlrvals.groupingKey)
-			recordsInGroup := iRecordsInGroup.(*list.List)
+			recordsInGroup := tr.recordListsByGroup.Get(groupingKeyAndMlrvals.groupingKey)
 			for iRecord := recordsInGroup.Front(); iRecord != nil; iRecord = iRecord.Next() {
 				outputRecordsAndContexts.PushBack(iRecord.Value.(*types.RecordAndContext))
 			}
@@ -430,14 +429,14 @@ func (tr *TransformerSort) Transform(
 	}
 }
 
-func groupHeadsToArray(groupHeads *lib.OrderedMap) []GroupingKeysAndMlrvals {
+func groupHeadsToArray(groupHeads *lib.OrderedMap[[]*mlrval.Mlrval]) []GroupingKeysAndMlrvals {
 	retval := make([]GroupingKeysAndMlrvals, groupHeads.FieldCount)
 
 	i := 0
 	for entry := groupHeads.Head; entry != nil; entry = entry.Next {
 		retval[i] = GroupingKeysAndMlrvals{
 			groupingKey: entry.Key,
-			mlrvals:     entry.Value.([]*mlrval.Mlrval),
+			mlrvals:     entry.Value,
 		}
 		i++
 	}

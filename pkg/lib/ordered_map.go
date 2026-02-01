@@ -1,42 +1,42 @@
 // ================================================================
-// ORDERED MAP FROM STRING TO INTERFACE{}
+// ORDERED MAP FROM STRING TO GENERIC VALUE TYPE
 //
-// Quite like types.OrderedMap but only with interface{} keys. See orderedMap.go for
+// Quite like types.OrderedMap but only with string keys. See orderedMap.go for
 // more information.
 // ================================================================
 
 package lib
 
 // ----------------------------------------------------------------
-type OrderedMap struct {
+type OrderedMap[V any] struct {
 	FieldCount    int64
-	Head          *orderedMapEntry
-	Tail          *orderedMapEntry
-	keysToEntries map[string]*orderedMapEntry
+	Head          *orderedMapEntry[V]
+	Tail          *orderedMapEntry[V]
+	keysToEntries map[string]*orderedMapEntry[V]
 }
 
-type orderedMapEntry struct {
+type orderedMapEntry[V any] struct {
 	Key   string
-	Value interface{}
-	Prev  *orderedMapEntry
-	Next  *orderedMapEntry
+	Value V
+	Prev  *orderedMapEntry[V]
+	Next  *orderedMapEntry[V]
 }
 
 // ----------------------------------------------------------------
-func NewOrderedMap() *OrderedMap {
-	return &OrderedMap{
+func NewOrderedMap[V any]() *OrderedMap[V] {
+	return &OrderedMap[V]{
 		FieldCount:    0,
 		Head:          nil,
 		Tail:          nil,
-		keysToEntries: make(map[string]*orderedMapEntry),
+		keysToEntries: make(map[string]*orderedMapEntry[V]),
 	}
 }
 
 // ----------------------------------------------------------------
 // Value-copy is up to the caller -- PutReference and PutCopy
 // are in the public OrderedMap API.
-func newOrderedMapEntry(key *string, value interface{}) *orderedMapEntry {
-	return &orderedMapEntry{
+func newOrderedMapEntry[V any](key *string, value V) *orderedMapEntry[V] {
+	return &orderedMapEntry[V]{
 		*key,
 		value,
 		nil,
@@ -45,15 +45,15 @@ func newOrderedMapEntry(key *string, value interface{}) *orderedMapEntry {
 }
 
 // ----------------------------------------------------------------
-func (omap *OrderedMap) IsEmpty() bool {
+func (omap *OrderedMap[V]) IsEmpty() bool {
 	return omap.FieldCount == 0
 }
 
-func (omap *OrderedMap) Has(key string) bool {
+func (omap *OrderedMap[V]) Has(key string) bool {
 	return omap.findEntry(&key) != nil
 }
 
-func (omap *OrderedMap) findEntry(key *string) *orderedMapEntry {
+func (omap *OrderedMap[V]) findEntry(key *string) *orderedMapEntry[V] {
 	if omap.keysToEntries != nil {
 		return omap.keysToEntries[*key]
 	} else {
@@ -67,7 +67,7 @@ func (omap *OrderedMap) findEntry(key *string) *orderedMapEntry {
 }
 
 // ----------------------------------------------------------------
-func (omap *OrderedMap) Put(key string, value interface{}) {
+func (omap *OrderedMap[V]) Put(key string, value V) {
 	pe := omap.findEntry(&key)
 	if pe == nil {
 		pe = newOrderedMapEntry(&key, value)
@@ -90,30 +90,30 @@ func (omap *OrderedMap) Put(key string, value interface{}) {
 }
 
 // ----------------------------------------------------------------
-func (omap *OrderedMap) Get(key string) interface{} {
+func (omap *OrderedMap[V]) Get(key string) V {
 	pe := omap.findEntry(&key)
 	if pe == nil {
-		return nil
-	} else {
-		return pe.Value
+		var zero V
+		return zero
 	}
+	return pe.Value
 }
 
 // The Get is sufficient for pointer values -- the caller can check if the
 // return value is nil. For int/string values (which are non-nullable) we have
 // this method.
-func (omap *OrderedMap) GetWithCheck(key string) (interface{}, bool) {
+func (omap *OrderedMap[V]) GetWithCheck(key string) (V, bool) {
 	pe := omap.findEntry(&key)
 	if pe == nil {
-		return nil, false
-	} else {
-		return pe.Value, true
+		var zero V
+		return zero, false
 	}
+	return pe.Value, true
 }
 
 // ----------------------------------------------------------------
 // Returns true if it was found and removed
-func (omap *OrderedMap) Remove(key string) bool {
+func (omap *OrderedMap[V]) Remove(key string) bool {
 	pe := omap.findEntry(&key)
 	if pe == nil {
 		return false
@@ -124,7 +124,7 @@ func (omap *OrderedMap) Remove(key string) bool {
 }
 
 // ----------------------------------------------------------------
-func (omap *OrderedMap) unlink(pe *orderedMapEntry) {
+func (omap *OrderedMap[V]) unlink(pe *orderedMapEntry[V]) {
 	if pe == omap.Head {
 		if pe == omap.Tail {
 			omap.Head = nil
