@@ -90,7 +90,7 @@ EmittableList
 
   // Allow trailing final comma, especially for multiline statements
   | Emittable "," EmittableList
-    << dsl.PrependChild(
+    << dsl.WithChildPrepended(
       $2,
       $0,
     ) >>
@@ -113,7 +113,7 @@ EmitKeys
     ) >>
 
   | Rvalue "," EmitKeys
-    << dsl.PrependChild(
+    << dsl.WithChildPrepended(
       $2,
       $0,
     ) >>

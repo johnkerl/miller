@@ -78,7 +78,6 @@ func NewASTNodeWithErrorReturn(
 	return WithErrorReturn(NewASTNode(itok, nodeType, children))
 }
 
-// ----------------------------------------------------------------
 func NewASTNodeTerminalWithErrorReturn(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
 	return WithErrorReturn(NewASTNode(itok, nodeType, nil))
 }
@@ -137,32 +136,7 @@ func NewASTNodeStripDoubleQuotePair(
 	return NewASTNodeTerminal(newToken, nodeType), nil
 }
 
-// xxx inline this. can be a one-liner.
-func convertToUnary(iparent interface{}, childA interface{}) {
-	parent := iparent.(*ASTNode)
-	children := make([]*ASTNode, 1)
-	children[0] = childA.(*ASTNode)
-	parent.Children = children
-}
-
-func convertToBinary(iparent interface{}, childA, childB interface{}) {
-	parent := iparent.(*ASTNode)
-	children := make([]*ASTNode, 2)
-	children[0] = childA.(*ASTNode)
-	children[1] = childB.(*ASTNode)
-	parent.Children = children
-}
-
-func convertToTernary(iparent interface{}, childA, childB, childC interface{}) {
-	parent := iparent.(*ASTNode)
-	children := make([]*ASTNode, 3)
-	children[0] = childA.(*ASTNode)
-	children[1] = childB.(*ASTNode)
-	children[2] = childC.(*ASTNode)
-	parent.Children = children
-}
-
-func PrependChild(iparent interface{}, ichild interface{}) (*ASTNode, error) {
+func WithChildPrepended(iparent interface{}, ichild interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	child := ichild.(*ASTNode)
 	if parent.Children == nil {
@@ -173,7 +147,7 @@ func PrependChild(iparent interface{}, ichild interface{}) (*ASTNode, error) {
 	return parent, nil
 }
 
-func PrependTwoChildren(iparent interface{}, ichildA, ichildB interface{}) (*ASTNode, error) {
+func WithTwoChildrenPreprended(iparent interface{}, ichildA, ichildB interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	childA := ichildA.(*ASTNode)
 	childB := ichildB.(*ASTNode)
@@ -185,7 +159,7 @@ func PrependTwoChildren(iparent interface{}, ichildA, ichildB interface{}) (*AST
 	return parent, nil
 }
 
-func AppendChild(iparent interface{}, child interface{}) (*ASTNode, error) {
+func WithChildAppended(iparent interface{}, child interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	if parent.Children == nil {
 		parent.Children = []*ASTNode{child.(*ASTNode)}
@@ -195,7 +169,7 @@ func AppendChild(iparent interface{}, child interface{}) (*ASTNode, error) {
 	return parent, nil
 }
 
-func AdoptChildren(iparent interface{}, ichild interface{}) (*ASTNode, error) {
+func WithChildrenAdopted(iparent interface{}, ichild interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	child := ichild.(*ASTNode)
 	parent.Children = child.Children

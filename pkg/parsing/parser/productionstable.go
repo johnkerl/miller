@@ -122,33 +122,33 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `NonEmptyStatementBlock : BracelessStatement ";" StatementBlock	<< dsl.PrependChild(X[2], X[0]) >>`,
+		String:     `NonEmptyStatementBlock : BracelessStatement ";" StatementBlock	<< dsl.WithChildPrepended(X[2], X[0]) >>`,
 		Id:         "NonEmptyStatementBlock",
 		NTType:     3,
 		Index:      7,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.PrependChild(X[2], X[0])
+			return dsl.WithChildPrepended(X[2], X[0])
 		},
 	},
 	ProdTabEntry{
-		String:     `NonEmptyStatementBlock : BracefulStatement ";" StatementBlock	<< dsl.PrependChild(X[2], X[0]) >>`,
+		String:     `NonEmptyStatementBlock : BracefulStatement ";" StatementBlock	<< dsl.WithChildPrepended(X[2], X[0]) >>`,
 		Id:         "NonEmptyStatementBlock",
 		NTType:     3,
 		Index:      8,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.PrependChild(X[2], X[0])
+			return dsl.WithChildPrepended(X[2], X[0])
 		},
 	},
 	ProdTabEntry{
-		String:     `NonEmptyStatementBlock : BracefulStatement BracefulStatement StatementBlock	<< dsl.PrependTwoChildren(X[2], X[0], X[1]) >>`,
+		String:     `NonEmptyStatementBlock : BracefulStatement BracefulStatement StatementBlock	<< dsl.WithTwoChildrenPreprended(X[2], X[0], X[1]) >>`,
 		Id:         "NonEmptyStatementBlock",
 		NTType:     3,
 		Index:      9,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.PrependTwoChildren(X[2], X[0], X[1])
+			return dsl.WithTwoChildrenPreprended(X[2], X[0], X[1])
 		},
 	},
 	ProdTabEntry{
@@ -200,13 +200,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `NonEmptyStatementBlock : BracefulStatement BracelessStatement ";" NonEmptyStatementBlock	<< dsl.PrependTwoChildren(X[3], X[0], X[1]) >>`,
+		String:     `NonEmptyStatementBlock : BracefulStatement BracelessStatement ";" NonEmptyStatementBlock	<< dsl.WithTwoChildrenPreprended(X[3], X[0], X[1]) >>`,
 		Id:         "NonEmptyStatementBlock",
 		NTType:     3,
 		Index:      12,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.PrependTwoChildren(X[3], X[0], X[1])
+			return dsl.WithTwoChildrenPreprended(X[3], X[0], X[1])
 		},
 	},
 	ProdTabEntry{
@@ -444,7 +444,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Unset : unset FcnArgs	<< dsl.AdoptChildren(
+		String: `Unset : unset FcnArgs	<< dsl.WithChildrenAdopted(
         dsl.NewASTNodeTerminal(
           X[0],
           dsl.NodeTypeUnset,
@@ -456,7 +456,7 @@ var productionsTable = ProdTab{
 		Index:      35,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.AdoptChildren(
+			return dsl.WithChildrenAdopted(
 				dsl.NewASTNodeTerminal(
 					X[0],
 					dsl.NodeTypeUnset,
@@ -476,13 +476,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `Lvalue : Typedecl LocalVariable	<< dsl.AppendChild(X[1], X[0]) >>`,
+		String:     `Lvalue : Typedecl LocalVariable	<< dsl.WithChildAppended(X[1], X[0]) >>`,
 		Id:         "Lvalue",
 		NTType:     8,
 		Index:      37,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.AppendChild(X[1], X[0])
+			return dsl.WithChildAppended(X[1], X[0])
 		},
 	},
 	ProdTabEntry{
@@ -1670,7 +1670,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EmittableList : Emittable "," EmittableList	<< dsl.PrependChild(
+		String: `EmittableList : Emittable "," EmittableList	<< dsl.WithChildPrepended(
       X[2],
       X[0],
     ) >>`,
@@ -1679,7 +1679,7 @@ var productionsTable = ProdTab{
 		Index:      85,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.PrependChild(
+			return dsl.WithChildPrepended(
 				X[2],
 				X[0],
 			)
@@ -1830,7 +1830,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EmitKeys : Rvalue "," EmitKeys	<< dsl.PrependChild(
+		String: `EmitKeys : Rvalue "," EmitKeys	<< dsl.WithChildPrepended(
       X[2],
       X[0],
     ) >>`,
@@ -1839,7 +1839,7 @@ var productionsTable = ProdTab{
 		Index:      98,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.PrependChild(
+			return dsl.WithChildPrepended(
 				X[2],
 				X[0],
 			)
@@ -4066,7 +4066,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ArrayLiteral : "[" ArrayLiteralElements "]"	<< dsl.AdoptChildren(
+		String: `ArrayLiteral : "[" ArrayLiteralElements "]"	<< dsl.WithChildrenAdopted(
         dsl.NewASTNodeTerminal(
           dsl.NewASTToken("[]", X[0]),
           dsl.NodeTypeArrayLiteral,
@@ -4078,7 +4078,7 @@ var productionsTable = ProdTab{
 		Index:      229,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.AdoptChildren(
+			return dsl.WithChildrenAdopted(
 				dsl.NewASTNodeTerminal(
 					dsl.NewASTToken("[]", X[0]),
 					dsl.NodeTypeArrayLiteral,
@@ -4132,7 +4132,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ArrayLiteralElements : Rvalue "," ArrayLiteralElements	<< dsl.PrependChild(
+		String: `ArrayLiteralElements : Rvalue "," ArrayLiteralElements	<< dsl.WithChildPrepended(
       X[2],
       X[0],
     ) >>`,
@@ -4141,7 +4141,7 @@ var productionsTable = ProdTab{
 		Index:      232,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.PrependChild(
+			return dsl.WithChildPrepended(
 				X[2],
 				X[0],
 			)
@@ -4176,7 +4176,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MapLiteral : "{" MapLiteralKeyValuePairs "}"	<< dsl.AdoptChildren(
+		String: `MapLiteral : "{" MapLiteralKeyValuePairs "}"	<< dsl.WithChildrenAdopted(
         dsl.NewASTNodeTerminal(
           dsl.NewASTToken("{}", X[0]),
           dsl.NodeTypeMapLiteral,
@@ -4188,7 +4188,7 @@ var productionsTable = ProdTab{
 		Index:      235,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.AdoptChildren(
+			return dsl.WithChildrenAdopted(
 				dsl.NewASTNodeTerminal(
 					dsl.NewASTToken("{}", X[0]),
 					dsl.NodeTypeMapLiteral,
@@ -4242,7 +4242,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MapLiteralKeyValuePairs : MapLiteralKeyValuePair "," MapLiteralKeyValuePairs	<< dsl.PrependChild(
+		String: `MapLiteralKeyValuePairs : MapLiteralKeyValuePair "," MapLiteralKeyValuePairs	<< dsl.WithChildPrepended(
       X[2],
       X[0],
     ) >>`,
@@ -4251,7 +4251,7 @@ var productionsTable = ProdTab{
 		Index:      238,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.PrependChild(
+			return dsl.WithChildPrepended(
 				X[2],
 				X[0],
 			)
@@ -4734,7 +4734,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FunctionCallsite : FunctionName "(" FcnArgs ")"	<< dsl.AdoptChildren(
+		String: `FunctionCallsite : FunctionName "(" FcnArgs ")"	<< dsl.WithChildrenAdopted(
         dsl.NewASTNodeTerminal(
           X[0],
           dsl.NodeTypeFunctionCallsite,
@@ -4746,7 +4746,7 @@ var productionsTable = ProdTab{
 		Index:      269,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.AdoptChildren(
+			return dsl.WithChildrenAdopted(
 				dsl.NewASTNodeTerminal(
 					X[0],
 					dsl.NodeTypeFunctionCallsite,
@@ -4830,7 +4830,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FcnArgs : Rvalue "," FcnArgs	<< dsl.PrependChild(
+		String: `FcnArgs : Rvalue "," FcnArgs	<< dsl.WithChildPrepended(
       X[2],
       X[0],
     ) >>`,
@@ -4839,7 +4839,7 @@ var productionsTable = ProdTab{
 		Index:      275,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.PrependChild(
+			return dsl.WithChildPrepended(
 				X[2],
 				X[0],
 			)
@@ -4864,7 +4864,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `SubroutineCallsite : call SubroutineName "(" FcnArgs ")"	<< dsl.AdoptChildren(
+		String: `SubroutineCallsite : call SubroutineName "(" FcnArgs ")"	<< dsl.WithChildrenAdopted(
         dsl.NewASTNodeTerminal(
           X[1],
           dsl.NodeTypeSubroutineCallsite,
@@ -4876,7 +4876,7 @@ var productionsTable = ProdTab{
 		Index:      277,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.AdoptChildren(
+			return dsl.WithChildrenAdopted(
 				dsl.NewASTNodeTerminal(
 					X[1],
 					dsl.NodeTypeSubroutineCallsite,
@@ -5054,13 +5054,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `IfChain : IfElifStar ElseBlock	<< dsl.AppendChild(X[0], X[1]) >>`,
+		String:     `IfChain : IfElifStar ElseBlock	<< dsl.WithChildAppended(X[0], X[1]) >>`,
 		Id:         "IfChain",
 		NTType:     83,
 		Index:      291,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.AppendChild(X[0], X[1])
+			return dsl.WithChildAppended(X[0], X[1])
 		},
 	},
 	ProdTabEntry{
@@ -5086,13 +5086,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `IfElifStar : IfElifStar ElifBlock	<< dsl.AppendChild(X[0], X[1]) >>`,
+		String:     `IfElifStar : IfElifStar ElifBlock	<< dsl.WithChildAppended(X[0], X[1]) >>`,
 		Id:         "IfElifStar",
 		NTType:     84,
 		Index:      293,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.AppendChild(X[0], X[1])
+			return dsl.WithChildAppended(X[0], X[1])
 		},
 	},
 	ProdTabEntry{
@@ -5360,7 +5360,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MultiIndex : MultiIndex "," LocalVariable	<< dsl.AppendChild(
+		String: `MultiIndex : MultiIndex "," LocalVariable	<< dsl.WithChildAppended(
       X[0],
       X[2],
     ) >>`,
@@ -5369,7 +5369,7 @@ var productionsTable = ProdTab{
 		Index:      307,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.AppendChild(
+			return dsl.WithChildAppended(
 				X[0],
 				X[2],
 			)
@@ -5444,13 +5444,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `TripleForStart : TripleForStart "," Assignment	<< dsl.AppendChild(X[0], X[2]) >>`,
+		String:     `TripleForStart : TripleForStart "," Assignment	<< dsl.WithChildAppended(X[0], X[2]) >>`,
 		Id:         "TripleForStart",
 		NTType:     96,
 		Index:      311,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.AppendChild(X[0], X[2])
+			return dsl.WithChildAppended(X[0], X[2])
 		},
 	},
 	ProdTabEntry{
@@ -5494,13 +5494,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `TripleForContinuation : TripleForContinuation "," TripleForContinuationItem	<< dsl.AppendChild(X[0], X[2]) >>`,
+		String:     `TripleForContinuation : TripleForContinuation "," TripleForContinuationItem	<< dsl.WithChildAppended(X[0], X[2]) >>`,
 		Id:         "TripleForContinuation",
 		NTType:     97,
 		Index:      314,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.AppendChild(X[0], X[2])
+			return dsl.WithChildAppended(X[0], X[2])
 		},
 	},
 	ProdTabEntry{
@@ -5564,13 +5564,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `TripleForUpdate : TripleForUpdate "," Assignment	<< dsl.AppendChild(X[0], X[2]) >>`,
+		String:     `TripleForUpdate : TripleForUpdate "," Assignment	<< dsl.WithChildAppended(X[0], X[2]) >>`,
 		Id:         "TripleForUpdate",
 		NTType:     99,
 		Index:      319,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.AppendChild(X[0], X[2])
+			return dsl.WithChildAppended(X[0], X[2])
 		},
 	},
 	ProdTabEntry{
@@ -5830,13 +5830,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `FuncOrSubrNonEmptyParameterList : FuncOrSubrParameter "," FuncOrSubrNonEmptyParameterList	<< dsl.PrependChild(X[2], X[0]) >>`,
+		String:     `FuncOrSubrNonEmptyParameterList : FuncOrSubrParameter "," FuncOrSubrNonEmptyParameterList	<< dsl.WithChildPrepended(X[2], X[0]) >>`,
 		Id:         "FuncOrSubrNonEmptyParameterList",
 		NTType:     106,
 		Index:      331,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.PrependChild(X[2], X[0])
+			return dsl.WithChildPrepended(X[2], X[0])
 		},
 	},
 	ProdTabEntry{
@@ -5894,13 +5894,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `TypedFuncOrSubrParameterName : Typedecl UntypedFuncOrSubrParameterName	<< dsl.AppendChild(X[1], X[0]) >>`,
+		String:     `TypedFuncOrSubrParameterName : Typedecl UntypedFuncOrSubrParameterName	<< dsl.WithChildAppended(X[1], X[0]) >>`,
 		Id:         "TypedFuncOrSubrParameterName",
 		NTType:     109,
 		Index:      335,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.AppendChild(X[1], X[0])
+			return dsl.WithChildAppended(X[1], X[0])
 		},
 	},
 	ProdTabEntry{

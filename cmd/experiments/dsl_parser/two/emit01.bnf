@@ -86,7 +86,7 @@ EmitArgs
     ) >>
 
   | Rvalue "," EmitArgs
-    << dsl.PrependChild(
+    << dsl.WithChildPrepended(
       $2,
       $0,
     ) >>
@@ -115,7 +115,7 @@ FcnArgs
 
   // Allow trailing final comma, especially for multiline statements
   | Rvalue "," FcnArgs
-    << dsl.PrependChild(
+    << dsl.WithChildPrepended(
       $2,
       $0,
     ) >>

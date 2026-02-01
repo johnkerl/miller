@@ -414,11 +414,11 @@ NonEmptyStatementBlock
 
   // Normal case for sequential statements like '$x=1; $y=2'
   | BracelessStatement ";" StatementBlock
-    <<dsl.PrependChild($2, $0) >>
+    <<dsl.WithChildPrepended($2, $0) >>
 
   // For 'begin {...} ; $x=1'
   | BracefulStatement ";" StatementBlock
-    <<dsl.PrependChild($2, $0) >>
+    <<dsl.WithChildPrepended($2, $0) >>
 
   // These are for things like 'begin {...} begin {...} ...' -- where people
   // shouldn't have to put semicolons after the closing curly braces.
@@ -426,14 +426,14 @@ NonEmptyStatementBlock
   // We get LR-1 conflicts with the following, so we need a pair of more
   // explicit lookahead-by-more production rules instead. (By using two
   // Statement rules and a (recursive) StatementBlock rule, with
-  // PrependTwoChildren, we are effectively getting lookahead-by-two.)
+  // WithTwoChildrenPreprended, we are effectively getting lookahead-by-two.)
   //
   // | BracefulStatement StatementBlock
-  //    <<dsl.PrependChild($1, $0) >>
+  //    <<dsl.WithChildPrepended($1, $0) >>
 
   // E.g. 'begin {...} begin {...} $x=1'
   | BracefulStatement BracefulStatement StatementBlock
-    <<dsl.PrependTwoChildren($2, $0, $1) >>
+    <<dsl.WithTwoChildrenPreprended($2, $0, $1) >>
 
   // E.g. 'begin {...} $x=1'
   | BracefulStatement BracelessStatement
@@ -458,7 +458,7 @@ NonEmptyStatementBlock
     ) >>
 
   | BracefulStatement BracelessStatement ";" NonEmptyStatementBlock
-    <<dsl.PrependTwoChildren($3, $0, $1) >>
+    <<dsl.WithTwoChildrenPreprended($3, $0, $1) >>
 ;
 
 // ----------------------------------------------------------------
@@ -515,7 +515,7 @@ Assignment
 Unset
   : unset FcnArgs
     <<
-      dsl.AdoptChildren(
+      dsl.WithChildrenAdopted(
         dsl.NewASTNodeTerminal(
           $0,
           dsl.NodeTypeUnset,
@@ -543,7 +543,7 @@ Unset
 Lvalue
   : Rvalue
   | Typedecl LocalVariable
-    << dsl.AppendChild($1, $0) >>
+    << dsl.WithChildAppended($1, $0) >>
 ;
 
 BareBoolean
@@ -1222,7 +1222,7 @@ EmittableList
 
   // Allow trailing final comma, especially for multiline statements
   | Emittable "," EmittableList
-    << dsl.PrependChild(
+    << dsl.WithChildPrepended(
       $2,
       $0,
     ) >>
@@ -1269,7 +1269,7 @@ EmitKeys
     ) >>
 
   | Rvalue "," EmitKeys
-    << dsl.PrependChild(
+    << dsl.WithChildPrepended(
       $2,
       $0,
     ) >>
@@ -2182,7 +2182,7 @@ ArrayLiteral
     //     * StringLiteral "a"
     //     * StringLiteral "b"
     <<
-      dsl.AdoptChildren(
+      dsl.WithChildrenAdopted(
         dsl.NewASTNodeTerminal(
           dsl.NewASTToken("[]", $0),
           dsl.NodeTypeArrayLiteral,
@@ -2216,7 +2216,7 @@ ArrayLiteralElements
 
   // Allow trailing final comma, especially for multiline statements
   | Rvalue "," ArrayLiteralElements
-    << dsl.PrependChild(
+    << dsl.WithChildPrepended(
       $2,
       $0,
     ) >>
@@ -2260,7 +2260,7 @@ MapLiteral
     //         * StringLiteral "b"
     //         * IntLiteral "2"
     <<
-      dsl.AdoptChildren(
+      dsl.WithChildrenAdopted(
         dsl.NewASTNodeTerminal(
           dsl.NewASTToken("{}", $0),
           dsl.NodeTypeMapLiteral,
@@ -2294,7 +2294,7 @@ MapLiteralKeyValuePairs
 
   // Allow trailing final comma, especially for multiline statements
   | MapLiteralKeyValuePair "," MapLiteralKeyValuePairs
-    << dsl.PrependChild(
+    << dsl.WithChildPrepended(
       $2,
       $0,
     ) >>
@@ -2499,7 +2499,7 @@ FunctionCallsite
     //     * StringLiteral "a"
     //     * StringLiteral "b"
     <<
-      dsl.AdoptChildren(
+      dsl.WithChildrenAdopted(
         dsl.NewASTNodeTerminal(
           $0,
           dsl.NodeTypeFunctionCallsite,
@@ -2543,7 +2543,7 @@ FcnArgs
 
   // Allow trailing final comma, especially for multiline statements
   | Rvalue "," FcnArgs
-    << dsl.PrependChild(
+    << dsl.WithChildPrepended(
       $2,
       $0,
     ) >>
@@ -2575,7 +2575,7 @@ SubroutineCallsite
     //     * StringLiteral "a"
     //     * StringLiteral "b"
     <<
-      dsl.AdoptChildren(
+      dsl.WithChildrenAdopted(
         dsl.NewASTNodeTerminal(
           $1,
           dsl.NodeTypeSubroutineCallsite,
@@ -2648,7 +2648,7 @@ CondBlock
 IfChain
   : IfElifStar
   | IfElifStar ElseBlock
-    << dsl.AppendChild($0, $1) >>
+    << dsl.WithChildAppended($0, $1) >>
 ;
 
 IfElifStar
@@ -2661,7 +2661,7 @@ IfElifStar
     },
     ) >>
   | IfElifStar ElifBlock
-    << dsl.AppendChild($0, $1) >>
+    << dsl.WithChildAppended($0, $1) >>
 ;
 
 IfBlock
@@ -2828,7 +2828,7 @@ MultiIndex
     ) >>
 
   | MultiIndex "," LocalVariable
-    << dsl.AppendChild(
+    << dsl.WithChildAppended(
       $0,
       $2,
     ) >>
@@ -2876,7 +2876,7 @@ TripleForStart
     },
     ) >>
   | TripleForStart "," Assignment
-    <<dsl.AppendChild($0, $2) >>
+    <<dsl.WithChildAppended($0, $2) >>
 ;
 
 // Enforced in the CST, not here: the last must be a bare boolean; the ones
@@ -2897,7 +2897,7 @@ TripleForContinuation
     },
     ) >>
   | TripleForContinuation "," TripleForContinuationItem
-    <<dsl.AppendChild($0, $2) >>
+    <<dsl.WithChildAppended($0, $2) >>
 ;
 
 TripleForContinuationItem
@@ -2921,7 +2921,7 @@ TripleForUpdate
     },
     ) >>
   | TripleForUpdate "," Assignment
-    <<dsl.AppendChild($0, $2) >>
+    <<dsl.WithChildAppended($0, $2) >>
 ;
 
 // ----------------------------------------------------------------
@@ -3093,7 +3093,7 @@ FuncOrSubrNonEmptyParameterList
       },
     ) >>
   | FuncOrSubrParameter "," FuncOrSubrNonEmptyParameterList
-    << dsl.PrependChild($2, $0) >>
+    << dsl.WithChildPrepended($2, $0) >>
 ;
 
 FuncOrSubrParameter
@@ -3130,7 +3130,7 @@ UntypedFuncOrSubrParameterName
 
 TypedFuncOrSubrParameterName
   : Typedecl UntypedFuncOrSubrParameterName
-    << dsl.AppendChild($1, $0) >>
+    << dsl.WithChildAppended($1, $0) >>
 ;
 
 // ----------------------------------------------------------------
