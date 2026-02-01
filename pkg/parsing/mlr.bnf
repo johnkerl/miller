@@ -367,7 +367,11 @@ StatementBlock
 
   // Empty statement. This allows for 'mlr put ""', as well as repeated semicolons.
   : empty
-    << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeStatementBlock,
+    []interface{}{}
+    ) >>
 
   | NonEmptyStatementBlock
     << dsl.Wrap($0) >>
@@ -384,11 +388,23 @@ NonEmptyStatementBlock
 
   // Things not ending in a curly brace, like assignments -- and also do-while.
   : BracelessStatement
-    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeStatementBlock,
+    []interface{}{
+      $0,
+    }
+    ) >>
 
   // Things ending in a curly brace, like for/do/while, begin/end, and pattern-acction blocks
   | BracefulStatement
-    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeStatementBlock,
+    []interface{}{
+      $0,
+    }
+    ) >>
 
   // ---------------------- Recursive rules
 
@@ -421,11 +437,25 @@ NonEmptyStatementBlock
 
   // E.g. 'begin {...} $x=1'
   | BracefulStatement BracelessStatement
-    << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeStatementBlock,
+    []interface{}{
+      $0,
+      $1,
+    }
+    ) >>
 
   // E.g. 'begin {...} $x=1 ;'
   | BracefulStatement BracelessStatement ";"
-    << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeStatementBlock,
+    []interface{}{
+      $0,
+      $1,
+    }
+    ) >>
 
   | BracefulStatement BracelessStatement ";" NonEmptyStatementBlock
     <<dsl.PrependTwoChildren($3, $0, $1) >>
@@ -472,7 +502,14 @@ BracelessStatement
 
 Assignment
   : Lvalue "=" Rvalue
-    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+    << dsl.NewASTNode(
+    $1,
+    dsl.NodeTypeAssignment,
+    []interface{}{
+      $0,
+      $2,
+    }
+    ) >>
 ;
 
 Unset
@@ -511,12 +548,24 @@ Lvalue
 
 BareBoolean
   : Rvalue
-    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeBareBoolean) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeBareBoolean,
+    []interface{}{
+      $0,
+    }
+    ) >>
 ;
 
 FilterStatement
   : filter Rvalue
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeFilterStatement) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeFilterStatement,
+    []interface{}{
+      $1,
+    }
+    ) >>
 ;
 
 // ----------------------------------------------------------------
@@ -524,18 +573,44 @@ FilterStatement
 
 Redirector
   : ">"  RedirectTarget
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeRedirectWrite) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeRedirectWrite,
+    []interface{}{
+      $1,
+    }
+    ) >>
   | ">>" RedirectTarget
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeRedirectAppend) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeRedirectAppend,
+    []interface{}{
+      $1,
+    }
+    ) >>
   | "|"  RedirectTarget
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeRedirectPipe) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeRedirectPipe,
+    []interface{}{
+      $1,
+    }
+    ) >>
 ;
 
 RedirectTarget
   : stdout
-    << dsl.NewASTNodeZary($0, dsl.NodeTypeRedirectTargetStdout) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeRedirectTargetStdout,
+    []interface{}{}
+    ) >>
   | stderr
-    << dsl.NewASTNodeZary($0, dsl.NodeTypeRedirectTargetStderr) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeRedirectTargetStderr,
+    []interface{}{}
+    ) >>
   | Rvalue
 ;
 
@@ -543,41 +618,61 @@ RedirectTarget
 PrintStatement
   : print
     <<
-      dsl.NewASTNodeBinary(
-        $0, // print
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypePrintStatement,
+      []interface{}{
+        // print
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no printable
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | print Redirector
     <<
-      dsl.NewASTNodeBinary(
-        $0, // print
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-        $1, // redirect
+      dsl.NewASTNode(
+      $0,
+      // redirect
         dsl.NodeTypePrintStatement,
+      []interface{}{
+        // print
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no printable
+        $1,
+      }
       )
     >>
 
   | print FcnArgs
     <<
-      dsl.NewASTNodeBinary(
-        $0, // print
-        $1, // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypePrintStatement,
+      []interface{}{
+        // print
+        $1,
+        // printables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | print Redirector "," FcnArgs
     <<
-      dsl.NewASTNodeBinary(
-        $0, // print
-        $3, // printables
-        $1, // redirect
+      dsl.NewASTNode(
+      $0,
+      // redirect
         dsl.NodeTypePrintStatement,
+      []interface{}{
+        // print
+        $3,
+        // printables
+        $1,
+      }
       )
     >>
 ;
@@ -586,41 +681,61 @@ PrintStatement
 PrintnStatement
   : printn
     <<
-      dsl.NewASTNodeBinary(
-        $0, // printn
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypePrintnStatement,
+      []interface{}{
+        // printn
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no printable
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | printn Redirector
     <<
-      dsl.NewASTNodeBinary(
-        $0, // printn
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-        $1, // redirect
+      dsl.NewASTNode(
+      $0,
+      // redirect
         dsl.NodeTypePrintnStatement,
+      []interface{}{
+        // printn
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no printable
+        $1,
+      }
       )
     >>
 
   | printn FcnArgs
     <<
-      dsl.NewASTNodeBinary(
-        $0, // printn
-        $1, // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypePrintnStatement,
+      []interface{}{
+        // printn
+        $1,
+        // printables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | printn Redirector "," FcnArgs
     <<
-      dsl.NewASTNodeBinary(
-        $0, // printn
-        $3, // printables
-        $1, // redirect
+      dsl.NewASTNode(
+      $0,
+      // redirect
         dsl.NodeTypePrintnStatement,
+      []interface{}{
+        // printn
+        $3,
+        // printables
+        $1,
+      }
       )
     >>
 ;
@@ -629,21 +744,31 @@ PrintnStatement
 EprintStatement
   : eprint
     <<
-      dsl.NewASTNodeBinary(
-        $0, // eprint
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeEprintStatement,
+      []interface{}{
+        // eprint
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no printables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | eprint FcnArgs
     <<
-      dsl.NewASTNodeBinary(
-        $0, // eprint
-        $1, // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeEprintStatement,
+      []interface{}{
+        // eprint
+        $1,
+        // printables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 ;
@@ -652,21 +777,31 @@ EprintStatement
 EprintnStatement
   : eprintn
     <<
-      dsl.NewASTNodeBinary(
-        $0, // eprint
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeEprintnStatement,
+      []interface{}{
+        // eprint
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no printables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | eprintn FcnArgs
     <<
-      dsl.NewASTNodeBinary(
-        $0, // eprintn
-        $1, // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeEprintnStatement,
+      []interface{}{
+        // eprintn
+        $1,
+        // printables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 ;
@@ -675,41 +810,61 @@ EprintnStatement
 DumpStatement
   : dump
     <<
-      dsl.NewASTNodeBinary(
-        $0, // dump
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeDumpStatement,
+      []interface{}{
+        // dump
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no dumpable
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | dump Redirector
     <<
-      dsl.NewASTNodeBinary(
-        $0, // dump
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
-        $1, // redirect
+      dsl.NewASTNode(
+      $0,
+      // redirect
         dsl.NodeTypeDumpStatement,
+      []interface{}{
+        // dump
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no dumpable
+        $1,
+      }
       )
     >>
 
   | dump FcnArgs
     <<
-      dsl.NewASTNodeBinary(
-        $0, // dump
-        $1, // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeDumpStatement,
+      []interface{}{
+        // dump
+        $1,
+        // printables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | dump Redirector "," FcnArgs
     <<
-      dsl.NewASTNodeBinary(
-        $0, // dump
-        $3, // printables
-        $1, // redirect
+      dsl.NewASTNode(
+      $0,
+      // redirect
         dsl.NodeTypeDumpStatement,
+      []interface{}{
+        // dump
+        $3,
+        // printables
+        $1,
+      }
       )
     >>
 ;
@@ -718,21 +873,31 @@ DumpStatement
 EdumpStatement
   : edump
     <<
-      dsl.NewASTNodeBinary(
-        $0, // edump
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeEdumpStatement,
+      []interface{}{
+        // edump
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no dumpable
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | edump FcnArgs
     <<
-      dsl.NewASTNodeBinary(
-        $0, // edump
-        $1, // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeEdumpStatement,
+      []interface{}{
+        // edump
+        $1,
+        // printables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 ;
@@ -740,7 +905,14 @@ EdumpStatement
 // ----------------------------------------------------------------
 TeeStatement
   : tee Redirector "," FullSrec
-    << dsl.NewASTNodeBinary($0, $3, $1, dsl.NodeTypeTeeStatement) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeTeeStatement,
+    []interface{}{
+      $3,
+      $1,
+    }
+    ) >>
 ;
 
 // ----------------------------------------------------------------
@@ -754,21 +926,31 @@ EmitFStatement
 
   : emitf EmittableList
     <<
-      dsl.NewASTNodeBinary(
-        $0, // emitf
-        $1, // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeEmitFStatement,
+      []interface{}{
+        // emitf
+        $1,
+        // emittables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | emitf Redirector "," EmittableList
     <<
-      dsl.NewASTNodeBinary(
-        $0, // emitf
-        $3, // emittables
-        $1, // redirect
+      dsl.NewASTNode(
+      $0,
+      // redirect
         dsl.NodeTypeEmitFStatement,
+      []interface{}{
+        // emitf
+        $3,
+        // emittables
+        $1,
+      }
       )
     >>
 ;
@@ -794,10 +976,14 @@ EmitFStatement
 Emit1Statement
   : emit1 Rvalue
     <<
-      dsl.NewASTNodeUnary(
-        $0, // emit
-        $1, // Emittable
+      dsl.NewASTNode(
+      $0,
+      // Emittable
         dsl.NodeTypeEmit1Statement,
+      []interface{}{
+        // emit
+        $1,
+      }
       )
     >>
 ;
@@ -841,89 +1027,137 @@ EmitStatement
 
   : emit EmittableAsList
     <<
-      dsl.NewASTNodeTernary(
-        $0, // emit
-        $1, // Emittable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeEmitStatement,
+      []interface{}{
+        // emit
+        $1,
+        // Emittable
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | emit Redirector "," EmittableAsList
     <<
-      dsl.NewASTNodeTernary(
-      $0, // emit
-      $3, // Emittable
-      dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-      $1, // redirect
+      dsl.NewASTNode(
+      $0,
+      // redirect
       dsl.NodeTypeEmitStatement,
-    )
+      []interface{}{
+        // emit
+      $3,
+        // Emittable
+      dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no keys
+      $1,
+      }
+      )
     >>
 
   | emit "(" EmittableList ")"
     <<
-      dsl.NewASTNodeTernary(
-        $0, // emit
-        $2, // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeEmitStatement,
+      []interface{}{
+        // emit
+        $2,
+        // emittables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | emit Redirector "," "(" EmittableList ")"
     <<
-      dsl.NewASTNodeTernary(
-        $0, // emit
-        $4, // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        $1, // redirect
+      dsl.NewASTNode(
+      $0,
+      // redirect
         dsl.NodeTypeEmitStatement,
+      []interface{}{
+        // emit
+        $4,
+        // emittables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no keys
+        $1,
+      }
       )
     >>
 
   | emit EmittableAsList "," EmitKeys
     <<
-      dsl.NewASTNodeTernary(
-        $0, // emit
-        $1, // emittable
-        $3, // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeEmitStatement,
+      []interface{}{
+        // emit
+        $1,
+        // emittable
+        $3,
+        // keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | emit Redirector "," EmittableAsList "," EmitKeys
     <<
-      dsl.NewASTNodeTernary(
-        $0, // emit
-        $3, // emittable
-        $5, // keys
-        $1, // redirect
+      dsl.NewASTNode(
+      $0,
+      // redirect
         dsl.NodeTypeEmitStatement,
+      []interface{}{
+        // emit
+        $3,
+        // emittable
+        $5,
+        // keys
+        $1,
+      }
       )
     >>
 
   | emit "(" EmittableList ")" "," EmitKeys
     <<
-      dsl.NewASTNodeTernary(
-        $0, // emit
-        $2, // emittable
-        $5, // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeEmitStatement,
+      []interface{}{
+        // emit
+        $2,
+        // emittable
+        $5,
+        // keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | emit Redirector "," "(" EmittableList ")" "," EmitKeys
     <<
-      dsl.NewASTNodeTernary(
-        $0, // emit
-        $4, // emittables
-        $7, // keys
-        $1, // redirect
+      dsl.NewASTNode(
+      $0,
+      // redirect
         dsl.NodeTypeEmitStatement,
+      []interface{}{
+        // emit
+        $4,
+        // emittables
+        $7,
+        // keys
+        $1,
+      }
       )
     >>
 ;
@@ -932,89 +1166,137 @@ EmitStatement
 EmitPStatement
   : emitp EmittableAsList
     <<
-      dsl.NewASTNodeTernary(
-        $0, // emitp
-        $1, // emittable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeEmitPStatement,
+      []interface{}{
+        // emitp
+        $1,
+        // emittable
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | emitp Redirector "," EmittableAsList
     <<
-      dsl.NewASTNodeTernary(
-      $0, // emitp
-      $3, // emittable
-      dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-      $1, // redirect
+      dsl.NewASTNode(
+      $0,
+      // redirect
       dsl.NodeTypeEmitPStatement,
-    )
+      []interface{}{
+        // emitp
+      $3,
+        // emittable
+      dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no keys
+      $1,
+      }
+      )
     >>
 
   | emitp "(" EmittableList ")"
     <<
-      dsl.NewASTNodeTernary(
-        $0, // emitp
-        $2, // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeEmitPStatement,
+      []interface{}{
+        // emitp
+        $2,
+        // emittables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | emitp Redirector "," "(" EmittableList ")"
     <<
-      dsl.NewASTNodeTernary(
-        $0, // emitp
-        $4, // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        $1, // redirect
+      dsl.NewASTNode(
+      $0,
+      // redirect
         dsl.NodeTypeEmitPStatement,
+      []interface{}{
+        // emitp
+        $4,
+        // emittables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+        // no keys
+        $1,
+      }
       )
     >>
 
   | emitp EmittableAsList "," EmitKeys
     <<
-      dsl.NewASTNodeTernary(
-        $0, // emitp
-        $1, // emittable
-        $3, // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeEmitPStatement,
+      []interface{}{
+        // emitp
+        $1,
+        // emittable
+        $3,
+        // keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | emitp Redirector "," EmittableAsList "," EmitKeys
     <<
-      dsl.NewASTNodeTernary(
-        $0, // emitp
-        $3, // emittable
-        $5, // keys
-        $1, // redirect
+      dsl.NewASTNode(
+      $0,
+      // redirect
         dsl.NodeTypeEmitPStatement,
+      []interface{}{
+        // emitp
+        $3,
+        // emittable
+        $5,
+        // keys
+        $1,
+      }
       )
     >>
 
   | emitp "(" EmittableList ")" "," EmitKeys
     <<
-      dsl.NewASTNodeTernary(
-        $0, // emitp
-        $2, // emittable
-        $5, // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+      dsl.NewASTNode(
+      $0,
+      // no redirect
         dsl.NodeTypeEmitPStatement,
+      []interface{}{
+        // emitp
+        $2,
+        // emittable
+        $5,
+        // keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp),
+      }
       )
     >>
 
   | emitp Redirector "," "(" EmittableList ")" "," EmitKeys
     <<
-      dsl.NewASTNodeTernary(
-        $0, // emitp
-        $4, // emittable
-        $7, // keys
-        $1, // redirect
+      dsl.NewASTNode(
+      $0,
+      // redirect
         dsl.NodeTypeEmitPStatement,
+      []interface{}{
+        // emitp
+        $4,
+        // emittable
+        $7,
+        // keys
+        $1,
+      }
       )
     >>
 ;
@@ -1023,10 +1305,12 @@ EmitPStatement
 EmittableList
   : Emittable
     <<
-      dsl.NewASTNodeUnary(
-        nil,
+      dsl.NewASTNode(
+      nil,
+      dsl.NodeTypeEmittableList,
+      []interface{}{
         $0,
-        dsl.NodeTypeEmittableList,
+      }
       )
     >>
 
@@ -1041,10 +1325,12 @@ EmittableList
 // Wraps a single emittable in a list-of-one node.
 EmittableAsList
   : Emittable
-  << dsl.NewASTNodeUnary(
-    nil,
+  << dsl.NewASTNode(
+  nil,
+  dsl.NodeTypeEmittableList,
+  []interface{}{
     $0,
-    dsl.NodeTypeEmittableList,
+  }
   ) >>
 ;
 
@@ -1068,10 +1354,12 @@ Emittable
 EmitKeys
 
   : Rvalue
-    << dsl.NewASTNodeUnary(
-      nil,
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeEmitKeys,
+    []interface{}{
       $0,
-      dsl.NodeTypeEmitKeys,
+    }
     ) >>
 
   | Rvalue "," EmitKeys
@@ -1101,7 +1389,13 @@ DirectFieldValue
 
 IndirectFieldValue
   : "$[" Rvalue "]"
-    << dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", $0), $1, dsl.NodeTypeIndirectFieldValue) >>
+    << dsl.NewASTNode(
+    dsl.NewASTToken("$[]", $0),
+    dsl.NodeTypeIndirectFieldValue,
+    []interface{}{
+      $1,
+    }
+    ) >>
 ;
 
 // * Direct is '$name'
@@ -1115,12 +1409,24 @@ BracedFieldValue
 
 PositionalFieldName
   : "$[[" Rvalue "]" "]" // Not "]]" since that would define a token, making '$foo[bar[1]]' a syntax error
-    << dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", $0), $1, dsl.NodeTypePositionalFieldName) >>
+    << dsl.NewASTNode(
+    dsl.NewASTToken("$[]", $0),
+    dsl.NodeTypePositionalFieldName,
+    []interface{}{
+      $1,
+    }
+    ) >>
 ;
 
 PositionalFieldValue
   : "$[[[" Rvalue "]" "]" "]" // Not "]]]" since that would define a token, making '$foo[bar[baz[1]]]' a syntax error
-    << dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", $0), $1, dsl.NodeTypePositionalFieldValue) >>
+    << dsl.NewASTNode(
+    dsl.NewASTToken("$[]", $0),
+    dsl.NodeTypePositionalFieldValue,
+    []interface{}{
+      $1,
+    }
+    ) >>
 ;
 
 FullSrec
@@ -1146,7 +1452,13 @@ DirectOosvarValue
 
 IndirectOosvarValue
   : "@[" Rvalue "]"
-    << dsl.NewASTNodeUnary(dsl.NewASTToken("@[]", $0), $1, dsl.NodeTypeIndirectOosvarValue) >>
+    << dsl.NewASTNode(
+    dsl.NewASTToken("@[]", $0),
+    dsl.NodeTypeIndirectOosvarValue,
+    []interface{}{
+      $1,
+    }
+    ) >>
 ;
 
 // * Direct is '@name'
@@ -1224,155 +1536,193 @@ Typedecl
 Assignment
 
   : Lvalue "||=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("||", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue "^^=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^^", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue "&&=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("&&", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue "??=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("??", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue "???=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("???", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue "|=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("|", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue "&=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue "^=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue "<<=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("<<", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue ">>=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(">"+">", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue ">>>=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(">"+">"+">", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue "+=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("+", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue ".=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(".", $1), $0, $2, dsl.NodeTypeDotOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue "-=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("-", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue "*=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("*", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue "/=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("/", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue "//=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("//", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue "%=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("%", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 
   | Lvalue "**=" Rvalue
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("=", $1),
+    dsl.NodeTypeAssignment,
+    []interface{}{
       $0,
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("**", $1), $0, $2, dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
+    }
     ) >>
 ;
 
@@ -1386,116 +1736,391 @@ PrecedenceChainStart : TernaryTerm ;
 
 TernaryTerm
   : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm
-    << dsl.NewASTNodeTernary(dsl.NewASTToken("?:", $1), $0, $2, $4, dsl.NodeTypeOperator) >>
+    << dsl.NewASTNode(
+    dsl.NewASTToken("?:", $1),
+    dsl.NodeTypeOperator,
+    []interface{}{
+      $0,
+      $2,
+      $4,
+    }
+    ) >>
   | LogicalOrTerm
 ;
 
 LogicalOrTerm
   : LogicalOrTerm "||" LogicalXORTerm
-    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+    << dsl.NewASTNode(
+    $1,
+    dsl.NodeTypeOperator,
+    []interface{}{
+      $0,
+      $2,
+    }
+    ) >>
   | LogicalXORTerm
 ;
 
 LogicalXORTerm
   : LogicalXORTerm "^^" LogicalAndTerm
-    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+    << dsl.NewASTNode(
+    $1,
+    dsl.NodeTypeOperator,
+    []interface{}{
+      $0,
+      $2,
+    }
+    ) >>
   | LogicalAndTerm
 ;
 
 LogicalAndTerm
   : LogicalAndTerm "&&" EqneTerm
-    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+    << dsl.NewASTNode(
+    $1,
+    dsl.NodeTypeOperator,
+    []interface{}{
+      $0,
+      $2,
+    }
+    ) >>
   | EqneTerm
 ;
 
 EqneTerm
-  : EqneTerm "=~"  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | EqneTerm "!=~" CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | EqneTerm "=="  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | EqneTerm "!="  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | EqneTerm "<=>" CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  : EqneTerm "=~"  CmpTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | EqneTerm "!=~" CmpTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | EqneTerm "=="  CmpTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | EqneTerm "!="  CmpTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | EqneTerm "<=>" CmpTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
   | CmpTerm
 ;
 
 CmpTerm
-  : CmpTerm ">"  BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | CmpTerm ">=" BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | CmpTerm "<"  BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | CmpTerm "<=" BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  : CmpTerm ">"  BitwiseORTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | CmpTerm ">=" BitwiseORTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | CmpTerm "<"  BitwiseORTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | CmpTerm "<=" BitwiseORTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
   | BitwiseORTerm
 ;
 
 BitwiseORTerm
-  : BitwiseORTerm "|" BitwiseXORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  : BitwiseORTerm "|" BitwiseXORTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
   | BitwiseXORTerm
 ;
 
 BitwiseXORTerm
-  : BitwiseXORTerm "^" BitwiseANDTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  : BitwiseXORTerm "^" BitwiseANDTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
   | BitwiseANDTerm
 ;
 
 BitwiseANDTerm
-  : BitwiseANDTerm "&" BitwiseShiftTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  : BitwiseANDTerm "&" BitwiseShiftTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
   | BitwiseShiftTerm
 ;
 
 BitwiseShiftTerm
-  : BitwiseShiftTerm "<<"  AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | BitwiseShiftTerm ">>"  AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | BitwiseShiftTerm ">>>" AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  : BitwiseShiftTerm "<<"  AddsubdotTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | BitwiseShiftTerm ">>"  AddsubdotTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | BitwiseShiftTerm ">>>" AddsubdotTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
   | AddsubdotTerm
 ;
 
 AddsubdotTerm
-  : AddsubdotTerm "+"  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | AddsubdotTerm "-"  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | AddsubdotTerm ".+" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | AddsubdotTerm ".-" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  : AddsubdotTerm "+"  MuldivTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | AddsubdotTerm "-"  MuldivTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | AddsubdotTerm ".+" MuldivTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | AddsubdotTerm ".-" MuldivTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
   | MuldivTerm
 ;
 
 MuldivTerm
-  : MuldivTerm "*"   DotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "/"   DotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "//"  DotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "%"   DotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm ".*"  DotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "./"  DotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm ".//" DotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  : MuldivTerm "*"   DotTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | MuldivTerm "/"   DotTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | MuldivTerm "//"  DotTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | MuldivTerm "%"   DotTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | MuldivTerm ".*"  DotTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | MuldivTerm "./"  DotTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
+  | MuldivTerm ".//" DotTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
   | DotTerm
 ;
 
 DotTerm
-  : DotTerm "."  UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeDotOperator) >>
+  : DotTerm "."  UnaryOpTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeDotOperator,
+  []interface{}{
+    $0,
+    $2,
+  }
+  ) >>
   | UnaryOpTerm
 ;
 
 UnaryOpTerm
-  : "+"  UnaryOpTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | "-"  UnaryOpTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | ".+" UnaryOpTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | ".-" UnaryOpTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | "!"  UnaryOpTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | "~"  UnaryOpTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  : "+"  UnaryOpTerm << dsl.NewASTNode(
+  $0,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $1,
+  }
+  ) >>
+  | "-"  UnaryOpTerm << dsl.NewASTNode(
+  $0,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $1,
+  }
+  ) >>
+  | ".+" UnaryOpTerm << dsl.NewASTNode(
+  $0,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $1,
+  }
+  ) >>
+  | ".-" UnaryOpTerm << dsl.NewASTNode(
+  $0,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $1,
+  }
+  ) >>
+  | "!"  UnaryOpTerm << dsl.NewASTNode(
+  $0,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $1,
+  }
+  ) >>
+  | "~"  UnaryOpTerm << dsl.NewASTNode(
+  $0,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $1,
+  }
+  ) >>
   | AbsentCoalesceTerm
 ;
 
 AbsentCoalesceTerm
   : AbsentCoalesceTerm "??" EmptyCoalesceTerm
-    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+    << dsl.NewASTNode(
+    $1,
+    dsl.NodeTypeOperator,
+    []interface{}{
+      $0,
+      $2,
+    }
+    ) >>
   | EmptyCoalesceTerm
 ;
 
 EmptyCoalesceTerm
   : EmptyCoalesceTerm "???" PowTerm
-    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+    << dsl.NewASTNode(
+    $1,
+    dsl.NodeTypeOperator,
+    []interface{}{
+      $0,
+      $2,
+    }
+    ) >>
   | PowTerm
 ;
 
 PowTerm
   : PrecedenceChainEnd "**"     PowTerm
-    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+    << dsl.NewASTNode(
+    $1,
+    dsl.NodeTypeOperator,
+    []interface{}{
+      $0,
+      $2,
+    }
+    ) >>
 
   // In the Miller-DSL grammar, the leading -/+ isn't part of the int/float token -- it's treated as
   // a unary operator. (Making it part of the token leads to LR1 conflicts, and is also inelegant.)
@@ -1505,21 +2130,29 @@ PowTerm
   // we need to be explicit about '2 ** -3' in a way that we do not need to for '2 * -3'.  Also, we
   // can't use 'PrecedenceChainEnd "**" UnaryOpTerm', as this also results in LR1 conflicts.
 
-  | PrecedenceChainEnd "**" "-" PowTerm << dsl.NewASTNodeBinary( $1, $0,
-  dsl.NewASTNodeUnaryNestable( $2, $3, dsl.NodeTypeOperator,), dsl.NodeTypeOperator,)
+  | PrecedenceChainEnd "**" "-" PowTerm << dsl.NewASTNode(
+  $1,
+  dsl.NodeTypeOperator,
+  []interface{}{
+    $0,
+    dsl.NewASTNodeUnaryNestable( $2, $3, dsl.NodeTypeOperator,),
+  }
+  )
     >>
 
   | PrecedenceChainEnd "**" "+" PowTerm
     <<
-      dsl.NewASTNodeBinary(
-        $1,
+      dsl.NewASTNode(
+      $1,
+      dsl.NodeTypeOperator,
+      []interface{}{
         $0,
         dsl.NewASTNodeUnaryNestable(
           $2,
           $3,
           dsl.NodeTypeOperator,
         ),
-        dsl.NodeTypeOperator,
+      }
       )
     >>
 
@@ -1622,9 +2255,10 @@ MlrvalOrFunction : ArrayLiteral ;
 ArrayLiteral
 
   : "[" "]"
-    << dsl.NewASTNodeZary(
-      dsl.NewASTToken("[]", $0),
-      dsl.NodeTypeArrayLiteral,
+    << dsl.NewASTNode(
+    dsl.NewASTToken("[]", $0),
+    dsl.NodeTypeArrayLiteral,
+    []interface{}{}
     ) >>
 
   | "[" ArrayLiteralElements "]"
@@ -1656,18 +2290,22 @@ ArrayLiteral
 ArrayLiteralElements
 
   : Rvalue
-    << dsl.NewASTNodeUnary(
-      nil,
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeArrayLiteral,
+    []interface{}{
       $0,
-      dsl.NodeTypeArrayLiteral,
+    }
     ) >>
 
   // Allow trailing final comma, especially for multiline statements
   | Rvalue ","
-    << dsl.NewASTNodeUnary(
-      nil,
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeArrayLiteral,
+    []interface{}{
       $0,
-      dsl.NodeTypeArrayLiteral,
+    }
     ) >>
 
   // Allow trailing final comma, especially for multiline statements
@@ -1687,9 +2325,10 @@ MlrvalOrFunction : MapLiteral ;
 MapLiteral
 
   : "{" "}"
-    << dsl.NewASTNodeZary(
-      dsl.NewASTToken("{}", $0),
-      dsl.NodeTypeMapLiteral,
+    << dsl.NewASTNode(
+    dsl.NewASTToken("{}", $0),
+    dsl.NodeTypeMapLiteral,
+    []interface{}{}
     ) >>
 
   | "{" MapLiteralKeyValuePairs "}"
@@ -1729,18 +2368,22 @@ MapLiteral
 MapLiteralKeyValuePairs
 
   : MapLiteralKeyValuePair
-    << dsl.NewASTNodeUnary(
-      nil,
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeMapLiteral,
+    []interface{}{
       $0,
-      dsl.NodeTypeMapLiteral,
+    }
     ) >>
 
   // Allow trailing final comma, especially for multiline statements
   | MapLiteralKeyValuePair ","
-    << dsl.NewASTNodeUnary(
-      nil,
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeMapLiteral,
+    []interface{}{
       $0,
-      dsl.NodeTypeMapLiteral,
+    }
     ) >>
 
   // Allow trailing final comma, especially for multiline statements
@@ -1754,11 +2397,13 @@ MapLiteralKeyValuePairs
 // ----------------------------------------------------------------
 MapLiteralKeyValuePair
   : Rvalue ":" Rvalue
-    << dsl.NewASTNodeBinary(
-      $1,
+    << dsl.NewASTNode(
+    $1,
+    dsl.NodeTypeMapLiteralKeyValuePair,
+    []interface{}{
       $0,
       $2,
-      dsl.NodeTypeMapLiteralKeyValuePair,
+    }
     ) >>
 ;
 
@@ -1791,17 +2436,21 @@ MlrvalOrFunction : ENV ;
 
 ENV
   : env "[" Rvalue "]"
-    << dsl.NewASTNodeUnary(
-      $0,
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeEnvironmentVariable,
+    []interface{}{
       $2,
-      dsl.NodeTypeEnvironmentVariable,
+    }
     ) >>
 
   | env "." non_sigil_name
-    << dsl.NewASTNodeUnary(
-      $0,
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeEnvironmentVariable,
+    []interface{}{
       dsl.NewASTNodeNestable($2, dsl.NodeTypeStringLiteral),
-      dsl.NodeTypeEnvironmentVariable,
+    }
     ) >>
 ;
 
@@ -1819,31 +2468,37 @@ MlrvalOrFunction
 
 ArrayOrMapIndexAccess
   : MlrvalOrFunction "[" Rvalue "]"
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("[]", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("[]", $1),
+    dsl.NodeTypeArrayOrMapIndexAccess,
+    []interface{}{
       $0,
       $2,
-      dsl.NodeTypeArrayOrMapIndexAccess,
+    }
     )>>
 ;
 
 ArrayOrMapPositionalNameAccess
   : MlrvalOrFunction "[[" Rvalue "]" "]" // Not "]]" since that would define a token, making '$foo[bar[1]]' a syntax error
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("[]", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("[]", $1),
+    dsl.NodeTypeArrayOrMapPositionalNameAccess,
+    []interface{}{
       $0,
       $2,
-      dsl.NodeTypeArrayOrMapPositionalNameAccess,
+    }
     )>>
 ;
 
 ArrayOrMapPositionalValueAccess
   : MlrvalOrFunction "[[[" Rvalue "]" "]" "]" // Not "]]]" since that would define a token, making '$foo[bar[baz[1]]]' a syntax error
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("[]", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("[]", $1),
+    dsl.NodeTypeArrayOrMapPositionalValueAccess,
+    []interface{}{
       $0,
       $2,
-      dsl.NodeTypeArrayOrMapPositionalValueAccess,
+    }
     )>>
 ;
 
@@ -1851,41 +2506,49 @@ ArrayOrMapPositionalValueAccess
 ArraySliceAccess
 
   : MlrvalOrFunction "[" Rvalue ":" Rvalue "]"
-    << dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("[]", $1),
+    dsl.NodeTypeArraySliceAccess,
+    []interface{}{
       $0,
       $2,
       $4,
-      dsl.NodeTypeArraySliceAccess,
+    }
     )>>
 
   | MlrvalOrFunction "[" ":" Rvalue "]"
-    << dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("[]", $1),
+    dsl.NodeTypeArraySliceAccess,
+    []interface{}{
       $0,
       dsl.NewASTNodeNestable(
         $2,
         dsl.NodeTypeArraySliceEmptyLowerIndex,
       ),
       $3,
-      dsl.NodeTypeArraySliceAccess,
+    }
     )>>
 
   | MlrvalOrFunction "[" Rvalue ":" "]"
-    << dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("[]", $1),
+    dsl.NodeTypeArraySliceAccess,
+    []interface{}{
       $0,
       $2,
       dsl.NewASTNodeNestable(
         $3,
         dsl.NodeTypeArraySliceEmptyUpperIndex,
       ),
-      dsl.NodeTypeArraySliceAccess,
+    }
     )>>
 
   | MlrvalOrFunction "[" ":" "]"
-    << dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", $1),
+    << dsl.NewASTNode(
+    dsl.NewASTToken("[]", $1),
+    dsl.NodeTypeArraySliceAccess,
+    []interface{}{
       $0,
       dsl.NewASTNodeNestable(
         $2,
@@ -1895,7 +2558,7 @@ ArraySliceAccess
         $2,
         dsl.NodeTypeArraySliceEmptyUpperIndex,
       ),
-      dsl.NodeTypeArraySliceAccess,
+    }
     )>>
 ;
 
@@ -1909,9 +2572,10 @@ MlrvalOrFunction
 FunctionCallsite
 
   : FunctionName "(" ")"
-    << dsl.NewASTNodeZary(
-      $0,
-      dsl.NodeTypeFunctionCallsite,
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeFunctionCallsite,
+    []interface{}{}
     ) >>
 
   | FunctionName "(" FcnArgs ")"
@@ -1953,18 +2617,22 @@ FunctionName
 FcnArgs
 
   : Rvalue
-    << dsl.NewASTNodeUnary(
-      nil,
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeFunctionCallsite,
+    []interface{}{
       $0,
-      dsl.NodeTypeFunctionCallsite,
+    }
     ) >>
 
   // Allow trailing final comma, especially for multiline statements
   | Rvalue ","
-    << dsl.NewASTNodeUnary(
-      nil,
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeFunctionCallsite,
+    []interface{}{
       $0,
-      dsl.NodeTypeFunctionCallsite,
+    }
     ) >>
 
   // Allow trailing final comma, especially for multiline statements
@@ -1980,9 +2648,10 @@ FcnArgs
 
 SubroutineCallsite
   : call SubroutineName "(" ")"
-    << dsl.NewASTNodeZary(
-      $1,
-      dsl.NodeTypeSubroutineCallsite,
+    << dsl.NewASTNode(
+    $1,
+    dsl.NodeTypeSubroutineCallsite,
+    []interface{}{}
     ) >>
 
   | call SubroutineName "(" FcnArgs ")"
@@ -2028,11 +2697,23 @@ BracefulStatement
 
 BeginBlock
   : begin StatementBlockInBraces
-    << dsl.NewASTNodeUnary(nil, $1, dsl.NodeTypeBeginBlock) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeBeginBlock,
+    []interface{}{
+      $1,
+    }
+    ) >>
 ;
 EndBlock
   : end StatementBlockInBraces
-    << dsl.NewASTNodeUnary(nil, $1, dsl.NodeTypeEndBlock) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeEndBlock,
+    []interface{}{
+      $1,
+    }
+    ) >>
 ;
 // ================================================================
 // PATTERN-ACTION BLOCKS (AWKISH)
@@ -2041,7 +2722,14 @@ EndBlock
 
 CondBlock
   := Rvalue StatementBlockInBraces
-    << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeCondBlock) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeCondBlock,
+    []interface{}{
+      $0,
+      $1,
+    }
+    ) >>
 ;
 
 // ================================================================
@@ -2059,24 +2747,50 @@ IfChain
 
 IfElifStar
   : IfBlock
-    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeIfChain) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeIfChain,
+    []interface{}{
+      $0,
+    }
+    ) >>
   | IfElifStar ElifBlock
     << dsl.AppendChild($0, $1) >>
 ;
 
 IfBlock
   : if "(" Rvalue ")" StatementBlockInBraces
-    << dsl.NewASTNodeBinary($0, $2, $4, dsl.NodeTypeIfItem) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeIfItem,
+    []interface{}{
+      $2,
+      $4,
+    }
+    ) >>
 ;
 
 ElifBlock
   : elif "(" Rvalue ")" StatementBlockInBraces
-    << dsl.NewASTNodeBinary($0, $2, $4, dsl.NodeTypeIfItem) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeIfItem,
+    []interface{}{
+      $2,
+      $4,
+    }
+    ) >>
 ;
 
 ElseBlock
   : else StatementBlockInBraces
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeIfItem) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeIfItem,
+    []interface{}{
+      $1,
+    }
+    ) >>
 ;
 
 // ================================================================
@@ -2084,12 +2798,26 @@ ElseBlock
 
 WhileLoop
   : while "(" Rvalue ")" StatementBlockInBraces
-    << dsl.NewASTNodeBinary($0, $2, $4, dsl.NodeTypeWhileLoop) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeWhileLoop,
+    []interface{}{
+      $2,
+      $4,
+    }
+    ) >>
 ;
 
 DoWhileLoop
   : do StatementBlockInBraces while "(" Rvalue ")"
-    << dsl.NewASTNodeBinary($0, $1, $4, dsl.NodeTypeDoWhileLoop) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeDoWhileLoop,
+    []interface{}{
+      $1,
+      $4,
+    }
+    ) >>
 ;
 
 // ================================================================
@@ -2114,12 +2842,14 @@ ForLoopOneVariable
     ")"
     StatementBlockInBraces
  <<
-   dsl.NewASTNodeTernary(
+   dsl.NewASTNode(
      $0, // "for"
-     $2, // k, etc.
-     $4, // $*, etc.
-     $6, // { ... }
      dsl.NodeTypeForLoopOneVariable,
+     []interface{}{
+       $2, // k, etc.
+       $4, // $*, etc.
+       $6, // { ... }
+     },
    );
  >>
 ;
@@ -2178,11 +2908,13 @@ ForLoopMultivariable
 MultiIndex
 
   : LocalVariable "," LocalVariable
-    << dsl.NewASTNodeBinary(
-      nil,
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeParameterList,
+    []interface{}{
       $0,
       $2,
-      dsl.NodeTypeParameterList,
+    }
     ) >>
 
   | MultiIndex "," LocalVariable
@@ -2218,9 +2950,19 @@ TripleForLoop
 
 TripleForStart
   : empty
-    << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeStatementBlock,
+    []interface{}{}
+    ) >>
   | Assignment
-    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeStatementBlock,
+    []interface{}{
+      $0,
+    }
+    ) >>
   | TripleForStart "," Assignment
     <<dsl.AppendChild($0, $2) >>
 ;
@@ -2229,9 +2971,19 @@ TripleForStart
 // before must be assignments.
 TripleForContinuation
   : empty
-    << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeStatementBlock,
+    []interface{}{}
+    ) >>
   | TripleForContinuationItem
-    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeStatementBlock,
+    []interface{}{
+      $0,
+    }
+    ) >>
   | TripleForContinuation "," TripleForContinuationItem
     <<dsl.AppendChild($0, $2) >>
 ;
@@ -2243,9 +2995,19 @@ TripleForContinuationItem
 
 TripleForUpdate
   : empty
-    << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeStatementBlock,
+    []interface{}{}
+    ) >>
   | Assignment
-    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeStatementBlock,
+    []interface{}{
+      $0,
+    }
+    ) >>
   | TripleForUpdate "," Assignment
     <<dsl.AppendChild($0, $2) >>
 ;
@@ -2253,12 +3015,20 @@ TripleForUpdate
 // ----------------------------------------------------------------
 BreakStatement
   : break
-    << dsl.NewASTNodeZary($0, dsl.NodeTypeBreak) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeBreak,
+    []interface{}{}
+    ) >>
 ;
 
 ContinueStatement
   : continue
-    << dsl.NewASTNodeZary($0, dsl.NodeTypeContinue) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeContinue,
+    []interface{}{}
+    ) >>
 ;
 
 // ================================================================
@@ -2275,11 +3045,15 @@ NamedFunctionDefinition
     ")"
     StatementBlockInBraces
   <<
-    dsl.NewASTNodeBinary(
-      $1,
-      $3, // parameter list
-      $5, // { ... }
+    dsl.NewASTNode(
+    $1,
+    // { ... }
       dsl.NodeTypeNamedFunctionDefinition,
+    []interface{}{
+      $3,
+      // parameter list
+      $5,
+    }
     );
   >>
 
@@ -2293,12 +3067,17 @@ NamedFunctionDefinition
     Typedecl
     StatementBlockInBraces
   <<
-    dsl.NewASTNodeTernary(
-      $1,
-      $3, // parameter list
-      $7, // {...}
-      $6, // return type
+    dsl.NewASTNode(
+    $1,
+    // return type
       dsl.NodeTypeNamedFunctionDefinition,
+    []interface{}{
+      $3,
+      // parameter list
+      $7,
+      // {...}
+      $6,
+    }
     );
   >>
 
@@ -2314,11 +3093,15 @@ UnnamedFunctionDefinition
     ")"
     StatementBlockInBraces
   <<
-    dsl.NewASTNodeBinary(
-      $0,
-      $2, // parameter list
-      $4, // { ... }
+    dsl.NewASTNode(
+    $0,
+    // { ... }
       dsl.NodeTypeUnnamedFunctionDefinition,
+    []interface{}{
+      $2,
+      // parameter list
+      $4,
+    }
     );
   >>
 
@@ -2331,12 +3114,17 @@ UnnamedFunctionDefinition
     Typedecl
     StatementBlockInBraces
   <<
-    dsl.NewASTNodeTernary(
-      $0,
-      $2, // parameter list
-      $6, // {...}
-      $5, // return type
+    dsl.NewASTNode(
+    $0,
+    // return type
       dsl.NodeTypeUnnamedFunctionDefinition,
+    []interface{}{
+      $2,
+      // parameter list
+      $6,
+      // {...}
+      $5,
+    }
     );
   >>
 
@@ -2350,11 +3138,15 @@ SubroutineDefinition
     ")"
     StatementBlockInBraces
   <<
-    dsl.NewASTNodeBinary(
-      $1,
-      $3, // parameter list
-      $5, // { ... }
+    dsl.NewASTNode(
+    $1,
+    // { ... }
       dsl.NodeTypeSubroutineDefinition,
+    []interface{}{
+      $3,
+      // parameter list
+      $5,
+    }
     );
   >>
 ;
@@ -2362,16 +3154,32 @@ SubroutineDefinition
 // ----------------------------------------------------------------
 FuncOrSubrParameterList
   : empty
-    << dsl.NewASTNodeZary(nil, dsl.NodeTypeParameterList) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeParameterList,
+    []interface{}{}
+    ) >>
   | FuncOrSubrNonEmptyParameterList
     << dsl.Wrap($0) >>
 ;
 
 FuncOrSubrNonEmptyParameterList
   : FuncOrSubrParameter
-    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeParameterList) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeParameterList,
+    []interface{}{
+      $0,
+    }
+    ) >>
   | FuncOrSubrParameter ","
-    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeParameterList) >>
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeParameterList,
+    []interface{}{
+      $0,
+    }
+    ) >>
   | FuncOrSubrParameter "," FuncOrSubrNonEmptyParameterList
     << dsl.PrependChild($2, $0) >>
 ;
@@ -2381,10 +3189,12 @@ FuncOrSubrParameter
   // Parameter
   // -> ParameterName "x"
   : UntypedFuncOrSubrParameterName
-    << dsl.NewASTNodeUnary(
-      nil,
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeParameter,
+    []interface{}{
       $0,
-      dsl.NodeTypeParameter,
+    }
     ) >>
 
   // Typed parameter, e.g. "num x". Produce this AST:
@@ -2392,10 +3202,12 @@ FuncOrSubrParameter
   // -> ParameterName "x"
   //   -> Typedecl "num"
   | TypedFuncOrSubrParameterName
-    << dsl.NewASTNodeUnary(
-      nil,
+    << dsl.NewASTNode(
+    nil,
+    dsl.NodeTypeParameter,
+    []interface{}{
       $0,
-      dsl.NodeTypeParameter,
+    }
     ) >>
 ;
 
@@ -2415,9 +3227,19 @@ TypedFuncOrSubrParameterName
 ReturnStatement
   // For user-defined functions: return a value
   : return Rvalue
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeReturn) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeReturn,
+    []interface{}{
+      $1,
+    }
+    ) >>
 
   // For user-defined subroutines
   | return
-    << dsl.NewASTNodeZary($0, dsl.NodeTypeReturn) >>
+    << dsl.NewASTNode(
+    $0,
+    dsl.NodeTypeReturn,
+    []interface{}{}
+    ) >>
 ;

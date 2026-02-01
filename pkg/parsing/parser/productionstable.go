@@ -40,13 +40,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `StatementBlock : empty	<< dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>`,
+		String:     `StatementBlock : empty	<< dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{}) >>`,
 		Id:         "StatementBlock",
 		NTType:     2,
 		Index:      2,
 		NumSymbols: 0,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock)
+			return dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{})
 		},
 	},
 	ProdTabEntry{
@@ -60,23 +60,23 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `NonEmptyStatementBlock : BracelessStatement	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock) >>`,
+		String:     `NonEmptyStatementBlock : BracelessStatement	<< dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{X[0]}) >>`,
 		Id:         "NonEmptyStatementBlock",
 		NTType:     3,
 		Index:      4,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock)
+			return dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
-		String:     `NonEmptyStatementBlock : BracefulStatement	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock) >>`,
+		String:     `NonEmptyStatementBlock : BracefulStatement	<< dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{X[0]}) >>`,
 		Id:         "NonEmptyStatementBlock",
 		NTType:     3,
 		Index:      5,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock)
+			return dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
@@ -120,23 +120,23 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `NonEmptyStatementBlock : BracefulStatement BracelessStatement	<< dsl.NewASTNodeBinary(nil, X[0], X[1], dsl.NodeTypeStatementBlock) >>`,
+		String:     `NonEmptyStatementBlock : BracefulStatement BracelessStatement	<< dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{X[0], X[1]}) >>`,
 		Id:         "NonEmptyStatementBlock",
 		NTType:     3,
 		Index:      10,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(nil, X[0], X[1], dsl.NodeTypeStatementBlock)
+			return dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{X[0], X[1]})
 		},
 	},
 	ProdTabEntry{
-		String:     `NonEmptyStatementBlock : BracefulStatement BracelessStatement ";"	<< dsl.NewASTNodeBinary(nil, X[0], X[1], dsl.NodeTypeStatementBlock) >>`,
+		String:     `NonEmptyStatementBlock : BracefulStatement BracelessStatement ";"	<< dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{X[0], X[1]}) >>`,
 		Id:         "NonEmptyStatementBlock",
 		NTType:     3,
 		Index:      11,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(nil, X[0], X[1], dsl.NodeTypeStatementBlock)
+			return dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{X[0], X[1]})
 		},
 	},
 	ProdTabEntry{
@@ -360,13 +360,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `Assignment : Lvalue "=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String:     `Assignment : Lvalue "=" Rvalue	<< dsl.NewASTNode(X[1], dsl.NodeTypeAssignment, []interface{}{X[0], X[2]}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      34,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeAssignment, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -412,73 +412,73 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `BareBoolean : Rvalue	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeBareBoolean) >>`,
+		String:     `BareBoolean : Rvalue	<< dsl.NewASTNode(nil, dsl.NodeTypeBareBoolean, []interface{}{X[0]}) >>`,
 		Id:         "BareBoolean",
 		NTType:     9,
 		Index:      38,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeBareBoolean)
+			return dsl.NewASTNode(nil, dsl.NodeTypeBareBoolean, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
-		String:     `FilterStatement : filter Rvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeFilterStatement) >>`,
+		String:     `FilterStatement : filter Rvalue	<< dsl.NewASTNode(X[0], dsl.NodeTypeFilterStatement, []interface{}{X[1]}) >>`,
 		Id:         "FilterStatement",
 		NTType:     10,
 		Index:      39,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeFilterStatement)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeFilterStatement, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
-		String:     `Redirector : ">" RedirectTarget	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeRedirectWrite) >>`,
+		String:     `Redirector : ">" RedirectTarget	<< dsl.NewASTNode(X[0], dsl.NodeTypeRedirectWrite, []interface{}{X[1]}) >>`,
 		Id:         "Redirector",
 		NTType:     11,
 		Index:      40,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeRedirectWrite)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeRedirectWrite, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
-		String:     `Redirector : ">>" RedirectTarget	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeRedirectAppend) >>`,
+		String:     `Redirector : ">>" RedirectTarget	<< dsl.NewASTNode(X[0], dsl.NodeTypeRedirectAppend, []interface{}{X[1]}) >>`,
 		Id:         "Redirector",
 		NTType:     11,
 		Index:      41,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeRedirectAppend)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeRedirectAppend, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
-		String:     `Redirector : "|" RedirectTarget	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeRedirectPipe) >>`,
+		String:     `Redirector : "|" RedirectTarget	<< dsl.NewASTNode(X[0], dsl.NodeTypeRedirectPipe, []interface{}{X[1]}) >>`,
 		Id:         "Redirector",
 		NTType:     11,
 		Index:      42,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeRedirectPipe)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeRedirectPipe, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
-		String:     `RedirectTarget : stdout	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeRedirectTargetStdout) >>`,
+		String:     `RedirectTarget : stdout	<< dsl.NewASTNode(X[0], dsl.NodeTypeRedirectTargetStdout, []interface{}{}) >>`,
 		Id:         "RedirectTarget",
 		NTType:     12,
 		Index:      43,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeZary(X[0], dsl.NodeTypeRedirectTargetStdout)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeRedirectTargetStdout, []interface{}{})
 		},
 	},
 	ProdTabEntry{
-		String:     `RedirectTarget : stderr	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeRedirectTargetStderr) >>`,
+		String:     `RedirectTarget : stderr	<< dsl.NewASTNode(X[0], dsl.NodeTypeRedirectTargetStderr, []interface{}{}) >>`,
 		Id:         "RedirectTarget",
 		NTType:     12,
 		Index:      44,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeZary(X[0], dsl.NodeTypeRedirectTargetStderr)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeRedirectTargetStderr, []interface{}{})
 		},
 	},
 	ProdTabEntry{
@@ -492,801 +492,645 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `PrintStatement : print	<< dsl.NewASTNodeBinary(
-        X[0], // print
+		String: `PrintStatement : print	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypePrintStatement, []interface{}{// print
         dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypePrintStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "PrintStatement",
 		NTType:     13,
 		Index:      46,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // print
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypePrintStatement, []interface{}{// print
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypePrintStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `PrintStatement : print Redirector	<< dsl.NewASTNodeBinary(
-        X[0], // print
+		String: `PrintStatement : print Redirector	<< dsl.NewASTNode(X[0], // redirect
+        dsl.NodeTypePrintStatement, []interface{}{// print
         dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-        X[1], // redirect
-        dsl.NodeTypePrintStatement,
-      ) >>`,
+        X[1]}) >>`,
 		Id:         "PrintStatement",
 		NTType:     13,
 		Index:      47,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // print
+			return dsl.NewASTNode(X[0], // redirect
+				dsl.NodeTypePrintStatement, []interface{}{// print
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-				X[1], // redirect
-				dsl.NodeTypePrintStatement,
-			)
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `PrintStatement : print FcnArgs	<< dsl.NewASTNodeBinary(
-        X[0], // print
+		String: `PrintStatement : print FcnArgs	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypePrintStatement, []interface{}{// print
         X[1], // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypePrintStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "PrintStatement",
 		NTType:     13,
 		Index:      48,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // print
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypePrintStatement, []interface{}{// print
 				X[1], // printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypePrintStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `PrintStatement : print Redirector "," FcnArgs	<< dsl.NewASTNodeBinary(
-        X[0], // print
+		String: `PrintStatement : print Redirector "," FcnArgs	<< dsl.NewASTNode(X[0], // redirect
+        dsl.NodeTypePrintStatement, []interface{}{// print
         X[3], // printables
-        X[1], // redirect
-        dsl.NodeTypePrintStatement,
-      ) >>`,
+        X[1]}) >>`,
 		Id:         "PrintStatement",
 		NTType:     13,
 		Index:      49,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // print
+			return dsl.NewASTNode(X[0], // redirect
+				dsl.NodeTypePrintStatement, []interface{}{// print
 				X[3], // printables
-				X[1], // redirect
-				dsl.NodeTypePrintStatement,
-			)
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `PrintnStatement : printn	<< dsl.NewASTNodeBinary(
-        X[0], // printn
+		String: `PrintnStatement : printn	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypePrintnStatement, []interface{}{// printn
         dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypePrintnStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "PrintnStatement",
 		NTType:     14,
 		Index:      50,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // printn
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypePrintnStatement, []interface{}{// printn
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypePrintnStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `PrintnStatement : printn Redirector	<< dsl.NewASTNodeBinary(
-        X[0], // printn
+		String: `PrintnStatement : printn Redirector	<< dsl.NewASTNode(X[0], // redirect
+        dsl.NodeTypePrintnStatement, []interface{}{// printn
         dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-        X[1], // redirect
-        dsl.NodeTypePrintnStatement,
-      ) >>`,
+        X[1]}) >>`,
 		Id:         "PrintnStatement",
 		NTType:     14,
 		Index:      51,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // printn
+			return dsl.NewASTNode(X[0], // redirect
+				dsl.NodeTypePrintnStatement, []interface{}{// printn
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
-				X[1], // redirect
-				dsl.NodeTypePrintnStatement,
-			)
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `PrintnStatement : printn FcnArgs	<< dsl.NewASTNodeBinary(
-        X[0], // printn
+		String: `PrintnStatement : printn FcnArgs	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypePrintnStatement, []interface{}{// printn
         X[1], // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypePrintnStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "PrintnStatement",
 		NTType:     14,
 		Index:      52,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // printn
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypePrintnStatement, []interface{}{// printn
 				X[1], // printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypePrintnStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `PrintnStatement : printn Redirector "," FcnArgs	<< dsl.NewASTNodeBinary(
-        X[0], // printn
+		String: `PrintnStatement : printn Redirector "," FcnArgs	<< dsl.NewASTNode(X[0], // redirect
+        dsl.NodeTypePrintnStatement, []interface{}{// printn
         X[3], // printables
-        X[1], // redirect
-        dsl.NodeTypePrintnStatement,
-      ) >>`,
+        X[1]}) >>`,
 		Id:         "PrintnStatement",
 		NTType:     14,
 		Index:      53,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // printn
+			return dsl.NewASTNode(X[0], // redirect
+				dsl.NodeTypePrintnStatement, []interface{}{// printn
 				X[3], // printables
-				X[1], // redirect
-				dsl.NodeTypePrintnStatement,
-			)
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `EprintStatement : eprint	<< dsl.NewASTNodeBinary(
-        X[0], // eprint
+		String: `EprintStatement : eprint	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeEprintStatement, []interface{}{// eprint
         dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeEprintStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "EprintStatement",
 		NTType:     15,
 		Index:      54,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // eprint
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeEprintStatement, []interface{}{// eprint
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeEprintStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `EprintStatement : eprint FcnArgs	<< dsl.NewASTNodeBinary(
-        X[0], // eprint
+		String: `EprintStatement : eprint FcnArgs	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeEprintStatement, []interface{}{// eprint
         X[1], // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeEprintStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "EprintStatement",
 		NTType:     15,
 		Index:      55,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // eprint
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeEprintStatement, []interface{}{// eprint
 				X[1], // printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeEprintStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `EprintnStatement : eprintn	<< dsl.NewASTNodeBinary(
-        X[0], // eprint
+		String: `EprintnStatement : eprintn	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeEprintnStatement, []interface{}{// eprint
         dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeEprintnStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "EprintnStatement",
 		NTType:     16,
 		Index:      56,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // eprint
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeEprintnStatement, []interface{}{// eprint
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeEprintnStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `EprintnStatement : eprintn FcnArgs	<< dsl.NewASTNodeBinary(
-        X[0], // eprintn
+		String: `EprintnStatement : eprintn FcnArgs	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeEprintnStatement, []interface{}{// eprintn
         X[1], // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeEprintnStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "EprintnStatement",
 		NTType:     16,
 		Index:      57,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // eprintn
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeEprintnStatement, []interface{}{// eprintn
 				X[1], // printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeEprintnStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `DumpStatement : dump	<< dsl.NewASTNodeBinary(
-        X[0], // dump
+		String: `DumpStatement : dump	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeDumpStatement, []interface{}{// dump
         dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeDumpStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "DumpStatement",
 		NTType:     17,
 		Index:      58,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // dump
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeDumpStatement, []interface{}{// dump
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeDumpStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `DumpStatement : dump Redirector	<< dsl.NewASTNodeBinary(
-        X[0], // dump
+		String: `DumpStatement : dump Redirector	<< dsl.NewASTNode(X[0], // redirect
+        dsl.NodeTypeDumpStatement, []interface{}{// dump
         dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
-        X[1], // redirect
-        dsl.NodeTypeDumpStatement,
-      ) >>`,
+        X[1]}) >>`,
 		Id:         "DumpStatement",
 		NTType:     17,
 		Index:      59,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // dump
+			return dsl.NewASTNode(X[0], // redirect
+				dsl.NodeTypeDumpStatement, []interface{}{// dump
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
-				X[1], // redirect
-				dsl.NodeTypeDumpStatement,
-			)
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `DumpStatement : dump FcnArgs	<< dsl.NewASTNodeBinary(
-        X[0], // dump
+		String: `DumpStatement : dump FcnArgs	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeDumpStatement, []interface{}{// dump
         X[1], // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeDumpStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "DumpStatement",
 		NTType:     17,
 		Index:      60,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // dump
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeDumpStatement, []interface{}{// dump
 				X[1], // printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeDumpStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `DumpStatement : dump Redirector "," FcnArgs	<< dsl.NewASTNodeBinary(
-        X[0], // dump
+		String: `DumpStatement : dump Redirector "," FcnArgs	<< dsl.NewASTNode(X[0], // redirect
+        dsl.NodeTypeDumpStatement, []interface{}{// dump
         X[3], // printables
-        X[1], // redirect
-        dsl.NodeTypeDumpStatement,
-      ) >>`,
+        X[1]}) >>`,
 		Id:         "DumpStatement",
 		NTType:     17,
 		Index:      61,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // dump
+			return dsl.NewASTNode(X[0], // redirect
+				dsl.NodeTypeDumpStatement, []interface{}{// dump
 				X[3], // printables
-				X[1], // redirect
-				dsl.NodeTypeDumpStatement,
-			)
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `EdumpStatement : edump	<< dsl.NewASTNodeBinary(
-        X[0], // edump
+		String: `EdumpStatement : edump	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeEdumpStatement, []interface{}{// edump
         dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeEdumpStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "EdumpStatement",
 		NTType:     18,
 		Index:      62,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // edump
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeEdumpStatement, []interface{}{// edump
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeEdumpStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `EdumpStatement : edump FcnArgs	<< dsl.NewASTNodeBinary(
-        X[0], // edump
+		String: `EdumpStatement : edump FcnArgs	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeEdumpStatement, []interface{}{// edump
         X[1], // printables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeEdumpStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "EdumpStatement",
 		NTType:     18,
 		Index:      63,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // edump
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeEdumpStatement, []interface{}{// edump
 				X[1], // printables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeEdumpStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String:     `TeeStatement : tee Redirector "," FullSrec	<< dsl.NewASTNodeBinary(X[0], X[3], X[1], dsl.NodeTypeTeeStatement) >>`,
+		String:     `TeeStatement : tee Redirector "," FullSrec	<< dsl.NewASTNode(X[0], dsl.NodeTypeTeeStatement, []interface{}{X[3], X[1]}) >>`,
 		Id:         "TeeStatement",
 		NTType:     19,
 		Index:      64,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[0], X[3], X[1], dsl.NodeTypeTeeStatement)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeTeeStatement, []interface{}{X[3], X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitFStatement : emitf EmittableList	<< dsl.NewASTNodeBinary(
-        X[0], // emitf
+		String: `EmitFStatement : emitf EmittableList	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeEmitFStatement, []interface{}{// emitf
         X[1], // emittables
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeEmitFStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "EmitFStatement",
 		NTType:     20,
 		Index:      65,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // emitf
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeEmitFStatement, []interface{}{// emitf
 				X[1], // emittables
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeEmitFStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitFStatement : emitf Redirector "," EmittableList	<< dsl.NewASTNodeBinary(
-        X[0], // emitf
+		String: `EmitFStatement : emitf Redirector "," EmittableList	<< dsl.NewASTNode(X[0], // redirect
+        dsl.NodeTypeEmitFStatement, []interface{}{// emitf
         X[3], // emittables
-        X[1], // redirect
-        dsl.NodeTypeEmitFStatement,
-      ) >>`,
+        X[1]}) >>`,
 		Id:         "EmitFStatement",
 		NTType:     20,
 		Index:      66,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0], // emitf
+			return dsl.NewASTNode(X[0], // redirect
+				dsl.NodeTypeEmitFStatement, []interface{}{// emitf
 				X[3], // emittables
-				X[1], // redirect
-				dsl.NodeTypeEmitFStatement,
-			)
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `Emit1Statement : emit1 Rvalue	<< dsl.NewASTNodeUnary(
-        X[0], // emit
-        X[1], // Emittable
-        dsl.NodeTypeEmit1Statement,
-      ) >>`,
+		String: `Emit1Statement : emit1 Rvalue	<< dsl.NewASTNode(X[0], // Emittable
+        dsl.NodeTypeEmit1Statement, []interface{}{// emit
+        X[1]}) >>`,
 		Id:         "Emit1Statement",
 		NTType:     21,
 		Index:      67,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(
-				X[0], // emit
-				X[1], // Emittable
-				dsl.NodeTypeEmit1Statement,
-			)
+			return dsl.NewASTNode(X[0], // Emittable
+				dsl.NodeTypeEmit1Statement, []interface{}{// emit
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitStatement : emit EmittableAsList	<< dsl.NewASTNodeTernary(
-        X[0], // emit
+		String: `EmitStatement : emit EmittableAsList	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeEmitStatement, []interface{}{// emit
         X[1], // Emittable
         dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeEmitStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "EmitStatement",
 		NTType:     22,
 		Index:      68,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emit
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeEmitStatement, []interface{}{// emit
 				X[1], // Emittable
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeEmitStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitStatement : emit Redirector "," EmittableAsList	<< dsl.NewASTNodeTernary(
-      X[0], // emit
+		String: `EmitStatement : emit Redirector "," EmittableAsList	<< dsl.NewASTNode(X[0], // redirect
+      dsl.NodeTypeEmitStatement, []interface{}{// emit
       X[3], // Emittable
       dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-      X[1], // redirect
-      dsl.NodeTypeEmitStatement,
-    ) >>`,
+      X[1]}) >>`,
 		Id:         "EmitStatement",
 		NTType:     22,
 		Index:      69,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emit
+			return dsl.NewASTNode(X[0], // redirect
+				dsl.NodeTypeEmitStatement, []interface{}{// emit
 				X[3], // Emittable
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-				X[1], // redirect
-				dsl.NodeTypeEmitStatement,
-			)
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitStatement : emit "(" EmittableList ")"	<< dsl.NewASTNodeTernary(
-        X[0], // emit
+		String: `EmitStatement : emit "(" EmittableList ")"	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeEmitStatement, []interface{}{// emit
         X[2], // emittables
         dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeEmitStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "EmitStatement",
 		NTType:     22,
 		Index:      70,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emit
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeEmitStatement, []interface{}{// emit
 				X[2], // emittables
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeEmitStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitStatement : emit Redirector "," "(" EmittableList ")"	<< dsl.NewASTNodeTernary(
-        X[0], // emit
+		String: `EmitStatement : emit Redirector "," "(" EmittableList ")"	<< dsl.NewASTNode(X[0], // redirect
+        dsl.NodeTypeEmitStatement, []interface{}{// emit
         X[4], // emittables
         dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        X[1], // redirect
-        dsl.NodeTypeEmitStatement,
-      ) >>`,
+        X[1]}) >>`,
 		Id:         "EmitStatement",
 		NTType:     22,
 		Index:      71,
 		NumSymbols: 6,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emit
+			return dsl.NewASTNode(X[0], // redirect
+				dsl.NodeTypeEmitStatement, []interface{}{// emit
 				X[4], // emittables
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-				X[1], // redirect
-				dsl.NodeTypeEmitStatement,
-			)
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitStatement : emit EmittableAsList "," EmitKeys	<< dsl.NewASTNodeTernary(
-        X[0], // emit
+		String: `EmitStatement : emit EmittableAsList "," EmitKeys	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeEmitStatement, []interface{}{// emit
         X[1], // emittable
         X[3], // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeEmitStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "EmitStatement",
 		NTType:     22,
 		Index:      72,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emit
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeEmitStatement, []interface{}{// emit
 				X[1], // emittable
 				X[3], // keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeEmitStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitStatement : emit Redirector "," EmittableAsList "," EmitKeys	<< dsl.NewASTNodeTernary(
-        X[0], // emit
+		String: `EmitStatement : emit Redirector "," EmittableAsList "," EmitKeys	<< dsl.NewASTNode(X[0], // redirect
+        dsl.NodeTypeEmitStatement, []interface{}{// emit
         X[3], // emittable
         X[5], // keys
-        X[1], // redirect
-        dsl.NodeTypeEmitStatement,
-      ) >>`,
+        X[1]}) >>`,
 		Id:         "EmitStatement",
 		NTType:     22,
 		Index:      73,
 		NumSymbols: 6,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emit
+			return dsl.NewASTNode(X[0], // redirect
+				dsl.NodeTypeEmitStatement, []interface{}{// emit
 				X[3], // emittable
 				X[5], // keys
-				X[1], // redirect
-				dsl.NodeTypeEmitStatement,
-			)
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitStatement : emit "(" EmittableList ")" "," EmitKeys	<< dsl.NewASTNodeTernary(
-        X[0], // emit
+		String: `EmitStatement : emit "(" EmittableList ")" "," EmitKeys	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeEmitStatement, []interface{}{// emit
         X[2], // emittable
         X[5], // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeEmitStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "EmitStatement",
 		NTType:     22,
 		Index:      74,
 		NumSymbols: 6,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emit
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeEmitStatement, []interface{}{// emit
 				X[2], // emittable
 				X[5], // keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeEmitStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitStatement : emit Redirector "," "(" EmittableList ")" "," EmitKeys	<< dsl.NewASTNodeTernary(
-        X[0], // emit
+		String: `EmitStatement : emit Redirector "," "(" EmittableList ")" "," EmitKeys	<< dsl.NewASTNode(X[0], // redirect
+        dsl.NodeTypeEmitStatement, []interface{}{// emit
         X[4], // emittables
         X[7], // keys
-        X[1], // redirect
-        dsl.NodeTypeEmitStatement,
-      ) >>`,
+        X[1]}) >>`,
 		Id:         "EmitStatement",
 		NTType:     22,
 		Index:      75,
 		NumSymbols: 8,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emit
+			return dsl.NewASTNode(X[0], // redirect
+				dsl.NodeTypeEmitStatement, []interface{}{// emit
 				X[4], // emittables
 				X[7], // keys
-				X[1], // redirect
-				dsl.NodeTypeEmitStatement,
-			)
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitPStatement : emitp EmittableAsList	<< dsl.NewASTNodeTernary(
-        X[0], // emitp
+		String: `EmitPStatement : emitp EmittableAsList	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeEmitPStatement, []interface{}{// emitp
         X[1], // emittable
         dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeEmitPStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "EmitPStatement",
 		NTType:     23,
 		Index:      76,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emitp
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeEmitPStatement, []interface{}{// emitp
 				X[1], // emittable
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeEmitPStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitPStatement : emitp Redirector "," EmittableAsList	<< dsl.NewASTNodeTernary(
-      X[0], // emitp
+		String: `EmitPStatement : emitp Redirector "," EmittableAsList	<< dsl.NewASTNode(X[0], // redirect
+      dsl.NodeTypeEmitPStatement, []interface{}{// emitp
       X[3], // emittable
       dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-      X[1], // redirect
-      dsl.NodeTypeEmitPStatement,
-    ) >>`,
+      X[1]}) >>`,
 		Id:         "EmitPStatement",
 		NTType:     23,
 		Index:      77,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emitp
+			return dsl.NewASTNode(X[0], // redirect
+				dsl.NodeTypeEmitPStatement, []interface{}{// emitp
 				X[3], // emittable
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-				X[1], // redirect
-				dsl.NodeTypeEmitPStatement,
-			)
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitPStatement : emitp "(" EmittableList ")"	<< dsl.NewASTNodeTernary(
-        X[0], // emitp
+		String: `EmitPStatement : emitp "(" EmittableList ")"	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeEmitPStatement, []interface{}{// emitp
         X[2], // emittables
         dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeEmitPStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "EmitPStatement",
 		NTType:     23,
 		Index:      78,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emitp
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeEmitPStatement, []interface{}{// emitp
 				X[2], // emittables
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeEmitPStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitPStatement : emitp Redirector "," "(" EmittableList ")"	<< dsl.NewASTNodeTernary(
-        X[0], // emitp
+		String: `EmitPStatement : emitp Redirector "," "(" EmittableList ")"	<< dsl.NewASTNode(X[0], // redirect
+        dsl.NodeTypeEmitPStatement, []interface{}{// emitp
         X[4], // emittables
         dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-        X[1], // redirect
-        dsl.NodeTypeEmitPStatement,
-      ) >>`,
+        X[1]}) >>`,
 		Id:         "EmitPStatement",
 		NTType:     23,
 		Index:      79,
 		NumSymbols: 6,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emitp
+			return dsl.NewASTNode(X[0], // redirect
+				dsl.NodeTypeEmitPStatement, []interface{}{// emitp
 				X[4], // emittables
 				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
-				X[1], // redirect
-				dsl.NodeTypeEmitPStatement,
-			)
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitPStatement : emitp EmittableAsList "," EmitKeys	<< dsl.NewASTNodeTernary(
-        X[0], // emitp
+		String: `EmitPStatement : emitp EmittableAsList "," EmitKeys	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeEmitPStatement, []interface{}{// emitp
         X[1], // emittable
         X[3], // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeEmitPStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "EmitPStatement",
 		NTType:     23,
 		Index:      80,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emitp
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeEmitPStatement, []interface{}{// emitp
 				X[1], // emittable
 				X[3], // keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeEmitPStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitPStatement : emitp Redirector "," EmittableAsList "," EmitKeys	<< dsl.NewASTNodeTernary(
-        X[0], // emitp
+		String: `EmitPStatement : emitp Redirector "," EmittableAsList "," EmitKeys	<< dsl.NewASTNode(X[0], // redirect
+        dsl.NodeTypeEmitPStatement, []interface{}{// emitp
         X[3], // emittable
         X[5], // keys
-        X[1], // redirect
-        dsl.NodeTypeEmitPStatement,
-      ) >>`,
+        X[1]}) >>`,
 		Id:         "EmitPStatement",
 		NTType:     23,
 		Index:      81,
 		NumSymbols: 6,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emitp
+			return dsl.NewASTNode(X[0], // redirect
+				dsl.NodeTypeEmitPStatement, []interface{}{// emitp
 				X[3], // emittable
 				X[5], // keys
-				X[1], // redirect
-				dsl.NodeTypeEmitPStatement,
-			)
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitPStatement : emitp "(" EmittableList ")" "," EmitKeys	<< dsl.NewASTNodeTernary(
-        X[0], // emitp
+		String: `EmitPStatement : emitp "(" EmittableList ")" "," EmitKeys	<< dsl.NewASTNode(X[0], // no redirect
+        dsl.NodeTypeEmitPStatement, []interface{}{// emitp
         X[2], // emittable
         X[5], // keys
-        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-        dsl.NodeTypeEmitPStatement,
-      ) >>`,
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)}) >>`,
 		Id:         "EmitPStatement",
 		NTType:     23,
 		Index:      82,
 		NumSymbols: 6,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emitp
+			return dsl.NewASTNode(X[0], // no redirect
+				dsl.NodeTypeEmitPStatement, []interface{}{// emitp
 				X[2], // emittable
 				X[5], // keys
-				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
-				dsl.NodeTypeEmitPStatement,
-			)
+				dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp)})
 		},
 	},
 	ProdTabEntry{
-		String: `EmitPStatement : emitp Redirector "," "(" EmittableList ")" "," EmitKeys	<< dsl.NewASTNodeTernary(
-        X[0], // emitp
+		String: `EmitPStatement : emitp Redirector "," "(" EmittableList ")" "," EmitKeys	<< dsl.NewASTNode(X[0], // redirect
+        dsl.NodeTypeEmitPStatement, []interface{}{// emitp
         X[4], // emittable
         X[7], // keys
-        X[1], // redirect
-        dsl.NodeTypeEmitPStatement,
-      ) >>`,
+        X[1]}) >>`,
 		Id:         "EmitPStatement",
 		NTType:     23,
 		Index:      83,
 		NumSymbols: 8,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0], // emitp
+			return dsl.NewASTNode(X[0], // redirect
+				dsl.NodeTypeEmitPStatement, []interface{}{// emitp
 				X[4], // emittable
 				X[7], // keys
-				X[1], // redirect
-				dsl.NodeTypeEmitPStatement,
-			)
+				X[1]})
 		},
 	},
 	ProdTabEntry{
-		String: `EmittableList : Emittable	<< dsl.NewASTNodeUnary(
-        nil,
-        X[0],
-        dsl.NodeTypeEmittableList,
-      ) >>`,
+		String: `EmittableList : Emittable	<< dsl.NewASTNode(nil, dsl.NodeTypeEmittableList, []interface{}{X[0]}) >>`,
 		Id:         "EmittableList",
 		NTType:     24,
 		Index:      84,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(
-				nil,
-				X[0],
-				dsl.NodeTypeEmittableList,
-			)
+			return dsl.NewASTNode(nil, dsl.NodeTypeEmittableList, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
@@ -1306,21 +1150,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EmittableAsList : Emittable	<< dsl.NewASTNodeUnary(
-    nil,
-    X[0],
-    dsl.NodeTypeEmittableList,
-  ) >>`,
+		String: `EmittableAsList : Emittable	<< dsl.NewASTNode(nil, dsl.NodeTypeEmittableList, []interface{}{X[0]}) >>`,
 		Id:         "EmittableAsList",
 		NTType:     25,
 		Index:      86,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(
-				nil,
-				X[0],
-				dsl.NodeTypeEmittableList,
-			)
+			return dsl.NewASTNode(nil, dsl.NodeTypeEmittableList, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
@@ -1424,21 +1260,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EmitKeys : Rvalue	<< dsl.NewASTNodeUnary(
-      nil,
-      X[0],
-      dsl.NodeTypeEmitKeys,
-    ) >>`,
+		String: `EmitKeys : Rvalue	<< dsl.NewASTNode(nil, dsl.NodeTypeEmitKeys, []interface{}{X[0]}) >>`,
 		Id:         "EmitKeys",
 		NTType:     27,
 		Index:      97,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(
-				nil,
-				X[0],
-				dsl.NodeTypeEmitKeys,
-			)
+			return dsl.NewASTNode(nil, dsl.NodeTypeEmitKeys, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
@@ -1518,13 +1346,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `IndirectFieldValue : "$[" Rvalue "]"	<< dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", X[0]), X[1], dsl.NodeTypeIndirectFieldValue) >>`,
+		String:     `IndirectFieldValue : "$[" Rvalue "]"	<< dsl.NewASTNode(dsl.NewASTToken("$[]", X[0]), dsl.NodeTypeIndirectFieldValue, []interface{}{X[1]}) >>`,
 		Id:         "IndirectFieldValue",
 		NTType:     30,
 		Index:      105,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", X[0]), X[1], dsl.NodeTypeIndirectFieldValue)
+			return dsl.NewASTNode(dsl.NewASTToken("$[]", X[0]), dsl.NodeTypeIndirectFieldValue, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
@@ -1538,23 +1366,23 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `PositionalFieldName : "$[[" Rvalue "]" "]"	<< dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", X[0]), X[1], dsl.NodeTypePositionalFieldName) >>`,
+		String:     `PositionalFieldName : "$[[" Rvalue "]" "]"	<< dsl.NewASTNode(dsl.NewASTToken("$[]", X[0]), dsl.NodeTypePositionalFieldName, []interface{}{X[1]}) >>`,
 		Id:         "PositionalFieldName",
 		NTType:     32,
 		Index:      107,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", X[0]), X[1], dsl.NodeTypePositionalFieldName)
+			return dsl.NewASTNode(dsl.NewASTToken("$[]", X[0]), dsl.NodeTypePositionalFieldName, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
-		String:     `PositionalFieldValue : "$[[[" Rvalue "]" "]" "]"	<< dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", X[0]), X[1], dsl.NodeTypePositionalFieldValue) >>`,
+		String:     `PositionalFieldValue : "$[[[" Rvalue "]" "]" "]"	<< dsl.NewASTNode(dsl.NewASTToken("$[]", X[0]), dsl.NodeTypePositionalFieldValue, []interface{}{X[1]}) >>`,
 		Id:         "PositionalFieldValue",
 		NTType:     33,
 		Index:      108,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", X[0]), X[1], dsl.NodeTypePositionalFieldValue)
+			return dsl.NewASTNode(dsl.NewASTToken("$[]", X[0]), dsl.NodeTypePositionalFieldValue, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
@@ -1608,13 +1436,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `IndirectOosvarValue : "@[" Rvalue "]"	<< dsl.NewASTNodeUnary(dsl.NewASTToken("@[]", X[0]), X[1], dsl.NodeTypeIndirectOosvarValue) >>`,
+		String:     `IndirectOosvarValue : "@[" Rvalue "]"	<< dsl.NewASTNode(dsl.NewASTToken("@[]", X[0]), dsl.NodeTypeIndirectOosvarValue, []interface{}{X[1]}) >>`,
 		Id:         "IndirectOosvarValue",
 		NTType:     37,
 		Index:      114,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(dsl.NewASTToken("@[]", X[0]), X[1], dsl.NodeTypeIndirectOosvarValue)
+			return dsl.NewASTNode(dsl.NewASTToken("@[]", X[0]), dsl.NodeTypeIndirectOosvarValue, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
@@ -1748,383 +1576,193 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "||=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("||", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "||=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("||", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      128,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("||", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("||", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "^^=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^^", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "^^=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^^", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      129,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^^", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^^", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "&&=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("&&", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "&&=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("&&", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      130,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("&&", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("&&", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "??=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("??", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "??=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("??", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      131,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("??", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("??", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "???=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("???", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "???=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("???", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      132,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("???", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("???", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "|=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("|", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "|=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("|", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      133,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("|", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("|", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "&=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "&=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      134,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "^=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "^=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      135,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "<<=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("<<", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "<<=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("<<", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      136,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("<<", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("<<", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue ">>=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(">"+">", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue ">>=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(">"+">", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      137,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(">"+">", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(">"+">", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue ">>>=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(">"+">"+">", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue ">>>=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(">"+">"+">", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      138,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(">"+">"+">", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(">"+">"+">", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "+=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("+", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "+=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("+", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      139,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("+", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("+", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue ".=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(".", X[1]), X[0], X[2], dsl.NodeTypeDotOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue ".=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(".", X[1]), X[0], X[2], dsl.NodeTypeDotOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      140,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(".", X[1]), X[0], X[2], dsl.NodeTypeDotOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(".", X[1]), X[0], X[2], dsl.NodeTypeDotOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "-=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("-", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "-=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("-", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      141,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("-", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("-", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "*=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("*", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "*=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("*", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      142,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("*", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("*", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "/=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("/", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "/=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("/", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      143,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("/", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("/", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "//=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("//", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "//=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("//", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      144,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("//", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("//", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "%=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("%", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "%=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("%", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      145,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("%", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("%", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "**=" Rvalue	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("=", X[1]),
-      X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("**", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-      dsl.NodeTypeAssignment,
-    ) >>`,
+		String: `Assignment : Lvalue "**=" Rvalue	<< dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("**", X[1]), X[0], X[2], dsl.NodeTypeOperator)}) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      146,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("=", X[1]),
-				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("**", X[1]), X[0], X[2], dsl.NodeTypeOperator),
-				dsl.NodeTypeAssignment,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("=", X[1]), dsl.NodeTypeAssignment, []interface{}{X[0], dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("**", X[1]), X[0], X[2], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
@@ -2148,13 +1786,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `TernaryTerm : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm	<< dsl.NewASTNodeTernary(dsl.NewASTToken("?:", X[1]), X[0], X[2], X[4], dsl.NodeTypeOperator) >>`,
+		String:     `TernaryTerm : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm	<< dsl.NewASTNode(dsl.NewASTToken("?:", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2], X[4]}) >>`,
 		Id:         "TernaryTerm",
 		NTType:     44,
 		Index:      149,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(dsl.NewASTToken("?:", X[1]), X[0], X[2], X[4], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(dsl.NewASTToken("?:", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2], X[4]})
 		},
 	},
 	ProdTabEntry{
@@ -2168,13 +1806,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `LogicalOrTerm : LogicalOrTerm "||" LogicalXORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `LogicalOrTerm : LogicalOrTerm "||" LogicalXORTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "LogicalOrTerm",
 		NTType:     45,
 		Index:      151,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -2188,13 +1826,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `LogicalXORTerm : LogicalXORTerm "^^" LogicalAndTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `LogicalXORTerm : LogicalXORTerm "^^" LogicalAndTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "LogicalXORTerm",
 		NTType:     46,
 		Index:      153,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -2208,13 +1846,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `LogicalAndTerm : LogicalAndTerm "&&" EqneTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `LogicalAndTerm : LogicalAndTerm "&&" EqneTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "LogicalAndTerm",
 		NTType:     47,
 		Index:      155,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -2228,53 +1866,53 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `EqneTerm : EqneTerm "=~" CmpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `EqneTerm : EqneTerm "=~" CmpTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "EqneTerm",
 		NTType:     48,
 		Index:      157,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `EqneTerm : EqneTerm "!=~" CmpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `EqneTerm : EqneTerm "!=~" CmpTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "EqneTerm",
 		NTType:     48,
 		Index:      158,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `EqneTerm : EqneTerm "==" CmpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `EqneTerm : EqneTerm "==" CmpTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "EqneTerm",
 		NTType:     48,
 		Index:      159,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `EqneTerm : EqneTerm "!=" CmpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `EqneTerm : EqneTerm "!=" CmpTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "EqneTerm",
 		NTType:     48,
 		Index:      160,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `EqneTerm : EqneTerm "<=>" CmpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `EqneTerm : EqneTerm "<=>" CmpTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "EqneTerm",
 		NTType:     48,
 		Index:      161,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -2288,43 +1926,43 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `CmpTerm : CmpTerm ">" BitwiseORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `CmpTerm : CmpTerm ">" BitwiseORTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "CmpTerm",
 		NTType:     49,
 		Index:      163,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `CmpTerm : CmpTerm ">=" BitwiseORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `CmpTerm : CmpTerm ">=" BitwiseORTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "CmpTerm",
 		NTType:     49,
 		Index:      164,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `CmpTerm : CmpTerm "<" BitwiseORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `CmpTerm : CmpTerm "<" BitwiseORTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "CmpTerm",
 		NTType:     49,
 		Index:      165,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `CmpTerm : CmpTerm "<=" BitwiseORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `CmpTerm : CmpTerm "<=" BitwiseORTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "CmpTerm",
 		NTType:     49,
 		Index:      166,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -2338,13 +1976,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `BitwiseORTerm : BitwiseORTerm "|" BitwiseXORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `BitwiseORTerm : BitwiseORTerm "|" BitwiseXORTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "BitwiseORTerm",
 		NTType:     50,
 		Index:      168,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -2358,13 +1996,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `BitwiseXORTerm : BitwiseXORTerm "^" BitwiseANDTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `BitwiseXORTerm : BitwiseXORTerm "^" BitwiseANDTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "BitwiseXORTerm",
 		NTType:     51,
 		Index:      170,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -2378,13 +2016,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `BitwiseANDTerm : BitwiseANDTerm "&" BitwiseShiftTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `BitwiseANDTerm : BitwiseANDTerm "&" BitwiseShiftTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "BitwiseANDTerm",
 		NTType:     52,
 		Index:      172,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -2398,33 +2036,33 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `BitwiseShiftTerm : BitwiseShiftTerm "<<" AddsubdotTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `BitwiseShiftTerm : BitwiseShiftTerm "<<" AddsubdotTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "BitwiseShiftTerm",
 		NTType:     53,
 		Index:      174,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `BitwiseShiftTerm : BitwiseShiftTerm ">>" AddsubdotTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `BitwiseShiftTerm : BitwiseShiftTerm ">>" AddsubdotTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "BitwiseShiftTerm",
 		NTType:     53,
 		Index:      175,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `BitwiseShiftTerm : BitwiseShiftTerm ">>>" AddsubdotTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `BitwiseShiftTerm : BitwiseShiftTerm ">>>" AddsubdotTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "BitwiseShiftTerm",
 		NTType:     53,
 		Index:      176,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -2438,43 +2076,43 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `AddsubdotTerm : AddsubdotTerm "+" MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `AddsubdotTerm : AddsubdotTerm "+" MuldivTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "AddsubdotTerm",
 		NTType:     54,
 		Index:      178,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `AddsubdotTerm : AddsubdotTerm "-" MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `AddsubdotTerm : AddsubdotTerm "-" MuldivTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "AddsubdotTerm",
 		NTType:     54,
 		Index:      179,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `AddsubdotTerm : AddsubdotTerm ".+" MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `AddsubdotTerm : AddsubdotTerm ".+" MuldivTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "AddsubdotTerm",
 		NTType:     54,
 		Index:      180,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `AddsubdotTerm : AddsubdotTerm ".-" MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `AddsubdotTerm : AddsubdotTerm ".-" MuldivTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "AddsubdotTerm",
 		NTType:     54,
 		Index:      181,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -2488,73 +2126,73 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `MuldivTerm : MuldivTerm "*" DotTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `MuldivTerm : MuldivTerm "*" DotTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "MuldivTerm",
 		NTType:     55,
 		Index:      183,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `MuldivTerm : MuldivTerm "/" DotTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `MuldivTerm : MuldivTerm "/" DotTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "MuldivTerm",
 		NTType:     55,
 		Index:      184,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `MuldivTerm : MuldivTerm "//" DotTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `MuldivTerm : MuldivTerm "//" DotTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "MuldivTerm",
 		NTType:     55,
 		Index:      185,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `MuldivTerm : MuldivTerm "%" DotTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `MuldivTerm : MuldivTerm "%" DotTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "MuldivTerm",
 		NTType:     55,
 		Index:      186,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `MuldivTerm : MuldivTerm ".*" DotTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `MuldivTerm : MuldivTerm ".*" DotTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "MuldivTerm",
 		NTType:     55,
 		Index:      187,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `MuldivTerm : MuldivTerm "./" DotTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `MuldivTerm : MuldivTerm "./" DotTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "MuldivTerm",
 		NTType:     55,
 		Index:      188,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String:     `MuldivTerm : MuldivTerm ".//" DotTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `MuldivTerm : MuldivTerm ".//" DotTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "MuldivTerm",
 		NTType:     55,
 		Index:      189,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -2568,13 +2206,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `DotTerm : DotTerm "." UnaryOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeDotOperator) >>`,
+		String:     `DotTerm : DotTerm "." UnaryOpTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeDotOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "DotTerm",
 		NTType:     56,
 		Index:      191,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeDotOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeDotOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -2588,63 +2226,63 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `UnaryOpTerm : "+" UnaryOpTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
+		String:     `UnaryOpTerm : "+" UnaryOpTerm	<< dsl.NewASTNode(X[0], dsl.NodeTypeOperator, []interface{}{X[1]}) >>`,
 		Id:         "UnaryOpTerm",
 		NTType:     57,
 		Index:      193,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeOperator, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
-		String:     `UnaryOpTerm : "-" UnaryOpTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
+		String:     `UnaryOpTerm : "-" UnaryOpTerm	<< dsl.NewASTNode(X[0], dsl.NodeTypeOperator, []interface{}{X[1]}) >>`,
 		Id:         "UnaryOpTerm",
 		NTType:     57,
 		Index:      194,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeOperator, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
-		String:     `UnaryOpTerm : ".+" UnaryOpTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
+		String:     `UnaryOpTerm : ".+" UnaryOpTerm	<< dsl.NewASTNode(X[0], dsl.NodeTypeOperator, []interface{}{X[1]}) >>`,
 		Id:         "UnaryOpTerm",
 		NTType:     57,
 		Index:      195,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeOperator, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
-		String:     `UnaryOpTerm : ".-" UnaryOpTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
+		String:     `UnaryOpTerm : ".-" UnaryOpTerm	<< dsl.NewASTNode(X[0], dsl.NodeTypeOperator, []interface{}{X[1]}) >>`,
 		Id:         "UnaryOpTerm",
 		NTType:     57,
 		Index:      196,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeOperator, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
-		String:     `UnaryOpTerm : "!" UnaryOpTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
+		String:     `UnaryOpTerm : "!" UnaryOpTerm	<< dsl.NewASTNode(X[0], dsl.NodeTypeOperator, []interface{}{X[1]}) >>`,
 		Id:         "UnaryOpTerm",
 		NTType:     57,
 		Index:      197,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeOperator, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
-		String:     `UnaryOpTerm : "~" UnaryOpTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
+		String:     `UnaryOpTerm : "~" UnaryOpTerm	<< dsl.NewASTNode(X[0], dsl.NodeTypeOperator, []interface{}{X[1]}) >>`,
 		Id:         "UnaryOpTerm",
 		NTType:     57,
 		Index:      198,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeOperator, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
@@ -2658,13 +2296,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `AbsentCoalesceTerm : AbsentCoalesceTerm "??" EmptyCoalesceTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `AbsentCoalesceTerm : AbsentCoalesceTerm "??" EmptyCoalesceTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "AbsentCoalesceTerm",
 		NTType:     58,
 		Index:      200,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -2678,13 +2316,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `EmptyCoalesceTerm : EmptyCoalesceTerm "???" PowTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `EmptyCoalesceTerm : EmptyCoalesceTerm "???" PowTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "EmptyCoalesceTerm",
 		NTType:     59,
 		Index:      202,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -2698,53 +2336,41 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `PowTerm : PrecedenceChainEnd "**" PowTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String:     `PowTerm : PrecedenceChainEnd "**" PowTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]}) >>`,
 		Id:         "PowTerm",
 		NTType:     60,
 		Index:      204,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String: `PowTerm : PrecedenceChainEnd "**" "-" PowTerm	<< dsl.NewASTNodeBinary( X[1], X[0],
-  dsl.NewASTNodeUnaryNestable( X[2], X[3], dsl.NodeTypeOperator,), dsl.NodeTypeOperator,) >>`,
+		String: `PowTerm : PrecedenceChainEnd "**" "-" PowTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], dsl.NewASTNodeUnaryNestable( X[2], X[3], dsl.NodeTypeOperator,)}) >>`,
 		Id:         "PowTerm",
 		NTType:     60,
 		Index:      205,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0],
-				dsl.NewASTNodeUnaryNestable(X[2], X[3], dsl.NodeTypeOperator), dsl.NodeTypeOperator)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], dsl.NewASTNodeUnaryNestable(X[2], X[3], dsl.NodeTypeOperator)})
 		},
 	},
 	ProdTabEntry{
-		String: `PowTerm : PrecedenceChainEnd "**" "+" PowTerm	<< dsl.NewASTNodeBinary(
-        X[1],
-        X[0],
-        dsl.NewASTNodeUnaryNestable(
+		String: `PowTerm : PrecedenceChainEnd "**" "+" PowTerm	<< dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], dsl.NewASTNodeUnaryNestable(
           X[2],
           X[3],
           dsl.NodeTypeOperator,
-        ),
-        dsl.NodeTypeOperator,
-      ) >>`,
+        )}) >>`,
 		Id:         "PowTerm",
 		NTType:     60,
 		Index:      206,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[1],
-				X[0],
-				dsl.NewASTNodeUnaryNestable(
+			return dsl.NewASTNode(X[1], dsl.NodeTypeOperator, []interface{}{X[0], dsl.NewASTNodeUnaryNestable(
 					X[2],
 					X[3],
 					dsl.NodeTypeOperator,
-				),
-				dsl.NodeTypeOperator,
-			)
+				)})
 		},
 	},
 	ProdTabEntry{
@@ -2970,19 +2596,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ArrayLiteral : "[" "]"	<< dsl.NewASTNodeZary(
-      dsl.NewASTToken("[]", X[0]),
-      dsl.NodeTypeArrayLiteral,
-    ) >>`,
+		String: `ArrayLiteral : "[" "]"	<< dsl.NewASTNode(dsl.NewASTToken("[]", X[0]), dsl.NodeTypeArrayLiteral, []interface{}{}) >>`,
 		Id:         "ArrayLiteral",
 		NTType:     63,
 		Index:      228,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeZary(
-				dsl.NewASTToken("[]", X[0]),
-				dsl.NodeTypeArrayLiteral,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("[]", X[0]), dsl.NodeTypeArrayLiteral, []interface{}{})
 		},
 	},
 	ProdTabEntry{
@@ -3008,39 +2628,23 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ArrayLiteralElements : Rvalue	<< dsl.NewASTNodeUnary(
-      nil,
-      X[0],
-      dsl.NodeTypeArrayLiteral,
-    ) >>`,
+		String: `ArrayLiteralElements : Rvalue	<< dsl.NewASTNode(nil, dsl.NodeTypeArrayLiteral, []interface{}{X[0]}) >>`,
 		Id:         "ArrayLiteralElements",
 		NTType:     64,
 		Index:      230,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(
-				nil,
-				X[0],
-				dsl.NodeTypeArrayLiteral,
-			)
+			return dsl.NewASTNode(nil, dsl.NodeTypeArrayLiteral, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
-		String: `ArrayLiteralElements : Rvalue ","	<< dsl.NewASTNodeUnary(
-      nil,
-      X[0],
-      dsl.NodeTypeArrayLiteral,
-    ) >>`,
+		String: `ArrayLiteralElements : Rvalue ","	<< dsl.NewASTNode(nil, dsl.NodeTypeArrayLiteral, []interface{}{X[0]}) >>`,
 		Id:         "ArrayLiteralElements",
 		NTType:     64,
 		Index:      231,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(
-				nil,
-				X[0],
-				dsl.NodeTypeArrayLiteral,
-			)
+			return dsl.NewASTNode(nil, dsl.NodeTypeArrayLiteral, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
@@ -3070,19 +2674,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MapLiteral : "{" "}"	<< dsl.NewASTNodeZary(
-      dsl.NewASTToken("{}", X[0]),
-      dsl.NodeTypeMapLiteral,
-    ) >>`,
+		String: `MapLiteral : "{" "}"	<< dsl.NewASTNode(dsl.NewASTToken("{}", X[0]), dsl.NodeTypeMapLiteral, []interface{}{}) >>`,
 		Id:         "MapLiteral",
 		NTType:     65,
 		Index:      234,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeZary(
-				dsl.NewASTToken("{}", X[0]),
-				dsl.NodeTypeMapLiteral,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("{}", X[0]), dsl.NodeTypeMapLiteral, []interface{}{})
 		},
 	},
 	ProdTabEntry{
@@ -3108,39 +2706,23 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MapLiteralKeyValuePairs : MapLiteralKeyValuePair	<< dsl.NewASTNodeUnary(
-      nil,
-      X[0],
-      dsl.NodeTypeMapLiteral,
-    ) >>`,
+		String: `MapLiteralKeyValuePairs : MapLiteralKeyValuePair	<< dsl.NewASTNode(nil, dsl.NodeTypeMapLiteral, []interface{}{X[0]}) >>`,
 		Id:         "MapLiteralKeyValuePairs",
 		NTType:     66,
 		Index:      236,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(
-				nil,
-				X[0],
-				dsl.NodeTypeMapLiteral,
-			)
+			return dsl.NewASTNode(nil, dsl.NodeTypeMapLiteral, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
-		String: `MapLiteralKeyValuePairs : MapLiteralKeyValuePair ","	<< dsl.NewASTNodeUnary(
-      nil,
-      X[0],
-      dsl.NodeTypeMapLiteral,
-    ) >>`,
+		String: `MapLiteralKeyValuePairs : MapLiteralKeyValuePair ","	<< dsl.NewASTNode(nil, dsl.NodeTypeMapLiteral, []interface{}{X[0]}) >>`,
 		Id:         "MapLiteralKeyValuePairs",
 		NTType:     66,
 		Index:      237,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(
-				nil,
-				X[0],
-				dsl.NodeTypeMapLiteral,
-			)
+			return dsl.NewASTNode(nil, dsl.NodeTypeMapLiteral, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
@@ -3160,23 +2742,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MapLiteralKeyValuePair : Rvalue ":" Rvalue	<< dsl.NewASTNodeBinary(
-      X[1],
-      X[0],
-      X[2],
-      dsl.NodeTypeMapLiteralKeyValuePair,
-    ) >>`,
+		String: `MapLiteralKeyValuePair : Rvalue ":" Rvalue	<< dsl.NewASTNode(X[1], dsl.NodeTypeMapLiteralKeyValuePair, []interface{}{X[0], X[2]}) >>`,
 		Id:         "MapLiteralKeyValuePair",
 		NTType:     67,
 		Index:      239,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[1],
-				X[0],
-				X[2],
-				dsl.NodeTypeMapLiteralKeyValuePair,
-			)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeMapLiteralKeyValuePair, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -3320,39 +2892,23 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ENV : env "[" Rvalue "]"	<< dsl.NewASTNodeUnary(
-      X[0],
-      X[2],
-      dsl.NodeTypeEnvironmentVariable,
-    ) >>`,
+		String: `ENV : env "[" Rvalue "]"	<< dsl.NewASTNode(X[0], dsl.NodeTypeEnvironmentVariable, []interface{}{X[2]}) >>`,
 		Id:         "ENV",
 		NTType:     69,
 		Index:      254,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(
-				X[0],
-				X[2],
-				dsl.NodeTypeEnvironmentVariable,
-			)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeEnvironmentVariable, []interface{}{X[2]})
 		},
 	},
 	ProdTabEntry{
-		String: `ENV : env "." non_sigil_name	<< dsl.NewASTNodeUnary(
-      X[0],
-      dsl.NewASTNodeNestable(X[2], dsl.NodeTypeStringLiteral),
-      dsl.NodeTypeEnvironmentVariable,
-    ) >>`,
+		String: `ENV : env "." non_sigil_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeEnvironmentVariable, []interface{}{dsl.NewASTNodeNestable(X[2], dsl.NodeTypeStringLiteral)}) >>`,
 		Id:         "ENV",
 		NTType:     69,
 		Index:      255,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(
-				X[0],
-				dsl.NewASTNodeNestable(X[2], dsl.NodeTypeStringLiteral),
-				dsl.NodeTypeEnvironmentVariable,
-			)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeEnvironmentVariable, []interface{}{dsl.NewASTNodeNestable(X[2], dsl.NodeTypeStringLiteral)})
 		},
 	},
 	ProdTabEntry{
@@ -3396,175 +2952,97 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ArrayOrMapIndexAccess : MlrvalOrFunction "[" Rvalue "]"	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("[]", X[1]),
-      X[0],
-      X[2],
-      dsl.NodeTypeArrayOrMapIndexAccess,
-    ) >>`,
+		String: `ArrayOrMapIndexAccess : MlrvalOrFunction "[" Rvalue "]"	<< dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArrayOrMapIndexAccess, []interface{}{X[0], X[2]}) >>`,
 		Id:         "ArrayOrMapIndexAccess",
 		NTType:     70,
 		Index:      260,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("[]", X[1]),
-				X[0],
-				X[2],
-				dsl.NodeTypeArrayOrMapIndexAccess,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArrayOrMapIndexAccess, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String: `ArrayOrMapPositionalNameAccess : MlrvalOrFunction "[[" Rvalue "]" "]"	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("[]", X[1]),
-      X[0],
-      X[2],
-      dsl.NodeTypeArrayOrMapPositionalNameAccess,
-    ) >>`,
+		String: `ArrayOrMapPositionalNameAccess : MlrvalOrFunction "[[" Rvalue "]" "]"	<< dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArrayOrMapPositionalNameAccess, []interface{}{X[0], X[2]}) >>`,
 		Id:         "ArrayOrMapPositionalNameAccess",
 		NTType:     71,
 		Index:      261,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("[]", X[1]),
-				X[0],
-				X[2],
-				dsl.NodeTypeArrayOrMapPositionalNameAccess,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArrayOrMapPositionalNameAccess, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String: `ArrayOrMapPositionalValueAccess : MlrvalOrFunction "[[[" Rvalue "]" "]" "]"	<< dsl.NewASTNodeBinary(
-      dsl.NewASTToken("[]", X[1]),
-      X[0],
-      X[2],
-      dsl.NodeTypeArrayOrMapPositionalValueAccess,
-    ) >>`,
+		String: `ArrayOrMapPositionalValueAccess : MlrvalOrFunction "[[[" Rvalue "]" "]" "]"	<< dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArrayOrMapPositionalValueAccess, []interface{}{X[0], X[2]}) >>`,
 		Id:         "ArrayOrMapPositionalValueAccess",
 		NTType:     72,
 		Index:      262,
 		NumSymbols: 6,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("[]", X[1]),
-				X[0],
-				X[2],
-				dsl.NodeTypeArrayOrMapPositionalValueAccess,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArrayOrMapPositionalValueAccess, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
-		String: `ArraySliceAccess : MlrvalOrFunction "[" Rvalue ":" Rvalue "]"	<< dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", X[1]),
-      X[0],
-      X[2],
-      X[4],
-      dsl.NodeTypeArraySliceAccess,
-    ) >>`,
+		String: `ArraySliceAccess : MlrvalOrFunction "[" Rvalue ":" Rvalue "]"	<< dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], X[2], X[4]}) >>`,
 		Id:         "ArraySliceAccess",
 		NTType:     73,
 		Index:      263,
 		NumSymbols: 6,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				dsl.NewASTToken("[]", X[1]),
-				X[0],
-				X[2],
-				X[4],
-				dsl.NodeTypeArraySliceAccess,
-			)
+			return dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], X[2], X[4]})
 		},
 	},
 	ProdTabEntry{
-		String: `ArraySliceAccess : MlrvalOrFunction "[" ":" Rvalue "]"	<< dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", X[1]),
-      X[0],
-      dsl.NewASTNodeNestable(
+		String: `ArraySliceAccess : MlrvalOrFunction "[" ":" Rvalue "]"	<< dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], dsl.NewASTNodeNestable(
         X[2],
         dsl.NodeTypeArraySliceEmptyLowerIndex,
-      ),
-      X[3],
-      dsl.NodeTypeArraySliceAccess,
-    ) >>`,
+      ), X[3]}) >>`,
 		Id:         "ArraySliceAccess",
 		NTType:     73,
 		Index:      264,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				dsl.NewASTToken("[]", X[1]),
-				X[0],
-				dsl.NewASTNodeNestable(
+			return dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], dsl.NewASTNodeNestable(
 					X[2],
 					dsl.NodeTypeArraySliceEmptyLowerIndex,
-				),
-				X[3],
-				dsl.NodeTypeArraySliceAccess,
-			)
+				), X[3]})
 		},
 	},
 	ProdTabEntry{
-		String: `ArraySliceAccess : MlrvalOrFunction "[" Rvalue ":" "]"	<< dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", X[1]),
-      X[0],
-      X[2],
-      dsl.NewASTNodeNestable(
+		String: `ArraySliceAccess : MlrvalOrFunction "[" Rvalue ":" "]"	<< dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], X[2], dsl.NewASTNodeNestable(
         X[3],
         dsl.NodeTypeArraySliceEmptyUpperIndex,
-      ),
-      dsl.NodeTypeArraySliceAccess,
-    ) >>`,
+      )}) >>`,
 		Id:         "ArraySliceAccess",
 		NTType:     73,
 		Index:      265,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				dsl.NewASTToken("[]", X[1]),
-				X[0],
-				X[2],
-				dsl.NewASTNodeNestable(
+			return dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], X[2], dsl.NewASTNodeNestable(
 					X[3],
 					dsl.NodeTypeArraySliceEmptyUpperIndex,
-				),
-				dsl.NodeTypeArraySliceAccess,
-			)
+				)})
 		},
 	},
 	ProdTabEntry{
-		String: `ArraySliceAccess : MlrvalOrFunction "[" ":" "]"	<< dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", X[1]),
-      X[0],
-      dsl.NewASTNodeNestable(
+		String: `ArraySliceAccess : MlrvalOrFunction "[" ":" "]"	<< dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], dsl.NewASTNodeNestable(
         X[2],
         dsl.NodeTypeArraySliceEmptyLowerIndex,
-      ),
-      dsl.NewASTNodeNestable(
+      ), dsl.NewASTNodeNestable(
         X[2],
         dsl.NodeTypeArraySliceEmptyUpperIndex,
-      ),
-      dsl.NodeTypeArraySliceAccess,
-    ) >>`,
+      )}) >>`,
 		Id:         "ArraySliceAccess",
 		NTType:     73,
 		Index:      266,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				dsl.NewASTToken("[]", X[1]),
-				X[0],
-				dsl.NewASTNodeNestable(
+			return dsl.NewASTNode(dsl.NewASTToken("[]", X[1]), dsl.NodeTypeArraySliceAccess, []interface{}{X[0], dsl.NewASTNodeNestable(
 					X[2],
 					dsl.NodeTypeArraySliceEmptyLowerIndex,
-				),
-				dsl.NewASTNodeNestable(
+				), dsl.NewASTNodeNestable(
 					X[2],
 					dsl.NodeTypeArraySliceEmptyUpperIndex,
-				),
-				dsl.NodeTypeArraySliceAccess,
-			)
+				)})
 		},
 	},
 	ProdTabEntry{
@@ -3578,19 +3056,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FunctionCallsite : FunctionName "(" ")"	<< dsl.NewASTNodeZary(
-      X[0],
-      dsl.NodeTypeFunctionCallsite,
-    ) >>`,
+		String: `FunctionCallsite : FunctionName "(" ")"	<< dsl.NewASTNode(X[0], dsl.NodeTypeFunctionCallsite, []interface{}{}) >>`,
 		Id:         "FunctionCallsite",
 		NTType:     74,
 		Index:      268,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeZary(
-				X[0],
-				dsl.NodeTypeFunctionCallsite,
-			)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeFunctionCallsite, []interface{}{})
 		},
 	},
 	ProdTabEntry{
@@ -3646,39 +3118,23 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FcnArgs : Rvalue	<< dsl.NewASTNodeUnary(
-      nil,
-      X[0],
-      dsl.NodeTypeFunctionCallsite,
-    ) >>`,
+		String: `FcnArgs : Rvalue	<< dsl.NewASTNode(nil, dsl.NodeTypeFunctionCallsite, []interface{}{X[0]}) >>`,
 		Id:         "FcnArgs",
 		NTType:     76,
 		Index:      273,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(
-				nil,
-				X[0],
-				dsl.NodeTypeFunctionCallsite,
-			)
+			return dsl.NewASTNode(nil, dsl.NodeTypeFunctionCallsite, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
-		String: `FcnArgs : Rvalue ","	<< dsl.NewASTNodeUnary(
-      nil,
-      X[0],
-      dsl.NodeTypeFunctionCallsite,
-    ) >>`,
+		String: `FcnArgs : Rvalue ","	<< dsl.NewASTNode(nil, dsl.NodeTypeFunctionCallsite, []interface{}{X[0]}) >>`,
 		Id:         "FcnArgs",
 		NTType:     76,
 		Index:      274,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(
-				nil,
-				X[0],
-				dsl.NodeTypeFunctionCallsite,
-			)
+			return dsl.NewASTNode(nil, dsl.NodeTypeFunctionCallsite, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
@@ -3698,19 +3154,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `SubroutineCallsite : call SubroutineName "(" ")"	<< dsl.NewASTNodeZary(
-      X[1],
-      dsl.NodeTypeSubroutineCallsite,
-    ) >>`,
+		String: `SubroutineCallsite : call SubroutineName "(" ")"	<< dsl.NewASTNode(X[1], dsl.NodeTypeSubroutineCallsite, []interface{}{}) >>`,
 		Id:         "SubroutineCallsite",
 		NTType:     77,
 		Index:      276,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeZary(
-				X[1],
-				dsl.NodeTypeSubroutineCallsite,
-			)
+			return dsl.NewASTNode(X[1], dsl.NodeTypeSubroutineCallsite, []interface{}{})
 		},
 	},
 	ProdTabEntry{
@@ -3826,33 +3276,33 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `BeginBlock : begin StatementBlockInBraces	<< dsl.NewASTNodeUnary(nil, X[1], dsl.NodeTypeBeginBlock) >>`,
+		String:     `BeginBlock : begin StatementBlockInBraces	<< dsl.NewASTNode(nil, dsl.NodeTypeBeginBlock, []interface{}{X[1]}) >>`,
 		Id:         "BeginBlock",
 		NTType:     80,
 		Index:      287,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(nil, X[1], dsl.NodeTypeBeginBlock)
+			return dsl.NewASTNode(nil, dsl.NodeTypeBeginBlock, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
-		String:     `EndBlock : end StatementBlockInBraces	<< dsl.NewASTNodeUnary(nil, X[1], dsl.NodeTypeEndBlock) >>`,
+		String:     `EndBlock : end StatementBlockInBraces	<< dsl.NewASTNode(nil, dsl.NodeTypeEndBlock, []interface{}{X[1]}) >>`,
 		Id:         "EndBlock",
 		NTType:     81,
 		Index:      288,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(nil, X[1], dsl.NodeTypeEndBlock)
+			return dsl.NewASTNode(nil, dsl.NodeTypeEndBlock, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
-		String:     `CondBlock : Rvalue StatementBlockInBraces	<< dsl.NewASTNodeBinary(nil, X[0], X[1], dsl.NodeTypeCondBlock) >>`,
+		String:     `CondBlock : Rvalue StatementBlockInBraces	<< dsl.NewASTNode(nil, dsl.NodeTypeCondBlock, []interface{}{X[0], X[1]}) >>`,
 		Id:         "CondBlock",
 		NTType:     82,
 		Index:      289,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(nil, X[0], X[1], dsl.NodeTypeCondBlock)
+			return dsl.NewASTNode(nil, dsl.NodeTypeCondBlock, []interface{}{X[0], X[1]})
 		},
 	},
 	ProdTabEntry{
@@ -3876,13 +3326,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `IfElifStar : IfBlock	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeIfChain) >>`,
+		String:     `IfElifStar : IfBlock	<< dsl.NewASTNode(nil, dsl.NodeTypeIfChain, []interface{}{X[0]}) >>`,
 		Id:         "IfElifStar",
 		NTType:     84,
 		Index:      292,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeIfChain)
+			return dsl.NewASTNode(nil, dsl.NodeTypeIfChain, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
@@ -3896,53 +3346,53 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `IfBlock : if "(" Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(X[0], X[2], X[4], dsl.NodeTypeIfItem) >>`,
+		String:     `IfBlock : if "(" Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNode(X[0], dsl.NodeTypeIfItem, []interface{}{X[2], X[4]}) >>`,
 		Id:         "IfBlock",
 		NTType:     85,
 		Index:      294,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[0], X[2], X[4], dsl.NodeTypeIfItem)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeIfItem, []interface{}{X[2], X[4]})
 		},
 	},
 	ProdTabEntry{
-		String:     `ElifBlock : elif "(" Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(X[0], X[2], X[4], dsl.NodeTypeIfItem) >>`,
+		String:     `ElifBlock : elif "(" Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNode(X[0], dsl.NodeTypeIfItem, []interface{}{X[2], X[4]}) >>`,
 		Id:         "ElifBlock",
 		NTType:     86,
 		Index:      295,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[0], X[2], X[4], dsl.NodeTypeIfItem)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeIfItem, []interface{}{X[2], X[4]})
 		},
 	},
 	ProdTabEntry{
-		String:     `ElseBlock : else StatementBlockInBraces	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeIfItem) >>`,
+		String:     `ElseBlock : else StatementBlockInBraces	<< dsl.NewASTNode(X[0], dsl.NodeTypeIfItem, []interface{}{X[1]}) >>`,
 		Id:         "ElseBlock",
 		NTType:     87,
 		Index:      296,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeIfItem)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeIfItem, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
-		String:     `WhileLoop : while "(" Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(X[0], X[2], X[4], dsl.NodeTypeWhileLoop) >>`,
+		String:     `WhileLoop : while "(" Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNode(X[0], dsl.NodeTypeWhileLoop, []interface{}{X[2], X[4]}) >>`,
 		Id:         "WhileLoop",
 		NTType:     88,
 		Index:      297,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[0], X[2], X[4], dsl.NodeTypeWhileLoop)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeWhileLoop, []interface{}{X[2], X[4]})
 		},
 	},
 	ProdTabEntry{
-		String:     `DoWhileLoop : do StatementBlockInBraces while "(" Rvalue ")"	<< dsl.NewASTNodeBinary(X[0], X[1], X[4], dsl.NodeTypeDoWhileLoop) >>`,
+		String:     `DoWhileLoop : do StatementBlockInBraces while "(" Rvalue ")"	<< dsl.NewASTNode(X[0], dsl.NodeTypeDoWhileLoop, []interface{}{X[1], X[4]}) >>`,
 		Id:         "DoWhileLoop",
 		NTType:     89,
 		Index:      298,
 		NumSymbols: 6,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[0], X[1], X[4], dsl.NodeTypeDoWhileLoop)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeDoWhileLoop, []interface{}{X[1], X[4]})
 		},
 	},
 	ProdTabEntry{
@@ -3986,24 +3436,28 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ForLoopOneVariable : for "(" LocalVariable in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeTernary(
+		String: `ForLoopOneVariable : for "(" LocalVariable in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNode(
      X[0], // "for"
-     X[2], // k, etc.
-     X[4], // $*, etc.
-     X[6], // { ... }
      dsl.NodeTypeForLoopOneVariable,
+     []interface{}{
+       X[2], // k, etc.
+       X[4], // $*, etc.
+       X[6], // { ... }
+     },
    ); >>`,
 		Id:         "ForLoopOneVariable",
 		NTType:     91,
 		Index:      303,
 		NumSymbols: 7,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
+			return dsl.NewASTNode(
 				X[0], // "for"
-				X[2], // k, etc.
-				X[4], // $*, etc.
-				X[6], // { ... }
 				dsl.NodeTypeForLoopOneVariable,
+				[]interface{}{
+					X[2], // k, etc.
+					X[4], // $*, etc.
+					X[6], // { ... }
+				},
 			)
 		},
 	},
@@ -4056,23 +3510,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MultiIndex : LocalVariable "," LocalVariable	<< dsl.NewASTNodeBinary(
-      nil,
-      X[0],
-      X[2],
-      dsl.NodeTypeParameterList,
-    ) >>`,
+		String: `MultiIndex : LocalVariable "," LocalVariable	<< dsl.NewASTNode(nil, dsl.NodeTypeParameterList, []interface{}{X[0], X[2]}) >>`,
 		Id:         "MultiIndex",
 		NTType:     94,
 		Index:      306,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				nil,
-				X[0],
-				X[2],
-				dsl.NodeTypeParameterList,
-			)
+			return dsl.NewASTNode(nil, dsl.NodeTypeParameterList, []interface{}{X[0], X[2]})
 		},
 	},
 	ProdTabEntry{
@@ -4116,23 +3560,23 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `TripleForStart : empty	<< dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>`,
+		String:     `TripleForStart : empty	<< dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{}) >>`,
 		Id:         "TripleForStart",
 		NTType:     96,
 		Index:      309,
 		NumSymbols: 0,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock)
+			return dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{})
 		},
 	},
 	ProdTabEntry{
-		String:     `TripleForStart : Assignment	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock) >>`,
+		String:     `TripleForStart : Assignment	<< dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{X[0]}) >>`,
 		Id:         "TripleForStart",
 		NTType:     96,
 		Index:      310,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock)
+			return dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
@@ -4146,23 +3590,23 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `TripleForContinuation : empty	<< dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>`,
+		String:     `TripleForContinuation : empty	<< dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{}) >>`,
 		Id:         "TripleForContinuation",
 		NTType:     97,
 		Index:      312,
 		NumSymbols: 0,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock)
+			return dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{})
 		},
 	},
 	ProdTabEntry{
-		String:     `TripleForContinuation : TripleForContinuationItem	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock) >>`,
+		String:     `TripleForContinuation : TripleForContinuationItem	<< dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{X[0]}) >>`,
 		Id:         "TripleForContinuation",
 		NTType:     97,
 		Index:      313,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock)
+			return dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
@@ -4196,23 +3640,23 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `TripleForUpdate : empty	<< dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>`,
+		String:     `TripleForUpdate : empty	<< dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{}) >>`,
 		Id:         "TripleForUpdate",
 		NTType:     99,
 		Index:      317,
 		NumSymbols: 0,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock)
+			return dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{})
 		},
 	},
 	ProdTabEntry{
-		String:     `TripleForUpdate : Assignment	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock) >>`,
+		String:     `TripleForUpdate : Assignment	<< dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{X[0]}) >>`,
 		Id:         "TripleForUpdate",
 		NTType:     99,
 		Index:      318,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock)
+			return dsl.NewASTNode(nil, dsl.NodeTypeStatementBlock, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
@@ -4226,137 +3670,107 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `BreakStatement : break	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeBreak) >>`,
+		String:     `BreakStatement : break	<< dsl.NewASTNode(X[0], dsl.NodeTypeBreak, []interface{}{}) >>`,
 		Id:         "BreakStatement",
 		NTType:     100,
 		Index:      320,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeZary(X[0], dsl.NodeTypeBreak)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeBreak, []interface{}{})
 		},
 	},
 	ProdTabEntry{
-		String:     `ContinueStatement : continue	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeContinue) >>`,
+		String:     `ContinueStatement : continue	<< dsl.NewASTNode(X[0], dsl.NodeTypeContinue, []interface{}{}) >>`,
 		Id:         "ContinueStatement",
 		NTType:     101,
 		Index:      321,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeZary(X[0], dsl.NodeTypeContinue)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContinue, []interface{}{})
 		},
 	},
 	ProdTabEntry{
-		String: `NamedFunctionDefinition : func non_sigil_name "(" FuncOrSubrParameterList ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(
-      X[1],
-      X[3], // parameter list
-      X[5], // { ... }
-      dsl.NodeTypeNamedFunctionDefinition,
-    ); >>`,
+		String: `NamedFunctionDefinition : func non_sigil_name "(" FuncOrSubrParameterList ")" StatementBlockInBraces	<< dsl.NewASTNode(X[1], // { ... }
+      dsl.NodeTypeNamedFunctionDefinition, []interface{}{X[3], // parameter list
+      X[5]}); >>`,
 		Id:         "NamedFunctionDefinition",
 		NTType:     102,
 		Index:      322,
 		NumSymbols: 6,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[1],
-				X[3], // parameter list
-				X[5], // { ... }
-				dsl.NodeTypeNamedFunctionDefinition,
-			)
+			return dsl.NewASTNode(X[1], // { ... }
+				dsl.NodeTypeNamedFunctionDefinition, []interface{}{X[3], // parameter list
+				X[5]})
 		},
 	},
 	ProdTabEntry{
-		String: `NamedFunctionDefinition : func non_sigil_name "(" FuncOrSubrParameterList ")" ":" Typedecl StatementBlockInBraces	<< dsl.NewASTNodeTernary(
-      X[1],
-      X[3], // parameter list
+		String: `NamedFunctionDefinition : func non_sigil_name "(" FuncOrSubrParameterList ")" ":" Typedecl StatementBlockInBraces	<< dsl.NewASTNode(X[1], // return type
+      dsl.NodeTypeNamedFunctionDefinition, []interface{}{X[3], // parameter list
       X[7], // {...}
-      X[6], // return type
-      dsl.NodeTypeNamedFunctionDefinition,
-    ); >>`,
+      X[6]}); >>`,
 		Id:         "NamedFunctionDefinition",
 		NTType:     102,
 		Index:      323,
 		NumSymbols: 8,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[1],
-				X[3], // parameter list
+			return dsl.NewASTNode(X[1], // return type
+				dsl.NodeTypeNamedFunctionDefinition, []interface{}{X[3], // parameter list
 				X[7], // {...}
-				X[6], // return type
-				dsl.NodeTypeNamedFunctionDefinition,
-			)
+				X[6]})
 		},
 	},
 	ProdTabEntry{
-		String: `UnnamedFunctionDefinition : func "(" FuncOrSubrParameterList ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(
-      X[0],
-      X[2], // parameter list
-      X[4], // { ... }
-      dsl.NodeTypeUnnamedFunctionDefinition,
-    ); >>`,
+		String: `UnnamedFunctionDefinition : func "(" FuncOrSubrParameterList ")" StatementBlockInBraces	<< dsl.NewASTNode(X[0], // { ... }
+      dsl.NodeTypeUnnamedFunctionDefinition, []interface{}{X[2], // parameter list
+      X[4]}); >>`,
 		Id:         "UnnamedFunctionDefinition",
 		NTType:     103,
 		Index:      324,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[0],
-				X[2], // parameter list
-				X[4], // { ... }
-				dsl.NodeTypeUnnamedFunctionDefinition,
-			)
+			return dsl.NewASTNode(X[0], // { ... }
+				dsl.NodeTypeUnnamedFunctionDefinition, []interface{}{X[2], // parameter list
+				X[4]})
 		},
 	},
 	ProdTabEntry{
-		String: `UnnamedFunctionDefinition : func "(" FuncOrSubrParameterList ")" ":" Typedecl StatementBlockInBraces	<< dsl.NewASTNodeTernary(
-      X[0],
-      X[2], // parameter list
+		String: `UnnamedFunctionDefinition : func "(" FuncOrSubrParameterList ")" ":" Typedecl StatementBlockInBraces	<< dsl.NewASTNode(X[0], // return type
+      dsl.NodeTypeUnnamedFunctionDefinition, []interface{}{X[2], // parameter list
       X[6], // {...}
-      X[5], // return type
-      dsl.NodeTypeUnnamedFunctionDefinition,
-    ); >>`,
+      X[5]}); >>`,
 		Id:         "UnnamedFunctionDefinition",
 		NTType:     103,
 		Index:      325,
 		NumSymbols: 7,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeTernary(
-				X[0],
-				X[2], // parameter list
+			return dsl.NewASTNode(X[0], // return type
+				dsl.NodeTypeUnnamedFunctionDefinition, []interface{}{X[2], // parameter list
 				X[6], // {...}
-				X[5], // return type
-				dsl.NodeTypeUnnamedFunctionDefinition,
-			)
+				X[5]})
 		},
 	},
 	ProdTabEntry{
-		String: `SubroutineDefinition : subr non_sigil_name "(" FuncOrSubrParameterList ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(
-      X[1],
-      X[3], // parameter list
-      X[5], // { ... }
-      dsl.NodeTypeSubroutineDefinition,
-    ); >>`,
+		String: `SubroutineDefinition : subr non_sigil_name "(" FuncOrSubrParameterList ")" StatementBlockInBraces	<< dsl.NewASTNode(X[1], // { ... }
+      dsl.NodeTypeSubroutineDefinition, []interface{}{X[3], // parameter list
+      X[5]}); >>`,
 		Id:         "SubroutineDefinition",
 		NTType:     104,
 		Index:      326,
 		NumSymbols: 6,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeBinary(
-				X[1],
-				X[3], // parameter list
-				X[5], // { ... }
-				dsl.NodeTypeSubroutineDefinition,
-			)
+			return dsl.NewASTNode(X[1], // { ... }
+				dsl.NodeTypeSubroutineDefinition, []interface{}{X[3], // parameter list
+				X[5]})
 		},
 	},
 	ProdTabEntry{
-		String:     `FuncOrSubrParameterList : empty	<< dsl.NewASTNodeZary(nil, dsl.NodeTypeParameterList) >>`,
+		String:     `FuncOrSubrParameterList : empty	<< dsl.NewASTNode(nil, dsl.NodeTypeParameterList, []interface{}{}) >>`,
 		Id:         "FuncOrSubrParameterList",
 		NTType:     105,
 		Index:      327,
 		NumSymbols: 0,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeZary(nil, dsl.NodeTypeParameterList)
+			return dsl.NewASTNode(nil, dsl.NodeTypeParameterList, []interface{}{})
 		},
 	},
 	ProdTabEntry{
@@ -4370,23 +3784,23 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `FuncOrSubrNonEmptyParameterList : FuncOrSubrParameter	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeParameterList) >>`,
+		String:     `FuncOrSubrNonEmptyParameterList : FuncOrSubrParameter	<< dsl.NewASTNode(nil, dsl.NodeTypeParameterList, []interface{}{X[0]}) >>`,
 		Id:         "FuncOrSubrNonEmptyParameterList",
 		NTType:     106,
 		Index:      329,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeParameterList)
+			return dsl.NewASTNode(nil, dsl.NodeTypeParameterList, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
-		String:     `FuncOrSubrNonEmptyParameterList : FuncOrSubrParameter ","	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeParameterList) >>`,
+		String:     `FuncOrSubrNonEmptyParameterList : FuncOrSubrParameter ","	<< dsl.NewASTNode(nil, dsl.NodeTypeParameterList, []interface{}{X[0]}) >>`,
 		Id:         "FuncOrSubrNonEmptyParameterList",
 		NTType:     106,
 		Index:      330,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeParameterList)
+			return dsl.NewASTNode(nil, dsl.NodeTypeParameterList, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
@@ -4400,39 +3814,23 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FuncOrSubrParameter : UntypedFuncOrSubrParameterName	<< dsl.NewASTNodeUnary(
-      nil,
-      X[0],
-      dsl.NodeTypeParameter,
-    ) >>`,
+		String: `FuncOrSubrParameter : UntypedFuncOrSubrParameterName	<< dsl.NewASTNode(nil, dsl.NodeTypeParameter, []interface{}{X[0]}) >>`,
 		Id:         "FuncOrSubrParameter",
 		NTType:     107,
 		Index:      332,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(
-				nil,
-				X[0],
-				dsl.NodeTypeParameter,
-			)
+			return dsl.NewASTNode(nil, dsl.NodeTypeParameter, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
-		String: `FuncOrSubrParameter : TypedFuncOrSubrParameterName	<< dsl.NewASTNodeUnary(
-      nil,
-      X[0],
-      dsl.NodeTypeParameter,
-    ) >>`,
+		String: `FuncOrSubrParameter : TypedFuncOrSubrParameterName	<< dsl.NewASTNode(nil, dsl.NodeTypeParameter, []interface{}{X[0]}) >>`,
 		Id:         "FuncOrSubrParameter",
 		NTType:     107,
 		Index:      333,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(
-				nil,
-				X[0],
-				dsl.NodeTypeParameter,
-			)
+			return dsl.NewASTNode(nil, dsl.NodeTypeParameter, []interface{}{X[0]})
 		},
 	},
 	ProdTabEntry{
@@ -4456,23 +3854,23 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `ReturnStatement : return Rvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeReturn) >>`,
+		String:     `ReturnStatement : return Rvalue	<< dsl.NewASTNode(X[0], dsl.NodeTypeReturn, []interface{}{X[1]}) >>`,
 		Id:         "ReturnStatement",
 		NTType:     110,
 		Index:      336,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeReturn)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeReturn, []interface{}{X[1]})
 		},
 	},
 	ProdTabEntry{
-		String:     `ReturnStatement : return	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeReturn) >>`,
+		String:     `ReturnStatement : return	<< dsl.NewASTNode(X[0], dsl.NodeTypeReturn, []interface{}{}) >>`,
 		Id:         "ReturnStatement",
 		NTType:     110,
 		Index:      337,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeZary(X[0], dsl.NodeTypeReturn)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeReturn, []interface{}{})
 		},
 	},
 }

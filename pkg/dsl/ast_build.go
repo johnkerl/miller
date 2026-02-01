@@ -31,8 +31,55 @@ func NewAST(iroot interface{}) (*AST, error) {
 }
 
 // ----------------------------------------------------------------
+// xxx comment why grammar use
+func NewASTNodeNestable(itok interface{}, nodeType TNodeType) *ASTNode {
+	var tok *token.Token = nil
+	if itok != nil {
+		tok = itok.(*token.Token)
+	}
+	return &ASTNode{
+		Token:    tok,
+		Type:     nodeType,
+		Children: nil,
+	}
+}
+
+// NewASTNode is the ASTNode constructor. If children is non-nil and length 0, a
+// zary node is created. (Example: a function call with zero arguments.) If
+// children is nil, a terminal node is created. (Example: a string or integer
+// literal.)
+func NewASTNode(
+	itok interface{},
+	nodeType TNodeType,
+	children []interface{},
+) (*ASTNode, error) {
+
+	var tok *token.Token = nil
+	if itok != nil {
+		tok = itok.(*token.Token)
+	}
+
+	node := &ASTNode{
+		Token:    tok,
+		Type:     nodeType,
+		Children: nil,
+	}
+
+	if children == nil {
+		return node, nil
+	}
+
+	n := len(children)
+	node.Children = make([]*ASTNode, n)
+	for i, child := range children {
+		node.Children[i] = child.(*ASTNode)
+	}
+	return node, nil
+}
+
+// ----------------------------------------------------------------
 func NewASTNodeTerminal(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
-	return NewASTNodeNestable(itok, nodeType), nil
+	return NewASTNode(itok, nodeType, nil)
 }
 
 // For handling empty expressions.
@@ -103,23 +150,8 @@ func NewASTNodeStripDoubleQuotePair(
 	return NewASTNodeNestable(newToken, nodeType), nil
 }
 
-// xxx comment why grammar use
-func NewASTNodeNestable(itok interface{}, nodeType TNodeType) *ASTNode {
-	var tok *token.Token = nil
-	if itok != nil {
-		tok = itok.(*token.Token)
-	}
-	return &ASTNode{
-		Token:    tok,
-		Type:     nodeType,
-		Children: nil,
-	}
-}
-
 func NewASTNodeZary(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
-	parent := NewASTNodeNestable(itok, nodeType)
-	convertToZary(parent)
-	return parent, nil
+	return NewASTNode(itok, nodeType, []interface{}{})
 }
 
 func NewASTNodeUnaryNestable(itok, childA interface{}, nodeType TNodeType) *ASTNode {
@@ -129,7 +161,7 @@ func NewASTNodeUnaryNestable(itok, childA interface{}, nodeType TNodeType) *ASTN
 }
 
 func NewASTNodeUnary(itok, childA interface{}, nodeType TNodeType) (*ASTNode, error) {
-	return NewASTNodeUnaryNestable(itok, childA, nodeType), nil
+	return NewASTNode(itok, nodeType, []interface{}{childA})
 }
 
 // Signature: Token Node Node Type
@@ -143,13 +175,11 @@ func NewASTNodeBinaryNestable(itok, childA, childB interface{}, nodeType TNodeTy
 func NewASTNodeBinary(
 	itok, childA, childB interface{}, nodeType TNodeType,
 ) (*ASTNode, error) {
-	return NewASTNodeBinaryNestable(itok, childA, childB, nodeType), nil
+	return NewASTNode(itok, nodeType, []interface{}{childA, childB})
 }
 
 func NewASTNodeTernary(itok, childA, childB, childC interface{}, nodeType TNodeType) (*ASTNode, error) {
-	parent := NewASTNodeNestable(itok, nodeType)
-	convertToTernary(parent, childA, childB, childC)
-	return parent, nil
+	return NewASTNode(itok, nodeType, []interface{}{childA, childB, childC})
 }
 
 func NewASTNodeQuaternary(
