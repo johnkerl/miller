@@ -178,9 +178,15 @@ a=wye,b=pan,i=5,x=0.573288,y=0.863624,ab=wye_pan
 
 The two verbs `mlr filter` and `mlr put` are essentially the same. The only differences are:
 
-* Expressions sent to `mlr filter` should contain a boolean expression, which is the filtering criterion. (If not, all records pass through.)
-
 * `mlr filter` expressions may not reference the `filter` keyword within them.
+* Before Miller 6.17:
+  * Expressions sent to `mlr filter` should contain a boolean expression, which is the filtering criterion. (If not, all records pass through.)
+* As of Miller 6.17:
+  * Expressions sent to `mlr filter` must contain a boolean expression, which is the filtering criterion.
+  * If the expression evaluates to `false`, the record does not pass through.
+  * If the expression evaluates to `true` or `absent`, the record passes through.
+  * If the expression evaluates to anything other than boolean or absent, that is a fatal error.
+  * The reason for accepting `absent` is for Miller's [record-heterogeneity guarantees](record-heterogeneity.md). It's not an error to filter for `$x > 10` if the current record has no `$x` field.
 
 ## Location of boolean expression for filter
 
