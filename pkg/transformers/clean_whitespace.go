@@ -151,7 +151,6 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
 
 		for pe := inrecAndContext.Record.Head; pe != nil; pe = pe.Next {
 			oldKey := mlrval.FromString(pe.Key)
-			// xxx temp
 			newKey := bifs.BIF_clean_whitespace(oldKey)
 			newValue := bifs.BIF_clean_whitespace(pe.Value)
 			// Transferring ownership from old record to new record; no copy needed

@@ -6,7 +6,7 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/scan"
 )
 
-// TODO: comment no infer-bool from data files. Always false in this path.
+// Note: we do not infer bools from data files; always false in this path.
 
 // It's essential that we use mv.Type() not mv.mvtype since types are
 // JIT-computed on first access for most data-file values. See type.go for more
@@ -51,7 +51,7 @@ func inferNormally(mv *Mlrval) *Mlrval {
 	return normalInferrerTable[scanType](mv)
 }
 
-// xxx temp
+// inferWithOctalAsInt uses the leading-zero-as-int inferrer table (mlr -O).
 func inferWithOctalAsInt(mv *Mlrval) *Mlrval {
 	scanType := scan.FindScanType(mv.printrep)
 	return leadingZeroAsIntInferrerTable[scanType](mv)
@@ -98,7 +98,7 @@ var leadingZeroAsIntInferrerTable []tInferrer = []tInferrer{
 	inferMaybeFloat,
 }
 
-// TODO: comment
+// inferDecimalInt parses a base-10 integer or keeps the value as a string.
 func inferDecimalInt(mv *Mlrval) *Mlrval {
 	intval, err := strconv.ParseInt(mv.printrep, 10, 64)
 	if err == nil {
@@ -108,7 +108,7 @@ func inferDecimalInt(mv *Mlrval) *Mlrval {
 	}
 }
 
-// TODO: comment
+// inferLeadingZeroDecimalIntAsInt parses base-10 integers when leading zeros are allowed.
 func inferLeadingZeroDecimalIntAsInt(mv *Mlrval) *Mlrval {
 	intval, err := strconv.ParseInt(mv.printrep, 10, 64)
 	if err == nil {
@@ -118,13 +118,13 @@ func inferLeadingZeroDecimalIntAsInt(mv *Mlrval) *Mlrval {
 	}
 }
 
-// TODO: comment
+// inferOctalInt parses explicit 0o-prefixed octal integers.
 // E.g. explicit 0o377, not 0377
 func inferOctalInt(mv *Mlrval) *Mlrval {
 	return inferBaseInt(mv, 8)
 }
 
-// TODO: comment
+// inferFromLeadingZeroOctalIntAsInt parses 0-prefixed octal integers.
 func inferFromLeadingZeroOctalIntAsInt(mv *Mlrval) *Mlrval {
 	intval, err := strconv.ParseInt(mv.printrep, 8, 64)
 	if err == nil {
@@ -134,7 +134,7 @@ func inferFromLeadingZeroOctalIntAsInt(mv *Mlrval) *Mlrval {
 	}
 }
 
-// TODO: comment
+// inferHexInt parses 0x-prefixed hex integers with two's-complement handling.
 func inferHexInt(mv *Mlrval) *Mlrval {
 	var input string
 	var negate bool
@@ -186,12 +186,12 @@ func inferHexInt(mv *Mlrval) *Mlrval {
 
 }
 
-// TODO: comment
+// inferBinaryInt parses 0b-prefixed binary integers.
 func inferBinaryInt(mv *Mlrval) *Mlrval {
 	return inferBaseInt(mv, 2)
 }
 
-// TODO: comment
+// inferMaybeFloat parses floating-point values or keeps the value as a string.
 func inferMaybeFloat(mv *Mlrval) *Mlrval {
 	floatval, err := strconv.ParseFloat(mv.printrep, 64)
 	if err == nil {
@@ -201,8 +201,7 @@ func inferMaybeFloat(mv *Mlrval) *Mlrval {
 	}
 }
 
-// TODO: comment
-// Shared code for 0o/0b integers
+// inferBaseInt is shared code for parsing 0o/0b integers.
 func inferBaseInt(mv *Mlrval, base int) *Mlrval {
 	var input string
 	var negate bool

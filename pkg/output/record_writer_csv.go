@@ -52,7 +52,7 @@ func (writer *RecordWriterCSV) Write(
 
 	if writer.csvWriter == nil {
 		writer.csvWriter = csv.NewWriter(bufferedOutputStream)
-		writer.csvWriter.Comma = rune(writer.writerOptions.OFS[0]) // xxx temp
+		writer.csvWriter.Comma = rune(writer.writerOptions.OFS[0]) // xxx temp -- needs length-1 OFS
 	}
 
 	if writer.firstRecordKeys == nil {

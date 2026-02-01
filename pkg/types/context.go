@@ -98,7 +98,6 @@ type Context struct {
 	NR  int64
 	FNR int64
 
-	// XXX 1513
 	JSONHadBrackets bool
 }
 
