@@ -234,12 +234,6 @@ func AdoptChildren(iparent interface{}, ichild interface{}) (*ASTNode, error) {
 	return parent, nil
 }
 
-// TODO: comment
-func Wrap(inode interface{}) (*ASTNode, error) {
-	node := inode.(*ASTNode)
-	return node, nil
-}
-
 func (node *ASTNode) CheckArity(
 	arity int,
 ) error {

@@ -374,7 +374,7 @@ StatementBlock
     )) >>
 
   | NonEmptyStatementBlock
-    << dsl.Wrap($0) >>
+    << dsl.WithErrorReturn($0) >>
 ;
 
 // ----------------------------------------------------------------
@@ -410,7 +410,7 @@ NonEmptyStatementBlock
 
   // So statements can start with a semicolon
   | ";" StatementBlock
-    << dsl.Wrap($1) >>
+    << dsl.WithErrorReturn($1) >>
 
   // Normal case for sequential statements like '$x=1; $y=2'
   | BracelessStatement ";" StatementBlock
@@ -466,7 +466,7 @@ NonEmptyStatementBlock
 // which use curly-braced bodies.
 StatementBlockInBraces
   : "{" StatementBlock "}"
-    << dsl.Wrap($1) >>
+    << dsl.WithErrorReturn($1) >>
 ;
 
 // ================================================================
@@ -3166,7 +3166,7 @@ FuncOrSubrParameterList
     []interface{}{}
     )) >>
   | FuncOrSubrNonEmptyParameterList
-    << dsl.Wrap($0) >>
+    << dsl.WithErrorReturn($0) >>
 ;
 
 FuncOrSubrNonEmptyParameterList

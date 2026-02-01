@@ -50,13 +50,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `StatementBlock : NonEmptyStatementBlock	<< dsl.Wrap(X[0]) >>`,
+		String:     `StatementBlock : NonEmptyStatementBlock	<< dsl.WithErrorReturn(X[0]) >>`,
 		Id:         "StatementBlock",
 		NTType:     2,
 		Index:      3,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.Wrap(X[0])
+			return dsl.WithErrorReturn(X[0])
 		},
 	},
 	ProdTabEntry{
@@ -80,13 +80,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `NonEmptyStatementBlock : ";" StatementBlock	<< dsl.Wrap(X[1]) >>`,
+		String:     `NonEmptyStatementBlock : ";" StatementBlock	<< dsl.WithErrorReturn(X[1]) >>`,
 		Id:         "NonEmptyStatementBlock",
 		NTType:     3,
 		Index:      6,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.Wrap(X[1])
+			return dsl.WithErrorReturn(X[1])
 		},
 	},
 	ProdTabEntry{
@@ -150,13 +150,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `StatementBlockInBraces : "{" StatementBlock "}"	<< dsl.Wrap(X[1]) >>`,
+		String:     `StatementBlockInBraces : "{" StatementBlock "}"	<< dsl.WithErrorReturn(X[1]) >>`,
 		Id:         "StatementBlockInBraces",
 		NTType:     4,
 		Index:      13,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.Wrap(X[1])
+			return dsl.WithErrorReturn(X[1])
 		},
 	},
 	ProdTabEntry{
@@ -3786,13 +3786,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String:     `FuncOrSubrParameterList : FuncOrSubrNonEmptyParameterList	<< dsl.Wrap(X[0]) >>`,
+		String:     `FuncOrSubrParameterList : FuncOrSubrNonEmptyParameterList	<< dsl.WithErrorReturn(X[0]) >>`,
 		Id:         "FuncOrSubrParameterList",
 		NTType:     105,
 		Index:      328,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.Wrap(X[0])
+			return dsl.WithErrorReturn(X[0])
 		},
 	},
 	ProdTabEntry{
