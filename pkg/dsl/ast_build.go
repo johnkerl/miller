@@ -12,17 +12,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/parsing/token"
 )
 
-// ----------------------------------------------------------------
-// xxx comment interface{} everywhere vs. true types due to gocc polymorphism API.
-// and, line-count for casts here vs in the BNF:
-//
-// Statement :
-//   md_token_field_name md_token_assign md_token_number
-//
-// Statement :
-//   md_token_field_name md_token_assign md_token_number
-//     << dsl.NewASTNodeTernary("foo", $0, $1, $2) >> ;
-
 // This is for the GOCC/BNF parser, which produces an AST
 func NewAST(iroot interface{}) (*AST, error) {
 	return &AST{
@@ -31,7 +20,6 @@ func NewAST(iroot interface{}) (*AST, error) {
 }
 
 // ----------------------------------------------------------------
-// xxx comment why grammar use
 func NewASTNodeNestable(itok interface{}, nodeType TNodeType) *ASTNode {
 	var tok *token.Token = nil
 	if itok != nil {
