@@ -2867,12 +2867,14 @@ ForLoopTwoVariable
     ")"
     StatementBlockInBraces
  <<
-   dsl.NewASTNodeQuaternary(
+   dsl.NewASTNodeWithErrorReturn(
      $0, // "for"
-     $2, // k, etc.
-     $4, // v, etc.
-     $6, // $*, etc.
-     $8, // { ... }
+	 []interface() {
+     	$2, // k, etc.
+     	$4, // v, etc.
+     	$6, // $*, etc.
+     	$8, // { ... }
+	 },
      dsl.NodeTypeForLoopTwoVariable,
    );
  >>
@@ -2894,12 +2896,14 @@ ForLoopMultivariable
     ")"
     StatementBlockInBraces
  <<
-   dsl.NewASTNodeQuaternary(
+   dsl.NewASTNodeWithErrorReturn(
      $0, // "for"
-     $3, // (k1, k2), etc.
-     $6, // v, etc.
-     $8, // $*, etc.
-     $10, // { ... }
+	 []interface() {
+     	$3, // (k1, k2), etc.
+     	$6, // v, etc.
+     	$8, // $*, etc.
+     	$10, // { ... }
+	 },
      dsl.NodeTypeForLoopMultivariable,
    );
  >>
@@ -2937,12 +2941,14 @@ TripleForLoop
     ")"
     StatementBlockInBraces
  <<
-   dsl.NewASTNodeQuaternary(
+   dsl.NewASTNodeWithErrorReturn(
      $0, // for
-     $2, // start
-     $4, // continuation
-     $6, // update
-     $8, // body
+	 []interface() {
+     	$2, // start
+     	$4, // continuation
+     	$6, // update
+     	$8, // body
+	 },
      dsl.NodeTypeTripleForLoop,
    );
  >>

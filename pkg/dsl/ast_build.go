@@ -71,9 +71,17 @@ func WithErrorReturn(iparent interface{}) (*ASTNode, error) {
 	return iparent.(*ASTNode), nil
 }
 
+func NewASTNodeWithErrorReturn(
+	itok interface{},
+	nodeType TNodeType,
+	children []interface{},
+) (*ASTNode, error) {
+	return WithErrorReturn(NewASTNode(itok, nodeType, children))
+}
+
 // ----------------------------------------------------------------
 func NewASTNodeTerminalWithErrorReturn(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
-	return NewASTNode(itok, nodeType, nil), nil
+	return WithErrorReturn(NewASTNode(itok, nodeType, nil))
 }
 
 // Strips the leading '$' from field names, or '@' from oosvar names. Not done
@@ -130,21 +138,13 @@ func NewASTNodeStripDoubleQuotePair(
 	return NewASTNodeTerminal(newToken, nodeType), nil
 }
 
-func NewASTNodeZary(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
-	return NewASTNode(itok, nodeType, []interface{}{}), nil
-}
-
 func NewASTNodeUnaryNestable(itok, childA interface{}, nodeType TNodeType) *ASTNode {
 	parent := NewASTNodeTerminal(itok, nodeType)
 	convertToUnary(parent, childA)
 	return parent
 }
 
-func NewASTNodeUnary(itok, childA interface{}, nodeType TNodeType) (*ASTNode, error) {
-	return NewASTNode(itok, nodeType, []interface{}{childA}), nil
-}
-
-// Signature: Token Node Node Type
+// XXX REMOVE
 func NewASTNodeBinaryNestable(itok, childA, childB interface{}, nodeType TNodeType) *ASTNode {
 	parent := NewASTNodeTerminal(itok, nodeType)
 	convertToBinary(parent, childA, childB)
@@ -152,24 +152,6 @@ func NewASTNodeBinaryNestable(itok, childA, childB interface{}, nodeType TNodeTy
 }
 
 // Signature: Token Node Node Type
-func NewASTNodeBinary(
-	itok, childA, childB interface{}, nodeType TNodeType,
-) (*ASTNode, error) {
-	return NewASTNode(itok, nodeType, []interface{}{childA, childB}), nil
-}
-
-func NewASTNodeTernary(itok, childA, childB, childC interface{}, nodeType TNodeType) (*ASTNode, error) {
-	return NewASTNode(itok, nodeType, []interface{}{childA, childB, childC}), nil
-}
-
-func NewASTNodeQuaternary(
-	itok, childA, childB, childC, childD interface{}, nodeType TNodeType,
-) (*ASTNode, error) {
-	parent := NewASTNodeTerminal(itok, nodeType)
-	convertToQuaternary(parent, childA, childB, childC, childD)
-	return parent, nil
-}
-
 func convertToZary(iparent interface{}) {
 	parent := iparent.(*ASTNode)
 	children := make([]*ASTNode, 0)

@@ -3462,12 +3462,14 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ForLoopTwoVariable : for "(" LocalVariable "," LocalVariable in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeQuaternary(
+		String: `ForLoopTwoVariable : for "(" LocalVariable "," LocalVariable in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
      X[0], // "for"
-     X[2], // k, etc.
-     X[4], // v, etc.
-     X[6], // $*, etc.
-     X[8], // { ... }
+	 []interface{} {
+     	X[2], // k, etc.
+     	X[4], // v, etc.
+     	X[6], // $*, etc.
+     	X[8], // { ... }
+	 },
      dsl.NodeTypeForLoopTwoVariable,
    ); >>`,
 		Id:         "ForLoopTwoVariable",
@@ -3475,37 +3477,43 @@ var productionsTable = ProdTab{
 		Index:      304,
 		NumSymbols: 9,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeQuaternary(
+			return dsl.NewASTNodeWithErrorReturn(
 				X[0], // "for"
-				X[2], // k, etc.
-				X[4], // v, etc.
-				X[6], // $*, etc.
-				X[8], // { ... }
 				dsl.NodeTypeForLoopTwoVariable,
+				[]interface{} {
+					X[2], // k, etc.
+					X[4], // v, etc.
+					X[6], // $*, etc.
+					X[8], // { ... }
+				},
 			)
 		},
 	},
 	ProdTabEntry{
-		String: `ForLoopMultivariable : for "(" "(" MultiIndex ")" "," LocalVariable in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeQuaternary(
+		String: `ForLoopMultivariable : for "(" "(" MultiIndex ")" "," LocalVariable in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
      X[0], // "for"
-     X[3], // (k1, k2), etc.
-     X[6], // v, etc.
-     X[8], // $*, etc.
-     X[10], // { ... }
      dsl.NodeTypeForLoopMultivariable,
+	 []interface{} {
+     	X[3], // (k1, k2), etc.
+     	X[6], // v, etc.
+     	X[8], // $*, etc.
+     	X[10], // { ... }
+	 },
    ); >>`,
 		Id:         "ForLoopMultivariable",
 		NTType:     93,
 		Index:      305,
 		NumSymbols: 11,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeQuaternary(
+			return dsl.NewASTNodeWithErrorReturn(
 				X[0],  // "for"
-				X[3],  // (k1, k2), etc.
-				X[6],  // v, etc.
-				X[8],  // $*, etc.
-				X[10], // { ... }
 				dsl.NodeTypeForLoopMultivariable,
+				[]interface{} {
+					X[3],  // (k1, k2), etc.
+					X[6],  // v, etc.
+					X[8],  // $*, etc.
+					X[10], // { ... }
+				},
 			)
 		},
 	},
@@ -3536,12 +3544,14 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `TripleForLoop : for "(" TripleForStart ";" TripleForContinuation ";" TripleForUpdate ")" StatementBlockInBraces	<< dsl.NewASTNodeQuaternary(
+		String: `TripleForLoop : for "(" TripleForStart ";" TripleForContinuation ";" TripleForUpdate ")" StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
      X[0], // for
-     X[2], // start
-     X[4], // continuation
-     X[6], // update
-     X[8], // body
+	 []interface{} {
+     	X[2], // start
+     	X[4], // continuation
+     	X[6], // update
+     	X[8], // body
+	 },
      dsl.NodeTypeTripleForLoop,
    ); >>`,
 		Id:         "TripleForLoop",
@@ -3549,13 +3559,15 @@ var productionsTable = ProdTab{
 		Index:      308,
 		NumSymbols: 9,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return dsl.NewASTNodeQuaternary(
+			return dsl.NewASTNodeWithErrorReturn(
 				X[0], // for
-				X[2], // start
-				X[4], // continuation
-				X[6], // update
-				X[8], // body
 				dsl.NodeTypeTripleForLoop,
+				[]interface{} {
+					X[2], // start
+					X[4], // continuation
+					X[6], // update
+					X[8], // body
+				},
 			)
 		},
 	},
