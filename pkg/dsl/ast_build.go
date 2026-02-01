@@ -52,7 +52,7 @@ func NewASTNode(
 	itok interface{},
 	nodeType TNodeType,
 	children []interface{},
-) (*ASTNode, error) {
+) *ASTNode {
 
 	var tok *token.Token = nil
 	if itok != nil {
@@ -66,7 +66,7 @@ func NewASTNode(
 	}
 
 	if children == nil {
-		return node, nil
+		return node
 	}
 
 	n := len(children)
@@ -74,12 +74,18 @@ func NewASTNode(
 	for i, child := range children {
 		node.Children[i] = child.(*ASTNode)
 	}
-	return node, nil
+	return node
+}
+
+// Pass-through expressions in the grammar sometimes need to be turned from
+// (ASTNode) to (ASTNode, error). This is for GOCC.
+func WithErrorReturn(iparent interface{}) (*ASTNode, error) {
+	return iparent.(*ASTNode), nil
 }
 
 // ----------------------------------------------------------------
 func NewASTNodeTerminal(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
-	return NewASTNode(itok, nodeType, nil)
+	return NewASTNode(itok, nodeType, nil), nil
 }
 
 // For handling empty expressions.
@@ -151,7 +157,7 @@ func NewASTNodeStripDoubleQuotePair(
 }
 
 func NewASTNodeZary(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
-	return NewASTNode(itok, nodeType, []interface{}{})
+	return NewASTNode(itok, nodeType, []interface{}{}), nil
 }
 
 func NewASTNodeUnaryNestable(itok, childA interface{}, nodeType TNodeType) *ASTNode {
@@ -161,7 +167,7 @@ func NewASTNodeUnaryNestable(itok, childA interface{}, nodeType TNodeType) *ASTN
 }
 
 func NewASTNodeUnary(itok, childA interface{}, nodeType TNodeType) (*ASTNode, error) {
-	return NewASTNode(itok, nodeType, []interface{}{childA})
+	return NewASTNode(itok, nodeType, []interface{}{childA}), nil
 }
 
 // Signature: Token Node Node Type
@@ -175,11 +181,11 @@ func NewASTNodeBinaryNestable(itok, childA, childB interface{}, nodeType TNodeTy
 func NewASTNodeBinary(
 	itok, childA, childB interface{}, nodeType TNodeType,
 ) (*ASTNode, error) {
-	return NewASTNode(itok, nodeType, []interface{}{childA, childB})
+	return NewASTNode(itok, nodeType, []interface{}{childA, childB}), nil
 }
 
 func NewASTNodeTernary(itok, childA, childB, childC interface{}, nodeType TNodeType) (*ASTNode, error) {
-	return NewASTNode(itok, nodeType, []interface{}{childA, childB, childC})
+	return NewASTNode(itok, nodeType, []interface{}{childA, childB, childC}), nil
 }
 
 func NewASTNodeQuaternary(
@@ -188,12 +194,6 @@ func NewASTNodeQuaternary(
 	parent := NewASTNodeNestable(itok, nodeType)
 	convertToQuaternary(parent, childA, childB, childC, childD)
 	return parent, nil
-}
-
-// Pass-through expressions in the grammar sometimes need to be turned from
-// (ASTNode) to (ASTNode, error)
-func Nestable(iparent interface{}) (*ASTNode, error) {
-	return iparent.(*ASTNode), nil
 }
 
 func convertToZary(iparent interface{}) {

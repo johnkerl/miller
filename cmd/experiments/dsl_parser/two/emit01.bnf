@@ -36,54 +36,54 @@ Root
 // parser/AST logic simpler.
 EmitStatement
   : emit Rvalue
-    << dsl.NewASTNode(
+    << dsl.WithErrorReturn(dsl.NewASTNode(
     $0,
     dsl.NodeTypeEmitStatement,
     []interface{}{
       $1,
     }
-    ) >>
+    )) >>
 
   | emit Rvalue "," EmitArgs
-    << dsl.NewASTNode(
+    << dsl.WithErrorReturn(dsl.NewASTNode(
     $0,
     dsl.NodeTypeEmitStatement,
     []interface{}{
       $1,
       $3,
     }
-    ) >>
+    )) >>
 
   | emit "(" EmitArgs ")"
-    << dsl.NewASTNode(
+    << dsl.WithErrorReturn(dsl.NewASTNode(
     $0,
     dsl.NodeTypeEmitStatement,
     []interface{}{
       $2,
     }
-    ) >>
+    )) >>
 
   | emit "(" EmitArgs ")" "," EmitArgs
-    << dsl.NewASTNode(
+    << dsl.WithErrorReturn(dsl.NewASTNode(
     $0,
     dsl.NodeTypeEmitStatement,
     []interface{}{
       $2,
       $5,
     }
-    ) >>
+    )) >>
 ;
 
 // ----------------------------------------------------------------
 EmitArgs
   : Rvalue
-    << dsl.NewASTNode(
+    << dsl.WithErrorReturn(dsl.NewASTNode(
     nil,
     dsl.NodeTypeFunctionCallsite,
     []interface{}{
       $0,
     }
-    ) >>
+    )) >>
 
   | Rvalue "," EmitArgs
     << dsl.PrependChild(
@@ -95,23 +95,23 @@ EmitArgs
 // ----------------------------------------------------------------
 FcnArgs
   : Rvalue
-    << dsl.NewASTNode(
+    << dsl.WithErrorReturn(dsl.NewASTNode(
     nil,
     dsl.NodeTypeFunctionCallsite,
     []interface{}{
       $0,
     }
-    ) >>
+    )) >>
 
   // Allow trailing final comma, especially for multiline statements
   | Rvalue ","
-    << dsl.NewASTNode(
+    << dsl.WithErrorReturn(dsl.NewASTNode(
     nil,
     dsl.NodeTypeFunctionCallsite,
     []interface{}{
       $0,
     }
-    ) >>
+    )) >>
 
   // Allow trailing final comma, especially for multiline statements
   | Rvalue "," FcnArgs
@@ -129,19 +129,19 @@ Rvalue
 ;
 
 Literal
-  : "x" << dsl.NewASTNode(
+  : "x" << dsl.WithErrorReturn(dsl.NewASTNode(
   $0,
   dsl.NodeTypeStringLiteral,
   []interface{}{}
-  ) >>
-  | "y" << dsl.NewASTNode(
+  )) >>
+  | "y" << dsl.WithErrorReturn(dsl.NewASTNode(
   $0,
   dsl.NodeTypeStringLiteral,
   []interface{}{}
-  ) >>
-  | "z" << dsl.NewASTNode(
+  )) >>
+  | "z" << dsl.WithErrorReturn(dsl.NewASTNode(
   $0,
   dsl.NodeTypeStringLiteral,
   []interface{}{}
-  ) >>
+  )) >>
 ;
