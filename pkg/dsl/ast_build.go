@@ -138,19 +138,6 @@ func NewASTNodeStripDoubleQuotePair(
 	return NewASTNodeTerminal(newToken, nodeType), nil
 }
 
-func NewASTNodeUnaryNestable(itok, childA interface{}, nodeType TNodeType) *ASTNode {
-	parent := NewASTNodeTerminal(itok, nodeType)
-	convertToUnary(parent, childA)
-	return parent
-}
-
-// XXX REMOVE
-func NewASTNodeBinaryNestable(itok, childA, childB interface{}, nodeType TNodeType) *ASTNode {
-	parent := NewASTNodeTerminal(itok, nodeType)
-	convertToBinary(parent, childA, childB)
-	return parent
-}
-
 // Signature: Token Node Node Type
 func convertToZary(iparent interface{}) {
 	parent := iparent.(*ASTNode)
