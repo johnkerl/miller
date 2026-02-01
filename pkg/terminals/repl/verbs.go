@@ -633,7 +633,7 @@ func writeRecord(repl *Repl, outrec *mlrval.Mlrmap) {
 			outrec.Unflatten(repl.options.WriterOptions.FLATSEP)
 		}
 	}
-	// XXX TEMP
+	// Write and flush immediately for REPL output.
 	repl.recordWriter.Write(outrec, nil, repl.bufferedRecordOutputStream, true /*outputIsStdout*/)
 	repl.bufferedRecordOutputStream.Flush()
 }
