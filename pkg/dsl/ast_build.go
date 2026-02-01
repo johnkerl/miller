@@ -138,13 +138,6 @@ func NewASTNodeStripDoubleQuotePair(
 	return NewASTNodeTerminal(newToken, nodeType), nil
 }
 
-// Signature: Token Node Node Type
-func convertToZary(iparent interface{}) {
-	parent := iparent.(*ASTNode)
-	children := make([]*ASTNode, 0)
-	parent.Children = children
-}
-
 // xxx inline this. can be a one-liner.
 func convertToUnary(iparent interface{}, childA interface{}) {
 	parent := iparent.(*ASTNode)
@@ -170,24 +163,13 @@ func convertToTernary(iparent interface{}, childA, childB, childC interface{}) {
 	parent.Children = children
 }
 
-func convertToQuaternary(iparent interface{}, childA, childB, childC, childD interface{}) {
-	parent := iparent.(*ASTNode)
-	children := make([]*ASTNode, 4)
-	children[0] = childA.(*ASTNode)
-	children[1] = childB.(*ASTNode)
-	children[2] = childC.(*ASTNode)
-	children[3] = childD.(*ASTNode)
-	parent.Children = children
-}
-
 func PrependChild(iparent interface{}, ichild interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	child := ichild.(*ASTNode)
 	if parent.Children == nil {
-		convertToUnary(iparent, ichild)
-	} else {
-		parent.Children = append([]*ASTNode{child}, parent.Children...)
+		parent.Children = make([]*ASTNode, 1)
 	}
+	parent.Children = append([]*ASTNode{child}, parent.Children...)
 	return parent, nil
 }
 
@@ -196,20 +178,18 @@ func PrependTwoChildren(iparent interface{}, ichildA, ichildB interface{}) (*AST
 	childA := ichildA.(*ASTNode)
 	childB := ichildB.(*ASTNode)
 	if parent.Children == nil {
-		convertToBinary(iparent, ichildA, ichildB)
-	} else {
-		parent.Children = append([]*ASTNode{childA, childB}, parent.Children...)
+		parent.Children = make([]*ASTNode, 2)
 	}
+	parent.Children = append([]*ASTNode{childA, childB}, parent.Children...)
 	return parent, nil
 }
 
 func AppendChild(iparent interface{}, child interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	if parent.Children == nil {
-		convertToUnary(iparent, child)
-	} else {
-		parent.Children = append(parent.Children, child.(*ASTNode))
+		parent.Children = make([]*ASTNode, 1)
 	}
+	parent.Children = append(parent.Children, child.(*ASTNode))
 	return parent, nil
 }
 
