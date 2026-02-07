@@ -1985,7 +1985,9 @@ dsl.NewASTNodeWithErrorReturn(
 ;
 
 EqneTerm
-  : EqneTerm "=~"  CmpTerm << dsl.NewASTNodeWithErrorReturn(
+  : EqneTerm "=~"  CmpTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -1995,7 +1997,9 @@ EqneTerm
   )
 
 >>
-  | EqneTerm "!=~" CmpTerm << dsl.NewASTNodeWithErrorReturn(
+  | EqneTerm "!=~" CmpTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2005,7 +2009,9 @@ EqneTerm
   )
 
 >>
-  | EqneTerm "=="  CmpTerm << dsl.NewASTNodeWithErrorReturn(
+  | EqneTerm "=="  CmpTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2015,7 +2021,9 @@ EqneTerm
   )
 
 >>
-  | EqneTerm "!="  CmpTerm << dsl.NewASTNodeWithErrorReturn(
+  | EqneTerm "!="  CmpTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2025,7 +2033,9 @@ EqneTerm
   )
 
 >>
-  | EqneTerm "<=>" CmpTerm << dsl.NewASTNodeWithErrorReturn(
+  | EqneTerm "<=>" CmpTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2039,7 +2049,9 @@ EqneTerm
 ;
 
 CmpTerm
-  : CmpTerm ">"  BitwiseORTerm << dsl.NewASTNodeWithErrorReturn(
+  : CmpTerm ">"  BitwiseORTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2049,7 +2061,9 @@ CmpTerm
   )
 
 >>
-  | CmpTerm ">=" BitwiseORTerm << dsl.NewASTNodeWithErrorReturn(
+  | CmpTerm ">=" BitwiseORTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2059,7 +2073,9 @@ CmpTerm
   )
 
 >>
-  | CmpTerm "<"  BitwiseORTerm << dsl.NewASTNodeWithErrorReturn(
+  | CmpTerm "<"  BitwiseORTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2069,7 +2085,9 @@ CmpTerm
   )
 
 >>
-  | CmpTerm "<=" BitwiseORTerm << dsl.NewASTNodeWithErrorReturn(
+  | CmpTerm "<=" BitwiseORTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2083,7 +2101,9 @@ CmpTerm
 ;
 
 BitwiseORTerm
-  : BitwiseORTerm "|" BitwiseXORTerm << dsl.NewASTNodeWithErrorReturn(
+  : BitwiseORTerm "|" BitwiseXORTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2097,7 +2117,9 @@ BitwiseORTerm
 ;
 
 BitwiseXORTerm
-  : BitwiseXORTerm "^" BitwiseANDTerm << dsl.NewASTNodeWithErrorReturn(
+  : BitwiseXORTerm "^" BitwiseANDTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2111,7 +2133,9 @@ BitwiseXORTerm
 ;
 
 BitwiseANDTerm
-  : BitwiseANDTerm "&" BitwiseShiftTerm << dsl.NewASTNodeWithErrorReturn(
+  : BitwiseANDTerm "&" BitwiseShiftTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2125,7 +2149,9 @@ BitwiseANDTerm
 ;
 
 BitwiseShiftTerm
-  : BitwiseShiftTerm "<<"  AddsubdotTerm << dsl.NewASTNodeWithErrorReturn(
+  : BitwiseShiftTerm "<<"  AddsubdotTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2135,7 +2161,9 @@ BitwiseShiftTerm
   )
 
 >>
-  | BitwiseShiftTerm ">>"  AddsubdotTerm << dsl.NewASTNodeWithErrorReturn(
+  | BitwiseShiftTerm ">>"  AddsubdotTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2145,7 +2173,9 @@ BitwiseShiftTerm
   )
 
 >>
-  | BitwiseShiftTerm ">>>" AddsubdotTerm << dsl.NewASTNodeWithErrorReturn(
+  | BitwiseShiftTerm ">>>" AddsubdotTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2159,7 +2189,9 @@ BitwiseShiftTerm
 ;
 
 AddsubdotTerm
-  : AddsubdotTerm "+"  MuldivTerm << dsl.NewASTNodeWithErrorReturn(
+  : AddsubdotTerm "+"  MuldivTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2169,7 +2201,9 @@ AddsubdotTerm
   )
 
 >>
-  | AddsubdotTerm "-"  MuldivTerm << dsl.NewASTNodeWithErrorReturn(
+  | AddsubdotTerm "-"  MuldivTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2179,7 +2213,9 @@ AddsubdotTerm
   )
 
 >>
-  | AddsubdotTerm ".+" MuldivTerm << dsl.NewASTNodeWithErrorReturn(
+  | AddsubdotTerm ".+" MuldivTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2189,7 +2225,9 @@ AddsubdotTerm
   )
 
 >>
-  | AddsubdotTerm ".-" MuldivTerm << dsl.NewASTNodeWithErrorReturn(
+  | AddsubdotTerm ".-" MuldivTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2203,7 +2241,9 @@ AddsubdotTerm
 ;
 
 MuldivTerm
-  : MuldivTerm "*"   DotTerm << dsl.NewASTNodeWithErrorReturn(
+  : MuldivTerm "*"   DotTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2213,7 +2253,9 @@ MuldivTerm
   )
 
 >>
-  | MuldivTerm "/"   DotTerm << dsl.NewASTNodeWithErrorReturn(
+  | MuldivTerm "/"   DotTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2223,7 +2265,9 @@ MuldivTerm
   )
 
 >>
-  | MuldivTerm "//"  DotTerm << dsl.NewASTNodeWithErrorReturn(
+  | MuldivTerm "//"  DotTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2233,7 +2277,9 @@ MuldivTerm
   )
 
 >>
-  | MuldivTerm "%"   DotTerm << dsl.NewASTNodeWithErrorReturn(
+  | MuldivTerm "%"   DotTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2243,7 +2289,9 @@ MuldivTerm
   )
 
 >>
-  | MuldivTerm ".*"  DotTerm << dsl.NewASTNodeWithErrorReturn(
+  | MuldivTerm ".*"  DotTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2253,7 +2301,9 @@ MuldivTerm
   )
 
 >>
-  | MuldivTerm "./"  DotTerm << dsl.NewASTNodeWithErrorReturn(
+  | MuldivTerm "./"  DotTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2263,7 +2313,9 @@ MuldivTerm
   )
 
 >>
-  | MuldivTerm ".//" DotTerm << dsl.NewASTNodeWithErrorReturn(
+  | MuldivTerm ".//" DotTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2277,7 +2329,9 @@ MuldivTerm
 ;
 
 DotTerm
-  : DotTerm "."  UnaryOpTerm << dsl.NewASTNodeWithErrorReturn(
+  : DotTerm "."  UnaryOpTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeDotOperator,
   []interface{}{
@@ -2291,7 +2345,9 @@ DotTerm
 ;
 
 UnaryOpTerm
-  : "+"  UnaryOpTerm << dsl.NewASTNodeWithErrorReturn(
+  : "+"  UnaryOpTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $0,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2300,7 +2356,9 @@ UnaryOpTerm
   )
 
 >>
-  | "-"  UnaryOpTerm << dsl.NewASTNodeWithErrorReturn(
+  | "-"  UnaryOpTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $0,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2309,7 +2367,9 @@ UnaryOpTerm
   )
 
 >>
-  | ".+" UnaryOpTerm << dsl.NewASTNodeWithErrorReturn(
+  | ".+" UnaryOpTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $0,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2318,7 +2378,9 @@ UnaryOpTerm
   )
 
 >>
-  | ".-" UnaryOpTerm << dsl.NewASTNodeWithErrorReturn(
+  | ".-" UnaryOpTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $0,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2327,7 +2389,9 @@ UnaryOpTerm
   )
 
 >>
-  | "!"  UnaryOpTerm << dsl.NewASTNodeWithErrorReturn(
+  | "!"  UnaryOpTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $0,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2336,7 +2400,9 @@ UnaryOpTerm
   )
 
 >>
-  | "~"  UnaryOpTerm << dsl.NewASTNodeWithErrorReturn(
+  | "~"  UnaryOpTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $0,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2402,7 +2468,9 @@ dsl.NewASTNodeWithErrorReturn(
   // we need to be explicit about '2 ** -3' in a way that we do not need to for '2 * -3'.  Also, we
   // can't use 'PrecedenceChainEnd "**" UnaryOpTerm', as this also results in LR1 conflicts.
 
-  | PrecedenceChainEnd "**" "-" PowTerm << dsl.NewASTNodeWithErrorReturn(
+  | PrecedenceChainEnd "**" "-" PowTerm
+<<
+dsl.NewASTNodeWithErrorReturn(
   $1,
   dsl.NodeTypeOperator,
   []interface{}{
@@ -2754,43 +2822,67 @@ dsl.NewASTNodeWithErrorReturn(
 MlrvalOrFunction : ContextVariable ;
 
 ContextVariable
-  : ctx_IPS << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
+  : ctx_IPS
+<<
+dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
 
 >>
-  | ctx_IFS << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
+  | ctx_IFS
+<<
+dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
 
 >>
-  | ctx_IRS << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-
->>
-
-  | ctx_OPS << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-
->>
-  | ctx_OFS << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-
->>
-  | ctx_ORS << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-
->>
-  | ctx_FLATSEP << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
+  | ctx_IRS
+<<
+dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
 
 >>
 
-  | ctx_NF  << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
+  | ctx_OPS
+<<
+dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
 
 >>
-  | ctx_NR  << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
+  | ctx_OFS
+<<
+dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
 
 >>
-  | ctx_FNR << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
+  | ctx_ORS
+<<
+dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
+
+>>
+  | ctx_FLATSEP
+<<
+dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
 
 >>
 
-  | ctx_FILENAME << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
+  | ctx_NF
+<<
+ dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
 
 >>
-  | ctx_FILENUM  << dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
+  | ctx_NR
+<<
+ dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
+
+>>
+  | ctx_FNR
+<<
+dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
+
+>>
+
+  | ctx_FILENAME
+<<
+dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
+
+>>
+  | ctx_FILENUM
+<<
+ dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
 
 >>
 ;
