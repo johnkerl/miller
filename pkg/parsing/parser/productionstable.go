@@ -41,10 +41,10 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `StatementBlock : empty	<< dsl.NewASTNodeWithErrorReturn(
-      nil,
-      dsl.NodeTypeStatementBlock,
-      []interface{}{},
-    ) >>`,
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{},
+      ) >>`,
 		Id:         "StatementBlock",
 		NTType:     2,
 		Index:      2,
@@ -69,12 +69,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `NonEmptyStatementBlock : BracelessStatement	<< dsl.NewASTNodeWithErrorReturn(
-      nil,
-      dsl.NodeTypeStatementBlock,
-      []interface{}{
-        X[0],
-      },
-    ) >>`,
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "NonEmptyStatementBlock",
 		NTType:     3,
 		Index:      4,
@@ -91,12 +91,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `NonEmptyStatementBlock : BracefulStatement	<< dsl.NewASTNodeWithErrorReturn(
-      nil,
-      dsl.NodeTypeStatementBlock,
-      []interface{}{
-        X[0],
-      },
-    ) >>`,
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "NonEmptyStatementBlock",
 		NTType:     3,
 		Index:      5,
@@ -153,13 +153,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `NonEmptyStatementBlock : BracefulStatement BracelessStatement	<< dsl.NewASTNodeWithErrorReturn(
-      nil,
-      dsl.NodeTypeStatementBlock,
-      []interface{}{
-        X[0],
-        X[1],
-      },
-    ) >>`,
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{
+          X[0],
+          X[1],
+        },
+      ) >>`,
 		Id:         "NonEmptyStatementBlock",
 		NTType:     3,
 		Index:      10,
@@ -177,13 +177,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `NonEmptyStatementBlock : BracefulStatement BracelessStatement ";"	<< dsl.NewASTNodeWithErrorReturn(
-      nil,
-      dsl.NodeTypeStatementBlock,
-      []interface{}{
-        X[0],
-        X[1],
-      },
-    ) >>`,
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{
+          X[0],
+          X[1],
+        },
+      ) >>`,
 		Id:         "NonEmptyStatementBlock",
 		NTType:     3,
 		Index:      11,
@@ -421,13 +421,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-      X[1],
-      dsl.NodeTypeAssignment,
-      []interface{}{
-        X[0],
-        X[2],
-      },
-    ) >>`,
+        X[1],
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      34,
@@ -487,12 +487,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `BareBoolean : Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-      nil,
-      dsl.NodeTypeBareBoolean,
-      []interface{}{
-        X[0],
-      },
-    ) >>`,
+        nil,
+        dsl.NodeTypeBareBoolean,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "BareBoolean",
 		NTType:     9,
 		Index:      38,
@@ -509,12 +509,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `FilterStatement : filter Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-      X[0],
-      dsl.NodeTypeFilterStatement,
-      []interface{}{
-        X[1],
-      },
-    ) >>`,
+        X[0],
+        dsl.NodeTypeFilterStatement,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "FilterStatement",
 		NTType:     10,
 		Index:      39,
@@ -531,12 +531,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Redirector : ">" RedirectTarget	<< dsl.NewASTNodeWithErrorReturn(
-      X[0],
-      dsl.NodeTypeRedirectWrite,
-      []interface{}{
-        X[1],
-      },
-    ) >>`,
+        X[0],
+        dsl.NodeTypeRedirectWrite,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "Redirector",
 		NTType:     11,
 		Index:      40,
@@ -553,12 +553,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Redirector : ">>" RedirectTarget	<< dsl.NewASTNodeWithErrorReturn(
-      X[0],
-      dsl.NodeTypeRedirectAppend,
-      []interface{}{
-        X[1],
-      },
-    ) >>`,
+        X[0],
+        dsl.NodeTypeRedirectAppend,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "Redirector",
 		NTType:     11,
 		Index:      41,
@@ -575,12 +575,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Redirector : "|" RedirectTarget	<< dsl.NewASTNodeWithErrorReturn(
-      X[0],
-      dsl.NodeTypeRedirectPipe,
-      []interface{}{
-        X[1],
-      },
-    ) >>`,
+        X[0],
+        dsl.NodeTypeRedirectPipe,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "Redirector",
 		NTType:     11,
 		Index:      42,
@@ -597,10 +597,10 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `RedirectTarget : stdout	<< dsl.NewASTNodeWithErrorReturn(
-      X[0],
-      dsl.NodeTypeRedirectTargetStdout,
-      []interface{}{},
-    ) >>`,
+        X[0],
+        dsl.NodeTypeRedirectTargetStdout,
+        []interface{}{},
+      ) >>`,
 		Id:         "RedirectTarget",
 		NTType:     12,
 		Index:      43,
@@ -615,10 +615,10 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `RedirectTarget : stderr	<< dsl.NewASTNodeWithErrorReturn(
-      X[0],
-      dsl.NodeTypeRedirectTargetStderr,
-      []interface{}{},
-    ) >>`,
+        X[0],
+        dsl.NodeTypeRedirectTargetStderr,
+        []interface{}{},
+      ) >>`,
 		Id:         "RedirectTarget",
 		NTType:     12,
 		Index:      44,
@@ -728,7 +728,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `PrintStatement : print Redirector "," FcnArgs	<< dsl.NewASTNodeWithErrorReturn(
         X[0],
-          dsl.NodeTypePrintStatement, // redirect
+        dsl.NodeTypePrintStatement, // redirect
         []interface{}{
           // print
           X[3],
@@ -756,7 +756,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `PrintnStatement : printn	<< dsl.NewASTNodeWithErrorReturn(
         X[0],
-          dsl.NodeTypePrintnStatement, // no redirect
+        dsl.NodeTypePrintnStatement, // no redirect
         []interface{}{
           // printn
           dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
@@ -812,7 +812,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `PrintnStatement : printn FcnArgs	<< dsl.NewASTNodeWithErrorReturn(
         X[0],
-          dsl.NodeTypePrintnStatement, // no redirect
+        dsl.NodeTypePrintnStatement, // no redirect
         []interface{}{
           // printn
           X[1],
@@ -1131,13 +1131,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `TeeStatement : tee Redirector "," FullSrec	<< dsl.NewASTNodeWithErrorReturn(
-      X[0],
-      dsl.NodeTypeTeeStatement,
-      []interface{}{
-        X[3],
-        X[1],
-      },
-    ) >>`,
+        X[0],
+        dsl.NodeTypeTeeStatement,
+        []interface{}{
+          X[3],
+          X[1],
+        },
+      ) >>`,
 		Id:         "TeeStatement",
 		NTType:     19,
 		Index:      64,
@@ -1157,7 +1157,7 @@ var productionsTable = ProdTab{
 		String: `EmitFStatement : emitf EmittableList	<< dsl.NewASTNodeWithErrorReturn(
         X[0],
         // no redirect
-          dsl.NodeTypeEmitFStatement,
+        dsl.NodeTypeEmitFStatement,
         []interface{}{
           // emitf
           X[1],
@@ -1289,7 +1289,7 @@ var productionsTable = ProdTab{
           X[2], // emit
           dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // emittables
           dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
-      },
+        },
       ) >>`,
 		Id:         "EmitStatement",
 		NTType:     22,
@@ -1671,9 +1671,9 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `EmittableList : Emittable "," EmittableList	<< dsl.WithChildPrepended(
-      X[2],
-      X[0],
-    ) >>`,
+        X[2],
+        X[0],
+      ) >>`,
 		Id:         "EmittableList",
 		NTType:     24,
 		Index:      85,
@@ -1687,12 +1687,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `EmittableAsList : Emittable	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeEmittableList,
-    []interface{}{
-      X[0],
-    },
-  ) >>`,
+        nil,
+        dsl.NodeTypeEmittableList,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "EmittableAsList",
 		NTType:     25,
 		Index:      86,
@@ -1809,12 +1809,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `EmitKeys : Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-      nil,
-      dsl.NodeTypeEmitKeys,
-      []interface{}{
-        X[0],
-      },
-    ) >>`,
+        nil,
+        dsl.NodeTypeEmitKeys,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "EmitKeys",
 		NTType:     27,
 		Index:      97,
@@ -1831,9 +1831,9 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `EmitKeys : Rvalue "," EmitKeys	<< dsl.WithChildPrepended(
-      X[2],
-      X[0],
-    ) >>`,
+        X[2],
+        X[0],
+      ) >>`,
 		Id:         "EmitKeys",
 		NTType:     27,
 		Index:      98,
@@ -1907,12 +1907,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `IndirectFieldValue : "$[" Rvalue "]"	<< dsl.NewASTNodeWithErrorReturn(
-      dsl.NewASTToken("$[]", X[0]),
-      dsl.NodeTypeIndirectFieldValue,
-      []interface{}{
-        X[1],
-      },
-    ) >>`,
+        dsl.NewASTToken("$[]", X[0]),
+        dsl.NodeTypeIndirectFieldValue,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "IndirectFieldValue",
 		NTType:     30,
 		Index:      105,
@@ -1939,12 +1939,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `PositionalFieldName : "$[[" Rvalue "]" "]"	<< dsl.NewASTNodeWithErrorReturn(
-      dsl.NewASTToken("$[]", X[0]),
-      dsl.NodeTypePositionalFieldName,
-      []interface{}{
-        X[1],
-      },
-    ) >>`,
+        dsl.NewASTToken("$[]", X[0]),
+        dsl.NodeTypePositionalFieldName,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "PositionalFieldName",
 		NTType:     32,
 		Index:      107,
@@ -1961,12 +1961,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `PositionalFieldValue : "$[[[" Rvalue "]" "]" "]"	<< dsl.NewASTNodeWithErrorReturn(
-      dsl.NewASTToken("$[]", X[0]),
-      dsl.NodeTypePositionalFieldValue,
-      []interface{}{
-        X[1],
-      },
-    ) >>`,
+        dsl.NewASTToken("$[]", X[0]),
+        dsl.NodeTypePositionalFieldValue,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "PositionalFieldValue",
 		NTType:     33,
 		Index:      108,
@@ -2033,12 +2033,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `IndirectOosvarValue : "@[" Rvalue "]"	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("@[]", X[0]),
-    dsl.NodeTypeIndirectOosvarValue,
-    []interface{}{
-      X[1],
-    },
-    ) >>`,
+        dsl.NewASTToken("@[]", X[0]),
+        dsl.NodeTypeIndirectOosvarValue,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "IndirectOosvarValue",
 		NTType:     37,
 		Index:      114,
@@ -2185,13 +2185,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "||=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("||", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("||", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      128,
@@ -2209,13 +2209,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "^^=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("^^", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("^^", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      129,
@@ -2233,13 +2233,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "&&=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("&&", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("&&", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      130,
@@ -2257,13 +2257,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "??=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("??", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("??", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      131,
@@ -2281,13 +2281,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "???=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("???", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("???", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      132,
@@ -2305,13 +2305,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "|=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("|", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("|", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      133,
@@ -2329,13 +2329,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "&=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("^", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("^", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      134,
@@ -2353,13 +2353,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "^=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("^", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("^", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      135,
@@ -2377,13 +2377,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "<<=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("<<", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("<<", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      136,
@@ -2401,13 +2401,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue ">>=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken(">"+">", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken(">"+">", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      137,
@@ -2425,13 +2425,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue ">>>=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken(">"+">"+">", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken(">"+">"+">", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      138,
@@ -2449,13 +2449,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "+=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("+", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("+", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      139,
@@ -2473,13 +2473,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue ".=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken(".", X[1]), dsl.NodeTypeDotOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken(".", X[1]), dsl.NodeTypeDotOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      140,
@@ -2497,13 +2497,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "-=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("-", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("-", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      141,
@@ -2521,13 +2521,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "*=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("*", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("*", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      142,
@@ -2545,13 +2545,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "/=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("/", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("/", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      143,
@@ -2569,13 +2569,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "//=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("//", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("//", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      144,
@@ -2593,13 +2593,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "%=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("%", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("%", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      145,
@@ -2617,13 +2617,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `Assignment : Lvalue "**=" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("=", X[1]),
-    dsl.NodeTypeAssignment,
-    []interface{}{
-      X[0],
-      dsl.NewASTNode(dsl.NewASTToken("**", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
-    },
-    ) >>`,
+        dsl.NewASTToken("=", X[1]),
+        dsl.NodeTypeAssignment,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(dsl.NewASTToken("**", X[1]), dsl.NodeTypeOperator, []interface{}{X[0], X[2]}),
+        },
+      ) >>`,
 		Id:         "Assignment",
 		NTType:     6,
 		Index:      146,
@@ -2661,14 +2661,14 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `TernaryTerm : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("?:", X[1]),
-    dsl.NodeTypeOperator,
-    []interface{}{
-      X[0],
-      X[2],
-      X[4],
-    },
-    ) >>`,
+        dsl.NewASTToken("?:", X[1]),
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+          X[4],
+        },
+      ) >>`,
 		Id:         "TernaryTerm",
 		NTType:     44,
 		Index:      149,
@@ -2697,13 +2697,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `LogicalOrTerm : LogicalOrTerm "||" LogicalXORTerm	<< dsl.NewASTNodeWithErrorReturn(
-    X[1],
-    dsl.NodeTypeOperator,
-    []interface{}{
-      X[0],
-      X[2],
-    },
-    ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "LogicalOrTerm",
 		NTType:     45,
 		Index:      151,
@@ -2731,13 +2731,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `LogicalXORTerm : LogicalXORTerm "^^" LogicalAndTerm	<< dsl.NewASTNodeWithErrorReturn(
-    X[1],
-    dsl.NodeTypeOperator,
-    []interface{}{
-      X[0],
-      X[2],
-    },
-    ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "LogicalXORTerm",
 		NTType:     46,
 		Index:      153,
@@ -2765,13 +2765,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `LogicalAndTerm : LogicalAndTerm "&&" EqneTerm	<< dsl.NewASTNodeWithErrorReturn(
-    X[1],
-    dsl.NodeTypeOperator,
-    []interface{}{
-      X[0],
-      X[2],
-    },
-    ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "LogicalAndTerm",
 		NTType:     47,
 		Index:      155,
@@ -2799,13 +2799,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `EqneTerm : EqneTerm "=~" CmpTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "EqneTerm",
 		NTType:     48,
 		Index:      157,
@@ -2823,13 +2823,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `EqneTerm : EqneTerm "!=~" CmpTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "EqneTerm",
 		NTType:     48,
 		Index:      158,
@@ -2847,13 +2847,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `EqneTerm : EqneTerm "==" CmpTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "EqneTerm",
 		NTType:     48,
 		Index:      159,
@@ -2871,13 +2871,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `EqneTerm : EqneTerm "!=" CmpTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "EqneTerm",
 		NTType:     48,
 		Index:      160,
@@ -2895,13 +2895,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `EqneTerm : EqneTerm "<=>" CmpTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "EqneTerm",
 		NTType:     48,
 		Index:      161,
@@ -2929,13 +2929,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `CmpTerm : CmpTerm ">" BitwiseORTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "CmpTerm",
 		NTType:     49,
 		Index:      163,
@@ -2953,13 +2953,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `CmpTerm : CmpTerm ">=" BitwiseORTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "CmpTerm",
 		NTType:     49,
 		Index:      164,
@@ -2977,13 +2977,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `CmpTerm : CmpTerm "<" BitwiseORTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "CmpTerm",
 		NTType:     49,
 		Index:      165,
@@ -3001,13 +3001,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `CmpTerm : CmpTerm "<=" BitwiseORTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "CmpTerm",
 		NTType:     49,
 		Index:      166,
@@ -3035,13 +3035,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `BitwiseORTerm : BitwiseORTerm "|" BitwiseXORTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "BitwiseORTerm",
 		NTType:     50,
 		Index:      168,
@@ -3069,13 +3069,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `BitwiseXORTerm : BitwiseXORTerm "^" BitwiseANDTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "BitwiseXORTerm",
 		NTType:     51,
 		Index:      170,
@@ -3103,13 +3103,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `BitwiseANDTerm : BitwiseANDTerm "&" BitwiseShiftTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "BitwiseANDTerm",
 		NTType:     52,
 		Index:      172,
@@ -3137,13 +3137,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `BitwiseShiftTerm : BitwiseShiftTerm "<<" AddsubdotTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "BitwiseShiftTerm",
 		NTType:     53,
 		Index:      174,
@@ -3161,13 +3161,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `BitwiseShiftTerm : BitwiseShiftTerm ">>" AddsubdotTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "BitwiseShiftTerm",
 		NTType:     53,
 		Index:      175,
@@ -3185,13 +3185,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `BitwiseShiftTerm : BitwiseShiftTerm ">>>" AddsubdotTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "BitwiseShiftTerm",
 		NTType:     53,
 		Index:      176,
@@ -3219,13 +3219,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `AddsubdotTerm : AddsubdotTerm "+" MuldivTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "AddsubdotTerm",
 		NTType:     54,
 		Index:      178,
@@ -3243,13 +3243,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `AddsubdotTerm : AddsubdotTerm "-" MuldivTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "AddsubdotTerm",
 		NTType:     54,
 		Index:      179,
@@ -3267,13 +3267,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `AddsubdotTerm : AddsubdotTerm ".+" MuldivTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "AddsubdotTerm",
 		NTType:     54,
 		Index:      180,
@@ -3291,13 +3291,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `AddsubdotTerm : AddsubdotTerm ".-" MuldivTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "AddsubdotTerm",
 		NTType:     54,
 		Index:      181,
@@ -3325,13 +3325,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MuldivTerm : MuldivTerm "*" DotTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "MuldivTerm",
 		NTType:     55,
 		Index:      183,
@@ -3349,13 +3349,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MuldivTerm : MuldivTerm "/" DotTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "MuldivTerm",
 		NTType:     55,
 		Index:      184,
@@ -3373,13 +3373,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MuldivTerm : MuldivTerm "//" DotTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "MuldivTerm",
 		NTType:     55,
 		Index:      185,
@@ -3397,13 +3397,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MuldivTerm : MuldivTerm "%" DotTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "MuldivTerm",
 		NTType:     55,
 		Index:      186,
@@ -3421,13 +3421,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MuldivTerm : MuldivTerm ".*" DotTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "MuldivTerm",
 		NTType:     55,
 		Index:      187,
@@ -3445,13 +3445,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MuldivTerm : MuldivTerm "./" DotTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "MuldivTerm",
 		NTType:     55,
 		Index:      188,
@@ -3469,13 +3469,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MuldivTerm : MuldivTerm ".//" DotTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "MuldivTerm",
 		NTType:     55,
 		Index:      189,
@@ -3503,13 +3503,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `DotTerm : DotTerm "." UnaryOpTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeDotOperator,
-  []interface{}{
-    X[0],
-    X[2],
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeDotOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "DotTerm",
 		NTType:     56,
 		Index:      191,
@@ -3537,12 +3537,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `UnaryOpTerm : "+" UnaryOpTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[0],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[1],
-  },
-  ) >>`,
+        X[0],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "UnaryOpTerm",
 		NTType:     57,
 		Index:      193,
@@ -3559,12 +3559,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `UnaryOpTerm : "-" UnaryOpTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[0],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[1],
-  },
-  ) >>`,
+        X[0],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "UnaryOpTerm",
 		NTType:     57,
 		Index:      194,
@@ -3581,12 +3581,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `UnaryOpTerm : ".+" UnaryOpTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[0],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[1],
-  },
-  ) >>`,
+        X[0],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "UnaryOpTerm",
 		NTType:     57,
 		Index:      195,
@@ -3603,12 +3603,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `UnaryOpTerm : ".-" UnaryOpTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[0],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[1],
-  },
-  ) >>`,
+        X[0],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "UnaryOpTerm",
 		NTType:     57,
 		Index:      196,
@@ -3625,12 +3625,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `UnaryOpTerm : "!" UnaryOpTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[0],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[1],
-  },
-  ) >>`,
+        X[0],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "UnaryOpTerm",
 		NTType:     57,
 		Index:      197,
@@ -3647,12 +3647,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `UnaryOpTerm : "~" UnaryOpTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[0],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[1],
-  },
-  ) >>`,
+        X[0],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "UnaryOpTerm",
 		NTType:     57,
 		Index:      198,
@@ -3679,13 +3679,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `AbsentCoalesceTerm : AbsentCoalesceTerm "??" EmptyCoalesceTerm	<< dsl.NewASTNodeWithErrorReturn(
-    X[1],
-    dsl.NodeTypeOperator,
-    []interface{}{
-      X[0],
-      X[2],
-    },
-    ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "AbsentCoalesceTerm",
 		NTType:     58,
 		Index:      200,
@@ -3713,13 +3713,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `EmptyCoalesceTerm : EmptyCoalesceTerm "???" PowTerm	<< dsl.NewASTNodeWithErrorReturn(
-    X[1],
-    dsl.NodeTypeOperator,
-    []interface{}{
-      X[0],
-      X[2],
-    },
-    ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "EmptyCoalesceTerm",
 		NTType:     59,
 		Index:      202,
@@ -3747,13 +3747,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `PowTerm : PrecedenceChainEnd "**" PowTerm	<< dsl.NewASTNodeWithErrorReturn(
-    X[1],
-    dsl.NodeTypeOperator,
-    []interface{}{
-      X[0],
-      X[2],
-    },
-    ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "PowTerm",
 		NTType:     60,
 		Index:      204,
@@ -3771,13 +3771,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `PowTerm : PrecedenceChainEnd "**" "-" PowTerm	<< dsl.NewASTNodeWithErrorReturn(
-  X[1],
-  dsl.NodeTypeOperator,
-  []interface{}{
-    X[0],
-    dsl.NewASTNode( X[2], dsl.NodeTypeOperator, []interface{}{X[3]}),
-  },
-  ) >>`,
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(X[2], dsl.NodeTypeOperator, []interface{}{X[3]}),
+        },
+      ) >>`,
 		Id:         "PowTerm",
 		NTType:     60,
 		Index:      205,
@@ -3795,16 +3795,16 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `PowTerm : PrecedenceChainEnd "**" "+" PowTerm	<< dsl.NewASTNodeWithErrorReturn(
-      X[1],
-      dsl.NodeTypeOperator,
-      []interface{}{
-        X[0],
-        dsl.NewASTNode(
-          X[2],
-          dsl.NodeTypeOperator,
-          []interface{}{X[3]},
-        ),
-      },
+        X[1],
+        dsl.NodeTypeOperator,
+        []interface{}{
+          X[0],
+          dsl.NewASTNode(
+            X[2],
+            dsl.NodeTypeOperator,
+            []interface{}{X[3]},
+          ),
+        },
       ) >>`,
 		Id:         "PowTerm",
 		NTType:     60,
@@ -3997,9 +3997,9 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MlrvalOrFunction : const_M_PI	<< dsl.NewASTNodeTerminalWithErrorReturn(
-      X[0],
-      dsl.NodeTypeConstant,
-    ) >>`,
+        X[0],
+        dsl.NodeTypeConstant,
+      ) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      224,
@@ -4013,9 +4013,9 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MlrvalOrFunction : const_M_E	<< dsl.NewASTNodeTerminalWithErrorReturn(
-      X[0],
-      dsl.NodeTypeConstant,
-    ) >>`,
+        X[0],
+        dsl.NodeTypeConstant,
+      ) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     62,
 		Index:      225,
@@ -4049,10 +4049,10 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ArrayLiteral : "[" "]"	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("[]", X[0]),
-    dsl.NodeTypeArrayLiteral,
-    []interface{}{},
-    ) >>`,
+        dsl.NewASTToken("[]", X[0]),
+        dsl.NodeTypeArrayLiteral,
+        []interface{}{},
+      ) >>`,
 		Id:         "ArrayLiteral",
 		NTType:     63,
 		Index:      228,
@@ -4089,12 +4089,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ArrayLiteralElements : Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeArrayLiteral,
-    []interface{}{
-      X[0],
-    },
-    ) >>`,
+        nil,
+        dsl.NodeTypeArrayLiteral,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "ArrayLiteralElements",
 		NTType:     64,
 		Index:      230,
@@ -4111,12 +4111,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ArrayLiteralElements : Rvalue ","	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeArrayLiteral,
-    []interface{}{
-      X[0],
-    },
-    ) >>`,
+        nil,
+        dsl.NodeTypeArrayLiteral,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "ArrayLiteralElements",
 		NTType:     64,
 		Index:      231,
@@ -4133,9 +4133,9 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ArrayLiteralElements : Rvalue "," ArrayLiteralElements	<< dsl.WithChildPrepended(
-      X[2],
-      X[0],
-    ) >>`,
+        X[2],
+        X[0],
+      ) >>`,
 		Id:         "ArrayLiteralElements",
 		NTType:     64,
 		Index:      232,
@@ -4159,10 +4159,10 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MapLiteral : "{" "}"	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("{}", X[0]),
-    dsl.NodeTypeMapLiteral,
-    []interface{}{},
-    ) >>`,
+        dsl.NewASTToken("{}", X[0]),
+        dsl.NodeTypeMapLiteral,
+        []interface{}{},
+      ) >>`,
 		Id:         "MapLiteral",
 		NTType:     65,
 		Index:      234,
@@ -4199,12 +4199,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MapLiteralKeyValuePairs : MapLiteralKeyValuePair	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeMapLiteral,
-    []interface{}{
-      X[0],
-    },
-    ) >>`,
+        nil,
+        dsl.NodeTypeMapLiteral,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "MapLiteralKeyValuePairs",
 		NTType:     66,
 		Index:      236,
@@ -4221,12 +4221,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MapLiteralKeyValuePairs : MapLiteralKeyValuePair ","	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeMapLiteral,
-    []interface{}{
-      X[0],
-    },
-    ) >>`,
+        nil,
+        dsl.NodeTypeMapLiteral,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "MapLiteralKeyValuePairs",
 		NTType:     66,
 		Index:      237,
@@ -4243,9 +4243,9 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MapLiteralKeyValuePairs : MapLiteralKeyValuePair "," MapLiteralKeyValuePairs	<< dsl.WithChildPrepended(
-      X[2],
-      X[0],
-    ) >>`,
+        X[2],
+        X[0],
+      ) >>`,
 		Id:         "MapLiteralKeyValuePairs",
 		NTType:     66,
 		Index:      238,
@@ -4259,13 +4259,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MapLiteralKeyValuePair : Rvalue ":" Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    X[1],
-    dsl.NodeTypeMapLiteralKeyValuePair,
-    []interface{}{
-      X[0],
-      X[2],
-    },
-    ) >>`,
+        X[1],
+        dsl.NodeTypeMapLiteralKeyValuePair,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "MapLiteralKeyValuePair",
 		NTType:     67,
 		Index:      239,
@@ -4423,12 +4423,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ENV : env "[" Rvalue "]"	<< dsl.NewASTNodeWithErrorReturn(
-      X[0],
-      dsl.NodeTypeEnvironmentVariable,
-      []interface{}{
-        X[2],
-      },
-    ) >>`,
+        X[0],
+        dsl.NodeTypeEnvironmentVariable,
+        []interface{}{
+          X[2],
+        },
+      ) >>`,
 		Id:         "ENV",
 		NTType:     69,
 		Index:      254,
@@ -4445,12 +4445,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ENV : env "." non_sigil_name	<< dsl.NewASTNodeWithErrorReturn(
-      X[0],
-      dsl.NodeTypeEnvironmentVariable,
-      []interface{}{
-        dsl.NewASTNodeTerminal(X[2], dsl.NodeTypeStringLiteral),
-      },
-    ) >>`,
+        X[0],
+        dsl.NodeTypeEnvironmentVariable,
+        []interface{}{
+          dsl.NewASTNodeTerminal(X[2], dsl.NodeTypeStringLiteral),
+        },
+      ) >>`,
 		Id:         "ENV",
 		NTType:     69,
 		Index:      255,
@@ -4507,13 +4507,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ArrayOrMapIndexAccess : MlrvalOrFunction "[" Rvalue "]"	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("[]", X[1]),
-    dsl.NodeTypeArrayOrMapIndexAccess,
-    []interface{}{
-      X[0],
-      X[2],
-    },
-    ) >>`,
+        dsl.NewASTToken("[]", X[1]),
+        dsl.NodeTypeArrayOrMapIndexAccess,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "ArrayOrMapIndexAccess",
 		NTType:     70,
 		Index:      260,
@@ -4531,13 +4531,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ArrayOrMapPositionalNameAccess : MlrvalOrFunction "[[" Rvalue "]" "]"	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("[]", X[1]),
-    dsl.NodeTypeArrayOrMapPositionalNameAccess,
-    []interface{}{
-      X[0],
-      X[2],
-    },
-    ) >>`,
+        dsl.NewASTToken("[]", X[1]),
+        dsl.NodeTypeArrayOrMapPositionalNameAccess,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "ArrayOrMapPositionalNameAccess",
 		NTType:     71,
 		Index:      261,
@@ -4555,13 +4555,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ArrayOrMapPositionalValueAccess : MlrvalOrFunction "[[[" Rvalue "]" "]" "]"	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("[]", X[1]),
-    dsl.NodeTypeArrayOrMapPositionalValueAccess,
-    []interface{}{
-      X[0],
-      X[2],
-    },
-    ) >>`,
+        dsl.NewASTToken("[]", X[1]),
+        dsl.NodeTypeArrayOrMapPositionalValueAccess,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "ArrayOrMapPositionalValueAccess",
 		NTType:     72,
 		Index:      262,
@@ -4579,14 +4579,14 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ArraySliceAccess : MlrvalOrFunction "[" Rvalue ":" Rvalue "]"	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("[]", X[1]),
-    dsl.NodeTypeArraySliceAccess,
-    []interface{}{
-      X[0],
-      X[2],
-      X[4],
-    },
-    ) >>`,
+        dsl.NewASTToken("[]", X[1]),
+        dsl.NodeTypeArraySliceAccess,
+        []interface{}{
+          X[0],
+          X[2],
+          X[4],
+        },
+      ) >>`,
 		Id:         "ArraySliceAccess",
 		NTType:     73,
 		Index:      263,
@@ -4605,17 +4605,17 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ArraySliceAccess : MlrvalOrFunction "[" ":" Rvalue "]"	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("[]", X[1]),
-    dsl.NodeTypeArraySliceAccess,
-    []interface{}{
-      X[0],
-      dsl.NewASTNodeTerminal(
-        X[2],
-        dsl.NodeTypeArraySliceEmptyLowerIndex,
-      ),
-      X[3],
-    },
-    ) >>`,
+        dsl.NewASTToken("[]", X[1]),
+        dsl.NodeTypeArraySliceAccess,
+        []interface{}{
+          X[0],
+          dsl.NewASTNodeTerminal(
+            X[2],
+            dsl.NodeTypeArraySliceEmptyLowerIndex,
+          ),
+          X[3],
+        },
+      ) >>`,
 		Id:         "ArraySliceAccess",
 		NTType:     73,
 		Index:      264,
@@ -4637,17 +4637,17 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ArraySliceAccess : MlrvalOrFunction "[" Rvalue ":" "]"	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("[]", X[1]),
-    dsl.NodeTypeArraySliceAccess,
-    []interface{}{
-      X[0],
-      X[2],
-      dsl.NewASTNodeTerminal(
-        X[3],
-        dsl.NodeTypeArraySliceEmptyUpperIndex,
-      ),
-    },
-    ) >>`,
+        dsl.NewASTToken("[]", X[1]),
+        dsl.NodeTypeArraySliceAccess,
+        []interface{}{
+          X[0],
+          X[2],
+          dsl.NewASTNodeTerminal(
+            X[3],
+            dsl.NodeTypeArraySliceEmptyUpperIndex,
+          ),
+        },
+      ) >>`,
 		Id:         "ArraySliceAccess",
 		NTType:     73,
 		Index:      265,
@@ -4669,20 +4669,20 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ArraySliceAccess : MlrvalOrFunction "[" ":" "]"	<< dsl.NewASTNodeWithErrorReturn(
-    dsl.NewASTToken("[]", X[1]),
-    dsl.NodeTypeArraySliceAccess,
-    []interface{}{
-      X[0],
-      dsl.NewASTNodeTerminal(
-        X[2],
-        dsl.NodeTypeArraySliceEmptyLowerIndex,
-      ),
-      dsl.NewASTNodeTerminal(
-        X[2],
-        dsl.NodeTypeArraySliceEmptyUpperIndex,
-      ),
-    },
-    ) >>`,
+        dsl.NewASTToken("[]", X[1]),
+        dsl.NodeTypeArraySliceAccess,
+        []interface{}{
+          X[0],
+          dsl.NewASTNodeTerminal(
+            X[2],
+            dsl.NodeTypeArraySliceEmptyLowerIndex,
+          ),
+          dsl.NewASTNodeTerminal(
+            X[2],
+            dsl.NodeTypeArraySliceEmptyUpperIndex,
+          ),
+        },
+      ) >>`,
 		Id:         "ArraySliceAccess",
 		NTType:     73,
 		Index:      266,
@@ -4717,10 +4717,10 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `FunctionCallsite : FunctionName "(" ")"	<< dsl.NewASTNodeWithErrorReturn(
-    X[0],
-    dsl.NodeTypeFunctionCallsite,
-    []interface{}{},
-    ) >>`,
+        X[0],
+        dsl.NodeTypeFunctionCallsite,
+        []interface{}{},
+      ) >>`,
 		Id:         "FunctionCallsite",
 		NTType:     74,
 		Index:      268,
@@ -4787,12 +4787,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `FcnArgs : Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeFunctionCallsite,
-    []interface{}{
-      X[0],
-    },
-    ) >>`,
+        nil,
+        dsl.NodeTypeFunctionCallsite,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "FcnArgs",
 		NTType:     76,
 		Index:      273,
@@ -4809,12 +4809,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `FcnArgs : Rvalue ","	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeFunctionCallsite,
-    []interface{}{
-      X[0],
-    },
-    ) >>`,
+        nil,
+        dsl.NodeTypeFunctionCallsite,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "FcnArgs",
 		NTType:     76,
 		Index:      274,
@@ -4831,9 +4831,9 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `FcnArgs : Rvalue "," FcnArgs	<< dsl.WithChildPrepended(
-      X[2],
-      X[0],
-    ) >>`,
+        X[2],
+        X[0],
+      ) >>`,
 		Id:         "FcnArgs",
 		NTType:     76,
 		Index:      275,
@@ -4847,10 +4847,10 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `SubroutineCallsite : call SubroutineName "(" ")"	<< dsl.NewASTNodeWithErrorReturn(
-    X[1],
-    dsl.NodeTypeSubroutineCallsite,
-    []interface{}{},
-    ) >>`,
+        X[1],
+        dsl.NodeTypeSubroutineCallsite,
+        []interface{}{},
+      ) >>`,
 		Id:         "SubroutineCallsite",
 		NTType:     77,
 		Index:      276,
@@ -4977,12 +4977,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `BeginBlock : begin StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeBeginBlock,
-    []interface{}{
-      X[1],
-    },
-    ) >>`,
+        nil,
+        dsl.NodeTypeBeginBlock,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "BeginBlock",
 		NTType:     80,
 		Index:      287,
@@ -4999,12 +4999,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `EndBlock : end StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeEndBlock,
-    []interface{}{
-      X[1],
-    },
-    ) >>`,
+        nil,
+        dsl.NodeTypeEndBlock,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "EndBlock",
 		NTType:     81,
 		Index:      288,
@@ -5021,13 +5021,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `CondBlock : Rvalue StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeCondBlock,
-    []interface{}{
-      X[0],
-      X[1],
-    },
-    ) >>`,
+        nil,
+        dsl.NodeTypeCondBlock,
+        []interface{}{
+          X[0],
+          X[1],
+        },
+      ) >>`,
 		Id:         "CondBlock",
 		NTType:     82,
 		Index:      289,
@@ -5065,12 +5065,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `IfElifStar : IfBlock	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeIfChain,
-    []interface{}{
-      X[0],
-    },
-    ) >>`,
+        nil,
+        dsl.NodeTypeIfChain,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "IfElifStar",
 		NTType:     84,
 		Index:      292,
@@ -5097,13 +5097,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `IfBlock : if "(" Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-    X[0],
-    dsl.NodeTypeIfItem,
-    []interface{}{
-      X[2],
-      X[4],
-    },
-    ) >>`,
+        X[0],
+        dsl.NodeTypeIfItem,
+        []interface{}{
+          X[2],
+          X[4],
+        },
+      ) >>`,
 		Id:         "IfBlock",
 		NTType:     85,
 		Index:      294,
@@ -5121,13 +5121,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ElifBlock : elif "(" Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-    X[0],
-    dsl.NodeTypeIfItem,
-    []interface{}{
-      X[2],
-      X[4],
-    },
-    ) >>`,
+        X[0],
+        dsl.NodeTypeIfItem,
+        []interface{}{
+          X[2],
+          X[4],
+        },
+      ) >>`,
 		Id:         "ElifBlock",
 		NTType:     86,
 		Index:      295,
@@ -5145,12 +5145,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ElseBlock : else StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-    X[0],
-    dsl.NodeTypeIfItem,
-    []interface{}{
-      X[1],
-    },
-    ) >>`,
+        X[0],
+        dsl.NodeTypeIfItem,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "ElseBlock",
 		NTType:     87,
 		Index:      296,
@@ -5167,13 +5167,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `WhileLoop : while "(" Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-    X[0],
-    dsl.NodeTypeWhileLoop,
-    []interface{}{
-      X[2],
-      X[4],
-    },
-    ) >>`,
+        X[0],
+        dsl.NodeTypeWhileLoop,
+        []interface{}{
+          X[2],
+          X[4],
+        },
+      ) >>`,
 		Id:         "WhileLoop",
 		NTType:     88,
 		Index:      297,
@@ -5191,13 +5191,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `DoWhileLoop : do StatementBlockInBraces while "(" Rvalue ")"	<< dsl.NewASTNodeWithErrorReturn(
-    X[0],
-    dsl.NodeTypeDoWhileLoop,
-    []interface{}{
-      X[1],
-      X[4],
-    },
-    ) >>`,
+        X[0],
+        dsl.NodeTypeDoWhileLoop,
+        []interface{}{
+          X[1],
+          X[4],
+        },
+      ) >>`,
 		Id:         "DoWhileLoop",
 		NTType:     89,
 		Index:      298,
@@ -5255,14 +5255,14 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ForLoopOneVariable : for "(" LocalVariable in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-     X[0], // "for"
-     dsl.NodeTypeForLoopOneVariable,
-     []interface{}{
-       X[2], // k, etc.
-       X[4], // $*, etc.
-       X[6], // { ... }
-     },
-   ); >>`,
+        X[0], // "for"
+        dsl.NodeTypeForLoopOneVariable,
+        []interface{}{
+          X[2], // k, etc.
+          X[4], // $*, etc.
+          X[6], // { ... }
+        },
+      ) >>`,
 		Id:         "ForLoopOneVariable",
 		NTType:     91,
 		Index:      303,
@@ -5281,15 +5281,15 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ForLoopTwoVariable : for "(" LocalVariable "," LocalVariable in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-     X[0], // "for"
-     dsl.NodeTypeForLoopTwoVariable,
-     []interface{} {
-        X[2], // k, etc.
-        X[4], // v, etc.
-        X[6], // $*, etc.
-        X[8], // { ... }
-     },
-   ); >>`,
+        X[0], // "for"
+        dsl.NodeTypeForLoopTwoVariable,
+        []interface{}{
+          X[2], // k, etc.
+          X[4], // v, etc.
+          X[6], // $*, etc.
+          X[8], // { ... }
+        },
+      ) >>`,
 		Id:         "ForLoopTwoVariable",
 		NTType:     92,
 		Index:      304,
@@ -5309,15 +5309,15 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ForLoopMultivariable : for "(" "(" MultiIndex ")" "," LocalVariable in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-     X[0], // "for"
-     dsl.NodeTypeForLoopMultivariable,
-     []interface{} {
-        X[3], // (k1, k2), etc.
-        X[6], // v, etc.
-        X[8], // $*, etc.
-        X[10], // { ... }
-     },
-   ); >>`,
+        X[0], // "for"
+        dsl.NodeTypeForLoopMultivariable,
+        []interface{}{
+          X[3],  // (k1, k2), etc.
+          X[6],  // v, etc.
+          X[8],  // $*, etc.
+          X[10], // { ... }
+        },
+      ) >>`,
 		Id:         "ForLoopMultivariable",
 		NTType:     93,
 		Index:      305,
@@ -5337,13 +5337,13 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MultiIndex : LocalVariable "," LocalVariable	<< dsl.NewASTNodeWithErrorReturn(
-      nil,
-      dsl.NodeTypeParameterList,
-      []interface{}{
-        X[0],
-        X[2],
-      },
-    ) >>`,
+        nil,
+        dsl.NodeTypeParameterList,
+        []interface{}{
+          X[0],
+          X[2],
+        },
+      ) >>`,
 		Id:         "MultiIndex",
 		NTType:     94,
 		Index:      306,
@@ -5361,9 +5361,9 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MultiIndex : MultiIndex "," LocalVariable	<< dsl.WithChildAppended(
-      X[0],
-      X[2],
-    ) >>`,
+        X[0],
+        X[2],
+      ) >>`,
 		Id:         "MultiIndex",
 		NTType:     94,
 		Index:      307,
@@ -5377,15 +5377,15 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `TripleForLoop : for "(" TripleForStart ";" TripleForContinuation ";" TripleForUpdate ")" StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-     X[0], // for
-     dsl.NodeTypeTripleForLoop,
-     []interface{} {
-        X[2], // start
-        X[4], // continuation
-        X[6], // update
-        X[8], // body
-     },
-   ); >>`,
+        X[0], // for
+        dsl.NodeTypeTripleForLoop,
+        []interface{}{
+          X[2], // start
+          X[4], // continuation
+          X[6], // update
+          X[8], // body
+        },
+      ) >>`,
 		Id:         "TripleForLoop",
 		NTType:     95,
 		Index:      308,
@@ -5405,10 +5405,10 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `TripleForStart : empty	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeStatementBlock,
-    []interface{}{},
-    ) >>`,
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{},
+      ) >>`,
 		Id:         "TripleForStart",
 		NTType:     96,
 		Index:      309,
@@ -5423,12 +5423,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `TripleForStart : Assignment	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeStatementBlock,
-    []interface{}{
-      X[0],
-    },
-    ) >>`,
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "TripleForStart",
 		NTType:     96,
 		Index:      310,
@@ -5455,10 +5455,10 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `TripleForContinuation : empty	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeStatementBlock,
-    []interface{}{},
-    ) >>`,
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{},
+      ) >>`,
 		Id:         "TripleForContinuation",
 		NTType:     97,
 		Index:      312,
@@ -5473,12 +5473,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `TripleForContinuation : TripleForContinuationItem	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeStatementBlock,
-    []interface{}{
-      X[0],
-    },
-    ) >>`,
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "TripleForContinuation",
 		NTType:     97,
 		Index:      313,
@@ -5525,10 +5525,10 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `TripleForUpdate : empty	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeStatementBlock,
-    []interface{}{},
-    ) >>`,
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{},
+      ) >>`,
 		Id:         "TripleForUpdate",
 		NTType:     99,
 		Index:      317,
@@ -5543,12 +5543,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `TripleForUpdate : Assignment	<< dsl.NewASTNodeWithErrorReturn(
-    nil,
-    dsl.NodeTypeStatementBlock,
-    []interface{}{
-      X[0],
-    },
-    ) >>`,
+        nil,
+        dsl.NodeTypeStatementBlock,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "TripleForUpdate",
 		NTType:     99,
 		Index:      318,
@@ -5575,10 +5575,10 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `BreakStatement : break	<< dsl.NewASTNodeWithErrorReturn(
-    X[0],
-    dsl.NodeTypeBreak,
-    []interface{}{},
-    ) >>`,
+        X[0],
+        dsl.NodeTypeBreak,
+        []interface{}{},
+      ) >>`,
 		Id:         "BreakStatement",
 		NTType:     100,
 		Index:      320,
@@ -5593,10 +5593,10 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ContinueStatement : continue	<< dsl.NewASTNodeWithErrorReturn(
-    X[0],
-    dsl.NodeTypeContinue,
-    []interface{}{},
-    ) >>`,
+        X[0],
+        dsl.NodeTypeContinue,
+        []interface{}{},
+      ) >>`,
 		Id:         "ContinueStatement",
 		NTType:     101,
 		Index:      321,
@@ -5611,15 +5611,15 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `NamedFunctionDefinition : func non_sigil_name "(" FuncOrSubrParameterList ")" StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-    X[1],
-    // { ... }
-      dsl.NodeTypeNamedFunctionDefinition,
-    []interface{}{
-      X[3],
-      // parameter list
-      X[5],
-    },
-    ); >>`,
+        X[1],
+        // { ... }
+        dsl.NodeTypeNamedFunctionDefinition,
+        []interface{}{
+          X[3],
+          // parameter list
+          X[5],
+        },
+      ) >>`,
 		Id:         "NamedFunctionDefinition",
 		NTType:     102,
 		Index:      322,
@@ -5639,17 +5639,17 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `NamedFunctionDefinition : func non_sigil_name "(" FuncOrSubrParameterList ")" ":" Typedecl StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-    X[1],
-    // return type
-      dsl.NodeTypeNamedFunctionDefinition,
-    []interface{}{
-      X[3],
-      // parameter list
-      X[7],
-      // {...}
-      X[6],
-    },
-    ); >>`,
+        X[1],
+        // return type
+        dsl.NodeTypeNamedFunctionDefinition,
+        []interface{}{
+          X[3],
+          // parameter list
+          X[7],
+          // {...}
+          X[6],
+        },
+      ) >>`,
 		Id:         "NamedFunctionDefinition",
 		NTType:     102,
 		Index:      323,
@@ -5671,15 +5671,15 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `UnnamedFunctionDefinition : func "(" FuncOrSubrParameterList ")" StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-    X[0],
-    // { ... }
-      dsl.NodeTypeUnnamedFunctionDefinition,
-    []interface{}{
-      X[2],
-      // parameter list
-      X[4],
-    },
-    ); >>`,
+        X[0],
+        // { ... }
+        dsl.NodeTypeUnnamedFunctionDefinition,
+        []interface{}{
+          X[2],
+          // parameter list
+          X[4],
+        },
+      ) >>`,
 		Id:         "UnnamedFunctionDefinition",
 		NTType:     103,
 		Index:      324,
@@ -5699,17 +5699,17 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `UnnamedFunctionDefinition : func "(" FuncOrSubrParameterList ")" ":" Typedecl StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-    X[0],
-    // return type
-      dsl.NodeTypeUnnamedFunctionDefinition,
-    []interface{}{
-      X[2],
-      // parameter list
-      X[6],
-      // {...}
-      X[5],
-    },
-    ); >>`,
+        X[0],
+        // return type
+        dsl.NodeTypeUnnamedFunctionDefinition,
+        []interface{}{
+          X[2],
+          // parameter list
+          X[6],
+          // {...}
+          X[5],
+        },
+      ) >>`,
 		Id:         "UnnamedFunctionDefinition",
 		NTType:     103,
 		Index:      325,
@@ -5731,15 +5731,15 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `SubroutineDefinition : subr non_sigil_name "(" FuncOrSubrParameterList ")" StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-    X[1],
-    // { ... }
-      dsl.NodeTypeSubroutineDefinition,
-    []interface{}{
-      X[3],
-      // parameter list
-      X[5],
-    },
-    ); >>`,
+        X[1],
+        // { ... }
+        dsl.NodeTypeSubroutineDefinition,
+        []interface{}{
+          X[3],
+          // parameter list
+          X[5],
+        },
+      ) >>`,
 		Id:         "SubroutineDefinition",
 		NTType:     104,
 		Index:      326,
@@ -5759,10 +5759,10 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `FuncOrSubrParameterList : empty	<< dsl.NewASTNodeWithErrorReturn(
-      nil,
-      dsl.NodeTypeParameterList,
-      []interface{}{},
-    ) >>`,
+        nil,
+        dsl.NodeTypeParameterList,
+        []interface{}{},
+      ) >>`,
 		Id:         "FuncOrSubrParameterList",
 		NTType:     105,
 		Index:      327,
@@ -5787,12 +5787,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `FuncOrSubrNonEmptyParameterList : FuncOrSubrParameter	<< dsl.NewASTNodeWithErrorReturn(
-      nil,
-      dsl.NodeTypeParameterList,
-      []interface{}{
-        X[0],
-      },
-    ) >>`,
+        nil,
+        dsl.NodeTypeParameterList,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "FuncOrSubrNonEmptyParameterList",
 		NTType:     106,
 		Index:      329,
@@ -5809,12 +5809,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `FuncOrSubrNonEmptyParameterList : FuncOrSubrParameter ","	<< dsl.NewASTNodeWithErrorReturn(
-      nil,
-      dsl.NodeTypeParameterList,
-      []interface{}{
-        X[0],
-      },
-    ) >>`,
+        nil,
+        dsl.NodeTypeParameterList,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "FuncOrSubrNonEmptyParameterList",
 		NTType:     106,
 		Index:      330,
@@ -5841,12 +5841,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `FuncOrSubrParameter : UntypedFuncOrSubrParameterName	<< dsl.NewASTNodeWithErrorReturn(
-      nil,
-      dsl.NodeTypeParameter,
-      []interface{}{
-        X[0],
-      },
-    ) >>`,
+        nil,
+        dsl.NodeTypeParameter,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "FuncOrSubrParameter",
 		NTType:     107,
 		Index:      332,
@@ -5863,12 +5863,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `FuncOrSubrParameter : TypedFuncOrSubrParameterName	<< dsl.NewASTNodeWithErrorReturn(
-      nil,
-      dsl.NodeTypeParameter,
-      []interface{}{
-        X[0],
-      },
-    ) >>`,
+        nil,
+        dsl.NodeTypeParameter,
+        []interface{}{
+          X[0],
+        },
+      ) >>`,
 		Id:         "FuncOrSubrParameter",
 		NTType:     107,
 		Index:      333,
@@ -5905,12 +5905,12 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ReturnStatement : return Rvalue	<< dsl.NewASTNodeWithErrorReturn(
-      X[0],
-      dsl.NodeTypeReturn,
-      []interface{}{
-        X[1],
-      },
-    ) >>`,
+        X[0],
+        dsl.NodeTypeReturn,
+        []interface{}{
+          X[1],
+        },
+      ) >>`,
 		Id:         "ReturnStatement",
 		NTType:     110,
 		Index:      336,
@@ -5927,10 +5927,10 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `ReturnStatement : return	<< dsl.NewASTNodeWithErrorReturn(
-      X[0],
-      dsl.NodeTypeReturn,
-      []interface{}{},
-    ) >>`,
+        X[0],
+        dsl.NodeTypeReturn,
+        []interface{}{},
+      ) >>`,
 		Id:         "ReturnStatement",
 		NTType:     110,
 		Index:      337,
