@@ -1,6 +1,7 @@
 // ================================================================
-// If you edit this file, please run tools/build-dsl to autogenerate
-// Go code from it, using the GOCC tool.
+// If you edit this file, please run tools/build-dsl to autogenerate Go code
+// from it, using the GOCC tool. See also tools/format-go-in-bnf (which reads
+// `stdin` and writes `stdout`) for automated code formatting of the Go bits.
 // ================================================================
 
 // ================================================================

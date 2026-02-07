@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+
+# ================================================================
+# Run pkg/parsing/mlr.bnf through this filter to reformat the Go code.
+# This only finds the Go code if the "<<" and the ">>" are on blank
+# lines before and after.
+# ================================================================
+
+import sys
+import re
+import subprocess
+
+in_dsl = False
+dsl_lines = []
+
+while True:
+    line = sys.stdin.readline()
+    if line == '':
+        break
+    line = line.rstrip()
+
+    if re.match("^ *<<$", line):
+        in_dsl = True
+        print(line)
+
+    elif re.match("^ *>>$", line):
+        in_dsl = False
+
+        in_block = "\n".join(dsl_lines)
+        in_block = re.sub(r'\$', 'DOLLAR_', in_block)
+
+        result = subprocess.run(
+            ['gofmt'],
+            input=in_block,
+            capture_output=True,
+            text=True,
+        )
+
+        if result.returncode == 0:
+            out_block = result.stdout
+            out_block = re.sub('DOLLAR_', '$', out_block)
+            out_block = re.sub('\t','  ', out_block)
+            out_lines = out_block.split("\n")
+            for out_line in out_lines:
+                out_line = re.sub(r"\s*$", "", out_line)
+                if out_line != "":
+                    print("    " + out_line)
+        else:
+            print()
+            print(result.stdout)
+            print(result.stderr)
+            print()
+            print("Exiting!")
+            print()
+            sys.exit(1)
+
+        print(line)
+        dsl_lines = []
+
+    elif in_dsl:
+        dsl_lines.append(line)
+
+    else:
+        #print("OUTSIDE")
+        print(line)
