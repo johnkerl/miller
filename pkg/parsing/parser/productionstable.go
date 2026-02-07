@@ -5671,15 +5671,15 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `UnnamedFunctionDefinition : func "(" FuncOrSubrParameterList ")" StatementBlockInBraces	<< dsl.NewASTNodeWithErrorReturn(
-        X[0],
-        // { ... }
-          dsl.NodeTypeUnnamedFunctionDefinition,
-        []interface{}{
-          X[2],
-          // parameter list
-          X[4],
-        },
-        ); >>`,
+            X[0],
+            // { ... }
+            dsl.NodeTypeUnnamedFunctionDefinition,
+            []interface{}{
+                X[2],
+                // parameter list
+                X[4],
+            },
+        ) >>`,
 		Id:         "UnnamedFunctionDefinition",
 		NTType:     103,
 		Index:      324,

@@ -3520,16 +3520,16 @@ UnnamedFunctionDefinition
     ")"
     StatementBlockInBraces
     <<
-    	dsl.NewASTNodeWithErrorReturn(
-    		$0,
-    		// { ... }
-    		dsl.NodeTypeUnnamedFunctionDefinition,
-    		[]interface{}{
-    			$2,
-    			// parameter list
-    			$4,
-    		},
-    	)
+        dsl.NewASTNodeWithErrorReturn(
+            $0,
+            // { ... }
+            dsl.NodeTypeUnnamedFunctionDefinition,
+            []interface{}{
+                $2,
+                // parameter list
+                $4,
+            },
+        )
     >>
 
   // With return-type annotation
