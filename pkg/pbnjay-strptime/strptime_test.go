@@ -132,6 +132,25 @@ var testData = []testDataType{
 		true,
 		599702400,
 	},
+	// Mixed modes for %f: no fraction, dot only, or variable digits (e.g. "2022-04-03 17:38:20 UTC" vs "2022-04-03 17:38:20.123 UTC").
+	{
+		"2022-04-03 17:38:20 UTC",
+		"%Y-%m-%d %H:%M:%S.%f UTC",
+		true,
+		1649007500,
+	},
+	{
+		"2022-04-03 17:38:20. UTC",
+		"%Y-%m-%d %H:%M:%S.%f UTC",
+		true,
+		1649007500,
+	},
+	{
+		"2022-04-03 17:38:20.1 UTC",
+		"%Y-%m-%d %H:%M:%S.%f UTC",
+		true,
+		1649007500, // .1 second = 1649007500.1 in float, but Unix() truncates to 1649007500
+	},
 }
 
 func TestStrptime(t *testing.T) {
