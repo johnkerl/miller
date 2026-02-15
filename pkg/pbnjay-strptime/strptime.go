@@ -248,17 +248,25 @@ func strptime_tz(
 						return time.Time{}, ErrFormatMismatch
 					}
 				} else {
-					sil = len(templateComponent)
-					if sil > len(strptime_input)-inputIdx {
+					want := len(templateComponent)
+					remaining := len(strptime_input) - inputIdx
+					if remaining == 0 {
 						if _debug {
 							fmt.Printf("format/template mismatch 2\n")
 						}
 						return time.Time{}, ErrFormatMismatch
 					}
+					// Allow single-digit at end of string (e.g. "1989-1-2" for %Y-%m-%d); we zero-pad when building.
+					if want > remaining {
+						sil = remaining
+					} else {
+						sil = want
+					}
 				}
 			}
 
-			sep := " "
+			// Use the format's literal as separator after each value (e.g. "/" for %m/%d/%Y) so Go parses unambiguously.
+			sep := partBetweenPercentSigns[1:]
 			if firstComponent {
 				sep = ""
 				firstComponent = false
@@ -267,14 +275,14 @@ func strptime_tz(
 				goLibTemplate += "." + templateComponent
 				goLibInput += "." + strptime_input[inputIdx:inputIdx+sil]
 			} else if formatCode == 'p' {
-				goLibTemplate += sep + templateComponent
-				goLibInput += sep + strings.ToUpper(strptime_input[inputIdx:inputIdx+sil])
+				goLibTemplate += templateComponent + sep
+				goLibInput += strings.ToUpper(strptime_input[inputIdx:inputIdx+sil]) + sep
 			} else {
 				comp := strptime_input[inputIdx : inputIdx+sil]
 				// Zero-pad numeric fields so single-digit input works (e.g. "1/07/2022" for %d/%m/%Y).
 				comp = zeroPadLeft(comp, len(templateComponent))
-				goLibTemplate += sep + templateComponent
-				goLibInput += sep + comp
+				goLibTemplate += templateComponent + sep
+				goLibInput += comp + sep
 			}
 		}
 
