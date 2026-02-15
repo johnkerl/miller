@@ -252,8 +252,8 @@ These are flags which are applicable to JSON output format.
 * `--jvstack`: Put one key-value pair per line for JSON output (multi-line output). This is the default for JSON output format.
 * `--no-jlistwrap`: Do not wrap JSON output in outermost `[ ]`. This is the default for JSON Lines output format.
 * `--no-jvstack`: Put objects/arrays all on one line for JSON output. This is the default for JSON Lines output format.
-* `--no-ylistwrap`: Do not wrap YAML output in a single array document; emit one YAML document per record with `---` between.
-* `--ylistwrap or --yl`: Wrap YAML output in a single top-level array document. This is the default for YAML output format.
+* `--no-yarray`: Do not wrap YAML output in a single array document; emit one YAML document per record with `---` between.
+* `--yarray or --ya`: Wrap YAML output in a single top-level array document. This is the default for YAML output format.
 
 ## Legacy flags
 

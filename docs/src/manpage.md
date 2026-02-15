@@ -502,9 +502,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                                 the default for JSON Lines output format.
        --no-jvstack             Put objects/arrays all on one line for JSON output.
                                 This is the default for JSON Lines output format.
-       --no-ylistwrap           Do not wrap YAML output in a single array document;
+       --no-yarray              Do not wrap YAML output in a single array document;
                                 emit one YAML document per record with `---` between.
-       --ylistwrap or --yl      Wrap YAML output in a single top-level array
+       --yarray or --ya         Wrap YAML output in a single top-level array
                                 document. This is the default for YAML output format.
 
 1mLEGACY FLAGS0m

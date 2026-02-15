@@ -469,8 +469,8 @@ var JSONOnlyFlagSection = FlagSection{
 		},
 
 		{
-			name:     "--ylistwrap",
-			altNames: []string{"--yl"},
+			name:     "--yarray",
+			altNames: []string{"--ya"},
 			help:     "Wrap YAML output in a single top-level array document. This is the default for YAML output format.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.WrapYAMLOutputInOuterList = true
@@ -478,7 +478,7 @@ var JSONOnlyFlagSection = FlagSection{
 			},
 		},
 		{
-			name: "--no-ylistwrap",
+			name: "--no-yarray",
 			help: "Do not wrap YAML output in a single array document; emit one YAML document per record with `---` between.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.WrapYAMLOutputInOuterList = false
