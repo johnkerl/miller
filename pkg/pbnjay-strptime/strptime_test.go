@@ -62,6 +62,13 @@ var testData = []testDataType{
 		false,
 		0,
 	},
+	// %f (fractional seconds) immediately followed by %z (timezone): no intervening text.
+	{
+		"2012-06-15 11:38:33.160001+0100",
+		"%Y-%m-%d %H:%M:%S.%f%z",
+		true,
+		1339756713, // epoch seconds (fraction .160001 preserved in subsecond)
+	},
 }
 
 func TestStrptime(t *testing.T) {
