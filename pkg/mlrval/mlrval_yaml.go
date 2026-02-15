@@ -10,6 +10,7 @@ package mlrval
 import (
 	"fmt"
 	"io"
+	"sort"
 
 	"gopkg.in/yaml.v3"
 )
@@ -72,9 +73,20 @@ func mlrvalFromYAMLNative(v interface{}) (*Mlrval, error) {
 }
 
 func mlrvalFromYAMLMap(m map[interface{}]interface{}) (*Mlrval, error) {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, yamlKeyString(k))
+	}
+	sort.Strings(keys)
 	out := FromEmptyMap()
-	for k, v := range m {
-		keyStr := yamlKeyString(k)
+	for _, keyStr := range keys {
+		var v interface{}
+		for k, val := range m {
+			if yamlKeyString(k) == keyStr {
+				v = val
+				break
+			}
+		}
 		valMv, err := mlrvalFromYAMLNative(v)
 		if err != nil {
 			return nil, err
@@ -85,9 +97,14 @@ func mlrvalFromYAMLMap(m map[interface{}]interface{}) (*Mlrval, error) {
 }
 
 func mlrvalFromYAMLStringMap(m map[string]interface{}) (*Mlrval, error) {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
 	out := FromEmptyMap()
-	for k, v := range m {
-		valMv, err := mlrvalFromYAMLNative(v)
+	for _, k := range keys {
+		valMv, err := mlrvalFromYAMLNative(m[k])
 		if err != nil {
 			return nil, err
 		}

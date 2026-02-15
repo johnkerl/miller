@@ -180,7 +180,10 @@ This keeps YAML aligned with Miller’s existing JSON subset and record model wh
 ## Implementation summary (done)
 
 * **Dependency:** `gopkg.in/yaml.v3` is a direct requirement in `go.mod`.
-* **Core:** `pkg/mlrval/mlrval_yaml.go` — decode (including `map[string]interface{}` from the library) and encode; `pkg/input/record_reader_yaml.go`; `pkg/output/record_writer_yaml.go` (list-wrap and multi-doc modes).
+* **Core:** `pkg/mlrval/mlrval_yaml.go` — decode (including `map[string]interface{}` from the library) with **deterministic key order** (sorted on decode so YAML→CSV/TSV etc. have stable schema) and encode; `pkg/input/record_reader_yaml.go`; `pkg/output/record_writer_yaml.go` (list-wrap and multi-doc modes).
 * **CLI:** `--yaml`, `--iyaml`, `--oyaml`, `-i yaml`, `-o yaml`; `--ylistwrap` / `--no-ylistwrap`; conversion shortcuts in the format matrix (`--c2y`, `--y2c`, etc.).
 * **Docs:** YAML in `helpFileFormats()`, `docs/src/file-formats.md.in`, and the separators table in `reference-main-separators.md.in`.
-* **Tests:** `pkg/mlrval/mlrval_yaml_test.go` (scalars, maps, arrays, multi-doc, round-trip, non-string keys); `test/cases/io-yaml-io/0001` (YAML→CSV), `0002` (YAML→YAML multi-doc); `test/cases/io-format-conversion-keystroke-savers/c2y` (CSV→YAML).
+* **Tests:** `pkg/mlrval/mlrval_yaml_test.go` (scalars, maps, arrays, multi-doc, round-trip, non-string keys); `test/cases/io-yaml-io/0001` (YAML→CSV), `0002` (YAML→YAML multi-doc); `test/cases/io-format-conversion-keystroke-savers`: c2y, j2y, y2j plus **y2c, y2t, y2d, y2n, y2p, y2x, y2m** and **t2y, d2y, n2y, p2y, x2y, m2y** for full conversion coverage.
+* **Regtest:** Directory and case-path iteration in `pkg/terminals/regtest/regtester.go` is **sorted** for deterministic run order.
+
+No open TODOs; proposal is complete.
