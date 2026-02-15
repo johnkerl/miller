@@ -1,0 +1,1 @@
+mlr nest --explode --pairs --across-fields -r '^x$' test/input/nest-explode.dkvp

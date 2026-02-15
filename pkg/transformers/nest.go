@@ -37,6 +37,8 @@ func transformerNestUsage(
 	fmt.Fprintf(o, "  --values,--pairs      One is required.\n")
 	fmt.Fprintf(o, "  --across-records,--across-fields One is required.\n")
 	fmt.Fprintf(o, "  -f {field name}       Required.\n")
+	fmt.Fprintf(o, "  -r {field names}      Like -f but treat arguments as a regular expression. Match all\n")
+	fmt.Fprintf(o, "                        field names and operate on each in record order. Example: `-r '^[xy]$`'.\n")
 	fmt.Fprintf(o, "  --nested-fs {string}  Defaults to \";\". Field separator for nested values.\n")
 	fmt.Fprintf(o, "  --nested-ps {string}  Defaults to \":\". Pair separator for nested key-value pairs.\n")
 	fmt.Fprintf(o, "  --evar {string}       Shorthand for --explode --values --across-records --nested-fs {string}\n")
@@ -102,6 +104,7 @@ func transformerNestParseCLI(
 
 	// Parse local flags
 	fieldName := ""
+	doRegexes := false
 	nestedFS := ";"
 	nestedPS := ":"
 	doExplode := true
@@ -128,6 +131,10 @@ func transformerNestParseCLI(
 			os.Exit(0)
 
 		} else if opt == "-f" {
+			fieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+
+		} else if opt == "-r" {
+			doRegexes = true
 			fieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--explode" || opt == "-e" {
@@ -213,6 +220,10 @@ func transformerNestParseCLI(
 		transformerNestUsage(os.Stderr)
 		os.Exit(1)
 	}
+	if doRegexes && !doExplode {
+		fmt.Fprintf(os.Stderr, "mlr nest: -r is only supported with --explode, not --implode.\n")
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
@@ -221,6 +232,7 @@ func transformerNestParseCLI(
 
 	transformer, err := NewTransformerNest(
 		fieldName,
+		doRegexes,
 		nestedFS,
 		nestedPS,
 		doExplode,
@@ -241,7 +253,10 @@ type TransformerNest struct {
 	nestedFS  string
 	nestedPS  string
 
-	// For implode across fields
+	doRegexes  bool
+	fieldRegex *regexp.Regexp // when doRegexes, for matching field names
+
+	// For implode across fields (when !doRegexes)
 	regex *regexp.Regexp
 
 	// For implode across records
@@ -253,6 +268,7 @@ type TransformerNest struct {
 // ----------------------------------------------------------------
 func NewTransformerNest(
 	fieldName string,
+	doRegexes bool,
 	nestedFS string,
 	nestedPS string,
 	doExplode bool,
@@ -262,22 +278,38 @@ func NewTransformerNest(
 
 	tr := &TransformerNest{
 		fieldName: fieldName,
+		doRegexes: doRegexes,
 		nestedFS:  cli.SeparatorFromArg(nestedFS), // "pipe" -> "|", etc
 		nestedPS:  cli.SeparatorFromArg(nestedPS),
 	}
 
-	// For implode across fields
-	regexString := "^" + fieldName + "_[0-9]+$"
-	regex, err := lib.CompileMillerRegex(regexString)
-	if err != nil {
-		fmt.Fprintf(
-			os.Stderr,
-			"%s %s: cannot compile regex [%s]\n",
-			"mlr", verbNameNest, regexString,
-		)
-		os.Exit(1)
+	// For implode across fields: regex to match exploded form (e.g. x_1, x_2)
+	if doRegexes {
+		fieldRegex, err := lib.CompileMillerRegex(fieldName)
+		if err != nil {
+			fmt.Fprintf(
+				os.Stderr,
+				"%s %s: cannot compile regex [%s]\n",
+				"mlr", verbNameNest, fieldName,
+			)
+			os.Exit(1)
+		}
+		tr.fieldRegex = fieldRegex
+		// implode uses fieldRegex directly when doRegexes
+		tr.regex = fieldRegex
+	} else {
+		regexString := "^" + fieldName + "_[0-9]+$"
+		regex, err := lib.CompileMillerRegex(regexString)
+		if err != nil {
+			fmt.Fprintf(
+				os.Stderr,
+				"%s %s: cannot compile regex [%s]\n",
+				"mlr", verbNameNest, regexString,
+			)
+			os.Exit(1)
+		}
+		tr.regex = regex
 	}
-	tr.regex = regex
 
 	// For implode across records
 	tr.otherKeysToOtherValuesToBuckets = lib.NewOrderedMap[*lib.OrderedMap[*tNestBucket]]()
@@ -325,6 +357,25 @@ func (tr *TransformerNest) Transform(
 }
 
 // ----------------------------------------------------------------
+// getMatchingFieldNames returns field names matching tr.fieldRegex in record order.
+// When !tr.doRegexes, returns [tr.fieldName] if present, else [].
+func (tr *TransformerNest) getMatchingFieldNames(inrec *mlrval.Mlrmap) []string {
+	if !tr.doRegexes {
+		if inrec.Get(tr.fieldName) != nil {
+			return []string{tr.fieldName}
+		}
+		return nil
+	}
+	var names []string
+	for pe := inrec.Head; pe != nil; pe = pe.Next {
+		if tr.fieldRegex.MatchString(pe.Key) {
+			names = append(names, pe.Key)
+		}
+	}
+	return names
+}
+
+// ----------------------------------------------------------------
 func (tr *TransformerNest) explodeValuesAcrossFields(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -334,27 +385,34 @@ func (tr *TransformerNest) explodeValuesAcrossFields(
 	if !inrecAndContext.EndOfStream {
 
 		inrec := inrecAndContext.Record
-		originalEntry := inrec.GetEntry(tr.fieldName)
-		if originalEntry == nil {
+		fieldNames := tr.getMatchingFieldNames(inrec)
+		if len(fieldNames) == 0 {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 			return
 		}
 
-		recordEntry := originalEntry
-		mvalue := originalEntry.Value
-		svalue := mvalue.String()
+		for _, fieldName := range fieldNames {
+			originalEntry := inrec.GetEntry(fieldName)
+			if originalEntry == nil {
+				continue
+			}
 
-		// Not lib.SplitString so 'x=' will map to 'x_1=', rather than no field at all
-		pieces := strings.Split(svalue, tr.nestedFS)
-		i := 1
-		for _, piece := range pieces {
-			key := tr.fieldName + "_" + strconv.Itoa(i)
-			value := mlrval.FromString(piece)
-			recordEntry = inrec.PutReferenceAfter(recordEntry, key, value)
-			i++
+			recordEntry := originalEntry
+			mvalue := originalEntry.Value
+			svalue := mvalue.String()
+
+			// Not lib.SplitString so 'x=' will map to 'x_1=', rather than no field at all
+			pieces := strings.Split(svalue, tr.nestedFS)
+			i := 1
+			for _, piece := range pieces {
+				key := fieldName + "_" + strconv.Itoa(i)
+				value := mlrval.FromString(piece)
+				recordEntry = inrec.PutReferenceAfter(recordEntry, key, value)
+				i++
+			}
+
+			inrec.Unlink(originalEntry)
 		}
-
-		inrec.Unlink(originalEntry)
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 
 	} else {
@@ -371,7 +429,14 @@ func (tr *TransformerNest) explodeValuesAcrossRecords(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		mvalue := inrec.Get(tr.fieldName)
+		fieldNames := tr.getMatchingFieldNames(inrec)
+		if len(fieldNames) == 0 {
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+			return
+		}
+		fieldName := fieldNames[0]
+
+		mvalue := inrec.Get(fieldName)
 		if mvalue == nil {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 			return
@@ -382,7 +447,7 @@ func (tr *TransformerNest) explodeValuesAcrossRecords(
 		pieces := strings.Split(svalue, tr.nestedFS)
 		for _, piece := range pieces {
 			outrec := inrec.Copy()
-			outrec.PutReference(tr.fieldName, mlrval.FromString(piece))
+			outrec.PutReference(fieldName, mlrval.FromString(piece))
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 		}
 
@@ -401,35 +466,42 @@ func (tr *TransformerNest) explodePairsAcrossFields(
 	if !inrecAndContext.EndOfStream {
 
 		inrec := inrecAndContext.Record
-		originalEntry := inrec.GetEntry(tr.fieldName)
-		if originalEntry == nil {
+		fieldNames := tr.getMatchingFieldNames(inrec)
+		if len(fieldNames) == 0 {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 			return
 		}
 
-		mvalue := originalEntry.Value
-		svalue := mvalue.String()
-
-		recordEntry := originalEntry
-		pieces := lib.SplitString(svalue, tr.nestedFS)
-		for _, piece := range pieces {
-			pair := strings.SplitN(piece, tr.nestedPS, 2)
-			if len(pair) == 2 { // there is a pair
-				recordEntry = inrec.PutReferenceAfter(
-					recordEntry,
-					pair[0],
-					mlrval.FromString(pair[1]),
-				)
-			} else { // there is not a pair
-				recordEntry = inrec.PutReferenceAfter(
-					recordEntry,
-					tr.fieldName,
-					mlrval.FromString(piece),
-				)
+		for _, fieldName := range fieldNames {
+			originalEntry := inrec.GetEntry(fieldName)
+			if originalEntry == nil {
+				continue
 			}
-		}
 
-		inrec.Unlink(originalEntry)
+			mvalue := originalEntry.Value
+			svalue := mvalue.String()
+
+			recordEntry := originalEntry
+			pieces := lib.SplitString(svalue, tr.nestedFS)
+			for _, piece := range pieces {
+				pair := strings.SplitN(piece, tr.nestedPS, 2)
+				if len(pair) == 2 { // there is a pair
+					recordEntry = inrec.PutReferenceAfter(
+						recordEntry,
+						pair[0],
+						mlrval.FromString(pair[1]),
+					)
+				} else { // there is not a pair
+					recordEntry = inrec.PutReferenceAfter(
+						recordEntry,
+						fieldName,
+						mlrval.FromString(piece),
+					)
+				}
+			}
+
+			inrec.Unlink(originalEntry)
+		}
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 
 	} else {
@@ -446,7 +518,14 @@ func (tr *TransformerNest) explodePairsAcrossRecords(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		mvalue := inrec.Get(tr.fieldName)
+		fieldNames := tr.getMatchingFieldNames(inrec)
+		if len(fieldNames) == 0 {
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+			return
+		}
+		fieldName := fieldNames[0]
+
+		mvalue := inrec.Get(fieldName)
 		if mvalue == nil {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 			return
@@ -457,7 +536,7 @@ func (tr *TransformerNest) explodePairsAcrossRecords(
 		for _, piece := range pieces {
 			outrec := inrec.Copy()
 
-			originalEntry := outrec.GetEntry(tr.fieldName)
+			originalEntry := outrec.GetEntry(fieldName)
 
 			// Put the new field where the old one was -- unless there's already a field with the new
 			// name, in which case replace its value.
@@ -465,7 +544,7 @@ func (tr *TransformerNest) explodePairsAcrossRecords(
 			if len(pair) == 2 { // there is a pair
 				outrec.PutReferenceAfter(originalEntry, pair[0], mlrval.FromString(pair[1]))
 			} else { // there is not a pair
-				outrec.PutReferenceAfter(originalEntry, tr.fieldName, mlrval.FromString(piece))
+				outrec.PutReferenceAfter(originalEntry, fieldName, mlrval.FromString(piece))
 			}
 
 			outrec.Unlink(originalEntry)
