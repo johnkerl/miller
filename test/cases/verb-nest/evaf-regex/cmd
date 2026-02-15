@@ -1,0 +1,1 @@
+mlr nest --explode --values --across-fields -r '^[xy]$' test/input/nest-explode-regex.dkvp

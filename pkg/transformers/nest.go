@@ -37,8 +37,8 @@ func transformerNestUsage(
 	fmt.Fprintf(o, "  --values,--pairs      One is required.\n")
 	fmt.Fprintf(o, "  --across-records,--across-fields One is required.\n")
 	fmt.Fprintf(o, "  -f {field name}       Required.\n")
-	fmt.Fprintf(o, "  -r                    Treat -f as regular expression. Match all field names\n")
-	fmt.Fprintf(o, "                        and operate on each in record order. Example: -f '^[xy]$' -r\n")
+	fmt.Fprintf(o, "  -r {field names}      Treat -f as regular expression. Match all field names\n")
+	fmt.Fprintf(o, "                        and operate on each in record order. Example: `-r '^[xy]$`'.\n")
 	fmt.Fprintf(o, "  --nested-fs {string}  Defaults to \";\". Field separator for nested values.\n")
 	fmt.Fprintf(o, "  --nested-ps {string}  Defaults to \":\". Pair separator for nested key-value pairs.\n")
 	fmt.Fprintf(o, "  --evar {string}       Shorthand for --explode --values --across-records --nested-fs {string}\n")
@@ -135,6 +135,7 @@ func transformerNestParseCLI(
 
 		} else if opt == "-r" {
 			doRegexes = true
+			fieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--explode" || opt == "-e" {
 			doExplode = true
