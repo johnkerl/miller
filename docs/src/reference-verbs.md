@@ -2245,6 +2245,8 @@ Options:
   --values,--pairs      One is required.
   --across-records,--across-fields One is required.
   -f {field name}       Required.
+  -r {field names}      Like -f but treat arguments as a regular expression. Match all
+                        field names and operate on each in record order. Example: `-r '^[xy]$`'.
   --nested-fs {string}  Defaults to ";". Field separator for nested values.
   --nested-ps {string}  Defaults to ":". Pair separator for nested key-value pairs.
   --evar {string}       Shorthand for --explode --values --across-records --nested-fs {string}
@@ -4134,7 +4136,7 @@ There are two main ways to use `mlr uniq`: the first way is with `-g` to specify
 <b>wc -l data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-10079 data/colored-shapes.csv
+   10079 data/colored-shapes.csv
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -4291,7 +4293,7 @@ color=purple,shape=square,flag=0
 <b>wc -l data/repeats.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-57 data/repeats.dkvp
+      57 data/repeats.dkvp
 </pre>
 
 <pre class="pre-highlight-in-pair">

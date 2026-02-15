@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2026-01-02
+.\"      Date: 2026-02-15
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2026-01-02" "\ \&" "\ \&"
+.TH "MILLER" "1" "2026-02-15" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1868,6 +1868,8 @@ Options:
   --values,--pairs      One is required.
   --across-records,--across-fields One is required.
   -f {field name}       Required.
+  -r {field names}      Like -f but treat arguments as a regular expression. Match all
+                        field names and operate on each in record order. Example: `-r '^[xy]$`'.
   --nested-fs {string}  Defaults to ";". Field separator for nested values.
   --nested-ps {string}  Defaults to ":". Pair separator for nested key-value pairs.
   --evar {string}       Shorthand for --explode --values --across-records --nested-fs {string}
