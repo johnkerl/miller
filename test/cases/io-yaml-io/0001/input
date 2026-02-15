@@ -1,0 +1,7 @@
+a: 1
+b: 2
+c: hello
+---
+a: 10
+b: 20
+c: world
