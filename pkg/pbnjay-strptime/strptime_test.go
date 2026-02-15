@@ -69,6 +69,19 @@ var testData = []testDataType{
 		true,
 		1339756713, // epoch seconds (fraction .160001 preserved in subsecond)
 	},
+	// Day/month not zero-padded: %d and %m with single digit (e.g. 1/07/2022).
+	{
+		"1/07/2022",
+		"%d/%m/%Y",
+		true,
+		1656633600, // 2022-07-01T00:00:00Z
+	},
+	{
+		"22/10/2022",
+		"%d/%m/%Y",
+		true,
+		1666483200, // 2022-10-22T00:00:00Z (Oct 22)
+	},
 }
 
 func TestStrptime(t *testing.T) {
