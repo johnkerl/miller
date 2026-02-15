@@ -92,18 +92,19 @@ staticcheck:
 # * turns *.md.in into *.md (live code samples), using mlr from the $PATH
 # * note the man/manpage.txt becomes some of the HTML content
 # * turns *.md into docs/site HTML and CSS files
-dev:
-	-make fmt
-	make build
+dev: fmt build
 	make check
 	make -C man build
 	make -C docs/src forcebuild
 	make -C docs
 	@echo DONE
 
-docs: build
+docs: fmt build
 	make -C docs/src forcebuild
 	make -C docs
+
+man: fmt build
+	make -C man build
 
 # ----------------------------------------------------------------
 # Keystroke-savers
@@ -124,4 +125,4 @@ release_tarball: build check
 
 # ================================================================
 # Go does its own dependency management, outside of make.
-.PHONY: build mlr check unit_test regression_test bench fmt staticcheck dev docs
+.PHONY: build mlr check unit_test regression_test bench fmt staticcheck dev docs man

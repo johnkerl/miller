@@ -401,6 +401,16 @@ JSON Lines (sequence of one-line objects):
   Record 1: "apple":"1", "bat":"2", "cog":"3"
   Record 2: "dish:egg":"7", "dish:flint":"8", "garlic":""
 
+YAML (single document = object or array of objects; multiple documents with ---):
++---------------------+
+| apple: 1            |
+| bat: 2              | Record 1: "apple":"1", "bat":"2", "cog":"3"
+| cog: 3              |
+| ---                 |
+| dish: 7             | Record 2: "dish":"7", "egg":"8"
+| egg: 8              |
++---------------------+
+
 PPRINT: pretty-printed tabular
 +---------------------+
 | apple bat cog       |

@@ -109,6 +109,9 @@ type TWriterOptions struct {
 	JVQuoteAll                bool // --jvquoteall
 	// Not using miller/types enum to avoid package cycle
 
+	// YAML output: wrap in outer list (single document array) vs one document per record
+	WrapYAMLOutputInOuterList bool
+
 	CSVQuoteAll bool // --quote-all
 
 	// When we read things like
@@ -253,6 +256,7 @@ func DefaultWriterOptions() TWriterOptions {
 
 		WrapJSONOutputInOuterList: true,
 		JSONOutputMultiline:       true,
+		WrapYAMLOutputInOuterList: true,
 
 		AutoUnflatten: true,
 		AutoFlatten:   true,
