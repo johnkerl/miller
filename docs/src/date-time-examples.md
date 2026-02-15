@@ -68,7 +68,7 @@ date,qoh
 <b>wc -l data/miss-date.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-1372 data/miss-date.csv
+    1372 data/miss-date.csv
 </pre>
 
 Since there are 1372 lines in the data file, some automation is called for. To find the missing dates, you can convert the dates to seconds since the epoch using `strptime`, then compute adjacent differences (the `cat -n` simply inserts record-counters):

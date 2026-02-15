@@ -1671,6 +1671,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Options:
        -e Put specified field names at record end: default is to put them at record start.
        -f {a,b,c} Field names to reorder.
+       -r        Treat field names as regular expressions. Matched fields are moved
+                 to start or end in record order. Example: -r '^YYY,^XXX' puts all
+                 YYY- and XXX-prefixed fields first (in record order), then the rest.
        -b {x}     Put field names specified with -f before field name specified by {x},
                   if any. If {x} isn't present in a given record, the specified fields
                   will not be moved.
@@ -1682,6 +1685,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Examples:
        mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
        mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
+       mlr reorder -r '^YYY,^XXX' puts YYY- and XXX-prefixed fields first (record order), then rest.
 
    1mrepeat0m
        Usage: mlr repeat [options]
@@ -3759,5 +3763,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-01-02                         4mMILLER24m(1)
+                                  2026-02-15                         4mMILLER24m(1)
 </pre>

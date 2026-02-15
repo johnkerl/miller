@@ -2534,6 +2534,9 @@ Moves specified names to start of record, or end of record.
 Options:
 -e Put specified field names at record end: default is to put them at record start.
 -f {a,b,c} Field names to reorder.
+-r        Treat field names as regular expressions. Matched fields are moved
+          to start or end in record order. Example: -r '^YYY,^XXX' puts all
+          YYY- and XXX-prefixed fields first (in record order), then the rest.
 -b {x}     Put field names specified with -f before field name specified by {x},
            if any. If {x} isn't present in a given record, the specified fields
            will not be moved.
@@ -2545,6 +2548,7 @@ Options:
 Examples:
 mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
 mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
+mlr reorder -r '^YYY,^XXX' puts YYY- and XXX-prefixed fields first (record order), then rest.
 </pre>
 
 This pivots specified field names to the start or end of the record -- for
@@ -4134,7 +4138,7 @@ There are two main ways to use `mlr uniq`: the first way is with `-g` to specify
 <b>wc -l data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-10079 data/colored-shapes.csv
+   10079 data/colored-shapes.csv
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -4291,7 +4295,7 @@ color=purple,shape=square,flag=0
 <b>wc -l data/repeats.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-57 data/repeats.dkvp
+      57 data/repeats.dkvp
 </pre>
 
 <pre class="pre-highlight-in-pair">

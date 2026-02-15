@@ -34,6 +34,9 @@ func transformerReorderUsage(
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-e Put specified field names at record end: default is to put them at record start.\n")
 	fmt.Fprintf(o, "-f {a,b,c} Field names to reorder.\n")
+	fmt.Fprintf(o, "-r        Treat field names as regular expressions. Matched fields are moved\n")
+	fmt.Fprintf(o, "          to start or end in record order. Example: -r '^YYY,^XXX' puts all\n")
+	fmt.Fprintf(o, "          YYY- and XXX-prefixed fields first (in record order), then the rest.\n")
 	fmt.Fprintf(o, "-b {x}     Put field names specified with -f before field name specified by {x},\n")
 	fmt.Fprintf(o, "           if any. If {x} isn't present in a given record, the specified fields\n")
 	fmt.Fprintf(o, "           will not be moved.\n")
@@ -45,6 +48,7 @@ func transformerReorderUsage(
 	fmt.Fprintf(o, "Examples:\n")
 	fmt.Fprintf(o, "%s %s    -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"a=1,b=2,d=4,c=3\".\n", argv0, verb)
 	fmt.Fprintf(o, "%s %s -e -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"d=4,c=3,a=1,b=2\".\n", argv0, verb)
+	fmt.Fprintf(o, "%s %s -r '^YYY,^XXX' puts YYY- and XXX-prefixed fields first (record order), then rest.\n", argv0, verb)
 }
 
 func transformerReorderParseCLI(
@@ -188,7 +192,7 @@ func NewTransformerReorder(
 				fmt.Fprintf(
 					os.Stderr,
 					"%s %s: cannot compile regex [%s]\n",
-					"mlr", verbNameCut, regexString,
+					"mlr", verbNameReorder, regexString,
 				)
 				os.Exit(1)
 			}
@@ -227,30 +231,36 @@ func (tr *TransformerReorder) reorderToStartNoRegex(
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }
 
-func (tr *TransformerReorder) reorderToStartWithRegex(
-	inrecAndContext *types.RecordAndContext,
-	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
-) {
-	inrec := inrecAndContext.Record
-
-	outrec := mlrval.NewMlrmapAsRecord()
-	atEnds := make([]*mlrval.MlrmapEntry, 0)
+// reorderSplitByRegex splits record fields into matching (any regex) and rest, preserving record order.
+func (tr *TransformerReorder) reorderSplitByRegex(inrec *mlrval.Mlrmap) (matching []*mlrval.MlrmapEntry, rest []*mlrval.MlrmapEntry) {
 	for pe := inrec.Head; pe != nil; pe = pe.Next {
 		found := false
 		for _, regex := range tr.regexes {
 			if regex.MatchString(pe.Key) {
-				outrec.PutReference(pe.Key, pe.Value)
+				matching = append(matching, pe)
 				found = true
 				break
 			}
 		}
 		if !found {
-			atEnds = append(atEnds, pe)
+			rest = append(rest, pe)
 		}
 	}
+	return matching, rest
+}
 
-	for _, pe := range atEnds {
-		// Ownership transfer; no copy needed
+func (tr *TransformerReorder) reorderToStartWithRegex(
+	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
+) {
+	inrec := inrecAndContext.Record
+	matching, rest := tr.reorderSplitByRegex(inrec)
+
+	outrec := mlrval.NewMlrmapAsRecord()
+	for _, pe := range matching {
+		outrec.PutReference(pe.Key, pe.Value)
+	}
+	for _, pe := range rest {
 		outrec.PutReference(pe.Key, pe.Value)
 	}
 
@@ -275,24 +285,13 @@ func (tr *TransformerReorder) reorderToEndWithRegex(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
 	inrec := inrecAndContext.Record
-	outrec := mlrval.NewMlrmapAsRecord()
-	atEnds := make([]*mlrval.MlrmapEntry, 0)
-	for pe := inrec.Head; pe != nil; pe = pe.Next {
-		found := false
-		for _, regex := range tr.regexes {
-			if regex.MatchString(pe.Key) {
-				atEnds = append(atEnds, pe)
-				found = true
-				break
-			}
-		}
-		if !found {
-			outrec.PutReference(pe.Key, pe.Value)
-		}
-	}
+	matching, rest := tr.reorderSplitByRegex(inrec)
 
-	for _, pe := range atEnds {
-		// Ownership transfer; no copy needed
+	outrec := mlrval.NewMlrmapAsRecord()
+	for _, pe := range rest {
+		outrec.PutReference(pe.Key, pe.Value)
+	}
+	for _, pe := range matching {
 		outrec.PutReference(pe.Key, pe.Value)
 	}
 
@@ -367,19 +366,17 @@ func (tr *TransformerReorder) reorderBeforeOrAfterWithRegex(
 		return
 	}
 
+	// Build matching set in record order (OrderedMap preserves insertion order)
 	matchingFieldNamesSet := lib.NewOrderedMap[*mlrval.Mlrval]()
 	for pe := inrec.Head; pe != nil; pe = pe.Next {
 		for _, regex := range tr.regexes {
-			if regex.MatchString(pe.Key) {
-				if pe.Key != tr.centerFieldName {
-					matchingFieldNamesSet.Put(pe.Key, pe.Value)
-					break
-				}
+			if regex.MatchString(pe.Key) && pe.Key != tr.centerFieldName {
+				matchingFieldNamesSet.Put(pe.Key, pe.Value)
+				break
 			}
 		}
 	}
 
-	// We use outrec.PutReference not output.PutCopy since inrec will be GC'ed
 	outrec := mlrval.NewMlrmapAsRecord()
 	for pe := inrec.Head; pe != nil; pe = pe.Next {
 		if pe.Key == tr.centerFieldName {
