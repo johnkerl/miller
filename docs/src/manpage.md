@@ -1886,6 +1886,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Exactly one  of -m, -n, or -g must be supplied.
        --prefix {p} Specify filename prefix; default "split".
        --suffix {s} Specify filename suffix; default is from mlr output format, e.g. "csv".
+       --folder {f} Specify output directory; default is current directory.
        -a           Append to existing file(s), if any, rather than overwriting.
        -v           Send records along to downstream verbs as well as splitting to files.
        -e           Do NOT URL-escape names of output files.
@@ -1909,6 +1910,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
          mlr --csv --from myfile.csv split -m 10 --prefix test --suffix dat
        Same, but written to the /tmp/ directory.
          mlr --csv --from myfile.csv split -m 10 --prefix /tmp/test --suffix dat
+       Or using --folder:
+         mlr --csv --from myfile.csv split -m 10 --folder /tmp --prefix test --suffix dat
 
        If the shape field has values triangle and square, then there will be split_triangle.csv and split_square.csv.
          mlr --csv --from myfile.csv split -g shape
@@ -3759,5 +3762,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-01-02                         4mMILLER24m(1)
+                                  2026-02-15                         4mMILLER24m(1)
 </pre>

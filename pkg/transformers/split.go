@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
@@ -36,6 +37,7 @@ func transformerSplitUsage(
 Exactly one  of -m, -n, or -g must be supplied.
 --prefix {p} Specify filename prefix; default "`+splitDefaultOutputFileNamePrefix+`".
 --suffix {s} Specify filename suffix; default is from mlr output format, e.g. "csv".
+--folder {f} Specify output directory; default is current directory.
 -a           Append to existing file(s), if any, rather than overwriting.
 -v           Send records along to downstream verbs as well as splitting to files.
 -e           Do NOT URL-escape names of output files.
@@ -59,6 +61,8 @@ Same but instead of split_1.csv, split_2.csv, etc. there are test_1.dat, test_2.
   mlr --csv --from myfile.csv split -m 10 --prefix test --suffix dat
 Same, but written to the /tmp/ directory.
   mlr --csv --from myfile.csv split -m 10 --prefix /tmp/test --suffix dat
+Or using --folder:
+  mlr --csv --from myfile.csv split -m 10 --folder /tmp --prefix test --suffix dat
 
 If the shape field has values triangle and square, then there will be split_triangle.csv and split_square.csv.
   mlr --csv --from myfile.csv split -g shape
@@ -95,6 +99,7 @@ func transformerSplitParseCLI(
 	var outputFileNamePrefix string = splitDefaultOutputFileNamePrefix
 	var outputFileNameSuffix string = "uninit"
 	haveOutputFileNameSuffix := false
+	var outputFolder string = ""
 
 	var localOptions *cli.TOptions = nil
 	if mainOptions != nil {
@@ -134,6 +139,9 @@ func transformerSplitParseCLI(
 		} else if opt == "--suffix" {
 			outputFileNameSuffix = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			haveOutputFileNameSuffix = true
+
+		} else if opt == "--folder" {
+			outputFolder = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-a" {
 			doAppend = true
@@ -194,6 +202,7 @@ func transformerSplitParseCLI(
 		doAppend,
 		outputFileNamePrefix,
 		outputFileNameSuffix,
+		outputFolder,
 		&localOptions.WriterOptions,
 	)
 	if err != nil {
@@ -209,6 +218,7 @@ type TransformerSplit struct {
 	n                        int64
 	outputFileNamePrefix     string
 	outputFileNameSuffix     string
+	outputFolder             string
 	emitDownstream           bool
 	escapeFileNameCharacters bool
 	fileNamePartJoiner       string
@@ -238,13 +248,22 @@ func NewTransformerSplit(
 	doAppend bool,
 	outputFileNamePrefix string,
 	outputFileNameSuffix string,
+	outputFolder string,
 	recordWriterOptions *cli.TWriterOptions,
 ) (*TransformerSplit, error) {
+
+	if outputFolder != "" {
+		err := os.MkdirAll(outputFolder, 0755)
+		if err != nil {
+			return nil, fmt.Errorf("mlr split: could not create output folder %s: %w", outputFolder, err)
+		}
+	}
 
 	tr := &TransformerSplit{
 		n:                        n,
 		outputFileNamePrefix:     outputFileNamePrefix,
 		outputFileNameSuffix:     outputFileNameSuffix,
+		outputFolder:             outputFolder,
 		emitDownstream:           emitDownstream,
 		escapeFileNameCharacters: escapeFileNameCharacters,
 		fileNamePartJoiner:       fileNamePartJoiner,
@@ -383,7 +402,12 @@ func (tr *TransformerSplit) splitGrouped(
 		var filename string
 		groupByFieldValues, ok := inrecAndContext.Record.GetSelectedValues(tr.groupByFieldNames)
 		if !ok {
-			filename = fmt.Sprintf("%s_ungrouped.%s", tr.outputFileNamePrefix, tr.outputFileNameSuffix)
+			baseName := fmt.Sprintf("%s_ungrouped.%s", tr.outputFileNamePrefix, tr.outputFileNameSuffix)
+			if tr.outputFolder != "" {
+				filename = filepath.Join(tr.outputFolder, baseName)
+			} else {
+				filename = baseName
+			}
 		} else {
 			filename = tr.makeGroupedOutputFileName(groupByFieldValues)
 		}
@@ -410,9 +434,13 @@ func (tr *TransformerSplit) splitGrouped(
 	}
 }
 
-// makeUngroupedOutputFileName example: "split_53.csv"
+// makeUngroupedOutputFileName example: "split_53.csv" or "folder/split_53.csv" with --folder
 func (tr *TransformerSplit) makeUngroupedOutputFileName(k int64) string {
-	return fmt.Sprintf("%s_%d.%s", tr.outputFileNamePrefix, k, tr.outputFileNameSuffix)
+	baseName := fmt.Sprintf("%s_%d.%s", tr.outputFileNamePrefix, k, tr.outputFileNameSuffix)
+	if tr.outputFolder != "" {
+		return filepath.Join(tr.outputFolder, baseName)
+	}
+	return baseName
 }
 
 // makeGroupedOutputFileName example: "split_orange.csv"
@@ -435,5 +463,9 @@ func (tr *TransformerSplit) makeGroupedOutputFileName(
 		fileName = tr.outputFileNamePrefix + tr.fileNamePartJoiner + fileName
 	}
 
-	return fileName + "." + tr.outputFileNameSuffix
+	baseName := fileName + "." + tr.outputFileNameSuffix
+	if tr.outputFolder != "" {
+		return filepath.Join(tr.outputFolder, baseName)
+	}
+	return baseName
 }
