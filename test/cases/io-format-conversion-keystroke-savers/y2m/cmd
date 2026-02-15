@@ -1,0 +1,1 @@
+mlr --y2m cat ${CASEDIR}/input

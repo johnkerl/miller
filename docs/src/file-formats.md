@@ -17,7 +17,7 @@ Quick links:
 # File formats
 
 Miller handles name-indexed data using several formats: some you probably know
-by name, such as CSV, TSV, JSON, and JSON Lines -- and other formats you're likely already
+by name, such as CSV, TSV, JSON, JSON Lines, and YAML -- and other formats you're likely already
 seeing and using in your structured data.
 
 Additionally, Miller gives you the option to include comments within your data.
@@ -61,6 +61,16 @@ JSON Lines (sequence of one-line objects):
 +------------------------------------------------+
   Record 1: "apple":"1", "bat":"2", "cog":"3"
   Record 2: "dish:egg":"7", "dish:flint":"8", "garlic":""
+
+YAML (single document = object or array of objects; multiple documents with ---):
++---------------------+
+| apple: 1            |
+| bat: 2              | Record 1: "apple":"1", "bat":"2", "cog":"3"
+| cog: 3              |
+| ---                 |
+| dish: 7             | Record 2: "dish":"7", "egg":"8"
+| egg: 8              |
++---------------------+
 
 PPRINT: pretty-printed tabular
 +---------------------+
@@ -408,6 +418,18 @@ won't reject your input data for lack of outermost `[...]`, nor will it reject y
 of newlines. The difference is on _output_: using `--ojson`, you get outermost `[...]` and pretty-printed
 records; using `--ojsonl`, you get no outermost `[...]`, and one line per record.
 
+## YAML
+
+Miller supports YAML as an I/O format in the same spirit as JSON: input can be a single YAML document
+that is an object (one record) or an array of objects (one record per element), or multiple YAML
+documents separated by `---` (each document is an object or array of objects). Output is either one
+YAML document per record (with `---` between documents) or a single YAML document that is an array
+of all records, controlled by the same kind of list-wrap behavior as JSON.
+
+Use `--yaml`, `--iyaml`, or `--oyaml` (or `-i yaml` / `-o yaml`). Nested structures and types are
+handled like JSON: nested objects become dotted keys when flattened; types are preserved through
+the stream.
+
 ## PPRINT: Pretty-printed tabular
 
 Miller's pretty-print format is similar to CSV, but with column alignment.  For example, compare
@@ -708,20 +730,21 @@ While you can do format conversion using `mlr --icsv --ojson cat myfile.csv`, th
 <pre class="pre-non-highlight-in-pair">
 FORMAT-CONVERSION KEYSTROKE-SAVER FLAGS
 As keystroke-savers for format-conversion you may use the following.
-The letters c, t, j, l, d, n, x, p, and m refer to formats CSV, TSV, DKVP, NIDX,
-JSON, JSON Lines, XTAB, PPRINT, and markdown, respectively.
+The letters c, t, j, l, d, n, x, p, m, and y refer to formats CSV, TSV, JSON, JSON Lines,
+DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively.
 
-| In\out   | CSV      | TSV      | JSON     | JSONL | DKVP  | NIDX  | XTAB  | PPRINT | Markdown |
-+----------+----------+----------+----------+-------+-------+-------+-------+--------+----------|
-| CSV      | --c2c,-c | --c2t    | --c2j    | --c2l | --c2d | --c2n | --c2x | --c2p  | --c2m    |
-| TSV      | --t2c    | --t2t,-t | --t2j    | --t2l | --t2d | --t2n | --t2x | --t2p  | --t2m    |
-| JSON     | --j2c    | --j2t    | --j2j,-j | --j2l | --j2d | --j2n | --j2x | --j2p  | --j2m    |
-| JSONL    | --l2c    | --l2t    | --l2j    | --l2l | --l2d | --l2n | --l2x | --l2p  | --l2m    |
-| DKVP     | --d2c    | --d2t    | --d2j    | --d2l | --d2d | --d2n | --d2x | --d2p  | --d2m    |
-| NIDX     | --n2c    | --n2t    | --n2j    | --n2l | --n2d | --n2n | --n2x | --n2p  | --n2m    |
-| XTAB     | --x2c    | --x2t    | --x2j    | --x2l | --x2d | --x2n | --x2x | --x2p  | --x2m    |
-| PPRINT   | --p2c    | --p2t    | --p2j    | --p2l | --p2d | --p2n | --p2x | -p2p   | --p2m    |
-| Markdown | --m2c    | --m2t    | --m2j    | --m2l | --m2d | --m2n | --m2x | --m2p  |          |
+| In\out   | CSV      | TSV      | JSON     | JSONL | DKVP  | NIDX  | XTAB  | PPRINT | Markdown | YAML   |
++----------+----------+----------+----------+-------+-------+-------+-------+--------+----------+--------+
+| CSV      | --c2c,-c | --c2t    | --c2j    | --c2l | --c2d | --c2n | --c2x | --c2p  | --c2m    | --c2y  |
+| TSV      | --t2c    | --t2t,-t | --t2j    | --t2l | --t2d | --t2n | --t2x | --t2p  | --t2m    | --t2y  |
+| JSON     | --j2c    | --j2t    | --j2j,-j | --j2l | --j2d | --j2n | --j2x | --j2p  | --j2m    | --j2y  |
+| JSONL    | --l2c    | --l2t    | --l2j    | --l2l | --l2d | --l2n | --l2x | --l2p  | --l2m    | --l2y  |
+| DKVP     | --d2c    | --d2t    | --d2j    | --d2l | --d2d | --d2n | --d2x | --d2p  | --d2m    | --d2y  |
+| NIDX     | --n2c    | --n2t    | --n2j    | --n2l | --n2d | --n2n | --n2x | --n2p  | --n2m    | --n2y  |
+| XTAB     | --x2c    | --x2t    | --x2j    | --x2l | --x2d | --x2n | --x2x | --x2p  | --x2m    | --x2y  |
+| PPRINT   | --p2c    | --p2t    | --p2j    | --p2l | --p2d | --p2n | --p2x | -p2p   | --p2m    | --p2y  |
+| Markdown | --m2c    | --m2t    | --m2j    | --m2l | --m2d | --m2n | --m2x | --m2p  |          | --m2y  |
+| YAML     | --y2c    | --y2t    | --y2j    | --y2l | --y2d | --y2n | --y2x | --y2p  | --y2m    | --y2y  |
 
 -p                       Keystroke-saver for `--nidx --fs space --repifs`.
 -T                       Keystroke-saver for `--nidx --fs tab`.

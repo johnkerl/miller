@@ -469,6 +469,24 @@ var JSONOnlyFlagSection = FlagSection{
 		},
 
 		{
+			name:     "--yarray",
+			altNames: []string{"--ya"},
+			help:     "Wrap YAML output in a single top-level array document. This is the default for YAML output format.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.WrapYAMLOutputInOuterList = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--no-yarray",
+			help: "Do not wrap YAML output in a single array document; emit one YAML document per record with `---` between.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.WrapYAMLOutputInOuterList = false
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--jvquoteall",
 			help: "Force all JSON values -- recursively into lists and object -- to string.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
@@ -761,6 +779,15 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name: "--iyaml",
+			help: "Use YAML format for input data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "yaml"
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--inidx",
 			help: "Use NIDX format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
@@ -985,6 +1012,16 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name: "--oyaml",
+			help: "Use YAML format for output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "yaml"
+				options.WriterOptions.WrapYAMLOutputInOuterList = true
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--onidx",
 			help: "Use NIDX format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
@@ -1152,6 +1189,18 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name:     "--yaml",
+			help:     "Use YAML format for input and output data.",
+			altNames: []string{"--y2y"},
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "yaml"
+				options.WriterOptions.OutputFileFormat = "yaml"
+				options.WriterOptions.WrapYAMLOutputInOuterList = true
+				*pargi += 1
+			},
+		},
+
+		{
 			name:     "--nidx",
 			help:     "Use NIDX format for input and output data.",
 			altNames: []string{"--n2n"},
@@ -1202,20 +1251,21 @@ var FileFormatFlagSection = FlagSection{
 
 func FormatConversionKeystrokeSaverPrintInfo() {
 	fmt.Println(`As keystroke-savers for format-conversion you may use the following.
-The letters c, t, j, l, d, n, x, p, and m refer to formats CSV, TSV, DKVP, NIDX,
-JSON, JSON Lines, XTAB, PPRINT, and markdown, respectively.
+The letters c, t, j, l, d, n, x, p, m, and y refer to formats CSV, TSV, JSON, JSON Lines,
+DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively.
 
-| In\out   | CSV      | TSV      | JSON     | JSONL | DKVP  | NIDX  | XTAB  | PPRINT | Markdown |
-+----------+----------+----------+----------+-------+-------+-------+-------+--------+----------|
-| CSV      | --c2c,-c | --c2t    | --c2j    | --c2l | --c2d | --c2n | --c2x | --c2p  | --c2m    |
-| TSV      | --t2c    | --t2t,-t | --t2j    | --t2l | --t2d | --t2n | --t2x | --t2p  | --t2m    |
-| JSON     | --j2c    | --j2t    | --j2j,-j | --j2l | --j2d | --j2n | --j2x | --j2p  | --j2m    |
-| JSONL    | --l2c    | --l2t    | --l2j    | --l2l | --l2d | --l2n | --l2x | --l2p  | --l2m    |
-| DKVP     | --d2c    | --d2t    | --d2j    | --d2l | --d2d | --d2n | --d2x | --d2p  | --d2m    |
-| NIDX     | --n2c    | --n2t    | --n2j    | --n2l | --n2d | --n2n | --n2x | --n2p  | --n2m    |
-| XTAB     | --x2c    | --x2t    | --x2j    | --x2l | --x2d | --x2n | --x2x | --x2p  | --x2m    |
-| PPRINT   | --p2c    | --p2t    | --p2j    | --p2l | --p2d | --p2n | --p2x | -p2p   | --p2m    |
-| Markdown | --m2c    | --m2t    | --m2j    | --m2l | --m2d | --m2n | --m2x | --m2p  |          |`)
+| In\out   | CSV      | TSV      | JSON     | JSONL | DKVP  | NIDX  | XTAB  | PPRINT | Markdown | YAML   |
++----------+----------+----------+----------+-------+-------+-------+-------+--------+----------+--------+
+| CSV      | --c2c,-c | --c2t    | --c2j    | --c2l | --c2d | --c2n | --c2x | --c2p  | --c2m    | --c2y  |
+| TSV      | --t2c    | --t2t,-t | --t2j    | --t2l | --t2d | --t2n | --t2x | --t2p  | --t2m    | --t2y  |
+| JSON     | --j2c    | --j2t    | --j2j,-j | --j2l | --j2d | --j2n | --j2x | --j2p  | --j2m    | --j2y  |
+| JSONL    | --l2c    | --l2t    | --l2j    | --l2l | --l2d | --l2n | --l2x | --l2p  | --l2m    | --l2y  |
+| DKVP     | --d2c    | --d2t    | --d2j    | --d2l | --d2d | --d2n | --d2x | --d2p  | --d2m    | --d2y  |
+| NIDX     | --n2c    | --n2t    | --n2j    | --n2l | --n2d | --n2n | --n2x | --n2p  | --n2m    | --n2y  |
+| XTAB     | --x2c    | --x2t    | --x2j    | --x2l | --x2d | --x2n | --x2x | --x2p  | --x2m    | --x2y  |
+| PPRINT   | --p2c    | --p2t    | --p2j    | --p2l | --p2d | --p2n | --p2x | -p2p   | --p2m    | --p2y  |
+| Markdown | --m2c    | --m2t    | --m2j    | --m2l | --m2d | --m2n | --m2x | --m2p  |          | --m2y  |
+| YAML     | --y2c    | --y2t    | --y2j    | --y2l | --y2d | --y2n | --y2x | --y2p  | --y2m    | --y2y  |`)
 }
 
 func init() { FormatConversionKeystrokeSaverFlagSection.Sort() }
@@ -1353,6 +1403,18 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			},
 		},
 		{
+			name:                    "--c2y",
+			help:                    "Use CSV for input, YAML for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.WriterOptions.OutputFileFormat = "yaml"
+				options.WriterOptions.WrapYAMLOutputInOuterList = true
+				options.ReaderOptions.irsWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
 			name: "--c2b",
 			help: "Use CSV for input, PPRINT with `--barred` for output.",
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
@@ -1481,6 +1543,17 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "markdown"
+				*pargi += 1
+			},
+		},
+		{
+			name:                    "--t2y",
+			help:                    "Use TSV for input, YAML for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "tsv"
+				options.WriterOptions.OutputFileFormat = "yaml"
+				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				*pargi += 1
 			},
 		},
@@ -1616,6 +1689,17 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			},
 		},
 		{
+			name:                    "--d2y",
+			help:                    "Use DKVP for input, YAML for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dkvp"
+				options.WriterOptions.OutputFileFormat = "yaml"
+				options.WriterOptions.WrapYAMLOutputInOuterList = true
+				*pargi += 1
+			},
+		},
+		{
 			name: "--d2b",
 			help: "Use DKVP for input, PPRINT with `--barred` for output.",
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
@@ -1739,6 +1823,17 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "markdown"
+				*pargi += 1
+			},
+		},
+		{
+			name:                    "--n2y",
+			help:                    "Use NIDX for input, YAML for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "nidx"
+				options.WriterOptions.OutputFileFormat = "yaml"
+				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				*pargi += 1
 			},
 		},
@@ -1869,6 +1964,17 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			},
 		},
 		{
+			name:                    "--j2y",
+			help:                    "Use JSON for input, YAML for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "yaml"
+				options.WriterOptions.WrapYAMLOutputInOuterList = true
+				*pargi += 1
+			},
+		},
+		{
 			name: "--j2b",
 			help: "Use JSON for input, PPRINT with --barred for output.",
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
@@ -1988,6 +2094,17 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "markdown"
+				*pargi += 1
+			},
+		},
+		{
+			name:                    "--l2y",
+			help:                    "Use JSON Lines for input, YAML for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "yaml"
+				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				*pargi += 1
 			},
 		},
@@ -2146,6 +2263,19 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 				*pargi += 1
 			},
 		},
+		{
+			name:                    "--p2y",
+			help:                    "Use PPRINT for input, YAML for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "pprint"
+				options.ReaderOptions.IFS = " "
+				options.WriterOptions.OutputFileFormat = "yaml"
+				options.WriterOptions.WrapYAMLOutputInOuterList = true
+				options.ReaderOptions.ifsWasSpecified = true
+				*pargi += 1
+			},
+		},
 
 		{
 			name: "--m2c",
@@ -2255,6 +2385,123 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 				*pargi += 1
 			},
 		},
+		{
+			name:                    "--m2y",
+			help:                    "Use markdown-tabular for input, YAML for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "markdown"
+				options.WriterOptions.OutputFileFormat = "yaml"
+				options.WriterOptions.WrapYAMLOutputInOuterList = true
+				options.ReaderOptions.ifsWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name:                    "--y2c",
+			help:                    "Use YAML for input, CSV for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "yaml"
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.orsWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name:                    "--y2t",
+			help:                    "Use YAML for input, TSV for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "yaml"
+				options.WriterOptions.OutputFileFormat = "tsv"
+				*pargi += 1
+			},
+		},
+		{
+			name:                    "--y2j",
+			help:                    "Use YAML for input, JSON for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "yaml"
+				options.WriterOptions.OutputFileFormat = "json"
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				options.WriterOptions.JSONOutputMultiline = true
+				*pargi += 1
+			},
+		},
+		{
+			name:                    "--y2l",
+			help:                    "Use YAML for input, JSON Lines for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "yaml"
+				options.WriterOptions.OutputFileFormat = "jsonl"
+				*pargi += 1
+			},
+		},
+		{
+			name:                    "--y2d",
+			help:                    "Use YAML for input, DKVP for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "yaml"
+				options.WriterOptions.OutputFileFormat = "dkvp"
+				*pargi += 1
+			},
+		},
+		{
+			name:                    "--y2n",
+			help:                    "Use YAML for input, NIDX for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "yaml"
+				options.WriterOptions.OutputFileFormat = "nidx"
+				*pargi += 1
+			},
+		},
+		{
+			name:                    "--y2x",
+			help:                    "Use YAML for input, XTAB for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "yaml"
+				options.WriterOptions.OutputFileFormat = "xtab"
+				*pargi += 1
+			},
+		},
+		{
+			name:                    "--y2p",
+			help:                    "Use YAML for input, PPRINT for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "yaml"
+				options.WriterOptions.OutputFileFormat = "pprint"
+				*pargi += 1
+			},
+		},
+		{
+			name:                    "--y2m",
+			help:                    "Use YAML for input, markdown-tabular for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "yaml"
+				options.WriterOptions.OutputFileFormat = "markdown"
+				*pargi += 1
+			},
+		},
+		{
+			name:                    "--y2y",
+			help:                    "Use YAML for input and output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "yaml"
+				options.WriterOptions.OutputFileFormat = "yaml"
+				options.WriterOptions.WrapYAMLOutputInOuterList = true
+				*pargi += 1
+			},
+		},
 
 		{
 			name: "--x2c",
@@ -2354,6 +2601,17 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "markdown"
+				*pargi += 1
+			},
+		},
+		{
+			name:                    "--x2y",
+			help:                    "Use XTAB for input, YAML for output.",
+			suppressFlagEnumeration: true,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "xtab"
+				options.WriterOptions.OutputFileFormat = "yaml"
+				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				*pargi += 1
 			},
 		},

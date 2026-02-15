@@ -1,7 +1,7 @@
 # File formats
 
 Miller handles name-indexed data using several formats: some you probably know
-by name, such as CSV, TSV, JSON, and JSON Lines -- and other formats you're likely already
+by name, such as CSV, TSV, JSON, JSON Lines, and YAML -- and other formats you're likely already
 seeing and using in your structured data.
 
 Additionally, Miller gives you the option to include comments within your data.
@@ -167,6 +167,18 @@ Note that for _input_ data, either is acceptable: whether you use `--ijson` or `
 won't reject your input data for lack of outermost `[...]`, nor will it reject your data for placement
 of newlines. The difference is on _output_: using `--ojson`, you get outermost `[...]` and pretty-printed
 records; using `--ojsonl`, you get no outermost `[...]`, and one line per record.
+
+## YAML
+
+Miller supports YAML as an I/O format in the same spirit as JSON: input can be a single YAML document
+that is an object (one record) or an array of objects (one record per element), or multiple YAML
+documents separated by `---` (each document is an object or array of objects). Output is either one
+YAML document per record (with `---` between documents) or a single YAML document that is an array
+of all records, controlled by the same kind of list-wrap behavior as JSON.
+
+Use `--yaml`, `--iyaml`, or `--oyaml` (or `-i yaml` / `-o yaml`). Nested structures and types are
+handled like JSON: nested objects become dotted keys when flattened; types are preserved through
+the stream.
 
 ## PPRINT: Pretty-printed tabular
 
