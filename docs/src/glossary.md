@@ -448,6 +448,10 @@ record is an object written on a single line, without need to be wrapped an
 outermost list. This format helps people interoperate with non-JSON-aware
 tools in the [Unix toolkit](#unix-toolkit) which generally operate on lines.
 
+## YAML
+
+A human-readable [file format](file-formats.md#yaml) for structured data supported by Miller. Input can be a single document (object or array of objects) or multiple documents separated by `---`. Output can be one top-level array document or one document per record.
+
 ## key
 
 The string index in a [map](#map). Also, the name of a field in a [record](#record).
@@ -464,7 +468,7 @@ trying to define a [local variable](#local-variable) `if = 3` will result in a p
 A subsequence of a text file in between line-ending symbols such as the special linefeed character.
 Tools in the [Unix toolkit](#unix-toolkit) generally operate on lines; Miller is designed to do
 that (using the [NIDX format flags](file-formats.md#nidx-index-numbered-toolkit-style)), as well
-as non-line-oriented formats such as [CSV, TSV, JSON, and others](file-formats.md).
+as non-line-oriented formats such as [CSV, TSV, JSON, YAML, and others](file-formats.md).
 
 ## local variable
 

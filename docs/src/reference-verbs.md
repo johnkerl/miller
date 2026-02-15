@@ -2245,6 +2245,8 @@ Options:
   --values,--pairs      One is required.
   --across-records,--across-fields One is required.
   -f {field name}       Required.
+  -r {field names}      Like -f but treat arguments as a regular expression. Match all
+                        field names and operate on each in record order. Example: `-r '^[xy]$`'.
   --nested-fs {string}  Defaults to ";". Field separator for nested values.
   --nested-ps {string}  Defaults to ":". Pair separator for nested key-value pairs.
   --evar {string}       Shorthand for --explode --values --across-records --nested-fs {string}
@@ -2534,6 +2536,9 @@ Moves specified names to start of record, or end of record.
 Options:
 -e Put specified field names at record end: default is to put them at record start.
 -f {a,b,c} Field names to reorder.
+-r        Treat field names as regular expressions. Matched fields are moved
+          to start or end in record order. Example: -r '^YYY,^XXX' puts all
+          YYY- and XXX-prefixed fields first (in record order), then the rest.
 -b {x}     Put field names specified with -f before field name specified by {x},
            if any. If {x} isn't present in a given record, the specified fields
            will not be moved.
@@ -2545,6 +2550,7 @@ Options:
 Examples:
 mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
 mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
+mlr reorder -r '^YYY,^XXX' puts YYY- and XXX-prefixed fields first (record order), then rest.
 </pre>
 
 This pivots specified field names to the start or end of the record -- for
@@ -3168,6 +3174,7 @@ Options:
 Exactly one  of -m, -n, or -g must be supplied.
 --prefix {p} Specify filename prefix; default "split".
 --suffix {s} Specify filename suffix; default is from mlr output format, e.g. "csv".
+--folder {f} Specify output directory; default is current directory.
 -a           Append to existing file(s), if any, rather than overwriting.
 -v           Send records along to downstream verbs as well as splitting to files.
 -e           Do NOT URL-escape names of output files.
@@ -3191,6 +3198,8 @@ Same but instead of split_1.csv, split_2.csv, etc. there are test_1.dat, test_2.
   mlr --csv --from myfile.csv split -m 10 --prefix test --suffix dat
 Same, but written to the /tmp/ directory.
   mlr --csv --from myfile.csv split -m 10 --prefix /tmp/test --suffix dat
+Or using --folder:
+  mlr --csv --from myfile.csv split -m 10 --folder /tmp --prefix test --suffix dat
 
 If the shape field has values triangle and square, then there will be split_triangle.csv and split_square.csv.
   mlr --csv --from myfile.csv split -g shape
@@ -4134,7 +4143,7 @@ There are two main ways to use `mlr uniq`: the first way is with `-g` to specify
 <b>wc -l data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-10079 data/colored-shapes.csv
+   10079 data/colored-shapes.csv
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -4291,7 +4300,7 @@ color=purple,shape=square,flag=0
 <b>wc -l data/repeats.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-57 data/repeats.dkvp
+      57 data/repeats.dkvp
 </pre>
 
 <pre class="pre-highlight-in-pair">

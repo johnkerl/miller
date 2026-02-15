@@ -94,6 +94,16 @@ This is simply a copy of what you should see on running `man mlr` at a command p
          Record 1: "apple":"1", "bat":"2", "cog":"3"
          Record 2: "dish:egg":"7", "dish:flint":"8", "garlic":""
 
+       YAML (single document = object or array of objects; multiple documents with ---):
+       +---------------------+
+       | apple: 1            |
+       | bat: 2              | Record 1: "apple":"1", "bat":"2", "cog":"3"
+       | cog: 3              |
+       | ---                 |
+       | dish: 7             | Record 2: "dish":"7", "egg":"8"
+       | egg: 8              |
+       +---------------------+
+
        PPRINT: pretty-printed tabular
        +---------------------+
        | apple bat cog       |
@@ -407,6 +417,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        --itsvlite               Use TSV-lite format for input data.
        --iusv or --iusvlite     Use USV format for input data.
        --ixtab                  Use XTAB format for input data.
+       --iyaml                  Use YAML format for input data.
        --json or -j or --j2j    Use JSON format for input and output data.
        --jsonl or --l2l         Use JSON Lines format for input and output data.
        --nidx or --n2n          Use NIDX format for input and output data.
@@ -423,12 +434,14 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        --otsvlite               Use TSV-lite format for output data.
        --ousv or --ousvlite     Use USV format for output data.
        --oxtab                  Use XTAB format for output data.
+       --oyaml                  Use YAML format for output data.
        --pprint or --p2p        Use PPRINT format for input and output data.
        --tsv or -t or --t2t     Use TSV format for input and output data.
        --tsvlite                Use TSV-lite format for input and output data.
        --usv or --usvlite       Use USV format for input and output data.
        --xtab or --x2x          Use XTAB format for input and output data.
        --xvright                Right-justify values for XTAB format.
+       --yaml or --y2y          Use YAML format for input and output data.
        -i {format name}         Use format name for input data. For example: `-i csv`
                                 is the same as `--icsv`.
        -o {format name}         Use format name for output data. For example: `-o
@@ -456,20 +469,21 @@ This is simply a copy of what you should see on running `man mlr` at a command p
 
 1mFORMAT-CONVERSION KEYSTROKE-SAVER FLAGS0m
        As keystroke-savers for format-conversion you may use the following.
-       The letters c, t, j, l, d, n, x, p, and m refer to formats CSV, TSV, DKVP, NIDX,
-       JSON, JSON Lines, XTAB, PPRINT, and markdown, respectively.
+       The letters c, t, j, l, d, n, x, p, m, and y refer to formats CSV, TSV, JSON, JSON Lines,
+       DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively.
 
-       | In\out   | CSV      | TSV      | JSON     | JSONL | DKVP  | NIDX  | XTAB  | PPRINT | Markdown |
-       +----------+----------+----------+----------+-------+-------+-------+-------+--------+----------|
-       | CSV      | --c2c,-c | --c2t    | --c2j    | --c2l | --c2d | --c2n | --c2x | --c2p  | --c2m    |
-       | TSV      | --t2c    | --t2t,-t | --t2j    | --t2l | --t2d | --t2n | --t2x | --t2p  | --t2m    |
-       | JSON     | --j2c    | --j2t    | --j2j,-j | --j2l | --j2d | --j2n | --j2x | --j2p  | --j2m    |
-       | JSONL    | --l2c    | --l2t    | --l2j    | --l2l | --l2d | --l2n | --l2x | --l2p  | --l2m    |
-       | DKVP     | --d2c    | --d2t    | --d2j    | --d2l | --d2d | --d2n | --d2x | --d2p  | --d2m    |
-       | NIDX     | --n2c    | --n2t    | --n2j    | --n2l | --n2d | --n2n | --n2x | --n2p  | --n2m    |
-       | XTAB     | --x2c    | --x2t    | --x2j    | --x2l | --x2d | --x2n | --x2x | --x2p  | --x2m    |
-       | PPRINT   | --p2c    | --p2t    | --p2j    | --p2l | --p2d | --p2n | --p2x | -p2p   | --p2m    |
-       | Markdown | --m2c    | --m2t    | --m2j    | --m2l | --m2d | --m2n | --m2x | --m2p  |          |
+       | In\out   | CSV      | TSV      | JSON     | JSONL | DKVP  | NIDX  | XTAB  | PPRINT | Markdown | YAML   |
+       +----------+----------+----------+----------+-------+-------+-------+-------+--------+----------+--------+
+       | CSV      | --c2c,-c | --c2t    | --c2j    | --c2l | --c2d | --c2n | --c2x | --c2p  | --c2m    | --c2y  |
+       | TSV      | --t2c    | --t2t,-t | --t2j    | --t2l | --t2d | --t2n | --t2x | --t2p  | --t2m    | --t2y  |
+       | JSON     | --j2c    | --j2t    | --j2j,-j | --j2l | --j2d | --j2n | --j2x | --j2p  | --j2m    | --j2y  |
+       | JSONL    | --l2c    | --l2t    | --l2j    | --l2l | --l2d | --l2n | --l2x | --l2p  | --l2m    | --l2y  |
+       | DKVP     | --d2c    | --d2t    | --d2j    | --d2l | --d2d | --d2n | --d2x | --d2p  | --d2m    | --d2y  |
+       | NIDX     | --n2c    | --n2t    | --n2j    | --n2l | --n2d | --n2n | --n2x | --n2p  | --n2m    | --n2y  |
+       | XTAB     | --x2c    | --x2t    | --x2j    | --x2l | --x2d | --x2n | --x2x | --x2p  | --x2m    | --x2y  |
+       | PPRINT   | --p2c    | --p2t    | --p2j    | --p2l | --p2d | --p2n | --p2x | -p2p   | --p2m    | --p2y  |
+       | Markdown | --m2c    | --m2t    | --m2j    | --m2l | --m2d | --m2n | --m2x | --m2p  |          | --m2y  |
+       | YAML     | --y2c    | --y2t    | --y2j    | --y2l | --y2d | --y2n | --y2x | --y2p  | --y2m    | --y2y  |
 
        -p                       Keystroke-saver for `--nidx --fs space --repifs`.
        -T                       Keystroke-saver for `--nidx --fs tab`.
@@ -488,6 +502,10 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                                 the default for JSON Lines output format.
        --no-jvstack             Put objects/arrays all on one line for JSON output.
                                 This is the default for JSON Lines output format.
+       --no-yarray              Do not wrap YAML output in a single array document;
+                                emit one YAML document per record with `---` between.
+       --yarray or --ya         Wrap YAML output in a single top-level array
+                                document. This is the default for YAML output format.
 
 1mLEGACY FLAGS0m
        These are flags which don't do anything in the current Miller version.
@@ -827,6 +845,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                pprint   " "    N/A    "\n"
                tsv      "     "    N/A    "\n"
                xtab     "\n"   " "    "\n\n"
+               yaml     N/A    N/A    N/A
 
        --fs {string}            Specify FS for input and output.
        --ifs {string}           Specify FS for input.
@@ -1498,6 +1517,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
          --values,--pairs      One is required.
          --across-records,--across-fields One is required.
          -f {field name}       Required.
+         -r {field names}      Like -f but treat arguments as a regular expression. Match all
+                               field names and operate on each in record order. Example: `-r '^[xy]$`'.
          --nested-fs {string}  Defaults to ";". Field separator for nested values.
          --nested-ps {string}  Defaults to ":". Pair separator for nested key-value pairs.
          --evar {string}       Shorthand for --explode --values --across-records --nested-fs {string}
@@ -1671,6 +1692,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Options:
        -e Put specified field names at record end: default is to put them at record start.
        -f {a,b,c} Field names to reorder.
+       -r        Treat field names as regular expressions. Matched fields are moved
+                 to start or end in record order. Example: -r '^YYY,^XXX' puts all
+                 YYY- and XXX-prefixed fields first (in record order), then the rest.
        -b {x}     Put field names specified with -f before field name specified by {x},
                   if any. If {x} isn't present in a given record, the specified fields
                   will not be moved.
@@ -1682,6 +1706,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Examples:
        mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
        mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
+       mlr reorder -r '^YYY,^XXX' puts YYY- and XXX-prefixed fields first (record order), then rest.
 
    1mrepeat0m
        Usage: mlr repeat [options]
@@ -1886,6 +1911,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Exactly one  of -m, -n, or -g must be supplied.
        --prefix {p} Specify filename prefix; default "split".
        --suffix {s} Specify filename suffix; default is from mlr output format, e.g. "csv".
+       --folder {f} Specify output directory; default is current directory.
        -a           Append to existing file(s), if any, rather than overwriting.
        -v           Send records along to downstream verbs as well as splitting to files.
        -e           Do NOT URL-escape names of output files.
@@ -1909,6 +1935,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
          mlr --csv --from myfile.csv split -m 10 --prefix test --suffix dat
        Same, but written to the /tmp/ directory.
          mlr --csv --from myfile.csv split -m 10 --prefix /tmp/test --suffix dat
+       Or using --folder:
+         mlr --csv --from myfile.csv split -m 10 --folder /tmp --prefix test --suffix dat
 
        If the shape field has values triangle and square, then there will be split_triangle.csv and split_square.csv.
          mlr --csv --from myfile.csv split -g shape
@@ -3759,5 +3787,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-01-02                         4mMILLER24m(1)
+                                  2026-02-15                         4mMILLER24m(1)
 </pre>

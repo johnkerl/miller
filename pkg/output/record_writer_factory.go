@@ -18,6 +18,8 @@ func Create(writerOptions *cli.TWriterOptions) (IRecordWriter, error) {
 		return NewRecordWriterJSON(writerOptions)
 	case "jsonl":
 		return NewRecordWriterJSONLines(writerOptions)
+	case "yaml":
+		return NewRecordWriterYAML(writerOptions)
 	case "md":
 		return NewRecordWriterMarkdown(writerOptions)
 	case "markdown":

@@ -1,0 +1,1 @@
+mlr nest --explode --values --across-records -r '^x$' test/input/nest-explode.dkvp

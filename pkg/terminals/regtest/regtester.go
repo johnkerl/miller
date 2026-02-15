@@ -60,6 +60,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"sort"
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/colorizer"
@@ -167,6 +168,7 @@ func (regtester *RegTester) Execute(
 	regtester.resetCounts()
 
 	lib.InternalCodingErrorIf(len(casePaths) == 0)
+	sort.Strings(casePaths)
 
 	if !regtester.plainMode {
 		fmt.Println("REGRESSION TEST:")
@@ -342,6 +344,7 @@ func (regtester *RegTester) hasCaseSubdirectories(
 		fmt.Printf("%s: %v\n", dirName, err)
 		os.Exit(1)
 	}
+	sort.Strings(names)
 
 	for _, name := range names {
 		path := dirName + string(filepath.Separator) + name

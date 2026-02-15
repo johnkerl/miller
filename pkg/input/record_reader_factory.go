@@ -16,6 +16,8 @@ func Create(readerOptions *cli.TReaderOptions, recordsPerBatch int64) (IRecordRe
 		return NewRecordReaderDKVP(readerOptions, recordsPerBatch)
 	case "json":
 		return NewRecordReaderJSON(readerOptions, recordsPerBatch)
+	case "yaml":
+		return NewRecordReaderYAML(readerOptions, recordsPerBatch)
 	case "nidx":
 		return NewRecordReaderNIDX(readerOptions, recordsPerBatch)
 	case "md":
