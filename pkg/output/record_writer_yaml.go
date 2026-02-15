@@ -13,9 +13,9 @@ import (
 )
 
 type RecordWriterYAML struct {
-	writerOptions    *cli.TWriterOptions
-	bufferedRecords  []interface{} // used when WrapYAMLOutputInOuterList is true
-	wroteAnyRecords  bool          // for multi-doc: emit "---\n" before 2nd and later docs
+	writerOptions   *cli.TWriterOptions
+	bufferedRecords []interface{} // used when WrapYAMLOutputInOuterList is true
+	wroteAnyRecords bool          // for multi-doc: emit "---\n" before 2nd and later docs
 }
 
 func NewRecordWriterYAML(writerOptions *cli.TWriterOptions) (*RecordWriterYAML, error) {

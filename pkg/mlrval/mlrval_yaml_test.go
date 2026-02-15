@@ -164,7 +164,7 @@ func TestMlrvalDecodeFromYAMLMultiDoc(t *testing.T) {
 func TestYAMLKeyStringNonStringKeys(t *testing.T) {
 	// map[interface{}]interface{} with int key
 	m := map[interface{}]interface{}{
-		1:    "one",
+		1:     "one",
 		"two": 2,
 	}
 	mv, err := mlrvalFromYAMLMap(m)

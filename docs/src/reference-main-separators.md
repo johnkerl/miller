@@ -264,7 +264,7 @@ Notes:
 * CSV IRS and ORS must be newline, and CSV IFS must be a single character. (CSV-lite does not have these restrictions.)
 * TSV IRS and ORS must be newline, and TSV IFS must be a tab. (TSV-lite does not have these restrictions.)
 * See the [CSV section](file-formats.md#csvtsvasvusvetc) for information about ASV and USV.
-* JSON: ignores all separator flags from the command line.
+* JSON and YAML: ignore separator flags from the command line.
 * Headerless CSV overlaps quite a bit with NIDX format using comma for IFS. See also the page on [CSV with and without headers](csv-with-and-without-headers.md).
 * For XTAB, the record separator is a repetition of the field separator. For example, if one record has `x=1,y=2` and the next has `x=3,y=4`, and OFS is newline, then output lines are `x 1`, then `y 2`, then an extra newline, then `x 3`, then `y 4`. This means: to customize XTAB, set `OFS` rather than `ORS`.
 
@@ -275,6 +275,7 @@ Notes:
 | [**CSV-lite**](file-formats.md#csvtsvasvusvetc)    | Default `\n` *   | Default `,`    | None     |
 | [**TSV-lite**](file-formats.md#csvtsvasvusvetc)    | Default `\n` *  |  Default `\t`   | None     |
 | [**JSON**](file-formats.md#json)   | N/A; records are between `{` and `}` | Always `,`; not alterable    | Always `:`; not alterable |
+| [**YAML**](file-formats.md#yaml)   | N/A; documents separated by `---` or single array   | N/A; not alterable    | Always `:`; not alterable |
 | [**DKVP**](file-formats.md#dkvp-key-value-pairs)   | Default `\n`    | Default `,`    | Default `=` |
 | [**NIDX**](file-formats.md#nidx-index-numbered-toolkit-style)   | Default `\n`    | Default space    | None     |
 | [**XTAB**](file-formats.md#xtab-vertical-tabular)   | Not used; records are separated by an extra FS    | `\n` *    | Default: space with repeats  |

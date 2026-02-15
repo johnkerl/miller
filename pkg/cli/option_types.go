@@ -256,7 +256,7 @@ func DefaultWriterOptions() TWriterOptions {
 
 		WrapJSONOutputInOuterList: true,
 		JSONOutputMultiline:       true,
-		WrapYAMLOutputInOuterList:  true,
+		WrapYAMLOutputInOuterList: true,
 
 		AutoUnflatten: true,
 		AutoFlatten:   true,
