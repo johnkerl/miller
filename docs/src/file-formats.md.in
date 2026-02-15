@@ -1,7 +1,7 @@
 # File formats
 
 Miller handles name-indexed data using several formats: some you probably know
-by name, such as CSV, TSV, JSON, and JSON Lines -- and other formats you're likely already
+by name, such as CSV, TSV, JSON, JSON Lines, and YAML -- and other formats you're likely already
 seeing and using in your structured data.
 
 Additionally, Miller gives you the option to include comments within your data.

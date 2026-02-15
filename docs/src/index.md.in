@@ -23,7 +23,7 @@ GENMD-SHOW-COMMAND
 mlr --json head -n 1 myfile.json
 GENMD-EOF
 
-The `sort`, `head`, etc., are called *verbs*. They're analogs of familiar command-line tools like `sort`, `head`, and so on -- but they're aware of name-indexed, multi-line file formats like CSV, TSV, and JSON. In addition, though, using Miller's `put` verb, you can use programming-language statements for expressions like
+The `sort`, `head`, etc., are called *verbs*. They're analogs of familiar command-line tools like `sort`, `head`, and so on -- but they're aware of name-indexed, multi-line file formats like CSV, TSV, JSON, and YAML. In addition, though, using Miller's `put` verb, you can use programming-language statements for expressions like
 
 GENMD-SHOW-COMMAND
 mlr --csv put '$rate = $units / $seconds' input.csv
