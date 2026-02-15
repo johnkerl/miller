@@ -237,7 +237,16 @@ func strptime_tz(
 			// Accumulate the go-lib style template and input strings.
 			if sil == 0 { // No intervening text, e.g. "%Y%m%d"
 				if formatCode == 'f' {
-					sil = len(strptime_input) - sii
+					// %f is optional decimal point + 1-6 digit runes (microseconds).
+					// Do not consume the rest of the string so that %f%z works:
+					// e.g. ".160001+0100" -> %f takes ".160001", %z takes "+0100".
+					sil = parseFracLen(strptime_input[sii:])
+					if sil == 0 {
+						if _debug {
+							fmt.Printf("format/template mismatch: no fractional digits for %%f\n")
+						}
+						return time.Time{}, ErrFormatMismatch
+					}
 				} else {
 					sil = len(templateComponent)
 					if sil > len(strptime_input)-sii {
@@ -301,6 +310,27 @@ func strptime_tz(
 	} else {
 		return time.Parse(goLibTemplate, goLibInput)
 	}
+}
+
+// parseFracLen returns the byte length of a strptime %f field in s: optional '.'
+// followed by 1-6 digit runes (microseconds). Returns 0 if no valid fraction.
+func parseFracLen(s string) int {
+	if s == "" {
+		return 0
+	}
+	n := 0
+	if s[0] == '.' {
+		n = 1
+	}
+	digits := 0
+	for n < len(s) && digits < 6 && s[n] >= '0' && s[n] <= '9' {
+		n++
+		digits++
+	}
+	if digits == 0 {
+		return 0
+	}
+	return n
 }
 
 // expandShorthands handles some shorthands that the C library uses, which we can easily
