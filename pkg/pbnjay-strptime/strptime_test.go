@@ -134,7 +134,6 @@ var testData = []testDataType{
 	},
 }
 
-
 func TestStrptime(t *testing.T) {
 	for i, item := range testData {
 		tval, err := Parse(item.input, item.format)
