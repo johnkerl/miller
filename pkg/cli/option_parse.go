@@ -761,6 +761,15 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name: "--iyaml",
+			help: "Use YAML format for input data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "yaml"
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--inidx",
 			help: "Use NIDX format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
@@ -985,6 +994,16 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name: "--oyaml",
+			help: "Use YAML format for output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "yaml"
+				options.WriterOptions.WrapYAMLOutputInOuterList = true
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--onidx",
 			help: "Use NIDX format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
@@ -1147,6 +1166,18 @@ var FileFormatFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "jsonl"
+				*pargi += 1
+			},
+		},
+
+		{
+			name:     "--yaml",
+			help:     "Use YAML format for input and output data.",
+			altNames: []string{"--y2y"},
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "yaml"
+				options.WriterOptions.OutputFileFormat = "yaml"
+				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				*pargi += 1
 			},
 		},
