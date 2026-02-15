@@ -1,6 +1,8 @@
 # Proposal: YAML I/O format support
 
-Miller already handles a subset of JSON for input and output. This document proposes adding **YAML** as an additional I/O format, reusing the same record model (stream of `Mlrmap` records) and the existing `mlrval` type system.
+**Status: Implemented.** YAML I/O, conversion shortcuts, list-wrap flags, unit tests, and regression tests are in place.
+
+Miller already handles a subset of JSON for input and output. This document proposed adding **YAML** as an additional I/O format, reusing the same record model (stream of `Mlrmap` records) and the existing `mlrval` type system.
 
 ## Goals
 
@@ -172,3 +174,13 @@ Remove the `// indirect` comment so the dependency is explicit.
 | docs              | `file-formats.md` YAML subsection |
 
 This keeps YAML aligned with Miller’s existing JSON subset and record model while reusing the same CLI and option patterns.
+
+---
+
+## Implementation summary (done)
+
+* **Dependency:** `gopkg.in/yaml.v3` is a direct requirement in `go.mod`.
+* **Core:** `pkg/mlrval/mlrval_yaml.go` — decode (including `map[string]interface{}` from the library) and encode; `pkg/input/record_reader_yaml.go`; `pkg/output/record_writer_yaml.go` (list-wrap and multi-doc modes).
+* **CLI:** `--yaml`, `--iyaml`, `--oyaml`, `-i yaml`, `-o yaml`; `--ylistwrap` / `--no-ylistwrap`; conversion shortcuts in the format matrix (`--c2y`, `--y2c`, etc.).
+* **Docs:** YAML in `helpFileFormats()`, `docs/src/file-formats.md.in`, and the separators table in `reference-main-separators.md.in`.
+* **Tests:** `pkg/mlrval/mlrval_yaml_test.go` (scalars, maps, arrays, multi-doc, round-trip, non-string keys); `test/cases/io-yaml-io/0001` (YAML→CSV), `0002` (YAML→YAML multi-doc); `test/cases/io-format-conversion-keystroke-savers/c2y` (CSV→YAML).
