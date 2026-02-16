@@ -788,6 +788,15 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name: "--idcf",
+			help: "Use Debian control file (DCF) format for input data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dcf"
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--inidx",
 			help: "Use NIDX format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {

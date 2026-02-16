@@ -88,6 +88,7 @@ var defaultFSes = map[string]string{
 	"dkvp":     ",",
 	"json":     "N/A", // not alterable; not parameterizable in JSON format
 	"yaml":     "N/A",
+	"dcf":      "N/A",
 	"nidx":     " ",
 	"markdown": " ",
 	"pprint":   " ",
@@ -102,6 +103,7 @@ var defaultPSes = map[string]string{
 	"dkvp":     "=",
 	"json":     "N/A", // not alterable; not parameterizable in JSON format
 	"yaml":     "N/A",
+	"dcf":      "N/A",
 	"markdown": "N/A",
 	"nidx":     "N/A",
 	"pprint":   "N/A",
@@ -116,6 +118,7 @@ var defaultRSes = map[string]string{
 	"dkvp":     "\n",
 	"json":     "N/A", // not alterable; not parameterizable in JSON format
 	"yaml":     "N/A",
+	"dcf":      "N/A",
 	"markdown": "\n",
 	"nidx":     "\n",
 	"pprint":   "\n",
@@ -130,6 +133,7 @@ var defaultAllowRepeatIFSes = map[string]bool{
 	"dkvp":     false,
 	"json":     false,
 	"yaml":     false,
+	"dcf":      false,
 	"markdown": false,
 	"nidx":     false,
 	"pprint":   true,
