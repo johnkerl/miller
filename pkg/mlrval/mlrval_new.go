@@ -123,14 +123,14 @@ func FromNotCollectionError(funcname string, v *Mlrval) *Mlrval {
 	return FromNotNamedTypeError(funcname, v, "array or map")
 }
 
-func FromNotNamedTypeError(funcname string, v *Mlrval, expected_type_name string) *Mlrval {
+func FromNotNamedTypeError(funcname string, v *Mlrval, expectedTypeName string) *Mlrval {
 	return FromError(
 		fmt.Errorf(
 			"%s: unacceptable value %s with type %s; needed type %s",
 			funcname,
 			v.StringMaybeQuoted(),
 			v.GetTypeName(),
-			expected_type_name,
+			expectedTypeName,
 		),
 	)
 }

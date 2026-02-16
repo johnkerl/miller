@@ -244,7 +244,7 @@ func recurseBinaryFuncOnInput1(binaryFunc BinaryFunc, input1, input2 *mlrval.Mlr
 
 func type_error_named_argument(
 	funcname string,
-	expected_type_name string,
+	expectedTypeName string,
 	varname string,
 	varval *mlrval.Mlrval,
 ) *mlrval.Mlrval {
@@ -253,7 +253,7 @@ func type_error_named_argument(
 			"%s: %s should be a %s; got type %s with value %s",
 			funcname,
 			varname,
-			expected_type_name,
+			expectedTypeName,
 			varval.GetTypeName(),
 			varval.StringMaybeQuoted(),
 		),
