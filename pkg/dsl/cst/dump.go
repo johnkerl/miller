@@ -1,4 +1,3 @@
-// ================================================================
 // This handles dump and edump statements.
 // See print.go for comments; this is similar.
 //
@@ -11,7 +10,6 @@
 //
 // * 'print $x,$y,$z' prints all items on one line; 'dump $x,$y,$z' prints each on
 //   its own line.
-// ================================================================
 
 package cst
 
@@ -56,7 +54,6 @@ func (root *RootNode) BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable
 	)
 }
 
-// ----------------------------------------------------------------
 // Common code for building dump/edump nodes
 
 func (root *RootNode) buildDumpxStatementNode(
@@ -114,7 +111,7 @@ func (root *RootNode) buildDumpxStatementNode(
 		lib.InternalCodingErrorIf(redirectorNode.Children == nil)
 		lib.InternalCodingErrorIf(len(redirectorNode.Children) != 1)
 		redirectorTargetNode := redirectorNode.Children[0]
-		var err error = nil
+		var err error
 
 		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
 			retval.dumpToRedirectFunc = retval.dumpToStdout
@@ -135,7 +132,7 @@ func (root *RootNode) buildDumpxStatementNode(
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
 				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
-				return nil, fmt.Errorf("mlr: unhandled redirector node type %s", string(redirectorNode.Type))
+				return nil, fmt.Errorf("unhandled redirector node type %s", string(redirectorNode.Type))
 			}
 		}
 	}
@@ -205,7 +202,7 @@ func (node *DumpStatementNode) dumpToFileOrPipe(
 	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
 		return fmt.Errorf(
-			"mlr: output redirection yielded %s, not string",
+			"output redirection yielded %s, not string",
 			redirectorTarget.GetTypeName(),
 		)
 	}

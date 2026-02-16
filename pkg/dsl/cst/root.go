@@ -1,7 +1,5 @@
-// ================================================================
 // Top-level entry point for building a CST from an AST at parse time, and for
 // executing the CST at runtime.
-// ================================================================
 
 package cst
 
@@ -29,16 +27,16 @@ func NewEmptyRoot(
 	dslInstanceType DSLInstanceType, // mlr put, mlr filter, or mlr repl
 ) *RootNode {
 	return &RootNode{
-		beginBlocks:                   make([]*StatementBlockNode, 0),
+		beginBlocks:                   []*StatementBlockNode{},
 		mainBlock:                     NewStatementBlockNode(),
 		replImmediateBlock:            NewStatementBlockNode(),
-		endBlocks:                     make([]*StatementBlockNode, 0),
+		endBlocks:                     []*StatementBlockNode{},
 		udfManager:                    NewUDFManager(),
 		udsManager:                    NewUDSManager(),
 		allowUDFUDSRedefinitions:      false,
-		unresolvedFunctionCallsites:   make([]*UDFCallsite, 0),
-		unresolvedSubroutineCallsites: make([]*UDSCallsite, 0),
-		outputHandlerManagers:         make([]output.OutputHandlerManager, 0),
+		unresolvedFunctionCallsites:   []*UDFCallsite{},
+		unresolvedSubroutineCallsites: []*UDSCallsite{},
+		outputHandlerManagers:         []output.OutputHandlerManager{},
 		recordWriterOptions:           recordWriterOptions,
 		dslInstanceType:               dslInstanceType,
 	}
@@ -58,8 +56,6 @@ func (root *RootNode) WithStrictMode(strictMode bool) *RootNode {
 	return root
 }
 
-// ----------------------------------------------------------------
-
 // ASTBuildVisitorFunc is a callback, used by RootNode's Build method, which
 // CST-builder callsites can use to visit parse-to-AST result of multi-string
 // DSL inputs. Nominal use: mlr put -v, mlr put -d, etc.
@@ -76,9 +72,6 @@ func (root *RootNode) Build(
 	doWarnings bool,
 	astBuildVisitorFunc ASTBuildVisitorFunc,
 ) (hadWarnings bool, err error) {
-	hadWarnings = false
-	err = nil
-
 	for _, dslString := range dslStrings {
 		astRootNode, err := buildASTFromStringWithMessage(dslString)
 		if err != nil {
@@ -116,9 +109,8 @@ func buildASTFromStringWithMessage(dslString string) (*dsl.AST, error) {
 		// At present it's overly parser-internal, and confusing. :(
 		fmt.Fprintln(os.Stderr, "mlr: cannot parse DSL expression.")
 		return nil, err
-	} else {
-		return astRootNode, nil
 	}
+	return astRootNode, nil
 }
 
 func buildASTFromString(dslString string) (*dsl.AST, error) {
@@ -145,8 +137,6 @@ func buildASTFromString(dslString string) (*dsl.AST, error) {
 	return astRootNode, nil
 }
 
-// ----------------------------------------------------------------
-
 // If the user has multiple put -f / put -e pieces, we can AST-parse each
 // separately and build them. However we cannot resolve UDF/UDS references
 // until after they're all ingested -- e.g. first piece calls a function which
@@ -159,9 +149,6 @@ func (root *RootNode) IngestAST(
 	isReplImmediate bool,
 	doWarnings bool,
 ) (hadWarnings bool, err error) {
-	hadWarnings = false
-	err = nil
-
 	if ast.RootNode == nil {
 		return hadWarnings, errors.New("cannot build CST from nil AST root")
 	}
@@ -213,7 +200,6 @@ func (root *RootNode) Resolve() error {
 	return nil
 }
 
-// ----------------------------------------------------------------
 // regexProtectPrePass rewrites string-literal nodes in regex position (e.g.
 // second arg to gsub) to have regex node type. This is so we can have "\t" be
 // a tab character for string literals generally, but remain backslash-t for
@@ -283,7 +269,6 @@ func (root *RootNode) regexProtectPrePassAux(astNode *dsl.ASTNode) {
 
 }
 
-// ----------------------------------------------------------------
 // This builds the CST almost entirely. The only afterwork is that user-defined
 // functions may be called before they are defined, so a follow-up pass will
 // need to resolve those callsites.
@@ -415,7 +400,7 @@ func (root *RootNode) resolveSubroutineCallsites() error {
 			return err
 		}
 		if uds == nil {
-			return errors.New("mlr: subroutine name not found: " + subroutineName)
+			return errors.New("subroutine name not found: " + subroutineName)
 		}
 
 		unresolvedSubroutineCallsite.uds = uds
@@ -423,7 +408,6 @@ func (root *RootNode) resolveSubroutineCallsites() error {
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Various 'tee > $hostname . ".dat", $*' statements will have
 // OutputHandlerManager instances to track file-descriptors for all unique
 // values of $hostname in the input stream.
@@ -480,7 +464,6 @@ func (root *RootNode) ExecuteEndBlocks(state *runtime.State) error {
 	return nil
 }
 
-// ----------------------------------------------------------------
 // These are for the Miller REPL.
 
 // If a DSL string was parsed into an AST and ingested in 'immediate' mode and
@@ -497,8 +480,8 @@ func (root *RootNode) ExecuteREPLImmediate(state *runtime.State) (outrec *mlrval
 // This is the 'and then discarded' part of that.
 func (root *RootNode) ResetForREPL() {
 	root.replImmediateBlock = NewStatementBlockNode()
-	root.unresolvedFunctionCallsites = make([]*UDFCallsite, 0)
-	root.unresolvedSubroutineCallsites = make([]*UDSCallsite, 0)
+	root.unresolvedFunctionCallsites = []*UDFCallsite{}
+	root.unresolvedSubroutineCallsites = []*UDSCallsite{}
 }
 
 // This is for the REPL's context-printer command.
@@ -510,15 +493,15 @@ func (root *RootNode) ShowBlockReport() {
 
 // This is for the REPL's resetblocks command.
 func (root *RootNode) ResetBeginBlocksForREPL() {
-	root.beginBlocks = make([]*StatementBlockNode, 0)
+	root.beginBlocks = []*StatementBlockNode{}
 }
 
 // This is for the REPL's resetblocks command.
 func (root *RootNode) ResetMainBlockForREPL() {
-	root.mainBlock.executables = make([]IExecutable, 0)
+	root.mainBlock.executables = []IExecutable{}
 }
 
 // This is for the REPL's resetblocks command.
 func (root *RootNode) ResetEndBlocksForREPL() {
-	root.endBlocks = make([]*StatementBlockNode, 0)
+	root.endBlocks = []*StatementBlockNode{}
 }

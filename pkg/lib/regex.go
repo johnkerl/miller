@@ -1,4 +1,3 @@
-// ================================================================
 // Support for regular expressions in Miller.
 //
 // * By and large we use the Go library.
@@ -31,7 +30,6 @@
 //   o "regex" is used for regular-expression strings following Miller's idiosyncratic syntax and
 //     semantics as described above.
 //
-// ================================================================
 
 package lib
 
@@ -132,7 +130,7 @@ func CompileMillerRegex(regexString string) (*regexp.Regexp, error) {
 func CompileMillerRegexOrDie(regexString string) *regexp.Regexp {
 	regex, err := CompileMillerRegex(regexString)
 	if err != nil {
-		fmt.Fprint(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 	return regex
@@ -154,10 +152,9 @@ func CompileMillerRegexesOrDie(regexStrings []string) []*regexp.Regexp {
 // but "" splits to [""] when I wish it were []. This function does the latter.
 func RegexCompiledSplitString(regex *regexp.Regexp, input string, n int) []string {
 	if input == "" {
-		return make([]string, 0)
-	} else {
-		return regex.Split(input, n)
+		return []string{}
 	}
+	return regex.Split(input, n)
 }
 
 // RegexStringSub implements the sub DSL function.
@@ -475,9 +472,8 @@ func ReplacementHasCaptures(
 ) {
 	if captureDetector.MatchString(replacement) {
 		return true, captureSplitter.FindAllStringSubmatchIndex(replacement, -1)
-	} else {
-		return false, nil
 	}
+	return false, nil
 }
 
 // InterpolateCaptures example:

@@ -70,8 +70,6 @@ func inferString(mv *Mlrval) *Mlrval {
 	return mv.SetFromString(mv.printrep)
 }
 
-// ----------------------------------------------------------------
-
 // Important: synchronize this with the type-ordering in the scan package.
 var normalInferrerTable []tInferrer = []tInferrer{
 	inferString,
@@ -101,9 +99,8 @@ func inferDecimalInt(mv *Mlrval) *Mlrval {
 	intval, err := strconv.ParseInt(mv.printrep, 10, 64)
 	if err == nil {
 		return mv.SetFromPrevalidatedIntString(mv.printrep, intval)
-	} else {
-		return mv.SetFromString(mv.printrep)
 	}
+	return mv.SetFromString(mv.printrep)
 }
 
 // inferLeadingZeroDecimalIntAsInt parses base-10 integers when leading zeros are allowed.
@@ -111,9 +108,8 @@ func inferLeadingZeroDecimalIntAsInt(mv *Mlrval) *Mlrval {
 	intval, err := strconv.ParseInt(mv.printrep, 10, 64)
 	if err == nil {
 		return mv.SetFromPrevalidatedIntString(mv.printrep, intval)
-	} else {
-		return mv.SetFromString(mv.printrep)
 	}
+	return mv.SetFromString(mv.printrep)
 }
 
 // inferOctalInt parses explicit 0o-prefixed octal integers.
@@ -127,9 +123,8 @@ func inferFromLeadingZeroOctalIntAsInt(mv *Mlrval) *Mlrval {
 	intval, err := strconv.ParseInt(mv.printrep, 8, 64)
 	if err == nil {
 		return mv.SetFromPrevalidatedIntString(mv.printrep, intval)
-	} else {
-		return mv.SetFromString(mv.printrep)
 	}
+	return mv.SetFromString(mv.printrep)
 }
 
 // inferHexInt parses 0x-prefixed hex integers with two's-complement handling.
@@ -167,19 +162,17 @@ func inferHexInt(mv *Mlrval) *Mlrval {
 		}
 		if err == nil {
 			return mv.SetFromPrevalidatedIntString(mv.printrep, intval)
-		} else {
-			return mv.SetFromString(mv.printrep)
 		}
+		return mv.SetFromString(mv.printrep)
+	}
+	intval, err := strconv.ParseInt(input, 16, 64)
+	if negate {
+		intval = -intval
+	}
+	if err == nil {
+		return mv.SetFromPrevalidatedIntString(mv.printrep, intval)
 	} else {
-		intval, err := strconv.ParseInt(input, 16, 64)
-		if negate {
-			intval = -intval
-		}
-		if err == nil {
-			return mv.SetFromPrevalidatedIntString(mv.printrep, intval)
-		} else {
-			return mv.SetFromString(mv.printrep)
-		}
+		return mv.SetFromString(mv.printrep)
 	}
 
 }
@@ -194,9 +187,8 @@ func inferMaybeFloat(mv *Mlrval) *Mlrval {
 	floatval, err := strconv.ParseFloat(mv.printrep, 64)
 	if err == nil {
 		return mv.SetFromPrevalidatedFloatString(mv.printrep, floatval)
-	} else {
-		return mv.SetFromString(mv.printrep)
 	}
+	return mv.SetFromString(mv.printrep)
 }
 
 // inferBaseInt is shared code for parsing 0o/0b integers.
@@ -220,7 +212,6 @@ func inferBaseInt(mv *Mlrval, base int) *Mlrval {
 			intval = -intval
 		}
 		return mv.SetFromPrevalidatedIntString(mv.printrep, intval)
-	} else {
-		return mv.SetFromString(mv.printrep)
 	}
+	return mv.SetFromString(mv.printrep)
 }

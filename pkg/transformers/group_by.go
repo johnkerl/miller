@@ -34,7 +34,7 @@ func transformerGroupByParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -54,10 +54,9 @@ func transformerGroupByParseCLI(
 			transformerGroupByUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerGroupByUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerGroupByUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	// Get the group-by field names from the command line
@@ -77,7 +76,7 @@ func transformerGroupByParseCLI(
 		groupByFieldNames,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -106,7 +105,6 @@ func NewTransformerGroupBy(
 	return tr, nil
 }
 
-
 func (tr *TransformerGroupBy) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -124,7 +122,7 @@ func (tr *TransformerGroupBy) Transform(
 
 		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
 		if recordListForGroup == nil {
-			records := make([]*types.RecordAndContext, 0)
+			records := []*types.RecordAndContext{}
 			recordListForGroup = &records
 			tr.recordListsByGroup.Put(groupingKey, recordListForGroup)
 		}

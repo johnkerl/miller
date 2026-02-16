@@ -6,9 +6,7 @@ import (
 	"os"
 )
 
-// ================================================================
 // Copyright (c) 1998 John Kerl.
-// ================================================================
 // This is a simple hex dump with hex offsets to the left, hex data in the
 // middle, and ASCII at the right.  This is a subset of the functionality of
 // Unix od; I wrote it in my NT days.
@@ -24,7 +22,6 @@ import (
 // 00000050: 50 51 52 53  54 55 56 57  58 59 5a 5b  5c 5d 5e 5f |PQRSTUVWXYZ[\]^_|
 // 00000060: 60 61 62 63  64 65 66 67  68 69 6a 6b  6c 6d 6e 6f |`abcdefghijklmno|
 // 00000070: 70 71 72 73  74 75 76 77  78 79 7a 7b  7c 7d 7e 7f |pqrstuvwxyz{|}~.|
-// ================================================================
 
 func hexUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "Usage: mlr %s [options] {zero or more file names}\n", verbName)
@@ -64,7 +61,7 @@ func hexMain(args []string) int {
 			istream, err := os.Open(filename)
 			if err != nil {
 				// TODO: "mlr"
-				fmt.Fprintln(os.Stderr, "mlr hex:", err)
+				fmt.Fprintf(os.Stderr, "mlr hex: %v\n", err)
 				os.Exit(1)
 			}
 
@@ -101,7 +98,7 @@ func hexDumpFile(istream *os.File, doRaw bool) {
 		// exact multiple of our buffer size. We'll break the loop after
 		// hex-dumping this last, partial fragment.
 		if err != nil && err != io.ErrUnexpectedEOF {
-			fmt.Fprintln(os.Stderr, "mlr hex:", err)
+			fmt.Fprintf(os.Stderr, "mlr hex: %v\n", err)
 			os.Exit(1)
 		}
 

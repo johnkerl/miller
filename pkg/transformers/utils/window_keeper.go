@@ -62,9 +62,8 @@ func (wk *TWindowKeeper) Get(
 	} else if index > 0 {
 		lib.InternalCodingErrorIf(index > wk.numForward)
 		return wk.itemsForward[index-1]
-	} else {
-		index = -index
-		lib.InternalCodingErrorIf(index > wk.numBackward)
-		return wk.itemsBackward[index-1]
 	}
+	index = -index
+	lib.InternalCodingErrorIf(index > wk.numBackward)
+	return wk.itemsBackward[index-1]
 }

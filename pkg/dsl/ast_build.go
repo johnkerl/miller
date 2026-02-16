@@ -1,7 +1,5 @@
-// ================================================================
 // AST-build methods, for use by callbacks within the GOCC/BNF Miller
 // DSL grammar in mlr.bnf.
-// ================================================================
 
 package dsl
 
@@ -182,9 +180,8 @@ func (node *ASTNode) CheckArity(
 ) error {
 	if len(node.Children) != arity {
 		return fmt.Errorf("expected AST node arity %d, got %d", arity, len(node.Children))
-	} else {
-		return nil
 	}
+	return nil
 }
 
 // Tokens are produced by GOCC. However there is an exception: for the ternary

@@ -1,6 +1,4 @@
-// ================================================================
 // See mlrval_json.go for details. This is the unmarshal/marshal solely for Mlrmap.
-// ================================================================
 
 package mlrval
 
@@ -50,10 +48,9 @@ func (mlrmap *Mlrmap) marshalJSONAux(
 		return mlrmap.marshalJSONAuxMultiline(jsonFormatting, elementNestingDepth, outputIsStdout)
 	} else if jsonFormatting == JSON_SINGLE_LINE {
 		return mlrmap.marshalJSONAuxSingleLine(jsonFormatting, elementNestingDepth, outputIsStdout)
-	} else {
-		lib.InternalCodingErrorIf(true)
-		return "", nil // not reached
 	}
+	lib.InternalCodingErrorIf(true)
+	return "", nil // not reached
 }
 
 func (mlrmap *Mlrmap) marshalJSONAuxMultiline(
@@ -145,7 +142,6 @@ func (mlrmap *Mlrmap) marshalJSONAuxSingleLine(
 	return buffer.String(), nil
 }
 
-// ----------------------------------------------------------------
 // JSON-stringifies a single field of a record
 func (entry *MlrmapEntry) JSONStringifyInPlace(
 	jsonFormatting TJSONFormatting,
@@ -158,7 +154,6 @@ func (entry *MlrmapEntry) JSONStringifyInPlace(
 	}
 }
 
-// ----------------------------------------------------------------
 // JSON-parses a single field of a record
 func (entry *MlrmapEntry) JSONParseInPlace() {
 	input := entry.Value.String()

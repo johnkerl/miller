@@ -25,10 +25,10 @@ type RecordWriterPPRINT struct {
 func NewRecordWriterPPRINT(writerOptions *cli.TWriterOptions) (*RecordWriterPPRINT, error) {
 	return &RecordWriterPPRINT{
 		writerOptions: writerOptions,
-		records:       make([]*mlrval.Mlrmap, 0),
+		records:       []*mlrval.Mlrmap{},
 
 		lastJoinedHeader: nil,
-		batch:            make([]*mlrval.Mlrmap, 0),
+		batch:            []*mlrval.Mlrmap{},
 	}, nil
 }
 
@@ -86,7 +86,6 @@ func (writer *RecordWriterPPRINT) Write(
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Returns false if there was nothing but empty record(s), e.g. 'mlr gap -n 10'.
 func (writer *RecordWriterPPRINT) writeHeterogenousList(
 	records []*mlrval.Mlrmap,
@@ -116,24 +115,22 @@ func (writer *RecordWriterPPRINT) writeHeterogenousList(
 
 	if maxNR == 0 {
 		return false
-	} else {
-		// Column name may be longer/shorter than all data values in the column
-		for key, oldMaxWidth := range maxWidths {
-			width := utf8.RuneCountInString(key)
-			if width > oldMaxWidth {
-				maxWidths[key] = width
-			}
-		}
-		if barred {
-			writer.writeHeterogenousListBarred(records, maxWidths, bufferedOutputStream, outputIsStdout)
-		} else {
-			writer.writeHeterogenousListNonBarred(records, maxWidths, bufferedOutputStream, outputIsStdout)
-		}
-		return true
 	}
+	// Column name may be longer/shorter than all data values in the column
+	for key, oldMaxWidth := range maxWidths {
+		width := utf8.RuneCountInString(key)
+		if width > oldMaxWidth {
+			maxWidths[key] = width
+		}
+	}
+	if barred {
+		writer.writeHeterogenousListBarred(records, maxWidths, bufferedOutputStream, outputIsStdout)
+	} else {
+		writer.writeHeterogenousListNonBarred(records, maxWidths, bufferedOutputStream, outputIsStdout)
+	}
+	return true
 }
 
-// ----------------------------------------------------------------
 // Example:
 //
 // a   b   i  x                    y
@@ -219,7 +216,6 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 	}
 }
 
-// ----------------------------------------------------------------
 // Example:
 //
 // +-----+-----+----+----------------------+---------------------+

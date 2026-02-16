@@ -8,7 +8,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
-// ================================================================
 // Unary plus operator
 
 func upos_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -33,7 +32,6 @@ func BIF_plus_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return upos_dispositions[input1.Type()](input1)
 }
 
-// ================================================================
 // Unary minus operator
 
 func uneg_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -66,7 +64,6 @@ func BIF_minus_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return uneg_dispositions[input1.Type()](input1)
 }
 
-// ================================================================
 // Addition with auto-overflow from int to float when necessary.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -90,9 +87,8 @@ func plus_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 	if overflowed {
 		return mlrval.FromFloat(float64(a) + float64(b))
-	} else {
-		return mlrval.FromInt(c)
 	}
+	return mlrval.FromInt(c)
 }
 
 func plus_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -128,7 +124,6 @@ func BIF_plus_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return plus_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 // Subtraction with auto-overflow from int to float when necessary.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -152,9 +147,8 @@ func minus_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 	if overflowed {
 		return mlrval.FromFloat(float64(a) - float64(b))
-	} else {
-		return mlrval.FromInt(c)
 	}
+	return mlrval.FromInt(c)
 }
 
 func minus_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -190,7 +184,6 @@ func BIF_minus_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return minus_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 // Multiplication with auto-overflow from int to float when necessary.  See
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -230,9 +223,8 @@ func times_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 	if math.Abs(c) > 9223372036854774784.0 {
 		return mlrval.FromFloat(c)
-	} else {
-		return mlrval.FromInt(a * b)
 	}
+	return mlrval.FromInt(a * b)
 }
 
 func times_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -268,7 +260,6 @@ func BIF_times(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return times_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 // Pythonic division.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 //
@@ -297,9 +288,8 @@ func divide_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	// Pythonic division, not C division.
 	if a%b == 0 {
 		return mlrval.FromInt(a / b)
-	} else {
-		return mlrval.FromFloat(float64(a) / float64(b))
 	}
+	return mlrval.FromFloat(float64(a) / float64(b))
 }
 
 func divide_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -335,7 +325,6 @@ func BIF_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return divide_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 // Integer division: DSL operator '//' as in Python.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -400,7 +389,6 @@ func BIF_int_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return int_divide_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 // Non-auto-overflowing addition: DSL operator '.+'.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -440,7 +428,6 @@ func BIF_dot_plus(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return dot_plus_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 // Non-auto-overflowing subtraction: DSL operator '.-'.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -480,7 +467,6 @@ func BIF_dot_minus(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return dotminus_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 // Non-auto-overflowing multiplication: DSL operator '.*'.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -520,7 +506,6 @@ func BIF_dot_times(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return dottimes_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 // 64-bit integer division: DSL operator './'.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -560,7 +545,6 @@ func BIF_dot_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return dotdivide_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 // 64-bit integer division: DSL operator './/'.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -625,7 +609,6 @@ func BIF_dot_int_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return dotidivide_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 // Modulus
 
 func modulus_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -693,7 +676,6 @@ func BIF_modulus(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return modulus_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 // Pythonic
 func mlrmod(a, m int64) int64 {
 	retval := a % m
@@ -786,7 +768,6 @@ func BIF_mod_exp(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	return imodop(input1, input2, input3, imodexp, "mexp")
 }
 
-// ================================================================
 // MIN AND MAX
 
 // Sort rules (same for min, max, and comparator):
@@ -823,9 +804,8 @@ func min_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	var b int64 = input2.AcquireIntValue()
 	if a < b {
 		return input1
-	} else {
-		return input2
 	}
+	return input2
 }
 
 // min | b=F   b=T
@@ -835,9 +815,8 @@ func min_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 func min_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.AcquireBoolValue() {
 		return input1
-	} else {
-		return input2
 	}
+	return input2
 }
 
 func min_s_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -845,9 +824,8 @@ func min_s_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	var b string = input2.AcquireStringValue()
 	if a < b {
 		return input1
-	} else {
-		return input2
 	}
+	return input2
 }
 
 func min_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -991,9 +969,8 @@ func max_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	var b int64 = input2.AcquireIntValue()
 	if a > b {
 		return input1
-	} else {
-		return input2
 	}
+	return input2
 }
 
 // max | b=F   b=T
@@ -1003,9 +980,8 @@ func max_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 func max_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.AcquireBoolValue() {
 		return input1
-	} else {
-		return input2
 	}
+	return input2
 }
 
 func max_s_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -1013,9 +989,8 @@ func max_s_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	var b string = input2.AcquireStringValue()
 	if a > b {
 		return input1
-	} else {
-		return input2
 	}
+	return input2
 }
 
 func max_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {

@@ -1,7 +1,5 @@
-// ================================================================
 // This is for begin and end blocks, but not the main block which is direct
 // from the CST root.
-// ================================================================
 
 package cst
 
@@ -13,7 +11,7 @@ import (
 
 func NewStatementBlockNode() *StatementBlockNode {
 	return &StatementBlockNode{
-		executables: make([]IExecutable, 0),
+		executables: []IExecutable{},
 	}
 }
 
@@ -64,9 +62,8 @@ func (root *RootNode) BuildStatementBlockNodeFromBeginOrEnd(
 	statementBlockNode, err := root.BuildStatementBlockNode(astStatementBlockNode)
 	if err != nil {
 		return nil, err
-	} else {
-		return statementBlockNode, nil
 	}
+	return statementBlockNode, nil
 }
 
 func (root *RootNode) BuildStatementBlockNode(
@@ -105,7 +102,6 @@ func (node *StatementBlockNode) Execute(state *runtime.State) (*BlockExitPayload
 	return nil, nil
 }
 
-// ----------------------------------------------------------------
 // Assumes the caller has wrapped PushStackFrame() / PopStackFrame().  That
 // could be done here, but is instead done in the caller to simplify the
 // binding of for-loop variables. In particular, in

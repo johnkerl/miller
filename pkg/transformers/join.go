@@ -22,7 +22,6 @@ var JoinSetup = TransformerSetup{
 	IgnoresInput: false,
 }
 
-// ----------------------------------------------------------------
 // Most transformers have option-variables as individual locals within the
 // transformerXYZParseCLI function, which are passed as individual arguments to
 // the NewTransformerXYZ function. For join, things are a bit more complex
@@ -137,7 +136,7 @@ func transformerJoinParseCLI(
 	args []string,
 	mainOptions *cli.TOptions, // Options for the right-files
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -274,7 +273,7 @@ func transformerJoinParseCLI(
 
 	transformer, err := NewTransformerJoin(opts)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -327,7 +326,7 @@ func NewTransformerJoin(
 	if opts.allowUnsortedInput {
 		// Half-streaming (default) case: ingest entire left file first.
 
-		tr.leftUnpairableRecordsAndContexts = make([]*types.RecordAndContext, 0)
+		tr.leftUnpairableRecordsAndContexts = []*types.RecordAndContext{}
 		tr.leftBucketsByJoinFieldValues = lib.NewOrderedMap[*utils.JoinBucket]()
 		tr.recordTransformerFunc = tr.transformHalfStreaming
 
@@ -351,7 +350,6 @@ func NewTransformerJoin(
 	return tr, nil
 }
 
-
 func (tr *TransformerJoin) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -363,7 +361,6 @@ func (tr *TransformerJoin) Transform(
 		inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 // This is for the half-streaming case. We ingest the entire left file,
 // matching each right record against those.
 func (tr *TransformerJoin) transformHalfStreaming(
@@ -461,7 +458,6 @@ func (tr *TransformerJoin) transformDoublyStreaming(
 	}
 }
 
-// ----------------------------------------------------------------
 // This is for the half-streaming case. We ingest the entire left file,
 // matching each right record against those.
 //
@@ -505,7 +501,7 @@ func (tr *TransformerJoin) ingestLeftFile() {
 		select {
 
 		case err := <-errorChannel:
-			fmt.Fprintln(os.Stderr, "mlr", ": ", err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 
 		case leftrecsAndContexts := <-readerChannel:
@@ -543,7 +539,6 @@ func (tr *TransformerJoin) ingestLeftFile() {
 	}
 }
 
-// ----------------------------------------------------------------
 // This helper method is used by the half-streaming/unsorted join, as well as
 // the doubly-streaming/sorted join.
 
@@ -604,7 +599,6 @@ func (tr *TransformerJoin) formAndEmitPairs(
 	////fmt.Println("-- pairs end") // VERBOSE
 }
 
-// ----------------------------------------------------------------
 // There are two kinds of left non-pair records: (a) those lacking the
 // specified join-keys -- can't possibly pair with anything on the right; (b)
 // those having the join-keys but not matching with a record on the right.

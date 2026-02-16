@@ -1,4 +1,3 @@
-// ================================================================
 // Wrapper for os.Open which maps string filename to *os.File, which in turn
 // implements io.ReadCloser, and optional in turn wrapping that in a
 // gzip/zlib/bunzip2 reader. Shared across record-readers for all the various
@@ -15,7 +14,6 @@
 // If a prepipe is specified, it is used; else if an encoding is specified, it
 // is used; otherwise the file suffix (.bz2, .gz, .z) is consulted; otherwise
 // the file is treated as text.
-// ================================================================
 
 package lib
 
@@ -56,13 +54,12 @@ func OpenFileForRead(
 ) (io.ReadCloser, error) {
 	if prepipe != "" {
 		return openPrepipedHandleForRead(filename, prepipe, prepipeIsRaw)
-	} else {
-		handle, err := PathToHandle(filename)
-		if err != nil {
-			return nil, err
-		}
-		return openEncodedHandleForRead(handle, encoding, filename)
 	}
+	handle, err := PathToHandle(filename)
+	if err != nil {
+		return nil, err
+	}
+	return openEncodedHandleForRead(handle, encoding, filename)
 }
 
 // PathToHandle maps various back-ends to a stream. As of 2021-07-07, the
@@ -82,9 +79,8 @@ func PathToHandle(
 		return handle, err
 	} else if strings.HasPrefix(path, "file://") {
 		return os.Open(strings.Replace(path, "file://", "", 1))
-	} else {
-		return os.Open(path)
 	}
+	return os.Open(path)
 }
 
 // OpenStdin: if prepipe is non-empty, popens "{prepipe}" and returns a handle
@@ -99,9 +95,8 @@ func OpenStdin(
 ) (io.ReadCloser, error) {
 	if prepipe != "" {
 		return openPrepipedHandleForRead("", prepipe, prepipeIsRaw)
-	} else {
-		return openEncodedHandleForRead(os.Stdin, encoding, "")
 	}
+	return openEncodedHandleForRead(os.Stdin, encoding, "")
 }
 
 func openPrepipedHandleForRead(
@@ -147,9 +142,8 @@ func escapeFileNameForPopen(filename string) string {
 	}
 	if foundQuoteOrSpace {
 		return "'" + buffer.String() + "'"
-	} else {
-		return buffer.String()
 	}
+	return buffer.String()
 }
 
 // TODO: comment
@@ -188,7 +182,6 @@ func openEncodedHandleForRead(
 	return handle, nil
 }
 
-// ----------------------------------------------------------------
 // BZip2ReadCloser remedies the fact that bzip2.NewReader does not implement io.ReadCloser.
 type BZip2ReadCloser struct {
 	originalHandle io.ReadCloser
@@ -210,7 +203,6 @@ func (rc *BZip2ReadCloser) Close() error {
 	return rc.originalHandle.Close()
 }
 
-// ----------------------------------------------------------------
 // ZstdReadCloser remedies the fact that zstd.NewReader does not implement io.ReadCloser.
 type ZstdReadCloser struct {
 	originalHandle io.ReadCloser
@@ -236,8 +228,6 @@ func (rc *ZstdReadCloser) Close() error {
 	return rc.originalHandle.Close()
 }
 
-// ----------------------------------------------------------------
-
 // IsEOF handles the following problem: reading past end of files opened with
 // os.Open returns the error which is io.EOF. Reading past close of pipes
 // opened with popen (e.g.  Miller's prepipe, where the file isn't 'foo.dat'
@@ -251,12 +241,10 @@ func IsEOF(err error) bool {
 		return true
 	} else if strings.Contains(err.Error(), "file already closed") {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
-// ----------------------------------------------------------------
 // Functions for in-place mode
 
 // IsUpdateableInPlace tells if we can use the input with mlr -I: not for URLs,

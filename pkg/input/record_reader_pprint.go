@@ -36,24 +36,23 @@ func NewRecordReaderPPRINT(
 		}
 		return reader, nil
 
-	} else {
-		// Use the CSVLite record-reader, which is implemented in another file,
-		// with multiple spaces instead of commas
-		reader := &RecordReaderCSVLite{
-			readerOptions:   readerOptions,
-			recordsPerBatch: recordsPerBatch,
-			fieldSplitter:   newFieldSplitter(readerOptions),
-
-			useVoidRep: true,
-			voidRep:    "-",
-		}
-		if reader.readerOptions.UseImplicitHeader {
-			reader.recordBatchGetter = getRecordBatchImplicitCSVHeader
-		} else {
-			reader.recordBatchGetter = getRecordBatchExplicitCSVHeader
-		}
-		return reader, nil
 	}
+	// Use the CSVLite record-reader, which is implemented in another file,
+	// with multiple spaces instead of commas
+	reader := &RecordReaderCSVLite{
+		readerOptions:   readerOptions,
+		recordsPerBatch: recordsPerBatch,
+		fieldSplitter:   newFieldSplitter(readerOptions),
+
+		useVoidRep: true,
+		voidRep:    "-",
+	}
+	if reader.readerOptions.UseImplicitHeader {
+		reader.recordBatchGetter = getRecordBatchImplicitCSVHeader
+	} else {
+		reader.recordBatchGetter = getRecordBatchExplicitCSVHeader
+	}
+	return reader, nil
 }
 
 type RecordReaderPprintBarredOrMarkdown struct {
@@ -172,7 +171,7 @@ func getRecordBatchExplicitPprintHeader(
 	recordsAndContexts []*types.RecordAndContext,
 	eof bool,
 ) {
-	recordsAndContexts = make([]*types.RecordAndContext, 0)
+	recordsAndContexts = []*types.RecordAndContext{}
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	lines, more := <-linesChannel
@@ -238,7 +237,7 @@ func getRecordBatchExplicitPprintHeader(
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
 				err := fmt.Errorf(
-					"mlr: PPRINT-barred header/data length mismatch %d != %d at filename %s line %d",
+					"PPRINT-barred header/data length mismatch %d != %d at filename %s line %d",
 					len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
 				)
 				errorChannel <- err
@@ -308,7 +307,7 @@ func getRecordBatchImplicitPprintHeader(
 	recordsAndContexts []*types.RecordAndContext,
 	eof bool,
 ) {
-	recordsAndContexts = make([]*types.RecordAndContext, 0)
+	recordsAndContexts = []*types.RecordAndContext{}
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	lines, more := <-linesChannel
@@ -374,7 +373,7 @@ func getRecordBatchImplicitPprintHeader(
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
 				err := fmt.Errorf(
-					"mlr: CSV header/data length mismatch %d != %d at filename %s line %d",
+					"CSV header/data length mismatch %d != %d at filename %s line %d",
 					len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
 				)
 				errorChannel <- err

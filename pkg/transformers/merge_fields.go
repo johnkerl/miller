@@ -75,15 +75,15 @@ func transformerMergeFieldsParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
 
-	accumulatorNameList := make([]string, 0)
-	valueFieldNameList := make([]string, 0)
+	accumulatorNameList := []string{}
+	valueFieldNameList := []string{}
 	outputFieldBasename := ""
 	doWhich := e_MERGE_UNSPECIFIED
 	keepInputFields := false
@@ -171,14 +171,13 @@ func transformerMergeFieldsParseCLI(
 		keepInputFields,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
 	return transformer
 }
 
-// ----------------------------------------------------------------
 // Given: accumulate count,sum on values x,y group by a,b.
 //
 // Example input:       Example output:
@@ -305,7 +304,6 @@ func NewTransformerMergeFields(
 
 	return tr, nil
 }
-
 
 func (tr *TransformerMergeFields) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -441,7 +439,6 @@ func (tr *TransformerMergeFields) transformByNameRegex(
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }
 
-// ----------------------------------------------------------------
 // mlr merge-fields -c in_,out_ -a sum
 // a_in_x  1     a_sum_x 3
 // a_out_x 2     b_sum_y 4

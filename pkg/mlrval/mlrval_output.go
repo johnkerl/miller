@@ -39,9 +39,8 @@ func (mv *Mlrval) String() string {
 func (mv *Mlrval) OriginalString() string {
 	if mv.printrepValid {
 		return mv.printrep
-	} else {
-		return mv.String()
 	}
+	return mv.String()
 }
 
 // StringMaybeQuoted Returns strings double-quoted; all else not.
@@ -49,9 +48,8 @@ func (mv *Mlrval) StringMaybeQuoted() string {
 	output := mv.String()
 	if mv.mvtype == MT_VOID || mv.mvtype == MT_STRING {
 		return `"` + output + `"`
-	} else {
-		return output
 	}
+	return output
 }
 
 // See mlrval.go for more about JIT-formatting of string backings
@@ -97,7 +95,7 @@ func (mv *Mlrval) setPrintRep() {
 			bytes, err := mv.MarshalJSON(JSON_MULTILINE, false)
 			// maybe just InternalCodingErrorIf(err != nil)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				os.Exit(1)
 			}
 			mv.printrep = string(bytes)
@@ -106,7 +104,7 @@ func (mv *Mlrval) setPrintRep() {
 			bytes, err := mv.MarshalJSON(JSON_MULTILINE, false)
 			// maybe just InternalCodingErrorIf(err != nil)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				os.Exit(1)
 			}
 			mv.printrep = string(bytes)

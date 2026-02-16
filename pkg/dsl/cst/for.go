@@ -1,6 +1,4 @@
-// ================================================================
 // This is for various flavors of for-loop
-// ================================================================
 
 package cst
 
@@ -14,7 +12,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
-// ----------------------------------------------------------------
 // Sample AST:
 
 // mlr -n put -v 'for (k in $*) { emit { k : k } }'
@@ -50,7 +47,6 @@ func NewForLoopOneVariableNode(
 	}
 }
 
-// ----------------------------------------------------------------
 // Sample AST:
 
 // mlr -n put -v 'for (k in $*) { emit { k : k } }'
@@ -100,7 +96,6 @@ func (root *RootNode) BuildForLoopOneVariableNode(astNode *dsl.ASTNode) (*ForLoo
 	), nil
 }
 
-// ----------------------------------------------------------------
 // Note: The statement-block has its own push/pop for its localvars.
 // Meanwhile we need to restrict scope of the bindvar to the for-loop.
 //
@@ -224,7 +219,6 @@ func NewForLoopTwoVariableNode(
 	}
 }
 
-// ----------------------------------------------------------------
 // Sample AST:
 
 // mlr -n put -v 'for (k, v in $*) { emit { k : v } }'
@@ -282,7 +276,6 @@ func (root *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoo
 	), nil
 }
 
-// ----------------------------------------------------------------
 // Note: The statement-block has its own push/pop for its localvars.
 // Meanwhile we need to restrict scope of the bindvar to the for-loop.
 //
@@ -416,7 +409,6 @@ func NewForLoopMultivariableNode(
 	}
 }
 
-// ----------------------------------------------------------------
 // Sample AST:
 
 // mlr -n put -v 'for ((k1, k2), v in $*) { }'
@@ -477,7 +469,6 @@ func (root *RootNode) BuildForLoopMultivariableNode(
 	), nil
 }
 
-// ----------------------------------------------------------------
 // Note: The statement-block has its own push/pop for its localvars.
 // Meanwhile we need to restrict scope of the bindvar to the for-loop.
 //
@@ -507,12 +498,11 @@ func (node *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitP
 	blockExitPayload, err := node.executeOuter(indexMlrval, node.keyIndexVariables, state)
 	if blockExitPayload == nil {
 		return nil, err
+	}
+	if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
+		return nil, err
 	} else {
-		if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
-			return nil, err
-		} else {
-			return blockExitPayload, err
-		}
+		return blockExitPayload, err
 	}
 }
 
@@ -726,7 +716,6 @@ func NewTripleForLoopNode(
 	}
 }
 
-// ----------------------------------------------------------------
 // Sample ASTs:
 
 // DSL EXPRESSION:
@@ -799,7 +788,7 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 			for i := 0; i < n-1; i++ {
 				if continuationExpressionASTNode.Children[i].Type != dsl.NodeTypeAssignment {
 					return nil, fmt.Errorf(
-						"mlr: the non-final triple-for continuation statements must be assignments",
+						"the non-final triple-for continuation statements must be assignments",
 					)
 				}
 				precontinuationAssignment, err := root.BuildAssignmentNode(
@@ -816,11 +805,11 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 		if bareBooleanASTNode.Type != dsl.NodeTypeBareBoolean {
 			if n == 1 {
 				return nil, fmt.Errorf(
-					"mlr: the triple-for continuation statement must be a bare boolean",
+					"the triple-for continuation statement must be a bare boolean",
 				)
 			} else {
 				return nil, fmt.Errorf(
-					"mlr: the final triple-for continuation statement must be a bare boolean",
+					"the final triple-for continuation statement must be a bare boolean",
 				)
 			}
 		}
@@ -852,7 +841,6 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 	), nil
 }
 
-// ----------------------------------------------------------------
 // Note: The statement-block has its own push/pop for its localvars.
 // Meanwhile we need to restrict scope of the bindvar to the for-loop.
 //
@@ -892,7 +880,7 @@ func (node *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload,
 			boolValue, isBool := continuationValue.GetBoolValue()
 			if !isBool {
 				return nil, fmt.Errorf(
-					"mlr: for-loop continuation did not evaluate to boolean%s",
+					"for-loop continuation did not evaluate to boolean%s",
 					dsl.TokenToLocationInfo(node.continuationExpressionToken),
 				)
 			}

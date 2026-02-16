@@ -1,8 +1,6 @@
-// ================================================================
 // Items which might better belong in miller/cli, but which are placed in a
 // deeper package to avoid a package-dependency cycle between miller/cli and
 // miller/transforming.
-// ================================================================
 
 package cli
 
@@ -66,7 +64,7 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) error {
 }
 
 // FinalizeWriterOptions unbackslashes OPS, OFS, and ORS.  This is because
-// because the '\n' at the command line which is Go "\\n" (a backslash and an
+// the '\n' at the command line which is Go "\\n" (a backslash and an
 // n) needs to become the single newline character., and likewise for "\t", etc.
 func FinalizeWriterOptions(writerOptions *TWriterOptions) error {
 	if !writerOptions.ofsWasSpecified {
@@ -117,7 +115,6 @@ func init() {
 	FLAG_TABLE.Sort()
 }
 
-// ================================================================
 // SEPARATOR FLAGS
 
 func SeparatorPrintInfo() {
@@ -416,7 +413,6 @@ var SeparatorFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // JSON-ONLY FLAGS
 
 func JSONOnlyPrintInfo() {
@@ -496,7 +492,6 @@ var JSONOnlyFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // PPRINT-ONLY FLAGS
 
 func PPRINTOnlyPrintInfo() {
@@ -541,7 +536,6 @@ var PPRINTOnlyFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // DKVP-ONLY FLAGS
 
 func DKVPOnlyPrintInfo() {
@@ -566,7 +560,6 @@ var DKVPOnlyFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // LEGACY FLAGS
 
 func LegacyFlagInfoPrint() {
@@ -663,7 +656,6 @@ var LegacyFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // FILE-FORMAT FLAGS
 
 func FileFormatPrintInfo() {
@@ -1273,7 +1265,6 @@ var FileFormatFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // FORMAT-CONVERSION KEYSTROKE-SAVER FLAGS
 
 func FormatConversionKeystrokeSaverPrintInfo() {
@@ -2670,7 +2661,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // CSV/TSV FLAGS
 
 func CSVTSVOnlyPrintInfo() {
@@ -2772,7 +2762,6 @@ var CSVTSVOnlyFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // COMPRESSED-DATA FLAGS
 
 func CompressedDataPrintInfo() {
@@ -2916,7 +2905,6 @@ var CompressedDataFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // COMMENTS-IN-DATA FLAGS
 
 func CommentsInDataPrintInfo() {
@@ -2992,7 +2980,6 @@ var CommentsInDataFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // OUTPUT-COLORIZATION FLAGS
 
 func OutputColorizationPrintInfo() {
@@ -3183,7 +3170,6 @@ var OutputColorizationFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // FLATTEN/UNFLATTEN FLAGS
 
 func FlattenUnflattenPrintInfo() {
@@ -3231,7 +3217,6 @@ var FlattenUnflattenFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // PROFILING FLAGS
 
 func ProfilingPrintInfo() {
@@ -3276,7 +3261,6 @@ This flag must be the very first thing after 'mlr' on the command line.`,
 	},
 }
 
-// ================================================================
 // MISC FLAGS
 
 func MiscPrintInfo() {
@@ -3360,7 +3344,7 @@ var MiscFlagSection = FlagSection{
 				handle, err := os.Open(fileName)
 				if err != nil {
 					/// XXXX return false
-					fmt.Fprintln(os.Stderr, "mlr", err)
+					fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 					os.Exit(1)
 				}
 				defer handle.Close()
@@ -3379,7 +3363,7 @@ var MiscFlagSection = FlagSection{
 					lineno++
 
 					if err != nil {
-						fmt.Fprintln(os.Stderr, "mlr", err)
+						fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 						os.Exit(1)
 					}
 

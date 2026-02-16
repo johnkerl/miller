@@ -36,7 +36,7 @@ func transformerUTF8ToLatin1ParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -56,10 +56,9 @@ func transformerUTF8ToLatin1ParseCLI(
 			transformerUTF8ToLatin1Usage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerUTF8ToLatin1Usage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerUTF8ToLatin1Usage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi
@@ -69,7 +68,7 @@ func transformerUTF8ToLatin1ParseCLI(
 
 	transformer, err := NewTransformerUTF8ToLatin1()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -83,7 +82,6 @@ func NewTransformerUTF8ToLatin1() (*TransformerUTF8ToLatin1, error) {
 	tr := &TransformerUTF8ToLatin1{}
 	return tr, nil
 }
-
 
 func (tr *TransformerUTF8ToLatin1) Transform(
 	inrecAndContext *types.RecordAndContext,

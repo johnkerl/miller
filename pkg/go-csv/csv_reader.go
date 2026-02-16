@@ -53,13 +53,11 @@
 //	{`Multi-line
 //	field`, `comma is ,`}
 
-// ================================================================
 // MILLER-SPECIFIC UPDATE:
 // This is a bugfix as sketched at
 // https://github.com/golang/go/issues/39119
 // -- sadly, this fix was _not_ accepted within the standard library,
 // so we are left to fork and patch.
-// ================================================================
 
 package csv
 

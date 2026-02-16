@@ -198,7 +198,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 	recordsAndContexts []*types.RecordAndContext,
 	eof bool,
 ) {
-	recordsAndContexts = make([]*types.RecordAndContext, 0)
+	recordsAndContexts = []*types.RecordAndContext{}
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	csvRecords, more := <-csvRecordsChannel
@@ -253,7 +253,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				err := fmt.Errorf(
-					"mlr: CSV header/data length mismatch %d != %d at filename %s row %d",
+					"CSV header/data length mismatch %d != %d at filename %s row %d",
 					nh, nd, reader.filename, reader.rowNumber,
 				)
 				errorChannel <- err
@@ -338,7 +338,6 @@ func (reader *RecordReaderCSV) maybeConsumeComment(
 	return false
 }
 
-// ----------------------------------------------------------------
 // BOM-stripping
 //
 // Some CSVs start with a "byte-order mark" which is the 3-byte sequence

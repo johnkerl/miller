@@ -1,6 +1,4 @@
-// ================================================================
 // Support for user-defined functions
-// ================================================================
 
 package cst
 
@@ -194,7 +192,7 @@ func (site *UDFCallsite) Evaluate(
 		err := udf.signature.typeGatedParameterNames[i].Check(arguments[i])
 		if err != nil {
 			// TODO: put error-return in the Evaluate API
-			fmt.Fprint(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 	}
@@ -238,7 +236,7 @@ func (site *UDFCallsite) EvaluateWithArguments(
 		)
 		// TODO: put error-return in the Evaluate API
 		if err != nil {
-			fmt.Fprint(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 	}
@@ -262,7 +260,7 @@ func (site *UDFCallsite) EvaluateWithArguments(
 	if blockExitPayload == nil {
 		err = udf.signature.typeGatedReturnValue.Check(mlrval.ABSENT)
 		if err != nil {
-			fmt.Fprint(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 		return mlrval.ABSENT.StrictModeCheck(
@@ -277,7 +275,7 @@ func (site *UDFCallsite) EvaluateWithArguments(
 	if blockExitPayload.blockExitStatus != BLOCK_EXIT_RETURN_VALUE {
 		err = udf.signature.typeGatedReturnValue.Check(mlrval.ABSENT)
 		if err != nil {
-			fmt.Fprint(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 		return mlrval.ABSENT.StrictModeCheck(
@@ -293,7 +291,7 @@ func (site *UDFCallsite) EvaluateWithArguments(
 	err = udf.signature.typeGatedReturnValue.Check(blockExitPayload.blockReturnValue)
 	if err != nil {
 		// TODO: put error-return in the Evaluate API
-		fmt.Fprint(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -304,8 +302,6 @@ func (site *UDFCallsite) EvaluateWithArguments(
 
 	return blockExitPayload.blockReturnValue.Copy()
 }
-
-// ----------------------------------------------------------------
 
 // UDFManager tracks named UDFs like 'func f(a, b) { return b - a }'
 type UDFManager struct {
@@ -319,24 +315,24 @@ func NewUDFManager() *UDFManager {
 	}
 }
 
-func (manager *UDFManager) Install(udf *UDF) {
-	manager.functions[udf.signature.funcOrSubrName] = udf
+func (mgr *UDFManager) Install(udf *UDF) {
+	mgr.functions[udf.signature.funcOrSubrName] = udf
 }
 
-func (manager *UDFManager) ExistsByName(name string) bool {
-	_, ok := manager.functions[name]
+func (mgr *UDFManager) ExistsByName(name string) bool {
+	_, ok := mgr.functions[name]
 	return ok
 }
 
 // LookUp is for callsites invoking UDFs whose names are known at CST-build time.
-func (manager *UDFManager) LookUp(functionName string, callsiteArity int) (*UDF, error) {
-	udf := manager.functions[functionName]
+func (mgr *UDFManager) LookUp(functionName string, callsiteArity int) (*UDF, error) {
+	udf := mgr.functions[functionName]
 	if udf == nil {
 		return nil, nil
 	}
 	if udf.signature.arity != callsiteArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			functionName,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -348,11 +344,10 @@ func (manager *UDFManager) LookUp(functionName string, callsiteArity int) (*UDF,
 
 // LookUpDisregardingArity is used for evaluating right-hand sides of 'f = udf'
 // where f will be a local variable of type funct and udf is an existing UDF.
-func (manager *UDFManager) LookUpDisregardingArity(functionName string) *UDF {
-	return manager.functions[functionName] // nil if not found
+func (mgr *UDFManager) LookUpDisregardingArity(functionName string) *UDF {
+	return mgr.functions[functionName] // nil if not found
 }
 
-// ----------------------------------------------------------------
 // Example AST for UDF definition and callsite:
 
 // DSL EXPRESSION:
@@ -401,7 +396,7 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 
 	if BuiltinFunctionManagerInstance.LookUp(functionName) != nil {
 		return fmt.Errorf(
-			`mlr: function named "%s" must not override a built-in function of the same name`,
+			`function named "%s" must not override a built-in function of the same name`,
 			functionName,
 		)
 	}
@@ -409,7 +404,7 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 	if !root.allowUDFUDSRedefinitions {
 		if root.udfManager.ExistsByName(functionName) {
 			return fmt.Errorf(
-				`mlr: function named "%s" has already been defined`,
+				`function named "%s" has already been defined`,
 				functionName,
 			)
 		}
@@ -425,7 +420,6 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 	return nil
 }
 
-
 var namelessFunctionCounter int = 0
 
 // genFunctionLiteralName provides a UUID for function-literal nodes like `func (a, b) { return b - a }'.
@@ -434,8 +428,6 @@ func genFunctionLiteralName() string {
 	namelessFunctionCounter++
 	return fmt.Sprintf("function-literal-%06d", namelessFunctionCounter)
 }
-
-// ----------------------------------------------------------------
 
 // UnnamedUDFNode holds function literals like 'func (a, b) { return b - a }'.
 type UnnamedUDFNode struct {
@@ -462,8 +454,6 @@ func (root *RootNode) BuildUnnamedUDFNode(astNode *dsl.ASTNode) (IEvaluable, err
 func (node *UnnamedUDFNode) Evaluate(state *runtime.State) *mlrval.Mlrval {
 	return node.udfAsMlrval
 }
-
-// ================================================================
 
 // BuildUDF is for named UDFs, like `func f(a, b) { return b - a}', or,
 // unnamed UDFs like `func (a, b) { return b - a }'.

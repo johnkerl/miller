@@ -1,9 +1,7 @@
-// ================================================================
 // Shows warnings for things like uninitialized variables. These are things
 // that are statically computable from the AST by itself -- it confines itself
 // to local-variable analysis. There are other uninitialization issues
 // detectable only at runtime, which would benefit from a 'strict mode'.
-// ================================================================
 
 package cst
 
@@ -15,7 +13,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
-// ----------------------------------------------------------------
 // Returns true if there are no warnings.
 func WarnOnAST(
 	ast *dsl.AST,
@@ -37,7 +34,6 @@ func WarnOnAST(
 	return ok
 }
 
-// ----------------------------------------------------------------
 // Example ASTs:
 //
 // $ mlr -n put -v 'z = x + y'
@@ -181,7 +177,6 @@ func warnOnASTAux(
 	return ok
 }
 
-// ----------------------------------------------------------------
 // Given a func/subr block, find the names of its parameters.  All the
 // lib.InternalCodingErrorIf parts are shape-assertions to make sure this code
 // is in sync with the BNF grammar which builds the AST from a Miller-DSL

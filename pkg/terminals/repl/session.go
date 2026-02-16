@@ -1,4 +1,3 @@
-// ================================================================
 // Top-level handler for a REPL session, including setup/construction, and
 // ingesting command-lines. Command-line strings are triaged and send off to
 // the appropriate handlers: DSL parse/execute if the command is a DSL statement
@@ -11,7 +10,6 @@
 //
 // is a delight. :)
 //
-// ================================================================
 
 package repl
 
@@ -86,7 +84,7 @@ func NewRepl(
 
 	// If there was a --load/--mload on the command line, load those DSL strings here (e.g.
 	// someone's local function library).
-	dslStrings := make([]string, 0)
+	dslStrings := []string{}
 	for _, filename := range options.DSLPreloadFileNames {
 		theseDSLStrings, err := lib.LoadStringsFromFileOrDir(filename, ".mlr")
 		if err != nil {
@@ -205,14 +203,13 @@ func (repl *Repl) handleSession(istream *os.File) error {
 			// We need the non-trimmed line here since the DSL syntax for comments is '#.*\n'.
 			err = repl.handleDSLStringImmediate(line, repl.doWarnings)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			}
 		}
 	}
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Context: the "<" or "<<" has already been seen. we read until ">" or ">>".
 
 func (repl *Repl) handleMultiLine(
@@ -240,14 +237,14 @@ func (repl *Repl) handleMultiLine(
 	}
 	dslString := buffer.String()
 
-	var err error = nil
+	var err error
 	if doImmediate {
 		err = repl.handleDSLStringImmediate(dslString, repl.doWarnings)
 	} else {
 		err = repl.handleDSLStringBulk(dslString, repl.doWarnings)
 	}
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 	}
 
 	return nil

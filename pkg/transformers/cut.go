@@ -52,7 +52,7 @@ func transformerCutParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -116,7 +116,7 @@ func transformerCutParseCLI(
 		doRegexes,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -179,7 +179,6 @@ func NewTransformerCut(
 	return tr, nil
 }
 
-
 func (tr *TransformerCut) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -190,7 +189,6 @@ func (tr *TransformerCut) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 // mlr cut -f a,b,c
 func (tr *TransformerCut) includeWithInputOrder(
 	inrecAndContext *types.RecordAndContext,
@@ -215,7 +213,6 @@ func (tr *TransformerCut) includeWithInputOrder(
 	}
 }
 
-// ----------------------------------------------------------------
 // mlr cut -o -f a,b,c
 func (tr *TransformerCut) includeWithArgOrder(
 	inrecAndContext *types.RecordAndContext,
@@ -239,7 +236,6 @@ func (tr *TransformerCut) includeWithArgOrder(
 	}
 }
 
-// ----------------------------------------------------------------
 // mlr cut -x -f a,b,c
 func (tr *TransformerCut) exclude(
 	inrecAndContext *types.RecordAndContext,

@@ -18,20 +18,17 @@ func GetPercentileLinearlyInterpolated(
 	iindex := int(math.Floor(findex))
 	if iindex >= n-1 {
 		return array[iindex].Copy()
-	} else {
-		// TODO: just do this in float64:
-		// array[iindex] + frac * (array[iindex+1] - array[iindex])
-		frac := mlrval.FromFloat(findex - float64(iindex))
-		diff := BIF_minus_binary(array[iindex+1], array[iindex])
-		prod := BIF_times(frac, diff)
-		return BIF_plus_binary(array[iindex], prod)
 	}
+	// TODO: just do this in float64:
+	// array[iindex] + frac * (array[iindex+1] - array[iindex])
+	frac := mlrval.FromFloat(findex - float64(iindex))
+	diff := BIF_minus_binary(array[iindex+1], array[iindex])
+	prod := BIF_times(frac, diff)
+	return BIF_plus_binary(array[iindex], prod)
 }
 
-// ================================================================
 // Non-interpolated percentiles (see also https://en.wikipedia.org/wiki/Percentile)
 
-// ----------------------------------------------------------------
 // OPTION 1: int index = p*n/100.0;
 //
 // x
@@ -71,7 +68,6 @@ func GetPercentileLinearlyInterpolated(
 // x_p08 0 x_p18 0 x_p28 25 x_p38 25 x_p48 50 x_p58 50 x_p68 75 x_p78 75 x_p88 100 x_p98 100
 // x_p09 0 x_p19 0 x_p29 25 x_p39 25 x_p49 50 x_p59 50 x_p69 75 x_p79 75 x_p89 100 x_p99 100
 //
-// ----------------------------------------------------------------
 // OPTION 2: int index = p*(n-1)/100.0;
 //
 // x
@@ -111,7 +107,6 @@ func GetPercentileLinearlyInterpolated(
 // x_p08 0 x_p18 0 x_p28 25 x_p38 25 x_p48 25 x_p58 50 x_p68 50 x_p78 75 x_p88 75 x_p98 75
 // x_p09 0 x_p19 0 x_p29 25 x_p39 25 x_p49 25 x_p59 50 x_p69 50 x_p79 75 x_p89 75 x_p99 75
 //
-// ----------------------------------------------------------------
 // OPTION 3: int index = (int)ceil(p*(n-1)/100.0);
 //
 // x
@@ -151,7 +146,6 @@ func GetPercentileLinearlyInterpolated(
 // x_p08 25 x_p18 25 x_p28 50 x_p38 50 x_p48 50 x_p58 75 x_p68 75 x_p78 100 x_p88 100 x_p98 100
 // x_p09 25 x_p19 25 x_p29 50 x_p39 50 x_p49 50 x_p59 75 x_p69 75 x_p79 100 x_p89 100 x_p99 100
 //
-// ----------------------------------------------------------------
 // OPTION 4: int index = (int)ceil(-0.5 + p*(n-1)/100.0);
 //
 // x
@@ -191,7 +185,6 @@ func GetPercentileLinearlyInterpolated(
 // x_p08 0 x_p18 25 x_p28 25 x_p38 50 x_p48 50 x_p58 50 x_p68 75 x_p78 75 x_p88 100 x_p98 100
 // x_p09 0 x_p19 25 x_p29 25 x_p39 50 x_p49 50 x_p59 50 x_p69 75 x_p79 75 x_p89 100 x_p99 100
 //
-// ----------------------------------------------------------------
 // CONCLUSION:
 // * I like option 2 for its simplicity ...
 // * ... but option 1 matches R's quantile with type=1.

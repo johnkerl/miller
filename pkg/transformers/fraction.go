@@ -55,7 +55,7 @@ func transformerFractionParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -117,7 +117,7 @@ func transformerFractionParseCLI(
 		doCumu,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -147,7 +147,7 @@ func NewTransformerFraction(
 	doCumu bool,
 ) (*TransformerFraction, error) {
 
-	recordsAndContexts := make([]*types.RecordAndContext, 0)
+	recordsAndContexts := []*types.RecordAndContext{}
 	sums := make(map[string]map[string]*mlrval.Mlrval)
 	cumus := make(map[string]map[string]*mlrval.Mlrval)
 
@@ -183,7 +183,6 @@ func NewTransformerFraction(
 		zero:                  zero,
 	}, nil
 }
-
 
 func (tr *TransformerFraction) Transform(
 	inrecAndContext *types.RecordAndContext,

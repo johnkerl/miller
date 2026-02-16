@@ -1,5 +1,5 @@
 mlr: cannot parse DSL expression.
-Parse error on token "" at line 2 column 1.
+mlr: Parse error on token "" at line 2 column 1.
 Expected one of:
   {
 

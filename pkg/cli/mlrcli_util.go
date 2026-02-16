@@ -21,9 +21,8 @@ func SeparatorFromArg(name string) string {
 	sep, ok := SEPARATOR_NAMES_TO_VALUES[name]
 	if ok {
 		return sep
-	} else {
-		return name
 	}
+	return name
 }
 
 // SeparatorRegexFromArg is for letting people do things like `--ifs-regex whitespace`
@@ -32,7 +31,6 @@ func SeparatorRegexFromArg(name string) string {
 	sep, ok := SEPARATOR_REGEX_NAMES_TO_VALUES[name]
 	if ok {
 		return sep
-	} else {
-		return name
 	}
+	return name
 }

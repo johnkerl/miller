@@ -114,7 +114,7 @@ func transformerSummaryParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -179,7 +179,7 @@ func transformerSummaryParseCLI(
 				excludeSummarizerNamesSet[excludeSummarizerName] = true
 			}
 
-			summarizerNames = make([]string, 0)
+			summarizerNames = []string{}
 			for _, summarizerName := range allSummarizerNamesList {
 				if !excludeSummarizerNamesSet[summarizerName] {
 					summarizerNames = append(summarizerNames, summarizerName)
@@ -202,7 +202,7 @@ func transformerSummaryParseCLI(
 
 	transformer, err := NewTransformerSummary(summarizerNames, transposeOutput)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -284,7 +284,6 @@ func NewTransformerSummary(
 
 	return tr, nil
 }
-
 
 func (tr *TransformerSummary) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -416,8 +415,6 @@ func (tr *TransformerSummary) emitTransposed(
 
 	*oracs = append(*oracs, inrecAndContext) // end-of-stream marker
 }
-
-// ----------------------------------------------------------------
 
 // maybeEmitAccumulatorTransposed is a helper method for emitTransposed,
 // for "count", "sum", "mean", etc.

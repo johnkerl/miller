@@ -1,4 +1,3 @@
-// ================================================================
 // Options for the step verb are mostly simple operations involving the previous record and the
 // current record, optionally grouped by one or more group-by field names. For example, with input
 // data
@@ -63,7 +62,6 @@
 //   window object for their grouping key.  We don't know a priori when the end of the record stream
 //   is so we keep the last n records for each grouping key.  At end of the record stream we process
 //   these.
-// ================================================================
 
 package transformers
 
@@ -145,7 +143,7 @@ func transformerStepParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -225,14 +223,13 @@ func transformerStepParseCLI(
 		ewmaSuffixes,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
 	return transformer
 }
 
-// ----------------------------------------------------------------
 // This is the "stepper log" referred to in comments at the top of this file.
 type tStepLogEntry struct {
 	recordAndContext *types.RecordAndContext
@@ -316,7 +313,6 @@ func NewTransformerStep(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 // Multilevel hashmap structure for the `groups` field example:
 //
 // * Group-by field names = ["a", "b"]
@@ -533,7 +529,6 @@ func (tr *TransformerStep) makeLogKey(
 	return fmt.Sprintf("%p", inrecAndContext)
 }
 
-// ================================================================
 // Lookups for individual steppers, like "delta" or "rsum"
 
 type tStepperInputFromName func(
@@ -689,7 +684,6 @@ func allocateStepper(
 	return nil
 }
 
-// ================================================================
 // Implementations of individual steppers, like "delta" or "rsum"
 
 type tStepperDelta struct {
@@ -748,7 +742,6 @@ func (stepper *tStepperDelta) process(
 	currec.PutCopy(stepper.outputFieldName, delta.Copy())
 }
 
-// ================================================================
 // shift is an alias for shift
 type tStepperShiftLag struct {
 	inputFieldName  string
@@ -1123,7 +1116,6 @@ func (stepper *tStepperCounter) process(
 	}
 }
 
-// ================================================================
 // https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
 
 type tStepperEWMA struct {

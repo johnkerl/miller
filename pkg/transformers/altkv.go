@@ -35,7 +35,7 @@ func transformerAltkvParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -55,10 +55,9 @@ func transformerAltkvParseCLI(
 			transformerAltkvUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerAltkvUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerAltkvUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi
@@ -68,7 +67,7 @@ func transformerAltkvParseCLI(
 
 	transformer, err := NewTransformerAltkv()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -82,7 +81,6 @@ func NewTransformerAltkv() (*TransformerAltkv, error) {
 	tr := &TransformerAltkv{}
 	return tr, nil
 }
-
 
 func (tr *TransformerAltkv) Transform(
 	inrecAndContext *types.RecordAndContext,

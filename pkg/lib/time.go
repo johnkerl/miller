@@ -167,12 +167,10 @@ func epochSecondsToTime(epochSeconds float64, doLocal bool, location *time.Locat
 	if doLocal {
 		if location == nil {
 			return time.Unix(intPart, decimalPart).Local()
-		} else {
-			return time.Unix(intPart, decimalPart).In(location)
 		}
-	} else {
-		return time.Unix(intPart, decimalPart).UTC()
+		return time.Unix(intPart, decimalPart).In(location)
 	}
+	return time.Unix(intPart, decimalPart).UTC()
 }
 
 func epochNanosecondsToTime(epochNanoseconds int64, doLocal bool, location *time.Location) time.Time {
@@ -181,10 +179,8 @@ func epochNanosecondsToTime(epochNanoseconds int64, doLocal bool, location *time
 	if doLocal {
 		if location == nil {
 			return time.Unix(intPart, fractionalPart).Local()
-		} else {
-			return time.Unix(intPart, fractionalPart).In(location)
 		}
-	} else {
-		return time.Unix(intPart, fractionalPart).UTC()
+		return time.Unix(intPart, fractionalPart).In(location)
 	}
+	return time.Unix(intPart, fractionalPart).UTC()
 }

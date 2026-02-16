@@ -35,7 +35,7 @@ func transformerRegularizeParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -55,10 +55,9 @@ func transformerRegularizeParseCLI(
 			transformerRegularizeUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerRegularizeUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerRegularizeUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi
@@ -68,7 +67,7 @@ func transformerRegularizeParseCLI(
 
 	transformer, err := NewTransformerRegularize()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -86,7 +85,6 @@ func NewTransformerRegularize() (*TransformerRegularize, error) {
 	}
 	return tr, nil
 }
-
 
 func (tr *TransformerRegularize) Transform(
 	inrecAndContext *types.RecordAndContext,

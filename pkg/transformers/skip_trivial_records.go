@@ -34,7 +34,7 @@ func transformerSkipTrivialRecordsParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -54,10 +54,9 @@ func transformerSkipTrivialRecordsParseCLI(
 			transformerSkipTrivialRecordsUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerSkipTrivialRecordsUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerSkipTrivialRecordsUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi
@@ -67,7 +66,7 @@ func transformerSkipTrivialRecordsParseCLI(
 
 	transformer, err := NewTransformerSkipTrivialRecords()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -81,7 +80,6 @@ func NewTransformerSkipTrivialRecords() (*TransformerSkipTrivialRecords, error) 
 	tr := &TransformerSkipTrivialRecords{}
 	return tr, nil
 }
-
 
 func (tr *TransformerSkipTrivialRecords) Transform(
 	inrecAndContext *types.RecordAndContext,

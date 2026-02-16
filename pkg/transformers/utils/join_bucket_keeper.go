@@ -1,4 +1,3 @@
-// ================================================================
 // JOIN_BUCKET_KEEPER
 //
 // This data structure supports Miller's sorted (double-streaming) join.  It is
@@ -40,7 +39,6 @@
 // * the right record with R=f is unpaired, and
 // * the left records with L=c and L=d are unpaired.
 //
-// ----------------------------------------------------------------
 // Now for the sorted (doubly-streaming) case. Here we require that the left
 // and right files be already sorted (lexically ascending) by the join fields.
 // Then the example inputs look like this:
@@ -103,7 +101,6 @@
 // * right record has R==f; left records with L==e are unpaired.
 // * etc.
 //
-// ================================================================
 
 package utils
 
@@ -119,7 +116,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 // Data stored in this class
 type JoinBucketKeeper struct {
 	// For streaming through the left-side file
@@ -168,7 +164,7 @@ func NewJoinBucketKeeper(
 	// Instantiate the record-reader
 	recordReader, err := input.Create(joinReaderOptions, 1) // TODO: maybe increase records per batch
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr join: %v", err)
+		fmt.Fprintf(os.Stderr, "mlr join: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -199,7 +195,7 @@ func NewJoinBucketKeeper(
 
 		JoinBucket:           NewJoinBucket(nil),
 		peekRecordAndContext: nil,
-		leftUnpaireds:        make([]*types.RecordAndContext, 0),
+		leftUnpaireds:        []*types.RecordAndContext{},
 
 		leof:  false,
 		state: LEFT_STATE_0_PREFILL,
@@ -208,7 +204,6 @@ func NewJoinBucketKeeper(
 	return keeper
 }
 
-// ----------------------------------------------------------------
 // For JoinBucketKeeper state machine
 type tJoinBucketKeeperState int
 
@@ -227,19 +222,16 @@ func (keeper *JoinBucketKeeper) computeState() tJoinBucketKeeperState {
 	if keeper.JoinBucket.leftFieldValues == nil {
 		if !keeper.leof {
 			return LEFT_STATE_0_PREFILL
-		} else {
-			return LEFT_STATE_3_EOF
 		}
+		return LEFT_STATE_3_EOF
+	}
+	if keeper.peekRecordAndContext == nil {
+		return LEFT_STATE_2_LAST_BUCKET
 	} else {
-		if keeper.peekRecordAndContext == nil {
-			return LEFT_STATE_2_LAST_BUCKET
-		} else {
-			return LEFT_STATE_1_FULL
-		}
+		return LEFT_STATE_1_FULL
 	}
 }
 
-// ----------------------------------------------------------------
 // This is the main entry point for the join verb.  Given the right-field
 // values from the current right-file record, this method finds left-file
 // join-bucket (if any) and points keeper.JoinBucket at it.
@@ -326,7 +318,6 @@ func (keeper *JoinBucketKeeper) FindJoinBucket(
 	return isPaired
 }
 
-// ----------------------------------------------------------------
 // This finds the first peek record which possesses all the necessary join-field
 // keys.  Any other records found along the way, lacking the necessary
 // join-field keys, are moved to the left-unpaired list.
@@ -351,7 +342,6 @@ func (keeper *JoinBucketKeeper) prepareForFirstJoinBucket() {
 	}
 }
 
-// ----------------------------------------------------------------
 // After right-file input has moved past the current join-bucket, this finds
 // the next peek record which possesses all the necessary join-field keys.  Any
 // other records found along the way, lacking the necessary join-field keys,
@@ -437,7 +427,6 @@ func (keeper *JoinBucketKeeper) prepareForNewJoinBucket(
 	}
 }
 
-// ----------------------------------------------------------------
 // This takes the peek record and forms a complete join-bucket with all records
 // having its join-field values. E.g. if the join-field is "id" and the peek
 // record has id=5, it's moved to a new join bucket with id=5 and all other
@@ -503,7 +492,6 @@ func (keeper *JoinBucketKeeper) fillNextJoinBucket() {
 	}
 }
 
-// ----------------------------------------------------------------
 // TODO: comment
 func (keeper *JoinBucketKeeper) markRemainingsAsUnpaired() {
 	// 1. Any records already in keeper.JoinBucket.records (current bucket)
@@ -528,7 +516,6 @@ func (keeper *JoinBucketKeeper) markRemainingsAsUnpaired() {
 	}
 }
 
-// ----------------------------------------------------------------
 // TODO: comment
 func (keeper *JoinBucketKeeper) OutputAndReleaseLeftUnpaireds(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -546,10 +533,8 @@ func (keeper *JoinBucketKeeper) ReleaseLeftUnpaireds(
 	keeper.leftUnpaireds = keeper.leftUnpaireds[:0]
 }
 
-// ================================================================
 // HELPER FUNCTIONS
 
-// ----------------------------------------------------------------
 // Method to get the next left-file record from the record-reader goroutine.
 // Returns nil at EOF.
 
@@ -560,7 +545,7 @@ func (keeper *JoinBucketKeeper) readRecord() *types.RecordAndContext {
 
 	select {
 	case err := <-keeper.errorChannel:
-		fmt.Fprintln(os.Stderr, "mlr", ": ", err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	case leftrecsAndContexts := <-keeper.readerChannel:
 		// TODO: temp
@@ -570,15 +555,13 @@ func (keeper *JoinBucketKeeper) readRecord() *types.RecordAndContext {
 		if leftrecAndContext.EndOfStream { // end-of-stream marker
 			keeper.recordReaderDone = true
 			return nil
-		} else {
-			return leftrecAndContext
 		}
+		return leftrecAndContext
 	}
 
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Pops everything off second-argument list and push to first-argument list.
 
 func moveRecordsAndContexts(
@@ -589,7 +572,6 @@ func moveRecordsAndContexts(
 	*source = (*source)[:0]
 }
 
-// ----------------------------------------------------------------
 // Returns -1, 0, 1 as left <, ==, > right, using lexical comparison only (even
 // for numerical values).
 
@@ -621,15 +603,14 @@ func KeepLeftFieldNames(
 	} else if leftKeepFieldNameSet == nil {
 		// Normal case
 		return inrec
-	} else {
-		outrec := mlrval.NewMlrmap()
-		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if leftKeepFieldNameSet[pe.Key] {
-				// PutReference, not PutCopy, since the inrec will be freed and this
-				// is an ownership transfer.
-				outrec.PutReference(pe.Key, pe.Value)
-			}
-		}
-		return outrec
 	}
+	outrec := mlrval.NewMlrmap()
+	for pe := inrec.Head; pe != nil; pe = pe.Next {
+		if leftKeepFieldNameSet[pe.Key] {
+			// PutReference, not PutCopy, since the inrec will be freed and this
+			// is an ownership transfer.
+			outrec.PutReference(pe.Key, pe.Value)
+		}
+	}
+	return outrec
 }

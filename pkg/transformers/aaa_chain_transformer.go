@@ -8,14 +8,12 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ================================================================
 // ChainTransformer is a refinement of Miller's high-level sketch in stream.go.
 // As far as stream.go is concerned, the transformer-chain is a box which reads
 // from an input-record channel (from the record-reader object) and writes to
 // an output-record channel (to the record-writer object). Inside that box is a
 // bit more complexity, including channels between transformers in the chain.
 //
-// ----------------------------------------------------------------
 // Channel structure from outside the box:
 // * readerInputRecordChannel "ichan" passes records from the record-reader
 //   to the transformer chain.
@@ -38,7 +36,6 @@ import (
 //     v
 //   Record-writer
 //
-// ----------------------------------------------------------------
 // Channel structure from inside the box:
 //
 //   Record-reader
@@ -60,7 +57,6 @@ import (
 //     v
 //   Record-writer
 //
-// ----------------------------------------------------------------
 // Each transformer has four channels from its point of view:
 //
 // | irchan  odchan |
@@ -95,7 +91,6 @@ import (
 //   o Otherwise it's an intermediary channel connected to transformer i-1's idchan,
 //     so transformer i can produce a downstream-done flag.
 //
-// ----------------------------------------------------------------
 // Handling in practice:
 //
 // * Most verbs pass a downstrem-done flag on their idchan upstream to their odchan.
@@ -117,7 +112,6 @@ import (
 // * In head.go, tee.go, and seqgen.go you will see specific handling of
 //   reading idchan and writing odchan.
 //
-// ----------------------------------------------------------------
 // TESTING
 //
 // * This is a bit awkward with regard to regression-test -- we don't want a
@@ -134,7 +128,6 @@ import (
 //     check `wc -l foo.txt` is 100 and `wc -l bar.txt` is 10
 //   mlr seqgen --stop 100000000 then head -n 10
 //
-// ================================================================
 
 // ChainTransformer is a refinement of Miller's high-level sketch in stream.go.
 // While stream.go sees goroutines for record reader, transformer chain, and
@@ -145,7 +138,7 @@ import (
 func ChainTransformer(
 	readerRecordChannel <-chan []*types.RecordAndContext, // list of *types.RecordAndContext
 	readerDownstreamDoneChannel chan<- bool, // for mlr head -- see also stream.go
-	recordTransformers []IRecordTransformer, // not *recordTransformer since this is an interface
+	recordTransformers []RecordTransformer, // not *recordTransformer since this is an interface
 	writerRecordChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	options *cli.TOptions,
 ) {
@@ -197,7 +190,7 @@ func ChainTransformer(
 }
 
 func runSingleTransformer(
-	recordTransformer IRecordTransformer,
+	recordTransformer RecordTransformer,
 	isFirstInChain bool,
 	inputRecordChannel <-chan []*types.RecordAndContext, // list of *types.RecordAndContext
 	outputRecordChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
@@ -225,7 +218,7 @@ func runSingleTransformer(
 // Returns true on end of record stream
 func runSingleTransformerBatch(
 	inputRecordsAndContexts []*types.RecordAndContext, // list of types.RecordAndContext
-	recordTransformer IRecordTransformer,
+	recordTransformer RecordTransformer,
 	isFirstInChain bool,
 	outputRecordChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,

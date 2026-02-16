@@ -1,7 +1,5 @@
-// ================================================================
 // CST build/execute for AST array-literal, map-literal, index-access, and
 // slice-access nodes
-// ================================================================
 
 package cst
 
@@ -125,15 +123,14 @@ func (node *ArrayOrMapIndexAccessNode) Evaluate(
 	} else if baseMlrval.IsAbsent() {
 		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
-	} else {
-		return mlrval.FromError(
-			fmt.Errorf(
-				"cannot index base value %s of type %s, which is not array, map, or string",
-				baseMlrval.StringMaybeQuoted(),
-				baseMlrval.GetTypeName(),
-			),
-		)
 	}
+	return mlrval.FromError(
+		fmt.Errorf(
+			"cannot index base value %s of type %s, which is not array, map, or string",
+			baseMlrval.StringMaybeQuoted(),
+			baseMlrval.GetTypeName(),
+		),
+	)
 }
 
 type ArraySliceAccessNode struct {
@@ -225,7 +222,6 @@ func (node *ArraySliceAccessNode) Evaluate(
 	return mlrval.FromArray(retval)
 }
 
-// ================================================================
 // For input record 'a=7,b=8,c=9',  $[[2]] = "b"
 
 type PositionalFieldNameNode struct {
@@ -272,7 +268,6 @@ func (node *PositionalFieldNameNode) Evaluate(
 	return mlrval.FromString(name)
 }
 
-// ================================================================
 // For input record 'a=7,b=8,c=9',  $[[2]] = 8
 
 type PositionalFieldValueNode struct {
@@ -318,7 +313,6 @@ func (node *PositionalFieldValueNode) Evaluate(
 	return retval
 }
 
-// ================================================================
 // For x = [7,8,9], x[[2]] = 2
 // For y = {"a":7,"b":8,"c":9}, y[[2]] = "b"
 type ArrayOrMapPositionalNameAccessNode struct {
@@ -371,34 +365,30 @@ func (node *ArrayOrMapPositionalNameAccessNode) Evaluate(
 		zindex, ok := mlrval.UnaliasArrayLengthIndex(int(n), int(index))
 		if ok {
 			return mlrval.FromInt(int64(zindex + 1)) // Miller user-space indices are 1-up
-		} else {
-			return mlrval.ABSENT
 		}
+		return mlrval.ABSENT
 
 	} else if baseMlrval.IsMap() {
 		name, ok := baseMlrval.GetMap().GetNameAtPositionalIndex(index)
 		if !ok {
 			return mlrval.ABSENT
-		} else {
-			return mlrval.FromString(name)
 		}
+		return mlrval.FromString(name)
 
 	} else if baseMlrval.IsAbsent() {
 		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
 
-	} else {
-		return mlrval.FromError(
-			fmt.Errorf(
-				"cannot index base value %s of type %s, which is not array, map, or string",
-				baseMlrval.StringMaybeQuoted(),
-				baseMlrval.GetTypeName(),
-			),
-		)
 	}
+	return mlrval.FromError(
+		fmt.Errorf(
+			"cannot index base value %s of type %s, which is not array, map, or string",
+			baseMlrval.StringMaybeQuoted(),
+			baseMlrval.GetTypeName(),
+		),
+	)
 }
 
-// ================================================================
 // For x = [7,8,9], x[[2]] = 8
 // For y = {"a":7,"b":8,"c":9}, y[[2]] = 8
 type ArrayOrMapPositionalValueAccessNode struct {
@@ -464,18 +454,16 @@ func (node *ArrayOrMapPositionalValueAccessNode) Evaluate(
 		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
 
-	} else {
-		return mlrval.FromError(
-			fmt.Errorf(
-				"cannot index base value %s of type %s, which is not array, map, or string",
-				baseMlrval.StringMaybeQuoted(),
-				baseMlrval.GetTypeName(),
-			),
-		)
 	}
+	return mlrval.FromError(
+		fmt.Errorf(
+			"cannot index base value %s of type %s, which is not array, map, or string",
+			baseMlrval.StringMaybeQuoted(),
+			baseMlrval.GetTypeName(),
+		),
+	)
 }
 
-// ================================================================
 // This is for computing map entries at runtime. For example, in
 //
 //   mlr put 'mymap = {"sum": $x + $y, "diff": $x - $y}; ...'

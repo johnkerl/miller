@@ -51,8 +51,8 @@ func get_point_plot(cr float64, ci float64, maxits int) string {
 	}
 	if !escaped {
 		return "."
-	} else {
-		level := (iti / levelstep) % len(chars)
-		return chars[level : level+1]
 	}
+	level := (iti / levelstep) % len(chars)
+	return chars[level : level+1]
 }
+

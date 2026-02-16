@@ -41,7 +41,7 @@ func transformerBootstrapParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -80,7 +80,7 @@ func transformerBootstrapParseCLI(
 
 	transformer, err := NewTransformerBootstrap(nout)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -94,12 +94,11 @@ type TransformerBootstrap struct {
 
 func NewTransformerBootstrap(nout int64) (*TransformerBootstrap, error) {
 	tr := &TransformerBootstrap{
-		recordsAndContexts: make([]*types.RecordAndContext, 0),
+		recordsAndContexts: []*types.RecordAndContext{},
 		nout:               nout,
 	}
 	return tr, nil
 }
-
 
 func (tr *TransformerBootstrap) Transform(
 	inrecAndContext *types.RecordAndContext,

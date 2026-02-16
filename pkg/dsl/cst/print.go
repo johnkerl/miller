@@ -1,6 +1,4 @@
-// ================================================================
 // This handles print, printn, eprint, and eprintn statements.
-// ================================================================
 
 package cst
 
@@ -16,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 // Example ASTs:
 //
 // $ mlr -n put -v 'print $a, $b'
@@ -197,7 +194,6 @@ func (root *RootNode) BuildEprintnStatementNode(astNode *dsl.ASTNode) (IExecutab
 	)
 }
 
-// ----------------------------------------------------------------
 // Common code for building print/eprint/printn/eprintn nodes
 
 func (root *RootNode) buildPrintxStatementNode(
@@ -257,7 +253,7 @@ func (root *RootNode) buildPrintxStatementNode(
 		lib.InternalCodingErrorIf(redirectorNode.Children == nil)
 		lib.InternalCodingErrorIf(len(redirectorNode.Children) != 1)
 		redirectorTargetNode := redirectorNode.Children[0]
-		var err error = nil
+		var err error
 
 		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
 			retval.printToRedirectFunc = retval.printToStdout
@@ -278,7 +274,7 @@ func (root *RootNode) buildPrintxStatementNode(
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
 				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
-				return nil, fmt.Errorf("mlr: unhandled redirector node type %s", string(redirectorNode.Type))
+				return nil, fmt.Errorf("unhandled redirector node type %s", string(redirectorNode.Type))
 			}
 		}
 	}
@@ -350,7 +346,7 @@ func (node *PrintStatementNode) printToFileOrPipe(
 ) error {
 	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
-		return fmt.Errorf("mlr: output redirection yielded %s, not string", redirectorTarget.GetTypeName())
+		return fmt.Errorf("output redirection yielded %s, not string", redirectorTarget.GetTypeName())
 	}
 	outputFileName := redirectorTarget.String()
 

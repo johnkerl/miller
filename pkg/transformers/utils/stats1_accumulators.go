@@ -1,6 +1,4 @@
-// ================================================================
 // For stats1 as well as merge-fields
-// ================================================================
 
 package utils
 
@@ -125,7 +123,6 @@ var stats1AccumulatorInfos []stats1AccumulatorInfo = []stats1AccumulatorInfo{
 	},
 }
 
-// ================================================================
 // TODO: comment
 
 type Stats1NamedAccumulator struct {
@@ -160,7 +157,6 @@ func (nacc *Stats1NamedAccumulator) Reset() {
 	nacc.accumulator.Reset()
 }
 
-// ----------------------------------------------------------------
 // If we are asked for p90 and p95 on the same column, we reuse the
 // percentile-keeper object to reduce runtime memory consumption.  This
 // two-level map is keyed by value-field name and grouping key.  E.g. for 'mlr
@@ -225,20 +221,19 @@ func tryPercentileFromName(accumulatorName string) (float64, bool) {
 	return 0.0, false
 }
 
-// ----------------------------------------------------------------
 // For merge-fields wherein percentile-keepers are re-created on each record
-func (factory *Stats1AccumulatorFactory) Reset() {
-	factory.percentileKeepers = make(map[string]map[string]*PercentileKeeper)
+func (fac *Stats1AccumulatorFactory) Reset() {
+	fac.percentileKeepers = make(map[string]map[string]*PercentileKeeper)
 }
 
-func (factory *Stats1AccumulatorFactory) MakeNamedAccumulator(
+func (fac *Stats1AccumulatorFactory) MakeNamedAccumulator(
 	accumulatorName string,
 	groupingKey string,
 	valueFieldName string,
 	doInterpolatedPercentiles bool,
 ) *Stats1NamedAccumulator {
 
-	accumulator := factory.MakeAccumulator(
+	accumulator := fac.MakeAccumulator(
 		accumulatorName,
 		groupingKey,
 		valueFieldName,
@@ -260,7 +255,7 @@ func (factory *Stats1AccumulatorFactory) MakeNamedAccumulator(
 	)
 }
 
-func (factory *Stats1AccumulatorFactory) MakeAccumulator(
+func (fac *Stats1AccumulatorFactory) MakeAccumulator(
 	accumulatorName string,
 	groupingKey string,
 	valueFieldName string,
@@ -269,10 +264,10 @@ func (factory *Stats1AccumulatorFactory) MakeAccumulator(
 	// First try percentiles, which have parameterized names.
 	percentile, ok := tryPercentileFromName(accumulatorName)
 	if ok {
-		percentileKeepersForValueFieldName := factory.percentileKeepers[valueFieldName]
+		percentileKeepersForValueFieldName := fac.percentileKeepers[valueFieldName]
 		if percentileKeepersForValueFieldName == nil {
 			percentileKeepersForValueFieldName = make(map[string]*PercentileKeeper)
-			factory.percentileKeepers[valueFieldName] = percentileKeepersForValueFieldName
+			fac.percentileKeepers[valueFieldName] = percentileKeepersForValueFieldName
 		}
 
 		percentileKeeper := percentileKeepersForValueFieldName[groupingKey]
@@ -341,7 +336,6 @@ func (acc *Stats1NullCountAccumulator) Reset() {
 	acc.count = 0
 }
 
-// ================================================================
 // Stats1DistinctCountAccumulator determines distinctness by string values.
 // Here, 4.1 and 4.10 are counted as distinct values.
 type Stats1DistinctCountAccumulator struct {
@@ -491,9 +485,8 @@ func (acc *Stats1MeanAccumulator) Ingest(value *mlrval.Mlrval) {
 func (acc *Stats1MeanAccumulator) Emit() *mlrval.Mlrval {
 	if acc.count == 0 {
 		return mlrval.VOID
-	} else {
-		return bifs.BIF_divide(acc.sum, mlrval.FromInt(acc.count))
 	}
+	return bifs.BIF_divide(acc.sum, mlrval.FromInt(acc.count))
 }
 func (acc *Stats1MeanAccumulator) Reset() {
 	acc.sum = mlrval.FromInt(0)
@@ -555,9 +548,8 @@ func (acc *Stats1MinAccumulator) Ingest(value *mlrval.Mlrval) {
 func (acc *Stats1MinAccumulator) Emit() *mlrval.Mlrval {
 	if acc.min.IsAbsent() {
 		return mlrval.VOID
-	} else {
-		return acc.min.Copy()
 	}
+	return acc.min.Copy()
 }
 func (acc *Stats1MinAccumulator) Reset() {
 	acc.min = mlrval.ABSENT
@@ -578,9 +570,8 @@ func (acc *Stats1MaxAccumulator) Ingest(value *mlrval.Mlrval) {
 func (acc *Stats1MaxAccumulator) Emit() *mlrval.Mlrval {
 	if acc.max.IsAbsent() {
 		return mlrval.VOID
-	} else {
-		return acc.max.Copy()
 	}
+	return acc.max.Copy()
 }
 func (acc *Stats1MaxAccumulator) Reset() {
 	acc.max = mlrval.ABSENT
@@ -792,7 +783,6 @@ func (acc *Stats1KurtosisAccumulator) Reset() {
 	acc.sum4 = mlrval.FromInt(0)
 }
 
-// ----------------------------------------------------------------
 // To conserve memory, percentile-keeprs on the same value-field-name (and
 // grouping-key) are shared. For example, p25,p75 on field "x".  This means
 // though that each datapoint must be ingested only once (e.g.  by the p25

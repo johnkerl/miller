@@ -1,4 +1,3 @@
-// ================================================================
 // OVERVIEW
 //
 // * Suppose we are sorting records lexically ascending on field "a" and then
@@ -37,7 +36,6 @@
 // * Note in particular that string keys ["a":"red","x":"1"] and
 //   ["a":"red","x":"1.0"] map to different groups, but will sort equally.
 //
-// ================================================================
 
 package transformers
 
@@ -97,15 +95,15 @@ func transformerSortParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
 
-	groupByFieldNames := make([]string, 0)
-	comparatorFuncs := make([]mlrval.CmpFuncInt, 0)
+	groupByFieldNames := []string{}
+	comparatorFuncs := []mlrval.CmpFuncInt{}
 	doMoveToHead := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -280,14 +278,13 @@ func transformerSortParseCLI(
 		doMoveToHead,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
 	return transformer
 }
 
-// ----------------------------------------------------------------
 // Example:
 // * mlr sort -f a -n i
 // * group-by field-name list is "a,i"
@@ -331,7 +328,7 @@ func NewTransformerSort(
 
 		recordListsByGroup: lib.NewOrderedMap[*[]*types.RecordAndContext](),
 		groupHeads:         lib.NewOrderedMap[[]*mlrval.Mlrval](),
-		spillGroup:         make([]*types.RecordAndContext, 0),
+		spillGroup:         []*types.RecordAndContext{},
 	}
 
 	return tr, nil
@@ -369,7 +366,7 @@ func (tr *TransformerSort) Transform(
 
 		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
 		if recordListForGroup == nil {
-			records := make([]*types.RecordAndContext, 0)
+			records := []*types.RecordAndContext{}
 			recordListForGroup = &records
 			tr.recordListsByGroup.Put(groupingKey, recordListForGroup)
 			tr.groupHeads.Put(groupingKey, selectedValues)

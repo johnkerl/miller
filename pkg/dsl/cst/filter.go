@@ -1,4 +1,3 @@
-// ================================================================
 // This handles bare booleans and filter statements.
 //
 // Example of the former: 'NR > 10' or '$x =~ "(..)_(...)"' without if or '{...}' body.
@@ -14,7 +13,6 @@
 // e.g. if the user types '1+2' then the repl prints '3' and that expression is
 // stored as a bare-boolean evaluable. Which is a misnomer (sorry!) since 3 is
 // not a boolean.
-// ================================================================
 
 package cst
 
@@ -24,7 +22,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
-// ----------------------------------------------------------------
 // BareBooleanStatementNode is for implicit filter statements such as mlr
 // filter 'NR < 10' -- "implicit" since the word "filter" doesn't appear within
 // the single quotes as part of the DSL expression per se. Or (as noted above)
@@ -60,7 +57,6 @@ func (node *BareBooleanStatementNode) Execute(state *runtime.State) (*BlockExitP
 	return nil, nil
 }
 
-// ----------------------------------------------------------------
 // FilterStatementNode is for explicit filter statements such as mlr put
 // 'filter NR < 10', where the word "filter" appears within the single quotes
 // and is part of the DSL expression per se.

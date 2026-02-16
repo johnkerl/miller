@@ -1,7 +1,5 @@
-// ================================================================
 // These are intended for streaming (i.e. single-pass) applications. Otherwise
 // the formulas look different (and are more intuitive).
-// ================================================================
 
 package lib
 
@@ -9,9 +7,7 @@ import (
 	"math"
 )
 
-// ----------------------------------------------------------------
 // Univariate linear regression
-// ----------------------------------------------------------------
 // There are N (xi, yi) pairs.
 //
 // minimize E = sum (yi - m xi - b)^2
@@ -84,8 +80,6 @@ func GetLinearRegressionOLS(
 //
 //	output = [m, b, math.sqrt(var_m), math.sqrt(var_b)]
 
-// ----------------------------------------------------------------
-
 // GetVar is the finalizing function for computing variance from streamed
 // accumulator values.
 func GetVar(
@@ -104,7 +98,6 @@ func GetVar(
 	return numerator / denominator
 }
 
-// ----------------------------------------------------------------
 // Unbiased estimator:
 //    (1/n)   sum{(xi-mean)**3}
 //  -----------------------------
@@ -127,9 +120,6 @@ func GetVar(
 //   = sumx2 - 2 n mean^2 + n mean^2
 //   = sumx2 - n mean^2
 
-// ----------------------------------------------------------------
-
-// ----------------------------------------------------------------
 // Unbiased:
 //  (1/n) sum{(x-mean)**4}
 //  ----------------------- - 3
@@ -144,7 +134,6 @@ func GetVar(
 //   = sumx4 - mean*(4 sumx3 - 6 mean sumx2 + 3 n mean^3)
 //   = sumx4 - mean*(4 sumx3 - mean*(6 sumx2 - 3 n mean^2))
 
-// ----------------------------------------------------------------
 // Non-streaming implementation:
 //
 // def find_sample_covariance(xs, ys):
@@ -193,7 +182,6 @@ func GetCovMatrix(
 	return Q
 }
 
-// ----------------------------------------------------------------
 // Principal component analysis can be used for linear regression:
 //
 // * Compute the covariance matrix for the x's and y's.
@@ -217,25 +205,25 @@ func GetCovMatrix(
 // appropriate when the x's and the y's are thought to both have errors.
 
 func GetLinearRegressionPCA(
-	eigenvalue_1 float64,
-	eigenvalue_2 float64,
-	eigenvector_1 [2]float64,
-	eigenvector_2 [2]float64,
-	x_mean float64,
-	y_mean float64,
+	eigenvalue1 float64,
+	eigenvalue2 float64,
+	eigenvector1 [2]float64,
+	eigenvector2 [2]float64,
+	xMean float64,
+	yMean float64,
 ) (m, b, quality float64) {
 
-	abs_1 := math.Abs(eigenvalue_1)
-	abs_2 := math.Abs(eigenvalue_2)
+	abs1 := math.Abs(eigenvalue1)
+	abs2 := math.Abs(eigenvalue2)
 	quality = 1.0
-	if abs_1 == 0.0 {
+	if abs1 == 0.0 {
 		quality = 0.0
-	} else if abs_2 > 0.0 {
-		quality = 1.0 - abs_2/abs_1
+	} else if abs2 > 0.0 {
+		quality = 1.0 - abs2/abs1
 	}
-	a0 := eigenvector_1[0]
-	a1 := eigenvector_1[1]
+	a0 := eigenvector1[0]
+	a1 := eigenvector1[1]
 	m = a1 / a0
-	b = y_mean - m*x_mean
+	b = yMean - m*xMean
 	return m, b, quality
 }

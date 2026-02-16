@@ -18,7 +18,7 @@ func Getoptify(inargs []string) []string {
 	expandRegex := regexp.MustCompile("^-[a-zA-Z0-9]+$")
 	splitRegex := regexp.MustCompile("^--[^=]+=.+$")
 	numberRegex := regexp.MustCompile("^-[0-9]+$")
-	outargs := make([]string, 0)
+	outargs := []string{}
 	for _, inarg := range inargs {
 		if expandRegex.MatchString(inarg) {
 			if numberRegex.MatchString(inarg) {

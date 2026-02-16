@@ -16,17 +16,15 @@ func BooleanXOR(a, b bool) bool {
 func BoolToInt(b bool) int64 {
 	if !b {
 		return 0
-	} else {
-		return 1
 	}
+	return 1
 }
 
 func Plural(n int) string {
 	if n == 1 {
 		return ""
-	} else {
-		return "s"
 	}
+	return "s"
 }
 
 // In Go as in all languages I'm aware of with a string-split, "a,b,c" splits
@@ -34,10 +32,9 @@ func Plural(n int) string {
 // but "" splits to [""] when I wish it were []. This function does the latter.
 func SplitString(input string, separator string) []string {
 	if input == "" {
-		return make([]string, 0)
-	} else {
-		return strings.Split(input, separator)
+		return []string{}
 	}
+	return strings.Split(input, separator)
 }
 
 func StringListToSet(stringList []string) map[string]bool {
@@ -52,44 +49,43 @@ func StringListToSet(stringList []string) map[string]bool {
 	return stringSet
 }
 
-func SortStrings(strings []string) {
+func SortStrings(strs []string) {
 	// Go sort API: for ascending sort, return true if element i < element j.
-	sort.Slice(strings, func(i, j int) bool {
-		return strings[i] < strings[j]
+	sort.Slice(strs, func(i, j int) bool {
+		return strs[i] < strs[j]
 	})
 }
 
-func ReverseStringList(strings []string) {
-	n := len(strings)
+func ReverseStringList(strs []string) {
+	n := len(strs)
 	i := 0
 	j := n - 1
 	for i < j {
-		temp := strings[i]
-		strings[i] = strings[j]
-		strings[j] = temp
+		temp := strs[i]
+		strs[i] = strs[j]
+		strs[j] = temp
 		i++
 		j--
 	}
 }
 
-func SortedStrings(strings []string) []string {
-	copy := make([]string, len(strings))
-	for i, s := range strings {
-		copy[i] = s
+func SortedStrings(strs []string) []string {
+	result := make([]string, len(strs))
+	for i, s := range strs {
+		result[i] = s
 	}
 	// Go sort API: for ascending sort, return true if element i < element j.
-	sort.Slice(copy, func(i, j int) bool {
-		return copy[i] < copy[j]
+	sort.Slice(result, func(i, j int) bool {
+		return result[i] < result[j]
 	})
-	return copy
+	return result
 }
 
 func IntMin2(a, b int64) int64 {
 	if a < b {
 		return a
-	} else {
-		return b
 	}
+	return b
 }
 
 // TryIntFromString tries decimal, hex, octal, and binary.
@@ -153,19 +149,18 @@ func TryFloatFromString(input string) (float64, bool) {
 	fval, err := strconv.ParseFloat(input, 64)
 	if err == nil {
 		return fval, true
-	} else {
-		return 0, false
 	}
+	return 0, false
 }
 
 func TryBoolFromBoolString(input string) (bool, bool) {
 	if input == "true" {
 		return true, true
-	} else if input == "false" {
-		return false, true
-	} else {
-		return false, false
 	}
+	if input == "false" {
+		return false, true
+	}
+	return false, false
 }
 
 // Go doesn't preserve insertion order in its arrays, so here we make an

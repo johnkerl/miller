@@ -1,9 +1,7 @@
-// ================================================================
 // ORDERED MAP FROM STRING TO GENERIC VALUE TYPE
 //
 // Quite like types.OrderedMap but only with string keys. See orderedMap.go for
 // more information.
-// ================================================================
 
 package lib
 
@@ -30,7 +28,6 @@ func NewOrderedMap[V any]() *OrderedMap[V] {
 	}
 }
 
-// ----------------------------------------------------------------
 // Value-copy is up to the caller -- PutReference and PutCopy
 // are in the public OrderedMap API.
 func newOrderedMapEntry[V any](key *string, value V) *orderedMapEntry[V] {
@@ -53,14 +50,13 @@ func (omap *OrderedMap[V]) Has(key string) bool {
 func (omap *OrderedMap[V]) findEntry(key *string) *orderedMapEntry[V] {
 	if omap.keysToEntries != nil {
 		return omap.keysToEntries[*key]
-	} else {
-		for pe := omap.Head; pe != nil; pe = pe.Next {
-			if pe.Key == *key {
-				return pe
-			}
-		}
-		return nil
 	}
+	for pe := omap.Head; pe != nil; pe = pe.Next {
+		if pe.Key == *key {
+			return pe
+		}
+	}
+	return nil
 }
 
 func (omap *OrderedMap[V]) Put(key string, value V) {
@@ -106,16 +102,14 @@ func (omap *OrderedMap[V]) GetWithCheck(key string) (V, bool) {
 	return pe.Value, true
 }
 
-// ----------------------------------------------------------------
 // Returns true if it was found and removed
 func (omap *OrderedMap[V]) Remove(key string) bool {
 	pe := omap.findEntry(&key)
 	if pe == nil {
 		return false
-	} else {
-		omap.unlink(pe)
-		return true
 	}
+	omap.unlink(pe)
+	return true
 }
 
 func (omap *OrderedMap[V]) unlink(pe *orderedMapEntry[V]) {

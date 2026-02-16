@@ -21,9 +21,8 @@ func (mlrmap *Mlrmap) Get(key string) *Mlrval {
 	pe := mlrmap.findEntry(key)
 	if pe == nil {
 		return nil
-	} else {
-		return pe.Value
 	}
+	return pe.Value
 }
 
 // PutReference copies the key but not the value. This is not safe for DSL use,
@@ -162,29 +161,28 @@ func (mlrmap *Mlrmap) PutReferenceAfter(
 		mlrmap.FieldCount++
 		return pf
 
-	} else {
-		// Before: ... pe pg ...
-		// After:  ... pe pf pg ...
-		//
-		// New entry is neither the new head (pe != nil) nor the new tail
-		// (pe.Next != nil, otherwise we'd be in the if-branch above).
-
-		pf := newMlrmapEntry(key, value)
-		pg := pe.Next
-
-		pe.Next = pf
-		pf.Next = pg
-		pf.Prev = pe
-		if pg != nil {
-			pg.Prev = pf
-		}
-
-		if mlrmap.keysToEntries != nil {
-			mlrmap.keysToEntries[key] = pf
-		}
-		mlrmap.FieldCount++
-		return pf
 	}
+	// Before: ... pe pg ...
+	// After:  ... pe pf pg ...
+	//
+	// New entry is neither the new head (pe != nil) nor the new tail
+	// (pe.Next != nil, otherwise we'd be in the if-branch above).
+
+	pf := newMlrmapEntry(key, value)
+	pg := pe.Next
+
+	pe.Next = pf
+	pf.Next = pg
+	pf.Prev = pe
+	if pg != nil {
+		pg.Prev = pf
+	}
+
+	if mlrmap.keysToEntries != nil {
+		mlrmap.keysToEntries[key] = pf
+	}
+	mlrmap.FieldCount++
+	return pf
 }
 
 // findEntry is the basic hash-map accessor for Has, Put, Get, Remove, etc.
@@ -194,14 +192,13 @@ func (mlrmap *Mlrmap) PutReferenceAfter(
 func (mlrmap *Mlrmap) findEntry(key string) *MlrmapEntry {
 	if mlrmap.keysToEntries != nil {
 		return mlrmap.keysToEntries[key]
-	} else {
-		for pe := mlrmap.Head; pe != nil; pe = pe.Next {
-			if pe.Key == key {
-				return pe
-			}
-		}
-		return nil
 	}
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
+		if pe.Key == key {
+			return pe
+		}
+	}
+	return nil
 }
 
 // findEntryByPositionalIndex is for '$[1]' etc. in the DSL.
@@ -244,18 +241,16 @@ func (mlrmap *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 	if key.IsStringOrInt() {
 		mlrmap.PutCopy(key.String(), value)
 		return nil
-	} else {
-		return fmt.Errorf(
-			"mlr: record/map indices must be string, int, or array thereof; got %s", key.GetTypeName(),
-		)
 	}
+	return fmt.Errorf(
+		"record/map indices must be string, int, or array thereof; got %s", key.GetTypeName(),
+	)
 }
 
 func (mlrmap *Mlrmap) PrependCopy(key string, value *Mlrval) {
 	mlrmap.PrependReference(key, value.Copy())
 }
 
-// ----------------------------------------------------------------
 // Merges that into mlrmap.
 func (mlrmap *Mlrmap) Merge(other *Mlrmap) {
 	for pe := other.Head; pe != nil; pe = pe.Next {
@@ -263,7 +258,6 @@ func (mlrmap *Mlrmap) Merge(other *Mlrmap) {
 	}
 }
 
-// ----------------------------------------------------------------
 // Exposed for the 'nest' verb
 func (mlrmap *Mlrmap) GetEntry(key string) *MlrmapEntry {
 	return mlrmap.findEntry(key)
@@ -283,7 +277,7 @@ func (mlrmap *Mlrmap) GetKeys() []string {
 // specified are to be passed in as a map from string to bool, as Go
 // doesn't have hash-sets.
 func (mlrmap *Mlrmap) GetKeysExcept(exceptions map[string]bool) []string {
-	keys := make([]string, 0)
+	keys := []string{}
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		if _, present := exceptions[pe.Key]; !present {
 			keys = append(keys, pe.Key)
@@ -292,7 +286,6 @@ func (mlrmap *Mlrmap) GetKeysExcept(exceptions map[string]bool) []string {
 	return keys
 }
 
-// ----------------------------------------------------------------
 // TODO: put error-return into this API
 func (mlrmap *Mlrmap) PutNameWithPositionalIndex(position int64, name *Mlrval) {
 	positionalEntry := mlrmap.findEntryByPositionalIndex(position)
@@ -339,9 +332,8 @@ func (mlrmap *Mlrmap) GetWithPositionalIndex(position int64) *Mlrval {
 func (mlrmap *Mlrmap) GetWithMlrvalIndex(index *Mlrval) (*Mlrval, error) {
 	if index.IsArray() {
 		return mlrmap.getWithMlrvalArrayIndex(index)
-	} else {
-		return mlrmap.getWithMlrvalSingleIndex(index)
 	}
+	return mlrmap.getWithMlrvalSingleIndex(index)
 }
 
 // This lets the user do '$y = $x[ ["a", "b", "c"] ]' in lieu of
@@ -359,7 +351,7 @@ func (mlrmap *Mlrmap) getWithMlrvalArrayIndex(index *Mlrval) (*Mlrval, error) {
 		}
 		if i < n-1 {
 			if !next.IsMap() {
-				return nil, fmt.Errorf("mlr: cannot multi-index non-map")
+				return nil, fmt.Errorf("cannot multi-index non-map")
 			}
 			current = next.intf.(*Mlrmap)
 		} else {
@@ -375,11 +367,10 @@ func (mlrmap *Mlrmap) getWithMlrvalSingleIndex(index *Mlrval) (*Mlrval, error) {
 		return mlrmap.Get(index.printrep), nil
 	} else if index.IsInt() {
 		return mlrmap.Get(index.String()), nil
-	} else {
-		return nil, fmt.Errorf(
-			"record/map indices must be string, int, or array thereof; got %s", index.GetTypeName(),
-		)
 	}
+	return nil, fmt.Errorf(
+		"record/map indices must be string, int, or array thereof; got %s", index.GetTypeName(),
+	)
 }
 
 // For '$[[1]]' etc. in the DSL.
@@ -400,7 +391,6 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int64) (string, bool) {
 	return mapEntry.Key, true
 }
 
-// ----------------------------------------------------------------
 // Copies the key and value (deep-copying in case the value is array/map).
 // This is safe for DSL use. See also PutReference.
 
@@ -476,10 +466,9 @@ func (mlrmap *Mlrmap) Remove(key string) bool {
 	pe := mlrmap.findEntry(key)
 	if pe == nil {
 		return false
-	} else {
-		mlrmap.Unlink(pe)
-		return true
 	}
+	mlrmap.Unlink(pe)
+	return true
 }
 
 func (mlrmap *Mlrmap) MoveToHead(key string) {
@@ -498,7 +487,6 @@ func (mlrmap *Mlrmap) MoveToTail(key string) {
 	}
 }
 
-// ----------------------------------------------------------------
 // E.g. '$name[1]["foo"] = "bar"' or '$*["foo"][1] = "bar"'
 // In the former case the indices are ["name", 1, "foo"] and in the latter case
 // the indices are ["foo", 1]. See also indexed-lvalues.md.
@@ -542,7 +530,6 @@ func (mlrmap *Mlrmap) GetValuesJoined() string {
 	return buffer.String()
 }
 
-// ----------------------------------------------------------------
 // For group-by in several transformers.  If the record is 'a=x,b=y,c=3,d=4,e=5' and
 // selectedFieldNames is 'a,b,c' then values are 'x,y,3'. This is returned as a
 // comma-joined string.  The boolean ok is false if not all selected field
@@ -658,7 +645,6 @@ func (mlrmap *Mlrmap) HasSelectedKeys(selectedFieldNames []string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 // For mlr nest implode across records.
 func (mlrmap *Mlrmap) GetKeysJoinedExcept(px *MlrmapEntry) string {
 	var buffer bytes.Buffer
@@ -796,7 +782,6 @@ func (mlrmap *Mlrmap) SortByKeyRecursively() {
 	*mlrmap = *other
 }
 
-// ----------------------------------------------------------------
 // Only checks to see if the first entry is a map. For emit/emitp.
 func (mlrmap *Mlrmap) IsNested() bool {
 	if mlrmap.Head == nil {
@@ -804,12 +789,10 @@ func (mlrmap *Mlrmap) IsNested() bool {
 	} else if mlrmap.Head.Value.GetMap() == nil {
 		//TODO: check IsArrayOrMap()
 		return false
-	} else {
-		return true
 	}
+	return true
 }
 
-// ================================================================
 // PRIVATE METHODS
 
 func (mlrmap *Mlrmap) Unlink(pe *MlrmapEntry) {
@@ -876,14 +859,11 @@ func (mlrmap *Mlrmap) linkAtTail(pe *MlrmapEntry) {
 func (mlrmap *Mlrmap) pop() *MlrmapEntry {
 	if mlrmap.Head == nil {
 		return nil
-	} else {
-		pe := mlrmap.Head
-		mlrmap.Unlink(pe)
-		return pe
 	}
+	pe := mlrmap.Head
+	mlrmap.Unlink(pe)
+	return pe
 }
-
-// ----------------------------------------------------------------
 
 // ToPairsArray is used for sorting maps by key/value/etc, e.g. the sortmf DSL function.
 func (mlrmap *Mlrmap) ToPairsArray() []MlrmapPair {
@@ -907,8 +887,6 @@ func MlrmapFromPairsArray(pairsArray []MlrmapPair) *Mlrmap {
 
 	return mlrmap
 }
-
-// ----------------------------------------------------------------
 
 // GetFirstPair returns the first key-value pair as its own map.  If the map is
 // empty (i.e. there is no first pair) it returns nil.

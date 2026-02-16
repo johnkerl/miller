@@ -1,10 +1,8 @@
-// ================================================================
 // CST build/execute for AST operator/function nodes.
 //
 // Operators and functions are semantically the same thing -- they differ only
 // syntactically. Binary operators are infix, like '1+2', while functions are
 // prefix, like 'max(1,2)'. Both parse to the same AST shape.
-// ================================================================
 
 package cst
 
@@ -13,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
-// ----------------------------------------------------------------
 // Function lookup:
 //
 // * Try builtins first
@@ -94,8 +91,7 @@ func (root *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 		udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)
 		root.rememberUnresolvedFunctionCallsite(udfCallsiteNode)
 		return udfCallsiteNode, nil
-	} else {
-		udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)
-		return udfCallsiteNode, nil
 	}
+	udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)
+	return udfCallsiteNode, nil
 }

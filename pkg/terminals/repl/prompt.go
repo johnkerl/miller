@@ -1,6 +1,4 @@
-// ================================================================
 // Handling for default and customized banners/prompts for the Miller REPL.
-// ================================================================
 
 package repl
 
@@ -27,9 +25,8 @@ func getInputIsTerminal() bool {
 		// outside MSYS2. So in that case we simply return true so that the mlr
 		// repl has a prompt.
 		return true
-	} else {
-		return term.IsTerminal(int(os.Stdin.Fd()))
 	}
+	return term.IsTerminal(int(os.Stdin.Fd()))
 }
 
 func getPrompt1() string {

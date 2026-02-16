@@ -23,14 +23,13 @@ func parseOne(input string, printError bool) bool {
 		iast.(*dsl.AST).Print()
 		fmt.Println()
 		return true
-	} else {
-		if printError {
-			fmt.Println(err)
-		}
-		fmt.Printf("%sFail%s %s\n", RED, TEXTDEFAULT, input)
-		fmt.Println()
-		return false
 	}
+	if printError {
+		fmt.Println(err)
+	}
+	fmt.Printf("%sFail%s %s\n", RED, TEXTDEFAULT, input)
+	fmt.Println()
+	return false
 }
 
 func main() {
@@ -121,3 +120,4 @@ func main() {
 		}
 	}
 }
+

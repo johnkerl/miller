@@ -1,4 +1,3 @@
-// ================================================================
 // This is the handler for taking DSL statements typed in interactively by the
 // user, parsing them to an AST, building a CST from the AST, and executing the
 // CST. It also handles DSL statements invoked using ':load' or multi-line '<<'
@@ -15,7 +14,6 @@
 //   blocks, the statement(s) is/are executed immediately for interactive mode,
 //   else populated into the CST's main-statements block for load-from-file
 //   multi-line mode.
-// ================================================================
 
 package repl
 

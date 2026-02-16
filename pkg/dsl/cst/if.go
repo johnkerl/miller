@@ -1,6 +1,4 @@
-// ================================================================
 // This is for if/elif/elif/else chains.
-// ================================================================
 
 package cst
 
@@ -24,7 +22,6 @@ func NewIfChainNode(ifItems []*IfItem) *IfChainNode {
 	}
 }
 
-// ----------------------------------------------------------------
 // For each if/elif/elif/else portion: the conditional part (...) and the
 // statement-block part {...}. For "else", the conditional is nil.
 type IfItem struct {
@@ -33,7 +30,6 @@ type IfItem struct {
 	statementBlockNode *StatementBlockNode
 }
 
-// ----------------------------------------------------------------
 // Sample AST:
 
 // DSL EXPRESSION:
@@ -74,7 +70,7 @@ type IfItem struct {
 func (root *RootNode) BuildIfChainNode(astNode *dsl.ASTNode) (*IfChainNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIfChain)
 
-	ifItems := make([]*IfItem, 0)
+	ifItems := []*IfItem{}
 
 	astChildren := astNode.Children
 
@@ -128,7 +124,7 @@ func (node *IfChainNode) Execute(state *runtime.State) (*BlockExitPayload, error
 		boolValue, isBool := condition.GetBoolValue()
 		if !isBool {
 			return nil, fmt.Errorf(
-				"mlr: conditional expression did not evaluate to boolean%s",
+				"conditional expression did not evaluate to boolean%s",
 				dsl.TokenToLocationInfo(ifItem.conditionToken),
 			)
 		}

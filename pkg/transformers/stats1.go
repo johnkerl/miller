@@ -92,16 +92,16 @@ func transformerStats1ParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
 
-	accumulatorNameList := make([]string, 0)
-	valueFieldNameList := make([]string, 0)
-	groupByFieldNameList := make([]string, 0)
+	accumulatorNameList := []string{}
+	valueFieldNameList := []string{}
+	groupByFieldNameList := []string{}
 
 	doRegexValueFieldNames := false
 	doRegexGroupByFieldNames := false
@@ -206,7 +206,7 @@ func transformerStats1ParseCLI(
 		doIterativeStats,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr stats1: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -309,7 +309,7 @@ func NewTransformerStats1(
 ) (*TransformerStats1, error) {
 	for _, name := range accumulatorNameList {
 		if !utils.ValidateStats1AccumulatorName(name) {
-			return nil, fmt.Errorf(`mlr stats1: accumulator "%s" not found`, name)
+			return nil, fmt.Errorf(`accumulator "%s" not found`, name)
 		}
 	}
 

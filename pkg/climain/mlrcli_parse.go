@@ -1,4 +1,3 @@
-// ================================================================
 // Miller main command-line parsing.
 //
 // Before Miller 6 the ordering was:
@@ -66,7 +65,6 @@
 // foo.csv' the '--csv' looks like it belongs to the 'head' verb. When people
 // use '#!/bin/sh' scripts they need to insert the '--' in 'mlr head -n 10 --
 // --csv foo.csv'; for 'mlr -s' we insert the '--' for them.
-// ================================================================
 
 package climain
 
@@ -89,7 +87,7 @@ func ParseCommandLine(
 	args []string,
 ) (
 	options *cli.TOptions,
-	recordTransformers []transformers.IRecordTransformer,
+	recordTransformers []transformers.RecordTransformer,
 	err error,
 ) {
 	// mlr -s scriptfile {data-file names ...} means take the contents of
@@ -125,10 +123,10 @@ func parseCommandLinePassOne(
 	verbSequences [][]string,
 	dataFileNames []string,
 ) {
-	flagSequences = make([][]string, 0)
+	flagSequences = [][]string{}
 	terminalSequence = nil
-	verbSequences = make([][]string, 0)
-	dataFileNames = make([]string, 0)
+	verbSequences = [][]string{}
+	dataFileNames = []string{}
 
 	// All verbs after the first must be preceded with "then"
 	onFirst := true
@@ -255,7 +253,7 @@ func parseCommandLinePassTwo(
 	dataFileNames []string,
 ) (
 	options *cli.TOptions,
-	recordTransformers []transformers.IRecordTransformer,
+	recordTransformers []transformers.RecordTransformer,
 	err error,
 ) {
 	// Options take in-code defaults, then overridden by .mlrrc (if any and if
@@ -275,8 +273,7 @@ func parseCommandLinePassTwo(
 		options.WriterOptions.FailOnDataError = true
 	}
 
-	recordTransformers = make([]transformers.IRecordTransformer, 0)
-	err = nil
+	recordTransformers = []transformers.RecordTransformer{}
 	ignoresInput := false
 
 	// Load a .mlrrc file unless --norc was a main-flag on the command line.

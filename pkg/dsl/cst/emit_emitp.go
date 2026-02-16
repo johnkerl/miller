@@ -1,4 +1,3 @@
-// ================================================================
 // This handles emit and emitp statements. These produce new records (in
 // addition to the current record, $*) into the output record stream.
 //
@@ -34,7 +33,6 @@
 // The third complexlity here is whether we have the '"x", "y"' after the
 // emittables. These control how nested maps are used to generate multiple
 // records (via implicit looping).
-// ================================================================
 
 package cst
 
@@ -50,7 +48,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ================================================================
 // Shared by emit and emitp
 
 type tEmitToRedirectFunc func(
@@ -106,7 +103,6 @@ func (root *RootNode) BuildEmitPStatementNode(astNode *dsl.ASTNode) (IExecutable
 	return root.buildEmitXStatementNode(astNode, true)
 }
 
-
 var EMITX_NAMED_NODE_TYPES = map[dsl.TNodeType]bool{
 	dsl.NodeTypeLocalVariable:       true,
 	dsl.NodeTypeDirectOosvarValue:   true,
@@ -121,7 +117,6 @@ var EMITX_NAMELESS_NODE_TYPES = map[dsl.TNodeType]bool{
 	dsl.NodeTypeMapLiteral: true,
 }
 
-// ----------------------------------------------------------------
 // EMIT AND EMITP
 
 func (root *RootNode) buildEmitXStatementNode(
@@ -170,7 +165,7 @@ func (root *RootNode) buildEmitXStatementNode(
 
 		} else {
 			return nil, fmt.Errorf(
-				"mlr: unlashed-emit node types must be local variables, field names, oosvars, or maps; got %s",
+				"unlashed-emit node types must be local variables, field names, oosvars, or maps; got %s",
 				childNode.Type,
 			)
 		}
@@ -180,7 +175,7 @@ func (root *RootNode) buildEmitXStatementNode(
 		for _, childNode := range emittablesNode.Children {
 			if !EMITX_NAMED_NODE_TYPES[childNode.Type] {
 				return nil, fmt.Errorf(
-					"mlr: lashed-emit node types must be local variables, field names, or oosvars; got %s",
+					"lashed-emit node types must be local variables, field names, or oosvars; got %s",
 					childNode.Type,
 				)
 			}
@@ -245,7 +240,7 @@ func (root *RootNode) buildEmitXStatementNode(
 		lib.InternalCodingErrorIf(redirectorNode.Children == nil)
 		lib.InternalCodingErrorIf(len(redirectorNode.Children) != 1)
 		redirectorTargetNode := redirectorNode.Children[0]
-		var err error = nil
+		var err error
 
 		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
 			retval.emitToRedirectFunc = retval.emitRecordToFileOrPipe
@@ -270,7 +265,7 @@ func (root *RootNode) buildEmitXStatementNode(
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
 				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
-				return nil, fmt.Errorf("mlr: unhandled redirector node type %s", string(redirectorNode.Type))
+				return nil, fmt.Errorf("unhandled redirector node type %s", string(redirectorNode.Type))
 			}
 		}
 	}
@@ -294,32 +289,30 @@ func (node *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 		}
 		return nil, node.executorFunc(names, values, state)
 
-	} else {
-		// 'emit @*', 'emit {...}', etc.
-		parentValue := node.topLevelEvaluableMap.Evaluate(state)
-		parentMapValue := parentValue.GetMap()
-		if parentMapValue == nil {
-			// TODO: what else to do if the should-be-a-map evaluates to:
-			// * absent -- clearly returning is the right thing
-			// * error -- what to emit?
-			// * anything else other than a map -- ?
-			return nil, nil
-		}
-		names := make([]string, parentMapValue.FieldCount)
-		values := make([]*mlrval.Mlrval, parentMapValue.FieldCount)
-
-		i := 0
-		for pe := parentMapValue.Head; pe != nil; pe = pe.Next {
-			names[i] = pe.Key
-			values[i] = pe.Value
-			i++
-		}
-
-		return nil, node.executorFunc(names, values, state)
 	}
+	// 'emit @*', 'emit {...}', etc.
+	parentValue := node.topLevelEvaluableMap.Evaluate(state)
+	parentMapValue := parentValue.GetMap()
+	if parentMapValue == nil {
+		// TODO: what else to do if the should-be-a-map evaluates to:
+		// * absent -- clearly returning is the right thing
+		// * error -- what to emit?
+		// * anything else other than a map -- ?
+		return nil, nil
+	}
+	names := make([]string, parentMapValue.FieldCount)
+	values := make([]*mlrval.Mlrval, parentMapValue.FieldCount)
+
+	i := 0
+	for pe := parentMapValue.Head; pe != nil; pe = pe.Next {
+		names[i] = pe.Key
+		values[i] = pe.Value
+		i++
+	}
+
+	return nil, node.executorFunc(names, values, state)
 }
 
-// ----------------------------------------------------------------
 // emit @* (supposing @a and @b exist) means @a and @b material are
 // emitted in separate records.
 //
@@ -382,8 +375,8 @@ func (node *EmitXStatementNode) executeNonIndexedNonLashedEmit(
 				}
 
 			} else { // recurse
-				nextLevelNames := make([]string, 0)
-				nextLevelValues := make([]*mlrval.Mlrval, 0)
+				nextLevelNames := []string{}
+				nextLevelValues := []*mlrval.Mlrval{}
 				for pe := value.GetMap().Head; pe != nil; pe = pe.Next {
 					nextLevelNames = append(nextLevelNames, pe.Key)
 					nextLevelValues = append(nextLevelValues, pe.Value.Copy())
@@ -416,7 +409,6 @@ func (node *EmitXStatementNode) executeNonIndexedNonLashedEmitP(
 	return nil
 }
 
-// ----------------------------------------------------------------
 // emit (@a, $b) means @a and @b material are lashed together in the
 // same record.
 
@@ -442,48 +434,47 @@ func (node *EmitXStatementNode) executeNonIndexedLashedEmit(
 		}
 		return node.emitToRedirectFunc(newrec, state)
 
-	} else {
-		for i, value := range values {
-			if value.IsAbsent() {
-				continue
+	}
+	for i, value := range values {
+		if value.IsAbsent() {
+			continue
+		}
+
+		valueAsMap := value.GetMap() // nil if not a map
+
+		if valueAsMap == nil {
+			newrec := mlrval.NewMlrmapAsRecord()
+			newrec.PutCopy(names[i], value)
+			err := node.emitToRedirectFunc(newrec, state)
+			if err != nil {
+				return err
 			}
 
-			valueAsMap := value.GetMap() // nil if not a map
-
-			if valueAsMap == nil {
+		} else {
+			recurse := valueAsMap.IsNested()
+			if !recurse {
 				newrec := mlrval.NewMlrmapAsRecord()
-				newrec.PutCopy(names[i], value)
+				for pe := valueAsMap.Head; pe != nil; pe = pe.Next {
+					newrec.PutCopy(pe.Key, pe.Value)
+				}
 				err := node.emitToRedirectFunc(newrec, state)
 				if err != nil {
 					return err
 				}
 
-			} else {
-				recurse := valueAsMap.IsNested()
-				if !recurse {
-					newrec := mlrval.NewMlrmapAsRecord()
-					for pe := valueAsMap.Head; pe != nil; pe = pe.Next {
-						newrec.PutCopy(pe.Key, pe.Value)
-					}
-					err := node.emitToRedirectFunc(newrec, state)
-					if err != nil {
-						return err
-					}
-
-				} else { // recurse
-					nextLevelNames := make([]string, 0)
-					nextLevelValues := make([]*mlrval.Mlrval, 0)
-					for pe := value.GetMap().Head; pe != nil; pe = pe.Next {
-						nextLevelNames = append(nextLevelNames, pe.Key)
-						nextLevelValues = append(nextLevelValues, pe.Value.Copy())
-					}
-					node.executeNonIndexedNonLashedEmit(nextLevelNames, nextLevelValues, state)
+			} else { // recurse
+				nextLevelNames := []string{}
+				nextLevelValues := []*mlrval.Mlrval{}
+				for pe := value.GetMap().Head; pe != nil; pe = pe.Next {
+					nextLevelNames = append(nextLevelNames, pe.Key)
+					nextLevelValues = append(nextLevelValues, pe.Value.Copy())
 				}
+				node.executeNonIndexedNonLashedEmit(nextLevelNames, nextLevelValues, state)
 			}
 		}
-
-		return nil
 	}
+
+	return nil
 }
 
 func (node *EmitXStatementNode) executeNonIndexedLashedEmitP(
@@ -574,7 +565,6 @@ func (node *EmitXStatementNode) executeIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 // Recurses over indices.
 //
 // Example:
@@ -690,7 +680,6 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitAux(
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Example:
 //
 // DSL expression: @count[$a][$b] += 1; @sum[$a][$b] += $n; end { emit (@count, @sum), "a", "b" }
@@ -849,7 +838,6 @@ func (node *EmitXStatementNode) executeIndexedLashedEmitAux(
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Recurses over indices.
 
 func (node *EmitXStatementNode) executeIndexedNonLashedEmitPAux(
@@ -984,7 +972,7 @@ func (node *EmitXStatementNode) emitRecordToFileOrPipe(
 ) error {
 	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
-		return fmt.Errorf("mlr: output redirection yielded %s, not string", redirectorTarget.GetTypeName())
+		return fmt.Errorf("output redirection yielded %s, not string", redirectorTarget.GetTypeName())
 	}
 	outputFileName := redirectorTarget.String()
 

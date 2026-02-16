@@ -1,4 +1,3 @@
-// ================================================================
 // Miller support for command-line flags.
 //
 // * Flags are used for several purposes:
@@ -33,7 +32,6 @@
 //   mlr, and -f/-n/-r etc can be used more than once for mlr sort, etc. I also
 //   insist on total control of flag formatting including alphabetization of
 //   flags for on-line help and documentation systems.
-// ================================================================
 
 package cli
 
@@ -46,7 +44,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
-// ----------------------------------------------------------------
 // Data types used within the flags table.
 
 // FlagParser is a function which takes a flag such as `--foo`.
@@ -63,8 +60,6 @@ type FlagParser func(
 	pargi *int,
 	options *TOptions,
 )
-
-// ----------------------------------------------------------------
 
 // FlagTable holds all the flags for Miller, organized into sections.
 type FlagTable struct {
@@ -121,7 +116,6 @@ type Flag struct {
 	suppressFlagEnumeration bool
 }
 
-// ================================================================
 // FlagTable methods
 
 // Sort organizes the sections in the table alphabetically, to make on-line
@@ -328,7 +322,6 @@ func (ft *FlagTable) NilCheck() {
 	fmt.Println("Flag-table nil check completed successfully.")
 }
 
-// ================================================================
 // FlagSection methods
 
 // Sort organizes the flags in the section alphabetically, to make on-line help
@@ -388,7 +381,6 @@ func (fs *FlagSection) NilCheck() {
 	}
 }
 
-// ================================================================
 // Flag methods
 
 // Owns determines whether this object handles a command-line flag such as
@@ -525,7 +517,6 @@ func (flag *Flag) NilCheck() {
 	lib.InternalCodingErrorWithMessageIf(flag.parser == nil, "Nil parser help for flag "+flag.name)
 }
 
-// ================================================================
 // Helper methods
 
 // NoOpParse1 is a helper function for flags which take no argument and are

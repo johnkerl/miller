@@ -125,7 +125,7 @@ func (reader *RecordReaderDKVPNIDX) getRecordBatch(
 	recordsAndContexts []*types.RecordAndContext,
 	eof bool,
 ) {
-	recordsAndContexts = make([]*types.RecordAndContext, 0)
+	recordsAndContexts = []*types.RecordAndContext{}
 
 	lines, more := <-linesChannel
 	if !more {

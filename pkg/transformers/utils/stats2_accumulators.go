@@ -1,6 +1,4 @@
-// ================================================================
 // For stats2
-// ================================================================
 
 package utils
 
@@ -107,7 +105,7 @@ func ValidateStats2AccumulatorName(
 	return false
 }
 
-func (factory *Stats2AccumulatorFactory) Make(
+func (fac *Stats2AccumulatorFactory) Make(
 	valueFieldName1 string,
 	valueFieldName2 string,
 	accumulatorName string,
@@ -296,7 +294,6 @@ func (acc *Stats2LogiRegAccumulator) Fit(
 	}
 }
 
-// ================================================================
 // http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient
 // Alternatively, just use sqrt(corr) as defined above.
 
@@ -371,7 +368,6 @@ func (acc *Stats2R2Accumulator) Fit(
 ) {
 }
 
-// ================================================================
 // Shared code for Corr, Cov, CovX, and LinRegPCA.
 // Corr(X,Y) = Cov(X,Y) / sigma_X sigma_Y.
 
@@ -551,9 +547,9 @@ func (acc *Stats2CorrCovAccumulator) Populate(
 
 			l1, l2, v1, v2 := lib.GetRealSymmetricEigensystem(Q)
 
-			x_mean := acc.sumx / float64(acc.count)
-			y_mean := acc.sumy / float64(acc.count)
-			m, b, q := lib.GetLinearRegressionPCA(l1, l2, v1, v2, x_mean, y_mean)
+			xMean := acc.sumx / float64(acc.count)
+			yMean := acc.sumy / float64(acc.count)
+			m, b, q := lib.GetLinearRegressionPCA(l1, l2, v1, v2, xMean, yMean)
 
 			outrec.PutReference(keym, mlrval.FromFloat(m))
 			outrec.PutReference(keyb, mlrval.FromFloat(b))
@@ -607,9 +603,9 @@ func (acc *Stats2CorrCovAccumulator) Fit(
 
 		l1, l2, v1, v2 := lib.GetRealSymmetricEigensystem(Q)
 
-		x_mean := acc.sumx / float64(acc.count)
-		y_mean := acc.sumy / float64(acc.count)
-		acc.m, acc.b, acc.q = lib.GetLinearRegressionPCA(l1, l2, v1, v2, x_mean, y_mean)
+		xMean := acc.sumx / float64(acc.count)
+		yMean := acc.sumy / float64(acc.count)
+		acc.m, acc.b, acc.q = lib.GetLinearRegressionPCA(l1, l2, v1, v2, xMean, yMean)
 
 		acc.fitReady = true
 	}

@@ -1,4 +1,3 @@
-// ================================================================
 // These are handlers for print, dump, emit, etc in the put/filter verbs.
 //
 // * For "> filename" ">> filename", these handle the open/write/close file operations.
@@ -59,9 +58,8 @@ func NewFileOutputHandlerManager(
 ) *MultiOutputHandlerManager {
 	if doAppend {
 		return NewFileAppendHandlerManager(recordWriterOptions)
-	} else {
-		return NewFileWritetHandlerManager(recordWriterOptions)
 	}
+	return NewFileWritetHandlerManager(recordWriterOptions)
 }
 
 func NewFileWritetHandlerManager(
@@ -124,72 +122,72 @@ func NewStderrWriteHandlerManager(
 	}
 }
 
-func (manager *MultiOutputHandlerManager) WriteString(
+func (mgr *MultiOutputHandlerManager) WriteString(
 	outputString string,
 	filename string,
 ) error {
-	outputHandler, err := manager.getOutputHandlerFor(filename)
+	outputHandler, err := mgr.getOutputHandlerFor(filename)
 	if err != nil {
 		return err
 	}
 	return outputHandler.WriteString(outputString)
 }
 
-func (manager *MultiOutputHandlerManager) WriteRecordAndContext(
+func (mgr *MultiOutputHandlerManager) WriteRecordAndContext(
 	outrecAndContext *types.RecordAndContext,
 	filename string,
 ) error {
-	outputHandler, err := manager.getOutputHandlerFor(filename)
+	outputHandler, err := mgr.getOutputHandlerFor(filename)
 	if err != nil {
 		return err
 	}
 	return outputHandler.WriteRecordAndContext(outrecAndContext)
 }
 
-func (manager *MultiOutputHandlerManager) getOutputHandlerFor(
+func (mgr *MultiOutputHandlerManager) getOutputHandlerFor(
 	filename string,
 ) (OutputHandler, error) {
-	if manager.singleHandler != nil {
-		return manager.singleHandler, nil
+	if mgr.singleHandler != nil {
+		return mgr.singleHandler, nil
 	}
 
 	// TODO: LRU with close and re-open in case too many files are open
-	outputHandler := manager.outputHandlers[filename]
+	outputHandler := mgr.outputHandlers[filename]
 	if outputHandler == nil {
 		var err error
-		if manager.pipe {
+		if mgr.pipe {
 			outputHandler, err = NewPipeWriteOutputHandler(
 				filename,
-				manager.recordWriterOptions,
+				mgr.recordWriterOptions,
 			)
-		} else if manager.append {
+		} else if mgr.append {
 			outputHandler, err = NewFileAppendOutputHandler(
 				filename,
-				manager.recordWriterOptions,
+				mgr.recordWriterOptions,
 			)
 		} else {
 			outputHandler, err = NewFileWriteOutputHandler(
 				filename,
-				manager.recordWriterOptions,
+				mgr.recordWriterOptions,
 			)
 		}
 		if err != nil {
 			return nil, err
 		}
-		manager.outputHandlers[filename] = outputHandler
+		mgr.outputHandlers[filename] = outputHandler
 	}
 	return outputHandler, nil
 }
 
-func (manager *MultiOutputHandlerManager) Close() []error {
-	errs := make([]error, 0)
-	if manager.singleHandler != nil {
-		err := manager.singleHandler.Close()
+func (mgr *MultiOutputHandlerManager) Close() []error {
+	errs := []error{}
+	if mgr.singleHandler != nil {
+		err := mgr.singleHandler.Close()
 		if err != nil {
 			errs = append(errs, err)
 		}
 	}
-	for _, outputHandler := range manager.outputHandlers {
+	for _, outputHandler := range mgr.outputHandlers {
 		err := outputHandler.Close()
 		if err != nil {
 			errs = append(errs, err)
@@ -242,9 +240,8 @@ func NewFileOutputHandler(
 ) (*FileOutputHandler, error) {
 	if doAppend {
 		return NewFileAppendOutputHandler(filename, recordWriterOptions)
-	} else {
-		return NewFileWriteOutputHandler(filename, recordWriterOptions)
 	}
+	return NewFileWriteOutputHandler(filename, recordWriterOptions)
 }
 
 func NewFileWriteOutputHandler(
@@ -403,7 +400,6 @@ func (handler *FileOutputHandler) Close() (retval error) {
 	handler.bufferedOutputStream.Flush()
 	if handler.closeable {
 		return handler.handle.Close()
-	} else { // e.g. stdout
-		return nil
-	}
+	} // e.g. stdout
+	return nil
 }

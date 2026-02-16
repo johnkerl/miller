@@ -43,7 +43,7 @@ func transformerSec2GMTParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -116,7 +116,7 @@ func transformerSec2GMTParseCLI(
 		numDecimalPlaces,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -141,7 +141,6 @@ func NewTransformerSec2GMT(
 	}
 	return tr, nil
 }
-
 
 func (tr *TransformerSec2GMT) Transform(
 	inrecAndContext *types.RecordAndContext,

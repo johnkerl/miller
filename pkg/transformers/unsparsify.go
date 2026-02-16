@@ -50,7 +50,7 @@ func transformerUnsparsifyParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -96,7 +96,7 @@ func transformerUnsparsifyParseCLI(
 		specifiedFieldNames,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -122,7 +122,7 @@ func NewTransformerUnsparsify(
 
 	tr := &TransformerUnsparsify{
 		fillerMlrval:       mlrval.FromString(fillerString),
-		recordsAndContexts: make([]*types.RecordAndContext, 0),
+		recordsAndContexts: []*types.RecordAndContext{},
 		fieldNamesSeen:     fieldNamesSeen,
 	}
 
@@ -134,7 +134,6 @@ func NewTransformerUnsparsify(
 
 	return tr, nil
 }
-
 
 func (tr *TransformerUnsparsify) Transform(
 	inrecAndContext *types.RecordAndContext,

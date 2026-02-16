@@ -1,8 +1,6 @@
-// ================================================================
 // This handles anything on the right-hand sides of assignment statements.
 // (Also, computed field names on the left-hand sides of assignment
 // statements.)
-// ================================================================
 
 package cst
 
@@ -123,7 +121,7 @@ func (node *IndirectFieldValueNode) Evaluate(
 	if err != nil {
 		// Key isn't int or string.
 		// TODO: needs error-return in the API
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 	if value == nil {

@@ -1,10 +1,8 @@
-// ================================================================
 // CST build/execute for subroutine nodes.
 //
 // Subroutines can't be used as rvalues; their invocation must be the entire
 // statement. Nonetheless, their name-resolution, argument/parameter binding,
 // etc. are very similar to functions.
-// ================================================================
 
 package cst
 
@@ -13,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
-// ----------------------------------------------------------------
 // Subroutine lookup:
 //
 // * Unlike for functions, There are no built-in subroutines -- the only ones
@@ -71,8 +68,7 @@ func (root *RootNode) BuildSubroutineCallsiteNode(astNode *dsl.ASTNode) (IExecut
 		udsCallsiteNode := NewUDSCallsite(argumentNodes, uds)
 		root.rememberUnresolvedSubroutineCallsite(udsCallsiteNode)
 		return udsCallsiteNode, nil
-	} else {
-		udsCallsiteNode := NewUDSCallsite(argumentNodes, uds)
-		return udsCallsiteNode, nil
 	}
+	udsCallsiteNode := NewUDSCallsite(argumentNodes, uds)
+	return udsCallsiteNode, nil
 }

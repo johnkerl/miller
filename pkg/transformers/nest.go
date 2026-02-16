@@ -94,7 +94,7 @@ func transformerNestParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -239,7 +239,7 @@ func transformerNestParseCLI(
 		doAcrossFields,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -351,7 +351,6 @@ func (tr *TransformerNest) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 // getMatchingFieldNames returns field names matching tr.fieldRegex in record order.
 // When !tr.doRegexes, returns [tr.fieldName] if present, else [].
 func (tr *TransformerNest) getMatchingFieldNames(inrec *mlrval.Mlrmap) []string {
@@ -672,6 +671,6 @@ type tNestBucket struct {
 func newNestBucket(representative *mlrval.Mlrmap) *tNestBucket {
 	return &tNestBucket{
 		representative: representative,
-		pairs:          make([]*mlrval.Mlrmap, 0),
+		pairs:          []*mlrval.Mlrmap{},
 	}
 }

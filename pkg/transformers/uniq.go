@@ -57,7 +57,7 @@ func transformerCountDistinctParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -134,7 +134,7 @@ func transformerCountDistinctParseCLI(
 		uniqifyEntireRecords,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -168,7 +168,7 @@ func transformerUniqParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -347,15 +347,13 @@ func NewTransformerUniq(
 	return tr, nil
 }
 
-
 func (tr *TransformerUniq) getFieldNamesForGrouping(
 	inrec *mlrval.Mlrmap,
 ) []string {
 	if tr.invertFieldNames {
 		return inrec.GetKeysExcept(tr.fieldNamesSet)
-	} else {
-		return tr.fieldNames
 	}
+	return tr.fieldNames
 }
 
 func (tr *TransformerUniq) Transform(
@@ -368,7 +366,6 @@ func (tr *TransformerUniq) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 // Print each unique record only once, with uniqueness counts.  This means
 // non-streaming, with output at end of stream.
 func (tr *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
@@ -404,7 +401,6 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
 
 }
 
-// ----------------------------------------------------------------
 // Print count of unique records.  This means non-streaming, with output at end
 // of stream.
 func (tr *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
@@ -432,7 +428,6 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
 	}
 }
 
-// ----------------------------------------------------------------
 // Print each unique record only once (on first occurrence).
 func (tr *TransformerUniq) transformUniqifyEntireRecords(
 	inrecAndContext *types.RecordAndContext,

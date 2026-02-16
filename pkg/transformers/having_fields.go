@@ -61,7 +61,7 @@ func transformerHavingFieldsParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	havingFieldsCriterion := havingFieldsCriterionUnspecified
 	var fieldNames []string = nil
@@ -142,7 +142,7 @@ func transformerHavingFieldsParseCLI(
 		regexString,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -212,7 +212,6 @@ func NewTransformerHavingFields(
 
 	return tr, nil
 }
-
 
 func (tr *TransformerHavingFields) Transform(
 	inrecAndContext *types.RecordAndContext,

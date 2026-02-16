@@ -184,14 +184,14 @@ func transformerPutOrFilterParseCLI(
 	args []string,
 	mainOptions *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
 
-	var dslStrings []string = make([]string, 0)
+	var dslStrings []string = []string{}
 	haveDSLStringsHere := false
 	echoDSLString := false
 	printASTAsTree := false
@@ -203,7 +203,7 @@ func transformerPutOrFilterParseCLI(
 	strictMode := false
 	invertFilter := false
 	suppressOutputRecord := false
-	presets := make([]string, 0)
+	presets := []string{}
 
 	// TODO: make sure this is a full nested-struct copy.
 	var options *cli.TOptions = nil
@@ -380,7 +380,7 @@ func transformerPutOrFilterParseCLI(
 		options,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -512,7 +512,7 @@ func (tr *TransformerPut) Transform(
 			tr.runtimeState.Update(nil, &context)
 			err := tr.cstRootNode.ExecuteBeginBlocks(tr.runtimeState)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				os.Exit(1)
 			}
 			tr.executedBeginBlocks = true
@@ -523,7 +523,7 @@ func (tr *TransformerPut) Transform(
 		// Execute the main block on the current input record
 		outrec, err := tr.cstRootNode.ExecuteMainBlock(tr.runtimeState)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 
@@ -573,7 +573,7 @@ func (tr *TransformerPut) Transform(
 		if !tr.executedBeginBlocks {
 			err := tr.cstRootNode.ExecuteBeginBlocks(tr.runtimeState)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				os.Exit(1)
 			}
 		}
@@ -581,7 +581,7 @@ func (tr *TransformerPut) Transform(
 		// Execute the end { ... } after the last input record
 		err := tr.cstRootNode.ExecuteEndBlocks(tr.runtimeState)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 

@@ -38,7 +38,7 @@ func transformerLabelParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -58,10 +58,9 @@ func transformerLabelParseCLI(
 			transformerLabelUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerLabelUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerLabelUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	// Get the label field names from the command line
@@ -81,7 +80,7 @@ func transformerLabelParseCLI(
 		newNames,
 	)
 	if err != nil {
-		fmt.Fprint(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr label: %v\n", err)
 		os.Exit(1)
 		// TODO: return nil to caller and have it exit, maybe
 	}
@@ -101,7 +100,7 @@ func NewTransformerLabel(
 	for _, newName := range newNames {
 		_, ok := uniquenessChecker[newName]
 		if ok {
-			return nil, fmt.Errorf(`mlr label: labels must be unique; got duplicate "%s"`, newName)
+			return nil, fmt.Errorf(`labels must be unique; got duplicate "%s"`, newName)
 		}
 		uniquenessChecker[newName] = true
 	}
@@ -112,7 +111,6 @@ func NewTransformerLabel(
 
 	return tr, nil
 }
-
 
 func (tr *TransformerLabel) Transform(
 	inrecAndContext *types.RecordAndContext,

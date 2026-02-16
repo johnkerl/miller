@@ -1,7 +1,5 @@
-// ================================================================
 // This is for Lvalues, i.e. things on the left-hand-side of an assignment
 // statement.
-// ================================================================
 
 package cst
 
@@ -45,11 +43,11 @@ func (root *RootNode) BuildAssignableNode(
 
 	case dsl.NodeTypeArrayOrMapPositionalNameAccess:
 		return nil, fmt.Errorf(
-			"mlr: '[[...]]' is allowed on assignment left-hand sides only when immediately preceded by '$'",
+			"'[[...]]' is allowed on assignment left-hand sides only when immediately preceded by '$'",
 		)
 	case dsl.NodeTypeArrayOrMapPositionalValueAccess:
 		return nil, fmt.Errorf(
-			"mlr: '[[[...]]]' is allowed on assignment left-hand sides only when immediately preceded by '$'",
+			"'[[[...]]]' is allowed on assignment left-hand sides only when immediately preceded by '$'",
 		)
 
 	case dsl.NodeTypeArrayOrMapIndexAccess:
@@ -116,12 +114,11 @@ func (node *DirectFieldValueLvalueNode) AssignIndexed(
 			return err
 		}
 		return nil
-	} else {
-		return state.Inrec.PutIndexed(
-			append([]*mlrval.Mlrval{node.lhsFieldName}, indices...),
-			rvalue,
-		)
 	}
+	return state.Inrec.PutIndexed(
+		append([]*mlrval.Mlrval{node.lhsFieldName}, indices...),
+		rvalue,
+	)
 }
 
 func (node *DirectFieldValueLvalueNode) Unassign(
@@ -214,12 +211,11 @@ func (node *IndirectFieldValueLvalueNode) AssignIndexed(
 			return err
 		}
 		return nil
-	} else {
-		return state.Inrec.PutIndexed(
-			append([]*mlrval.Mlrval{lhsFieldName.Copy()}, indices...),
-			rvalue,
-		)
 	}
+	return state.Inrec.PutIndexed(
+		append([]*mlrval.Mlrval{lhsFieldName.Copy()}, indices...),
+		rvalue,
+	)
 }
 
 func (node *IndirectFieldValueLvalueNode) Unassign(
@@ -252,7 +248,6 @@ func (node *IndirectFieldValueLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 // Set the name at 2nd positional index in the current stream record: e.g.
 // '$[[2]] = "abc"
 
@@ -306,12 +301,11 @@ func (node *PositionalFieldNameLvalueNode) Assign(
 		// TODO: incorporate error-return into this API
 		state.Inrec.PutNameWithPositionalIndex(index, rvalue)
 		return nil
-	} else {
-		return fmt.Errorf(
-			"mlr: positional index for $[[...]] assignment must be integer; got %s",
-			lhsFieldIndex.GetTypeName(),
-		)
 	}
+	return fmt.Errorf(
+		"positional index for $[[...]] assignment must be integer; got %s",
+		lhsFieldIndex.GetTypeName(),
+	)
 }
 
 func (node *PositionalFieldNameLvalueNode) AssignIndexed(
@@ -322,7 +316,7 @@ func (node *PositionalFieldNameLvalueNode) AssignIndexed(
 	// TODO: reconsider this if /when we decide to allow string-slice
 	// assignments.
 	return fmt.Errorf(
-		"mlr: $[[...]] = ... expressions are not indexable",
+		"$[[...]] = ... expressions are not indexable",
 	)
 }
 
@@ -362,7 +356,6 @@ func (node *PositionalFieldNameLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 // Set the value at 2nd positional index in the current stream record: e.g.
 // '$[[[2]]] = "abc"
 
@@ -430,12 +423,11 @@ func (node *PositionalFieldValueLvalueNode) AssignIndexed(
 			//return nil
 			state.Inrec.PutCopyWithPositionalIndex(index, rvalue)
 			return nil
-		} else {
-			return fmt.Errorf(
-				"mlr: positional index for $[[[...]]] assignment must be integer; got %s",
-				lhsFieldIndex.GetTypeName(),
-			)
 		}
+		return fmt.Errorf(
+			"positional index for $[[[...]]] assignment must be integer; got %s",
+			lhsFieldIndex.GetTypeName(),
+		)
 	} else {
 		// xxx positional
 		return state.Inrec.PutIndexed(
@@ -592,12 +584,11 @@ func (node *DirectOosvarValueLvalueNode) AssignIndexed(
 			return err
 		}
 		return nil
-	} else {
-		return state.Oosvars.PutIndexed(
-			append([]*mlrval.Mlrval{node.lhsOosvarName}, indices...),
-			rvalue,
-		)
 	}
+	return state.Oosvars.PutIndexed(
+		append([]*mlrval.Mlrval{node.lhsOosvarName}, indices...),
+		rvalue,
+	)
 }
 
 func (node *DirectOosvarValueLvalueNode) Unassign(
@@ -671,12 +662,11 @@ func (node *IndirectOosvarValueLvalueNode) AssignIndexed(
 			return err
 		}
 		return nil
-	} else {
-		return state.Oosvars.PutIndexed(
-			append([]*mlrval.Mlrval{lhsOosvarName.Copy()}, indices...),
-			rvalue,
-		)
 	}
+	return state.Oosvars.PutIndexed(
+		append([]*mlrval.Mlrval{lhsOosvarName.Copy()}, indices...),
+		rvalue,
+	)
 }
 
 func (node *IndirectOosvarValueLvalueNode) Unassign(
@@ -780,7 +770,7 @@ func (root *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssig
 	if astNode.Children == nil { // untyped, like 'x = 3'
 		if root.strictMode {
 			return nil, fmt.Errorf(
-				`mlr: need typedecl such as "var", "str", "num", etc. for variable "%s" in strict mode`,
+				`need typedecl such as "var", "str", "num", etc. for variable "%s" in strict mode`,
 				variableName,
 			)
 		}
@@ -823,7 +813,7 @@ func (node *LocalVariableLvalueNode) AssignIndexed(
 ) error {
 	// AssignmentNode checks for absent, so we just assign whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
-	var err error = nil
+	var err error
 	if indices == nil {
 		if node.defineTypedAtScope {
 			err = state.Stack.DefineTypedAtScope(node.stackVariable, node.typeName, rvalue)
@@ -856,7 +846,6 @@ func (node *LocalVariableLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 // IndexedValueNode is a delegator to base-lvalue types.
 // * The baseLvalue is some IAssignable
 // * The indexEvaluables are an array of IEvaluables
@@ -878,8 +867,8 @@ func (root *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable,
 	lib.InternalCodingErrorIf(astNode == nil)
 
 	var baseLvalue IAssignable = nil
-	indexEvaluables := make([]IEvaluable, 0)
-	var err error = nil
+	indexEvaluables := []IEvaluable{}
+	var err error
 
 	// $ mlr -n put -v '$x[1][2]=3'
 	// DSL EXPRESSION:
@@ -1051,7 +1040,7 @@ func (node *EnvironmentVariableLvalueNode) AssignIndexed(
 	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
-	return fmt.Errorf("mlr: ENV[...] cannot be indexed")
+	return fmt.Errorf("ENV[...] cannot be indexed")
 }
 
 func (node *EnvironmentVariableLvalueNode) Unassign(

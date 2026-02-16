@@ -62,7 +62,7 @@ func transformerStats2ParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -73,7 +73,7 @@ func transformerStats2ParseCLI(
 
 	var accumulatorNameList []string = nil
 	var valueFieldNameList []string = nil
-	groupByFieldNameList := make([]string, 0)
+	groupByFieldNameList := []string{}
 	doVerbose := false
 	doIterativeStats := false
 	doHoldAndFit := false
@@ -159,7 +159,7 @@ func transformerStats2ParseCLI(
 		doHoldAndFit,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -222,7 +222,6 @@ func NewTransformerStats2(
 	return tr, nil
 }
 
-// ================================================================
 // Given: accumulate corr,cov on values x,y group by a,b.
 // Example input:       Example output:
 //   a b x y            a b x_corr x_cov y_corr y_cov
@@ -255,8 +254,6 @@ func NewTransformerStats2(
 //
 // In the iterative case, add to the current record its current group's stats fields.
 // In the non-iterative case, produce output only at the end of the input stream.
-// ================================================================
-
 
 func (tr *TransformerStats2) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -310,7 +307,7 @@ func (tr *TransformerStats2) ingest(
 	if tr.doHoldAndFit { // Retain the input record in memory, for fitting and delivery at end of stream
 		groupToRecords := tr.recordGroups.Get(groupingKey)
 		if groupToRecords == nil {
-			records := make([]*types.RecordAndContext, 0)
+			records := []*types.RecordAndContext{}
 			groupToRecords = &records
 			tr.recordGroups.Put(groupingKey, groupToRecords)
 		}

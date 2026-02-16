@@ -1,6 +1,5 @@
 package transformers
 
-// ================================================================
 // WIDE:
 //          time           X          Y           Z
 // 1  2009-01-01  0.65473572  2.4520609 -1.46570942
@@ -121,7 +120,7 @@ func transformerReshapeParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -153,7 +152,7 @@ func transformerReshapeParseCLI(
 		} else if opt == "-r" {
 			inputFieldRegexString := cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			if inputFieldRegexStrings == nil {
-				inputFieldRegexStrings = make([]string, 0)
+				inputFieldRegexStrings = []string{}
 			}
 			inputFieldRegexStrings = append(inputFieldRegexStrings, inputFieldRegexString)
 		} else if opt == "-o" {
@@ -213,7 +212,7 @@ func transformerReshapeParseCLI(
 		splitOutValueFieldName,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -283,7 +282,6 @@ func NewTransformerReshape(
 
 	return tr, nil
 }
-
 
 func (tr *TransformerReshape) Transform(
 	inrecAndContext *types.RecordAndContext,

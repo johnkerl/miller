@@ -1,4 +1,3 @@
-// ================================================================
 // ABOUT ARRAY/MAP INDEXING
 //
 // Arrays:
@@ -64,7 +63,6 @@
 // * Inside this file I say 'zindex' for the 0-up Go indices and 'mindex'
 //   for 1-up Miller indices.
 //
-// ================================================================
 
 package mlrval
 
@@ -75,7 +73,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
-// ================================================================
 // TODO: copy-reduction refactor
 func (mv *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 	if !mv.IsArray() {
@@ -88,18 +85,16 @@ func (mv *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 	value := arrayGetAliased(&arrayval, int(mindex.intf.(int64)))
 	if value == nil {
 		return *ABSENT
-	} else {
-		return *value
 	}
+	return *value
 }
 
 func arrayGetAliased(array *[]*Mlrval, mindex int) *Mlrval {
 	zindex, ok := UnaliasArrayIndex(array, mindex)
 	if ok {
 		return (*array)[zindex]
-	} else {
-		return nil
 	}
+	return nil
 }
 
 func UnaliasArrayIndex(array *[]*Mlrval, mindex int) (int, bool) {
@@ -144,23 +139,19 @@ func UnaliasArrayLengthIndex(n int, mindex int) (int, bool) {
 		zindex := mindex - 1
 		if mindex <= n { // in bounds
 			return zindex, true
-		} else { // out of bounds
-			return zindex, false
-		}
+		} // out of bounds
+		return zindex, false
 	} else if mindex <= -1 {
 		zindex := mindex + n
 		if -n <= mindex { // in bounds
 			return zindex, true
-		} else { // out of bounds
-			return zindex, false
-		}
-	} else {
-		// mindex is 0
-		return -1, false
+		} // out of bounds
+		return zindex, false
 	}
+	// mindex is 0
+	return -1, false
 }
 
-// ----------------------------------------------------------------
 // TODO: thinking about capacity-resizing
 func (mv *Mlrval) ArrayAppend(value *Mlrval) {
 	if !mv.IsArray() {
@@ -205,7 +196,6 @@ func (mv *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
 	// Silent no-ops are not good UX ...
 }
 
-// ----------------------------------------------------------------
 // This is a multi-level map/array put.
 //
 // E.g. '$name[1]["foo"] = "bar"' or '$*["foo"][1] = "bar"' In the former case
@@ -253,26 +243,24 @@ func (mv *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 		mv.intf = arrayval
 		return retval
 
+	}
+	baseIndex := indices[0]
+	if baseIndex.IsString() {
+		*mv = *FromEmptyMap()
+		return putIndexedOnMap(mv.intf.(*Mlrmap), indices, rvalue)
+	} else if baseIndex.IsInt() {
+		*mv = *FromEmptyArray()
+		arrayval := mv.intf.([]*Mlrval)
+		retval := putIndexedOnArray(&arrayval, indices, rvalue)
+		mv.intf = arrayval
+		return retval
 	} else {
-		baseIndex := indices[0]
-		if baseIndex.IsString() {
-			*mv = *FromEmptyMap()
-			return putIndexedOnMap(mv.intf.(*Mlrmap), indices, rvalue)
-		} else if baseIndex.IsInt() {
-			*mv = *FromEmptyArray()
-			arrayval := mv.intf.([]*Mlrval)
-			retval := putIndexedOnArray(&arrayval, indices, rvalue)
-			mv.intf = arrayval
-			return retval
-		} else {
-			return errors.New(
-				"mlr: only maps and arrays are indexable; got " + mv.GetTypeName(),
-			)
-		}
+		return errors.New(
+			"only maps and arrays are indexable; got " + mv.GetTypeName(),
+		)
 	}
 }
 
-// ----------------------------------------------------------------
 // Helper function for Mlrval.PutIndexed, for mlrvals of map type.
 func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 	numIndices := len(indices)
@@ -301,7 +289,7 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 	if !baseIndex.IsString() && !baseIndex.IsInt() {
 		// Base is map, index is invalid type
 		return errors.New(
-			"mlr: map indices must be string, int, or array thereof; got " + baseIndex.GetTypeName(),
+			"map indices must be string, int, or array thereof; got " + baseIndex.GetTypeName(),
 		)
 	}
 
@@ -310,7 +298,7 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 		// Create a new level in order to recurse from
 		nextIndex := indices[1]
 
-		var err error = nil
+		var err error
 		baseValue, err = NewMlrvalForAutoDeepen(nextIndex.Type())
 		if err != nil {
 			return err
@@ -320,7 +308,6 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 	return baseValue.PutIndexed(indices[1:], rvalue)
 }
 
-// ----------------------------------------------------------------
 // Helper function for Mlrval.PutIndexed, for mlrvals of array type.
 func putIndexedOnArray(
 	baseArray *[]*Mlrval,
@@ -345,51 +332,51 @@ func putIndexedOnArray(
 		// If last index, then assign.
 		if inBounds {
 			(*baseArray)[zindex] = rvalue.Copy()
-		} else if mindex.intf.(int64) == 0 {
-			return errors.New("mlr: zero indices are not supported. Indices are 1-up")
-		} else if mindex.intf.(int64) < 0 {
-			return errors.New("mlr: Cannot use negative indices to auto-lengthen arrays")
-		} else {
-			// Array is [a,b,c] with mindices 1,2,3. Length is 3. Zindices are 0,1,2.
-			// Given mindex is 4.
-			LengthenMlrvalArray(baseArray, int(mindex.intf.(int64)))
-			zindex := mindex.intf.(int64) - 1
-			(*baseArray)[zindex] = rvalue.Copy()
+			return nil
 		}
+		if mindex.intf.(int64) == 0 {
+			return errors.New("zero indices are not supported. Indices are 1-up")
+		}
+		if mindex.intf.(int64) < 0 {
+			return errors.New("Cannot use negative indices to auto-lengthen arrays")
+		}
+		// Array is [a,b,c] with mindices 1,2,3. Length is 3. Zindices are 0,1,2.
+		// Given mindex is 4.
+		LengthenMlrvalArray(baseArray, int(mindex.intf.(int64)))
+		zindex := mindex.intf.(int64) - 1
+		(*baseArray)[zindex] = rvalue.Copy()
 		return nil
+	}
+	// More indices remain; recurse
+	if inBounds {
+		nextIndex := indices[1]
 
-	} else {
-		// More indices remain; recurse
-		if inBounds {
-			nextIndex := indices[1]
-
-			// Overwrite what's in this slot if it's the wrong type
-			if nextIndex.IsString() {
-				if !(*baseArray)[zindex].IsMap() {
-					(*baseArray)[zindex] = FromEmptyMap()
-				}
-			} else if nextIndex.IsInt() {
-				if !(*baseArray)[zindex].IsArray() {
-					(*baseArray)[zindex] = FromEmptyArray()
-				}
-			} else {
-				return errors.New(
-					"mlr: indices must be string, int, or array thereof; got " + nextIndex.GetTypeName(),
-				)
+		// Overwrite what's in this slot if it's the wrong type
+		if nextIndex.IsString() {
+			if !(*baseArray)[zindex].IsMap() {
+				(*baseArray)[zindex] = FromEmptyMap()
 			}
-
-			return (*baseArray)[zindex].PutIndexed(indices[1:], rvalue)
-
-		} else if mindex.intf.(int64) == 0 {
-			return errors.New("mlr: zero indices are not supported. Indices are 1-up")
-		} else if mindex.intf.(int64) < 0 {
-			return errors.New("mlr: Cannot use negative indices to auto-lengthen arrays")
+		} else if nextIndex.IsInt() {
+			if !(*baseArray)[zindex].IsArray() {
+				(*baseArray)[zindex] = FromEmptyArray()
+			}
 		} else {
-			// Already allocated but needs to be longer
-			LengthenMlrvalArray(baseArray, int(mindex.intf.(int64)))
-			zindex := mindex.intf.(int64) - 1
-			return (*baseArray)[zindex].PutIndexed(indices[1:], rvalue)
+			return errors.New(
+				"indices must be string, int, or array thereof; got " + nextIndex.GetTypeName(),
+			)
 		}
+
+		return (*baseArray)[zindex].PutIndexed(indices[1:], rvalue)
+
+	} else if mindex.intf.(int64) == 0 {
+		return errors.New("zero indices are not supported. Indices are 1-up")
+	} else if mindex.intf.(int64) < 0 {
+		return errors.New("Cannot use negative indices to auto-lengthen arrays")
+	} else {
+		// Already allocated but needs to be longer
+		LengthenMlrvalArray(baseArray, int(mindex.intf.(int64)))
+		zindex := mindex.intf.(int64) - 1
+		return (*baseArray)[zindex].PutIndexed(indices[1:], rvalue)
 	}
 }
 
@@ -405,14 +392,12 @@ func (mv *Mlrval) RemoveIndexed(indices []*Mlrval) error {
 		mv.intf = arrayval
 		return retval
 
-	} else {
-		return errors.New(
-			"mlr: cannot unset index variable which is neither map nor array",
-		)
 	}
+	return errors.New(
+		"cannot unset index variable which is neither map nor array",
+	)
 }
 
-// ----------------------------------------------------------------
 // Helper function for Mlrval.RemoveIndexed, for mlrvals of map type.
 func removeIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 	numIndices := len(indices)
@@ -424,12 +409,11 @@ func removeIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 		if baseIndex.IsString() || baseIndex.IsInt() {
 			baseMap.Remove(baseIndex.String())
 			return nil
-		} else {
-			return errors.New(
-				"mlr: map indices must be string, int, or array thereof; got " +
-					baseIndex.GetTypeName(),
-			)
 		}
+		return errors.New(
+			"map indices must be string, int, or array thereof; got " +
+				baseIndex.GetTypeName(),
+		)
 	}
 
 	// If not last index, then recurse.
@@ -443,14 +427,13 @@ func removeIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 	} else {
 		// Base is map, index is invalid type
 		return errors.New(
-			"mlr: map indices must be string, int, or array thereof; got " + baseIndex.GetTypeName(),
+			"map indices must be string, int, or array thereof; got " + baseIndex.GetTypeName(),
 		)
 	}
 
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Helper function for Mlrval.PutIndexed, for mlrvals of array type.
 func removeIndexedOnArray(
 	baseArray *[]*Mlrval,
@@ -476,28 +459,24 @@ func removeIndexedOnArray(
 			rightSlice := (*baseArray)[zindex+1 : len((*baseArray))]
 			*baseArray = append(leftSlice, rightSlice...)
 		} else if mindex.intf.(int64) == 0 {
-			return errors.New("mlr: zero indices are not supported. Indices are 1-up")
-		} else {
-			// TODO: improve wording
-			return errors.New("mlr: array index out of bounds for unset")
+			return errors.New("zero indices are not supported. Indices are 1-up")
 		}
+		// TODO: improve wording
+		return errors.New("array index out of bounds for unset")
+	}
+	// More indices remain; recurse
+	if inBounds {
+		return (*baseArray)[zindex].RemoveIndexed(indices[1:])
+	} else if mindex.intf.(int64) == 0 {
+		return errors.New("zero indices are not supported. Indices are 1-up")
 	} else {
-		// More indices remain; recurse
-		if inBounds {
-			return (*baseArray)[zindex].RemoveIndexed(indices[1:])
-		} else if mindex.intf.(int64) == 0 {
-			return errors.New("mlr: zero indices are not supported. Indices are 1-up")
-		} else {
-			// TODO: improve wording
-			return errors.New("mlr: array index out of bounds for unset")
-		}
-
+		// TODO: improve wording
+		return errors.New("array index out of bounds for unset")
 	}
 
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Nominally for TopKeeper
 
 type BsearchMlrvalArrayFunc func(
@@ -543,9 +522,8 @@ func BsearchMlrvalArrayForDescendingInsert(
 				return lo
 			} else if GreaterThanOrEquals(value, (*array)[hi]) {
 				return hi
-			} else {
-				return hi + 1
 			}
+			return hi + 1
 		}
 		mid = newmid
 	}
@@ -590,9 +568,8 @@ func BsearchMlrvalArrayForAscendingInsert(
 				return lo
 			} else if LessThanOrEquals(value, (*array)[hi]) {
 				return hi
-			} else {
-				return hi + 1
 			}
+			return hi + 1
 		}
 		mid = newmid
 	}
@@ -612,11 +589,10 @@ func NewMlrvalForAutoDeepen(mvtype MVType) (*Mlrval, error) {
 	if mvtype == MT_STRING || mvtype == MT_INT {
 		empty := FromEmptyMap()
 		return empty, nil
-	} else {
-		return nil, errors.New(
-			"mlr: indices must be string, int, or array thereof; got " + GetTypeName(mvtype),
-		)
 	}
+	return nil, errors.New(
+		"indices must be string, int, or array thereof; got " + GetTypeName(mvtype),
+	)
 }
 
 func (mv *Mlrval) Arrayify() *Mlrval {
@@ -645,9 +621,8 @@ func (mv *Mlrval) Arrayify() *Mlrval {
 			}
 			return FromArray(arrayval)
 
-		} else {
-			return mv
 		}
+		return mv
 
 	} else if mv.IsArray() {
 		// TODO: comment (or rethink) that this modifies its inputs!!
@@ -659,9 +634,8 @@ func (mv *Mlrval) Arrayify() *Mlrval {
 		mv.intf = arrayval
 		return output
 
-	} else {
-		return mv
 	}
+	return mv
 }
 
 func LengthenMlrvalArray(array *[]*Mlrval, newLength64 int) {
@@ -732,7 +706,6 @@ func CollectionFold(
 		return ArrayFold(c.AcquireArrayValue(), initval, f)
 	} else if c.IsMap() {
 		return MapFold(c.AcquireMapValue(), initval, f)
-	} else {
-		panic("CollectionFold argument is neither array nor map")
 	}
+	panic("CollectionFold argument is neither array nor map")
 }

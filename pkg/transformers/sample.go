@@ -39,7 +39,7 @@ func transformerSampleParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -90,7 +90,7 @@ func transformerSampleParseCLI(
 		groupByFieldNames,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -120,7 +120,6 @@ func NewTransformerSample(
 	}
 	return tr, nil
 }
-
 
 func (tr *TransformerSample) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -165,7 +164,6 @@ func newSampleBucket(sampleCount int64) *sampleBucketType {
 	}
 }
 
-// ----------------------------------------------------------------
 // This is the reservoir-sampling algorithm.  Here we retain an input record
 // (if retained in the sample) or let it be GC'ed (if not retained in the
 // sample).

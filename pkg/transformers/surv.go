@@ -39,7 +39,7 @@ func transformerSurvParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool,
-) IRecordTransformer {
+) RecordTransformer {
 	argi := *pargi
 	verb := args[argi]
 	argi++
@@ -100,12 +100,12 @@ type TransformerSurv struct {
 }
 
 // NewTransformerSurv constructs a new surv transformer.
-func NewTransformerSurv(durationField, statusField string) IRecordTransformer {
+func NewTransformerSurv(durationField, statusField string) RecordTransformer {
 	return &TransformerSurv{
 		durationField: durationField,
 		statusField:   statusField,
-		times:         make([]float64, 0),
-		events:        make([]bool, 0),
+		times:         []float64{},
+		events:        []bool{},
 	}
 }
 

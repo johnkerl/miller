@@ -1,6 +1,4 @@
-// ================================================================
 // CST build/execute for AST leaf nodes
-// ================================================================
 
 package cst
 
@@ -105,9 +103,8 @@ func (node *DirectFieldRvalueNode) Evaluate(
 	value := state.Inrec.Get(node.fieldName)
 	if value == nil {
 		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$"+node.fieldName)
-	} else {
-		return value
 	}
+	return value
 }
 
 type FullSrecRvalueNode struct {
@@ -126,9 +123,8 @@ func (node *FullSrecRvalueNode) Evaluate(
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
 		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$*")
-	} else {
-		return mlrval.FromMap(state.Inrec)
 	}
+	return mlrval.FromMap(state.Inrec)
 }
 
 type DirectOosvarRvalueNode struct {
@@ -146,9 +142,8 @@ func (node *DirectOosvarRvalueNode) Evaluate(
 	value := state.Oosvars.Get(node.variableName)
 	if value == nil {
 		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "@"+node.variableName)
-	} else {
-		return value
 	}
+	return value
 }
 
 type FullOosvarRvalueNode struct {
@@ -163,7 +158,6 @@ func (node *FullOosvarRvalueNode) Evaluate(
 	return mlrval.FromMap(state.Oosvars)
 }
 
-// ----------------------------------------------------------------
 // TODO: rename this node-type.
 // RHSes can be:
 // * Local variables, like `x` in `x = 3`
@@ -204,7 +198,6 @@ func (node *LocalVariableNode) Evaluate(
 	return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "local variable "+node.stackVariable.GetName())
 }
 
-// ----------------------------------------------------------------
 // During the BNF parse all string literals -- "foo" or "(..)_(...)" regexes
 // etc -- are marked as dsl.NodeTypeStringLiteral. However, a CST-build
 // pre-pass relabels second argument to sub/gsub etc -- any known regex
@@ -228,7 +221,6 @@ func (node *RegexLiteralNode) Evaluate(
 	return node.literal
 }
 
-// ----------------------------------------------------------------
 // StringLiteralNode is for any string literal that doesn't have any "\0" ..
 // "\9" in it.
 type StringLiteralNode struct {
@@ -366,7 +358,6 @@ func (node *NullLiteralNode) Evaluate(
 	return node.literal
 }
 
-// ----------------------------------------------------------------
 // Used for testing purposes; not used by the main DSL.
 
 type MlrvalLiteralNode struct {
@@ -643,7 +634,6 @@ func (node *LiteralEmptyStringNode) Evaluate(
 	return mlrval.FromString("")
 }
 
-// ----------------------------------------------------------------
 // The panic token is a special token which causes a panic when evaluated.
 // This is for testing that AND/OR short-circuiting is implemented correctly:
 // output = input1 || panic should NOT panic the process when input1 is true.

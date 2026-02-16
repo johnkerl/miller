@@ -42,7 +42,7 @@ func transformerTeeParseCLI(
 	args []string,
 	mainOptions *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -139,7 +139,7 @@ func NewTransformerTee(
 	recordWriterOptions *cli.TWriterOptions,
 ) (*TransformerTee, error) {
 	var fileOutputHandler *output.FileOutputHandler = nil
-	var err error = nil
+	var err error
 	filenameOrCommandForDisplay := filenameOrCommand
 	if piping {
 		fileOutputHandler, err = output.NewPipeWriteOutputHandler(filenameOrCommand, recordWriterOptions)
@@ -195,7 +195,7 @@ func (tr *TransformerTee) Transform(
 				"%s: error writing to tee \"%s\":\n",
 				"mlr", tr.filenameOrCommandForDisplay,
 			)
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 
@@ -208,7 +208,7 @@ func (tr *TransformerTee) Transform(
 				"%s: error closing tee \"%s\":\n",
 				"mlr", tr.filenameOrCommandForDisplay,
 			)
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)

@@ -1,6 +1,4 @@
-// ================================================================
 // Handlers for non-DSL statements like ':open foo.dat' or ':help'.
-// ================================================================
 
 package repl
 
@@ -17,7 +15,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 // Types for the lookup table.
 
 // Handlers should return false if they want their usage function to be called.
@@ -59,7 +56,6 @@ func init() {
 	}
 }
 
-// ----------------------------------------------------------------
 // No hash-table acceleration; things here are small, and the tool is interactive.
 func (repl *Repl) findHandler(verbName string) *handlerInfo {
 	for _, entry := range handlerLookupTable {
@@ -78,9 +74,8 @@ func (repl *Repl) showUsageForHandler(verbName string) bool {
 		fmt.Println(colorizer.MaybeColorizeHelp(verbName, true))
 		nonDSLHandler.usageFunc(repl)
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
 func (repl *Repl) showUsageForHandlerApproximate(searchString string) bool {
@@ -97,7 +92,6 @@ func (repl *Repl) showUsageForHandlerApproximate(searchString string) bool {
 	return foundAny
 }
 
-// ----------------------------------------------------------------
 // Handles a single non-DSL statement like ':open foo.dat' or ':help'.
 func (repl *Repl) handleNonDSLLine(trimmedLine string) bool {
 	args := strings.Fields(trimmedLine)
@@ -284,7 +278,7 @@ func handleRead(repl *Repl, args []string) bool {
 	}
 
 	var recordsAndContexts []*types.RecordAndContext // list of *types.RecordAndContext
-	var err error = nil
+	var err error
 
 	select {
 	case recordsAndContexts = <-repl.readerChannel:
@@ -365,17 +359,16 @@ func handleSkip(repl *Repl, args []string) bool {
 		return true
 	} else if args[0] != "until" && args[0] != "u" {
 		return false
-	} else {
-		args := args[1:]
-		dslString := strings.Join(args, " ")
-		// If they say ':skip until intr' then we use a DSL string of 'false',
-		// i.e. skip until they type control-C.
-		if len(args) == 1 && args[0] == "intr" {
-			dslString = "false"
-		}
-		handleSkipOrProcessUntil(repl, dslString, false)
-		return true
 	}
+	args = args[1:]
+	dslString := strings.Join(args, " ")
+	// If they say ':skip until intr' then we use a DSL string of 'false',
+	// i.e. skip until they type control-C.
+	if len(args) == 1 && args[0] == "intr" {
+		dslString = "false"
+	}
+	handleSkipOrProcessUntil(repl, dslString, false)
+	return true
 }
 
 func usageProcess(repl *Repl) {
@@ -413,22 +406,21 @@ func handleProcess(repl *Repl, args []string) bool {
 		return true
 	} else if args[0] != "until" && args[0] != "u" {
 		return false
-	} else {
-		args := args[1:]
-		dslString := strings.Join(args, " ")
-		// If they say ':process until intr' then we use a DSL string of 'false',
-		// i.e. skip until they type control-C.
-		if len(args) == 1 && args[0] == "intr" {
-			dslString = "false"
-		}
-		handleSkipOrProcessUntil(repl, dslString, true)
-		return true
 	}
+	args = args[1:]
+	dslString := strings.Join(args, " ")
+	// If they say ':process until intr' then we use a DSL string of 'false',
+	// i.e. skip until they type control-C.
+	if len(args) == 1 && args[0] == "intr" {
+		dslString = "false"
+	}
+	handleSkipOrProcessUntil(repl, dslString, true)
+	return true
 }
 
 func handleSkipOrProcessN(repl *Repl, n int64, processingNotSkipping bool) {
 	var recordsAndContexts []*types.RecordAndContext // list of *types.RecordAndContext
-	var err error = nil
+	var err error
 
 	for i := int64(1); i <= n; i++ {
 		select {

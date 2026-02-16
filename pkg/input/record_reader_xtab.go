@@ -38,8 +38,8 @@ type tStanza struct {
 
 func newStanza() *tStanza {
 	return &tStanza{
-		dataLines:    make([]string, 0),
-		commentLines: make([]string, 0),
+		dataLines:    []string{},
+		commentLines: []string{},
 	}
 }
 
@@ -157,7 +157,7 @@ func channelizedStanzaScanner(
 				done = true
 				break
 			} else {
-				fmt.Fprintf(os.Stderr, "mlr: %#v\n", err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				break
 			}
 		}
@@ -238,7 +238,7 @@ func (reader *RecordReaderXTAB) getRecordBatch(
 	recordsAndContexts []*types.RecordAndContext,
 	eof bool,
 ) {
-	recordsAndContexts = make([]*types.RecordAndContext, 0)
+	recordsAndContexts = []*types.RecordAndContext{}
 
 	stanzas, more := <-stanzasChannel
 	if !more {
@@ -295,9 +295,8 @@ func (reader *RecordReaderXTAB) recordFromXTABLines(
 func newXTABPairSplitter(options *cli.TReaderOptions) iXTABPairSplitter {
 	if options.IPSRegex == nil {
 		return &tXTABIPSSplitter{ips: options.IPS, ipslen: len(options.IPS)}
-	} else {
-		return &tXTABIPSRegexSplitter{ipsRegex: options.IPSRegex}
 	}
+	return &tXTABIPSRegexSplitter{ipsRegex: options.IPSRegex}
 }
 
 type tXTABIPSSplitter struct {
@@ -371,7 +370,6 @@ func (s *tXTABIPSRegexSplitter) Split(input string) (key, value string, err erro
 		return kv[0], "", nil
 	} else if len(kv) == 2 {
 		return kv[0], kv[1], nil
-	} else {
-		return "", "", fmt.Errorf("internal coding error in XTAB reader")
 	}
+	return "", "", fmt.Errorf("internal coding error in XTAB reader")
 }

@@ -1,7 +1,5 @@
-// ================================================================
 // Support for things like 'num x = $a + $b' in the DSL, wherein we check types
 // at assignment time.
-// ================================================================
 
 package types
 
@@ -23,7 +21,7 @@ func NewTypeGatedMlrvalName(
 ) (*TypeGatedMlrvalName, error) {
 	typeMask, ok := mlrval.TypeNameToMask(typeName)
 	if !ok {
-		return nil, fmt.Errorf(`mlr: couldn't resolve type name "%s"`, typeName)
+		return nil, fmt.Errorf(`couldn't resolve type name "%s"`, typeName)
 	}
 	return &TypeGatedMlrvalName{
 		Name:     name,
@@ -36,12 +34,11 @@ func (tname *TypeGatedMlrvalName) Check(value *mlrval.Mlrval) error {
 	bit := value.GetTypeBit()
 	if bit&tname.TypeMask != 0 {
 		return nil
-	} else {
-		return fmt.Errorf(
-			"mlr: couldn't assign variable %s %s from value %s %s",
-			tname.TypeName, tname.Name, value.GetTypeName(), value.String(),
-		)
 	}
+	return fmt.Errorf(
+		"couldn't assign variable %s %s from value %s %s",
+		tname.TypeName, tname.Name, value.GetTypeName(), value.String(),
+	)
 }
 
 type TypeGatedMlrvalVariable struct {

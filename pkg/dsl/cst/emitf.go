@@ -1,7 +1,5 @@
-// ================================================================
 // This handles emitf statements. This produces new records (in addition to $*)
 // into the output record stream.
-// ================================================================
 
 package cst
 
@@ -16,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ================================================================
 // Examples:
 //   emitf @a
 //   emitf @a, @b
@@ -39,7 +36,6 @@ type EmitFStatementNode struct {
 	outputHandlerManager      output.OutputHandlerManager // for file/pipe targets
 }
 
-// ----------------------------------------------------------------
 // $ mlr -n put -v 'emitf a,$b,@c'
 // DSL EXPRESSION:
 // emitf a,$b,@c
@@ -94,7 +90,7 @@ func (root *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable
 		lib.InternalCodingErrorIf(redirectorNode.Children == nil)
 		lib.InternalCodingErrorIf(len(redirectorNode.Children) != 1)
 		redirectorTargetNode := redirectorNode.Children[0]
-		var err error = nil
+		var err error
 
 		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
 			retval.emitfToRedirectFunc = retval.emitfToFileOrPipe
@@ -119,7 +115,7 @@ func (root *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
 				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
-				return nil, fmt.Errorf("mlr: unhandled redirector node type %s", string(redirectorNode.Type))
+				return nil, fmt.Errorf("unhandled redirector node type %s", string(redirectorNode.Type))
 			}
 		}
 	}
@@ -149,7 +145,6 @@ func (node *EmitFStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 	return nil, err
 }
 
-// ----------------------------------------------------------------
 // Gets the name of a non-indexed oosvar, localvar, or field name; otherwise,
 // returns error.
 //
@@ -163,7 +158,7 @@ func getNameFromNamedNode(astNode *dsl.ASTNode, description string) (string, err
 	} else if astNode.Type == dsl.NodeTypeDirectFieldValue {
 		return string(astNode.Token.Lit), nil
 	}
-	return "", fmt.Errorf(`mlr: can't get name of node type "%s" for %s`, string(astNode.Type), description)
+	return "", fmt.Errorf(`can't get name of node type "%s" for %s`, string(astNode.Type), description)
 }
 
 func (node *EmitFStatementNode) emitfToRecordStream(
@@ -185,7 +180,7 @@ func (node *EmitFStatementNode) emitfToFileOrPipe(
 ) error {
 	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
-		return fmt.Errorf("mlr: output redirection yielded %s, not string", redirectorTarget.GetTypeName())
+		return fmt.Errorf("output redirection yielded %s, not string", redirectorTarget.GetTypeName())
 	}
 	outputFileName := redirectorTarget.String()
 

@@ -1,7 +1,5 @@
-// ================================================================
 // All the usual contents of main() are put into this package for ease of
 // testing.
-// ================================================================
 
 package entrypoint
 
@@ -43,7 +41,7 @@ func Main() MainReturn {
 
 	options, recordTransformers, err := climain.ParseCommandLine(os.Args)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "mlr:", err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -53,7 +51,7 @@ func Main() MainReturn {
 		err = processFilesInPlace(options)
 	}
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v.\n", err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -62,17 +60,15 @@ func Main() MainReturn {
 	}
 }
 
-// ----------------------------------------------------------------
 // processToStdout is normal processing without mlr -I.
 
 func processToStdout(
 	options *cli.TOptions,
-	recordTransformers []transformers.IRecordTransformer,
+	recordTransformers []transformers.RecordTransformer,
 ) error {
 	return stream.Stream(options.FileNames, options, recordTransformers, os.Stdout, true)
 }
 
-// ----------------------------------------------------------------
 // processFilesInPlace is in-place processing without mlr -I.
 //
 // For in-place mode, reconstruct the transformers on each input file. E.g.

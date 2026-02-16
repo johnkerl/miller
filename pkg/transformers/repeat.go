@@ -63,7 +63,7 @@ func transformerRepeatParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	repeatCountSource := repeatCountSourceUnspecified
 	repeatCount := int64(0)
@@ -118,7 +118,7 @@ func transformerRepeatParseCLI(
 		repeatCountFieldName,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -150,7 +150,6 @@ func NewTransformerRepeat(
 
 	return tr, nil
 }
-
 
 func (tr *TransformerRepeat) Transform(
 	inrecAndContext *types.RecordAndContext,

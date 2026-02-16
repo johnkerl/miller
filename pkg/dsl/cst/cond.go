@@ -1,7 +1,5 @@
-// ================================================================
 // This is for awkish pattern-action-blocks, like mlr put 'NR > 10 { ... }'.
 // Just shorthand for if-statements without elif/else.
-// ================================================================
 
 package cst
 
@@ -21,7 +19,6 @@ type CondBlockNode struct {
 	statementBlockNode *StatementBlockNode
 }
 
-// ----------------------------------------------------------------
 // Sample AST:
 
 func (root *RootNode) BuildCondBlockNode(astNode *dsl.ASTNode) (*CondBlockNode, error) {
@@ -60,7 +57,7 @@ func (node *CondBlockNode) Execute(
 		boolValue = false
 	} else if !isBool {
 		return nil, fmt.Errorf(
-			"mlr: conditional expression did not evaluate to boolean%s",
+			"conditional expression did not evaluate to boolean%s",
 			dsl.TokenToLocationInfo(node.conditionToken),
 		)
 	}

@@ -46,11 +46,11 @@ func (writer *RecordWriterYAML) writeWithListWrap(
 ) {
 	if outrec != nil {
 		if writer.bufferedRecords == nil {
-			writer.bufferedRecords = make([]interface{}, 0)
+			writer.bufferedRecords = []interface{}{}
 		}
 		native, err := mlrval.MlrmapToYAMLNative(outrec)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 		writer.bufferedRecords = append(writer.bufferedRecords, native)
@@ -58,7 +58,7 @@ func (writer *RecordWriterYAML) writeWithListWrap(
 		// End of stream: emit single YAML document as array
 		out, err := yaml.Marshal(writer.bufferedRecords)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 		bufferedOutputStream.Write(out)
@@ -78,12 +78,12 @@ func (writer *RecordWriterYAML) writeWithoutListWrap(
 	}
 	native, err := mlrval.MlrmapToYAMLNative(outrec)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 	out, err := yaml.Marshal(native)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 	bufferedOutputStream.Write(out)

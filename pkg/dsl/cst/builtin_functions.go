@@ -1,6 +1,4 @@
-// ================================================================
 // Methods for built-in functions
-// ================================================================
 
 package cst
 
@@ -51,12 +49,11 @@ func (root *RootNode) BuildBuiltinFunctionCallsiteNode(
 			return root.BuildVariadicFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.variadicFuncWithState != nil {
 			return root.BuildVariadicFunctionWithStateCallsiteNode(astNode, builtinFunctionInfo)
-		} else {
-			return nil, fmt.Errorf(
-				"at CST BuildFunctionCallsiteNode: builtin function not implemented yet: %s",
-				functionName,
-			)
 		}
+		return nil, fmt.Errorf(
+			"at CST BuildFunctionCallsiteNode: builtin function not implemented yet: %s",
+			functionName,
+		)
 	}
 
 	return nil, nil // not found
@@ -95,7 +92,7 @@ func BuildZaryFunctionCallsiteNode(
 	expectedArity := 0
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -127,7 +124,7 @@ func (root *RootNode) BuildUnaryFunctionCallsiteNode(
 	expectedArity := 1
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -165,7 +162,7 @@ func (root *RootNode) BuildUnaryFunctionWithContextCallsiteNode(
 	expectedArity := 1
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -204,7 +201,7 @@ func (root *RootNode) BuildBinaryFunctionCallsiteNode(
 	expectedArity := 2
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -277,7 +274,7 @@ func (root *RootNode) BuildBinaryFunctionWithStateCallsiteNode(
 	expectedArity := 2
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -326,7 +323,7 @@ func (root *RootNode) BuildTernaryFunctionWithStateCallsiteNode(
 	expectedArity := 3
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -366,7 +363,6 @@ func (node *TernaryFunctionWithStateCallsiteNode) Evaluate(
 	)
 }
 
-// ----------------------------------------------------------------
 // RegexCaptureBinaryFunctionCallsiteNode special-cases the =~ and !=~
 // operators which set the CST State object's captures array for "\1".."\9".
 // This is identical to BinaryFunctionCallsite except that
@@ -412,7 +408,7 @@ func (root *RootNode) BuildRegexCaptureBinaryFunctionCallsiteNode(
 	expectedArity := 2
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -447,7 +443,6 @@ func (node *RegexCaptureBinaryFunctionCallsiteNode) Evaluate(
 	return output
 }
 
-// ----------------------------------------------------------------
 // DotCallsiteNode special-cases the dot operator, which is:
 // * string + string, with coercion to string if either side is int/float/bool/etc.
 // * map attribute access, if the left-hand side is a map.
@@ -464,7 +459,7 @@ func (root *RootNode) BuildDotCallsiteNode(
 	expectedArity := 2
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			".",
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -501,14 +496,12 @@ func (node *DotCallsiteNode) Evaluate(
 		value2 := mapvalue1.Get(node.string2)
 		if value2 == nil {
 			return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "map access ["+node.string2+"]")
-		} else {
-			return value2
 		}
-	} else {
-		// Case 2: string concatenation
-		value2 := node.evaluable2.Evaluate(state)
-		return bifs.BIF_dot(value1, value2)
+		return value2
 	}
+	// Case 2: string concatenation
+	value2 := node.evaluable2.Evaluate(state)
+	return bifs.BIF_dot(value1, value2)
 }
 
 type TernaryFunctionCallsiteNode struct {
@@ -526,7 +519,7 @@ func (root *RootNode) BuildTernaryFunctionCallsiteNode(
 	expectedArity := 3
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -590,7 +583,7 @@ func (root *RootNode) BuildVariadicFunctionCallsiteNode(
 
 	if callsiteArity < builtinFunctionInfo.minimumVariadicArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s takes minimum argument count %d; got %d",
+			"function %s takes minimum argument count %d; got %d",
 			builtinFunctionInfo.name,
 			builtinFunctionInfo.minimumVariadicArity,
 			callsiteArity,
@@ -600,7 +593,7 @@ func (root *RootNode) BuildVariadicFunctionCallsiteNode(
 	if builtinFunctionInfo.maximumVariadicArity != 0 {
 		if callsiteArity > builtinFunctionInfo.maximumVariadicArity {
 			return nil, fmt.Errorf(
-				"mlr: function %s takes maximum argument count %d; got %d",
+				"function %s takes maximum argument count %d; got %d",
 				builtinFunctionInfo.name,
 				builtinFunctionInfo.maximumVariadicArity,
 				callsiteArity,
@@ -608,7 +601,7 @@ func (root *RootNode) BuildVariadicFunctionCallsiteNode(
 		}
 	}
 
-	var err error = nil
+	var err error
 	for i, astChildNode := range astNode.Children {
 		evaluables[i], err = root.BuildEvaluableNode(astChildNode)
 		if err != nil {
@@ -647,7 +640,7 @@ func (root *RootNode) BuildVariadicFunctionWithStateCallsiteNode(
 
 	if callsiteArity < builtinFunctionInfo.minimumVariadicArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s takes minimum argument count %d; got %d",
+			"function %s takes minimum argument count %d; got %d",
 			builtinFunctionInfo.name,
 			builtinFunctionInfo.minimumVariadicArity,
 			callsiteArity,
@@ -657,7 +650,7 @@ func (root *RootNode) BuildVariadicFunctionWithStateCallsiteNode(
 	if builtinFunctionInfo.maximumVariadicArity != 0 {
 		if callsiteArity > builtinFunctionInfo.maximumVariadicArity {
 			return nil, fmt.Errorf(
-				"mlr: function %s takes maximum argument count %d; got %d",
+				"function %s takes maximum argument count %d; got %d",
 				builtinFunctionInfo.name,
 				builtinFunctionInfo.maximumVariadicArity,
 				callsiteArity,
@@ -665,7 +658,7 @@ func (root *RootNode) BuildVariadicFunctionWithStateCallsiteNode(
 		}
 	}
 
-	var err error = nil
+	var err error
 	for i, astChildNode := range astNode.Children {
 		evaluables[i], err = root.BuildEvaluableNode(astChildNode)
 		if err != nil {
@@ -869,7 +862,6 @@ func (node *LogicalOROperatorNode) Evaluate(
 	return bifs.BIF_logical_OR(aout, bout)
 }
 
-// ================================================================
 // a ?? b evaluates to b only when a is absent. Example: '$foo ?? 0' when the
 // current record has no field $foo.
 type AbsentCoalesceOperatorNode struct{ a, b IEvaluable }
@@ -892,7 +884,6 @@ func (node *AbsentCoalesceOperatorNode) Evaluate(
 	return node.b.Evaluate(state)
 }
 
-// ================================================================
 // a ?? b evaluates to b only when a is absent or empty. Example: '$foo ?? 0'
 // when the current record has no field $foo, or when $foo is empty..
 type EmptyCoalesceOperatorNode struct{ a, b IEvaluable }
@@ -911,9 +902,8 @@ func (node *EmptyCoalesceOperatorNode) Evaluate(
 	atype := aout.Type()
 	if atype == mlrval.MT_ABSENT || atype == mlrval.MT_VOID || (atype == mlrval.MT_STRING && aout.String() == "") {
 		return node.b.Evaluate(state)
-	} else {
-		return aout
 	}
+	return aout
 }
 
 type StandardTernaryOperatorNode struct{ a, b, c IEvaluable }
@@ -934,12 +924,10 @@ func (node *StandardTernaryOperatorNode) Evaluate(
 	// Short-circuit: defer evaluation unless needed
 	if boolValue {
 		return node.b.Evaluate(state)
-	} else {
-		return node.c.Evaluate(state)
 	}
+	return node.c.Evaluate(state)
 }
 
-// ================================================================
 // The function-manager logic is designed to make it easy to implement a large
 // number of functions/operators with a small number of keystrokes. The general
 // paradigm is evaluate the arguments, then invoke the function/operator.

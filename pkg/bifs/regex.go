@@ -206,10 +206,9 @@ func BIF_string_does_not_match_regexp(input1, input2 *mlrval.Mlrval) (retval *ml
 	output, captures := BIF_string_matches_regexp(input1, input2)
 	if output.IsBool() {
 		return mlrval.FromBool(!output.AcquireBoolValue()), captures
-	} else {
-		// else leave it as error, absent, etc.
-		return output, captures
 	}
+	// else leave it as error, absent, etc.
+	return output, captures
 }
 
 func BIF_regextract(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -223,9 +222,8 @@ func BIF_regextract(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	match := regex.FindStringIndex(input1.AcquireStringValue())
 	if match != nil {
 		return mlrval.FromString(input1.AcquireStringValue()[match[0]:match[1]])
-	} else {
-		return mlrval.ABSENT
 	}
+	return mlrval.ABSENT
 }
 
 func BIF_regextract_or_else(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -239,7 +237,6 @@ func BIF_regextract_or_else(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrva
 	match := regex.FindStringIndex(input1.AcquireStringValue())
 	if match != nil {
 		return mlrval.FromString(input1.AcquireStringValue()[match[0]:match[1]])
-	} else {
-		return input3
 	}
+	return input3
 }
