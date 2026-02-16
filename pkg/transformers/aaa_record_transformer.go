@@ -36,13 +36,18 @@ type TransformerUsageFunc func(
 	ostream *os.File,
 )
 
+// TransformerParseCLIFunc parses verb options from the CLI. Returns (nil, nil) on
+// success for pass one (doConstruct=false). Returns (transformer, nil) on success
+// for pass two (doConstruct=true). Returns (nil, cli.ErrHelpRequested) when -h/--help
+// was used (caller should exit 0; usage already printed). Returns (nil, err) on
+// parse or constructor failure (caller should print and exit 1).
 type TransformerParseCLIFunc func(
 	pargi *int,
 	argc int,
 	args []string,
 	mainOptions *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer
+) (RecordTransformer, error)
 
 type TransformerSetup struct {
 	Verb         string

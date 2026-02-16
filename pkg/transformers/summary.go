@@ -114,7 +114,7 @@ func transformerSummaryParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -135,6 +135,7 @@ func transformerSummaryParseCLI(
 
 	transposeOutput := false
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -147,30 +148,30 @@ func transformerSummaryParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerSummaryUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "--all" {
 			summarizerNames = allSummarizerNamesList
 
 		} else if opt == "-a" {
-			summarizerNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			summarizerNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			for _, summarizerName := range summarizerNames {
 				if !allSummarizerNamesSet[summarizerName] {
-					fmt.Fprintf(os.Stderr, "mlr %s: unrecognized summarizer name %s\n",
-						verb, summarizerName,
-					)
-					os.Exit(1)
+					return nil, cli.VerbErrorf(verb, "summarizer \"%s\" not found", summarizerName)
 				}
 			}
 
 		} else if opt == "-x" {
-			excludeSummarizerNames := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			excludeSummarizerNames, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			for _, excludeSummarizerName := range excludeSummarizerNames {
 				if !allSummarizerNamesSet[excludeSummarizerName] {
-					fmt.Fprintf(os.Stderr, "mlr %s: unrecognized Summarizer name %s\n",
-						verb, excludeSummarizerName,
-					)
-					os.Exit(1)
+					return nil, cli.VerbErrorf(verb, "exclude summarizer \"%s\" not found", excludeSummarizerName)
 				}
 			}
 
@@ -190,23 +191,21 @@ func transformerSummaryParseCLI(
 			transposeOutput = true
 
 		} else {
-			transformerSummaryUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerSummary(summarizerNames, transposeOutput)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type tFieldSummary struct {

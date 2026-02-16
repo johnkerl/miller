@@ -38,7 +38,7 @@ func transformerLabelParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -56,36 +56,32 @@ func transformerLabelParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerLabelUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		}
-		transformerLabelUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verbNameLabel, "option \"%s\" not recognized", opt)
 	}
 
 	// Get the label field names from the command line
 	if argi >= argc {
-		transformerLabelUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verbNameLabel, "field names required")
 	}
 	newNames := lib.SplitString(args[argi], ",")
 	argi++
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerLabel(
 		newNames,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr label: %v\n", err)
-		os.Exit(1)
-		// TODO: return nil to caller and have it exit, maybe
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerLabel struct {
@@ -100,7 +96,7 @@ func NewTransformerLabel(
 	for _, newName := range newNames {
 		_, ok := uniquenessChecker[newName]
 		if ok {
-			return nil, fmt.Errorf(`labels must be unique; got duplicate "%s"`, newName)
+			return nil, fmt.Errorf(`mlr label: labels must be unique; got duplicate "%s"`, newName)
 		}
 		uniquenessChecker[newName] = true
 	}

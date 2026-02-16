@@ -75,7 +75,7 @@ func transformerMergeFieldsParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -89,6 +89,7 @@ func transformerMergeFieldsParseCLI(
 	keepInputFields := false
 	doInterpolatedPercentiles := false
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -101,25 +102,40 @@ func transformerMergeFieldsParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerMergeFieldsUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-a" {
-			accumulatorNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			accumulatorNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-f" {
-			valueFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			valueFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			doWhich = e_MERGE_BY_NAME_LIST
 
 		} else if opt == "-r" {
-			valueFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			valueFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			doWhich = e_MERGE_BY_NAME_REGEX
 
 		} else if opt == "-c" {
-			valueFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			valueFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			doWhich = e_MERGE_BY_COLLAPSING
 
 		} else if opt == "-o" {
-			outputFieldBasename = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			outputFieldBasename, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-k" {
 			keepInputFields = true
@@ -134,32 +150,26 @@ func transformerMergeFieldsParseCLI(
 			// No-op pass-through for backward compatibility with Miller 5
 
 		} else {
-			transformerMergeFieldsUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	// TODO: libify for use across verbs.
 	if len(accumulatorNameList) == 0 {
-		fmt.Fprintf(os.Stderr, "%s %s: -a option is required.\n", "mlr", verbNameMergeFields)
-		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", "mlr", verbNameMergeFields)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verbNameMergeFields, "-a option is required")
 	}
 	if len(valueFieldNameList) == 0 {
-		fmt.Fprintf(os.Stderr, "%s %s: -f option is required.\n", "mlr", verbNameMergeFields)
-		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", "mlr", verbNameMergeFields)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verbNameMergeFields, "-f option is required")
 	}
 	if outputFieldBasename == "" {
 		if doWhich == e_MERGE_BY_NAME_LIST || doWhich == e_MERGE_BY_NAME_REGEX {
-			transformerMergeFieldsUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verbNameMergeFields, "-o output field basename required")
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerMergeFields(
@@ -171,11 +181,10 @@ func transformerMergeFieldsParseCLI(
 		keepInputFields,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 // Given: accumulate count,sum on values x,y group by a,b.

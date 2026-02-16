@@ -80,7 +80,7 @@ func transformerSplitParseCLI(
 	args []string,
 	mainOptions *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -107,6 +107,7 @@ func transformerSplitParseCLI(
 	}
 
 	// Parse local flags.
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -119,28 +120,46 @@ func transformerSplitParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerSplitUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-n" {
-			n = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			n, err = cli.VerbGetIntArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			doSize = true
 
 		} else if opt == "-m" {
-			n = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			n, err = cli.VerbGetIntArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			doMod = true
 
 		} else if opt == "-g" {
-			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "--prefix" {
-			outputFileNamePrefix = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			outputFileNamePrefix, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "--suffix" {
-			outputFileNameSuffix = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			outputFileNameSuffix, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			haveOutputFileNameSuffix = true
 
 		} else if opt == "--folder" {
-			outputFolder = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			outputFolder, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-a" {
 			doAppend = true
@@ -152,7 +171,10 @@ func transformerSplitParseCLI(
 			escapeFileNameCharacters = false
 
 		} else if opt == "-j" {
-			fileNamePartJoiner = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			fileNamePartJoiner, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else {
 			// This is inelegant. For error-proofing we advance argi already in our
@@ -164,20 +186,17 @@ func transformerSplitParseCLI(
 				// Nothing else to handle here.
 				argi = largi
 			} else {
-				transformerSplitUsage(os.Stderr)
-				os.Exit(1)
+				return nil, cli.VerbErrorf(verb, "output format not recognized")
 			}
 		}
 	}
 
 	doGroup := groupByFieldNames != nil
 	if !doMod && !doSize && !doGroup {
-		fmt.Fprintf(os.Stderr, "mlr %s: At least one of -m, -n, or -g is required.\n", verb)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-n, -g, or -s is required")
 	}
 	if (doMod && doSize) || (doMod && doGroup) || (doSize && doGroup) {
-		fmt.Fprintf(os.Stderr, "mlr %s: Only one of -m, -n, or -g is required.\n", verb)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-n, -g, and -s are mutually exclusive")
 	}
 
 	cli.FinalizeWriterOptions(&localOptions.WriterOptions)
@@ -187,7 +206,7 @@ func transformerSplitParseCLI(
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerSplit(
@@ -209,7 +228,7 @@ func transformerSplitParseCLI(
 		os.Exit(1)
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerSplit struct {
@@ -310,7 +329,7 @@ func (tr *TransformerSplit) splitModUngrouped(
 
 		err := tr.outputHandlerManager.WriteRecordAndContext(inrecAndContext, filename)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr: file-write error: %v\n", err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 
@@ -346,7 +365,7 @@ func (tr *TransformerSplit) splitSizeUngrouped(
 			if tr.outputHandler != nil {
 				err = tr.outputHandler.Close()
 				if err != nil {
-					fmt.Fprintf(os.Stderr, "mlr: file-close error: %v\n", err)
+					fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 					os.Exit(1)
 				}
 			}
@@ -358,7 +377,7 @@ func (tr *TransformerSplit) splitSizeUngrouped(
 				tr.doAppend,
 			)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "mlr: file-open error: %v\n", err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				os.Exit(1)
 			}
 
@@ -367,7 +386,7 @@ func (tr *TransformerSplit) splitSizeUngrouped(
 
 		err = tr.outputHandler.WriteRecordAndContext(inrecAndContext)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr: file-write error: %v\n", err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 
@@ -383,7 +402,7 @@ func (tr *TransformerSplit) splitSizeUngrouped(
 		if tr.outputHandler != nil {
 			err := tr.outputHandler.Close()
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "mlr: file-close error: %v\n", err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				os.Exit(1)
 			}
 		}

@@ -55,7 +55,7 @@ func transformerRenameParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -76,7 +76,7 @@ func transformerRenameParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerRenameUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-r" {
 			doRegexes = true
@@ -85,8 +85,7 @@ func transformerRenameParseCLI(
 			doGsub = true
 
 		} else {
-			transformerRenameUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verbNameRename, "option \"%s\" not recognized", opt)
 		}
 	}
 
@@ -96,19 +95,17 @@ func transformerRenameParseCLI(
 
 	// Get the rename field names from the command line
 	if argi >= argc {
-		transformerRenameUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verbNameRename, "old1,new1,old2,new2,... required")
 	}
 	names := lib.SplitString(args[argi], ",")
 	if len(names)%2 != 0 {
-		transformerRenameUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verbNameRename, "names string must have even length")
 	}
 	argi++
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerRename(
@@ -117,11 +114,10 @@ func transformerRenameParseCLI(
 		doGsub,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type tRegexAndReplacement struct {

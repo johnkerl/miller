@@ -44,7 +44,7 @@ func transformerTemplateParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -54,6 +54,7 @@ func transformerTemplateParseCLI(
 	var fieldNames []string = nil
 	fillWith := ""
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -66,37 +67,43 @@ func transformerTemplateParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerTemplateUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-f" {
-			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-t" {
-			templateFileName := cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			templateFileName, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			temp, err := lib.ReadCSVHeader(templateFileName)
 			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
+				return nil, fmt.Errorf("mlr %s: cannot read template file: %w", verb, err)
 			}
 			fieldNames = temp
 
 		} else if opt == "--fill-with" {
-			fillWith = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			fillWith, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else {
-			transformerTemplateUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	if fieldNames == nil {
-		transformerTemplateUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-f or -t is required")
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerTemplate(
@@ -104,11 +111,10 @@ func transformerTemplateParseCLI(
 		fillWith,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerTemplate struct {

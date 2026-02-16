@@ -54,7 +54,7 @@ func transformerBarParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -62,6 +62,7 @@ func transformerBarParseCLI(
 	argi++
 
 	// Parse local flags
+	var err error
 	var fieldNames []string = nil
 	lo := barDefaultLo
 	hi := barDefaultHi
@@ -83,42 +84,61 @@ func transformerBarParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerBarUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-f" {
-			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "--lo" {
-			lo = cli.VerbGetFloatArgOrDie(verb, opt, args, &argi, argc)
+			lo, err = cli.VerbGetFloatArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 		} else if opt == "-w" {
-			width = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			width, err = cli.VerbGetIntArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 		} else if opt == "--hi" {
-			hi = cli.VerbGetFloatArgOrDie(verb, opt, args, &argi, argc)
+			hi, err = cli.VerbGetFloatArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-c" {
-			fillString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			fillString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 		} else if opt == "-x" {
-			oobString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			oobString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 		} else if opt == "-b" {
-			blankString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			blankString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "--auto" {
 			doAuto = true
 
 		} else {
-			transformerBarUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	if fieldNames == nil {
-		transformerBarUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-f field names required")
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerBar(
@@ -132,11 +152,10 @@ func transformerBarParseCLI(
 		blankString,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerBar struct {

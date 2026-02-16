@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/auxents"
 	"github.com/johnkerl/miller/v6/pkg/cli"
@@ -41,7 +42,7 @@ func Main() MainReturn {
 
 	options, recordTransformers, err := climain.ParseCommandLine(os.Args)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+		printError(err)
 		os.Exit(1)
 	}
 
@@ -51,12 +52,22 @@ func Main() MainReturn {
 		err = processFilesInPlace(options)
 	}
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+		printError(err)
 		os.Exit(1)
 	}
 
 	return MainReturn{
 		PrintElapsedTime: options.PrintElapsedTime,
+	}
+}
+
+// printError prints err to stderr. Errors that already start with "mlr " (e.g.
+// "mlr stats1: ...") are printed as-is to avoid double-prefixing.
+func printError(err error) {
+	if strings.HasPrefix(err.Error(), "mlr ") {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+	} else {
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 	}
 }
 

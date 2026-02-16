@@ -39,13 +39,14 @@ func transformerCatParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
 
+	var err error
 	// Parse local flags
 	doCounters := false
 	counterFieldName := ""
@@ -65,16 +66,22 @@ func transformerCatParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerCatUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-n" {
 			counterFieldName = "n"
 
 		} else if opt == "-N" {
-			counterFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			counterFieldName, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-g" {
-			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "--filename" {
 			doFileName = true
@@ -83,14 +90,13 @@ func transformerCatParseCLI(
 			doFileNum = true
 
 		} else {
-			transformerCatUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerCat(
@@ -101,11 +107,10 @@ func transformerCatParseCLI(
 		doFileNum,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerCat struct {

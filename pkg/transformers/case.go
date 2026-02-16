@@ -53,13 +53,14 @@ func transformerCaseParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
 
+	var err error
 	which := "keys_and_values"
 	style := e_UNSPECIFIED_CASE
 	var fieldNames []string = nil
@@ -76,7 +77,7 @@ func transformerCaseParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerCaseUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-k" {
 			which = "keys_only"
@@ -85,7 +86,10 @@ func transformerCaseParseCLI(
 			which = "values_only"
 
 		} else if opt == "-f" {
-			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-u" {
 			style = e_UPPER_CASE
@@ -97,23 +101,21 @@ func transformerCaseParseCLI(
 			style = e_TITLE_CASE
 
 		} else {
-			transformerCaseUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerCase(which, fieldNames, style)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type caserFuncT func(input string) string

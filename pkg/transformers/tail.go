@@ -37,7 +37,7 @@ func transformerTailParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -59,10 +59,14 @@ func transformerTailParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerTailUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-n" {
-			tailCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			n, err := cli.VerbGetIntArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			tailCount = n
 
 			// This is a bit of a hack. In our Getoptify routine we preprocess
 			// the command line sending '-xyz' to '-x -y -z', but leaving
@@ -75,17 +79,21 @@ func transformerTailParseCLI(
 			}
 
 		} else if opt == "-g" {
-			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			names, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			groupByFieldNames = names
 
 		} else {
 			transformerTailUsage(os.Stderr)
-			os.Exit(1)
+			return nil, fmt.Errorf("%s %s: option \"%s\" not recognized", "mlr", verb, opt)
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerTail(
@@ -93,11 +101,10 @@ func transformerTailParseCLI(
 		groupByFieldNames,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerTail struct {

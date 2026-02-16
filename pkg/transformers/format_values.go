@@ -63,7 +63,7 @@ func transformerFormatValuesParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -75,6 +75,7 @@ func transformerFormatValuesParseCLI(
 	floatFormat := defaultFormatValuesFloatFormat
 	coerceIntToFloat := false
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -87,26 +88,34 @@ func transformerFormatValuesParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerFormatValuesUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-s" {
-			stringFormat = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			stringFormat, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 		} else if opt == "-i" {
-			intFormat = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			intFormat, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 		} else if opt == "-f" {
-			floatFormat = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			floatFormat, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 		} else if opt == "-n" {
 			coerceIntToFloat = true
 
 		} else {
-			transformerFormatValuesUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerFormatValues(
@@ -116,11 +125,10 @@ func transformerFormatValuesParseCLI(
 		coerceIntToFloat,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerFormatValues struct {

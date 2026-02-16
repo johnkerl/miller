@@ -63,7 +63,7 @@ func transformerRepeatParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	repeatCountSource := repeatCountSourceUnspecified
 	repeatCount := int64(0)
@@ -74,6 +74,7 @@ func transformerRepeatParseCLI(
 	verb := args[argi]
 	argi++
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -86,30 +87,34 @@ func transformerRepeatParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerRepeatUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-n" {
-			repeatCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			repeatCount, err = cli.VerbGetIntArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			repeatCountSource = repeatCountFromInt
 
 		} else if opt == "-f" {
-			repeatCountFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			repeatCountFieldName, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			repeatCountSource = repeatCountFromFieldName
 
 		} else {
-			transformerRepeatUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	if repeatCountSource == repeatCountSourceUnspecified {
-		transformerRepeatUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-n or -f is required")
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerRepeat(
@@ -118,11 +123,10 @@ func transformerRepeatParseCLI(
 		repeatCountFieldName,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerRepeat struct {

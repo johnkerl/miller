@@ -44,7 +44,7 @@ func transformerCleanWhitespaceParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	doKeys := true
 	doValues := true
@@ -65,7 +65,7 @@ func transformerCleanWhitespaceParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerCleanWhitespaceUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-k" || opt == "--keys-only" {
 			doKeys = true
@@ -75,19 +75,17 @@ func transformerCleanWhitespaceParseCLI(
 			doValues = true
 
 		} else {
-			transformerCleanWhitespaceUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verbNameCleanWhitespace, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	if !doKeys && !doValues {
-		transformerCleanWhitespaceUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verbNameCleanWhitespace, "-k or -v is required")
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerCleanWhitespace(
@@ -95,11 +93,10 @@ func transformerCleanWhitespaceParseCLI(
 		doValues,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerCleanWhitespace struct {

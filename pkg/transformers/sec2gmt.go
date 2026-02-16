@@ -43,7 +43,7 @@ func transformerSec2GMTParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -64,7 +64,7 @@ func transformerSec2GMTParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerSec2GMTUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-1" {
 			numDecimalPlaces = 1
@@ -93,21 +93,19 @@ func transformerSec2GMTParseCLI(
 			preDivide = 1.0e9
 
 		} else {
-			transformerSec2GMTUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verbNameSec2GMT, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	if argi >= argc {
-		transformerSec2GMTUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verbNameSec2GMT, "field names required")
 	}
 	fieldNames := args[argi]
 	argi++
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerSec2GMT(
@@ -116,11 +114,10 @@ func transformerSec2GMTParseCLI(
 		numDecimalPlaces,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerSec2GMT struct {
