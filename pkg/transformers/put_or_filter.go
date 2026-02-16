@@ -380,7 +380,7 @@ func transformerPutOrFilterParseCLI(
 		options,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -512,7 +512,7 @@ func (tr *TransformerPut) Transform(
 			tr.runtimeState.Update(nil, &context)
 			err := tr.cstRootNode.ExecuteBeginBlocks(tr.runtimeState)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				os.Exit(1)
 			}
 			tr.executedBeginBlocks = true
@@ -523,7 +523,7 @@ func (tr *TransformerPut) Transform(
 		// Execute the main block on the current input record
 		outrec, err := tr.cstRootNode.ExecuteMainBlock(tr.runtimeState)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 
@@ -573,7 +573,7 @@ func (tr *TransformerPut) Transform(
 		if !tr.executedBeginBlocks {
 			err := tr.cstRootNode.ExecuteBeginBlocks(tr.runtimeState)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				os.Exit(1)
 			}
 		}
@@ -581,7 +581,7 @@ func (tr *TransformerPut) Transform(
 		// Execute the end { ... } after the last input record
 		err := tr.cstRootNode.ExecuteEndBlocks(tr.runtimeState)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 

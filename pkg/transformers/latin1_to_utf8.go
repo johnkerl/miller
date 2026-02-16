@@ -68,7 +68,7 @@ func transformerLatin1ToUTF8ParseCLI(
 
 	transformer, err := NewTransformerLatin1ToUTF8()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 

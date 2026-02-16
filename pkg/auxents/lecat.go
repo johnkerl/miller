@@ -48,7 +48,7 @@ func lecatMain(args []string) int {
 
 			istream, err := os.Open(filename)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, "mlr lecat:", err)
+				fmt.Fprintf(os.Stderr, "mlr lecat: %v\n", err)
 				os.Exit(1)
 			}
 

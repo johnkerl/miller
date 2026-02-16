@@ -130,7 +130,7 @@ func CompileMillerRegex(regexString string) (*regexp.Regexp, error) {
 func CompileMillerRegexOrDie(regexString string) *regexp.Regexp {
 	regex, err := CompileMillerRegex(regexString)
 	if err != nil {
-		fmt.Fprint(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 	return regex

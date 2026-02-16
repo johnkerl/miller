@@ -41,7 +41,7 @@ func Main() MainReturn {
 
 	options, recordTransformers, err := climain.ParseCommandLine(os.Args)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "mlr:", err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -51,7 +51,7 @@ func Main() MainReturn {
 		err = processFilesInPlace(options)
 	}
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v.\n", err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 

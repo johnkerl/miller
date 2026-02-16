@@ -80,7 +80,7 @@ func transformerLabelParseCLI(
 		newNames,
 	)
 	if err != nil {
-		fmt.Fprint(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 		// TODO: return nil to caller and have it exit, maybe
 	}

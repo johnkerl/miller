@@ -61,7 +61,7 @@ func hexMain(args []string) int {
 			istream, err := os.Open(filename)
 			if err != nil {
 				// TODO: "mlr"
-				fmt.Fprintln(os.Stderr, "mlr hex:", err)
+				fmt.Fprintf(os.Stderr, "mlr hex: %v\n", err)
 				os.Exit(1)
 			}
 
@@ -98,7 +98,7 @@ func hexDumpFile(istream *os.File, doRaw bool) {
 		// exact multiple of our buffer size. We'll break the loop after
 		// hex-dumping this last, partial fragment.
 		if err != nil && err != io.ErrUnexpectedEOF {
-			fmt.Fprintln(os.Stderr, "mlr hex:", err)
+			fmt.Fprintf(os.Stderr, "mlr hex: %v\n", err)
 			os.Exit(1)
 		}
 

@@ -78,7 +78,7 @@ func (writer *RecordWriterJSON) writeWithListWrap(
 		// can place it neatly with commas here (if the user requested them).
 		s, err := outrec.MarshalJSON(writer.jsonFormatting, outputIsStdout)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 
@@ -119,7 +119,7 @@ func (writer *RecordWriterJSON) writeWithoutListWrap(
 	// can place it neatly with commas here (if the user requested them).
 	s, err := outrec.MarshalJSON(writer.jsonFormatting, outputIsStdout)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 

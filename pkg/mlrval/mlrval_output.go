@@ -95,7 +95,7 @@ func (mv *Mlrval) setPrintRep() {
 			bytes, err := mv.MarshalJSON(JSON_MULTILINE, false)
 			// maybe just InternalCodingErrorIf(err != nil)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				os.Exit(1)
 			}
 			mv.printrep = string(bytes)
@@ -104,7 +104,7 @@ func (mv *Mlrval) setPrintRep() {
 			bytes, err := mv.MarshalJSON(JSON_MULTILINE, false)
 			// maybe just InternalCodingErrorIf(err != nil)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				os.Exit(1)
 			}
 			mv.printrep = string(bytes)

@@ -273,7 +273,7 @@ func transformerJoinParseCLI(
 
 	transformer, err := NewTransformerJoin(opts)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -501,7 +501,7 @@ func (tr *TransformerJoin) ingestLeftFile() {
 		select {
 
 		case err := <-errorChannel:
-			fmt.Fprintln(os.Stderr, "mlr", ": ", err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 
 		case leftrecsAndContexts := <-readerChannel:

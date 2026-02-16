@@ -35,7 +35,7 @@ func unhexMain(args []string) int {
 		for _, filename := range args {
 			istream, err := os.Open(filename)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, "mlr unhex:", err)
+				fmt.Fprintf(os.Stderr, "mlr unhex: %v\n", err)
 				os.Exit(1)
 			}
 			unhexFile(istream, os.Stdout)
@@ -62,7 +62,7 @@ func unhexFile(istream *os.File, ostream *os.File) {
 			break
 		}
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "mlr unhex:", err)
+			fmt.Fprintf(os.Stderr, "mlr unhex: %v\n", err)
 			os.Exit(1)
 		}
 
@@ -75,7 +75,7 @@ func unhexFile(istream *os.File, ostream *os.File) {
 			if field != "" {
 				n, err := fmt.Sscanf(field, "%x", &scanValue)
 				if err != nil {
-					fmt.Fprintln(os.Stderr, "mlr unhex:", err)
+					fmt.Fprintf(os.Stderr, "mlr unhex: %v\n", err)
 					os.Exit(1)
 				}
 				if n != 1 {

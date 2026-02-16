@@ -74,7 +74,7 @@ func transformerSortWithinRecordsParseCLI(
 
 	transformer, err := NewTransformerSortWithinRecords(doRecurse)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 

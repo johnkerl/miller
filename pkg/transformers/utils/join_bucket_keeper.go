@@ -164,7 +164,7 @@ func NewJoinBucketKeeper(
 	// Instantiate the record-reader
 	recordReader, err := input.Create(joinReaderOptions, 1) // TODO: maybe increase records per batch
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr join: %v", err)
+		fmt.Fprintf(os.Stderr, "mlr join: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -545,7 +545,7 @@ func (keeper *JoinBucketKeeper) readRecord() *types.RecordAndContext {
 
 	select {
 	case err := <-keeper.errorChannel:
-		fmt.Fprintln(os.Stderr, "mlr", ": ", err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	case leftrecsAndContexts := <-keeper.readerChannel:
 		// TODO: temp

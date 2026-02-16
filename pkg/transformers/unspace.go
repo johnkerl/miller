@@ -83,7 +83,7 @@ func transformerUnspaceParseCLI(
 
 	transformer, err := NewTransformerUnspace(filler, which)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 

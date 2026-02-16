@@ -203,7 +203,7 @@ func (repl *Repl) handleSession(istream *os.File) error {
 			// We need the non-trimmed line here since the DSL syntax for comments is '#.*\n'.
 			err = repl.handleDSLStringImmediate(line, repl.doWarnings)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			}
 		}
 	}
@@ -244,7 +244,7 @@ func (repl *Repl) handleMultiLine(
 		err = repl.handleDSLStringBulk(dslString, repl.doWarnings)
 	}
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 	}
 
 	return nil

@@ -223,7 +223,7 @@ func transformerStepParseCLI(
 		ewmaSuffixes,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 

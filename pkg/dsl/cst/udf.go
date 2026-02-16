@@ -192,7 +192,7 @@ func (site *UDFCallsite) Evaluate(
 		err := udf.signature.typeGatedParameterNames[i].Check(arguments[i])
 		if err != nil {
 			// TODO: put error-return in the Evaluate API
-			fmt.Fprint(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 	}
@@ -236,7 +236,7 @@ func (site *UDFCallsite) EvaluateWithArguments(
 		)
 		// TODO: put error-return in the Evaluate API
 		if err != nil {
-			fmt.Fprint(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 	}
@@ -260,7 +260,7 @@ func (site *UDFCallsite) EvaluateWithArguments(
 	if blockExitPayload == nil {
 		err = udf.signature.typeGatedReturnValue.Check(mlrval.ABSENT)
 		if err != nil {
-			fmt.Fprint(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 		return mlrval.ABSENT.StrictModeCheck(
@@ -275,7 +275,7 @@ func (site *UDFCallsite) EvaluateWithArguments(
 	if blockExitPayload.blockExitStatus != BLOCK_EXIT_RETURN_VALUE {
 		err = udf.signature.typeGatedReturnValue.Check(mlrval.ABSENT)
 		if err != nil {
-			fmt.Fprint(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 		return mlrval.ABSENT.StrictModeCheck(
@@ -291,7 +291,7 @@ func (site *UDFCallsite) EvaluateWithArguments(
 	err = udf.signature.typeGatedReturnValue.Check(blockExitPayload.blockReturnValue)
 	if err != nil {
 		// TODO: put error-return in the Evaluate API
-		fmt.Fprint(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 

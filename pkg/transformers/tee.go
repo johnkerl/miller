@@ -195,7 +195,7 @@ func (tr *TransformerTee) Transform(
 				"%s: error writing to tee \"%s\":\n",
 				"mlr", tr.filenameOrCommandForDisplay,
 			)
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 
@@ -208,7 +208,7 @@ func (tr *TransformerTee) Transform(
 				"%s: error closing tee \"%s\":\n",
 				"mlr", tr.filenameOrCommandForDisplay,
 			)
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)

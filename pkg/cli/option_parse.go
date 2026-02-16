@@ -3344,7 +3344,7 @@ var MiscFlagSection = FlagSection{
 				handle, err := os.Open(fileName)
 				if err != nil {
 					/// XXXX return false
-					fmt.Fprintln(os.Stderr, "mlr", err)
+					fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 					os.Exit(1)
 				}
 				defer handle.Close()
@@ -3363,7 +3363,7 @@ var MiscFlagSection = FlagSection{
 					lineno++
 
 					if err != nil {
-						fmt.Fprintln(os.Stderr, "mlr", err)
+						fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 						os.Exit(1)
 					}
 

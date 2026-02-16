@@ -157,7 +157,7 @@ func channelizedStanzaScanner(
 				done = true
 				break
 			} else {
-				fmt.Fprintf(os.Stderr, "mlr: %#v\n", err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				break
 			}
 		}
