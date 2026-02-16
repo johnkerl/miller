@@ -143,7 +143,7 @@ func transformerStepParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -168,51 +168,67 @@ func transformerStepParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerStepUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-a" {
 			// Let them do '-a delta -a rsum' or '-a delta,rsum'
-			stepperNames := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			stepperNames, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 			for _, stepperName := range stepperNames {
 				stepperInput := stepperInputFromName(stepperName)
 				if stepperInput == nil {
-					fmt.Fprintf(os.Stderr, "mlr %s: stepper \"%s\" not found.\n",
-						verbNameStep, stepperName)
-					os.Exit(1)
+					return nil, cli.VerbErrorf(verb, "stepper \"%s\" not found", stepperName)
 				}
 				stepperInputs = append(stepperInputs, stepperInput)
 			}
 
 		} else if opt == "-f" {
 			// Let them do '-f x -f y' or '-f x,y'
-			valueFieldNames = append(valueFieldNames, cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)...)
+			arr, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			valueFieldNames = append(valueFieldNames, arr...)
 
 		} else if opt == "-g" {
 			// Let them do '-g a -g b' or '-g a,b'
-			groupByFieldNames = append(groupByFieldNames, cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)...)
+			arr, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			groupByFieldNames = append(groupByFieldNames, arr...)
 
 		} else if opt == "-d" {
 			// Let them do '-d 0.8 -d 0.9' or '-d 0.8,0.9'
-			stringAlphas = append(stringAlphas, cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)...)
+			arr, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			stringAlphas = append(stringAlphas, arr...)
 
 		} else if opt == "-o" {
 			// Let them do '-o fast -o slow' or '-o fast,slow'
-			ewmaSuffixes = append(ewmaSuffixes, cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)...)
+			arr, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			ewmaSuffixes = append(ewmaSuffixes, arr...)
 
 		} else if opt == "-F" {
 			// As of Miller 6 this happens automatically, but the flag is accepted
 			// as a no-op for backward compatibility with Miller 5 and below.
 
 		} else {
-			transformerStepUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerStep(
@@ -223,11 +239,10 @@ func transformerStepParseCLI(
 		ewmaSuffixes,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 // This is the "stepper log" referred to in comments at the top of this file.
@@ -436,8 +451,7 @@ func (tr *TransformerStep) handleRecord(
 					tr.ewmaSuffixes,
 				)
 				if stepper == nil {
-					fmt.Fprintf(os.Stderr, "mlr %s: stepper \"%s\" not found.\n",
-						verbNameStep, stepperInput.name)
+					fmt.Fprintf(os.Stderr, "mlr step: stepper allocation failed\n")
 					os.Exit(1)
 				}
 				accFieldToAccState[stepperInput.name] = stepper

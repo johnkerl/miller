@@ -62,14 +62,12 @@ func transformerStats2ParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
-
-	argv0 := "mlr"
 
 	var accumulatorNameList []string = nil
 	var valueFieldNameList []string = nil
@@ -78,6 +76,7 @@ func transformerStats2ParseCLI(
 	doIterativeStats := false
 	doHoldAndFit := false
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -90,16 +89,25 @@ func transformerStats2ParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerStats2Usage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-a" {
-			accumulatorNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			accumulatorNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-f" {
-			valueFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			valueFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-g" {
-			groupByFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-v" {
 			doVerbose = true
@@ -120,34 +128,26 @@ func transformerStats2ParseCLI(
 			// for all applicable stats2 accumulators (i.e. none of them).
 
 		} else {
-			transformerStats2Usage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	if doIterativeStats && doHoldAndFit {
-		transformerStats2Usage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "cannot combine -I and -H")
 	}
 	if accumulatorNameList == nil {
-		fmt.Fprintf(os.Stderr, "%s %s: -a option is required.\n", argv0, verb)
-		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", argv0, verb)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-a option is required")
 	}
 	if valueFieldNameList == nil {
-		fmt.Fprintf(os.Stderr, "%s %s: -f option is required.\n", argv0, verb)
-		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", argv0, verb)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-f option is required")
 	}
 	if len(valueFieldNameList)%2 != 0 {
-		fmt.Fprintf(os.Stderr, "%s %s: argument to -f must have even number of fields.\n", argv0, verb)
-		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", argv0, verb)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "argument to -f must have even number of fields")
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerStats2(
@@ -159,11 +159,10 @@ func transformerStats2ParseCLI(
 		doHoldAndFit,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerStats2 struct {
@@ -348,9 +347,7 @@ func (tr *TransformerStats2) ingest(
 					tr.doVerbose,
 				)
 				if accumulator == nil {
-					fmt.Fprintf(os.Stderr, "%s %s: accumulator \"%s\" not found.\n",
-						"mlr", verbNameStats2, accumulatorName,
-					)
+					fmt.Fprintf(os.Stderr, "mlr stats2: accumulator creation failed\n")
 					os.Exit(1)
 				}
 				valueFieldsToAccumulator.Put(accumulatorName, accumulator)

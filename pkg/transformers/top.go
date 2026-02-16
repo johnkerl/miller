@@ -52,7 +52,7 @@ func transformerTopParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -67,6 +67,7 @@ func transformerTopParseCLI(
 	doMax := true
 	outputFieldName := verbTopDefaultOutputFieldName
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -79,14 +80,23 @@ func transformerTopParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerTopUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-n" {
-			topCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			topCount, err = cli.VerbGetIntArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 		} else if opt == "-f" {
-			valueFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			valueFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 		} else if opt == "-g" {
-			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 		} else if opt == "-a" {
 			showFullRecords = true
 		} else if opt == "--max" {
@@ -96,26 +106,26 @@ func transformerTopParseCLI(
 		} else if opt == "-F" {
 			// Ignored in Miller 6; allowed for command-line backward compatibility
 		} else if opt == "-o" {
-			outputFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			outputFieldName, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else {
-			transformerTopUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	if valueFieldNames == nil {
-		transformerTopUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-f field names required")
 	}
 	if len(valueFieldNames) > 1 && showFullRecords {
-		transformerTopUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-a (full records) incompatible with multiple -f fields")
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, _ := NewTransformerTop(
@@ -127,7 +137,7 @@ func transformerTopParseCLI(
 		outputFieldName,
 	)
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerTop struct {

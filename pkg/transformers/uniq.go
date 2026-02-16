@@ -57,7 +57,7 @@ func transformerCountDistinctParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -71,6 +71,7 @@ func transformerCountDistinctParseCLI(
 	outputFieldName := uniqDefaultOutputFieldName
 	doLashed := true
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -83,37 +84,43 @@ func transformerCountDistinctParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerCountDistinctUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-g" || opt == "-f" {
-			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-x" {
-			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			invertFieldNames = true
 
 		} else if opt == "-n" {
 			showNumDistinctOnly = true
 
 		} else if opt == "-o" {
-			outputFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			outputFieldName, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-u" {
 			doLashed = false
 
 		} else {
-			transformerCountDistinctUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	if fieldNames == nil {
-		transformerCountDistinctUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-g or -x field names required")
 	}
 	if !doLashed && showNumDistinctOnly {
-		transformerCountDistinctUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-n requires -a (uniqify entire records)")
 	}
 
 	showCounts := true
@@ -121,7 +128,7 @@ func transformerCountDistinctParseCLI(
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerUniq(
@@ -134,11 +141,10 @@ func transformerCountDistinctParseCLI(
 		uniqifyEntireRecords,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 func transformerUniqUsage(
@@ -168,7 +174,7 @@ func transformerUniqParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -183,6 +189,7 @@ func transformerUniqParseCLI(
 	outputFieldName := uniqDefaultOutputFieldName
 	uniqifyEntireRecords := false
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -195,13 +202,19 @@ func transformerUniqParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerUniqUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-g" || opt == "-f" {
-			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-x" {
-			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			invertFieldNames = true
 
 		} else if opt == "-c" {
@@ -211,30 +224,29 @@ func transformerUniqParseCLI(
 			showNumDistinctOnly = true
 
 		} else if opt == "-o" {
-			outputFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			outputFieldName, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-a" {
 			uniqifyEntireRecords = true
 
 		} else {
-			transformerUniqUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	if uniqifyEntireRecords {
 		if fieldNames != nil {
-			transformerUniqUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "-a (uniqify entire records) is incompatible with -g/-x")
 		}
 		if showCounts && showNumDistinctOnly {
-			transformerUniqUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "-c and -n are mutually exclusive with -a")
 		}
 	} else {
 		if fieldNames == nil {
-			transformerUniqUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "-g or -x field names required")
 		}
 	}
 
@@ -242,7 +254,7 @@ func transformerUniqParseCLI(
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, _ := NewTransformerUniq(
@@ -255,7 +267,7 @@ func transformerUniqParseCLI(
 		uniqifyEntireRecords,
 	)
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerUniq struct {

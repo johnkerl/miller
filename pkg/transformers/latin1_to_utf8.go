@@ -36,7 +36,7 @@ func transformerLatin1ToUTF8ParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -54,25 +54,23 @@ func transformerLatin1ToUTF8ParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerLatin1ToUTF8Usage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		}
-		transformerLatin1ToUTF8Usage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verbNameLatin1ToUTF8, "option \"%s\" not recognized", opt)
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerLatin1ToUTF8()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerLatin1ToUTF8 struct {

@@ -94,7 +94,7 @@ func transformerNestParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -127,14 +127,22 @@ func transformerNestParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerNestUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-f" {
-			fieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			fieldName = s
 
 		} else if opt == "-r" {
 			doRegexes = true
-			fieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			fieldName = s
 
 		} else if opt == "--explode" || opt == "-e" {
 			doExplode = true
@@ -158,12 +166,24 @@ func transformerNestParseCLI(
 			doAcrossFieldsSpecified = true
 
 		} else if opt == "--nested-fs" || opt == "-S" {
-			nestedFS = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			nestedFS = s
 		} else if opt == "--nested-ps" || opt == "-P" {
-			nestedPS = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			nestedPS = s
 
 		} else if opt == "--evar" {
-			evfs = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			evfs = s
 			doExplode = true
 			doExplodeSpecified = true
 			doPairs = false
@@ -172,7 +192,11 @@ func transformerNestParseCLI(
 			doAcrossFieldsSpecified = true
 
 		} else if opt == "--ivar" {
-			ivfs = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			ivfs = s
 			doExplode = false
 			doExplodeSpecified = true
 			doPairs = false
@@ -182,7 +206,7 @@ func transformerNestParseCLI(
 
 		} else {
 			transformerNestUsage(os.Stderr)
-			os.Exit(1)
+			return nil, fmt.Errorf("%s %s: option \"%s\" not recognized", "mlr", verb, opt)
 		}
 	}
 
@@ -201,32 +225,31 @@ func transformerNestParseCLI(
 
 	if fieldName == "" {
 		transformerNestUsage(os.Stderr)
-		os.Exit(1)
+		return nil, fmt.Errorf("%s %s: -f or -r is required", "mlr", verb)
 	}
 	if !doExplodeSpecified {
 		transformerNestUsage(os.Stderr)
-		os.Exit(1)
+		return nil, fmt.Errorf("%s %s: --explode or --implode is required", "mlr", verb)
 	}
 	if !doPairsSpecified {
 		transformerNestUsage(os.Stderr)
-		os.Exit(1)
+		return nil, fmt.Errorf("%s %s: --values or --pairs is required", "mlr", verb)
 	}
 	if !doAcrossFieldsSpecified {
 		transformerNestUsage(os.Stderr)
-		os.Exit(1)
+		return nil, fmt.Errorf("%s %s: --across-records or --across-fields is required", "mlr", verb)
 	}
 	if doPairs && !doExplode {
 		transformerNestUsage(os.Stderr)
-		os.Exit(1)
+		return nil, fmt.Errorf("%s %s: --implode with --pairs doesn't make sense", "mlr", verb)
 	}
 	if doRegexes && !doExplode {
-		fmt.Fprintf(os.Stderr, "mlr nest: -r is only supported with --explode, not --implode.\n")
-		os.Exit(1)
+		return nil, fmt.Errorf("mlr nest: -r is only supported with --explode, not --implode")
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerNest(
@@ -239,11 +262,10 @@ func transformerNestParseCLI(
 		doAcrossFields,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerNest struct {

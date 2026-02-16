@@ -69,6 +69,7 @@
 package climain
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -205,16 +206,24 @@ func parseCommandLinePassOne(
 				os.Exit(1)
 			}
 
-			// It's up to the parse func to print its usage, and exit 1, on
-			// CLI-parse failure.  Also note: this assumes main reader/writer opts
-			// are all parsed *before* transformer parse-CLI methods are invoked.
-			transformer := transformerSetup.ParseCLIFunc(
+			// ParseCLIFunc returns (nil, nil) on pass-one success, (nil, err) on failure.
+			transformer, err := transformerSetup.ParseCLIFunc(
 				&argi,
 				argc,
 				args,
 				options,
 				false, // false for first pass of CLI-parse, true for second pass -- this is the first pass
 			)
+			if err != nil {
+				if errors.Is(err, cli.ErrHelpRequested) {
+					os.Exit(0)
+				}
+				if errors.Is(err, cli.ErrUsagePrinted) {
+					os.Exit(1)
+				}
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+				os.Exit(1)
+			}
 			// For pass one we want the verbs to identify the arg-sequences
 			// they own within the command line, but not construct
 			// transformers.
@@ -348,15 +357,22 @@ func parseCommandLinePassTwo(
 		transformerSetup := transformers.LookUp(args[0])
 		lib.InternalCodingErrorIf(transformerSetup == nil)
 
-		// It's up to the parse func to print its usage, and exit 1, on
-		// CLI-parse failure.
-		transformer := transformerSetup.ParseCLIFunc(
+		transformer, err := transformerSetup.ParseCLIFunc(
 			&argi,
 			argc,
 			args,
 			options,
-			true, // false for first pass of CLI-parse, true for second pass -- this is the first pass
+			true, // false for first pass of CLI-parse, true for second pass -- this is pass two
 		)
+		if err != nil {
+			if errors.Is(err, cli.ErrHelpRequested) {
+				os.Exit(0)
+			}
+			if errors.Is(err, cli.ErrUsagePrinted) {
+				os.Exit(1)
+			}
+			return nil, nil, err
+		}
 		// Unparsable verb-setups should have been found in pass one.
 		lib.InternalCodingErrorIf(transformer == nil)
 		// Make sure we consumed the entire verb sequence as parsed by pass one.

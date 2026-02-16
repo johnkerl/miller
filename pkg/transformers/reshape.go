@@ -120,7 +120,7 @@ func transformerReshapeParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) RecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -133,6 +133,7 @@ func transformerReshapeParseCLI(
 	var outputFieldNames []string = nil
 	var splitOutFieldNames []string = nil
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -145,24 +146,35 @@ func transformerReshapeParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerReshapeUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-i" {
-			inputFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			inputFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 		} else if opt == "-r" {
-			inputFieldRegexString := cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			inputFieldRegexString, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			if inputFieldRegexStrings == nil {
 				inputFieldRegexStrings = []string{}
 			}
 			inputFieldRegexStrings = append(inputFieldRegexStrings, inputFieldRegexString)
 		} else if opt == "-o" {
-			outputFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			outputFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 		} else if opt == "-s" {
-			splitOutFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			splitOutFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else {
-			transformerReshapeUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
@@ -174,25 +186,21 @@ func transformerReshapeParseCLI(
 	if splitOutFieldNames == nil {
 		// wide to long
 		if inputFieldNames == nil && inputFieldRegexStrings == nil {
-			transformerReshapeUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "-i or -r is required for wide-to-long")
 		}
 
 		if outputFieldNames == nil {
-			transformerReshapeUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "-o is required for wide-to-long")
 		}
 		if len(outputFieldNames) != 2 {
-			transformerReshapeUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "-o must have exactly 2 field names for wide-to-long")
 		}
 		outputKeyFieldName = outputFieldNames[0]
 		outputValueFieldName = outputFieldNames[1]
 	} else {
 		// long to wide
 		if len(splitOutFieldNames) != 2 {
-			transformerReshapeUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "-s must have exactly 2 field names for long-to-wide")
 		}
 		splitOutKeyFieldName = splitOutFieldNames[0]
 		splitOutValueFieldName = splitOutFieldNames[1]
@@ -200,7 +208,7 @@ func transformerReshapeParseCLI(
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerReshape(
@@ -212,11 +220,10 @@ func transformerReshapeParseCLI(
 		splitOutValueFieldName,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerReshape struct {
