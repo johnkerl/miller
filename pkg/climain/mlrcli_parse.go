@@ -87,7 +87,7 @@ func ParseCommandLine(
 	args []string,
 ) (
 	options *cli.TOptions,
-	recordTransformers []transformers.IRecordTransformer,
+	recordTransformers []transformers.RecordTransformer,
 	err error,
 ) {
 	// mlr -s scriptfile {data-file names ...} means take the contents of
@@ -253,7 +253,7 @@ func parseCommandLinePassTwo(
 	dataFileNames []string,
 ) (
 	options *cli.TOptions,
-	recordTransformers []transformers.IRecordTransformer,
+	recordTransformers []transformers.RecordTransformer,
 	err error,
 ) {
 	// Options take in-code defaults, then overridden by .mlrrc (if any and if
@@ -273,7 +273,7 @@ func parseCommandLinePassTwo(
 		options.WriterOptions.FailOnDataError = true
 	}
 
-	recordTransformers = make([]transformers.IRecordTransformer, 0)
+	recordTransformers = make([]transformers.RecordTransformer, 0)
 	err = nil
 	ignoresInput := false
 

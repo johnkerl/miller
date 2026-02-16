@@ -63,7 +63,7 @@ func transformerRepeatParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	repeatCountSource := repeatCountSourceUnspecified
 	repeatCount := int64(0)

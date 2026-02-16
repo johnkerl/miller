@@ -44,7 +44,7 @@ func transformerCleanWhitespaceParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	doKeys := true
 	doValues := true

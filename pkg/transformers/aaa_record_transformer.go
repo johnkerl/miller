@@ -7,10 +7,10 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// IRecordTransformer is the interface satisfied by all transformers, i.e.,
+// RecordTransformer is the interface satisfied by all transformers, i.e.,
 // Miller verbs. See stream.go for context on the channels, as well as for
 // context on end-of-record-stream signaling.
-type IRecordTransformer interface {
+type RecordTransformer interface {
 	Transform(
 		inrecAndContext *types.RecordAndContext,
 		outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -42,7 +42,7 @@ type TransformerParseCLIFunc func(
 	args []string,
 	mainOptions *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer
+) RecordTransformer
 
 type TransformerSetup struct {
 	Verb         string

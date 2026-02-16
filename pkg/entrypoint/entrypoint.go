@@ -64,7 +64,7 @@ func Main() MainReturn {
 
 func processToStdout(
 	options *cli.TOptions,
-	recordTransformers []transformers.IRecordTransformer,
+	recordTransformers []transformers.RecordTransformer,
 ) error {
 	return stream.Stream(options.FileNames, options, recordTransformers, os.Stdout, true)
 }

@@ -138,7 +138,7 @@ import (
 func ChainTransformer(
 	readerRecordChannel <-chan []*types.RecordAndContext, // list of *types.RecordAndContext
 	readerDownstreamDoneChannel chan<- bool, // for mlr head -- see also stream.go
-	recordTransformers []IRecordTransformer, // not *recordTransformer since this is an interface
+	recordTransformers []RecordTransformer, // not *recordTransformer since this is an interface
 	writerRecordChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	options *cli.TOptions,
 ) {
@@ -190,7 +190,7 @@ func ChainTransformer(
 }
 
 func runSingleTransformer(
-	recordTransformer IRecordTransformer,
+	recordTransformer RecordTransformer,
 	isFirstInChain bool,
 	inputRecordChannel <-chan []*types.RecordAndContext, // list of *types.RecordAndContext
 	outputRecordChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
@@ -218,7 +218,7 @@ func runSingleTransformer(
 // Returns true on end of record stream
 func runSingleTransformerBatch(
 	inputRecordsAndContexts []*types.RecordAndContext, // list of types.RecordAndContext
-	recordTransformer IRecordTransformer,
+	recordTransformer RecordTransformer,
 	isFirstInChain bool,
 	outputRecordChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,

@@ -61,7 +61,7 @@ func transformerHavingFieldsParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) RecordTransformer {
 
 	havingFieldsCriterion := havingFieldsCriterionUnspecified
 	var fieldNames []string = nil
