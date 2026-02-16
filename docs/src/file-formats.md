@@ -222,7 +222,7 @@ a,b,c
 1,2,3
 4,5,6
 mlr: CSV schema change: first keys "a,b,c"; current keys "a,X,c"
-mlr: exiting due to data error.
+mlr: exiting due to data error
 </pre>
 
 * In short, use-cases for CSV-lite and TSV-lite are often found when dealing with CSV/TSV files which are formatted in some non-standard way -- you have a little more flexibility available to you. (As an example of this flexibility: ASV and USV are nothing more than CSV-lite with different values for FS and RS.)

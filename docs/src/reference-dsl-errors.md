@@ -56,7 +56,7 @@ x,y
 3,0.4771212547196624
 mlr: data error at NR=4 FNR=4 FILENAME=data-error.csv
 mlr: field y: log10: unacceptable type string with value "text"
-mlr: exiting due to data error.
+mlr: exiting due to data error
 </pre>
 
 The second is to put `-x` into your [`~/.mlrrc` file](customization.md).
