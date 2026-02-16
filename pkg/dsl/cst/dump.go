@@ -111,7 +111,7 @@ func (root *RootNode) buildDumpxStatementNode(
 		lib.InternalCodingErrorIf(redirectorNode.Children == nil)
 		lib.InternalCodingErrorIf(len(redirectorNode.Children) != 1)
 		redirectorTargetNode := redirectorNode.Children[0]
-		var err error = nil
+		var err error
 
 		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
 			retval.dumpToRedirectFunc = retval.dumpToStdout

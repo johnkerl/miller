@@ -813,7 +813,7 @@ func (node *LocalVariableLvalueNode) AssignIndexed(
 ) error {
 	// AssignmentNode checks for absent, so we just assign whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
-	var err error = nil
+	var err error
 	if indices == nil {
 		if node.defineTypedAtScope {
 			err = state.Stack.DefineTypedAtScope(node.stackVariable, node.typeName, rvalue)
@@ -868,7 +868,7 @@ func (root *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable,
 
 	var baseLvalue IAssignable = nil
 	indexEvaluables := make([]IEvaluable, 0)
-	var err error = nil
+	var err error
 
 	// $ mlr -n put -v '$x[1][2]=3'
 	// DSL EXPRESSION:

@@ -601,7 +601,7 @@ func (root *RootNode) BuildVariadicFunctionCallsiteNode(
 		}
 	}
 
-	var err error = nil
+	var err error
 	for i, astChildNode := range astNode.Children {
 		evaluables[i], err = root.BuildEvaluableNode(astChildNode)
 		if err != nil {
@@ -658,7 +658,7 @@ func (root *RootNode) BuildVariadicFunctionWithStateCallsiteNode(
 		}
 	}
 
-	var err error = nil
+	var err error
 	for i, astChildNode := range astNode.Children {
 		evaluables[i], err = root.BuildEvaluableNode(astChildNode)
 		if err != nil {

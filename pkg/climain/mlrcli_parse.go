@@ -274,7 +274,6 @@ func parseCommandLinePassTwo(
 	}
 
 	recordTransformers = make([]transformers.RecordTransformer, 0)
-	err = nil
 	ignoresInput := false
 
 	// Load a .mlrrc file unless --norc was a main-flag on the command line.

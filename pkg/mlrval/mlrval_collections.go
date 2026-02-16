@@ -298,7 +298,7 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 		// Create a new level in order to recurse from
 		nextIndex := indices[1]
 
-		var err error = nil
+		var err error
 		baseValue, err = NewMlrvalForAutoDeepen(nextIndex.Type())
 		if err != nil {
 			return err

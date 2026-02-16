@@ -237,7 +237,7 @@ func (repl *Repl) handleMultiLine(
 	}
 	dslString := buffer.String()
 
-	var err error = nil
+	var err error
 	if doImmediate {
 		err = repl.handleDSLStringImmediate(dslString, repl.doWarnings)
 	} else {

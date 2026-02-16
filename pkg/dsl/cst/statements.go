@@ -14,7 +14,7 @@ func (root *RootNode) BuildStatementNode(
 ) (IExecutable, error) {
 
 	var statement IExecutable = nil
-	var err error = nil
+	var err error
 	switch astNode.Type {
 
 	case dsl.NodeTypeAssignment:

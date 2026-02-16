@@ -90,7 +90,7 @@ func (root *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable
 		lib.InternalCodingErrorIf(redirectorNode.Children == nil)
 		lib.InternalCodingErrorIf(len(redirectorNode.Children) != 1)
 		redirectorTargetNode := redirectorNode.Children[0]
-		var err error = nil
+		var err error
 
 		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
 			retval.emitfToRedirectFunc = retval.emitfToFileOrPipe

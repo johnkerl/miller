@@ -278,7 +278,7 @@ func handleRead(repl *Repl, args []string) bool {
 	}
 
 	var recordsAndContexts []*types.RecordAndContext // list of *types.RecordAndContext
-	var err error = nil
+	var err error
 
 	select {
 	case recordsAndContexts = <-repl.readerChannel:
@@ -420,7 +420,7 @@ func handleProcess(repl *Repl, args []string) bool {
 
 func handleSkipOrProcessN(repl *Repl, n int64, processingNotSkipping bool) {
 	var recordsAndContexts []*types.RecordAndContext // list of *types.RecordAndContext
-	var err error = nil
+	var err error
 
 	for i := int64(1); i <= n; i++ {
 		select {

@@ -72,9 +72,6 @@ func (root *RootNode) Build(
 	doWarnings bool,
 	astBuildVisitorFunc ASTBuildVisitorFunc,
 ) (hadWarnings bool, err error) {
-	hadWarnings = false
-	err = nil
-
 	for _, dslString := range dslStrings {
 		astRootNode, err := buildASTFromStringWithMessage(dslString)
 		if err != nil {
@@ -152,9 +149,6 @@ func (root *RootNode) IngestAST(
 	isReplImmediate bool,
 	doWarnings bool,
 ) (hadWarnings bool, err error) {
-	hadWarnings = false
-	err = nil
-
 	if ast.RootNode == nil {
 		return hadWarnings, errors.New("cannot build CST from nil AST root")
 	}
