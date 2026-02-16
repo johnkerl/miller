@@ -99,9 +99,9 @@ func transformerStats1ParseCLI(
 	verb := args[argi]
 	argi++
 
-	accumulatorNameList := make([]string, 0)
-	valueFieldNameList := make([]string, 0)
-	groupByFieldNameList := make([]string, 0)
+	accumulatorNameList := []string{}
+	valueFieldNameList := []string{}
+	groupByFieldNameList := []string{}
 
 	doRegexValueFieldNames := false
 	doRegexGroupByFieldNames := false

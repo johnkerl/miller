@@ -321,7 +321,7 @@ func FromSingletonArray(element *Mlrval) *Mlrval {
 }
 
 func FromEmptyArray() *Mlrval {
-	return FromArray(make([]*Mlrval, 0))
+	return FromArray([]*Mlrval{})
 }
 
 func FromMap(mapval *Mlrmap) *Mlrval {

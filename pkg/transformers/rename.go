@@ -161,7 +161,7 @@ func NewTransformerRename(
 		tr.doGsub = false
 		tr.recordTransformerFunc = tr.transformWithoutRegexes
 	} else {
-		tr.regexesAndReplacements = make([]*tRegexAndReplacement, 0)
+		tr.regexesAndReplacements = []*tRegexAndReplacement{}
 		for pe := oldToNewNames.Head; pe != nil; pe = pe.Next {
 			regexString := pe.Key
 			regex := lib.CompileMillerRegexOrDie(regexString)

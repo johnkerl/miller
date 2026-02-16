@@ -326,7 +326,7 @@ func NewTransformerJoin(
 	if opts.allowUnsortedInput {
 		// Half-streaming (default) case: ingest entire left file first.
 
-		tr.leftUnpairableRecordsAndContexts = make([]*types.RecordAndContext, 0)
+		tr.leftUnpairableRecordsAndContexts = []*types.RecordAndContext{}
 		tr.leftBucketsByJoinFieldValues = lib.NewOrderedMap[*utils.JoinBucket]()
 		tr.recordTransformerFunc = tr.transformHalfStreaming
 

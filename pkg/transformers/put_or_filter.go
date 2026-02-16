@@ -191,7 +191,7 @@ func transformerPutOrFilterParseCLI(
 	verb := args[argi]
 	argi++
 
-	var dslStrings []string = make([]string, 0)
+	var dslStrings []string = []string{}
 	haveDSLStringsHere := false
 	echoDSLString := false
 	printASTAsTree := false
@@ -203,7 +203,7 @@ func transformerPutOrFilterParseCLI(
 	strictMode := false
 	invertFilter := false
 	suppressOutputRecord := false
-	presets := make([]string, 0)
+	presets := []string{}
 
 	// TODO: make sure this is a full nested-struct copy.
 	var options *cli.TOptions = nil

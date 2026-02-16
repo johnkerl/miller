@@ -128,8 +128,8 @@ func NewRegTester(
 		directoryFailCount: 0,
 		casePassCount:      0,
 		caseFailCount:      0,
-		failDirNames:       make([]string, 0),
-		failCaseNames:      make([]string, 0),
+		failDirNames:       []string{},
+		failCaseNames:      []string{},
 		firstNFailsToShow:  firstNFailsToShow,
 	}
 }
@@ -853,7 +853,7 @@ func (regtester *RegTester) loadStringPairFile(
 	filename string,
 	caseDir string,
 ) ([]stringPair, error) {
-	pairs := make([]stringPair, 0)
+	pairs := []stringPair{}
 	// If the file doesn't exist that's the normal case -- most cases do not
 	// have a .precopy or .postcmp file.
 	_, err := os.Stat(filename)
@@ -867,7 +867,7 @@ func (regtester *RegTester) loadStringPairFile(
 		return nil, err
 	}
 
-	pairs = make([]stringPair, 0)
+	pairs = []stringPair{}
 	lines := strings.Split(contents, "\n")
 	for _, line := range lines {
 		line = strings.TrimSuffix(line, "\r")

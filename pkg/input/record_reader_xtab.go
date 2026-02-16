@@ -38,8 +38,8 @@ type tStanza struct {
 
 func newStanza() *tStanza {
 	return &tStanza{
-		dataLines:    make([]string, 0),
-		commentLines: make([]string, 0),
+		dataLines:    []string{},
+		commentLines: []string{},
 	}
 }
 
@@ -238,7 +238,7 @@ func (reader *RecordReaderXTAB) getRecordBatch(
 	recordsAndContexts []*types.RecordAndContext,
 	eof bool,
 ) {
-	recordsAndContexts = make([]*types.RecordAndContext, 0)
+	recordsAndContexts = []*types.RecordAndContext{}
 
 	stanzas, more := <-stanzasChannel
 	if !more {

@@ -27,16 +27,16 @@ func NewEmptyRoot(
 	dslInstanceType DSLInstanceType, // mlr put, mlr filter, or mlr repl
 ) *RootNode {
 	return &RootNode{
-		beginBlocks:                   make([]*StatementBlockNode, 0),
+		beginBlocks:                   []*StatementBlockNode{},
 		mainBlock:                     NewStatementBlockNode(),
 		replImmediateBlock:            NewStatementBlockNode(),
-		endBlocks:                     make([]*StatementBlockNode, 0),
+		endBlocks:                     []*StatementBlockNode{},
 		udfManager:                    NewUDFManager(),
 		udsManager:                    NewUDSManager(),
 		allowUDFUDSRedefinitions:      false,
-		unresolvedFunctionCallsites:   make([]*UDFCallsite, 0),
-		unresolvedSubroutineCallsites: make([]*UDSCallsite, 0),
-		outputHandlerManagers:         make([]output.OutputHandlerManager, 0),
+		unresolvedFunctionCallsites:   []*UDFCallsite{},
+		unresolvedSubroutineCallsites: []*UDSCallsite{},
+		outputHandlerManagers:         []output.OutputHandlerManager{},
 		recordWriterOptions:           recordWriterOptions,
 		dslInstanceType:               dslInstanceType,
 	}
@@ -480,8 +480,8 @@ func (root *RootNode) ExecuteREPLImmediate(state *runtime.State) (outrec *mlrval
 // This is the 'and then discarded' part of that.
 func (root *RootNode) ResetForREPL() {
 	root.replImmediateBlock = NewStatementBlockNode()
-	root.unresolvedFunctionCallsites = make([]*UDFCallsite, 0)
-	root.unresolvedSubroutineCallsites = make([]*UDSCallsite, 0)
+	root.unresolvedFunctionCallsites = []*UDFCallsite{}
+	root.unresolvedSubroutineCallsites = []*UDSCallsite{}
 }
 
 // This is for the REPL's context-printer command.
@@ -493,15 +493,15 @@ func (root *RootNode) ShowBlockReport() {
 
 // This is for the REPL's resetblocks command.
 func (root *RootNode) ResetBeginBlocksForREPL() {
-	root.beginBlocks = make([]*StatementBlockNode, 0)
+	root.beginBlocks = []*StatementBlockNode{}
 }
 
 // This is for the REPL's resetblocks command.
 func (root *RootNode) ResetMainBlockForREPL() {
-	root.mainBlock.executables = make([]IExecutable, 0)
+	root.mainBlock.executables = []IExecutable{}
 }
 
 // This is for the REPL's resetblocks command.
 func (root *RootNode) ResetEndBlocksForREPL() {
-	root.endBlocks = make([]*StatementBlockNode, 0)
+	root.endBlocks = []*StatementBlockNode{}
 }

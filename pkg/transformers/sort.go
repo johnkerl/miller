@@ -102,8 +102,8 @@ func transformerSortParseCLI(
 	verb := args[argi]
 	argi++
 
-	groupByFieldNames := make([]string, 0)
-	comparatorFuncs := make([]mlrval.CmpFuncInt, 0)
+	groupByFieldNames := []string{}
+	comparatorFuncs := []mlrval.CmpFuncInt{}
 	doMoveToHead := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -328,7 +328,7 @@ func NewTransformerSort(
 
 		recordListsByGroup: lib.NewOrderedMap[*[]*types.RecordAndContext](),
 		groupHeads:         lib.NewOrderedMap[[]*mlrval.Mlrval](),
-		spillGroup:         make([]*types.RecordAndContext, 0),
+		spillGroup:         []*types.RecordAndContext{},
 	}
 
 	return tr, nil
@@ -366,7 +366,7 @@ func (tr *TransformerSort) Transform(
 
 		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
 		if recordListForGroup == nil {
-			records := make([]*types.RecordAndContext, 0)
+			records := []*types.RecordAndContext{}
 			recordListForGroup = &records
 			tr.recordListsByGroup.Put(groupingKey, recordListForGroup)
 			tr.groupHeads.Put(groupingKey, selectedValues)

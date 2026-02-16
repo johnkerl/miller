@@ -122,7 +122,7 @@ func NewTransformerUnsparsify(
 
 	tr := &TransformerUnsparsify{
 		fillerMlrval:       mlrval.FromString(fillerString),
-		recordsAndContexts: make([]*types.RecordAndContext, 0),
+		recordsAndContexts: []*types.RecordAndContext{},
 		fieldNamesSeen:     fieldNamesSeen,
 	}
 

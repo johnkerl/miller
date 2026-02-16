@@ -11,7 +11,7 @@ import (
 
 func NewStatementBlockNode() *StatementBlockNode {
 	return &StatementBlockNode{
-		executables: make([]IExecutable, 0),
+		executables: []IExecutable{},
 	}
 }
 

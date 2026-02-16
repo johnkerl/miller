@@ -198,7 +198,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 	recordsAndContexts []*types.RecordAndContext,
 	eof bool,
 ) {
-	recordsAndContexts = make([]*types.RecordAndContext, 0)
+	recordsAndContexts = []*types.RecordAndContext{}
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	csvRecords, more := <-csvRecordsChannel

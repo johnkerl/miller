@@ -94,7 +94,7 @@ type TransformerBootstrap struct {
 
 func NewTransformerBootstrap(nout int64) (*TransformerBootstrap, error) {
 	tr := &TransformerBootstrap{
-		recordsAndContexts: make([]*types.RecordAndContext, 0),
+		recordsAndContexts: []*types.RecordAndContext{},
 		nout:               nout,
 	}
 	return tr, nil

@@ -122,7 +122,7 @@ func (tr *TransformerGroupBy) Transform(
 
 		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
 		if recordListForGroup == nil {
-			records := make([]*types.RecordAndContext, 0)
+			records := []*types.RecordAndContext{}
 			recordListForGroup = &records
 			tr.recordListsByGroup.Put(groupingKey, recordListForGroup)
 		}

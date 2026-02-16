@@ -80,7 +80,7 @@ type TransformerRemoveEmptyColumns struct {
 
 func NewTransformerRemoveEmptyColumns() (*TransformerRemoveEmptyColumns, error) {
 	tr := &TransformerRemoveEmptyColumns{
-		recordsAndContexts:      make([]*types.RecordAndContext, 0),
+		recordsAndContexts:      []*types.RecordAndContext{},
 		namesWithNonEmptyValues: make(map[string]bool),
 	}
 	return tr, nil

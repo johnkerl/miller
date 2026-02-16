@@ -78,7 +78,7 @@ type TransformerTac struct {
 
 func NewTransformerTac() (*TransformerTac, error) {
 	return &TransformerTac{
-		recordsAndContexts: make([]*types.RecordAndContext, 0),
+		recordsAndContexts: []*types.RecordAndContext{},
 	}, nil
 }
 

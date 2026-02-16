@@ -255,7 +255,7 @@ func unflattenTerminal(input *Mlrval) *Mlrval {
 		return FromMap(NewMlrmap())
 	}
 	if input.printrep == "[]" {
-		return FromArray(make([]*Mlrval, 0))
+		return FromArray([]*Mlrval{})
 	}
 	return input
 }

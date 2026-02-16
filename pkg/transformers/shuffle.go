@@ -83,7 +83,7 @@ type TransformerShuffle struct {
 func NewTransformerShuffle() (*TransformerShuffle, error) {
 
 	tr := &TransformerShuffle{
-		recordsAndContexts: make([]*types.RecordAndContext, 0),
+		recordsAndContexts: []*types.RecordAndContext{},
 	}
 
 	return tr, nil

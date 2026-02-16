@@ -32,7 +32,7 @@ func Plural(n int) string {
 // but "" splits to [""] when I wish it were []. This function does the latter.
 func SplitString(input string, separator string) []string {
 	if input == "" {
-		return make([]string, 0)
+		return []string{}
 	}
 	return strings.Split(input, separator)
 }

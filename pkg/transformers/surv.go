@@ -104,8 +104,8 @@ func NewTransformerSurv(durationField, statusField string) RecordTransformer {
 	return &TransformerSurv{
 		durationField: durationField,
 		statusField:   statusField,
-		times:         make([]float64, 0),
-		events:        make([]bool, 0),
+		times:         []float64{},
+		events:        []bool{},
 	}
 }
 

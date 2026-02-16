@@ -168,7 +168,7 @@ func getRecordBatchExplicitCSVHeader(
 	recordsAndContexts []*types.RecordAndContext,
 	eof bool,
 ) {
-	recordsAndContexts = make([]*types.RecordAndContext, 0)
+	recordsAndContexts = []*types.RecordAndContext{}
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	lines, more := <-linesChannel
@@ -290,7 +290,7 @@ func getRecordBatchImplicitCSVHeader(
 	recordsAndContexts []*types.RecordAndContext,
 	eof bool,
 ) {
-	recordsAndContexts = make([]*types.RecordAndContext, 0)
+	recordsAndContexts = []*types.RecordAndContext{}
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	lines, more := <-linesChannel

@@ -45,7 +45,7 @@ func LoadStringFromFile(filename string) (string, error) {
 // will load /u/myfiles/foo.mlr and /u/myfiles/bar.mlr but will skip over
 // /u/myfiles/data.csv and /u/myfiles/todo.txt.
 func LoadStringsFromDir(dirname string, extension string) ([]string, error) {
-	dslStrings := make([]string, 0)
+	dslStrings := []string{}
 
 	f, err := os.Open(dirname)
 	if err != nil {

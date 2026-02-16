@@ -2582,7 +2582,7 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionClasses() {
 
 func (manager *BuiltinFunctionManager) getBuiltinFunctionClasses() []string {
 	classesSeen := make(map[string]bool)
-	classesList := make([]string, 0)
+	classesList := []string{}
 	for _, builtinFunctionInfo := range *manager.lookupTable {
 		class := string(builtinFunctionInfo.class)
 		if !classesSeen[class] {
@@ -2712,7 +2712,7 @@ func (manager *BuiltinFunctionManager) showSingleUsage(
 
 func describeNargs(info *BuiltinFunctionInfo) string {
 	if info.hasMultipleArities {
-		pieces := make([]string, 0)
+		pieces := []string{}
 		if info.zaryFunc != nil {
 			pieces = append(pieces, "0")
 		}

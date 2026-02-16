@@ -179,7 +179,7 @@ func transformerSummaryParseCLI(
 				excludeSummarizerNamesSet[excludeSummarizerName] = true
 			}
 
-			summarizerNames = make([]string, 0)
+			summarizerNames = []string{}
 			for _, summarizerName := range allSummarizerNamesList {
 				if !excludeSummarizerNamesSet[summarizerName] {
 					summarizerNames = append(summarizerNames, summarizerName)

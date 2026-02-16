@@ -63,7 +63,7 @@ func GetArgs() []string {
 		)
 	}
 
-	retargs := make([]string, 0)
+	retargs := []string{}
 
 	// TODO err/stetret if lens uneq
 
@@ -76,7 +76,7 @@ func GetArgs() []string {
 	}
 	//printArgs(retargs, "NEW")
 
-	globbed := make([]string, 0)
+	globbed := []string{}
 	for i := range retargs {
 		// Expand things like *.csv
 		matches, err := filepath.Glob(retargs[i])

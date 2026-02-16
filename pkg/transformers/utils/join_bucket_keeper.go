@@ -195,7 +195,7 @@ func NewJoinBucketKeeper(
 
 		JoinBucket:           NewJoinBucket(nil),
 		peekRecordAndContext: nil,
-		leftUnpaireds:        make([]*types.RecordAndContext, 0),
+		leftUnpaireds:        []*types.RecordAndContext{},
 
 		leof:  false,
 		state: LEFT_STATE_0_PREFILL,

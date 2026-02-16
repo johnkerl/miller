@@ -82,8 +82,8 @@ func transformerMergeFieldsParseCLI(
 	verb := args[argi]
 	argi++
 
-	accumulatorNameList := make([]string, 0)
-	valueFieldNameList := make([]string, 0)
+	accumulatorNameList := []string{}
+	valueFieldNameList := []string{}
 	outputFieldBasename := ""
 	doWhich := e_MERGE_UNSPECIFIED
 	keepInputFields := false

@@ -18,7 +18,7 @@ func NewJoinBucket(
 ) *JoinBucket {
 	return &JoinBucket{
 		leftFieldValues:    leftFieldValues,
-		RecordsAndContexts: make([]*types.RecordAndContext, 0),
+		RecordsAndContexts: []*types.RecordAndContext{},
 		WasPaired:          false,
 	}
 }

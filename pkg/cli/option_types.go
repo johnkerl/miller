@@ -209,8 +209,8 @@ func DefaultOptions() *TOptions {
 		ReaderOptions: DefaultReaderOptions(),
 		WriterOptions: DefaultWriterOptions(),
 
-		FileNames:           make([]string, 0),
-		DSLPreloadFileNames: make([]string, 0),
+		FileNames:           []string{},
+		DSLPreloadFileNames: []string{},
 		NoInput:             false,
 	}
 }

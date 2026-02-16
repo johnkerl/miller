@@ -867,7 +867,7 @@ func (root *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable,
 	lib.InternalCodingErrorIf(astNode == nil)
 
 	var baseLvalue IAssignable = nil
-	indexEvaluables := make([]IEvaluable, 0)
+	indexEvaluables := []IEvaluable{}
 	var err error
 
 	// $ mlr -n put -v '$x[1][2]=3'

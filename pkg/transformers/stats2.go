@@ -73,7 +73,7 @@ func transformerStats2ParseCLI(
 
 	var accumulatorNameList []string = nil
 	var valueFieldNameList []string = nil
-	groupByFieldNameList := make([]string, 0)
+	groupByFieldNameList := []string{}
 	doVerbose := false
 	doIterativeStats := false
 	doHoldAndFit := false
@@ -307,7 +307,7 @@ func (tr *TransformerStats2) ingest(
 	if tr.doHoldAndFit { // Retain the input record in memory, for fitting and delivery at end of stream
 		groupToRecords := tr.recordGroups.Get(groupingKey)
 		if groupToRecords == nil {
-			records := make([]*types.RecordAndContext, 0)
+			records := []*types.RecordAndContext{}
 			groupToRecords = &records
 			tr.recordGroups.Put(groupingKey, groupToRecords)
 		}

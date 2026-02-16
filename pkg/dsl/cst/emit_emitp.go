@@ -375,8 +375,8 @@ func (node *EmitXStatementNode) executeNonIndexedNonLashedEmit(
 				}
 
 			} else { // recurse
-				nextLevelNames := make([]string, 0)
-				nextLevelValues := make([]*mlrval.Mlrval, 0)
+				nextLevelNames := []string{}
+				nextLevelValues := []*mlrval.Mlrval{}
 				for pe := value.GetMap().Head; pe != nil; pe = pe.Next {
 					nextLevelNames = append(nextLevelNames, pe.Key)
 					nextLevelValues = append(nextLevelValues, pe.Value.Copy())
@@ -463,8 +463,8 @@ func (node *EmitXStatementNode) executeNonIndexedLashedEmit(
 				}
 
 			} else { // recurse
-				nextLevelNames := make([]string, 0)
-				nextLevelValues := make([]*mlrval.Mlrval, 0)
+				nextLevelNames := []string{}
+				nextLevelValues := []*mlrval.Mlrval{}
 				for pe := value.GetMap().Head; pe != nil; pe = pe.Next {
 					nextLevelNames = append(nextLevelNames, pe.Key)
 					nextLevelValues = append(nextLevelValues, pe.Value.Copy())

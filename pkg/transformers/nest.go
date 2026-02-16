@@ -671,6 +671,6 @@ type tNestBucket struct {
 func newNestBucket(representative *mlrval.Mlrmap) *tNestBucket {
 	return &tNestBucket{
 		representative: representative,
-		pairs:          make([]*mlrval.Mlrmap, 0),
+		pairs:          []*mlrval.Mlrmap{},
 	}
 }

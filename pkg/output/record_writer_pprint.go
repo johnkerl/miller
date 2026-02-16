@@ -25,10 +25,10 @@ type RecordWriterPPRINT struct {
 func NewRecordWriterPPRINT(writerOptions *cli.TWriterOptions) (*RecordWriterPPRINT, error) {
 	return &RecordWriterPPRINT{
 		writerOptions: writerOptions,
-		records:       make([]*mlrval.Mlrmap, 0),
+		records:       []*mlrval.Mlrmap{},
 
 		lastJoinedHeader: nil,
-		batch:            make([]*mlrval.Mlrmap, 0),
+		batch:            []*mlrval.Mlrmap{},
 	}, nil
 }
 

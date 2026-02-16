@@ -84,7 +84,7 @@ func NewRepl(
 
 	// If there was a --load/--mload on the command line, load those DSL strings here (e.g.
 	// someone's local function library).
-	dslStrings := make([]string, 0)
+	dslStrings := []string{}
 	for _, filename := range options.DSLPreloadFileNames {
 		theseDSLStrings, err := lib.LoadStringsFromFileOrDir(filename, ".mlr")
 		if err != nil {

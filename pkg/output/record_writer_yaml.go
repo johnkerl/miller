@@ -46,7 +46,7 @@ func (writer *RecordWriterYAML) writeWithListWrap(
 ) {
 	if outrec != nil {
 		if writer.bufferedRecords == nil {
-			writer.bufferedRecords = make([]interface{}, 0)
+			writer.bufferedRecords = []interface{}{}
 		}
 		native, err := mlrval.MlrmapToYAMLNative(outrec)
 		if err != nil {

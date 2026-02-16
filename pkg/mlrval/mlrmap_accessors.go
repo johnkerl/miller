@@ -277,7 +277,7 @@ func (mlrmap *Mlrmap) GetKeys() []string {
 // specified are to be passed in as a map from string to bool, as Go
 // doesn't have hash-sets.
 func (mlrmap *Mlrmap) GetKeysExcept(exceptions map[string]bool) []string {
-	keys := make([]string, 0)
+	keys := []string{}
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		if _, present := exceptions[pe.Key]; !present {
 			keys = append(keys, pe.Key)

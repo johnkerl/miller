@@ -123,10 +123,10 @@ func parseCommandLinePassOne(
 	verbSequences [][]string,
 	dataFileNames []string,
 ) {
-	flagSequences = make([][]string, 0)
+	flagSequences = [][]string{}
 	terminalSequence = nil
-	verbSequences = make([][]string, 0)
-	dataFileNames = make([]string, 0)
+	verbSequences = [][]string{}
+	dataFileNames = []string{}
 
 	// All verbs after the first must be preceded with "then"
 	onFirst := true
@@ -273,7 +273,7 @@ func parseCommandLinePassTwo(
 		options.WriterOptions.FailOnDataError = true
 	}
 
-	recordTransformers = make([]transformers.RecordTransformer, 0)
+	recordTransformers = []transformers.RecordTransformer{}
 	ignoresInput := false
 
 	// Load a .mlrrc file unless --norc was a main-flag on the command line.

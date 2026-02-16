@@ -180,7 +180,7 @@ func (manager *MultiOutputHandlerManager) getOutputHandlerFor(
 }
 
 func (manager *MultiOutputHandlerManager) Close() []error {
-	errs := make([]error, 0)
+	errs := []error{}
 	if manager.singleHandler != nil {
 		err := manager.singleHandler.Close()
 		if err != nil {

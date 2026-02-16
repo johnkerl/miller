@@ -190,7 +190,7 @@ func NewTransformerBar(
 
 	if doAuto {
 		tr.recordTransformerFunc = tr.processAuto
-		tr.recordsForAutoMode = make([]*types.RecordAndContext, 0)
+		tr.recordsForAutoMode = []*types.RecordAndContext{}
 	} else {
 		tr.recordTransformerFunc = tr.processNoAuto
 		tr.recordsForAutoMode = nil

@@ -70,7 +70,7 @@ type IfItem struct {
 func (root *RootNode) BuildIfChainNode(astNode *dsl.ASTNode) (*IfChainNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIfChain)
 
-	ifItems := make([]*IfItem, 0)
+	ifItems := []*IfItem{}
 
 	astChildren := astNode.Children
 

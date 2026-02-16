@@ -152,7 +152,7 @@ func CompileMillerRegexesOrDie(regexStrings []string) []*regexp.Regexp {
 // but "" splits to [""] when I wish it were []. This function does the latter.
 func RegexCompiledSplitString(regex *regexp.Regexp, input string, n int) []string {
 	if input == "" {
-		return make([]string, 0)
+		return []string{}
 	}
 	return regex.Split(input, n)
 }

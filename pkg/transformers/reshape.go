@@ -152,7 +152,7 @@ func transformerReshapeParseCLI(
 		} else if opt == "-r" {
 			inputFieldRegexString := cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			if inputFieldRegexStrings == nil {
-				inputFieldRegexStrings = make([]string, 0)
+				inputFieldRegexStrings = []string{}
 			}
 			inputFieldRegexStrings = append(inputFieldRegexStrings, inputFieldRegexString)
 		} else if opt == "-o" {
