@@ -80,7 +80,7 @@ func transformerLabelParseCLI(
 		newNames,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+		fmt.Fprintf(os.Stderr, "mlr label: %v\n", err)
 		os.Exit(1)
 		// TODO: return nil to caller and have it exit, maybe
 	}
@@ -100,7 +100,7 @@ func NewTransformerLabel(
 	for _, newName := range newNames {
 		_, ok := uniquenessChecker[newName]
 		if ok {
-			return nil, fmt.Errorf(`mlr label: labels must be unique; got duplicate "%s"`, newName)
+			return nil, fmt.Errorf(`labels must be unique; got duplicate "%s"`, newName)
 		}
 		uniquenessChecker[newName] = true
 	}

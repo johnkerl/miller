@@ -206,7 +206,7 @@ func transformerStats1ParseCLI(
 		doIterativeStats,
 	)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+		fmt.Fprintf(os.Stderr, "mlr stats1: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -309,7 +309,7 @@ func NewTransformerStats1(
 ) (*TransformerStats1, error) {
 	for _, name := range accumulatorNameList {
 		if !utils.ValidateStats1AccumulatorName(name) {
-			return nil, fmt.Errorf(`mlr stats1: accumulator "%s" not found`, name)
+			return nil, fmt.Errorf(`accumulator "%s" not found`, name)
 		}
 	}
 
