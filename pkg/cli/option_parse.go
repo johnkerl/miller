@@ -1219,6 +1219,16 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name: "--dcf",
+			help: "Use Debian control file (DCF) format for input and output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dcf"
+				options.WriterOptions.OutputFileFormat = "dcf"
+				*pargi += 1
+			},
+		},
+
+		{
 			name:     "--nidx",
 			help:     "Use NIDX format for input and output data.",
 			altNames: []string{"--n2n"},
