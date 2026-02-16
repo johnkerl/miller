@@ -20,7 +20,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/transformers"
 )
 
-// ================================================================
 type tZaryHandlerFunc func()
 type tVarArgHandlerFunc func(args []string)
 
@@ -247,7 +246,6 @@ func HelpMain(args []string) int {
 	return 0
 }
 
-// ----------------------------------------------------------------
 func MainUsage(o *os.File) {
 	fmt.Fprintf(o,
 		`Usage: mlr [flags] {verb} [verb-dependent options ...] {zero or more file names}
@@ -287,12 +285,10 @@ func ParseTerminalUsage(arg string) bool {
 	return false
 }
 
-// ================================================================
 func handleDefault() {
 	MainUsage(os.Stdout)
 }
 
-// ----------------------------------------------------------------
 func listTopics() {
 	fmt.Println("Type 'mlr help {topic}' for any of the following:")
 	for _, section := range handlerLookupTable.sections {
@@ -313,7 +309,6 @@ func listTopics() {
 	fmt.Printf("for all things with \"map\" in their names.\n")
 }
 
-// ----------------------------------------------------------------
 func showFlagsHelp() {
 	cli.FLAG_TABLE.ShowHelp()
 }
@@ -351,7 +346,6 @@ func helpTerminals() {
 	// We can't invoke the terminal-lister since that would create a cyclic package reference.
 }
 
-// ----------------------------------------------------------------
 func helpBasicExamples() {
 	fmt.Print(
 		`mlr --icsv --opprint cat example.csv
@@ -364,7 +358,6 @@ mlr --icsv --opprint --from example.csv sort -nr index then cut -f shape,quantit
 `)
 }
 
-// ----------------------------------------------------------------
 func helpFileFormats() {
 	fmt.Printf(
 		`CSV/CSV-lite: comma-separated values with separate header line
@@ -461,7 +454,6 @@ DCF: Debian control file format
 `)
 }
 
-// ----------------------------------------------------------------
 func helpMlrrc() {
 	fmt.Print(
 		`You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.
@@ -499,12 +491,10 @@ https://miller.readthedocs.io/en/latest/customization.html
 `)
 }
 
-// ----------------------------------------------------------------
 func helpOutputColorization() {
 	cli.OutputColorizationPrintInfo()
 }
 
-// ----------------------------------------------------------------
 func helpTypeArithmeticInfo() {
 	helpTypeArithmeticInfoAux(false)
 }
@@ -694,7 +684,6 @@ func showHelpForFlag(flagNames []string) {
 	}
 }
 
-// ----------------------------------------------------------------
 func listVerbs() {
 	if isatty.IsTerminal(os.Stdout.Fd()) {
 		transformers.ListVerbNamesAsParagraph()
@@ -721,7 +710,6 @@ func usageVerbs() {
 	transformers.UsageVerbs()
 }
 
-// ----------------------------------------------------------------
 func listFunctions() {
 	if isatty.IsTerminal(os.Stdout.Fd()) {
 		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph()
@@ -843,7 +831,6 @@ func helpByApproximateSearchOne(thing string) bool {
 	return found
 }
 
-// ----------------------------------------------------------------
 func listKeywords() {
 	if isatty.IsTerminal(os.Stdout.Fd()) {
 		cst.ListKeywordsAsParagraph()

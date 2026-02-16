@@ -103,7 +103,6 @@ var prematureEofError error = errors.New("mlr: JSON parser: unexpected premature
 // ingest all records at once, and operable within a tail -f context.
 // ================================================================
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) UnmarshalJSON(inputBytes []byte) error {
 	*mv = *FromPending()
 	decoder := json.NewDecoder(bytes.NewReader(inputBytes))
@@ -118,7 +117,6 @@ func (mv *Mlrval) UnmarshalJSON(inputBytes []byte) error {
 	return nil
 }
 
-// ----------------------------------------------------------------
 func TryUnmarshalJSON(inputBytes []byte) (pmv *Mlrval, err error) {
 	decoder := json.NewDecoder(bytes.NewReader(inputBytes))
 	pmv, eof, err := MlrvalDecodeFromJSON(decoder)
@@ -128,7 +126,6 @@ func TryUnmarshalJSON(inputBytes []byte) (pmv *Mlrval, err error) {
 	return pmv, err
 }
 
-// ----------------------------------------------------------------
 func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 	mlrval *Mlrval,
 	eof bool,
@@ -267,7 +264,6 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 	}
 }
 
-// ================================================================
 func (mv *Mlrval) MarshalJSON(
 	jsonFormatting TJSONFormatting,
 	outputIsStdout bool,
@@ -312,7 +308,6 @@ func (mv *Mlrval) marshalJSONAux(
 // ================================================================
 // TYPE-SPECIFIC MARSHALERS
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONPending(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_PENDING)
 	return "", fmt.Errorf(
