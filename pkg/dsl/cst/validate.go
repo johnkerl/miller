@@ -13,7 +13,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
-// ----------------------------------------------------------------
 func ValidateAST(
 	ast *dsl.AST,
 	dslInstanceType DSLInstanceType, // mlr put, mlr filter, mlr repl
@@ -56,7 +55,6 @@ func ValidateAST(
 	return nil
 }
 
-// ----------------------------------------------------------------
 func validateASTAux(
 	astNode *dsl.ASTNode,
 	dslInstanceType DSLInstanceType, // mlr put, mlr filter, mlr repl
@@ -302,7 +300,6 @@ func validateForLoopMultivariableUniqueNames(astNode *dsl.ASTNode) error {
 	return nil
 }
 
-// ================================================================
 
 var VALID_LHS_NODE_TYPES = map[dsl.TNodeType]bool{
 	dsl.NodeTypeArrayOrMapIndexAccess:           true,

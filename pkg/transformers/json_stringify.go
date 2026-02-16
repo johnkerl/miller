@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameJSONStringify = "json-stringify"
 
 var JSONStringifySetup = TransformerSetup{
@@ -104,7 +103,6 @@ func transformerJSONStringifyParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerJSONStringify struct {
 	// input
 	jsonFormatting mlrval.TJSONFormatting
@@ -136,7 +134,6 @@ func NewTransformerJSONStringify(
 	return retval, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerJSONStringify) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -148,7 +145,6 @@ func (tr *TransformerJSONStringify) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerJSONStringify) jsonStringifyAll(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -166,7 +162,6 @@ func (tr *TransformerJSONStringify) jsonStringifyAll(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerJSONStringify) jsonStringifySome(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

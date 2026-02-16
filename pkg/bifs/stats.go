@@ -24,7 +24,6 @@ import (
 //
 //	output = [m, b, math.sqrt(var_m), math.sqrt(var_b)]
 
-// ----------------------------------------------------------------
 func BIF_finalize_variance(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
 	n, isInt := mn.GetIntValue()
 	lib.InternalCodingErrorIf(!isInt)
@@ -46,7 +45,6 @@ func BIF_finalize_variance(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromFloat(numerator / denominator)
 }
 
-// ----------------------------------------------------------------
 func BIF_finalize_stddev(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
 	mvar := BIF_finalize_variance(mn, msum, msum2)
 	if mvar.IsVoid() {
@@ -55,7 +53,6 @@ func BIF_finalize_stddev(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return BIF_sqrt(mvar)
 }
 
-// ----------------------------------------------------------------
 func BIF_finalize_mean_eb(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
 	mvar := BIF_finalize_variance(mn, msum, msum2)
 	if mvar.IsVoid() {
@@ -87,7 +84,6 @@ func BIF_finalize_mean_eb(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
 //   = sumx2 - 2 n mean^2 + n mean^2
 //   = sumx2 - n mean^2
 
-// ----------------------------------------------------------------
 func BIF_finalize_skewness(mn, msum, msum2, msum3 *mlrval.Mlrval) *mlrval.Mlrval {
 	n, isInt := mn.GetIntValue()
 	lib.InternalCodingErrorIf(!isInt)
@@ -124,7 +120,6 @@ func BIF_finalize_skewness(mn, msum, msum2, msum3 *mlrval.Mlrval) *mlrval.Mlrval
 //   = sumx4 - mean*(4 sumx3 - 6 mean sumx2 + 3 n mean^3)
 //   = sumx4 - mean*(4 sumx3 - mean*(6 sumx2 - 3 n mean^2))
 
-// ----------------------------------------------------------------
 func BIF_finalize_kurtosis(mn, msum, msum2, msum3, msum4 *mlrval.Mlrval) *mlrval.Mlrval {
 	n, isInt := mn.GetIntValue()
 	lib.InternalCodingErrorIf(!isInt)

@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameRename = "rename"
 
 var RenameSetup = TransformerSetup{
@@ -125,7 +124,6 @@ func transformerRenameParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type tRegexAndReplacement struct {
 	regex                    *regexp.Regexp
 	replacement              string
@@ -183,7 +181,6 @@ func NewTransformerRename(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerRename) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -195,7 +192,6 @@ func (tr *TransformerRename) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerRename) transformWithoutRegexes(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -216,7 +212,6 @@ func (tr *TransformerRename) transformWithoutRegexes(
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // including end-of-stream marker
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerRename) transformWithRegexes(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

@@ -9,7 +9,6 @@ import (
 	"testing"
 )
 
-// ----------------------------------------------------------------
 type tDataForHasCaptures struct {
 	replacement         string
 	expectedHasCaptures bool
@@ -30,7 +29,6 @@ type tDataForMatches struct {
 	expectedCaptures []string
 }
 
-// ----------------------------------------------------------------
 var dataForHasCaptures = []tDataForHasCaptures{
 	{"foo", false, nil},
 	{"\\0", true, [][]int{{0, 2, 0, 2}}},

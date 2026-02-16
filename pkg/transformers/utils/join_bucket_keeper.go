@@ -157,7 +157,6 @@ type JoinBucketKeeper struct {
 	state tJoinBucketKeeperState
 }
 
-// ----------------------------------------------------------------
 func NewJoinBucketKeeper(
 	// TODO prepipe string,
 	leftFileName string,

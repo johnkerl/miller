@@ -88,7 +88,6 @@ func NewEndOfStreamMarkerList(context *Context) []*RecordAndContext {
 	return recordsAndContexts
 }
 
-// ----------------------------------------------------------------
 type Context struct {
 	FILENAME string
 	FILENUM  int64

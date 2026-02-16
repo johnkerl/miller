@@ -13,7 +13,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
-// ================================================================
 type WhileLoopNode struct {
 	conditionNode      IEvaluable
 	conditionToken     *token.Token
@@ -53,7 +52,6 @@ func (root *RootNode) BuildWhileLoopNode(astNode *dsl.ASTNode) (*WhileLoopNode, 
 	), nil
 }
 
-// ----------------------------------------------------------------
 func (node *WhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	for {
 		condition := node.conditionNode.Evaluate(state)
@@ -90,7 +88,6 @@ func (node *WhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, err
 	return nil, nil
 }
 
-// ================================================================
 type DoWhileLoopNode struct {
 	statementBlockNode *StatementBlockNode
 	conditionNode      IEvaluable
@@ -130,7 +127,6 @@ func (root *RootNode) BuildDoWhileLoopNode(astNode *dsl.ASTNode) (*DoWhileLoopNo
 	), nil
 }
 
-// ----------------------------------------------------------------
 func (node *DoWhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	for {
 		blockExitPayload, err := node.statementBlockNode.Execute(state)

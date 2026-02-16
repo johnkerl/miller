@@ -16,7 +16,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ================================================================
 type ASTPrintMode int
 
 const (
@@ -26,7 +25,6 @@ const (
 	ASTPrintIndent
 )
 
-// ================================================================
 type Repl struct {
 	// From os.Args[] as we were invoked. These are for printing error messages.
 	exeName  string

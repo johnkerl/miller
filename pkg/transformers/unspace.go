@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameUnspace = "unspace"
 
 var UnspaceSetup = TransformerSetup{
@@ -91,7 +90,6 @@ func transformerUnspaceParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerUnspace struct {
 	filler                string
 	recordTransformerFunc RecordTransformerFunc

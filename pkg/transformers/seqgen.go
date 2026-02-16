@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameSeqgen = "seqgen"
 
 var SeqgenSetup = TransformerSetup{
@@ -110,7 +109,6 @@ func transformerSeqgenParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerSeqgen struct {
 	fieldName      string
 	start          *mlrval.Mlrval
@@ -120,7 +118,6 @@ type TransformerSeqgen struct {
 	mdone          *mlrval.Mlrval
 }
 
-// ----------------------------------------------------------------
 func NewTransformerSeqgen(
 	fieldName string,
 	startString string,

@@ -16,7 +16,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
-// ----------------------------------------------------------------
 func (root *RootNode) BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 
 	if astNode.Children == nil {
@@ -84,7 +83,6 @@ func (root *RootNode) BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, erro
 	)
 }
 
-// ----------------------------------------------------------------
 type IndirectFieldValueNode struct {
 	fieldNameEvaluable IEvaluable
 }
@@ -134,7 +132,6 @@ func (node *IndirectFieldValueNode) Evaluate(
 	return value
 }
 
-// ----------------------------------------------------------------
 type IndirectOosvarValueNode struct {
 	oosvarNameEvaluable IEvaluable
 }

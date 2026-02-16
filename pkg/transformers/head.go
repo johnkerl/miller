@@ -9,7 +9,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameHead = "head"
 
 var HeadSetup = TransformerSetup{
@@ -101,7 +100,6 @@ func transformerHeadParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerHead struct {
 	// input
 	headCount         int64
@@ -138,7 +136,6 @@ func NewTransformerHead(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerHead) Transform(
 	inrecAndContext *types.RecordAndContext,

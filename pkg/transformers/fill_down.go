@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameFillDown = "fill-down"
 
 var FillDownSetup = TransformerSetup{
@@ -111,7 +110,6 @@ func transformerFillDownParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerFillDown struct {
 	// input
 	fillDownFieldNames []string
@@ -143,7 +141,6 @@ func NewTransformerFillDown(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerFillDown) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -155,7 +152,6 @@ func (tr *TransformerFillDown) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerFillDown) transformSpecified(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -193,7 +189,6 @@ func (tr *TransformerFillDown) transformSpecified(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerFillDown) transformAll(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

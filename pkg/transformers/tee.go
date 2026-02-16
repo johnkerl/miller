@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameTee = "tee"
 
 var TeeSetup = TransformerSetup{
@@ -128,7 +127,6 @@ func transformerTeeParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerTee struct {
 	filenameOrCommandForDisplay string
 	fileOutputHandler           *output.FileOutputHandler

@@ -22,7 +22,6 @@ type PercentileKeeper struct {
 var fenceInnerK = mlrval.FromFloat(1.5)
 var fenceOuterK = mlrval.FromFloat(3.0)
 
-// ----------------------------------------------------------------
 func NewPercentileKeeper(
 	doInterpolatedPercentiles bool,
 ) *PercentileKeeper {
@@ -38,7 +37,6 @@ func (keeper *PercentileKeeper) Reset() {
 	keeper.sorted = false
 }
 
-// ----------------------------------------------------------------
 func (keeper *PercentileKeeper) Ingest(value *mlrval.Mlrval) {
 	if len(keeper.data) >= cap(keeper.data) {
 		newData := make([]*mlrval.Mlrval, len(keeper.data), 2*cap(keeper.data))
@@ -54,7 +52,6 @@ func (keeper *PercentileKeeper) Ingest(value *mlrval.Mlrval) {
 	keeper.sorted = false
 }
 
-// ----------------------------------------------------------------
 func (keeper *PercentileKeeper) sortIfNecessary() {
 	if !keeper.sorted {
 		sort.Slice(keeper.data, func(i, j int) bool {
@@ -64,7 +61,6 @@ func (keeper *PercentileKeeper) sortIfNecessary() {
 	}
 }
 
-// ----------------------------------------------------------------
 func (keeper *PercentileKeeper) Emit(percentile float64) *mlrval.Mlrval {
 	if keeper.doInterpolatedPercentiles {
 		return keeper.EmitLinearlyInterpolated(percentile)

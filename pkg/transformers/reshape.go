@@ -39,7 +39,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameReshape = "reshape"
 
 var ReshapeSetup = TransformerSetup{
@@ -221,7 +220,6 @@ func transformerReshapeParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerReshape struct {
 	// for wide-to-long:
 	inputFieldNames      []string
@@ -237,7 +235,6 @@ type TransformerReshape struct {
 	recordTransformerFunc RecordTransformerFunc
 }
 
-// ----------------------------------------------------------------
 func NewTransformerReshape(
 	inputFieldNames []string,
 	inputFieldRegexStrings []string,
@@ -287,7 +284,6 @@ func NewTransformerReshape(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerReshape) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -299,7 +295,6 @@ func (tr *TransformerReshape) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerReshape) wideToLongNoRegex(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -338,7 +333,6 @@ func (tr *TransformerReshape) wideToLongNoRegex(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerReshape) wideToLongRegex(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -380,7 +374,6 @@ func (tr *TransformerReshape) wideToLongRegex(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerReshape) longToWide(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

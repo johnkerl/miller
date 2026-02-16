@@ -9,7 +9,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameTac = "tac"
 
 var TacSetup = TransformerSetup{
@@ -74,7 +73,6 @@ func transformerTacParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerTac struct {
 	recordsAndContexts []*types.RecordAndContext
 }

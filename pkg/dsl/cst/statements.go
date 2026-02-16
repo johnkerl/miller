@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/dsl"
 )
 
-// ----------------------------------------------------------------
 func (root *RootNode) BuildStatementNode(
 	astNode *dsl.ASTNode,
 ) (IExecutable, error) {

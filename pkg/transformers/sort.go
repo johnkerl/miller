@@ -53,7 +53,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameSort = "sort"
 
 var SortSetup = TransformerSetup{
@@ -338,7 +337,6 @@ func NewTransformerSort(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 type GroupingKeysAndMlrvals struct {
 	groupingKey string
 	mlrvals     []*mlrval.Mlrval

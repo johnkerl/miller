@@ -14,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
-// ----------------------------------------------------------------
 func (root *RootNode) BuildLeafNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
@@ -83,7 +82,6 @@ func (root *RootNode) BuildLeafNode(
 	return nil, fmt.Errorf("at CST BuildLeafNode: unhandled AST node %s", string(astNode.Type))
 }
 
-// ----------------------------------------------------------------
 type DirectFieldRvalueNode struct {
 	fieldName string
 }
@@ -112,7 +110,6 @@ func (node *DirectFieldRvalueNode) Evaluate(
 	}
 }
 
-// ----------------------------------------------------------------
 type FullSrecRvalueNode struct {
 }
 
@@ -134,7 +131,6 @@ func (node *FullSrecRvalueNode) Evaluate(
 	}
 }
 
-// ----------------------------------------------------------------
 type DirectOosvarRvalueNode struct {
 	variableName string
 }
@@ -155,7 +151,6 @@ func (node *DirectOosvarRvalueNode) Evaluate(
 	}
 }
 
-// ----------------------------------------------------------------
 type FullOosvarRvalueNode struct {
 }
 
@@ -307,7 +302,6 @@ func (node *RegexCaptureReplacementNode) Evaluate(
 	)
 }
 
-// ----------------------------------------------------------------
 type IntLiteralNode struct {
 	literal *mlrval.Mlrval
 }
@@ -325,7 +319,6 @@ func (node *IntLiteralNode) Evaluate(
 	return node.literal
 }
 
-// ----------------------------------------------------------------
 type FloatLiteralNode struct {
 	literal *mlrval.Mlrval
 }
@@ -343,7 +336,6 @@ func (node *FloatLiteralNode) Evaluate(
 	return node.literal
 }
 
-// ----------------------------------------------------------------
 type BoolLiteralNode struct {
 	literal *mlrval.Mlrval
 }
@@ -359,7 +351,6 @@ func (node *BoolLiteralNode) Evaluate(
 	return node.literal
 }
 
-// ----------------------------------------------------------------
 type NullLiteralNode struct {
 	literal *mlrval.Mlrval
 }
@@ -393,7 +384,6 @@ func (node *MlrvalLiteralNode) Evaluate(
 	return node.literal
 }
 
-// ================================================================
 func (root *RootNode) BuildContextVariableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Token == nil)
 	sval := string(astNode.Token.Lit)
@@ -433,7 +423,6 @@ func (root *RootNode) BuildContextVariableNode(astNode *dsl.ASTNode) (IEvaluable
 	return nil, fmt.Errorf("at CST BuildContextVariableNode: unhandled context variable %s", sval)
 }
 
-// ----------------------------------------------------------------
 type FILENAMENode struct {
 }
 
@@ -446,7 +435,6 @@ func (node *FILENAMENode) Evaluate(
 	return mlrval.FromString(state.Context.FILENAME)
 }
 
-// ----------------------------------------------------------------
 type FILENUMNode struct {
 }
 
@@ -459,7 +447,6 @@ func (node *FILENUMNode) Evaluate(
 	return mlrval.FromInt(state.Context.FILENUM)
 }
 
-// ----------------------------------------------------------------
 type NFNode struct {
 }
 
@@ -472,7 +459,6 @@ func (node *NFNode) Evaluate(
 	return mlrval.FromInt(state.Inrec.FieldCount)
 }
 
-// ----------------------------------------------------------------
 type NRNode struct {
 }
 
@@ -485,7 +471,6 @@ func (node *NRNode) Evaluate(
 	return mlrval.FromInt(state.Context.NR)
 }
 
-// ----------------------------------------------------------------
 type FNRNode struct {
 }
 
@@ -498,7 +483,6 @@ func (node *FNRNode) Evaluate(
 	return mlrval.FromInt(state.Context.FNR)
 }
 
-// ----------------------------------------------------------------
 type IRSNode struct {
 }
 
@@ -511,7 +495,6 @@ func (node *IRSNode) Evaluate(
 	return mlrval.FromString(state.Options.ReaderOptions.IRS)
 }
 
-// ----------------------------------------------------------------
 type IFSNode struct {
 }
 
@@ -524,7 +507,6 @@ func (node *IFSNode) Evaluate(
 	return mlrval.FromString(state.Options.ReaderOptions.IFS)
 }
 
-// ----------------------------------------------------------------
 type IPSNode struct {
 }
 
@@ -537,7 +519,6 @@ func (node *IPSNode) Evaluate(
 	return mlrval.FromString(state.Options.ReaderOptions.IPS)
 }
 
-// ----------------------------------------------------------------
 type ORSNode struct {
 }
 
@@ -550,7 +531,6 @@ func (node *ORSNode) Evaluate(
 	return mlrval.FromString(state.Options.WriterOptions.ORS)
 }
 
-// ----------------------------------------------------------------
 type OFSNode struct {
 }
 
@@ -563,7 +543,6 @@ func (node *OFSNode) Evaluate(
 	return mlrval.FromString(state.Options.WriterOptions.OFS)
 }
 
-// ----------------------------------------------------------------
 type OPSNode struct {
 }
 
@@ -576,7 +555,6 @@ func (node *OPSNode) Evaluate(
 	return mlrval.FromString(state.Options.WriterOptions.OPS)
 }
 
-// ----------------------------------------------------------------
 type FLATSEPNode struct {
 }
 
@@ -589,7 +567,6 @@ func (node *FLATSEPNode) Evaluate(
 	return mlrval.FromString(state.Options.WriterOptions.FLATSEP)
 }
 
-// ================================================================
 func (root *RootNode) BuildConstantNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Token == nil)
 	sval := string(astNode.Token.Lit)
@@ -606,7 +583,6 @@ func (root *RootNode) BuildConstantNode(astNode *dsl.ASTNode) (IEvaluable, error
 	return nil, fmt.Errorf("at CST BuildContextVariableNode: unhandled context variable %s", sval)
 }
 
-// ----------------------------------------------------------------
 type MathPINode struct {
 }
 
@@ -619,7 +595,6 @@ func (node *MathPINode) Evaluate(
 	return mlrval.FromFloat(math.Pi)
 }
 
-// ----------------------------------------------------------------
 type MathENode struct {
 }
 
@@ -632,7 +607,6 @@ func (node *MathENode) Evaluate(
 	return mlrval.FromFloat(math.E)
 }
 
-// ================================================================
 type LiteralOneNode struct {
 }
 
@@ -650,7 +624,6 @@ func (node *LiteralOneNode) Evaluate(
 	return mlrval.FromInt(1)
 }
 
-// ================================================================
 type LiteralEmptyStringNode struct {
 }
 

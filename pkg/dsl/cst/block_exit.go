@@ -13,7 +13,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
-// ----------------------------------------------------------------
 type BreakNode struct {
 }
 
@@ -32,7 +31,6 @@ func (node *BreakNode) Execute(state *runtime.State) (*BlockExitPayload, error) 
 	}, nil
 }
 
-// ----------------------------------------------------------------
 type ContinueNode struct {
 }
 
@@ -51,7 +49,6 @@ func (node *ContinueNode) Execute(state *runtime.State) (*BlockExitPayload, erro
 	}, nil
 }
 
-// ----------------------------------------------------------------
 type ReturnNode struct {
 	returnValueExpression IEvaluable
 }

@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameSparsify = "sparsify"
 
 var SparsifySetup = TransformerSetup{
@@ -100,7 +99,6 @@ func transformerSparsifyParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerSparsify struct {
 	fillerString          string
 	fieldNamesSet         map[string]bool
@@ -165,7 +163,6 @@ func (tr *TransformerSparsify) transformAll(
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, outrecAndContext)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerSparsify) transformSome(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

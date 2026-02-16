@@ -12,7 +12,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameMostFrequent = "most-frequent"
 const verbNameLeastFrequent = "least-frequent"
 
@@ -163,7 +162,6 @@ func transformerMostOrLeastFrequentParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerMostOrLeastFrequent struct {
 	groupByFieldNames []string
 	maxOutputLength   int64
@@ -179,7 +177,6 @@ type tMostOrLeastFrequentSortPair struct {
 	groupingKey string
 }
 
-// ----------------------------------------------------------------
 func NewTransformerMostOrLeastFrequent(
 	groupByFieldNames []string,
 	maxOutputLength int64,
@@ -200,7 +197,6 @@ func NewTransformerMostOrLeastFrequent(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerMostOrLeastFrequent) Transform(
 	inrecAndContext *types.RecordAndContext,

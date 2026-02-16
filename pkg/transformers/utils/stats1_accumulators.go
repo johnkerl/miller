@@ -14,14 +14,12 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
-// ----------------------------------------------------------------
 type IStats1Accumulator interface {
 	Ingest(value *mlrval.Mlrval)
 	Emit() *mlrval.Mlrval
 	Reset() // for merge-fields where we reset after each record instead of replace/recreate
 }
 
-// ----------------------------------------------------------------
 type newStats1AccumulatorFunc func() IStats1Accumulator
 
 type stats1AccumulatorInfo struct {
@@ -179,7 +177,6 @@ func NewStats1AccumulatorFactory() *Stats1AccumulatorFactory {
 	}
 }
 
-// ----------------------------------------------------------------
 func ListStats1Accumulators(o *os.File) {
 	for _, info := range stats1AccumulatorInfos {
 		fmt.Fprintf(o, "  %-8s %s\n", info.name, info.description)
@@ -304,7 +301,6 @@ func (factory *Stats1AccumulatorFactory) MakeAccumulator(
 	return nil
 }
 
-// ================================================================
 type Stats1CountAccumulator struct {
 	count int64
 }
@@ -324,7 +320,6 @@ func (acc *Stats1CountAccumulator) Reset() {
 	acc.count = 0
 }
 
-// ================================================================
 type Stats1NullCountAccumulator struct {
 	count int64
 }
@@ -375,7 +370,6 @@ func (acc *Stats1DistinctCountAccumulator) Reset() {
 	acc.distincts = lib.NewOrderedMap[int64]()
 }
 
-// ----------------------------------------------------------------
 type Stats1ModeAccumulator struct {
 	// Needs to be an ordered map to guarantee Miller's semantics that
 	// first-found breaks ties.
@@ -416,7 +410,6 @@ func (acc *Stats1ModeAccumulator) Reset() {
 	acc.countsByValue = lib.NewOrderedMap[int64]()
 }
 
-// ----------------------------------------------------------------
 type Stats1AntimodeAccumulator struct {
 	// Needs to be an ordered map to guarantee Miller's semantics that
 	// first-found breaks ties.
@@ -457,7 +450,6 @@ func (acc *Stats1AntimodeAccumulator) Reset() {
 	acc.countsByValue = lib.NewOrderedMap[int64]()
 }
 
-// ----------------------------------------------------------------
 type Stats1SumAccumulator struct {
 	sum *mlrval.Mlrval
 }
@@ -479,7 +471,6 @@ func (acc *Stats1SumAccumulator) Reset() {
 	acc.sum = mlrval.FromInt(0)
 }
 
-// ----------------------------------------------------------------
 type Stats1MeanAccumulator struct {
 	sum   *mlrval.Mlrval
 	count int64
@@ -509,7 +500,6 @@ func (acc *Stats1MeanAccumulator) Reset() {
 	acc.count = 0
 }
 
-// ----------------------------------------------------------------
 type Stats1MeanAbsDevAccumulator struct {
 	samples []*mlrval.Mlrval
 }
@@ -550,7 +540,6 @@ func (acc *Stats1MeanAbsDevAccumulator) Reset() {
 	acc.samples = make([]*mlrval.Mlrval, 0, 1000)
 }
 
-// ----------------------------------------------------------------
 type Stats1MinAccumulator struct {
 	min *mlrval.Mlrval
 }
@@ -574,7 +563,6 @@ func (acc *Stats1MinAccumulator) Reset() {
 	acc.min = mlrval.ABSENT
 }
 
-// ----------------------------------------------------------------
 type Stats1MaxAccumulator struct {
 	max *mlrval.Mlrval
 }
@@ -598,7 +586,6 @@ func (acc *Stats1MaxAccumulator) Reset() {
 	acc.max = mlrval.ABSENT
 }
 
-// ----------------------------------------------------------------
 type Stats1MinLenAccumulator struct {
 	minacc IStats1Accumulator
 }
@@ -618,7 +605,6 @@ func (acc *Stats1MinLenAccumulator) Reset() {
 	acc.minacc = NewStats1MinAccumulator()
 }
 
-// ----------------------------------------------------------------
 type Stats1MaxLenAccumulator struct {
 	maxacc IStats1Accumulator
 }
@@ -638,7 +624,6 @@ func (acc *Stats1MaxLenAccumulator) Reset() {
 	acc.maxacc = NewStats1MaxAccumulator()
 }
 
-// ----------------------------------------------------------------
 type Stats1VarAccumulator struct {
 	count int64
 	sum   *mlrval.Mlrval
@@ -669,7 +654,6 @@ func (acc *Stats1VarAccumulator) Reset() {
 	acc.sum2 = mlrval.FromInt(0)
 }
 
-// ----------------------------------------------------------------
 type Stats1StddevAccumulator struct {
 	count int64
 	sum   *mlrval.Mlrval
@@ -700,7 +684,6 @@ func (acc *Stats1StddevAccumulator) Reset() {
 	acc.sum2 = mlrval.FromInt(0)
 }
 
-// ----------------------------------------------------------------
 type Stats1MeanEBAccumulator struct {
 	count int64
 	sum   *mlrval.Mlrval
@@ -732,7 +715,6 @@ func (acc *Stats1MeanEBAccumulator) Reset() {
 	acc.sum2 = mlrval.FromInt(0)
 }
 
-// ----------------------------------------------------------------
 type Stats1SkewnessAccumulator struct {
 	count int64
 	sum   *mlrval.Mlrval
@@ -769,7 +751,6 @@ func (acc *Stats1SkewnessAccumulator) Reset() {
 	acc.sum3 = mlrval.FromInt(0)
 }
 
-// ----------------------------------------------------------------
 type Stats1KurtosisAccumulator struct {
 	count int64
 	sum   *mlrval.Mlrval

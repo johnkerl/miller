@@ -8,19 +8,16 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/parsing/token"
 )
 
-// ----------------------------------------------------------------
 type AST struct {
 	RootNode *ASTNode
 }
 
-// ----------------------------------------------------------------
 type ASTNode struct {
 	Token    *token.Token // Nil for tokenless/structural nodes
 	Type     TNodeType
 	Children []*ASTNode
 }
 
-// ----------------------------------------------------------------
 type TNodeType string
 
 const (

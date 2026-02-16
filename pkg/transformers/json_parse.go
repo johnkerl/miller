@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameJSONParse = "json-parse"
 
 var JSONParseSetup = TransformerSetup{
@@ -94,7 +93,6 @@ func transformerJSONParseParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerJSONParse struct {
 	// input
 	fieldNameSet map[string]bool
@@ -126,7 +124,6 @@ func NewTransformerJSONParse(
 	return retval, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerJSONParse) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -138,7 +135,6 @@ func (tr *TransformerJSONParse) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerJSONParse) jsonParseAll(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -160,7 +156,6 @@ func (tr *TransformerJSONParse) jsonParseAll(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerJSONParse) jsonParseSome(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

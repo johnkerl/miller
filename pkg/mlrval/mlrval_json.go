@@ -101,7 +101,6 @@ var prematureEofError error = errors.New("mlr: JSON parser: unexpected premature
 //
 // This is so the Miller JSON record-reader can be streaming, not needing to
 // ingest all records at once, and operable within a tail -f context.
-// ================================================================
 
 func (mv *Mlrval) UnmarshalJSON(inputBytes []byte) error {
 	*mv = *FromPending()

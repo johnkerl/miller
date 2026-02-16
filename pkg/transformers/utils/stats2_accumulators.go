@@ -13,7 +13,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
-// ----------------------------------------------------------------
 type IStats2Accumulator interface {
 	Ingest(
 		x float64,
@@ -84,7 +83,6 @@ var stats2AccumulatorInfos []stats2AccumulatorInfo = []stats2AccumulatorInfo{
 	},
 }
 
-// ----------------------------------------------------------------
 type Stats2AccumulatorFactory struct {
 }
 
@@ -124,7 +122,6 @@ func (factory *Stats2AccumulatorFactory) Make(
 	return nil
 }
 
-// ================================================================
 type Stats2LinRegOLSAccumulator struct {
 	count              int64
 	sumx               float64
@@ -216,7 +213,6 @@ func (acc *Stats2LinRegOLSAccumulator) Fit(
 	}
 }
 
-// ================================================================
 const LOGIREG_DVECTOR_INITIAL_SIZE = 16
 
 type Stats2LogiRegAccumulator struct {
@@ -426,7 +422,6 @@ type Stats2CorrCovAccumulator struct {
 	q        float64
 }
 
-// ----------------------------------------------------------------
 func NewStats2CorrCovAccumulator(
 	valueFieldName1 string,
 	valueFieldName2 string,
@@ -626,7 +621,6 @@ func (acc *Stats2CorrCovAccumulator) Fit(
 	}
 }
 
-// ================================================================
 func NewStats2CorrAccumulator(
 	valueFieldName1 string,
 	valueFieldName2 string,

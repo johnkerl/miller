@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameUnflatten = "unflatten"
 
 var UnflattenSetup = TransformerSetup{
@@ -94,7 +93,6 @@ func transformerUnflattenParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerUnflatten struct {
 	// input
 	oFlatSep     string
@@ -128,7 +126,6 @@ func NewTransformerUnflatten(
 	return retval, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerUnflatten) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -140,7 +137,6 @@ func (tr *TransformerUnflatten) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerUnflatten) unflattenAll(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -160,7 +156,6 @@ func (tr *TransformerUnflatten) unflattenAll(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerUnflatten) unflattenSome(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

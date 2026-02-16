@@ -11,19 +11,16 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
-// ----------------------------------------------------------------
 func NewStatementBlockNode() *StatementBlockNode {
 	return &StatementBlockNode{
 		executables: make([]IExecutable, 0),
 	}
 }
 
-// ----------------------------------------------------------------
 func (node *StatementBlockNode) AppendStatementNode(executable IExecutable) {
 	node.executables = append(node.executables, executable)
 }
 
-// ----------------------------------------------------------------
 func (root *RootNode) BuildStatementBlockNodeFromBeginOrEnd(
 	astBeginOrEndNode *dsl.ASTNode,
 ) (*StatementBlockNode, error) {
@@ -72,7 +69,6 @@ func (root *RootNode) BuildStatementBlockNodeFromBeginOrEnd(
 	}
 }
 
-// ----------------------------------------------------------------
 func (root *RootNode) BuildStatementBlockNode(
 	astNode *dsl.ASTNode,
 ) (*StatementBlockNode, error) {
@@ -93,7 +89,6 @@ func (root *RootNode) BuildStatementBlockNode(
 	return statementBlockNode, nil
 }
 
-// ----------------------------------------------------------------
 func (node *StatementBlockNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	state.Stack.PushStackFrame()
 	defer state.Stack.PopStackFrame()

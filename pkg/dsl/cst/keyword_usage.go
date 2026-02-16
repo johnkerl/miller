@@ -8,7 +8,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
-// ----------------------------------------------------------------
 type tKeywordUsageFunc func()
 
 type tKeywordUsageEntry struct {
@@ -116,14 +115,12 @@ func TryUsageForKeywordApproximate(searchString string) bool {
 	return foundAny
 }
 
-// ----------------------------------------------------------------
 func ListKeywordsVertically() {
 	for _, entry := range KEYWORD_USAGE_TABLE {
 		fmt.Println(entry.name)
 	}
 }
 
-// ----------------------------------------------------------------
 func ListKeywordsAsParagraph() {
 	keywords := make([]string, len(KEYWORD_USAGE_TABLE))
 	for i, entry := range KEYWORD_USAGE_TABLE {
@@ -132,7 +129,6 @@ func ListKeywordsAsParagraph() {
 	lib.PrintWordsAsParagraph(keywords)
 }
 
-// ----------------------------------------------------------------
 func allKeywordUsage() {
 	fmt.Println(
 		`used in "emit1", "emit", "emitp", and "unset" as a synonym for @*`,

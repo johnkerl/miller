@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameRemoveEmptyColumns = "remove-empty-columns"
 
 var RemoveEmptyColumnsSetup = TransformerSetup{
@@ -75,7 +74,6 @@ func transformerRemoveEmptyColumnsParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerRemoveEmptyColumns struct {
 	recordsAndContexts      []*types.RecordAndContext
 	namesWithNonEmptyValues map[string]bool

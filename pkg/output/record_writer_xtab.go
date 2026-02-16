@@ -25,7 +25,6 @@ import (
 //   def: 4567
 //
 // then they can do that.
-// ----------------------------------------------------------------
 
 type RecordWriterXTAB struct {
 	writerOptions *cli.TWriterOptions

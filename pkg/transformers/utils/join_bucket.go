@@ -9,7 +9,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 type JoinBucket struct {
 	leftFieldValues    []*mlrval.Mlrval
 	RecordsAndContexts []*types.RecordAndContext

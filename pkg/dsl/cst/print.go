@@ -148,7 +148,6 @@ import (
 //   redirectorTargetEvaluable  = non-nil
 //   outputHandlerManager       = non-nil
 
-// ================================================================
 type tPrintToRedirectFunc func(
 	outputString string,
 	state *runtime.State,
@@ -162,7 +161,6 @@ type PrintStatementNode struct {
 	outputHandlerManager      output.OutputHandlerManager // for file/pipe targets
 }
 
-// ----------------------------------------------------------------
 func (root *RootNode) BuildPrintStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePrintStatement)
 	return root.buildPrintxStatementNode(
@@ -294,7 +292,6 @@ func (root *RootNode) buildPrintxStatementNode(
 	return retval, nil
 }
 
-// ----------------------------------------------------------------
 func (node *PrintStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	if len(node.expressionEvaluables) == 0 {
 		node.printToRedirectFunc(node.terminator, state)
@@ -322,7 +319,6 @@ func (node *PrintStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 	return nil, nil
 }
 
-// ----------------------------------------------------------------
 func (node *PrintStatementNode) printToStdout(
 	outputString string,
 	state *runtime.State,
@@ -340,7 +336,6 @@ func (node *PrintStatementNode) printToStdout(
 	return nil
 }
 
-// ----------------------------------------------------------------
 func (node *PrintStatementNode) printToStderr(
 	outputString string,
 	state *runtime.State,
@@ -349,7 +344,6 @@ func (node *PrintStatementNode) printToStderr(
 	return nil
 }
 
-// ----------------------------------------------------------------
 func (node *PrintStatementNode) printToFileOrPipe(
 	outputString string,
 	state *runtime.State,

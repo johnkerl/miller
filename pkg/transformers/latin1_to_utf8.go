@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameLatin1ToUTF8 = "latin1-to-utf8"
 
 var Latin1ToUTF8Setup = TransformerSetup{
@@ -77,7 +76,6 @@ func transformerLatin1ToUTF8ParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerLatin1ToUTF8 struct {
 }
 
@@ -86,7 +84,6 @@ func NewTransformerLatin1ToUTF8() (*TransformerLatin1ToUTF8, error) {
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerLatin1ToUTF8) Transform(
 	inrecAndContext *types.RecordAndContext,

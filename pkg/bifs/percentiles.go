@@ -196,7 +196,6 @@ func GetPercentileLinearlyInterpolated(
 // * I like option 2 for its simplicity ...
 // * ... but option 1 matches R's quantile with type=1.
 // * (Note that Miller's interpolated percentiles match match R's quantile with type=7)
-// ----------------------------------------------------------------
 
 func GetPercentileNonInterpolated(
 	array []*mlrval.Mlrval,

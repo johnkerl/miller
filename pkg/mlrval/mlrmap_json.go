@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
-// ----------------------------------------------------------------
 func (mlrmap *Mlrmap) MarshalJSON(
 	jsonFormatting TJSONFormatting,
 	outputIsStdout bool,

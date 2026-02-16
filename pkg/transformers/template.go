@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameTemplate = "template"
 
 var TemplateSetup = TransformerSetup{
@@ -112,7 +111,6 @@ func transformerTemplateParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerTemplate struct {
 	fieldNameList []string
 	fieldNameSet  map[string]bool
@@ -130,7 +128,6 @@ func NewTransformerTemplate(
 	}, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerTemplate) Transform(
 	inrecAndContext *types.RecordAndContext,

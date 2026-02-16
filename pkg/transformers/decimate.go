@@ -9,7 +9,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameDecimate = "decimate"
 
 var DecimateSetup = TransformerSetup{
@@ -105,7 +104,6 @@ func transformerDecimateParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerDecimate struct {
 	decimateCount     int64
 	remainderToKeep   int64
@@ -114,7 +112,6 @@ type TransformerDecimate struct {
 	countsByGroup map[string]int64
 }
 
-// ----------------------------------------------------------------
 func NewTransformerDecimate(
 	decimateCount int64,
 	atStart bool,
@@ -137,7 +134,6 @@ func NewTransformerDecimate(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerDecimate) Transform(
 	inrecAndContext *types.RecordAndContext,

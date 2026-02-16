@@ -10,12 +10,10 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ================================================================
 func BIF_typeof(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromString(input1.GetTypeName())
 }
 
-// ----------------------------------------------------------------
 func string_to_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	i, ok := lib.TryIntFromString(input1.AcquireStringValue())
 	if ok {
@@ -66,7 +64,6 @@ func BIF_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return to_int_dispositions[input1.Type()](input1)
 }
 
-// ----------------------------------------------------------------
 func string_to_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	i, ok := lib.TryIntFromStringWithBase(input1.AcquireStringValue(), input2.AcquireIntValue())
 	if ok {
@@ -124,7 +121,6 @@ func BIF_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return to_int_with_base_dispositions[input1.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 func string_to_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	f, ok := lib.TryFloatFromString(input1.AcquireStringValue())
 	if ok {
@@ -175,7 +171,6 @@ func BIF_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return to_float_dispositions[input1.Type()](input1)
 }
 
-// ----------------------------------------------------------------
 func string_to_boolean(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	b, ok := lib.TryBoolFromBoolString(input1.AcquireStringValue())
 	if ok {
@@ -222,7 +217,6 @@ func BIF_boolean(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return to_boolean_dispositions[input1.Type()](input1)
 }
 
-// ----------------------------------------------------------------
 func BIF_is_absent(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.IsAbsent())
 }
@@ -311,7 +305,6 @@ func BIF_is_nan(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-// ----------------------------------------------------------------
 func assertingCommon(input1, check *mlrval.Mlrval, description string, context *types.Context) *mlrval.Mlrval {
 	if check.IsFalse() {
 		// TODO: get context as in the C impl

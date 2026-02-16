@@ -12,7 +12,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameTop = "top"
 const verbTopDefaultOutputFieldName = "top_idx"
 
@@ -131,7 +130,6 @@ func transformerTopParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerTop struct {
 	topCount          int64
 	valueFieldNames   []string
@@ -146,7 +144,6 @@ type TransformerTop struct {
 	groupingKeysToGroupByFieldValues map[string][]*mlrval.Mlrval
 }
 
-// ----------------------------------------------------------------
 func NewTransformerTop(
 	topCount int64,
 	valueFieldNames []string,
@@ -234,7 +231,6 @@ func (tr *TransformerTop) ingest(
 
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerTop) emit(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
-// ================================================================
 func BIF_strlen(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
 		return mlrval.FromTypeErrorUnary("strlen", input1)
@@ -20,7 +19,6 @@ func BIF_strlen(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-// ================================================================
 func BIF_string(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromString(input1.String())
 }
@@ -168,7 +166,6 @@ func BIF_contains(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(strings.Contains(input1.String(), input2.String()))
 }
 
-// ================================================================
 func BIF_truncate(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
@@ -197,7 +194,6 @@ func BIF_truncate(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-// ================================================================
 func BIF_leftpad(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
@@ -264,7 +260,6 @@ func BIF_rightpad(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromString(buffer.String())
 }
 
-// ================================================================
 func BIF_lstrip(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		return mlrval.FromString(strings.TrimLeft(input1.AcquireStringValue(), " \t"))
@@ -289,7 +284,6 @@ func BIF_strip(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-// ----------------------------------------------------------------
 func BIF_collapse_whitespace(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return BIF_collapse_whitespace_regexp(input1, _whitespace_regexp)
 }
@@ -304,7 +298,6 @@ func BIF_collapse_whitespace_regexp(input1 *mlrval.Mlrval, whitespaceRegexp *reg
 
 var _whitespace_regexp = regexp.MustCompile(`\s+`)
 
-// ================================================================
 func BIF_toupper(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		return mlrval.FromString(strings.ToUpper(input1.AcquireStringValue()))
@@ -342,7 +335,6 @@ func BIF_capitalize(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-// ----------------------------------------------------------------
 func BIF_clean_whitespace(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	mv := BIF_strip(
 		BIF_collapse_whitespace_regexp(
@@ -352,7 +344,6 @@ func BIF_clean_whitespace(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInferredType(mv.String())
 }
 
-// ================================================================
 func BIF_format(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) == 0 {
 		return mlrval.VOID
@@ -476,7 +467,6 @@ func bif_unformat_aux(input1, input2 *mlrval.Mlrval, inferTypes bool) *mlrval.Ml
 	return output
 }
 
-// ================================================================
 func BIF_hexfmt(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsInt() {
 		return mlrval.FromString("0x" + strconv.FormatUint(uint64(input1.AcquireIntValue()), 16))
@@ -485,7 +475,6 @@ func BIF_hexfmt(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-// ----------------------------------------------------------------
 func fmtnum_is(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsString() {
 		return mlrval.FromTypeErrorUnary("fmtnum", input2)

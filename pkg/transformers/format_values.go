@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameFormatValues = "format-values"
 
 const defaultFormatValuesStringFormat = "%s"
@@ -24,7 +23,6 @@ var FormatValuesSetup = TransformerSetup{
 	IgnoresInput: false,
 }
 
-// ----------------------------------------------------------------
 func transformerFormatValuesUsage(
 	o *os.File,
 ) {
@@ -125,7 +123,6 @@ func transformerFormatValuesParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerFormatValues struct {
 	stringFormatter  mlrval.IFormatter
 	intFormatter     mlrval.IFormatter
@@ -163,7 +160,6 @@ func NewTransformerFormatValues(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerFormatValues) Transform(
 	inrecAndContext *types.RecordAndContext,

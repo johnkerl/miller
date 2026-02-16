@@ -30,7 +30,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/cli"
 )
 
-// ================================================================
 func replUsage(verbName string, o *os.File, exitCode int) {
 	exeName := path.Base(os.Args[0])
 	fmt.Fprintf(o, "Usage: %s %s [options] {zero or more data-file names}\n", exeName, verbName)

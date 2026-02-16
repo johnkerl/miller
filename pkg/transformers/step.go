@@ -83,7 +83,6 @@ import (
 // For EWMA
 const DEFAULT_STRING_ALPHA = "0.5"
 
-// ----------------------------------------------------------------
 const verbNameStep = "step"
 
 var StepSetup = TransformerSetup{
@@ -693,7 +692,6 @@ func allocateStepper(
 // ================================================================
 // Implementations of individual steppers, like "delta" or "rsum"
 
-// ================================================================
 type tStepperDelta struct {
 	inputFieldName  string
 	outputFieldName string
@@ -826,7 +824,6 @@ func (stepper *tStepperShiftLag) process(
 	}
 }
 
-// ================================================================
 type tStepperShiftLead struct {
 	inputFieldName  string
 	outputFieldName string
@@ -877,7 +874,6 @@ func (stepper *tStepperShiftLead) process(
 	}
 }
 
-// ================================================================
 type tStepperFromFirst struct {
 	first           *mlrval.Mlrval
 	inputFieldName  string
@@ -927,7 +923,6 @@ func (stepper *tStepperFromFirst) process(
 	currec.PutCopy(stepper.outputFieldName, fromFirst)
 }
 
-// ================================================================
 type tStepperRatio struct {
 	inputFieldName  string
 	outputFieldName string
@@ -984,7 +979,6 @@ func (stepper *tStepperRatio) process(
 	currec.PutCopy(stepper.outputFieldName, ratio.Copy())
 }
 
-// ================================================================
 type tStepperRprod struct {
 	rprod           *mlrval.Mlrval
 	inputFieldName  string
@@ -1033,7 +1027,6 @@ func (stepper *tStepperRprod) process(
 	}
 }
 
-// ================================================================
 type tStepperRsum struct {
 	rsum            *mlrval.Mlrval
 	inputFieldName  string
@@ -1082,7 +1075,6 @@ func (stepper *tStepperRsum) process(
 	}
 }
 
-// ================================================================
 type tStepperCounter struct {
 	counter         *mlrval.Mlrval
 	inputFieldName  string
@@ -1232,7 +1224,6 @@ func (stepper *tStepperEWMA) process(
 	}
 }
 
-// ================================================================
 type tStepperSlwin struct {
 	inputFieldName     string
 	numRecordsBackward int

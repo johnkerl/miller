@@ -24,7 +24,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ================================================================
 type OutputHandlerManager interface {
 
 	// For print-variants and dump-variants
@@ -42,7 +41,6 @@ type OutputHandler interface {
 	Close() error
 }
 
-// ================================================================
 type MultiOutputHandlerManager struct {
 	outputHandlers map[string]OutputHandler
 
@@ -55,7 +53,6 @@ type MultiOutputHandlerManager struct {
 	recordWriterOptions *cli.TWriterOptions
 }
 
-// ----------------------------------------------------------------
 func NewFileOutputHandlerManager(
 	recordWriterOptions *cli.TWriterOptions,
 	doAppend bool,
@@ -127,7 +124,6 @@ func NewStderrWriteHandlerManager(
 	}
 }
 
-// ----------------------------------------------------------------
 func (manager *MultiOutputHandlerManager) WriteString(
 	outputString string,
 	filename string,
@@ -202,7 +198,6 @@ func (manager *MultiOutputHandlerManager) Close() []error {
 	return errs
 }
 
-// ================================================================
 type FileOutputHandler struct {
 	filename             string
 	handle               io.WriteCloser
@@ -240,7 +235,6 @@ func newOutputHandlerCommon(
 	}
 }
 
-// ----------------------------------------------------------------
 func NewFileOutputHandler(
 	filename string,
 	recordWriterOptions *cli.TWriterOptions,
@@ -332,13 +326,11 @@ func newStderrOutputHandler(
 	)
 }
 
-// ----------------------------------------------------------------
 func (handler *FileOutputHandler) WriteString(outputString string) error {
 	_, err := handler.bufferedOutputStream.WriteString(outputString)
 	return err
 }
 
-// ----------------------------------------------------------------
 func (handler *FileOutputHandler) WriteRecordAndContext(
 	outrecAndContext *types.RecordAndContext,
 ) error {
@@ -383,7 +375,6 @@ func (handler *FileOutputHandler) setUpRecordWriter() error {
 	return nil
 }
 
-// ----------------------------------------------------------------
 func (handler *FileOutputHandler) Close() (retval error) {
 	retval = nil
 

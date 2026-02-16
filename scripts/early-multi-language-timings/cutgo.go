@@ -9,7 +9,6 @@ import (
 	"strings"
 )
 
-// ----------------------------------------------------------------
 func main() {
 	includeFields := strings.Split(os.Args[1], ",")
 	filenames := os.Args[2:]
@@ -29,7 +28,6 @@ func main() {
 	}
 }
 
-// ----------------------------------------------------------------
 func handle(fileName string, includeFields []string) (ok bool) {
 	inputStream := os.Stdin
 	if fileName != "-" {

@@ -41,7 +41,6 @@ const (
 	FUNC_CLASS_TIME        TFunctionClass = "time"
 )
 
-// ================================================================
 type BuiltinFunctionInfo struct {
 	name  string
 	class TFunctionClass
@@ -66,7 +65,6 @@ type BuiltinFunctionInfo struct {
 	variadicFuncWithState  VariadicFuncWithState       // sort
 }
 
-// ================================================================
 
 func isLetter(c byte) bool {
 	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z')
@@ -2539,7 +2537,6 @@ Run a command via executable, path, args and environment, yielding its stdout mi
 	return lookupTable
 }
 
-// ================================================================
 type BuiltinFunctionManager struct {
 	// We need both the array and the hashmap since Go maps are not
 	// insertion-order-preserving: to produce a sensical help-all-functions
@@ -2581,7 +2578,6 @@ func hashifyLookupTable(lookupTable *[]BuiltinFunctionInfo) map[string]*BuiltinF
 	return hashTable
 }
 
-// ----------------------------------------------------------------
 
 func (manager *BuiltinFunctionManager) ListBuiltinFunctionClasses() {
 	classesList := manager.getBuiltinFunctionClasses()
@@ -2604,7 +2600,6 @@ func (manager *BuiltinFunctionManager) getBuiltinFunctionClasses() []string {
 	return classesList
 }
 
-// ----------------------------------------------------------------
 
 func (manager *BuiltinFunctionManager) ListBuiltinFunctionsInClass(class string) {
 	for _, builtinFunctionInfo := range *manager.lookupTable {
@@ -2639,7 +2634,6 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionsAsTable() {
 	}
 }
 
-// ----------------------------------------------------------------
 func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsages() {
 	for i, builtinFunctionInfo := range *manager.lookupTable {
 		if i > 0 {

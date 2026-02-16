@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
-// ----------------------------------------------------------------
 type TypeGatedMlrvalName struct {
 	Name     string
 	TypeName string
@@ -45,7 +44,6 @@ func (tname *TypeGatedMlrvalName) Check(value *mlrval.Mlrval) error {
 	}
 }
 
-// ----------------------------------------------------------------
 type TypeGatedMlrvalVariable struct {
 	typeGatedMlrvalName *TypeGatedMlrvalName
 	value               *mlrval.Mlrval

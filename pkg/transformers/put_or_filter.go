@@ -14,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNamePut = "put"
 
 var PutSetup = TransformerSetup{
@@ -33,7 +32,6 @@ var FilterSetup = TransformerSetup{
 	IgnoresInput: false,
 }
 
-// ----------------------------------------------------------------
 func transformerPutUsage(
 	o *os.File,
 ) {
@@ -180,7 +178,6 @@ More example filter expressions:
 	fmt.Fprintf(o, "See also %s/reference-dsl for more context.\n", lib.DOC_URL)
 }
 
-// ----------------------------------------------------------------
 func transformerPutOrFilterParseCLI(
 	pargi *int,
 	argc int,
@@ -390,7 +387,6 @@ func transformerPutOrFilterParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerPut struct {
 	doFilter             bool // false for the put verb, true for the filter verb
 	cstRootNode          *cst.RootNode

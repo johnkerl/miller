@@ -27,7 +27,6 @@ func BIF_length(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(1)
 }
 
-// ================================================================
 func depth_from_array(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	maxChildDepth := int64(0)
 	arrayval := input1.AcquireArrayValue()
@@ -89,7 +88,6 @@ func BIF_depth(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return depth_dispositions[input1.Type()](input1)
 }
 
-// ================================================================
 func leafcount_from_array(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	sumChildLeafCount := int64(0)
 	arrayval := input1.AcquireArrayValue()
@@ -160,7 +158,6 @@ func BIF_leafcount(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return leafcount_dispositions[input1.Type()](input1)
 }
 
-// ----------------------------------------------------------------
 func has_key_in_array(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input2.IsString() {
 		return mlrval.FALSE
@@ -191,7 +188,6 @@ func BIF_haskey(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-// ================================================================
 func BIF_concat(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	output := mlrval.FromEmptyArray()
 
@@ -209,7 +205,6 @@ func BIF_concat(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	return output
 }
 
-// ================================================================
 func BIF_mapselect(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) < 1 {
 		return mlrval.FromErrorString("mapselect: received a zero-length array as input")
@@ -250,7 +245,6 @@ func BIF_mapselect(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromMap(newMap)
 }
 
-// ----------------------------------------------------------------
 func BIF_mapexcept(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) < 1 {
 		return mlrval.FromErrorString("mapexcept: received a zero-length array as input")
@@ -281,7 +275,6 @@ func BIF_mapexcept(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromMap(newMap)
 }
 
-// ----------------------------------------------------------------
 func BIF_mapsum(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) == 0 {
 		return mlrval.FromEmptyMap()
@@ -307,7 +300,6 @@ func BIF_mapsum(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromMap(newMap)
 }
 
-// ----------------------------------------------------------------
 func BIF_mapdiff(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) == 0 {
 		return mlrval.FromEmptyMap()
@@ -619,7 +611,6 @@ func bif_splitax_helper(input string, separator string) *mlrval.Mlrval {
 	return mlrval.FromArray(arrayval)
 }
 
-// ----------------------------------------------------------------
 func BIF_get_keys(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsMap() {
 		// TODO: make a ReferenceFrom with comments
@@ -645,7 +636,6 @@ func BIF_get_keys(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-// ----------------------------------------------------------------
 func BIF_get_values(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsMap() {
 		mapval := input1.AcquireMapValue()
@@ -670,7 +660,6 @@ func BIF_get_values(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-// ----------------------------------------------------------------
 func BIF_append(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsArray() {
 		return mlrval.FromNotArrayError("append", input1)
@@ -774,7 +763,6 @@ func BIF_arrayify(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-// ----------------------------------------------------------------
 func BIF_json_parse(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsVoid() {
 		return input1

@@ -9,7 +9,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameSkipTrivialRecords = "skip-trivial-records"
 
 var SkipTrivialRecordsSetup = TransformerSetup{
@@ -75,7 +74,6 @@ func transformerSkipTrivialRecordsParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerSkipTrivialRecords struct {
 }
 
@@ -84,7 +82,6 @@ func NewTransformerSkipTrivialRecords() (*TransformerSkipTrivialRecords, error) 
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerSkipTrivialRecords) Transform(
 	inrecAndContext *types.RecordAndContext,

@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameShuffle = "shuffle"
 
 var ShuffleSetup = TransformerSetup{
@@ -78,7 +77,6 @@ func transformerShuffleParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerShuffle struct {
 	recordsAndContexts []*types.RecordAndContext
 }
@@ -92,7 +90,6 @@ func NewTransformerShuffle() (*TransformerShuffle, error) {
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerShuffle) Transform(
 	inrecAndContext *types.RecordAndContext,

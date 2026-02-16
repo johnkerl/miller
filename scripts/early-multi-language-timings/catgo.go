@@ -7,7 +7,6 @@ import (
 	"os"
 )
 
-// ----------------------------------------------------------------
 func main() {
 	args := os.Args[1:]
 
@@ -26,7 +25,6 @@ func main() {
 	}
 }
 
-// ----------------------------------------------------------------
 func handle(fileName string) (ok bool) {
 	inputStream := os.Stdin
 	if fileName != "-" {

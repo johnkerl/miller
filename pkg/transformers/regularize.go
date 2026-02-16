@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameRegularize = "regularize"
 
 var RegularizeSetup = TransformerSetup{
@@ -76,7 +75,6 @@ func transformerRegularizeParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerRegularize struct {
 	// map from string to []string
 	sortedToOriginal map[string][]string
@@ -89,7 +87,6 @@ func NewTransformerRegularize() (*TransformerRegularize, error) {
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerRegularize) Transform(
 	inrecAndContext *types.RecordAndContext,

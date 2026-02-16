@@ -46,7 +46,6 @@ func (root *RootNode) BuildCondBlockNode(astNode *dsl.ASTNode) (*CondBlockNode, 
 	return condBlockNode, nil
 }
 
-// ----------------------------------------------------------------
 func (node *CondBlockNode) Execute(
 	state *runtime.State,
 ) (*BlockExitPayload, error) {

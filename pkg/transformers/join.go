@@ -13,7 +13,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameJoin = "join"
 
 var JoinSetup = TransformerSetup{
@@ -72,7 +71,6 @@ func newJoinOptions() *tJoinOptions {
 	}
 }
 
-// ----------------------------------------------------------------
 func transformerJoinUsage(
 	o *os.File,
 ) {
@@ -133,7 +131,6 @@ func transformerJoinUsage(
 	fmt.Fprintf(o, "including examples.\n")
 }
 
-// ----------------------------------------------------------------
 func transformerJoinParseCLI(
 	pargi *int,
 	argc int,
@@ -284,7 +281,6 @@ func transformerJoinParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerJoin struct {
 	opts *tJoinOptions
 
@@ -303,7 +299,6 @@ type TransformerJoin struct {
 	recordTransformerFunc RecordTransformerFunc
 }
 
-// ----------------------------------------------------------------
 func NewTransformerJoin(
 	opts *tJoinOptions,
 ) (*TransformerJoin, error) {
@@ -356,7 +351,6 @@ func NewTransformerJoin(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerJoin) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -422,7 +416,6 @@ func (tr *TransformerJoin) transformHalfStreaming(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerJoin) transformDoublyStreaming(
 	rightRecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

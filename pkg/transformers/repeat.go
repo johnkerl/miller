@@ -17,7 +17,6 @@ const (
 	repeatCountFromFieldName
 )
 
-// ----------------------------------------------------------------
 const verbNameRepeat = "repeat"
 
 var RepeatSetup = TransformerSetup{
@@ -126,14 +125,12 @@ func transformerRepeatParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerRepeat struct {
 	repeatCount           int64
 	repeatCountFieldName  string
 	recordTransformerFunc RecordTransformerFunc
 }
 
-// ----------------------------------------------------------------
 func NewTransformerRepeat(
 	repeatCountSource tRepeatCountSource,
 	repeatCount int64,
@@ -154,7 +151,6 @@ func NewTransformerRepeat(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerRepeat) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -166,7 +162,6 @@ func (tr *TransformerRepeat) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerRepeat) repeatByCount(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -185,7 +180,6 @@ func (tr *TransformerRepeat) repeatByCount(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerRepeat) repeatByFieldName(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

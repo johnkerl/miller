@@ -9,7 +9,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameCheck = "check"
 
 var CheckSetup = TransformerSetup{
@@ -79,7 +78,6 @@ func transformerCheckParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerCheck struct {
 	// stateless
 	messagedReEmptyKey map[string]bool

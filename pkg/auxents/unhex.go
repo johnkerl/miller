@@ -9,7 +9,6 @@ import (
 	"strings"
 )
 
-// ================================================================
 func unhexUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "Usage: mlr %s [option] {zero or more file names}\n", verbName)
 	fmt.Fprintf(o, "Options:\n")

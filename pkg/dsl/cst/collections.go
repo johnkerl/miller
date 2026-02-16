@@ -15,7 +15,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
-// ----------------------------------------------------------------
 type ArrayLiteralNode struct {
 	evaluables []IEvaluable
 }
@@ -53,7 +52,6 @@ func (node *ArrayLiteralNode) Evaluate(
 	return mlrval.FromArray(mlrvals)
 }
 
-// ----------------------------------------------------------------
 type ArrayOrMapIndexAccessNode struct {
 	baseEvaluable  IEvaluable
 	indexEvaluable IEvaluable
@@ -138,7 +136,6 @@ func (node *ArrayOrMapIndexAccessNode) Evaluate(
 	}
 }
 
-// ----------------------------------------------------------------
 type ArraySliceAccessNode struct {
 	baseEvaluable       IEvaluable
 	lowerIndexEvaluable IEvaluable
@@ -498,7 +495,6 @@ func NewEvaluablePair(key IEvaluable, value IEvaluable) *EvaluablePair {
 	}
 }
 
-// ----------------------------------------------------------------
 type MapLiteralNode struct {
 	evaluablePairs []*EvaluablePair
 }
