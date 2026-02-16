@@ -123,7 +123,11 @@ func (site *UDFCallsite) Evaluate(
 
 	udf := site.findUDF(state)
 	if udf == nil {
-		fmt.Fprintln(os.Stderr, "mlr: function name not found: "+site.functionName)
+		msg := "mlr: function name not found: " + site.functionName
+		if state.NoExitOnFunctionNotFound {
+			return mlrval.FromErrorString(msg)
+		}
+		fmt.Fprintln(os.Stderr, msg)
 		os.Exit(1)
 	}
 	lib.InternalCodingErrorIf(udf.functionBody == nil)

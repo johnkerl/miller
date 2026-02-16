@@ -37,6 +37,10 @@ type State struct {
 
 	// StrictMode allows for runtime handling of absent-reads and untyped assignments.
 	StrictMode bool
+
+	// NoExitOnFunctionNotFound is used by the REPL: when true, a call to an
+	// undefined function returns an error mlrval instead of exiting the process.
+	NoExitOnFunctionNotFound bool
 }
 
 func NewEmptyState(options *cli.TOptions, strictMode bool) *State {
