@@ -66,8 +66,6 @@ func HandleDefaultDownstreamDone(
 	select {
 	case b := <-inputDownstreamDoneChannel:
 		outputDownstreamDoneChannel <- b
-		break
 	default:
-		break
 	}
 }
