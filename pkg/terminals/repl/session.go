@@ -155,7 +155,27 @@ func (repl *Repl) handleSession(istream *os.File) error {
 	for {
 		repl.printPrompt1()
 
-		line, err := lineReader.ReadString('\n')
+		// Read in a goroutine so we can select on Control-C and exit cleanly at the prompt.
+		type readResult struct {
+			line string
+			err  error
+		}
+		readDone := make(chan readResult, 1)
+		go func() {
+			line, err := lineReader.ReadString('\n')
+			readDone <- readResult{line, err}
+		}()
+
+		var line string
+		var err error
+		select {
+		case <-repl.appSignalNotificationChannel:
+			// Control-C at prompt: exit cleanly (controlCHandler already printed ^C)
+			return nil
+		case result := <-readDone:
+			line, err = result.line, result.err
+		}
+
 		if err == io.EOF {
 			if repl.inputIsTerminal {
 				fmt.Println()
@@ -167,19 +187,15 @@ func (repl *Repl) handleSession(istream *os.File) error {
 			return err
 		}
 
-		// Acknowledge any control-C's, even if typed at a ready prompt. We
-		// need to drain them all out since they're in a channel from the
-		// signal-handler goroutine.
-		doneDraining := false
+		// Drain any additional control-C's that may have been typed (e.g. to cancel
+		// partial input). Ignore the line if so.
+	drainLoop:
 		for {
 			select {
 			case <-repl.appSignalNotificationChannel:
-				line = "" // Ignore any partially-entered line -- a ^C should do that
+				line = ""
 			default:
-				doneDraining = true
-			}
-			if doneDraining {
-				break
+				break drainLoop
 			}
 		}
 
