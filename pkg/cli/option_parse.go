@@ -64,7 +64,7 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) error {
 }
 
 // FinalizeWriterOptions unbackslashes OPS, OFS, and ORS.  This is because
-// because the '\n' at the command line which is Go "\\n" (a backslash and an
+// the '\n' at the command line which is Go "\\n" (a backslash and an
 // n) needs to become the single newline character., and likewise for "\t", etc.
 func FinalizeWriterOptions(writerOptions *TWriterOptions) error {
 	if !writerOptions.ofsWasSpecified {
