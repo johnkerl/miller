@@ -62,6 +62,7 @@ func NewRepl(
 	context := types.NewContext()
 
 	runtimeState := runtime.NewEmptyState(options, strictMode)
+	runtimeState.NoExitOnFunctionNotFound = true
 	runtimeState.Update(inrec, context)
 	// The filter expression for the main Miller DSL is any non-assignment
 	// statement like 'true' or '$x > 0.5' etc. For the REPL, we re-use this for
