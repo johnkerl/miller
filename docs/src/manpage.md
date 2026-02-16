@@ -141,6 +141,17 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        | fox jumped          | Record 2: "1":"fox", "2":"jumped"
        +---------------------+
 
+       DCF: Debian control file format
+       +------------+
+       | apple: 1   |
+       | bat: 2     |
+       | cog: 3     |
+       |            |
+       | dish: 7    |
+       | egg: 8     |
+       | 3: flint   |
+       +------------+
+
 1mHELP OPTIONS0m
        Type 'mlr help {topic}' for any of the following:
        Essentials:
@@ -474,7 +485,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
 1mFORMAT-CONVERSION KEYSTROKE-SAVER FLAGS0m
        As keystroke-savers for format-conversion you may use the following.
        The letters c, t, j, l, d, n, x, p, m, and y refer to formats CSV, TSV, JSON, JSON Lines,
-       DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively.
+       DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively. DCF is also supported (use --dcf for DCF in and out).
 
        | In\out   | CSV      | TSV      | JSON     | JSONL | DKVP  | NIDX  | XTAB  | PPRINT | Markdown | YAML   |
        +----------+----------+----------+----------+-------+-------+-------+-------+--------+----------+--------+

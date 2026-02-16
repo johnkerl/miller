@@ -1280,7 +1280,7 @@ var FileFormatFlagSection = FlagSection{
 func FormatConversionKeystrokeSaverPrintInfo() {
 	fmt.Println(`As keystroke-savers for format-conversion you may use the following.
 The letters c, t, j, l, d, n, x, p, m, and y refer to formats CSV, TSV, JSON, JSON Lines,
-DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively.
+DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively. DCF is also supported (use --dcf for DCF in and out).
 
 | In\out   | CSV      | TSV      | JSON     | JSONL | DKVP  | NIDX  | XTAB  | PPRINT | Markdown | YAML   |
 +----------+----------+----------+----------+-------+-------+-------+-------+--------+----------+--------+

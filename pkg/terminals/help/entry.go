@@ -447,6 +447,17 @@ NIDX: implicitly numerically indexed (Unix-toolkit style)
 | the quick brown     | Record 1: "1":"the", "2":"quick", "3":"brown"
 | fox jumped          | Record 2: "1":"fox", "2":"jumped"
 +---------------------+
+
+DCF: Debian control file format
++------------+
+| apple: 1   |
+| bat: 2     |
+| cog: 3     |
+|            |
+| dish: 7    |
+| egg: 8     |
+| 3: flint   |
++------------+
 `)
 }
 

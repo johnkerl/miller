@@ -276,6 +276,7 @@ Notes:
 | [**TSV-lite**](file-formats.md#csvtsvasvusvetc)    | Default `\n` *  |  Default `\t`   | None     |
 | [**JSON**](file-formats.md#json)   | N/A; records are between `{` and `}` | Always `,`; not alterable    | Always `:`; not alterable |
 | [**YAML**](file-formats.md#yaml)   | N/A; documents separated by `---` or single array   | N/A; not alterable    | Always `:`; not alterable |
+| [**DCF**](file-formats.md#dcf-debian-control-file)   | N/A; paragraphs separated by blank lines   | N/A; not alterable    | Always `:`; not alterable |
 | [**DKVP**](file-formats.md#dkvp-key-value-pairs)   | Default `\n`    | Default `,`    | Default `=` |
 | [**NIDX**](file-formats.md#nidx-index-numbered-toolkit-style)   | Default `\n`    | Default space    | None     |
 | [**XTAB**](file-formats.md#xtab-vertical-tabular)   | Not used; records are separated by an extra FS    | `\n` *    | Default: space with repeats  |

@@ -1,7 +1,7 @@
 # File formats
 
 Miller handles name-indexed data using several formats: some you probably know
-by name, such as CSV, TSV, JSON, JSON Lines, and YAML -- and other formats you're likely already
+by name, such as CSV, TSV, JSON, JSON Lines, YAML, and DCF -- and other formats you're likely already
 seeing and using in your structured data.
 
 Additionally, Miller gives you the option to include comments within your data.
@@ -360,6 +360,16 @@ GENMD-EOF
 
 GENMD-RUN-COMMAND
 mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt
+GENMD-EOF
+
+## DCF (Debian control file)
+
+GENMD-RUN-COMMAND
+cat data/sample.dcf
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr -i dcf -o json cat data/sample.dcf
 GENMD-EOF
 
 ## Data-conversion keystroke-savers

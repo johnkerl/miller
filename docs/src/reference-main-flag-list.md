@@ -222,7 +222,7 @@ See the flatten/unflatten doc page https://miller.readthedocs.io/en/latest/flatt
 ## Format-conversion keystroke-saver flags
 
 The letters `c`, `t`, `j`, `l`, `d`, `n`, `x`, `p`, `m`, and `y` refer to formats CSV, TSV, JSON, JSON Lines,
-DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively. Note that markdown format is available for
+DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively. DCF is also supported (use `--dcf` for DCF in and out). Note that markdown format is available for
 output only.
 
 | In \ out  | **CSV** | **TSV** | **JSON** | **JSONL** | **DKVP** | **NIDX** | **XTAB** | **PPRINT** | **Markdown** | **YAML** |

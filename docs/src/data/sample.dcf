@@ -1,0 +1,9 @@
+Package: foo
+Version: 1.0
+Depends: libc6 (>= 2.0), libfoo (>= 1.2)
+Description: A test package.
+
+Package: bar
+Version: 2.0
+Recommends: foo
+Description: Another package.
