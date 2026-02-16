@@ -31,6 +31,7 @@ require (
 	golang.org/x/term v0.40.0
 	golang.org/x/text v0.34.0
 	gopkg.in/yaml.v3 v3.0.1
+	pault.ag/go/debian v0.19.0
 )
 
 require (
@@ -40,9 +41,8 @@ require (
 	github.com/google/pprof v0.0.0-20211214055906-6f57359322fd // indirect
 	github.com/kshedden/dstream v0.0.0-20190512025041-c4c410631beb // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	golang.org/x/crypto v0.40.0 // indirect
+	golang.org/x/crypto v0.45.0 // indirect
 	golang.org/x/tools v0.41.0 // indirect
 	gonum.org/v1/gonum v0.16.0 // indirect
-	pault.ag/go/debian v0.19.0 // indirect
 	pault.ag/go/topsort v0.1.1 // indirect
 )
