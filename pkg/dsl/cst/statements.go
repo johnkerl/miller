@@ -64,9 +64,9 @@ func (root *RootNode) BuildStatementNode(
 		return root.BuildEmitPStatementNode(astNode)
 
 	case dsl.NodeTypeBeginBlock:
-		return nil, fmt.Errorf("mlr: begin blocks may only be declared at top level")
+		return nil, fmt.Errorf("begin blocks may only be declared at top level")
 	case dsl.NodeTypeEndBlock:
-		return nil, fmt.Errorf("mlr: end blocks may only be declared at top level")
+		return nil, fmt.Errorf("end blocks may only be declared at top level")
 
 	case dsl.NodeTypeIfChain:
 		return root.BuildIfChainNode(astNode)
@@ -86,9 +86,9 @@ func (root *RootNode) BuildStatementNode(
 		return root.BuildTripleForLoopNode(astNode)
 
 	case dsl.NodeTypeNamedFunctionDefinition:
-		return nil, fmt.Errorf("mlr: functions may only be declared at top level")
+		return nil, fmt.Errorf("functions may only be declared at top level")
 	case dsl.NodeTypeSubroutineDefinition:
-		return nil, fmt.Errorf("mlr: subroutines may only be declared at top level")
+		return nil, fmt.Errorf("subroutines may only be declared at top level")
 	case dsl.NodeTypeSubroutineCallsite:
 		return root.BuildSubroutineCallsiteNode(astNode)
 

@@ -92,7 +92,7 @@ func BuildZaryFunctionCallsiteNode(
 	expectedArity := 0
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -124,7 +124,7 @@ func (root *RootNode) BuildUnaryFunctionCallsiteNode(
 	expectedArity := 1
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -162,7 +162,7 @@ func (root *RootNode) BuildUnaryFunctionWithContextCallsiteNode(
 	expectedArity := 1
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -201,7 +201,7 @@ func (root *RootNode) BuildBinaryFunctionCallsiteNode(
 	expectedArity := 2
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -274,7 +274,7 @@ func (root *RootNode) BuildBinaryFunctionWithStateCallsiteNode(
 	expectedArity := 2
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -323,7 +323,7 @@ func (root *RootNode) BuildTernaryFunctionWithStateCallsiteNode(
 	expectedArity := 3
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -408,7 +408,7 @@ func (root *RootNode) BuildRegexCaptureBinaryFunctionCallsiteNode(
 	expectedArity := 2
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -459,7 +459,7 @@ func (root *RootNode) BuildDotCallsiteNode(
 	expectedArity := 2
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			".",
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -519,7 +519,7 @@ func (root *RootNode) BuildTernaryFunctionCallsiteNode(
 	expectedArity := 3
 	if callsiteArity != expectedArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s invoked with %d argument%s; expected %d",
+			"function %s invoked with %d argument%s; expected %d",
 			builtinFunctionInfo.name,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -583,7 +583,7 @@ func (root *RootNode) BuildVariadicFunctionCallsiteNode(
 
 	if callsiteArity < builtinFunctionInfo.minimumVariadicArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s takes minimum argument count %d; got %d",
+			"function %s takes minimum argument count %d; got %d",
 			builtinFunctionInfo.name,
 			builtinFunctionInfo.minimumVariadicArity,
 			callsiteArity,
@@ -593,7 +593,7 @@ func (root *RootNode) BuildVariadicFunctionCallsiteNode(
 	if builtinFunctionInfo.maximumVariadicArity != 0 {
 		if callsiteArity > builtinFunctionInfo.maximumVariadicArity {
 			return nil, fmt.Errorf(
-				"mlr: function %s takes maximum argument count %d; got %d",
+				"function %s takes maximum argument count %d; got %d",
 				builtinFunctionInfo.name,
 				builtinFunctionInfo.maximumVariadicArity,
 				callsiteArity,
@@ -640,7 +640,7 @@ func (root *RootNode) BuildVariadicFunctionWithStateCallsiteNode(
 
 	if callsiteArity < builtinFunctionInfo.minimumVariadicArity {
 		return nil, fmt.Errorf(
-			"mlr: function %s takes minimum argument count %d; got %d",
+			"function %s takes minimum argument count %d; got %d",
 			builtinFunctionInfo.name,
 			builtinFunctionInfo.minimumVariadicArity,
 			callsiteArity,
@@ -650,7 +650,7 @@ func (root *RootNode) BuildVariadicFunctionWithStateCallsiteNode(
 	if builtinFunctionInfo.maximumVariadicArity != 0 {
 		if callsiteArity > builtinFunctionInfo.maximumVariadicArity {
 			return nil, fmt.Errorf(
-				"mlr: function %s takes maximum argument count %d; got %d",
+				"function %s takes maximum argument count %d; got %d",
 				builtinFunctionInfo.name,
 				builtinFunctionInfo.maximumVariadicArity,
 				callsiteArity,

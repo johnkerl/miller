@@ -256,7 +256,7 @@ func (mv *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 		return retval
 	} else {
 		return errors.New(
-			"mlr: only maps and arrays are indexable; got " + mv.GetTypeName(),
+			"only maps and arrays are indexable; got " + mv.GetTypeName(),
 		)
 	}
 }
@@ -289,7 +289,7 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 	if !baseIndex.IsString() && !baseIndex.IsInt() {
 		// Base is map, index is invalid type
 		return errors.New(
-			"mlr: map indices must be string, int, or array thereof; got " + baseIndex.GetTypeName(),
+			"map indices must be string, int, or array thereof; got " + baseIndex.GetTypeName(),
 		)
 	}
 
@@ -335,10 +335,10 @@ func putIndexedOnArray(
 			return nil
 		}
 		if mindex.intf.(int64) == 0 {
-			return errors.New("mlr: zero indices are not supported. Indices are 1-up")
+			return errors.New("zero indices are not supported. Indices are 1-up")
 		}
 		if mindex.intf.(int64) < 0 {
-			return errors.New("mlr: Cannot use negative indices to auto-lengthen arrays")
+			return errors.New("Cannot use negative indices to auto-lengthen arrays")
 		}
 		// Array is [a,b,c] with mindices 1,2,3. Length is 3. Zindices are 0,1,2.
 		// Given mindex is 4.
@@ -362,16 +362,16 @@ func putIndexedOnArray(
 			}
 		} else {
 			return errors.New(
-				"mlr: indices must be string, int, or array thereof; got " + nextIndex.GetTypeName(),
+				"indices must be string, int, or array thereof; got " + nextIndex.GetTypeName(),
 			)
 		}
 
 		return (*baseArray)[zindex].PutIndexed(indices[1:], rvalue)
 
 	} else if mindex.intf.(int64) == 0 {
-		return errors.New("mlr: zero indices are not supported. Indices are 1-up")
+		return errors.New("zero indices are not supported. Indices are 1-up")
 	} else if mindex.intf.(int64) < 0 {
-		return errors.New("mlr: Cannot use negative indices to auto-lengthen arrays")
+		return errors.New("Cannot use negative indices to auto-lengthen arrays")
 	} else {
 		// Already allocated but needs to be longer
 		LengthenMlrvalArray(baseArray, int(mindex.intf.(int64)))
@@ -394,7 +394,7 @@ func (mv *Mlrval) RemoveIndexed(indices []*Mlrval) error {
 
 	}
 	return errors.New(
-		"mlr: cannot unset index variable which is neither map nor array",
+		"cannot unset index variable which is neither map nor array",
 	)
 }
 
@@ -411,7 +411,7 @@ func removeIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 			return nil
 		}
 		return errors.New(
-			"mlr: map indices must be string, int, or array thereof; got " +
+			"map indices must be string, int, or array thereof; got " +
 				baseIndex.GetTypeName(),
 		)
 	}
@@ -427,7 +427,7 @@ func removeIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 	} else {
 		// Base is map, index is invalid type
 		return errors.New(
-			"mlr: map indices must be string, int, or array thereof; got " + baseIndex.GetTypeName(),
+			"map indices must be string, int, or array thereof; got " + baseIndex.GetTypeName(),
 		)
 	}
 
@@ -459,19 +459,19 @@ func removeIndexedOnArray(
 			rightSlice := (*baseArray)[zindex+1 : len((*baseArray))]
 			*baseArray = append(leftSlice, rightSlice...)
 		} else if mindex.intf.(int64) == 0 {
-			return errors.New("mlr: zero indices are not supported. Indices are 1-up")
+			return errors.New("zero indices are not supported. Indices are 1-up")
 		}
 		// TODO: improve wording
-		return errors.New("mlr: array index out of bounds for unset")
+		return errors.New("array index out of bounds for unset")
 	}
 	// More indices remain; recurse
 	if inBounds {
 		return (*baseArray)[zindex].RemoveIndexed(indices[1:])
 	} else if mindex.intf.(int64) == 0 {
-		return errors.New("mlr: zero indices are not supported. Indices are 1-up")
+		return errors.New("zero indices are not supported. Indices are 1-up")
 	} else {
 		// TODO: improve wording
-		return errors.New("mlr: array index out of bounds for unset")
+		return errors.New("array index out of bounds for unset")
 	}
 
 	return nil
@@ -591,7 +591,7 @@ func NewMlrvalForAutoDeepen(mvtype MVType) (*Mlrval, error) {
 		return empty, nil
 	}
 	return nil, errors.New(
-		"mlr: indices must be string, int, or array thereof; got " + GetTypeName(mvtype),
+		"indices must be string, int, or array thereof; got " + GetTypeName(mvtype),
 	)
 }
 

@@ -171,7 +171,7 @@ func (manager *UDSManager) LookUp(subroutineName string, callsiteArity int) (*UD
 	}
 	if uds.signature.arity != callsiteArity {
 		return nil, fmt.Errorf(
-			"mlr: subroutine %s invoked with %d argument%s; expected %d",
+			"subroutine %s invoked with %d argument%s; expected %d",
 			subroutineName,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -238,7 +238,7 @@ func (root *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
 	if !root.allowUDFUDSRedefinitions {
 		if root.udsManager.ExistsByName(subroutineName) {
 			return fmt.Errorf(
-				`mlr: subroutine named "%s" has already been defined`,
+				`subroutine named "%s" has already been defined`,
 				subroutineName,
 			)
 		}

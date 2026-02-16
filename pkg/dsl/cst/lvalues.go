@@ -43,11 +43,11 @@ func (root *RootNode) BuildAssignableNode(
 
 	case dsl.NodeTypeArrayOrMapPositionalNameAccess:
 		return nil, fmt.Errorf(
-			"mlr: '[[...]]' is allowed on assignment left-hand sides only when immediately preceded by '$'",
+			"'[[...]]' is allowed on assignment left-hand sides only when immediately preceded by '$'",
 		)
 	case dsl.NodeTypeArrayOrMapPositionalValueAccess:
 		return nil, fmt.Errorf(
-			"mlr: '[[[...]]]' is allowed on assignment left-hand sides only when immediately preceded by '$'",
+			"'[[[...]]]' is allowed on assignment left-hand sides only when immediately preceded by '$'",
 		)
 
 	case dsl.NodeTypeArrayOrMapIndexAccess:
@@ -303,7 +303,7 @@ func (node *PositionalFieldNameLvalueNode) Assign(
 		return nil
 	}
 	return fmt.Errorf(
-		"mlr: positional index for $[[...]] assignment must be integer; got %s",
+		"positional index for $[[...]] assignment must be integer; got %s",
 		lhsFieldIndex.GetTypeName(),
 	)
 }
@@ -316,7 +316,7 @@ func (node *PositionalFieldNameLvalueNode) AssignIndexed(
 	// TODO: reconsider this if /when we decide to allow string-slice
 	// assignments.
 	return fmt.Errorf(
-		"mlr: $[[...]] = ... expressions are not indexable",
+		"$[[...]] = ... expressions are not indexable",
 	)
 }
 
@@ -425,7 +425,7 @@ func (node *PositionalFieldValueLvalueNode) AssignIndexed(
 			return nil
 		}
 		return fmt.Errorf(
-			"mlr: positional index for $[[[...]]] assignment must be integer; got %s",
+			"positional index for $[[[...]]] assignment must be integer; got %s",
 			lhsFieldIndex.GetTypeName(),
 		)
 	} else {
@@ -770,7 +770,7 @@ func (root *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssig
 	if astNode.Children == nil { // untyped, like 'x = 3'
 		if root.strictMode {
 			return nil, fmt.Errorf(
-				`mlr: need typedecl such as "var", "str", "num", etc. for variable "%s" in strict mode`,
+				`need typedecl such as "var", "str", "num", etc. for variable "%s" in strict mode`,
 				variableName,
 			)
 		}
@@ -1040,7 +1040,7 @@ func (node *EnvironmentVariableLvalueNode) AssignIndexed(
 	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
-	return fmt.Errorf("mlr: ENV[...] cannot be indexed")
+	return fmt.Errorf("ENV[...] cannot be indexed")
 }
 
 func (node *EnvironmentVariableLvalueNode) Unassign(

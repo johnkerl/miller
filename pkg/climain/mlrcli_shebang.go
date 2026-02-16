@@ -39,7 +39,7 @@ func maybeInterpolateDashS(args []string) ([]string, error) {
 		return args, nil
 	}
 	if len(args) < 3 {
-		return nil, fmt.Errorf("mlr: -s flag requires a filename after it")
+		return nil, fmt.Errorf("-s flag requires a filename after it")
 	}
 
 	// mlr -s scriptfile input1.csv input2.csv
@@ -51,7 +51,7 @@ func maybeInterpolateDashS(args []string) ([]string, error) {
 	// Read the bytes in the filename given after -s.
 	byteContents, rerr := os.ReadFile(filename)
 	if rerr != nil {
-		return nil, fmt.Errorf("mlr: cannot read %s: %v", filename, rerr)
+		return nil, fmt.Errorf("cannot read %s: %v", filename, rerr)
 	}
 	contents := string(byteContents)
 
@@ -78,7 +78,7 @@ func maybeInterpolateDashS(args []string) ([]string, error) {
 	contents = strings.Join(lines, "\n")
 	argsFromFile, err := shellquote.Split(contents)
 	if err != nil {
-		return nil, fmt.Errorf("mlr: cannot parse %s: %v", filename, err)
+		return nil, fmt.Errorf("cannot parse %s: %v", filename, err)
 	}
 
 	// Join "mlr", the args from the script-file contents, and all the remaining arguments

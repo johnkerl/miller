@@ -184,7 +184,7 @@ func getRecordBatchExplicitTSVHeader(
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
 				err := fmt.Errorf(
-					"mlr: TSV header/data length mismatch %d != %d at filename %s line %d",
+					"TSV header/data length mismatch %d != %d at filename %s line %d",
 					len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
 				)
 				errorChannel <- err
@@ -303,7 +303,7 @@ func getRecordBatchImplicitTSVHeader(
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
 				err := fmt.Errorf(
-					"mlr: TSV header/data length mismatch %d != %d at filename %s line %d",
+					"TSV header/data length mismatch %d != %d at filename %s line %d",
 					len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
 				)
 				errorChannel <- err

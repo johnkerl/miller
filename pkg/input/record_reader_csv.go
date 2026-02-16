@@ -253,7 +253,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				err := fmt.Errorf(
-					"mlr: CSV header/data length mismatch %d != %d at filename %s row %d",
+					"CSV header/data length mismatch %d != %d at filename %s row %d",
 					nh, nd, reader.filename, reader.rowNumber,
 				)
 				errorChannel <- err

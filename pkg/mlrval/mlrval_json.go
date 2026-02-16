@@ -27,7 +27,7 @@ const (
 	JSON_MULTILINE   = 2
 )
 
-var prematureEofError error = errors.New("mlr: JSON parser: unexpected premature EOF")
+var prematureEofError error = errors.New("JSON parser: unexpected premature EOF")
 
 // The JSON decoder (https://golang.org/pkg/encoding/json/#Decoder) is quite
 // nice. What we can have is:
@@ -102,7 +102,7 @@ func (mv *Mlrval) UnmarshalJSON(inputBytes []byte) error {
 	decoder := json.NewDecoder(bytes.NewReader(inputBytes))
 	pmv, eof, err := MlrvalDecodeFromJSON(decoder)
 	if eof {
-		return fmt.Errorf("mlr: JSON parser: unexpected premature EOF")
+		return fmt.Errorf("JSON parser: unexpected premature EOF")
 	}
 	if err != nil {
 		return err
@@ -115,7 +115,7 @@ func TryUnmarshalJSON(inputBytes []byte) (pmv *Mlrval, err error) {
 	decoder := json.NewDecoder(bytes.NewReader(inputBytes))
 	pmv, eof, err := MlrvalDecodeFromJSON(decoder)
 	if eof {
-		err = fmt.Errorf("mlr: JSON parser: unexpected premature EOF")
+		err = fmt.Errorf("JSON parser: unexpected premature EOF")
 	}
 	return pmv, err
 }
@@ -161,7 +161,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 		}
 
 		return nil, false, fmt.Errorf(
-			"mlr: JSON reader internal coding error: non-delimiter token unhandled",
+			"JSON reader internal coding error: non-delimiter token unhandled",
 		)
 
 	} else {
@@ -179,7 +179,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 			collectionType = "JSON object`"
 		} else {
 			return nil, false, fmt.Errorf(
-				"mlr: JSON reader: Unhandled opening delimiter \"%s\"", string(delimiter),
+				"JSON reader: Unhandled opening delimiter \"%s\"", string(delimiter),
 			)
 		}
 
@@ -231,14 +231,14 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 		}
 
 		imbalanceError := fmt.Errorf(
-			"mlr: JSON reader: did not find closing token \"%s\" for %s",
+			"JSON reader: did not find closing token \"%s\" for %s",
 			string(expectedClosingDelimiter),
 			collectionType,
 		)
 
 		endToken, err := decoder.Token()
 		if err == io.EOF {
-			return nil, false, fmt.Errorf("mlr: JSON parser: unexpected premature EOF")
+			return nil, false, fmt.Errorf("JSON parser: unexpected premature EOF")
 		}
 		if err != nil {
 			return nil, false, err
@@ -294,9 +294,9 @@ func (mv *Mlrval) marshalJSONAux(
 	case MT_MAP:
 		return mv.marshalJSONMap(jsonFormatting, elementNestingDepth, outputIsStdout)
 	case MT_DIM: // MT_DIM is one past the last valid type
-		return "", fmt.Errorf("mlr: internal coding error detected")
+		return "", fmt.Errorf("internal coding error detected")
 	}
-	return "", fmt.Errorf("mlr: Internal coding error detected")
+	return "", fmt.Errorf("Internal coding error detected")
 }
 
 // TYPE-SPECIFIC MARSHALERS
@@ -304,7 +304,7 @@ func (mv *Mlrval) marshalJSONAux(
 func (mv *Mlrval) marshalJSONPending(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_PENDING)
 	return "", fmt.Errorf(
-		"mlr: internal coding error: pending-values should not have been produced",
+		"internal coding error: pending-values should not have been produced",
 	)
 }
 
@@ -316,7 +316,7 @@ func (mv *Mlrval) marshalJSONError(outputIsStdout bool) (string, error) {
 func (mv *Mlrval) marshalJSONAbsent(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_ABSENT)
 	return "", fmt.Errorf(
-		"mlr: internal coding error: absent-values should not have been assigned",
+		"internal coding error: absent-values should not have been assigned",
 	)
 }
 

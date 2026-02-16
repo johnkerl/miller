@@ -400,7 +400,7 @@ func (root *RootNode) resolveSubroutineCallsites() error {
 			return err
 		}
 		if uds == nil {
-			return errors.New("mlr: subroutine name not found: " + subroutineName)
+			return errors.New("subroutine name not found: " + subroutineName)
 		}
 
 		unresolvedSubroutineCallsite.uds = uds

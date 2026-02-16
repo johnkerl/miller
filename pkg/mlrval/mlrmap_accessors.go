@@ -243,7 +243,7 @@ func (mlrmap *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 		return nil
 	}
 	return fmt.Errorf(
-		"mlr: record/map indices must be string, int, or array thereof; got %s", key.GetTypeName(),
+		"record/map indices must be string, int, or array thereof; got %s", key.GetTypeName(),
 	)
 }
 
@@ -351,7 +351,7 @@ func (mlrmap *Mlrmap) getWithMlrvalArrayIndex(index *Mlrval) (*Mlrval, error) {
 		}
 		if i < n-1 {
 			if !next.IsMap() {
-				return nil, fmt.Errorf("mlr: cannot multi-index non-map")
+				return nil, fmt.Errorf("cannot multi-index non-map")
 			}
 			current = next.intf.(*Mlrmap)
 		} else {
