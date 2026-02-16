@@ -15,9 +15,9 @@ import (
 // DCF list-valued field names (comma-separated in the format). These are
 // exposed as Miller arrays; all other fields remain strings.
 var dcfListFieldNames = map[string]bool{
-	"Depends":                true,
-	"Pre-Depends":            true,
-	"Recommends":             true,
+	"Depends":               true,
+	"Pre-Depends":           true,
+	"Recommends":            true,
 	"Suggests":              true,
 	"Enhances":              true,
 	"Breaks":                true,
