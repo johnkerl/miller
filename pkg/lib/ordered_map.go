@@ -50,14 +50,13 @@ func (omap *OrderedMap[V]) Has(key string) bool {
 func (omap *OrderedMap[V]) findEntry(key *string) *orderedMapEntry[V] {
 	if omap.keysToEntries != nil {
 		return omap.keysToEntries[*key]
-	} else {
-		for pe := omap.Head; pe != nil; pe = pe.Next {
-			if pe.Key == *key {
-				return pe
-			}
-		}
-		return nil
 	}
+	for pe := omap.Head; pe != nil; pe = pe.Next {
+		if pe.Key == *key {
+			return pe
+		}
+	}
+	return nil
 }
 
 func (omap *OrderedMap[V]) Put(key string, value V) {
@@ -108,10 +107,9 @@ func (omap *OrderedMap[V]) Remove(key string) bool {
 	pe := omap.findEntry(&key)
 	if pe == nil {
 		return false
-	} else {
-		omap.unlink(pe)
-		return true
 	}
+	omap.unlink(pe)
+	return true
 }
 
 func (omap *OrderedMap[V]) unlink(pe *orderedMapEntry[V]) {

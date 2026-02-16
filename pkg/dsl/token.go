@@ -11,7 +11,6 @@ import (
 func TokenToLocationInfo(sourceToken *token.Token) string {
 	if sourceToken == nil {
 		return ""
-	} else {
-		return fmt.Sprintf(" at DSL expression line %d column %d", sourceToken.Pos.Line, sourceToken.Pos.Column)
 	}
+	return fmt.Sprintf(" at DSL expression line %d column %d", sourceToken.Pos.Line, sourceToken.Pos.Column)
 }

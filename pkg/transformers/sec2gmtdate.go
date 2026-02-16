@@ -57,10 +57,9 @@ func transformerSec2GMTDateParseCLI(
 			transformerSec2GMTDateUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerSec2GMTDateUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerSec2GMTDateUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	if argi >= argc {

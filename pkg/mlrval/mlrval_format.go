@@ -175,9 +175,8 @@ func getLanguageTag() language.Tag {
 	v, ok := os.LookupEnv("LANG")
 	if ok {
 		return language.Make(v)
-	} else {
-		return language.Make("en")
 	}
+	return language.Make("en")
 }
 
 type formatterToSeparatedInt struct {

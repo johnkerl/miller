@@ -256,9 +256,8 @@ func validateForLoopTwoVariableUniqueNames(astNode *dsl.ASTNode) error {
 	valVarName := string(valVarNode.Token.Lit)
 	if keyVarName == valVarName {
 		return fmt.Errorf("mlr: redefinition of variable %s in the same scope", keyVarName)
-	} else {
-		return nil
 	}
+	return nil
 }
 
 // Check against 'for ((a,a), b in $*)' or 'for ((a,b), a in $*)' -- repeated 'a'.

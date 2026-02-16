@@ -222,15 +222,13 @@ func (keeper *JoinBucketKeeper) computeState() tJoinBucketKeeperState {
 	if keeper.JoinBucket.leftFieldValues == nil {
 		if !keeper.leof {
 			return LEFT_STATE_0_PREFILL
-		} else {
-			return LEFT_STATE_3_EOF
 		}
+		return LEFT_STATE_3_EOF
+	}
+	if keeper.peekRecordAndContext == nil {
+		return LEFT_STATE_2_LAST_BUCKET
 	} else {
-		if keeper.peekRecordAndContext == nil {
-			return LEFT_STATE_2_LAST_BUCKET
-		} else {
-			return LEFT_STATE_1_FULL
-		}
+		return LEFT_STATE_1_FULL
 	}
 }
 
@@ -557,9 +555,8 @@ func (keeper *JoinBucketKeeper) readRecord() *types.RecordAndContext {
 		if leftrecAndContext.EndOfStream { // end-of-stream marker
 			keeper.recordReaderDone = true
 			return nil
-		} else {
-			return leftrecAndContext
 		}
+		return leftrecAndContext
 	}
 
 	return nil
@@ -606,15 +603,14 @@ func KeepLeftFieldNames(
 	} else if leftKeepFieldNameSet == nil {
 		// Normal case
 		return inrec
-	} else {
-		outrec := mlrval.NewMlrmap()
-		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if leftKeepFieldNameSet[pe.Key] {
-				// PutReference, not PutCopy, since the inrec will be freed and this
-				// is an ownership transfer.
-				outrec.PutReference(pe.Key, pe.Value)
-			}
-		}
-		return outrec
 	}
+	outrec := mlrval.NewMlrmap()
+	for pe := inrec.Head; pe != nil; pe = pe.Next {
+		if leftKeepFieldNameSet[pe.Key] {
+			// PutReference, not PutCopy, since the inrec will be freed and this
+			// is an ownership transfer.
+			outrec.PutReference(pe.Key, pe.Value)
+		}
+	}
+	return outrec
 }

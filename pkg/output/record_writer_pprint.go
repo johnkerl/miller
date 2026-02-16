@@ -115,21 +115,20 @@ func (writer *RecordWriterPPRINT) writeHeterogenousList(
 
 	if maxNR == 0 {
 		return false
-	} else {
-		// Column name may be longer/shorter than all data values in the column
-		for key, oldMaxWidth := range maxWidths {
-			width := utf8.RuneCountInString(key)
-			if width > oldMaxWidth {
-				maxWidths[key] = width
-			}
-		}
-		if barred {
-			writer.writeHeterogenousListBarred(records, maxWidths, bufferedOutputStream, outputIsStdout)
-		} else {
-			writer.writeHeterogenousListNonBarred(records, maxWidths, bufferedOutputStream, outputIsStdout)
-		}
-		return true
 	}
+	// Column name may be longer/shorter than all data values in the column
+	for key, oldMaxWidth := range maxWidths {
+		width := utf8.RuneCountInString(key)
+		if width > oldMaxWidth {
+			maxWidths[key] = width
+		}
+	}
+	if barred {
+		writer.writeHeterogenousListBarred(records, maxWidths, bufferedOutputStream, outputIsStdout)
+	} else {
+		writer.writeHeterogenousListNonBarred(records, maxWidths, bufferedOutputStream, outputIsStdout)
+	}
+	return true
 }
 
 // Example:

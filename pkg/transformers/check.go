@@ -58,10 +58,9 @@ func transformerCheckParseCLI(
 			transformerCheckUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerCheckUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerCheckUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

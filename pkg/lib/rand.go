@@ -32,9 +32,8 @@ func RandInt63() int64 {
 func RandRange(lowInclusive, highExclusive int64) int64 {
 	if lowInclusive == highExclusive {
 		return lowInclusive
-	} else {
-		u := generator.Int63()
-		// TODO: test divide-by-zero cases in UT
-		return lowInclusive + (u % (highExclusive - lowInclusive))
 	}
+	u := generator.Int63()
+	// TODO: test divide-by-zero cases in UT
+	return lowInclusive + (u % (highExclusive - lowInclusive))
 }

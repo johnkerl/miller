@@ -215,9 +215,8 @@ func recurseUnaryFuncOnInput1(unaryFunc UnaryFunc, input1 *mlrval.Mlrval) *mlrva
 			outputMap.PutReference(pe.Key, unaryFunc(pe.Value))
 		}
 		return mlrval.FromMap(outputMap)
-	} else {
-		return unaryFunc(input1)
 	}
+	return unaryFunc(input1)
 }
 
 // recurseBinaryFuncOnInput1 is for fmtifnum and other functions which apply themselves recursively
@@ -239,9 +238,8 @@ func recurseBinaryFuncOnInput1(binaryFunc BinaryFunc, input1, input2 *mlrval.Mlr
 			outputMap.PutReference(pe.Key, binaryFunc(pe.Value, input2))
 		}
 		return mlrval.FromMap(outputMap)
-	} else {
-		return binaryFunc(input1, input2)
 	}
+	return binaryFunc(input1, input2)
 }
 
 func type_error_named_argument(

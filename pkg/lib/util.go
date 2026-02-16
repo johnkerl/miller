@@ -16,17 +16,15 @@ func BooleanXOR(a, b bool) bool {
 func BoolToInt(b bool) int64 {
 	if !b {
 		return 0
-	} else {
-		return 1
 	}
+	return 1
 }
 
 func Plural(n int) string {
 	if n == 1 {
 		return ""
-	} else {
-		return "s"
 	}
+	return "s"
 }
 
 // In Go as in all languages I'm aware of with a string-split, "a,b,c" splits
@@ -35,9 +33,8 @@ func Plural(n int) string {
 func SplitString(input string, separator string) []string {
 	if input == "" {
 		return make([]string, 0)
-	} else {
-		return strings.Split(input, separator)
 	}
+	return strings.Split(input, separator)
 }
 
 func StringListToSet(stringList []string) map[string]bool {
@@ -87,9 +84,8 @@ func SortedStrings(strings []string) []string {
 func IntMin2(a, b int64) int64 {
 	if a < b {
 		return a
-	} else {
-		return b
 	}
+	return b
 }
 
 // TryIntFromString tries decimal, hex, octal, and binary.
@@ -153,9 +149,8 @@ func TryFloatFromString(input string) (float64, bool) {
 	fval, err := strconv.ParseFloat(input, 64)
 	if err == nil {
 		return fval, true
-	} else {
-		return 0, false
 	}
+	return 0, false
 }
 
 func TryBoolFromBoolString(input string) (bool, bool) {
@@ -163,9 +158,8 @@ func TryBoolFromBoolString(input string) (bool, bool) {
 		return true, true
 	} else if input == "false" {
 		return false, true
-	} else {
-		return false, false
 	}
+	return false, false
 }
 
 // Go doesn't preserve insertion order in its arrays, so here we make an

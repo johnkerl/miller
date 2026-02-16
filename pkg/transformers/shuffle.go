@@ -57,10 +57,9 @@ func transformerShuffleParseCLI(
 			transformerShuffleUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerShuffleUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerShuffleUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

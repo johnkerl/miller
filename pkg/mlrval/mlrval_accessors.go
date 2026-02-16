@@ -9,9 +9,8 @@ import (
 func (mv *Mlrval) GetArrayLength() (int, bool) {
 	if mv.IsArray() {
 		return len(mv.intf.([]*Mlrval)), true
-	} else {
-		return -999, false
 	}
+	return -999, false
 }
 
 func CopyMlrvalArray(input []*Mlrval) []*Mlrval {

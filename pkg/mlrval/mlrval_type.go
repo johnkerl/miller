@@ -193,7 +193,6 @@ func TypeNameToMask(typeName string) (mask int, present bool) {
 	retval := typeNameToMaskMap[typeName]
 	if retval != 0 {
 		return retval, true
-	} else {
-		return 0, false
 	}
+	return 0, false
 }

@@ -295,9 +295,8 @@ func (reader *RecordReaderXTAB) recordFromXTABLines(
 func newXTABPairSplitter(options *cli.TReaderOptions) iXTABPairSplitter {
 	if options.IPSRegex == nil {
 		return &tXTABIPSSplitter{ips: options.IPS, ipslen: len(options.IPS)}
-	} else {
-		return &tXTABIPSRegexSplitter{ipsRegex: options.IPSRegex}
 	}
+	return &tXTABIPSRegexSplitter{ipsRegex: options.IPSRegex}
 }
 
 type tXTABIPSSplitter struct {
@@ -371,7 +370,6 @@ func (s *tXTABIPSRegexSplitter) Split(input string) (key, value string, err erro
 		return kv[0], "", nil
 	} else if len(kv) == 2 {
 		return kv[0], kv[1], nil
-	} else {
-		return "", "", fmt.Errorf("internal coding error in XTAB reader")
 	}
+	return "", "", fmt.Errorf("internal coding error in XTAB reader")
 }

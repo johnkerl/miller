@@ -62,9 +62,8 @@ func (root *RootNode) BuildStatementBlockNodeFromBeginOrEnd(
 	statementBlockNode, err := root.BuildStatementBlockNode(astStatementBlockNode)
 	if err != nil {
 		return nil, err
-	} else {
-		return statementBlockNode, nil
 	}
+	return statementBlockNode, nil
 }
 
 func (root *RootNode) BuildStatementBlockNode(

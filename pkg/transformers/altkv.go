@@ -55,10 +55,9 @@ func transformerAltkvParseCLI(
 			transformerAltkvUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerAltkvUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerAltkvUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

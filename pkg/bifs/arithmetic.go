@@ -87,9 +87,8 @@ func plus_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 	if overflowed {
 		return mlrval.FromFloat(float64(a) + float64(b))
-	} else {
-		return mlrval.FromInt(c)
 	}
+	return mlrval.FromInt(c)
 }
 
 func plus_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -148,9 +147,8 @@ func minus_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 	if overflowed {
 		return mlrval.FromFloat(float64(a) - float64(b))
-	} else {
-		return mlrval.FromInt(c)
 	}
+	return mlrval.FromInt(c)
 }
 
 func minus_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -225,9 +223,8 @@ func times_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 	if math.Abs(c) > 9223372036854774784.0 {
 		return mlrval.FromFloat(c)
-	} else {
-		return mlrval.FromInt(a * b)
 	}
+	return mlrval.FromInt(a * b)
 }
 
 func times_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -291,9 +288,8 @@ func divide_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	// Pythonic division, not C division.
 	if a%b == 0 {
 		return mlrval.FromInt(a / b)
-	} else {
-		return mlrval.FromFloat(float64(a) / float64(b))
 	}
+	return mlrval.FromFloat(float64(a) / float64(b))
 }
 
 func divide_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -808,9 +804,8 @@ func min_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	var b int64 = input2.AcquireIntValue()
 	if a < b {
 		return input1
-	} else {
-		return input2
 	}
+	return input2
 }
 
 // min | b=F   b=T
@@ -820,9 +815,8 @@ func min_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 func min_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.AcquireBoolValue() {
 		return input1
-	} else {
-		return input2
 	}
+	return input2
 }
 
 func min_s_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -830,9 +824,8 @@ func min_s_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	var b string = input2.AcquireStringValue()
 	if a < b {
 		return input1
-	} else {
-		return input2
 	}
+	return input2
 }
 
 func min_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -976,9 +969,8 @@ func max_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	var b int64 = input2.AcquireIntValue()
 	if a > b {
 		return input1
-	} else {
-		return input2
 	}
+	return input2
 }
 
 // max | b=F   b=T
@@ -988,9 +980,8 @@ func max_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 func max_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.AcquireBoolValue() {
 		return input1
-	} else {
-		return input2
 	}
+	return input2
 }
 
 func max_s_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -998,9 +989,8 @@ func max_s_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	var b string = input2.AcquireStringValue()
 	if a > b {
 		return input1
-	} else {
-		return input2
 	}
+	return input2
 }
 
 func max_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {

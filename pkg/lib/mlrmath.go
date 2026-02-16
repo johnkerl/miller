@@ -17,9 +17,8 @@ func Sgn(a float64) float64 {
 		return -1.0
 	} else if a == 0 {
 		return 0.0
-	} else {
-		return math.NaN()
 	}
+	return math.NaN()
 }
 
 // Normal cumulative distribution function, expressed in terms of erfc library

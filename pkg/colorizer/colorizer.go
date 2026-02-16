@@ -127,15 +127,13 @@ func maybeColorize(text string, colorString string, outputIsStdout bool) string 
 	if outputIsStdout && stdoutIsATTY {
 		if colorization == ColorizeOutputNever {
 			return text
-		} else {
-			return colorize(text, colorString)
 		}
+		return colorize(text, colorString)
+	}
+	if colorization == ColorizeOutputAlways {
+		return colorize(text, colorString)
 	} else {
-		if colorization == ColorizeOutputAlways {
-			return colorize(text, colorString)
-		} else {
-			return text
-		}
+		return text
 	}
 }
 
@@ -148,23 +146,20 @@ func GetColorization(outputIsStdout bool, isKey bool) (string, string) {
 	if outputIsStdout && stdoutIsATTY {
 		if colorization == ColorizeOutputNever {
 			return "", ""
+		}
+		if isKey {
+			return keyColorString, defaultColorString
 		} else {
-			if isKey {
-				return keyColorString, defaultColorString
-			} else {
-				return valueColorString, defaultColorString
-			}
+			return valueColorString, defaultColorString
 		}
 	} else {
 		if colorization == ColorizeOutputAlways {
 			if isKey {
 				return keyColorString, defaultColorString
-			} else {
-				return valueColorString, defaultColorString
 			}
-		} else {
-			return "", ""
+			return valueColorString, defaultColorString
 		}
+		return "", ""
 	}
 }
 

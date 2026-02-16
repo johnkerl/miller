@@ -21,13 +21,12 @@ func LoadStringsFromFileOrDir(path string, extension string) ([]string, error) {
 	}
 	if fileInfo.IsDir() {
 		return LoadStringsFromDir(path, extension)
+	}
+	dslString, err := LoadStringFromFile(path)
+	if err != nil {
+		return nil, err
 	} else {
-		dslString, err := LoadStringFromFile(path)
-		if err != nil {
-			return nil, err
-		} else {
-			return []string{dslString}, nil
-		}
+		return []string{dslString}, nil
 	}
 }
 

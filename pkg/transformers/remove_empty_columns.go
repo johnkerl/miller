@@ -54,10 +54,9 @@ func transformerRemoveEmptyColumnsParseCLI(
 			transformerRemoveEmptyColumnsUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerRemoveEmptyColumnsUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerRemoveEmptyColumnsUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

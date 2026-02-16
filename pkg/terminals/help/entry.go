@@ -204,10 +204,9 @@ func HelpMain(args []string) int {
 		if len(args) > 0 {
 			helpByApproximateSearch(args)
 			return 0
-		} else {
-			fmt.Printf("mlr help find: need one or more things to search for.\n")
-			return 1
 		}
+		fmt.Printf("mlr help find: need one or more things to search for.\n")
+		return 1
 	}
 
 	// "mlr help something" where we recognize the something

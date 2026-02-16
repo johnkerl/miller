@@ -95,9 +95,8 @@ type MlrmapPair struct {
 func NewMlrmapAsRecord() *Mlrmap {
 	if hashRecords {
 		return newMlrmapHashed()
-	} else {
-		return newMlrmapUnhashed()
 	}
+	return newMlrmapUnhashed()
 }
 func NewMlrmap() *Mlrmap {
 	return newMlrmapHashed()
@@ -127,9 +126,8 @@ func newMlrmapHashed() *Mlrmap {
 func NewMlrmapMaybeHashed(wantHashing bool) *Mlrmap {
 	if wantHashing {
 		return newMlrmapHashed()
-	} else {
-		return newMlrmapUnhashed()
 	}
+	return newMlrmapUnhashed()
 }
 
 func (mlrmap *Mlrmap) isHashed() bool {

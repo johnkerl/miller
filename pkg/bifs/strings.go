@@ -14,9 +14,8 @@ import (
 func BIF_strlen(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
 		return mlrval.FromTypeErrorUnary("strlen", input1)
-	} else {
-		return mlrval.FromInt(lib.UTF8Strlen(input1.AcquireStringValue()))
 	}
+	return mlrval.FromInt(lib.UTF8Strlen(input1.AcquireStringValue()))
 }
 
 func BIF_string(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -184,9 +183,8 @@ func BIF_truncate(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	maxLength := int(input2.AcquireIntValue())
 	if oldLength <= maxLength {
 		return input1
-	} else {
-		return mlrval.FromString(string(runes[0:maxLength]))
 	}
+	return mlrval.FromString(string(runes[0:maxLength]))
 }
 
 func BIF_leftpad(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -258,25 +256,22 @@ func BIF_rightpad(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_lstrip(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		return mlrval.FromString(strings.TrimLeft(input1.AcquireStringValue(), " \t"))
-	} else {
-		return input1
 	}
+	return input1
 }
 
 func BIF_rstrip(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		return mlrval.FromString(strings.TrimRight(input1.AcquireStringValue(), " \t"))
-	} else {
-		return input1
 	}
+	return input1
 }
 
 func BIF_strip(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		return mlrval.FromString(strings.Trim(input1.AcquireStringValue(), " \t"))
-	} else {
-		return input1
 	}
+	return input1
 }
 
 func BIF_collapse_whitespace(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -286,9 +281,8 @@ func BIF_collapse_whitespace(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 func BIF_collapse_whitespace_regexp(input1 *mlrval.Mlrval, whitespaceRegexp *regexp.Regexp) *mlrval.Mlrval {
 	if input1.IsString() {
 		return mlrval.FromString(whitespaceRegexp.ReplaceAllString(input1.AcquireStringValue(), " "))
-	} else {
-		return input1
 	}
+	return input1
 }
 
 var _whitespace_regexp = regexp.MustCompile(`\s+`)
@@ -298,9 +292,8 @@ func BIF_toupper(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.FromString(strings.ToUpper(input1.AcquireStringValue()))
 	} else if input1.IsVoid() {
 		return input1
-	} else {
-		return input1
 	}
+	return input1
 }
 
 func BIF_tolower(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -308,26 +301,23 @@ func BIF_tolower(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.FromString(strings.ToLower(input1.AcquireStringValue()))
 	} else if input1.IsVoid() {
 		return input1
-	} else {
-		return input1
 	}
+	return input1
 }
 
 func BIF_capitalize(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		if input1.AcquireStringValue() == "" {
 			return input1
-		} else {
-			runes := []rune(input1.AcquireStringValue())
-			rfirst := runes[0]
-			rrest := runes[1:]
-			sfirst := strings.ToUpper(string(rfirst))
-			srest := string(rrest)
-			return mlrval.FromString(sfirst + srest)
 		}
-	} else {
-		return input1
+		runes := []rune(input1.AcquireStringValue())
+		rfirst := runes[0]
+		rrest := runes[1:]
+		sfirst := strings.ToUpper(string(rfirst))
+		srest := string(rrest)
+		return mlrval.FromString(sfirst + srest)
 	}
+	return input1
 }
 
 func BIF_clean_whitespace(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -465,9 +455,8 @@ func bif_unformat_aux(input1, input2 *mlrval.Mlrval, inferTypes bool) *mlrval.Ml
 func BIF_hexfmt(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsInt() {
 		return mlrval.FromString("0x" + strconv.FormatUint(uint64(input1.AcquireIntValue()), 16))
-	} else {
-		return input1
 	}
+	return input1
 }
 
 func fmtnum_is(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -533,21 +522,19 @@ var fmtnum_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 func BIF_fmtnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsArray() || input1.IsMap() {
 		return recurseBinaryFuncOnInput1(BIF_fmtnum, input1, input2)
-	} else {
-		return fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
 	}
+	return fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 func BIF_fmtifnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsArray() || input1.IsMap() {
 		return recurseBinaryFuncOnInput1(BIF_fmtifnum, input1, input2)
+	}
+	output := fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
+	if output.IsError() {
+		return input1
 	} else {
-		output := fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
-		if output.IsError() {
-			return input1
-		} else {
-			return output
-		}
+		return output
 	}
 }
 
@@ -560,12 +547,10 @@ func BIF_latin1_to_utf8(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 			// Somewhat arbitrary design decision
 			// return input1
 			return mlrval.FromError(err)
-		} else {
-			return mlrval.FromString(output)
 		}
-	} else {
-		return input1
+		return mlrval.FromString(output)
 	}
+	return input1
 }
 
 func BIF_utf8_to_latin1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -577,10 +562,8 @@ func BIF_utf8_to_latin1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 			// Somewhat arbitrary design decision
 			// return input1
 			return mlrval.FromError(err)
-		} else {
-			return mlrval.FromString(output)
 		}
-	} else {
-		return input1
+		return mlrval.FromString(output)
 	}
+	return input1
 }

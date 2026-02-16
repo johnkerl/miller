@@ -366,17 +366,16 @@ func strptime_tz(
 	if useTZ {
 		if location != nil {
 			return time.ParseInLocation(goLibTemplate, goLibInput, location)
+		}
+		tz := os.Getenv("TZ")
+		if tz == "" {
+			return time.Parse(goLibTemplate, goLibInput)
 		} else {
-			tz := os.Getenv("TZ")
-			if tz == "" {
-				return time.Parse(goLibTemplate, goLibInput)
-			} else {
-				location, err := time.LoadLocation(tz)
-				if err != nil {
-					return time.Time{}, err
-				}
-				return time.ParseInLocation(goLibTemplate, goLibInput, location)
+			location, err := time.LoadLocation(tz)
+			if err != nil {
+				return time.Time{}, err
 			}
+			return time.ParseInLocation(goLibTemplate, goLibInput, location)
 		}
 	} else {
 		// Parse in UTC so strptime (without _local) is deterministic and matches docs.

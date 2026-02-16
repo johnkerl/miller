@@ -153,9 +153,8 @@ func CompileMillerRegexesOrDie(regexStrings []string) []*regexp.Regexp {
 func RegexCompiledSplitString(regex *regexp.Regexp, input string, n int) []string {
 	if input == "" {
 		return make([]string, 0)
-	} else {
-		return regex.Split(input, n)
 	}
+	return regex.Split(input, n)
 }
 
 // RegexStringSub implements the sub DSL function.
@@ -473,9 +472,8 @@ func ReplacementHasCaptures(
 ) {
 	if captureDetector.MatchString(replacement) {
 		return true, captureSplitter.FindAllStringSubmatchIndex(replacement, -1)
-	} else {
-		return false, nil
 	}
+	return false, nil
 }
 
 // InterpolateCaptures example:

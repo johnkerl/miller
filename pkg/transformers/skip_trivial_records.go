@@ -54,10 +54,9 @@ func transformerSkipTrivialRecordsParseCLI(
 			transformerSkipTrivialRecordsUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerSkipTrivialRecordsUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerSkipTrivialRecordsUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

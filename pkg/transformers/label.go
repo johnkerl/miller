@@ -58,10 +58,9 @@ func transformerLabelParseCLI(
 			transformerLabelUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerLabelUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerLabelUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	// Get the label field names from the command line

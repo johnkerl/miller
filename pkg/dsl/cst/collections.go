@@ -123,15 +123,14 @@ func (node *ArrayOrMapIndexAccessNode) Evaluate(
 	} else if baseMlrval.IsAbsent() {
 		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
-	} else {
-		return mlrval.FromError(
-			fmt.Errorf(
-				"cannot index base value %s of type %s, which is not array, map, or string",
-				baseMlrval.StringMaybeQuoted(),
-				baseMlrval.GetTypeName(),
-			),
-		)
 	}
+	return mlrval.FromError(
+		fmt.Errorf(
+			"cannot index base value %s of type %s, which is not array, map, or string",
+			baseMlrval.StringMaybeQuoted(),
+			baseMlrval.GetTypeName(),
+		),
+	)
 }
 
 type ArraySliceAccessNode struct {
@@ -366,31 +365,28 @@ func (node *ArrayOrMapPositionalNameAccessNode) Evaluate(
 		zindex, ok := mlrval.UnaliasArrayLengthIndex(int(n), int(index))
 		if ok {
 			return mlrval.FromInt(int64(zindex + 1)) // Miller user-space indices are 1-up
-		} else {
-			return mlrval.ABSENT
 		}
+		return mlrval.ABSENT
 
 	} else if baseMlrval.IsMap() {
 		name, ok := baseMlrval.GetMap().GetNameAtPositionalIndex(index)
 		if !ok {
 			return mlrval.ABSENT
-		} else {
-			return mlrval.FromString(name)
 		}
+		return mlrval.FromString(name)
 
 	} else if baseMlrval.IsAbsent() {
 		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
 
-	} else {
-		return mlrval.FromError(
-			fmt.Errorf(
-				"cannot index base value %s of type %s, which is not array, map, or string",
-				baseMlrval.StringMaybeQuoted(),
-				baseMlrval.GetTypeName(),
-			),
-		)
 	}
+	return mlrval.FromError(
+		fmt.Errorf(
+			"cannot index base value %s of type %s, which is not array, map, or string",
+			baseMlrval.StringMaybeQuoted(),
+			baseMlrval.GetTypeName(),
+		),
+	)
 }
 
 // For x = [7,8,9], x[[2]] = 8
@@ -458,15 +454,14 @@ func (node *ArrayOrMapPositionalValueAccessNode) Evaluate(
 		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
 
-	} else {
-		return mlrval.FromError(
-			fmt.Errorf(
-				"cannot index base value %s of type %s, which is not array, map, or string",
-				baseMlrval.StringMaybeQuoted(),
-				baseMlrval.GetTypeName(),
-			),
-		)
 	}
+	return mlrval.FromError(
+		fmt.Errorf(
+			"cannot index base value %s of type %s, which is not array, map, or string",
+			baseMlrval.StringMaybeQuoted(),
+			baseMlrval.GetTypeName(),
+		),
+	)
 }
 
 // This is for computing map entries at runtime. For example, in

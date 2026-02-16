@@ -331,9 +331,8 @@ func (frame *StackFrame) get(
 	offset, ok := frame.namesToOffsets[stackVariable.name]
 	if ok {
 		return frame.vars[offset].GetValue()
-	} else {
-		return nil
 	}
+	return nil
 }
 
 func (frame *StackFrame) has(
@@ -358,9 +357,8 @@ func (frame *StackFrame) set(
 		offsetInFrame := len(frame.vars) - 1
 		frame.namesToOffsets[stackVariable.name] = offsetInFrame
 		return nil
-	} else {
-		return frame.vars[offset].Assign(mlrval)
 	}
+	return frame.vars[offset].Assign(mlrval)
 }
 
 // TODO: audit for honor of error-return at callsites
@@ -379,12 +377,11 @@ func (frame *StackFrame) defineTyped(
 		offsetInFrame := len(frame.vars) - 1
 		frame.namesToOffsets[stackVariable.name] = offsetInFrame
 		return nil
-	} else {
-		return fmt.Errorf(
-			"%s: variable %s has already been defined in the same scope",
-			"mlr", stackVariable.name,
-		)
 	}
+	return fmt.Errorf(
+		"%s: variable %s has already been defined in the same scope",
+		"mlr", stackVariable.name,
+	)
 }
 
 // TODO: audit for honor of error-return at callsites
@@ -401,12 +398,11 @@ func (frame *StackFrame) setIndexed(
 			newval := mlrval.FromMap(mlrval.NewMlrmap())
 			newval.PutIndexed(indices, mv)
 			return frame.set(stackVariable, newval)
-		} else {
-			return fmt.Errorf(
-				"%s: map indices must be int or string; got %s",
-				"mlr", leadingIndex.GetTypeName(),
-			)
 		}
+		return fmt.Errorf(
+			"%s: map indices must be int or string; got %s",
+			"mlr", leadingIndex.GetTypeName(),
+		)
 	} else {
 		// For example maybe the variable exists and is an array but the
 		// leading index is a string.

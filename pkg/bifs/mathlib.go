@@ -165,9 +165,8 @@ func pow_f_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	// Int raised to int power should be float if it can be (i.e. unless overflow)
 	if float64(ioutput) == foutput {
 		return mlrval.FromInt(ioutput)
-	} else {
-		return mlrval.FromFloat(foutput)
 	}
+	return mlrval.FromFloat(foutput)
 }
 func pow_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromFloat(math.Pow(float64(input1.AcquireIntValue()), input2.AcquireFloatValue()))

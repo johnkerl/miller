@@ -62,9 +62,8 @@ func (root *RootNode) BuildReturnNode(astNode *dsl.ASTNode) (*ReturnNode, error)
 			return nil, err
 		}
 		return &ReturnNode{returnValueExpression: returnValueExpression}, nil
-	} else {
-		lib.InternalCodingErrorIf(true)
 	}
+	lib.InternalCodingErrorIf(true)
 	return nil, fmt.Errorf("internal coding error: statement should not be reached")
 }
 

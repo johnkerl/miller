@@ -114,12 +114,11 @@ func (node *DirectFieldValueLvalueNode) AssignIndexed(
 			return err
 		}
 		return nil
-	} else {
-		return state.Inrec.PutIndexed(
-			append([]*mlrval.Mlrval{node.lhsFieldName}, indices...),
-			rvalue,
-		)
 	}
+	return state.Inrec.PutIndexed(
+		append([]*mlrval.Mlrval{node.lhsFieldName}, indices...),
+		rvalue,
+	)
 }
 
 func (node *DirectFieldValueLvalueNode) Unassign(
@@ -212,12 +211,11 @@ func (node *IndirectFieldValueLvalueNode) AssignIndexed(
 			return err
 		}
 		return nil
-	} else {
-		return state.Inrec.PutIndexed(
-			append([]*mlrval.Mlrval{lhsFieldName.Copy()}, indices...),
-			rvalue,
-		)
 	}
+	return state.Inrec.PutIndexed(
+		append([]*mlrval.Mlrval{lhsFieldName.Copy()}, indices...),
+		rvalue,
+	)
 }
 
 func (node *IndirectFieldValueLvalueNode) Unassign(
@@ -303,12 +301,11 @@ func (node *PositionalFieldNameLvalueNode) Assign(
 		// TODO: incorporate error-return into this API
 		state.Inrec.PutNameWithPositionalIndex(index, rvalue)
 		return nil
-	} else {
-		return fmt.Errorf(
-			"mlr: positional index for $[[...]] assignment must be integer; got %s",
-			lhsFieldIndex.GetTypeName(),
-		)
 	}
+	return fmt.Errorf(
+		"mlr: positional index for $[[...]] assignment must be integer; got %s",
+		lhsFieldIndex.GetTypeName(),
+	)
 }
 
 func (node *PositionalFieldNameLvalueNode) AssignIndexed(
@@ -426,12 +423,11 @@ func (node *PositionalFieldValueLvalueNode) AssignIndexed(
 			//return nil
 			state.Inrec.PutCopyWithPositionalIndex(index, rvalue)
 			return nil
-		} else {
-			return fmt.Errorf(
-				"mlr: positional index for $[[[...]]] assignment must be integer; got %s",
-				lhsFieldIndex.GetTypeName(),
-			)
 		}
+		return fmt.Errorf(
+			"mlr: positional index for $[[[...]]] assignment must be integer; got %s",
+			lhsFieldIndex.GetTypeName(),
+		)
 	} else {
 		// xxx positional
 		return state.Inrec.PutIndexed(
@@ -588,12 +584,11 @@ func (node *DirectOosvarValueLvalueNode) AssignIndexed(
 			return err
 		}
 		return nil
-	} else {
-		return state.Oosvars.PutIndexed(
-			append([]*mlrval.Mlrval{node.lhsOosvarName}, indices...),
-			rvalue,
-		)
 	}
+	return state.Oosvars.PutIndexed(
+		append([]*mlrval.Mlrval{node.lhsOosvarName}, indices...),
+		rvalue,
+	)
 }
 
 func (node *DirectOosvarValueLvalueNode) Unassign(
@@ -667,12 +662,11 @@ func (node *IndirectOosvarValueLvalueNode) AssignIndexed(
 			return err
 		}
 		return nil
-	} else {
-		return state.Oosvars.PutIndexed(
-			append([]*mlrval.Mlrval{lhsOosvarName.Copy()}, indices...),
-			rvalue,
-		)
 	}
+	return state.Oosvars.PutIndexed(
+		append([]*mlrval.Mlrval{lhsOosvarName.Copy()}, indices...),
+		rvalue,
+	)
 }
 
 func (node *IndirectOosvarValueLvalueNode) Unassign(

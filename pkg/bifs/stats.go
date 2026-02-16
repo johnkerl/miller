@@ -187,10 +187,9 @@ func BIF_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	if collection.IsArray() {
 		arrayval := collection.AcquireArrayValue()
 		return mlrval.FromInt(int64(len(arrayval)))
-	} else {
-		mapval := collection.AcquireMapValue()
-		return mlrval.FromInt(mapval.FieldCount)
 	}
+	mapval := collection.AcquireMapValue()
+	return mlrval.FromInt(mapval.FieldCount)
 }
 
 func BIF_null_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
@@ -201,9 +200,8 @@ func BIF_null_count(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	f := func(element *mlrval.Mlrval) *mlrval.Mlrval {
 		if element.IsVoid() || element.IsNull() {
 			return mlrval.FromInt(1)
-		} else {
-			return mlrval.FromInt(0)
 		}
+		return mlrval.FromInt(0)
 	}
 	return mlrval.CollectionFold(
 		collection,
@@ -434,9 +432,8 @@ func BIF_minlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 	if collection.IsArray() {
 		return BIF_minlen_variadic(collection.AcquireArrayValue())
-	} else {
-		return BIF_minlen_within_map_values(collection.AcquireMapValue())
 	}
+	return BIF_minlen_within_map_values(collection.AcquireMapValue())
 }
 
 func BIF_maxlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
@@ -446,9 +443,8 @@ func BIF_maxlen(collection *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 	if collection.IsArray() {
 		return BIF_maxlen_variadic(collection.AcquireArrayValue())
-	} else {
-		return BIF_maxlen_within_map_values(collection.AcquireMapValue())
 	}
+	return BIF_maxlen_within_map_values(collection.AcquireMapValue())
 }
 
 func BIF_sort_collection(collection *mlrval.Mlrval) *mlrval.Mlrval {
@@ -644,12 +640,11 @@ func bif_percentiles_impl(
 
 	if output_array_not_map {
 		return mlrval.FromArray(outputs)
-	} else {
-		m := mlrval.NewMlrmap()
-		for i := range ps {
-			sp := ps[i].String()
-			m.PutCopy(sp, outputs[i])
-		}
-		return mlrval.FromMap(m)
 	}
+	m := mlrval.NewMlrmap()
+	for i := range ps {
+		sp := ps[i].String()
+		m.PutCopy(sp, outputs[i])
+	}
+	return mlrval.FromMap(m)
 }

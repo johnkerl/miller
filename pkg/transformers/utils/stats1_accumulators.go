@@ -485,9 +485,8 @@ func (acc *Stats1MeanAccumulator) Ingest(value *mlrval.Mlrval) {
 func (acc *Stats1MeanAccumulator) Emit() *mlrval.Mlrval {
 	if acc.count == 0 {
 		return mlrval.VOID
-	} else {
-		return bifs.BIF_divide(acc.sum, mlrval.FromInt(acc.count))
 	}
+	return bifs.BIF_divide(acc.sum, mlrval.FromInt(acc.count))
 }
 func (acc *Stats1MeanAccumulator) Reset() {
 	acc.sum = mlrval.FromInt(0)
@@ -549,9 +548,8 @@ func (acc *Stats1MinAccumulator) Ingest(value *mlrval.Mlrval) {
 func (acc *Stats1MinAccumulator) Emit() *mlrval.Mlrval {
 	if acc.min.IsAbsent() {
 		return mlrval.VOID
-	} else {
-		return acc.min.Copy()
 	}
+	return acc.min.Copy()
 }
 func (acc *Stats1MinAccumulator) Reset() {
 	acc.min = mlrval.ABSENT
@@ -572,9 +570,8 @@ func (acc *Stats1MaxAccumulator) Ingest(value *mlrval.Mlrval) {
 func (acc *Stats1MaxAccumulator) Emit() *mlrval.Mlrval {
 	if acc.max.IsAbsent() {
 		return mlrval.VOID
-	} else {
-		return acc.max.Copy()
 	}
+	return acc.max.Copy()
 }
 func (acc *Stats1MaxAccumulator) Reset() {
 	acc.max = mlrval.ABSENT

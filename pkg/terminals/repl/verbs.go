@@ -74,9 +74,8 @@ func (repl *Repl) showUsageForHandler(verbName string) bool {
 		fmt.Println(colorizer.MaybeColorizeHelp(verbName, true))
 		nonDSLHandler.usageFunc(repl)
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
 func (repl *Repl) showUsageForHandlerApproximate(searchString string) bool {
@@ -360,17 +359,16 @@ func handleSkip(repl *Repl, args []string) bool {
 		return true
 	} else if args[0] != "until" && args[0] != "u" {
 		return false
-	} else {
-		args := args[1:]
-		dslString := strings.Join(args, " ")
-		// If they say ':skip until intr' then we use a DSL string of 'false',
-		// i.e. skip until they type control-C.
-		if len(args) == 1 && args[0] == "intr" {
-			dslString = "false"
-		}
-		handleSkipOrProcessUntil(repl, dslString, false)
-		return true
 	}
+	args = args[1:]
+	dslString := strings.Join(args, " ")
+	// If they say ':skip until intr' then we use a DSL string of 'false',
+	// i.e. skip until they type control-C.
+	if len(args) == 1 && args[0] == "intr" {
+		dslString = "false"
+	}
+	handleSkipOrProcessUntil(repl, dslString, false)
+	return true
 }
 
 func usageProcess(repl *Repl) {
@@ -408,17 +406,16 @@ func handleProcess(repl *Repl, args []string) bool {
 		return true
 	} else if args[0] != "until" && args[0] != "u" {
 		return false
-	} else {
-		args := args[1:]
-		dslString := strings.Join(args, " ")
-		// If they say ':process until intr' then we use a DSL string of 'false',
-		// i.e. skip until they type control-C.
-		if len(args) == 1 && args[0] == "intr" {
-			dslString = "false"
-		}
-		handleSkipOrProcessUntil(repl, dslString, true)
-		return true
 	}
+	args = args[1:]
+	dslString := strings.Join(args, " ")
+	// If they say ':process until intr' then we use a DSL string of 'false',
+	// i.e. skip until they type control-C.
+	if len(args) == 1 && args[0] == "intr" {
+		dslString = "false"
+	}
+	handleSkipOrProcessUntil(repl, dslString, true)
+	return true
 }
 
 func handleSkipOrProcessN(repl *Repl, n int64, processingNotSkipping bool) {

@@ -54,13 +54,12 @@ func OpenFileForRead(
 ) (io.ReadCloser, error) {
 	if prepipe != "" {
 		return openPrepipedHandleForRead(filename, prepipe, prepipeIsRaw)
-	} else {
-		handle, err := PathToHandle(filename)
-		if err != nil {
-			return nil, err
-		}
-		return openEncodedHandleForRead(handle, encoding, filename)
 	}
+	handle, err := PathToHandle(filename)
+	if err != nil {
+		return nil, err
+	}
+	return openEncodedHandleForRead(handle, encoding, filename)
 }
 
 // PathToHandle maps various back-ends to a stream. As of 2021-07-07, the
@@ -80,9 +79,8 @@ func PathToHandle(
 		return handle, err
 	} else if strings.HasPrefix(path, "file://") {
 		return os.Open(strings.Replace(path, "file://", "", 1))
-	} else {
-		return os.Open(path)
 	}
+	return os.Open(path)
 }
 
 // OpenStdin: if prepipe is non-empty, popens "{prepipe}" and returns a handle
@@ -97,9 +95,8 @@ func OpenStdin(
 ) (io.ReadCloser, error) {
 	if prepipe != "" {
 		return openPrepipedHandleForRead("", prepipe, prepipeIsRaw)
-	} else {
-		return openEncodedHandleForRead(os.Stdin, encoding, "")
 	}
+	return openEncodedHandleForRead(os.Stdin, encoding, "")
 }
 
 func openPrepipedHandleForRead(
@@ -145,9 +142,8 @@ func escapeFileNameForPopen(filename string) string {
 	}
 	if foundQuoteOrSpace {
 		return "'" + buffer.String() + "'"
-	} else {
-		return buffer.String()
 	}
+	return buffer.String()
 }
 
 // TODO: comment
@@ -245,9 +241,8 @@ func IsEOF(err error) bool {
 		return true
 	} else if strings.Contains(err.Error(), "file already closed") {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
 // Functions for in-place mode

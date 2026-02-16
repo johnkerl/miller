@@ -20,9 +20,8 @@ func main() {
 	}
 	if ok {
 		os.Exit(0)
-	} else {
-		os.Exit(1)
 	}
+	os.Exit(1)
 }
 
 func handle(fileName string) (ok bool) {
@@ -50,3 +49,4 @@ func handle(fileName string) (ok bool) {
 
 	return true
 }
+

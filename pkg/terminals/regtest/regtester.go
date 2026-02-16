@@ -216,12 +216,11 @@ func (regtester *RegTester) Execute(
 			fmt.Printf("%s overall\n", colorizer.MaybeColorizePass("PASS", true))
 		}
 		return true
-	} else {
-		if !regtester.plainMode {
-			fmt.Printf("%s overall\n", colorizer.MaybeColorizeFail("FAIL", true))
-		}
-		return false
 	}
+	if !regtester.plainMode {
+		fmt.Printf("%s overall\n", colorizer.MaybeColorizeFail("FAIL", true))
+	}
+	return false
 }
 
 // Recursively invoked routine to process either a single .cmd file, or a

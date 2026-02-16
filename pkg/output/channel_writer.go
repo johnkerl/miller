@@ -118,9 +118,8 @@ func channelWriterHandleBatch(
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				return true, true
-			} else {
-				return true, false
 			}
+			return true, false
 		}
 	}
 	return false, false

@@ -54,10 +54,9 @@ func transformerNothingParseCLI(
 			transformerNothingUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerNothingUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerNothingUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

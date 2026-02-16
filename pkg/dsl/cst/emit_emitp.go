@@ -289,29 +289,28 @@ func (node *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 		}
 		return nil, node.executorFunc(names, values, state)
 
-	} else {
-		// 'emit @*', 'emit {...}', etc.
-		parentValue := node.topLevelEvaluableMap.Evaluate(state)
-		parentMapValue := parentValue.GetMap()
-		if parentMapValue == nil {
-			// TODO: what else to do if the should-be-a-map evaluates to:
-			// * absent -- clearly returning is the right thing
-			// * error -- what to emit?
-			// * anything else other than a map -- ?
-			return nil, nil
-		}
-		names := make([]string, parentMapValue.FieldCount)
-		values := make([]*mlrval.Mlrval, parentMapValue.FieldCount)
-
-		i := 0
-		for pe := parentMapValue.Head; pe != nil; pe = pe.Next {
-			names[i] = pe.Key
-			values[i] = pe.Value
-			i++
-		}
-
-		return nil, node.executorFunc(names, values, state)
 	}
+	// 'emit @*', 'emit {...}', etc.
+	parentValue := node.topLevelEvaluableMap.Evaluate(state)
+	parentMapValue := parentValue.GetMap()
+	if parentMapValue == nil {
+		// TODO: what else to do if the should-be-a-map evaluates to:
+		// * absent -- clearly returning is the right thing
+		// * error -- what to emit?
+		// * anything else other than a map -- ?
+		return nil, nil
+	}
+	names := make([]string, parentMapValue.FieldCount)
+	values := make([]*mlrval.Mlrval, parentMapValue.FieldCount)
+
+	i := 0
+	for pe := parentMapValue.Head; pe != nil; pe = pe.Next {
+		names[i] = pe.Key
+		values[i] = pe.Value
+		i++
+	}
+
+	return nil, node.executorFunc(names, values, state)
 }
 
 // emit @* (supposing @a and @b exist) means @a and @b material are
@@ -435,48 +434,47 @@ func (node *EmitXStatementNode) executeNonIndexedLashedEmit(
 		}
 		return node.emitToRedirectFunc(newrec, state)
 
-	} else {
-		for i, value := range values {
-			if value.IsAbsent() {
-				continue
+	}
+	for i, value := range values {
+		if value.IsAbsent() {
+			continue
+		}
+
+		valueAsMap := value.GetMap() // nil if not a map
+
+		if valueAsMap == nil {
+			newrec := mlrval.NewMlrmapAsRecord()
+			newrec.PutCopy(names[i], value)
+			err := node.emitToRedirectFunc(newrec, state)
+			if err != nil {
+				return err
 			}
 
-			valueAsMap := value.GetMap() // nil if not a map
-
-			if valueAsMap == nil {
+		} else {
+			recurse := valueAsMap.IsNested()
+			if !recurse {
 				newrec := mlrval.NewMlrmapAsRecord()
-				newrec.PutCopy(names[i], value)
+				for pe := valueAsMap.Head; pe != nil; pe = pe.Next {
+					newrec.PutCopy(pe.Key, pe.Value)
+				}
 				err := node.emitToRedirectFunc(newrec, state)
 				if err != nil {
 					return err
 				}
 
-			} else {
-				recurse := valueAsMap.IsNested()
-				if !recurse {
-					newrec := mlrval.NewMlrmapAsRecord()
-					for pe := valueAsMap.Head; pe != nil; pe = pe.Next {
-						newrec.PutCopy(pe.Key, pe.Value)
-					}
-					err := node.emitToRedirectFunc(newrec, state)
-					if err != nil {
-						return err
-					}
-
-				} else { // recurse
-					nextLevelNames := make([]string, 0)
-					nextLevelValues := make([]*mlrval.Mlrval, 0)
-					for pe := value.GetMap().Head; pe != nil; pe = pe.Next {
-						nextLevelNames = append(nextLevelNames, pe.Key)
-						nextLevelValues = append(nextLevelValues, pe.Value.Copy())
-					}
-					node.executeNonIndexedNonLashedEmit(nextLevelNames, nextLevelValues, state)
+			} else { // recurse
+				nextLevelNames := make([]string, 0)
+				nextLevelValues := make([]*mlrval.Mlrval, 0)
+				for pe := value.GetMap().Head; pe != nil; pe = pe.Next {
+					nextLevelNames = append(nextLevelNames, pe.Key)
+					nextLevelValues = append(nextLevelValues, pe.Value.Copy())
 				}
+				node.executeNonIndexedNonLashedEmit(nextLevelNames, nextLevelValues, state)
 			}
 		}
-
-		return nil
 	}
+
+	return nil
 }
 
 func (node *EmitXStatementNode) executeNonIndexedLashedEmitP(

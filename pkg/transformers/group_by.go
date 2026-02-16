@@ -54,10 +54,9 @@ func transformerGroupByParseCLI(
 			transformerGroupByUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerGroupByUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerGroupByUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	// Get the group-by field names from the command line

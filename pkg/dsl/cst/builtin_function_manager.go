@@ -70,9 +70,8 @@ func isLetter(c byte) bool {
 func startsWithLetter(s string) bool {
 	if len(s) < 1 {
 		return false
-	} else {
-		return isLetter(s[0])
 	}
+	return isLetter(s[0])
 }
 
 func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
@@ -2522,12 +2521,11 @@ Run a command via executable, path, args and environment, yielding its stdout mi
 			return true
 		} else if !si && sj {
 			return false
+		}
+		if namei < namej {
+			return true
 		} else {
-			if namei < namej {
-				return true
-			} else {
-				return false
-			}
+			return false
 		}
 	})
 
@@ -2735,37 +2733,36 @@ func describeNargs(info *BuiltinFunctionInfo) string {
 		}
 		return strings.Join(pieces, ",")
 
-	} else {
-		if info.zaryFunc != nil {
-			return "0"
-		}
-		if info.unaryFunc != nil {
-			return "1"
-		}
-		if info.unaryFuncWithContext != nil {
-			return "1"
-		}
-		if info.binaryFunc != nil {
-			return "2"
-		}
-		if info.binaryFuncWithState != nil {
-			return "2"
-		}
-		if info.regexCaptureBinaryFunc != nil {
-			return "2"
-		}
-		if info.ternaryFunc != nil {
-			return "3"
-		}
-		if info.ternaryFuncWithState != nil {
-			return "3"
-		}
-		if info.variadicFunc != nil || info.variadicFuncWithState != nil {
-			if info.maximumVariadicArity != 0 {
-				return fmt.Sprintf("%d-%d", info.minimumVariadicArity, info.maximumVariadicArity)
-			} else {
-				return "variadic"
-			}
+	}
+	if info.zaryFunc != nil {
+		return "0"
+	}
+	if info.unaryFunc != nil {
+		return "1"
+	}
+	if info.unaryFuncWithContext != nil {
+		return "1"
+	}
+	if info.binaryFunc != nil {
+		return "2"
+	}
+	if info.binaryFuncWithState != nil {
+		return "2"
+	}
+	if info.regexCaptureBinaryFunc != nil {
+		return "2"
+	}
+	if info.ternaryFunc != nil {
+		return "3"
+	}
+	if info.ternaryFuncWithState != nil {
+		return "3"
+	}
+	if info.variadicFunc != nil || info.variadicFuncWithState != nil {
+		if info.maximumVariadicArity != 0 {
+			return fmt.Sprintf("%d-%d", info.minimumVariadicArity, info.maximumVariadicArity)
+		} else {
+			return "variadic"
 		}
 	}
 	lib.InternalCodingErrorIf(true)

@@ -91,8 +91,7 @@ func (root *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 		udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)
 		root.rememberUnresolvedFunctionCallsite(udfCallsiteNode)
 		return udfCallsiteNode, nil
-	} else {
-		udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)
-		return udfCallsiteNode, nil
 	}
+	udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)
+	return udfCallsiteNode, nil
 }

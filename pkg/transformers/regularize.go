@@ -55,10 +55,9 @@ func transformerRegularizeParseCLI(
 			transformerRegularizeUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerRegularizeUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerRegularizeUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

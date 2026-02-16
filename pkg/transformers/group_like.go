@@ -54,10 +54,9 @@ func transformerGroupLikeParseCLI(
 			transformerGroupLikeUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerGroupLikeUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerGroupLikeUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

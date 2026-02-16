@@ -21,9 +21,8 @@ func (mlrmap *Mlrmap) Get(key string) *Mlrval {
 	pe := mlrmap.findEntry(key)
 	if pe == nil {
 		return nil
-	} else {
-		return pe.Value
 	}
+	return pe.Value
 }
 
 // PutReference copies the key but not the value. This is not safe for DSL use,
@@ -162,29 +161,28 @@ func (mlrmap *Mlrmap) PutReferenceAfter(
 		mlrmap.FieldCount++
 		return pf
 
-	} else {
-		// Before: ... pe pg ...
-		// After:  ... pe pf pg ...
-		//
-		// New entry is neither the new head (pe != nil) nor the new tail
-		// (pe.Next != nil, otherwise we'd be in the if-branch above).
-
-		pf := newMlrmapEntry(key, value)
-		pg := pe.Next
-
-		pe.Next = pf
-		pf.Next = pg
-		pf.Prev = pe
-		if pg != nil {
-			pg.Prev = pf
-		}
-
-		if mlrmap.keysToEntries != nil {
-			mlrmap.keysToEntries[key] = pf
-		}
-		mlrmap.FieldCount++
-		return pf
 	}
+	// Before: ... pe pg ...
+	// After:  ... pe pf pg ...
+	//
+	// New entry is neither the new head (pe != nil) nor the new tail
+	// (pe.Next != nil, otherwise we'd be in the if-branch above).
+
+	pf := newMlrmapEntry(key, value)
+	pg := pe.Next
+
+	pe.Next = pf
+	pf.Next = pg
+	pf.Prev = pe
+	if pg != nil {
+		pg.Prev = pf
+	}
+
+	if mlrmap.keysToEntries != nil {
+		mlrmap.keysToEntries[key] = pf
+	}
+	mlrmap.FieldCount++
+	return pf
 }
 
 // findEntry is the basic hash-map accessor for Has, Put, Get, Remove, etc.
@@ -194,14 +192,13 @@ func (mlrmap *Mlrmap) PutReferenceAfter(
 func (mlrmap *Mlrmap) findEntry(key string) *MlrmapEntry {
 	if mlrmap.keysToEntries != nil {
 		return mlrmap.keysToEntries[key]
-	} else {
-		for pe := mlrmap.Head; pe != nil; pe = pe.Next {
-			if pe.Key == key {
-				return pe
-			}
-		}
-		return nil
 	}
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
+		if pe.Key == key {
+			return pe
+		}
+	}
+	return nil
 }
 
 // findEntryByPositionalIndex is for '$[1]' etc. in the DSL.
@@ -244,11 +241,10 @@ func (mlrmap *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 	if key.IsStringOrInt() {
 		mlrmap.PutCopy(key.String(), value)
 		return nil
-	} else {
-		return fmt.Errorf(
-			"mlr: record/map indices must be string, int, or array thereof; got %s", key.GetTypeName(),
-		)
 	}
+	return fmt.Errorf(
+		"mlr: record/map indices must be string, int, or array thereof; got %s", key.GetTypeName(),
+	)
 }
 
 func (mlrmap *Mlrmap) PrependCopy(key string, value *Mlrval) {
@@ -336,9 +332,8 @@ func (mlrmap *Mlrmap) GetWithPositionalIndex(position int64) *Mlrval {
 func (mlrmap *Mlrmap) GetWithMlrvalIndex(index *Mlrval) (*Mlrval, error) {
 	if index.IsArray() {
 		return mlrmap.getWithMlrvalArrayIndex(index)
-	} else {
-		return mlrmap.getWithMlrvalSingleIndex(index)
 	}
+	return mlrmap.getWithMlrvalSingleIndex(index)
 }
 
 // This lets the user do '$y = $x[ ["a", "b", "c"] ]' in lieu of
@@ -372,11 +367,10 @@ func (mlrmap *Mlrmap) getWithMlrvalSingleIndex(index *Mlrval) (*Mlrval, error) {
 		return mlrmap.Get(index.printrep), nil
 	} else if index.IsInt() {
 		return mlrmap.Get(index.String()), nil
-	} else {
-		return nil, fmt.Errorf(
-			"record/map indices must be string, int, or array thereof; got %s", index.GetTypeName(),
-		)
 	}
+	return nil, fmt.Errorf(
+		"record/map indices must be string, int, or array thereof; got %s", index.GetTypeName(),
+	)
 }
 
 // For '$[[1]]' etc. in the DSL.
@@ -472,10 +466,9 @@ func (mlrmap *Mlrmap) Remove(key string) bool {
 	pe := mlrmap.findEntry(key)
 	if pe == nil {
 		return false
-	} else {
-		mlrmap.Unlink(pe)
-		return true
 	}
+	mlrmap.Unlink(pe)
+	return true
 }
 
 func (mlrmap *Mlrmap) MoveToHead(key string) {
@@ -796,9 +789,8 @@ func (mlrmap *Mlrmap) IsNested() bool {
 	} else if mlrmap.Head.Value.GetMap() == nil {
 		//TODO: check IsArrayOrMap()
 		return false
-	} else {
-		return true
 	}
+	return true
 }
 
 // PRIVATE METHODS
@@ -867,11 +859,10 @@ func (mlrmap *Mlrmap) linkAtTail(pe *MlrmapEntry) {
 func (mlrmap *Mlrmap) pop() *MlrmapEntry {
 	if mlrmap.Head == nil {
 		return nil
-	} else {
-		pe := mlrmap.Head
-		mlrmap.Unlink(pe)
-		return pe
 	}
+	pe := mlrmap.Head
+	mlrmap.Unlink(pe)
+	return pe
 }
 
 // ToPairsArray is used for sorting maps by key/value/etc, e.g. the sortmf DSL function.

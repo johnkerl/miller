@@ -172,9 +172,8 @@ func has_key_in_array(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 func has_key_in_map(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input2.IsString() || input2.IsInt() {
 		return mlrval.FromBool(input1.AcquireMapValue().Has(input2.String()))
-	} else {
-		return mlrval.FromNotNamedTypeError("haskey", input2, "string or int")
 	}
+	return mlrval.FromNotNamedTypeError("haskey", input2, "string or int")
 }
 
 func BIF_haskey(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -182,9 +181,8 @@ func BIF_haskey(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return has_key_in_array(input1, input2)
 	} else if input1.IsMap() {
 		return has_key_in_map(input1, input2)
-	} else {
-		return mlrval.FromNotCollectionError("haskey", input1)
 	}
+	return mlrval.FromNotCollectionError("haskey", input1)
 }
 
 func BIF_concat(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
@@ -354,9 +352,8 @@ func BIF_joink(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		}
 
 		return mlrval.FromString(buffer.String())
-	} else {
-		return mlrval.FromNotCollectionError("joink", input1)
 	}
+	return mlrval.FromNotCollectionError("joink", input1)
 }
 
 // joinv([3,4,5], ",") -> "3,4,5"
@@ -389,9 +386,8 @@ func BIF_joinv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		}
 
 		return mlrval.FromString(buffer.String())
-	} else {
-		return mlrval.FromNotCollectionError("joinv", input1)
 	}
+	return mlrval.FromNotCollectionError("joinv", input1)
 }
 
 // joinkv([3,4,5], "=", ",") -> "1=3,2=4,3=5"
@@ -433,9 +429,8 @@ func BIF_joinkv(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 		}
 
 		return mlrval.FromString(buffer.String())
-	} else {
-		return mlrval.FromNotCollectionError("joinkv", input1)
 	}
+	return mlrval.FromNotCollectionError("joinkv", input1)
 }
 
 // splitkv("a=3,b=4,c=5", "=", ",") -> {"a":3,"b":4,"c":5}
@@ -621,9 +616,8 @@ func BIF_get_keys(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		}
 		return mlrval.FromArray(arrayval)
 
-	} else {
-		return mlrval.FromNotCollectionError("get_keys", input1)
 	}
+	return mlrval.FromNotCollectionError("get_keys", input1)
 }
 
 func BIF_get_values(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -645,9 +639,8 @@ func BIF_get_values(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		}
 		return mlrval.FromArray(arrayval)
 
-	} else {
-		return mlrval.FromNotCollectionError("get_values", input1)
 	}
+	return mlrval.FromNotCollectionError("get_values", input1)
 }
 
 func BIF_append(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -678,9 +671,8 @@ func BIF_flatten(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 
 		retval := input3.FlattenToMap(prefix, delimiter)
 		return &retval
-	} else {
-		return input3
 	}
+	return input3
 }
 
 // flatten($*, ".") is the same as flatten("", ".", $*)
@@ -732,9 +724,8 @@ func BIF_arrayify(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 			}
 			return mlrval.FromArray(arrayval)
 
-		} else {
-			return input1
 		}
+		return input1
 
 	} else if input1.IsArray() {
 		// TODO: comment (or rethink) that this modifies its inputs!!
@@ -745,9 +736,8 @@ func BIF_arrayify(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		}
 		return output
 
-	} else {
-		return input1
 	}
+	return input1
 }
 
 func BIF_json_parse(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -755,23 +745,21 @@ func BIF_json_parse(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		return input1
 	} else if !input1.IsString() {
 		return mlrval.FromNotStringError("json_parse", input1)
-	} else {
-		output := mlrval.FromPending()
-		err := output.UnmarshalJSON([]byte(input1.AcquireStringValue()))
-		if err != nil {
-			return mlrval.FromError(err)
-		}
-		return output
 	}
+	output := mlrval.FromPending()
+	err := output.UnmarshalJSON([]byte(input1.AcquireStringValue()))
+	if err != nil {
+		return mlrval.FromError(err)
+	}
+	return output
 }
 
 func BIF_json_stringify_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	outputBytes, err := input1.MarshalJSON(mlrval.JSON_SINGLE_LINE, false)
 	if err != nil {
 		return mlrval.FromError(err)
-	} else {
-		return mlrval.FromString(string(outputBytes))
 	}
+	return mlrval.FromString(string(outputBytes))
 }
 
 func BIF_json_stringify_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -787,9 +775,8 @@ func BIF_json_stringify_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	outputBytes, err := input1.MarshalJSON(jsonFormatting, false)
 	if err != nil {
 		return mlrval.FromError(err)
-	} else {
-		return mlrval.FromString(string(outputBytes))
 	}
+	return mlrval.FromString(string(outputBytes))
 }
 
 func unaliasArrayIndex(array *[]*mlrval.Mlrval, mindex int) (int, bool) {
@@ -834,20 +821,17 @@ func unaliasArrayLengthIndex(n int, mindex int) (int, bool) {
 		zindex := mindex - 1
 		if mindex <= n { // in bounds
 			return zindex, true
-		} else { // out of bounds
-			return zindex, false
-		}
+		} // out of bounds
+		return zindex, false
 	} else if mindex <= -1 {
 		zindex := mindex + n
 		if -n <= mindex { // in bounds
 			return zindex, true
-		} else { // out of bounds
-			return zindex, false
-		}
-	} else {
-		// mindex is 0
-		return -1, false
+		} // out of bounds
+		return zindex, false
 	}
+	// mindex is 0
+	return -1, false
 }
 
 // MillerSliceAccess is code shared by the string-slicer and the array-slicer.

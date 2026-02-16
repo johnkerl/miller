@@ -49,12 +49,11 @@ func (root *RootNode) BuildBuiltinFunctionCallsiteNode(
 			return root.BuildVariadicFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.variadicFuncWithState != nil {
 			return root.BuildVariadicFunctionWithStateCallsiteNode(astNode, builtinFunctionInfo)
-		} else {
-			return nil, fmt.Errorf(
-				"at CST BuildFunctionCallsiteNode: builtin function not implemented yet: %s",
-				functionName,
-			)
 		}
+		return nil, fmt.Errorf(
+			"at CST BuildFunctionCallsiteNode: builtin function not implemented yet: %s",
+			functionName,
+		)
 	}
 
 	return nil, nil // not found
@@ -497,14 +496,12 @@ func (node *DotCallsiteNode) Evaluate(
 		value2 := mapvalue1.Get(node.string2)
 		if value2 == nil {
 			return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "map access ["+node.string2+"]")
-		} else {
-			return value2
 		}
-	} else {
-		// Case 2: string concatenation
-		value2 := node.evaluable2.Evaluate(state)
-		return bifs.BIF_dot(value1, value2)
+		return value2
 	}
+	// Case 2: string concatenation
+	value2 := node.evaluable2.Evaluate(state)
+	return bifs.BIF_dot(value1, value2)
 }
 
 type TernaryFunctionCallsiteNode struct {
@@ -905,9 +902,8 @@ func (node *EmptyCoalesceOperatorNode) Evaluate(
 	atype := aout.Type()
 	if atype == mlrval.MT_ABSENT || atype == mlrval.MT_VOID || (atype == mlrval.MT_STRING && aout.String() == "") {
 		return node.b.Evaluate(state)
-	} else {
-		return aout
 	}
+	return aout
 }
 
 type StandardTernaryOperatorNode struct{ a, b, c IEvaluable }
@@ -928,9 +924,8 @@ func (node *StandardTernaryOperatorNode) Evaluate(
 	// Short-circuit: defer evaluation unless needed
 	if boolValue {
 		return node.b.Evaluate(state)
-	} else {
-		return node.c.Evaluate(state)
 	}
+	return node.c.Evaluate(state)
 }
 
 // The function-manager logic is designed to make it easy to implement a large

@@ -352,9 +352,8 @@ func (tr *TransformerUniq) getFieldNamesForGrouping(
 ) []string {
 	if tr.invertFieldNames {
 		return inrec.GetKeysExcept(tr.fieldNamesSet)
-	} else {
-		return tr.fieldNames
 	}
+	return tr.fieldNames
 }
 
 func (tr *TransformerUniq) Transform(

@@ -68,8 +68,7 @@ func (root *RootNode) BuildSubroutineCallsiteNode(astNode *dsl.ASTNode) (IExecut
 		udsCallsiteNode := NewUDSCallsite(argumentNodes, uds)
 		root.rememberUnresolvedSubroutineCallsite(udsCallsiteNode)
 		return udsCallsiteNode, nil
-	} else {
-		udsCallsiteNode := NewUDSCallsite(argumentNodes, uds)
-		return udsCallsiteNode, nil
 	}
+	udsCallsiteNode := NewUDSCallsite(argumentNodes, uds)
+	return udsCallsiteNode, nil
 }

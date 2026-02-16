@@ -335,25 +335,22 @@ func (tr *TransformerSubs) fieldAcceptorAll(
 func safe_sub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		return bifs.BIF_sub(input1, input2, input3)
-	} else {
-		return input1
 	}
+	return input1
 }
 
 // safe_gsub implements gsub, but doesn't produce error-type on non-string input.
 func safe_gsub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		return bifs.BIF_gsub(input1, input2, input3)
-	} else {
-		return input1
 	}
+	return input1
 }
 
 // safe_ssub implements ssub, but doesn't produce error-type on non-string input.
 func safe_ssub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		return bifs.BIF_ssub(input1, input2, input3)
-	} else {
-		return input1
 	}
+	return input1
 }

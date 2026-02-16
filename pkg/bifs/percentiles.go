@@ -18,14 +18,13 @@ func GetPercentileLinearlyInterpolated(
 	iindex := int(math.Floor(findex))
 	if iindex >= n-1 {
 		return array[iindex].Copy()
-	} else {
-		// TODO: just do this in float64:
-		// array[iindex] + frac * (array[iindex+1] - array[iindex])
-		frac := mlrval.FromFloat(findex - float64(iindex))
-		diff := BIF_minus_binary(array[iindex+1], array[iindex])
-		prod := BIF_times(frac, diff)
-		return BIF_plus_binary(array[iindex], prod)
 	}
+	// TODO: just do this in float64:
+	// array[iindex] + frac * (array[iindex+1] - array[iindex])
+	frac := mlrval.FromFloat(findex - float64(iindex))
+	diff := BIF_minus_binary(array[iindex+1], array[iindex])
+	prod := BIF_times(frac, diff)
+	return BIF_plus_binary(array[iindex], prod)
 }
 
 // Non-interpolated percentiles (see also https://en.wikipedia.org/wiki/Percentile)

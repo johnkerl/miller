@@ -112,9 +112,8 @@ func buildASTFromStringWithMessage(dslString string) (*dsl.AST, error) {
 		// At present it's overly parser-internal, and confusing. :(
 		fmt.Fprintln(os.Stderr, "mlr: cannot parse DSL expression.")
 		return nil, err
-	} else {
-		return astRootNode, nil
 	}
+	return astRootNode, nil
 }
 
 func buildASTFromString(dslString string) (*dsl.AST, error) {

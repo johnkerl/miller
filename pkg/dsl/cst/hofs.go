@@ -203,9 +203,8 @@ func SelectHOF(
 		return selectArray(input1, input2, state)
 	} else if input1.IsMap() {
 		return selectMap(input1, input2, state)
-	} else {
-		return mlrval.FromNotCollectionError("select", input1)
 	}
+	return mlrval.FromNotCollectionError("select", input1)
 }
 
 func selectArray(
@@ -293,9 +292,8 @@ func ApplyHOF(
 		return applyArray(input1, input2, state)
 	} else if input1.IsMap() {
 		return applyMap(input1, input2, state)
-	} else {
-		return mlrval.FromNotCollectionError("apply", input1)
 	}
+	return mlrval.FromNotCollectionError("apply", input1)
 }
 
 func applyArray(
@@ -363,9 +361,8 @@ func ReduceHOF(
 		return reduceArray(input1, input2, state)
 	} else if input1.IsMap() {
 		return reduceMap(input1, input2, state)
-	} else {
-		return mlrval.FromNotCollectionError("reduce", input1)
 	}
+	return mlrval.FromNotCollectionError("reduce", input1)
 }
 
 func reduceArray(
@@ -442,9 +439,8 @@ func FoldHOF(
 		return foldArray(input1, input2, input3, state)
 	} else if input1.IsMap() {
 		return foldMap(input1, input2, input3, state)
-	} else {
-		return mlrval.FromNotCollectionError("fold", input1)
 	}
+	return mlrval.FromNotCollectionError("fold", input1)
 }
 
 func foldArray(
@@ -520,34 +516,30 @@ func SortHOF(
 			return sortA(inputs[0], "")
 		} else if inputs[0].IsMap() {
 			return sortM(inputs[0], "")
-		} else {
-			return mlrval.FromNotCollectionError("sort", inputs[0])
 		}
+		return mlrval.FromNotCollectionError("sort", inputs[0])
 
 	} else if inputs[1].IsStringOrVoid() {
 		if inputs[0].IsArray() {
 			return sortA(inputs[0], inputs[1].String())
 		} else if inputs[0].IsMap() {
 			return sortM(inputs[0], inputs[1].String())
-		} else {
-			return mlrval.FromNotCollectionError("sort", inputs[0])
 		}
+		return mlrval.FromNotCollectionError("sort", inputs[0])
 
 	} else if inputs[1].IsFunction() {
 		if inputs[0].IsArray() {
 			return sortAF(inputs[0], inputs[1], state)
 		} else if inputs[0].IsMap() {
 			return sortMF(inputs[0], inputs[1], state)
-		} else {
-			return mlrval.FromNotCollectionError("sort", inputs[0])
 		}
+		return mlrval.FromNotCollectionError("sort", inputs[0])
 
-	} else {
-		fmt.Fprintf(os.Stderr, "mlr: sort: second argument must be a string or function; got %s.\n",
-			inputs[1].GetTypeName(),
-		)
-		os.Exit(1)
 	}
+	fmt.Fprintf(os.Stderr, "mlr: sort: second argument must be a string or function; got %s.\n",
+		inputs[1].GetTypeName(),
+	)
+	os.Exit(1)
 	// Not reached
 	lib.InternalCodingErrorIf(true)
 	return nil
@@ -719,9 +711,8 @@ func sortMNumerical(array []mlrval.MlrmapEntryForArray, reverse bool, byMapValue
 				nb, errb := strconv.ParseFloat(array[j].Key, 64)
 				if erra == nil && errb == nil {
 					return na < nb
-				} else {
-					return array[i].Key < array[j].Key
 				}
+				return array[i].Key < array[j].Key
 			})
 		} else {
 			sort.Slice(array, func(i, j int) bool {
@@ -729,9 +720,8 @@ func sortMNumerical(array []mlrval.MlrmapEntryForArray, reverse bool, byMapValue
 				nb, errb := strconv.ParseFloat(array[j].Key, 64)
 				if erra == nil && errb == nil {
 					return na > nb
-				} else {
-					return array[i].Key > array[j].Key
 				}
+				return array[i].Key > array[j].Key
 			})
 		}
 	} else {
@@ -924,9 +914,8 @@ func AnyHOF(
 		return anyArray(input1, input2, state)
 	} else if input1.IsMap() {
 		return anyMap(input1, input2, state)
-	} else {
-		return mlrval.FromNotCollectionError("any", input1)
 	}
+	return mlrval.FromNotCollectionError("any", input1)
 }
 
 func anyArray(
@@ -1015,9 +1004,8 @@ func EveryHOF(
 		return everyArray(input1, input2, state)
 	} else if input1.IsMap() {
 		return everyMap(input1, input2, state)
-	} else {
-		return mlrval.FromNotCollectionError("every", input1)
 	}
+	return mlrval.FromNotCollectionError("every", input1)
 }
 
 func everyArray(

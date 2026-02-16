@@ -498,12 +498,11 @@ func (node *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitP
 	blockExitPayload, err := node.executeOuter(indexMlrval, node.keyIndexVariables, state)
 	if blockExitPayload == nil {
 		return nil, err
+	}
+	if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
+		return nil, err
 	} else {
-		if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
-			return nil, err
-		} else {
-			return blockExitPayload, err
-		}
+		return blockExitPayload, err
 	}
 }
 

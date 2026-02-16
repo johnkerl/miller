@@ -53,10 +53,9 @@ func transformerTacParseCLI(
 			transformerTacUsage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerTacUsage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerTacUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

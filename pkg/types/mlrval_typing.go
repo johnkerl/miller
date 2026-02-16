@@ -34,12 +34,11 @@ func (tname *TypeGatedMlrvalName) Check(value *mlrval.Mlrval) error {
 	bit := value.GetTypeBit()
 	if bit&tname.TypeMask != 0 {
 		return nil
-	} else {
-		return fmt.Errorf(
-			"mlr: couldn't assign variable %s %s from value %s %s",
-			tname.TypeName, tname.Name, value.GetTypeName(), value.String(),
-		)
 	}
+	return fmt.Errorf(
+		"mlr: couldn't assign variable %s %s from value %s %s",
+		tname.TypeName, tname.Name, value.GetTypeName(), value.String(),
+	)
 }
 
 type TypeGatedMlrvalVariable struct {

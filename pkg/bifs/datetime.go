@@ -497,9 +497,8 @@ func bif_strptime_unary_aux(input1, input2 *mlrval.Mlrval, doLocal, produceNanos
 
 	if produceNanoseconds {
 		return mlrval.FromInt(t.UnixNano())
-	} else {
-		return mlrval.FromFloat(float64(t.UnixNano()) / 1.0e9)
 	}
+	return mlrval.FromFloat(float64(t.UnixNano()) / 1.0e9)
 }
 
 // Argument 1 is formatted date string like "2021-03-04T02:59:50Z".
@@ -551,9 +550,8 @@ func bif_strptime_binary_aux(input1, input2 *mlrval.Mlrval, doLocal, produceNano
 
 	if produceNanoseconds {
 		return mlrval.FromInt(t.UnixNano())
-	} else {
-		return mlrval.FromFloat(float64(t.UnixNano()) / 1.0e9)
 	}
+	return mlrval.FromFloat(float64(t.UnixNano()) / 1.0e9)
 }
 
 func BIF_strptime_local_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -599,7 +597,6 @@ func bif_strptime_local_ternary_aux(input1, input2, input3 *mlrval.Mlrval, produ
 
 	if produceNanoseconds {
 		return mlrval.FromInt(t.UnixNano())
-	} else {
-		return mlrval.FromFloat(float64(t.UnixNano()) / 1.0e9)
 	}
+	return mlrval.FromFloat(float64(t.UnixNano()) / 1.0e9)
 }

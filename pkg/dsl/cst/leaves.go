@@ -103,9 +103,8 @@ func (node *DirectFieldRvalueNode) Evaluate(
 	value := state.Inrec.Get(node.fieldName)
 	if value == nil {
 		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$"+node.fieldName)
-	} else {
-		return value
 	}
+	return value
 }
 
 type FullSrecRvalueNode struct {
@@ -124,9 +123,8 @@ func (node *FullSrecRvalueNode) Evaluate(
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
 		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$*")
-	} else {
-		return mlrval.FromMap(state.Inrec)
 	}
+	return mlrval.FromMap(state.Inrec)
 }
 
 type DirectOosvarRvalueNode struct {
@@ -144,9 +142,8 @@ func (node *DirectOosvarRvalueNode) Evaluate(
 	value := state.Oosvars.Get(node.variableName)
 	if value == nil {
 		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "@"+node.variableName)
-	} else {
-		return value
 	}
+	return value
 }
 
 type FullOosvarRvalueNode struct {

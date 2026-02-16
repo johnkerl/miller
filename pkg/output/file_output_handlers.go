@@ -58,9 +58,8 @@ func NewFileOutputHandlerManager(
 ) *MultiOutputHandlerManager {
 	if doAppend {
 		return NewFileAppendHandlerManager(recordWriterOptions)
-	} else {
-		return NewFileWritetHandlerManager(recordWriterOptions)
 	}
+	return NewFileWritetHandlerManager(recordWriterOptions)
 }
 
 func NewFileWritetHandlerManager(
@@ -241,9 +240,8 @@ func NewFileOutputHandler(
 ) (*FileOutputHandler, error) {
 	if doAppend {
 		return NewFileAppendOutputHandler(filename, recordWriterOptions)
-	} else {
-		return NewFileWriteOutputHandler(filename, recordWriterOptions)
 	}
+	return NewFileWriteOutputHandler(filename, recordWriterOptions)
 }
 
 func NewFileWriteOutputHandler(
@@ -402,7 +400,6 @@ func (handler *FileOutputHandler) Close() (retval error) {
 	handler.bufferedOutputStream.Flush()
 	if handler.closeable {
 		return handler.handle.Close()
-	} else { // e.g. stdout
-		return nil
-	}
+	} // e.g. stdout
+	return nil
 }

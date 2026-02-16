@@ -180,9 +180,8 @@ func (node *ASTNode) CheckArity(
 ) error {
 	if len(node.Children) != arity {
 		return fmt.Errorf("expected AST node arity %d, got %d", arity, len(node.Children))
-	} else {
-		return nil
 	}
+	return nil
 }
 
 // Tokens are produced by GOCC. However there is an exception: for the ternary

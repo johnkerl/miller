@@ -432,9 +432,8 @@ func (mv *Mlrval) marshalJSONArray(
 
 	if allTerminal || (jsonFormatting == JSON_SINGLE_LINE) {
 		return mv.marshalJSONArraySingleLine(elementNestingDepth, outputIsStdout)
-	} else {
-		return mv.marshalJSONArrayMultipleLines(jsonFormatting, elementNestingDepth, outputIsStdout)
 	}
+	return mv.marshalJSONArrayMultipleLines(jsonFormatting, elementNestingDepth, outputIsStdout)
 }
 
 func (mv *Mlrval) marshalJSONArraySingleLine(

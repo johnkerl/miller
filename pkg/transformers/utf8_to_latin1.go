@@ -56,10 +56,9 @@ func transformerUTF8ToLatin1ParseCLI(
 			transformerUTF8ToLatin1Usage(os.Stdout)
 			os.Exit(0)
 
-		} else {
-			transformerUTF8ToLatin1Usage(os.Stderr)
-			os.Exit(1)
 		}
+		transformerUTF8ToLatin1Usage(os.Stderr)
+		os.Exit(1)
 	}
 
 	*pargi = argi

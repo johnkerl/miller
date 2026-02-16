@@ -36,24 +36,23 @@ func NewRecordReaderPPRINT(
 		}
 		return reader, nil
 
-	} else {
-		// Use the CSVLite record-reader, which is implemented in another file,
-		// with multiple spaces instead of commas
-		reader := &RecordReaderCSVLite{
-			readerOptions:   readerOptions,
-			recordsPerBatch: recordsPerBatch,
-			fieldSplitter:   newFieldSplitter(readerOptions),
-
-			useVoidRep: true,
-			voidRep:    "-",
-		}
-		if reader.readerOptions.UseImplicitHeader {
-			reader.recordBatchGetter = getRecordBatchImplicitCSVHeader
-		} else {
-			reader.recordBatchGetter = getRecordBatchExplicitCSVHeader
-		}
-		return reader, nil
 	}
+	// Use the CSVLite record-reader, which is implemented in another file,
+	// with multiple spaces instead of commas
+	reader := &RecordReaderCSVLite{
+		readerOptions:   readerOptions,
+		recordsPerBatch: recordsPerBatch,
+		fieldSplitter:   newFieldSplitter(readerOptions),
+
+		useVoidRep: true,
+		voidRep:    "-",
+	}
+	if reader.readerOptions.UseImplicitHeader {
+		reader.recordBatchGetter = getRecordBatchImplicitCSVHeader
+	} else {
+		reader.recordBatchGetter = getRecordBatchExplicitCSVHeader
+	}
+	return reader, nil
 }
 
 type RecordReaderPprintBarredOrMarkdown struct {

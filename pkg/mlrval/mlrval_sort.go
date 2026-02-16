@@ -25,9 +25,8 @@ func LexicalAscendingComparator(input1 *Mlrval, input2 *Mlrval) int {
 		return -1
 	} else if sa > sb {
 		return 1
-	} else {
-		return 0
 	}
+	return 0
 }
 
 // LexicalDescendingComparator is for reverse-lexical sort: it stringifies
@@ -51,9 +50,8 @@ func CaseFoldAscendingComparator(input1 *Mlrval, input2 *Mlrval) int {
 		return -1
 	} else if sa > sb {
 		return 1
-	} else {
-		return 0
 	}
+	return 0
 }
 
 // CaseFoldDescendingComparator is for case-folded lexical sort: it stringifies
@@ -89,9 +87,8 @@ func NaturalAscendingComparator(input1, input2 *Mlrval) int {
 
 	if natsort.Compare(input1.String(), input2.String()) {
 		return 1
-	} else {
-		return -1
 	}
+	return -1
 }
 
 func NaturalDescendingComparator(input1, input2 *Mlrval) int {
