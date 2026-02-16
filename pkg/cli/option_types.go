@@ -80,7 +80,6 @@ type TReaderOptions struct {
 	RecordsPerBatch int64
 }
 
-// ----------------------------------------------------------------
 type TWriterOptions struct {
 	OutputFileFormat string
 	ORS              string
@@ -179,7 +178,6 @@ type TWriterOptions struct {
 	FailOnDataError bool
 }
 
-// ----------------------------------------------------------------
 type TOptions struct {
 	ReaderOptions TReaderOptions
 	WriterOptions TWriterOptions

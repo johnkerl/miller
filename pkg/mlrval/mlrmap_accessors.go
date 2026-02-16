@@ -251,7 +251,6 @@ func (mlrmap *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 	}
 }
 
-// ----------------------------------------------------------------
 func (mlrmap *Mlrmap) PrependCopy(key string, value *Mlrval) {
 	mlrmap.PrependReference(key, value.Copy())
 }
@@ -423,7 +422,6 @@ func (mlrmap *Mlrmap) RemoveWithPositionalIndex(position int64) {
 	}
 }
 
-// ----------------------------------------------------------------
 func (mlrmap *Mlrmap) Equals(other *Mlrmap) bool {
 	if mlrmap.FieldCount != other.FieldCount {
 		return false
@@ -465,7 +463,6 @@ func (mlrmap *Mlrmap) Clear() {
 	}
 }
 
-// ----------------------------------------------------------------
 func (mlrmap *Mlrmap) Copy() *Mlrmap {
 	other := NewMlrmapMaybeHashed(mlrmap.isHashed())
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
@@ -518,7 +515,6 @@ func (mlrmap *Mlrmap) RemoveIndexed(indices []*Mlrval) error {
 	return removeIndexedOnMap(mlrmap, indices)
 }
 
-// ----------------------------------------------------------------
 func (mlrmap *Mlrmap) GetKeysJoined() string {
 	var buffer bytes.Buffer
 	i := 0
@@ -699,7 +695,6 @@ func (mlrmap *Mlrmap) GetValuesJoinedExcept(px *MlrmapEntry) string {
 	return buffer.String()
 }
 
-// ----------------------------------------------------------------
 func (mlrmap *Mlrmap) Rename(oldKey string, newKey string) bool {
 	entry := mlrmap.findEntry(oldKey)
 	if entry == nil {
@@ -729,7 +724,6 @@ func (mlrmap *Mlrmap) Rename(oldKey string, newKey string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 func (mlrmap *Mlrmap) Label(newNames []string) {
 	other := NewMlrmapAsRecord()
 
@@ -768,7 +762,6 @@ func (mlrmap *Mlrmap) Label(newNames []string) {
 	*mlrmap = *other
 }
 
-// ----------------------------------------------------------------
 func (mlrmap *Mlrmap) SortByKey() {
 	keys := mlrmap.GetKeys()
 
@@ -784,7 +777,6 @@ func (mlrmap *Mlrmap) SortByKey() {
 	*mlrmap = *other
 }
 
-// ----------------------------------------------------------------
 func (mlrmap *Mlrmap) SortByKeyRecursively() {
 	keys := mlrmap.GetKeys()
 
@@ -881,7 +873,6 @@ func (mlrmap *Mlrmap) linkAtTail(pe *MlrmapEntry) {
 	mlrmap.FieldCount++
 }
 
-// ----------------------------------------------------------------
 func (mlrmap *Mlrmap) pop() *MlrmapEntry {
 	if mlrmap.Head == nil {
 		return nil

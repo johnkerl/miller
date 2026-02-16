@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameCountDistinct = "count-distinct"
 const verbNameUniq = "uniq"
 const uniqDefaultOutputFieldName = "count"
@@ -30,7 +29,6 @@ var UniqSetup = TransformerSetup{
 	IgnoresInput: false,
 }
 
-// ----------------------------------------------------------------
 func transformerCountDistinctUsage(
 	o *os.File,
 ) {
@@ -143,7 +141,6 @@ func transformerCountDistinctParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 func transformerUniqUsage(
 	o *os.File,
 ) {
@@ -261,7 +258,6 @@ func transformerUniqParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerUniq struct {
 	fieldNames       []string
 	fieldNamesSet    map[string]bool
@@ -304,7 +300,6 @@ type TransformerUniq struct {
 	recordTransformerFunc RecordTransformerFunc
 }
 
-// ----------------------------------------------------------------
 func NewTransformerUniq(
 	fieldNames []string,
 	invertFieldNames bool,
@@ -352,7 +347,6 @@ func NewTransformerUniq(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerUniq) getFieldNamesForGrouping(
 	inrec *mlrval.Mlrmap,
@@ -461,7 +455,6 @@ func (tr *TransformerUniq) transformUniqifyEntireRecords(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerUniq) transformUnlashed(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -516,7 +509,6 @@ func (tr *TransformerUniq) transformUnlashed(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerUniq) transformNumDistinctOnly(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -548,7 +540,6 @@ func (tr *TransformerUniq) transformNumDistinctOnly(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerUniq) transformWithCounts(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -598,7 +589,6 @@ func (tr *TransformerUniq) transformWithCounts(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerUniq) transformWithoutCounts(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

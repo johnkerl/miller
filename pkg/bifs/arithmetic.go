@@ -800,7 +800,6 @@ func BIF_mod_exp(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 // * absent-null always loses
 // * empty-null always loses against numbers
 
-// ----------------------------------------------------------------
 func min_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	var a float64 = input1.AcquireFloatValue()
 	var b float64 = input2.AcquireFloatValue()
@@ -939,7 +938,6 @@ func bif_min_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return min_unary_dispositions[input1.Type()](input1)
 }
 
-// ----------------------------------------------------------------
 func BIF_minlen_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) == 0 {
 		return mlrval.VOID
@@ -970,7 +968,6 @@ func BIF_minlen_within_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
 	return mlrval.FromInt(retval)
 }
 
-// ----------------------------------------------------------------
 func max_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	var a float64 = input1.AcquireFloatValue()
 	var b float64 = input2.AcquireFloatValue()
@@ -1109,7 +1106,6 @@ func bif_max_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return max_unary_dispositions[input1.Type()](input1)
 }
 
-// ----------------------------------------------------------------
 func BIF_maxlen_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) == 0 {
 		return mlrval.VOID

@@ -53,7 +53,6 @@ import (
 // b = ----------------------------------------
 //                   D
 //
-// ----------------------------------------------------------------
 
 func GetLinearRegressionOLS(
 	nint int64,
@@ -174,7 +173,6 @@ func GetCov(
 	return numerator / denominator
 }
 
-// ----------------------------------------------------------------
 func GetCovMatrix(
 	nint int64,
 	sumx float64,

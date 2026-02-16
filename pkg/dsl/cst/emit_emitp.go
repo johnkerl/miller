@@ -106,7 +106,6 @@ func (root *RootNode) BuildEmitPStatementNode(astNode *dsl.ASTNode) (IExecutable
 	return root.buildEmitXStatementNode(astNode, true)
 }
 
-// ----------------------------------------------------------------
 
 var EMITX_NAMED_NODE_TYPES = map[dsl.TNodeType]bool{
 	dsl.NodeTypeLocalVariable:       true,
@@ -285,7 +284,6 @@ func (root *RootNode) buildEmitXStatementNode(
 	return retval, nil
 }
 
-// ================================================================
 func (node *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	if node.topLevelEvaluableMap == nil {
 		// 'emit @a', 'emit (@a, @b)', etc.
@@ -506,7 +504,6 @@ func (node *EmitXStatementNode) executeNonIndexedLashedEmitP(
 	return node.emitToRedirectFunc(newrec, state)
 }
 
-// ----------------------------------------------------------------
 func (node *EmitXStatementNode) executeIndexed(
 	names []string,
 	values []*mlrval.Mlrval,
@@ -968,7 +965,6 @@ func (node *EmitXStatementNode) executeIndexedLashedEmitPAux(
 	return nil
 }
 
-// ----------------------------------------------------------------
 func (node *EmitXStatementNode) emitRecordToRecordStream(
 	outrec *mlrval.Mlrmap,
 	state *runtime.State,
@@ -982,7 +978,6 @@ func (node *EmitXStatementNode) emitRecordToRecordStream(
 	return nil
 }
 
-// ----------------------------------------------------------------
 func (node *EmitXStatementNode) emitRecordToFileOrPipe(
 	outrec *mlrval.Mlrmap,
 	state *runtime.State,

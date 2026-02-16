@@ -9,7 +9,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 type TopKeeper struct {
 	TopValues             []*mlrval.Mlrval
 	TopRecordsAndContexts []*types.RecordAndContext
@@ -18,7 +17,6 @@ type TopKeeper struct {
 	bsearchFunc           mlrval.BsearchMlrvalArrayFunc
 }
 
-// ----------------------------------------------------------------
 func NewTopKeeper(capacity int64, doMax bool) *TopKeeper {
 	keeper := &TopKeeper{
 		TopValues:             make([]*mlrval.Mlrval, capacity),

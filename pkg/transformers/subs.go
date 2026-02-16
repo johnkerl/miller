@@ -13,7 +13,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameSub = "sub"
 const verbNameGsub = "gsub"
 const verbNameSsub = "ssub"

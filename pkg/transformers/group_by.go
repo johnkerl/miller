@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameGroupBy = "group-by"
 
 var GroupBySetup = TransformerSetup{
@@ -85,7 +84,6 @@ func transformerGroupByParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerGroupBy struct {
 	// input
 	groupByFieldNames []string
@@ -108,7 +106,6 @@ func NewTransformerGroupBy(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerGroupBy) Transform(
 	inrecAndContext *types.RecordAndContext,

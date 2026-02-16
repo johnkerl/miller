@@ -26,7 +26,6 @@ import (
 // 00000070: 70 71 72 73  74 75 76 77  78 79 7a 7b  7c 7d 7e 7f |pqrstuvwxyz{|}~.|
 // ================================================================
 
-// ----------------------------------------------------------------
 func hexUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "Usage: mlr %s [options] {zero or more file names}\n", verbName)
 	fmt.Fprintf(o, "Simple hex-dump.\n")

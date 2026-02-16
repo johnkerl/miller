@@ -9,7 +9,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameNothing = "nothing"
 
 var NothingSetup = TransformerSetup{
@@ -75,7 +74,6 @@ func transformerNothingParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerNothing struct {
 	// stateless
 }

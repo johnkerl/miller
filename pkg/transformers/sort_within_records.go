@@ -9,7 +9,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameSortWithinRecords = "sort-within-records"
 
 var SortWithinRecordsSetup = TransformerSetup{
@@ -82,7 +81,6 @@ func transformerSortWithinRecordsParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerSortWithinRecords struct {
 	recordTransformerFunc RecordTransformerFunc
 }
@@ -101,8 +99,6 @@ func NewTransformerSortWithinRecords(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerSortWithinRecords) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -113,7 +109,6 @@ func (tr *TransformerSortWithinRecords) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerSortWithinRecords) transformNonrecursively(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -127,7 +122,6 @@ func (tr *TransformerSortWithinRecords) transformNonrecursively(
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // including end-of-stream marker
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerSortWithinRecords) transformRecursively(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

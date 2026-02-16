@@ -12,7 +12,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameMergeFields = "merge-fields"
 
 var MergeFieldsSetup = TransformerSetup{
@@ -307,7 +306,6 @@ func NewTransformerMergeFields(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerMergeFields) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -319,7 +317,6 @@ func (tr *TransformerMergeFields) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerMergeFields) transformByNameList(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -370,7 +367,6 @@ func (tr *TransformerMergeFields) transformByNameList(
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerMergeFields) transformByNameRegex(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

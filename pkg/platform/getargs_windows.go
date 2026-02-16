@@ -93,7 +93,6 @@ func GetArgs() []string {
 	return globbed
 }
 
-// ----------------------------------------------------------------
 func printArgs(args []string, description string) {
 	fmt.Printf("%s:\n", description)
 	for i, arg := range args {
@@ -102,7 +101,6 @@ func printArgs(args []string, description string) {
 	fmt.Println()
 }
 
-// ----------------------------------------------------------------
 func regroupForSingleQuote(inargs []string) ([]string, bool) {
 	outargs := make([]string, 0, len(inargs))
 	inside := false

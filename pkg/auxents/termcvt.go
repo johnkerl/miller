@@ -8,7 +8,6 @@ import (
 	"strings"
 )
 
-// ================================================================
 func termcvtUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "Usage: mlr %s [option] {zero or more file names}\n", verbName)
 	fmt.Fprintf(o, "Option (exactly one is required):\n")

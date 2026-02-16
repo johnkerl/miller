@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameCountSimilar = "count-similar"
 
 var CountSimilarSetup = TransformerSetup{
@@ -97,7 +96,6 @@ func transformerCountSimilarParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerCountSimilar struct {
 	// Input:
 	groupByFieldNames []string
@@ -107,7 +105,6 @@ type TransformerCountSimilar struct {
 	recordListsByGroup *lib.OrderedMap[*[]*types.RecordAndContext] // map from string to records
 }
 
-// ----------------------------------------------------------------
 func NewTransformerCountSimilar(
 	groupByFieldNames []string,
 	counterFieldName string,
@@ -120,7 +117,6 @@ func NewTransformerCountSimilar(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerCountSimilar) Transform(
 	inrecAndContext *types.RecordAndContext,

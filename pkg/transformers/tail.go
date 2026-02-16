@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameTail = "tail"
 
 var TailSetup = TransformerSetup{
@@ -101,7 +100,6 @@ func transformerTailParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerTail struct {
 	// input
 	tailCount         int64
@@ -127,7 +125,6 @@ func NewTransformerTail(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerTail) Transform(
 	inrecAndContext *types.RecordAndContext,

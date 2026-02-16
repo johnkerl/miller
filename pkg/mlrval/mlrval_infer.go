@@ -44,8 +44,6 @@ func SetInferrerStringOnly() {
 	packageLevelInferrer = inferString
 }
 
-// ----------------------------------------------------------------
-
 func inferNormally(mv *Mlrval) *Mlrval {
 	scanType := scan.FindScanType(mv.printrep)
 	return normalInferrerTable[scanType](mv)

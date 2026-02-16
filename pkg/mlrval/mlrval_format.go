@@ -146,7 +146,6 @@ func newFormatter(
 	return newFormatterToString(goFormatString), nil
 }
 
-// ----------------------------------------------------------------
 
 type formatterToFloat struct {
 	goFormatString string
@@ -176,7 +175,6 @@ func (formatter *formatterToFloat) FormatFloat(floatValue float64) string {
 	return fmt.Sprintf(formatter.goFormatString, floatValue)
 }
 
-// ----------------------------------------------------------------
 
 func getLanguageTag() language.Tag {
 	v, ok := os.LookupEnv("LANG")
@@ -187,7 +185,6 @@ func getLanguageTag() language.Tag {
 	}
 }
 
-// ----------------------------------------------------------------
 
 type formatterToSeparatedInt struct {
 	goFormatString string
@@ -219,7 +216,6 @@ func (formatter *formatterToSeparatedInt) FormatFloat(floatValue float64) string
 	return formatter.printer.Sprintf(formatter.goFormatString, int(floatValue))
 }
 
-// ----------------------------------------------------------------
 
 type formatterToSeparatedFloat struct {
 	goFormatString string
@@ -251,7 +247,6 @@ func (formatter *formatterToSeparatedFloat) FormatFloat(floatValue float64) stri
 	return formatter.printer.Sprintf(formatter.goFormatString, floatValue)
 }
 
-// ----------------------------------------------------------------
 
 type formatterToInt struct {
 	goFormatString string
@@ -281,7 +276,6 @@ func (formatter *formatterToInt) FormatFloat(floatValue float64) string {
 	return fmt.Sprintf(formatter.goFormatString, int(floatValue))
 }
 
-// ----------------------------------------------------------------
 
 type formatterToString struct {
 	goFormatString string

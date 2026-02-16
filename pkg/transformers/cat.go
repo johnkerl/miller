@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameCat = "cat"
 
 var CatSetup = TransformerSetup{
@@ -109,7 +108,6 @@ func transformerCatParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerCat struct {
 	doCounters        bool
 	groupByFieldNames []string
@@ -124,7 +122,6 @@ type TransformerCat struct {
 	recordTransformerFunc RecordTransformerFunc
 }
 
-// ----------------------------------------------------------------
 func NewTransformerCat(
 	doCounters bool,
 	counterFieldName string,
@@ -160,7 +157,6 @@ func NewTransformerCat(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerCat) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -177,7 +173,6 @@ func (tr *TransformerCat) Transform(
 	)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerCat) simpleCat(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -195,7 +190,6 @@ func (tr *TransformerCat) simpleCat(
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerCat) countersUngrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -218,7 +212,6 @@ func (tr *TransformerCat) countersUngrouped(
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerCat) countersGrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

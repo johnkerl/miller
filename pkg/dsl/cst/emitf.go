@@ -166,7 +166,6 @@ func getNameFromNamedNode(astNode *dsl.ASTNode, description string) (string, err
 	return "", fmt.Errorf(`mlr: can't get name of node type "%s" for %s`, string(astNode.Type), description)
 }
 
-// ----------------------------------------------------------------
 func (node *EmitFStatementNode) emitfToRecordStream(
 	outrec *mlrval.Mlrmap,
 	state *runtime.State,
@@ -180,7 +179,6 @@ func (node *EmitFStatementNode) emitfToRecordStream(
 	return nil
 }
 
-// ----------------------------------------------------------------
 func (node *EmitFStatementNode) emitfToFileOrPipe(
 	outrec *mlrval.Mlrmap,
 	state *runtime.State,

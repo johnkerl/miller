@@ -14,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameNest = "nest"
 
 var NestSetup = TransformerSetup{
@@ -247,7 +246,6 @@ func transformerNestParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerNest struct {
 	fieldName string
 	nestedFS  string
@@ -265,7 +263,6 @@ type TransformerNest struct {
 	recordTransformerFunc RecordTransformerFunc
 }
 
-// ----------------------------------------------------------------
 func NewTransformerNest(
 	fieldName string,
 	doRegexes bool,
@@ -344,8 +341,6 @@ func NewTransformerNest(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerNest) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -375,7 +370,6 @@ func (tr *TransformerNest) getMatchingFieldNames(inrec *mlrval.Mlrmap) []string 
 	return names
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerNest) explodeValuesAcrossFields(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -420,7 +414,6 @@ func (tr *TransformerNest) explodeValuesAcrossFields(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerNest) explodeValuesAcrossRecords(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -456,7 +449,6 @@ func (tr *TransformerNest) explodeValuesAcrossRecords(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerNest) explodePairsAcrossFields(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -509,7 +501,6 @@ func (tr *TransformerNest) explodePairsAcrossFields(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerNest) explodePairsAcrossRecords(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -556,7 +547,6 @@ func (tr *TransformerNest) explodePairsAcrossRecords(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerNest) implodeValuesAcrossFields(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -605,7 +595,6 @@ func (tr *TransformerNest) implodeValuesAcrossFields(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerNest) implodeValueAcrossRecords(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

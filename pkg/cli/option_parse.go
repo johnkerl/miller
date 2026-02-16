@@ -94,7 +94,6 @@ func FinalizeWriterOptions(writerOptions *TWriterOptions) error {
 	return nil
 }
 
-// ================================================================
 var FLAG_TABLE = FlagTable{
 	sections: []*FlagSection{
 		&LegacyFlagSection,

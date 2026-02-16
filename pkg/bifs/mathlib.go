@@ -32,7 +32,6 @@ func _math_unary_void1(input1 *mlrval.Mlrval, f mathLibUnaryFunc, fname string) 
 	return mlrval.VOID
 }
 
-// ----------------------------------------------------------------
 func math_unary_f_i(input1 *mlrval.Mlrval, f mathLibUnaryFunc, fname string) *mlrval.Mlrval {
 	return mlrval.FromFloat(f(float64(input1.AcquireIntValue())))
 }
@@ -207,7 +206,6 @@ func BIF_pow(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return pow_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 func atan2_f_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromFloat(math.Atan2(float64(input1.AcquireIntValue()), float64(input2.AcquireIntValue())))
 }
@@ -244,7 +242,6 @@ func BIF_atan2(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return atan2_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 func mlr_roundm(x, m float64) float64 {
 	return math.Round(x/m) * m
 }
@@ -285,7 +282,6 @@ func BIF_roundm(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return roundm_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 func logifit_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromTypeErrorBinary("logifit", input1, input2)
 }

@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameHistogram = "histogram"
 const histogramDefaultBinCount = int64(20)
 
@@ -134,7 +133,6 @@ func transformerHistogramParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 const histogramVectorInitialSize = 1024
 
 type TransformerHistogram struct {
@@ -151,7 +149,6 @@ type TransformerHistogram struct {
 	recordTransformerFunc RecordTransformerFunc
 }
 
-// ----------------------------------------------------------------
 func NewTransformerHistogram(
 	valueFieldNames []string,
 	lo float64,
@@ -193,7 +190,6 @@ func NewTransformerHistogram(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerHistogram) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -205,7 +201,6 @@ func (tr *TransformerHistogram) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerHistogram) transformNonAuto(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -278,7 +273,6 @@ func (tr *TransformerHistogram) emitNonAuto(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerHistogram) transformAuto(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

@@ -15,7 +15,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 type UDF struct {
 	signature    *Signature
 	functionBody *StatementBlockNode
@@ -47,7 +46,6 @@ func NewUnresolvedUDF(
 	return udf
 }
 
-// ----------------------------------------------------------------
 type UDFCallsite struct {
 	argumentNodes []IEvaluable
 
@@ -427,7 +425,6 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 	return nil
 }
 
-// ================================================================
 
 var namelessFunctionCounter int = 0
 

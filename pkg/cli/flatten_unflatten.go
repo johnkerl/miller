@@ -56,7 +56,6 @@ package cli
 // * Overriding these: if the last verb the user has explicitly provided is
 //   flatten, don't undo that by putting an unflatten right after.
 //
-// ================================================================
 
 func DecideFinalFlatten(writerOptions *TWriterOptions) bool {
 	ofmt := writerOptions.OutputFileFormat

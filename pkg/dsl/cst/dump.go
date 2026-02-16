@@ -28,7 +28,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ================================================================
 type tDumpToRedirectFunc func(
 	outputString string,
 	state *runtime.State,
@@ -41,7 +40,6 @@ type DumpStatementNode struct {
 	outputHandlerManager      output.OutputHandlerManager // for file/pipe targets
 }
 
-// ----------------------------------------------------------------
 func (root *RootNode) BuildDumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDumpStatement)
 	return root.buildDumpxStatementNode(
@@ -151,7 +149,6 @@ func (root *RootNode) buildDumpxStatementNode(
 	return retval, nil
 }
 
-// ----------------------------------------------------------------
 func (node *DumpStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	// 5x faster than fmt.Dump() separately: note that os.Stdout is
 	// non-buffered in Go whereas stdout is buffered in C.
@@ -176,7 +173,6 @@ func (node *DumpStatementNode) Execute(state *runtime.State) (*BlockExitPayload,
 	return nil, nil
 }
 
-// ----------------------------------------------------------------
 func (node *DumpStatementNode) dumpToStdout(
 	outputString string,
 	state *runtime.State,
@@ -194,7 +190,6 @@ func (node *DumpStatementNode) dumpToStdout(
 	return nil
 }
 
-// ----------------------------------------------------------------
 func (node *DumpStatementNode) dumpToStderr(
 	outputString string,
 	state *runtime.State,
@@ -203,7 +198,6 @@ func (node *DumpStatementNode) dumpToStderr(
 	return nil
 }
 
-// ----------------------------------------------------------------
 func (node *DumpStatementNode) dumpToFileOrPipe(
 	outputString string,
 	state *runtime.State,

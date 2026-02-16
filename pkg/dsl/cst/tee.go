@@ -56,7 +56,6 @@ import (
 //             * string literal "jq ."
 // ----------------------------------------------------------------
 
-// ================================================================
 type tTeeToRedirectFunc func(
 	outrec *mlrval.Mlrmap,
 	state *runtime.State,
@@ -69,7 +68,6 @@ type TeeStatementNode struct {
 	outputHandlerManager      output.OutputHandlerManager // for file/pipe targets
 }
 
-// ----------------------------------------------------------------
 func (root *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeTeeStatement)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
@@ -134,7 +132,6 @@ func (root *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 	return retval, nil
 }
 
-// ----------------------------------------------------------------
 func (node *TeeStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	expression := node.expressionEvaluable.Evaluate(state)
 	if !expression.IsMap() {
@@ -144,7 +141,6 @@ func (node *TeeStatementNode) Execute(state *runtime.State) (*BlockExitPayload, 
 	return nil, err
 }
 
-// ----------------------------------------------------------------
 func (node *TeeStatementNode) teeToFileOrPipe(
 	outrec *mlrval.Mlrmap,
 	state *runtime.State,

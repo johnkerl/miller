@@ -14,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameCase = "case"
 
 var CaseSetup = TransformerSetup{
@@ -117,7 +116,6 @@ func transformerCaseParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type caserFuncT func(input string) string
 
 type TransformerCase struct {

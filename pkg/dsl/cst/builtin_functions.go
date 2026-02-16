@@ -15,7 +15,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
-// ----------------------------------------------------------------
 func (root *RootNode) BuildBuiltinFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
@@ -63,7 +62,6 @@ func (root *RootNode) BuildBuiltinFunctionCallsiteNode(
 	return nil, nil // not found
 }
 
-// ----------------------------------------------------------------
 func (root *RootNode) BuildMultipleArityFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
@@ -85,7 +83,6 @@ func (root *RootNode) BuildMultipleArityFunctionCallsiteNode(
 	)
 }
 
-// ----------------------------------------------------------------
 type ZaryFunctionCallsiteNode struct {
 	zaryFunc bifs.ZaryFunc
 }
@@ -117,7 +114,6 @@ func (node *ZaryFunctionCallsiteNode) Evaluate(
 	return node.zaryFunc()
 }
 
-// ----------------------------------------------------------------
 type UnaryFunctionCallsiteNode struct {
 	unaryFunc  bifs.UnaryFunc
 	evaluable1 IEvaluable
@@ -156,7 +152,6 @@ func (node *UnaryFunctionCallsiteNode) Evaluate(
 	return node.unaryFunc(node.evaluable1.Evaluate(state))
 }
 
-// ----------------------------------------------------------------
 type UnaryFunctionWithContextCallsiteNode struct {
 	unaryFuncWithContext bifs.UnaryFuncWithContext
 	evaluable1           IEvaluable
@@ -195,7 +190,6 @@ func (node *UnaryFunctionWithContextCallsiteNode) Evaluate(
 	return node.unaryFuncWithContext(node.evaluable1.Evaluate(state), state.Context)
 }
 
-// ----------------------------------------------------------------
 type BinaryFunctionCallsiteNode struct {
 	binaryFunc bifs.BinaryFunc
 	evaluable1 IEvaluable
@@ -269,7 +263,6 @@ func (node *BinaryFunctionCallsiteNode) Evaluate(
 	)
 }
 
-// ----------------------------------------------------------------
 type BinaryFunctionWithStateCallsiteNode struct {
 	binaryFuncWithState BinaryFuncWithState
 	evaluable1          IEvaluable
@@ -318,7 +311,6 @@ func (node *BinaryFunctionWithStateCallsiteNode) Evaluate(
 	)
 }
 
-// ----------------------------------------------------------------
 type TernaryFunctionWithStateCallsiteNode struct {
 	ternaryFuncWithState TernaryFuncWithState
 	evaluable1           IEvaluable
@@ -519,7 +511,6 @@ func (node *DotCallsiteNode) Evaluate(
 	}
 }
 
-// ----------------------------------------------------------------
 type TernaryFunctionCallsiteNode struct {
 	ternaryFunc bifs.TernaryFunc
 	evaluable1  IEvaluable
@@ -583,7 +574,6 @@ func (node *TernaryFunctionCallsiteNode) Evaluate(
 	)
 }
 
-// ----------------------------------------------------------------
 type VariadicFunctionCallsiteNode struct {
 	variadicFunc bifs.VariadicFunc
 	evaluables   []IEvaluable
@@ -641,7 +631,6 @@ func (node *VariadicFunctionCallsiteNode) Evaluate(
 	return node.variadicFunc(args)
 }
 
-// ----------------------------------------------------------------
 type VariadicFunctionWithStateCallsiteNode struct {
 	variadicFuncWithState VariadicFuncWithState
 	evaluables            []IEvaluable
@@ -699,7 +688,6 @@ func (node *VariadicFunctionWithStateCallsiteNode) Evaluate(
 	return node.variadicFuncWithState(args, state)
 }
 
-// ================================================================
 type LogicalANDOperatorNode struct {
 	a, b IEvaluable
 }
@@ -799,7 +787,6 @@ func (node *LogicalANDOperatorNode) Evaluate(
 	return bifs.BIF_logical_AND(aout, bout)
 }
 
-// ================================================================
 type LogicalOROperatorNode struct {
 	a, b IEvaluable
 }
@@ -929,7 +916,6 @@ func (node *EmptyCoalesceOperatorNode) Evaluate(
 	}
 }
 
-// ================================================================
 type StandardTernaryOperatorNode struct{ a, b, c IEvaluable }
 
 func BuildStandardTernaryOperatorNode(a, b, c IEvaluable) *StandardTernaryOperatorNode {

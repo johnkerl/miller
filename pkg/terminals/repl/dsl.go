@@ -28,7 +28,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
-// ----------------------------------------------------------------
 func (repl *Repl) handleDSLStringImmediate(dslString string, doWarnings bool) error {
 	return repl.handleDSLStringAux(dslString, true, doWarnings)
 }

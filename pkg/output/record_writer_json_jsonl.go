@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 type RecordWriterJSON struct {
 	// Parameters:
 	writerOptions  *cli.TWriterOptions
@@ -21,7 +20,6 @@ type RecordWriterJSON struct {
 	wroteAnyRecords bool
 }
 
-// ----------------------------------------------------------------
 func NewRecordWriterJSON(writerOptions *cli.TWriterOptions) (*RecordWriterJSON, error) {
 	var jsonFormatting mlrval.TJSONFormatting = mlrval.JSON_SINGLE_LINE
 	if writerOptions.JSONOutputMultiline {
@@ -35,7 +33,6 @@ func NewRecordWriterJSON(writerOptions *cli.TWriterOptions) (*RecordWriterJSON, 
 	}, nil
 }
 
-// ----------------------------------------------------------------
 func NewRecordWriterJSONLines(writerOptions *cli.TWriterOptions) (*RecordWriterJSON, error) {
 	wopt := *writerOptions
 	wopt.WrapJSONOutputInOuterList = false
@@ -48,7 +45,6 @@ func NewRecordWriterJSONLines(writerOptions *cli.TWriterOptions) (*RecordWriterJ
 	}, nil
 }
 
-// ----------------------------------------------------------------
 func (writer *RecordWriterJSON) Write(
 	outrec *mlrval.Mlrmap,
 	context *types.Context,
@@ -67,7 +63,6 @@ func (writer *RecordWriterJSON) Write(
 	return nil
 }
 
-// ----------------------------------------------------------------
 func (writer *RecordWriterJSON) writeWithListWrap(
 	outrec *mlrval.Mlrmap,
 	context *types.Context,
@@ -109,7 +104,6 @@ func (writer *RecordWriterJSON) writeWithListWrap(
 	}
 }
 
-// ----------------------------------------------------------------
 func (writer *RecordWriterJSON) writeWithoutListWrap(
 	outrec *mlrval.Mlrmap,
 	_ *types.Context,

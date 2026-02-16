@@ -14,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
-// ----------------------------------------------------------------
 type IfChainNode struct {
 	ifItems []*IfItem
 }
@@ -120,7 +119,6 @@ func (root *RootNode) BuildIfChainNode(astNode *dsl.ASTNode) (*IfChainNode, erro
 	return ifChainNode, nil
 }
 
-// ----------------------------------------------------------------
 func (node *IfChainNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	for _, ifItem := range node.ifItems {
 		condition := mlrval.TRUE

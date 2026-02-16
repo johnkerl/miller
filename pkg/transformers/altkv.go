@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameAltkv = "altkv"
 
 var AltkvSetup = TransformerSetup{
@@ -76,7 +75,6 @@ func transformerAltkvParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerAltkv struct {
 }
 
@@ -85,7 +83,6 @@ func NewTransformerAltkv() (*TransformerAltkv, error) {
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerAltkv) Transform(
 	inrecAndContext *types.RecordAndContext,

@@ -34,7 +34,6 @@ type BareBooleanStatementNode struct {
 	writeToState         bool
 }
 
-// ----------------------------------------------------------------
 func (root *RootNode) BuildBareBooleanStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeBareBoolean)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)

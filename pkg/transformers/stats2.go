@@ -12,7 +12,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameStats2 = "stats2"
 
 // For joining "x" and "y" into "x...y" for map keys. "," is another natural choice but would break
@@ -57,7 +56,6 @@ func transformerStats2Usage(
 	fmt.Fprintf(o, "Example: %s %s -a corr -f x,y\n", argv0, verb)
 }
 
-// ----------------------------------------------------------------
 func transformerStats2ParseCLI(
 	pargi *int,
 	argc int,
@@ -168,7 +166,6 @@ func transformerStats2ParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerStats2 struct {
 	// Input:
 	accumulatorNameList  []string
@@ -260,7 +257,6 @@ func NewTransformerStats2(
 // In the non-iterative case, produce output only at the end of the input stream.
 // ================================================================
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerStats2) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -291,7 +287,6 @@ func (tr *TransformerStats2) Transform(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerStats2) ingest(
 	inrecAndContext *types.RecordAndContext,
 ) {
@@ -380,7 +375,6 @@ func (tr *TransformerStats2) ingest(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerStats2) emit(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	context *types.Context,

@@ -93,7 +93,6 @@ func (mv *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 	}
 }
 
-// ----------------------------------------------------------------
 func arrayGetAliased(array *[]*Mlrval, mindex int) *Mlrval {
 	zindex, ok := UnaliasArrayIndex(array, mindex)
 	if ok {
@@ -173,7 +172,6 @@ func (mv *Mlrval) ArrayAppend(value *Mlrval) {
 
 }
 
-// ================================================================
 func (mv *Mlrval) MapGet(key *Mlrval) Mlrval {
 	if !mv.IsMap() {
 		return *FromNotMapError("map[]", mv)
@@ -191,7 +189,6 @@ func (mv *Mlrval) MapGet(key *Mlrval) Mlrval {
 	return *mval
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
 	if !mv.IsMap() {
 		// TODO: need to be careful about semantics here.
@@ -396,7 +393,6 @@ func putIndexedOnArray(
 	}
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) RemoveIndexed(indices []*Mlrval) error {
 	lib.InternalCodingErrorIf(len(indices) < 1)
 

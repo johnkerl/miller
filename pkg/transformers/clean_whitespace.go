@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameCleanWhitespace = "clean-whitespace"
 
 var CleanWhitespaceSetup = TransformerSetup{
@@ -103,12 +102,10 @@ func transformerCleanWhitespaceParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerCleanWhitespace struct {
 	recordTransformerFunc RecordTransformerFunc
 }
 
-// ----------------------------------------------------------------
 func NewTransformerCleanWhitespace(
 	doKeys bool,
 	doValues bool,
@@ -127,8 +124,6 @@ func NewTransformerCleanWhitespace(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerCleanWhitespace) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -139,7 +134,6 @@ func (tr *TransformerCleanWhitespace) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -163,7 +157,6 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeys(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -186,7 +179,6 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeys(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerCleanWhitespace) cleanWhitespaceInValues(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

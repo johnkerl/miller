@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameFillEmpty = "fill-empty"
 const defaultFillEmptyString = "N/A"
 
@@ -87,7 +86,6 @@ func transformerFillEmptyParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerFillEmpty struct {
 	fillValue *mlrval.Mlrval
 }
@@ -105,7 +103,6 @@ func NewTransformerFillEmpty(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerFillEmpty) Transform(
 	inrecAndContext *types.RecordAndContext,

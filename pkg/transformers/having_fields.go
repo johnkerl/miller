@@ -23,7 +23,6 @@ const (
 	havingNoFieldsMatching
 )
 
-// ----------------------------------------------------------------
 const verbNameHavingFields = "having-fields"
 
 var HavingFieldsSetup = TransformerSetup{
@@ -150,7 +149,6 @@ func transformerHavingFieldsParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerHavingFields struct {
 	fieldNames    []string
 	numFieldNames int64
@@ -161,7 +159,6 @@ type TransformerHavingFields struct {
 	recordTransformerFunc RecordTransformerFunc
 }
 
-// ----------------------------------------------------------------
 func NewTransformerHavingFields(
 	havingFieldsCriterion tHavingFieldsCriterion,
 	fieldNames []string,
@@ -216,7 +213,6 @@ func NewTransformerHavingFields(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerHavingFields) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -228,7 +224,6 @@ func (tr *TransformerHavingFields) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerHavingFields) transformHavingFieldsAtLeast(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -294,7 +289,6 @@ func (tr *TransformerHavingFields) transformHavingFieldsAtMost(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerHavingFields) transformHavingAllFieldsMatching(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

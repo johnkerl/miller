@@ -32,7 +32,6 @@ func NewRecordWriterPPRINT(writerOptions *cli.TWriterOptions) (*RecordWriterPPRI
 	}, nil
 }
 
-// ----------------------------------------------------------------
 func (writer *RecordWriterPPRINT) Write(
 	outrec *mlrval.Mlrmap,
 	_ *types.Context,

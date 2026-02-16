@@ -101,9 +101,7 @@ var prematureEofError error = errors.New("mlr: JSON parser: unexpected premature
 //
 // This is so the Miller JSON record-reader can be streaming, not needing to
 // ingest all records at once, and operable within a tail -f context.
-// ================================================================
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) UnmarshalJSON(inputBytes []byte) error {
 	*mv = *FromPending()
 	decoder := json.NewDecoder(bytes.NewReader(inputBytes))
@@ -118,7 +116,6 @@ func (mv *Mlrval) UnmarshalJSON(inputBytes []byte) error {
 	return nil
 }
 
-// ----------------------------------------------------------------
 func TryUnmarshalJSON(inputBytes []byte) (pmv *Mlrval, err error) {
 	decoder := json.NewDecoder(bytes.NewReader(inputBytes))
 	pmv, eof, err := MlrvalDecodeFromJSON(decoder)
@@ -128,7 +125,6 @@ func TryUnmarshalJSON(inputBytes []byte) (pmv *Mlrval, err error) {
 	return pmv, err
 }
 
-// ----------------------------------------------------------------
 func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 	mlrval *Mlrval,
 	eof bool,
@@ -267,7 +263,6 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 	}
 }
 
-// ================================================================
 func (mv *Mlrval) MarshalJSON(
 	jsonFormatting TJSONFormatting,
 	outputIsStdout bool,
@@ -312,7 +307,6 @@ func (mv *Mlrval) marshalJSONAux(
 // ================================================================
 // TYPE-SPECIFIC MARSHALERS
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONPending(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_PENDING)
 	return "", fmt.Errorf(
@@ -320,13 +314,11 @@ func (mv *Mlrval) marshalJSONPending(outputIsStdout bool) (string, error) {
 	)
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONError(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_ERROR)
 	return colorizer.MaybeColorizeValue(mv.printrep, outputIsStdout), nil
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONAbsent(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_ABSENT)
 	return "", fmt.Errorf(
@@ -334,19 +326,16 @@ func (mv *Mlrval) marshalJSONAbsent(outputIsStdout bool) (string, error) {
 	)
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONNull(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_NULL)
 	return colorizer.MaybeColorizeValue("null", outputIsStdout), nil
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONVoid(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_VOID)
 	return colorizer.MaybeColorizeValue("\"\"", outputIsStdout), nil
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONString(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_STRING)
 
@@ -404,7 +393,6 @@ func millerJSONEncodeString(input string) string {
 	return buffer.String()
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONInt(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_INT)
 	// Other formats would use mv.String(): for example, if the user used hex
@@ -419,19 +407,16 @@ func (mv *Mlrval) marshalJSONInt(outputIsStdout bool) (string, error) {
 	return colorizer.MaybeColorizeValue(s, outputIsStdout), nil
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONFloat(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_FLOAT)
 	return colorizer.MaybeColorizeValue(mv.String(), outputIsStdout), nil
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONBool(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_BOOL)
 	return colorizer.MaybeColorizeValue(mv.String(), outputIsStdout), nil
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONArray(
 	jsonFormatting TJSONFormatting,
 	elementNestingDepth int,
@@ -534,7 +519,6 @@ func (mv *Mlrval) marshalJSONArrayMultipleLines(
 	return buffer.String(), nil
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONMap(
 	jsonFormatting TJSONFormatting,
 	elementNestingDepth int,

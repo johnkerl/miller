@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameUnsparsify = "unsparsify"
 
 var UnsparsifySetup = TransformerSetup{
@@ -104,7 +103,6 @@ func transformerUnsparsifyParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerUnsparsify struct {
 	fillerMlrval          *mlrval.Mlrval
 	recordsAndContexts    []*types.RecordAndContext
@@ -137,7 +135,6 @@ func NewTransformerUnsparsify(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerUnsparsify) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -149,7 +146,6 @@ func (tr *TransformerUnsparsify) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerUnsparsify) transformNonStreaming(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -186,7 +182,6 @@ func (tr *TransformerUnsparsify) transformNonStreaming(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerUnsparsify) transformStreaming(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

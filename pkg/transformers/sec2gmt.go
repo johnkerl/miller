@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameSec2GMT = "sec2gmt"
 
 var Sec2GMTSetup = TransformerSetup{
@@ -124,7 +123,6 @@ func transformerSec2GMTParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerSec2GMT struct {
 	fieldNameList    []string
 	preDivide        float64
@@ -144,7 +142,6 @@ func NewTransformerSec2GMT(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerSec2GMT) Transform(
 	inrecAndContext *types.RecordAndContext,

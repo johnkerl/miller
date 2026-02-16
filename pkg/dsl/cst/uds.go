@@ -14,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 type UDS struct {
 	signature      *Signature
 	subroutineBody *StatementBlockNode
@@ -41,7 +40,6 @@ func NewUnresolvedUDS(
 	return uds
 }
 
-// ----------------------------------------------------------------
 type UDSCallsite struct {
 	argumentNodes []IEvaluable
 	uds           *UDS
@@ -158,7 +156,6 @@ func (site *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error
 	return blockExitPayload, nil
 }
 
-// ----------------------------------------------------------------
 type UDSManager struct {
 	subroutines map[string]*UDS
 }

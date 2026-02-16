@@ -12,7 +12,6 @@ import (
 	"github.com/kshedden/statmodel/statmodel"
 )
 
-// ----------------------------------------------------------------
 const verbNameSurv = "surv"
 
 // SurvSetup defines the surv verb: Kaplan-Meier survival curve.

@@ -35,7 +35,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 func NewRepl(
 	exeName string,
 	replName string,
@@ -147,7 +146,6 @@ func controlCHandler(sysToSignalHandlerChannel chan os.Signal, appSignalNotifica
 	}
 }
 
-// ----------------------------------------------------------------
 func (repl *Repl) handleSession(istream *os.File) error {
 	if repl.showStartupBanner {
 		repl.printStartupBanner()

@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameGroupLike = "group-like"
 
 var GroupLikeSetup = TransformerSetup{
@@ -75,7 +74,6 @@ func transformerGroupLikeParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerGroupLike struct {
 	// map from string to record slices
 	recordListsByGroup *lib.OrderedMap[*[]*types.RecordAndContext]
@@ -90,7 +88,6 @@ func NewTransformerGroupLike() (*TransformerGroupLike, error) {
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerGroupLike) Transform(
 	inrecAndContext *types.RecordAndContext,

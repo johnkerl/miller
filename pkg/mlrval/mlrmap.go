@@ -67,7 +67,6 @@ func HashRecords(onOff bool) {
 	hashRecords = onOff
 }
 
-// ----------------------------------------------------------------
 type Mlrmap struct {
 	FieldCount int64
 	Head       *MlrmapEntry
@@ -97,7 +96,6 @@ type MlrmapPair struct {
 	Value *Mlrval
 }
 
-// ----------------------------------------------------------------
 func NewMlrmapAsRecord() *Mlrmap {
 	if hashRecords {
 		return newMlrmapHashed()

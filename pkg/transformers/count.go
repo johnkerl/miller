@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameCount = "count"
 
 var CountSetup = TransformerSetup{
@@ -99,7 +98,6 @@ func transformerCountParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerCount struct {
 	// input
 	groupByFieldNames []string
@@ -145,7 +143,6 @@ func NewTransformerCount(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerCount) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -157,7 +154,6 @@ func (tr *TransformerCount) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerCount) countUngrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -175,7 +171,6 @@ func (tr *TransformerCount) countUngrouped(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerCount) countGrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

@@ -14,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameStats1 = "stats1"
 
 var Stats1Setup = TransformerSetup{
@@ -214,7 +213,6 @@ func transformerStats1ParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerStats1 struct {
 	// Input:
 	accumulatorNameList  []string

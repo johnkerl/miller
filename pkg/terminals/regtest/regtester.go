@@ -98,7 +98,6 @@ type stringPair struct {
 	second string
 }
 
-// ----------------------------------------------------------------
 type RegTester struct {
 	exeName        string
 	verbosityLevel int
@@ -115,7 +114,6 @@ type RegTester struct {
 	firstNFailsToShow int
 }
 
-// ----------------------------------------------------------------
 func NewRegTester(
 	exeName string,
 	doPopulate bool,
@@ -272,7 +270,6 @@ func (regtester *RegTester) executeSinglePath(
 	return false // fall-through
 }
 
-// ----------------------------------------------------------------
 func (regtester *RegTester) executeSingleDirectory(
 	dirName string,
 ) (bool, bool) {
@@ -753,7 +750,6 @@ func (regtester *RegTester) executeSingleCmdFile(
 	return passed
 }
 
-// ----------------------------------------------------------------
 func (regtester *RegTester) FileExists(fileName string) bool {
 	fileInfo, err := os.Stat(fileName)
 	if err != nil {
@@ -824,7 +820,6 @@ func (regtester *RegTester) compareFiles(
 	return expectedContents == actualContents, expectedContents, actualContents, nil
 }
 
-// ----------------------------------------------------------------
 func (regtester *RegTester) loadEnvFile(
 	filename string,
 	caseDir string,
@@ -861,7 +856,6 @@ func (regtester *RegTester) loadEnvFile(
 	return keyValuePairs, nil
 }
 
-// ----------------------------------------------------------------
 func (regtester *RegTester) loadStringPairFile(
 	filename string,
 	caseDir string,

@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameGap = "gap"
 
 var GapSetup = TransformerSetup{
@@ -99,7 +98,6 @@ func transformerGapParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerGap struct {
 	// input
 	gapCount          int64
@@ -133,7 +131,6 @@ func NewTransformerGap(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerGap) Transform(
 	inrecAndContext *types.RecordAndContext,

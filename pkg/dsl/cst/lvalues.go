@@ -16,7 +16,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
-// ----------------------------------------------------------------
 func (root *RootNode) BuildAssignableNode(
 	astNode *dsl.ASTNode,
 ) (IAssignable, error) {
@@ -68,7 +67,6 @@ func (root *RootNode) BuildAssignableNode(
 	)
 }
 
-// ----------------------------------------------------------------
 type DirectFieldValueLvalueNode struct {
 	lhsFieldName *mlrval.Mlrval
 }
@@ -157,7 +155,6 @@ func (node *DirectFieldValueLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 type IndirectFieldValueLvalueNode struct {
 	lhsFieldNameExpression IEvaluable
 }
@@ -485,7 +482,6 @@ func (node *PositionalFieldValueLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 type FullSrecLvalueNode struct {
 }
 
@@ -559,7 +555,6 @@ func (node *FullSrecLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 type DirectOosvarValueLvalueNode struct {
 	lhsOosvarName *mlrval.Mlrval
 }
@@ -625,7 +620,6 @@ func (node *DirectOosvarValueLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 type IndirectOosvarValueLvalueNode struct {
 	lhsOosvarNameExpression IEvaluable
 }
@@ -707,7 +701,6 @@ func (node *IndirectOosvarValueLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 type FullOosvarLvalueNode struct {
 }
 
@@ -763,7 +756,6 @@ func (node *FullOosvarLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 type LocalVariableLvalueNode struct {
 	stackVariable *runtime.StackVariable
 	typeName      string
@@ -874,7 +866,6 @@ func (node *LocalVariableLvalueNode) UnassignIndexed(
 //   o error if ith mlrval is string and that level isn't a map
 //   o error for any other types -- maybe absent-handling for heterogeneity ...
 
-// ----------------------------------------------------------------
 type IndexedLvalueNode struct {
 	baseLvalue      IAssignable
 	indexEvaluables []IEvaluable
@@ -998,7 +989,6 @@ func (node *IndexedLvalueNode) UnassignIndexed(
 	lib.InternalCodingErrorIf(true)
 }
 
-// ----------------------------------------------------------------
 type EnvironmentVariableLvalueNode struct {
 	nameExpression IEvaluable
 }

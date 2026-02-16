@@ -13,7 +13,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameFraction = "fraction"
 
 var FractionSetup = TransformerSetup{
@@ -125,7 +124,6 @@ func transformerFractionParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerFraction struct {
 	fractionFieldNames []string
 	groupByFieldNames  []string
@@ -142,7 +140,6 @@ type TransformerFraction struct {
 	zero                  *mlrval.Mlrval
 }
 
-// ----------------------------------------------------------------
 func NewTransformerFraction(
 	fractionFieldNames []string,
 	groupByFieldNames []string,
@@ -187,7 +184,6 @@ func NewTransformerFraction(
 	}, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerFraction) Transform(
 	inrecAndContext *types.RecordAndContext,

@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameGrep = "grep"
 
 var GrepSetup = TransformerSetup{
@@ -130,7 +129,6 @@ func transformerGrepParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerGrep struct {
 	regexp     *regexp.Regexp
 	invert     bool
@@ -150,7 +148,6 @@ func NewTransformerGrep(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerGrep) Transform(
 	inrecAndContext *types.RecordAndContext,

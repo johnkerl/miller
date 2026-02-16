@@ -13,7 +13,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameSplit = "split"
 const splitDefaultOutputFileNamePrefix = "split"
 const splitDefaultFileNamePartJoiner = "_"
@@ -213,7 +212,6 @@ func transformerSplitParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerSplit struct {
 	n                        int64
 	outputFileNamePrefix     string

@@ -18,7 +18,6 @@ const barDefaultLo = 0.0
 const barDefaultHi = 100.0
 const barDefaultWidth = int64(40)
 
-// ----------------------------------------------------------------
 const verbNameBar = "bar"
 
 var BarSetup = TransformerSetup{
@@ -140,7 +139,6 @@ func transformerBarParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerBar struct {
 	fieldNames         []string
 	lo                 float64
@@ -155,7 +153,6 @@ type TransformerBar struct {
 	recordTransformerFunc RecordTransformerFunc
 }
 
-// ----------------------------------------------------------------
 func NewTransformerBar(
 	fieldNames []string,
 	lo float64,
@@ -202,7 +199,6 @@ func NewTransformerBar(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerBar) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -214,7 +210,6 @@ func (tr *TransformerBar) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerBar) processNoAuto(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -249,7 +244,6 @@ func (tr *TransformerBar) processNoAuto(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerBar) processAuto(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

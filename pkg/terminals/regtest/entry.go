@@ -13,7 +13,6 @@ import (
 
 const defaultPath = "./test/cases"
 
-// ================================================================
 func regTestUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "Usage: mlr %s [options] [one or more directories/files]\n", verbName)
 	fmt.Fprintf(o, "If no directories/files are specified, the directory %s is used by default.\n", defaultPath)

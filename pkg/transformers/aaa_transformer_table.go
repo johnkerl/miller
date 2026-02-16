@@ -9,7 +9,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
-// ----------------------------------------------------------------
 var TRANSFORMER_LOOKUP_TABLE = []TransformerSetup{
 	AltkvSetup,
 	BarSetup,
@@ -130,7 +129,6 @@ func ListVerbNamesAsParagraph() {
 	lib.PrintWordsAsParagraph(verbNames)
 }
 
-// ----------------------------------------------------------------
 func UsageVerbs() {
 	separator := "================================================================"
 

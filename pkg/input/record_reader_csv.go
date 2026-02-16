@@ -14,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 type RecordReaderCSV struct {
 	readerOptions       *cli.TReaderOptions
 	recordsPerBatch     int64 // distinct from readerOptions.RecordsPerBatch for join/repl

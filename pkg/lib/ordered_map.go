@@ -7,7 +7,6 @@
 
 package lib
 
-// ----------------------------------------------------------------
 type OrderedMap[V any] struct {
 	FieldCount    int64
 	Head          *orderedMapEntry[V]
@@ -22,7 +21,6 @@ type orderedMapEntry[V any] struct {
 	Next  *orderedMapEntry[V]
 }
 
-// ----------------------------------------------------------------
 func NewOrderedMap[V any]() *OrderedMap[V] {
 	return &OrderedMap[V]{
 		FieldCount:    0,
@@ -44,7 +42,6 @@ func newOrderedMapEntry[V any](key *string, value V) *orderedMapEntry[V] {
 	}
 }
 
-// ----------------------------------------------------------------
 func (omap *OrderedMap[V]) IsEmpty() bool {
 	return omap.FieldCount == 0
 }
@@ -66,7 +63,6 @@ func (omap *OrderedMap[V]) findEntry(key *string) *orderedMapEntry[V] {
 	}
 }
 
-// ----------------------------------------------------------------
 func (omap *OrderedMap[V]) Put(key string, value V) {
 	pe := omap.findEntry(&key)
 	if pe == nil {
@@ -89,7 +85,6 @@ func (omap *OrderedMap[V]) Put(key string, value V) {
 	}
 }
 
-// ----------------------------------------------------------------
 func (omap *OrderedMap[V]) Get(key string) V {
 	pe := omap.findEntry(&key)
 	if pe == nil {
@@ -123,7 +118,6 @@ func (omap *OrderedMap[V]) Remove(key string) bool {
 	}
 }
 
-// ----------------------------------------------------------------
 func (omap *OrderedMap[V]) unlink(pe *orderedMapEntry[V]) {
 	if pe == omap.Head {
 		if pe == omap.Tail {

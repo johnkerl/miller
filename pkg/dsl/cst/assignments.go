@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
-// ================================================================
 func (root *RootNode) BuildAssignmentNode(
 	astNode *dsl.ASTNode,
 ) (*AssignmentNode, error) {
@@ -40,7 +39,6 @@ func (root *RootNode) BuildAssignmentNode(
 	}, nil
 }
 
-// ----------------------------------------------------------------
 type AssignmentNode struct {
 	lvalueNode IAssignable
 	rvalueNode IEvaluable
@@ -59,7 +57,6 @@ func (node *AssignmentNode) Execute(
 	return nil, nil
 }
 
-// ================================================================
 func (root *RootNode) BuildUnsetNode(
 	astNode *dsl.ASTNode,
 ) (*UnsetNode, error) {
@@ -81,7 +78,6 @@ func (root *RootNode) BuildUnsetNode(
 	}, nil
 }
 
-// ----------------------------------------------------------------
 type UnsetNode struct {
 	lvalueNodes []IAssignable
 }

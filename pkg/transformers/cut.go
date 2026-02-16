@@ -14,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameCut = "cut"
 
 var CutSetup = TransformerSetup{
@@ -124,7 +123,6 @@ func transformerCutParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerCut struct {
 	fieldNameList []string
 	fieldNameSet  map[string]bool
@@ -181,7 +179,6 @@ func NewTransformerCut(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerCut) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -266,7 +263,6 @@ type entryIndex struct {
 	entry *mlrval.MlrmapEntry
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerCut) processWithRegexes(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

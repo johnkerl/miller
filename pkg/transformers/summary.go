@@ -12,7 +12,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameSummary = "summary"
 
 type tSummarizerType int
@@ -210,7 +209,6 @@ func transformerSummaryParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type tFieldSummary struct {
 	// Needs lib.OrderedMap, not map[string]int64, for deterministic regression-test output.
 	// This is a map (a set really) rather than a single value in case of heterogeneous data.
@@ -287,7 +285,6 @@ func NewTransformerSummary(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerSummary) Transform(
 	inrecAndContext *types.RecordAndContext,

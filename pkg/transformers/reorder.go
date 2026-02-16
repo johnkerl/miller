@@ -12,7 +12,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameReorder = "reorder"
 
 var ReorderSetup = TransformerSetup{
@@ -133,7 +132,6 @@ func transformerReorderParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerReorder struct {
 	// input
 	fieldNames      []string

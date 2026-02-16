@@ -32,7 +32,6 @@ import (
 //                         * LocalVariable "k"
 //                         * LocalVariable "k"
 
-// ================================================================
 type ForLoopOneVariableNode struct {
 	indexVariable      *runtime.StackVariable
 	indexableNode      IEvaluable
@@ -204,7 +203,6 @@ func (node *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 	return nil, nil
 }
 
-// ================================================================
 type ForLoopTwoVariableNode struct {
 	keyIndexVariable   *runtime.StackVariable
 	valueIndexVariable *runtime.StackVariable
@@ -397,7 +395,6 @@ func (node *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 	return nil, nil
 }
 
-// ================================================================
 type ForLoopMultivariableNode struct {
 	keyIndexVariables  []*runtime.StackVariable
 	valueIndexVariable *runtime.StackVariable
@@ -519,7 +516,6 @@ func (node *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitP
 	}
 }
 
-// ----------------------------------------------------------------
 func (node *ForLoopMultivariableNode) executeOuter(
 	mv *mlrval.Mlrval,
 	keyIndexVariables []*runtime.StackVariable,
@@ -609,7 +605,6 @@ func (node *ForLoopMultivariableNode) executeOuter(
 	return nil, nil
 }
 
-// ----------------------------------------------------------------
 func (node *ForLoopMultivariableNode) executeInner(
 	mv *mlrval.Mlrval,
 	keyIndexVariable *runtime.StackVariable,
@@ -704,7 +699,6 @@ func (node *ForLoopMultivariableNode) executeInner(
 	return nil, nil
 }
 
-// ================================================================
 type TripleForLoopNode struct {
 	startBlockNode              *StatementBlockNode
 	precontinuationAssignments  []IExecutable

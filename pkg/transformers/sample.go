@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameSample = "sample"
 
 var SampleSetup = TransformerSetup{
@@ -98,7 +97,6 @@ func transformerSampleParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type sampleBucketType struct {
 	nalloc             int64
 	nused              int64
@@ -123,7 +121,6 @@ func NewTransformerSample(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerSample) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -160,7 +157,6 @@ func (tr *TransformerSample) Transform(
 	}
 }
 
-// ----------------------------------------------------------------
 func newSampleBucket(sampleCount int64) *sampleBucketType {
 	return &sampleBucketType{
 		nalloc:             sampleCount,

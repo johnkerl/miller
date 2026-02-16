@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameLabel = "label"
 
 var LabelSetup = TransformerSetup{
@@ -90,7 +89,6 @@ func transformerLabelParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerLabel struct {
 	newNames []string
 }
@@ -115,7 +113,6 @@ func NewTransformerLabel(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerLabel) Transform(
 	inrecAndContext *types.RecordAndContext,

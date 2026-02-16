@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameBootstrap = "bootstrap"
 
 var BootstrapSetup = TransformerSetup{
@@ -88,7 +87,6 @@ func transformerBootstrapParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 type TransformerBootstrap struct {
 	recordsAndContexts []*types.RecordAndContext
 	nout               int64
@@ -102,7 +100,6 @@ func NewTransformerBootstrap(nout int64) (*TransformerBootstrap, error) {
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 
 func (tr *TransformerBootstrap) Transform(
 	inrecAndContext *types.RecordAndContext,
