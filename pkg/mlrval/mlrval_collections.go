@@ -332,9 +332,12 @@ func putIndexedOnArray(
 		// If last index, then assign.
 		if inBounds {
 			(*baseArray)[zindex] = rvalue.Copy()
-		} else if mindex.intf.(int64) == 0 {
+			return nil
+		}
+		if mindex.intf.(int64) == 0 {
 			return errors.New("mlr: zero indices are not supported. Indices are 1-up")
-		} else if mindex.intf.(int64) < 0 {
+		}
+		if mindex.intf.(int64) < 0 {
 			return errors.New("mlr: Cannot use negative indices to auto-lengthen arrays")
 		}
 		// Array is [a,b,c] with mindices 1,2,3. Length is 3. Zindices are 0,1,2.
@@ -343,7 +346,6 @@ func putIndexedOnArray(
 		zindex := mindex.intf.(int64) - 1
 		(*baseArray)[zindex] = rvalue.Copy()
 		return nil
-
 	}
 	// More indices remain; recurse
 	if inBounds {
