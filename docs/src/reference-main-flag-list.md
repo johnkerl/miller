@@ -155,6 +155,7 @@ are overridden in all cases by setting output format to `format2`.
 * `--asv or --asvlite`: Use ASV format for input and output data.
 * `--csv or -c or --c2c`: Use CSV format for input and output data.
 * `--csvlite`: Use CSV-lite format for input and output data.
+* `--dcf`: Use Debian control file (DCF) format for input and output data.
 * `--dkvp or --d2d`: Use DKVP format for input and output data.
 * `--gen-field-name`: Specify field name for --igen. Defaults to "i".
 * `--gen-start`: Specify start value for --igen. Defaults to 1.
@@ -163,6 +164,7 @@ are overridden in all cases by setting output format to `format2`.
 * `--iasv or --iasvlite`: Use ASV format for input data.
 * `--icsv`: Use CSV format for input data.
 * `--icsvlite`: Use CSV-lite format for input data.
+* `--idcf`: Use Debian control file (DCF) format for input data.
 * `--idkvp`: Use DKVP format for input data.
 * `--igen`: Ignore input files and instead generate sequential numeric input using --gen-field-name, --gen-start, --gen-step, and --gen-stop values. See also the seqgen verb, which is more useful/intuitive.
 * `--ijson`: Use JSON format for input data.
@@ -182,6 +184,7 @@ are overridden in all cases by setting output format to `format2`.
 * `--oasv or --oasvlite`: Use ASV format for output data.
 * `--ocsv`: Use CSV format for output data.
 * `--ocsvlite`: Use CSV-lite format for output data.
+* `--odcf`: Use Debian control file (DCF) format for output data.
 * `--odkvp`: Use DKVP format for output data.
 * `--ojson`: Use JSON format for output data.
 * `--ojsonl`: Use JSON Lines format for output data.
@@ -219,7 +222,7 @@ See the flatten/unflatten doc page https://miller.readthedocs.io/en/latest/flatt
 ## Format-conversion keystroke-saver flags
 
 The letters `c`, `t`, `j`, `l`, `d`, `n`, `x`, `p`, `m`, and `y` refer to formats CSV, TSV, JSON, JSON Lines,
-DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively. Note that markdown format is available for
+DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively. DCF is also supported (use `--dcf` for DCF in and out). Note that markdown format is available for
 output only.
 
 | In \ out  | **CSV** | **TSV** | **JSON** | **JSONL** | **DKVP** | **NIDX** | **XTAB** | **PPRINT** | **Markdown** | **YAML** |
@@ -494,6 +497,7 @@ Notes about all other separators:
         Format   FS     PS     RS
         csv      ","    N/A    "\n"
         csvlite  ","    N/A    "\n"
+        dcf      N/A    N/A    N/A
         dkvp     ","    "="    "\n"
         gen      ","    N/A    "\n"
         json     N/A    N/A    N/A

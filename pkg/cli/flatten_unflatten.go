@@ -61,7 +61,8 @@ package cli
 func DecideFinalFlatten(writerOptions *TWriterOptions) bool {
 	ofmt := writerOptions.OutputFileFormat
 	if writerOptions.AutoFlatten {
-		if ofmt != "json" {
+		// Preserve nested/array structure for formats that support it.
+		if ofmt != "json" && ofmt != "jsonl" && ofmt != "dcf" {
 			return true
 		}
 	}

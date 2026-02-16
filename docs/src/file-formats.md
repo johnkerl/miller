@@ -17,7 +17,7 @@ Quick links:
 # File formats
 
 Miller handles name-indexed data using several formats: some you probably know
-by name, such as CSV, TSV, JSON, JSON Lines, and YAML -- and other formats you're likely already
+by name, such as CSV, TSV, JSON, JSON Lines, YAML, and DCF -- and other formats you're likely already
 seeing and using in your structured data.
 
 Additionally, Miller gives you the option to include comments within your data.
@@ -108,6 +108,17 @@ NIDX: implicitly numerically indexed (Unix-toolkit style)
 | the quick brown     | Record 1: "1":"the", "2":"quick", "3":"brown"
 | fox jumped          | Record 2: "1":"fox", "2":"jumped"
 +---------------------+
+
+DCF: Debian control file format
++------------+
+| apple: 1   |
+| bat: 2     |
+| cog: 3     |
+|            |
+| dish: 7    |
+| egg: 8     |
+| 3: flint   |
++------------+
 </pre>
 
 ## CSV/TSV/ASV/USV/etc.
@@ -720,6 +731,43 @@ the dawn's
 light
 </pre>
 
+## DCF (Debian control file)
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/sample.dcf</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Package: foo
+Version: 1.0
+Depends: libc6 (>= 2.0), libfoo (>= 1.2)
+Description: A test package.
+
+Package: bar
+Version: 2.0
+Recommends: foo
+Description: Another package.
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -i dcf -o json cat data/sample.dcf</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "Package": "foo",
+  "Version": "1.0",
+  "Depends": ["libc6 (>= 2.0)", "libfoo (>= 1.2)"],
+  "Description": "A test package."
+},
+{
+  "Package": "bar",
+  "Version": "2.0",
+  "Recommends": ["foo"],
+  "Description": "Another package."
+}
+]
+</pre>
+
 ## Data-conversion keystroke-savers
 
 While you can do format conversion using `mlr --icsv --ojson cat myfile.csv`, there are also keystroke-savers for this purpose, such as `mlr --c2j cat myfile.csv`.  For a complete list:
@@ -731,7 +779,7 @@ While you can do format conversion using `mlr --icsv --ojson cat myfile.csv`, th
 FORMAT-CONVERSION KEYSTROKE-SAVER FLAGS
 As keystroke-savers for format-conversion you may use the following.
 The letters c, t, j, l, d, n, x, p, m, and y refer to formats CSV, TSV, JSON, JSON Lines,
-DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively.
+DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively. DCF is also supported (use --dcf for DCF in and out).
 
 | In\out   | CSV      | TSV      | JSON     | JSONL | DKVP  | NIDX  | XTAB  | PPRINT | Markdown | YAML   |
 +----------+----------+----------+----------+-------+-------+-------+-------+--------+----------+--------+

@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2026-02-15
+.\"      Date: 2026-02-16
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2026-02-15" "\ \&" "\ \&"
+.TH "MILLER" "1" "2026-02-16" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -150,6 +150,17 @@ NIDX: implicitly numerically indexed (Unix-toolkit style)
 | the quick brown     | Record 1: "1":"the", "2":"quick", "3":"brown"
 | fox jumped          | Record 2: "1":"fox", "2":"jumped"
 +---------------------+
+
+DCF: Debian control file format
++------------+
+| apple: 1   |
+| bat: 2     |
+| cog: 3     |
+|            |
+| dish: 7    |
+| egg: 8     |
+| 3: flint   |
++------------+
 .fi
 .if n \{\
 .RE
@@ -461,6 +472,8 @@ are overridden in all cases by setting output format to `format2`.
 --asv or --asvlite       Use ASV format for input and output data.
 --csv or -c or --c2c     Use CSV format for input and output data.
 --csvlite                Use CSV-lite format for input and output data.
+--dcf                    Use Debian control file (DCF) format for input and
+                         output data.
 --dkvp or --d2d          Use DKVP format for input and output data.
 --gen-field-name         Specify field name for --igen. Defaults to "i".
 --gen-start              Specify start value for --igen. Defaults to 1.
@@ -469,6 +482,7 @@ are overridden in all cases by setting output format to `format2`.
 --iasv or --iasvlite     Use ASV format for input data.
 --icsv                   Use CSV format for input data.
 --icsvlite               Use CSV-lite format for input data.
+--idcf                   Use Debian control file (DCF) format for input data.
 --idkvp                  Use DKVP format for input data.
 --igen                   Ignore input files and instead generate sequential
                          numeric input using --gen-field-name, --gen-start,
@@ -492,6 +506,7 @@ are overridden in all cases by setting output format to `format2`.
 --oasv or --oasvlite     Use ASV format for output data.
 --ocsv                   Use CSV format for output data.
 --ocsvlite               Use CSV-lite format for output data.
+--odcf                   Use Debian control file (DCF) format for output data.
 --odkvp                  Use DKVP format for output data.
 --ojson                  Use JSON format for output data.
 --ojsonl                 Use JSON Lines format for output data.
@@ -554,7 +569,7 @@ See the flatten/unflatten doc page https://miller.readthedocs.io/en/latest/flatt
 .nf
 As keystroke-savers for format-conversion you may use the following.
 The letters c, t, j, l, d, n, x, p, m, and y refer to formats CSV, TSV, JSON, JSON Lines,
-DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively.
+DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively. DCF is also supported (use --dcf for DCF in and out).
 
 | In\eout   | CSV      | TSV      | JSON     | JSONL | DKVP  | NIDX  | XTAB  | PPRINT | Markdown | YAML   |
 +----------+----------+----------+----------+-------+-------+-------+-------+--------+----------+--------+
@@ -977,6 +992,7 @@ Notes about all other separators:
         Format   FS     PS     RS
         csv      ","    N/A    "\en"
         csvlite  ","    N/A    "\en"
+        dcf      N/A    N/A    N/A
         dkvp     ","    "="    "\en"
         gen      ","    N/A    "\en"
         json     N/A    N/A    N/A

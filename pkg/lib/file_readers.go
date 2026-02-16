@@ -2,7 +2,7 @@
 // Wrapper for os.Open which maps string filename to *os.File, which in turn
 // implements io.ReadCloser, and optional in turn wrapping that in a
 // gzip/zlib/bunzip2 reader. Shared across record-readers for all the various
-// input-file formats (CSV, JSON, XTAB, DKVP, NIDX, PPRINT) which Miller
+// input-file formats (CSV, JSON, XTAB, DKVP, NIDX, PPRINT, DCF) which Miller
 // supports.
 //
 // There are two ways of handling compressed data in the Miller Go port:

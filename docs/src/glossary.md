@@ -468,7 +468,7 @@ trying to define a [local variable](#local-variable) `if = 3` will result in a p
 A subsequence of a text file in between line-ending symbols such as the special linefeed character.
 Tools in the [Unix toolkit](#unix-toolkit) generally operate on lines; Miller is designed to do
 that (using the [NIDX format flags](file-formats.md#nidx-index-numbered-toolkit-style)), as well
-as non-line-oriented formats such as [CSV, TSV, JSON, YAML, and others](file-formats.md).
+as non-line-oriented formats such as [CSV, TSV, JSON, YAML, DCF, and others](file-formats.md).
 
 ## local variable
 
