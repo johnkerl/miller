@@ -49,36 +49,36 @@ func StringListToSet(stringList []string) map[string]bool {
 	return stringSet
 }
 
-func SortStrings(strings []string) {
+func SortStrings(strs []string) {
 	// Go sort API: for ascending sort, return true if element i < element j.
-	sort.Slice(strings, func(i, j int) bool {
-		return strings[i] < strings[j]
+	sort.Slice(strs, func(i, j int) bool {
+		return strs[i] < strs[j]
 	})
 }
 
-func ReverseStringList(strings []string) {
-	n := len(strings)
+func ReverseStringList(strs []string) {
+	n := len(strs)
 	i := 0
 	j := n - 1
 	for i < j {
-		temp := strings[i]
-		strings[i] = strings[j]
-		strings[j] = temp
+		temp := strs[i]
+		strs[i] = strs[j]
+		strs[j] = temp
 		i++
 		j--
 	}
 }
 
-func SortedStrings(strings []string) []string {
-	copy := make([]string, len(strings))
-	for i, s := range strings {
-		copy[i] = s
+func SortedStrings(strs []string) []string {
+	result := make([]string, len(strs))
+	for i, s := range strs {
+		result[i] = s
 	}
 	// Go sort API: for ascending sort, return true if element i < element j.
-	sort.Slice(copy, func(i, j int) bool {
-		return copy[i] < copy[j]
+	sort.Slice(result, func(i, j int) bool {
+		return result[i] < result[j]
 	})
-	return copy
+	return result
 }
 
 func IntMin2(a, b int64) int64 {
