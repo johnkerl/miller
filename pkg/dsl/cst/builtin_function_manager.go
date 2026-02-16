@@ -2549,8 +2549,8 @@ func NewBuiltinFunctionManager() *BuiltinFunctionManager {
 	}
 }
 
-func (manager *BuiltinFunctionManager) LookUp(functionName string) *BuiltinFunctionInfo {
-	return manager.hashTable[functionName]
+func (mgr *BuiltinFunctionManager) LookUp(functionName string) *BuiltinFunctionInfo {
+	return mgr.hashTable[functionName]
 }
 
 func hashifyLookupTable(lookupTable *[]BuiltinFunctionInfo) map[string]*BuiltinFunctionInfo {
@@ -2573,17 +2573,17 @@ func hashifyLookupTable(lookupTable *[]BuiltinFunctionInfo) map[string]*BuiltinF
 	return hashTable
 }
 
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionClasses() {
-	classesList := manager.getBuiltinFunctionClasses()
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionClasses() {
+	classesList := mgr.getBuiltinFunctionClasses()
 	for _, class := range classesList {
 		fmt.Println(class)
 	}
 }
 
-func (manager *BuiltinFunctionManager) getBuiltinFunctionClasses() []string {
+func (mgr *BuiltinFunctionManager) getBuiltinFunctionClasses() []string {
 	classesSeen := make(map[string]bool)
 	classesList := []string{}
-	for _, builtinFunctionInfo := range *manager.lookupTable {
+	for _, builtinFunctionInfo := range *mgr.lookupTable {
 		class := string(builtinFunctionInfo.class)
 		if !classesSeen[class] {
 			classesList = append(classesList, class)
@@ -2594,31 +2594,31 @@ func (manager *BuiltinFunctionManager) getBuiltinFunctionClasses() []string {
 	return classesList
 }
 
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionsInClass(class string) {
-	for _, builtinFunctionInfo := range *manager.lookupTable {
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionsInClass(class string) {
+	for _, builtinFunctionInfo := range *mgr.lookupTable {
 		if string(builtinFunctionInfo.class) == class {
 			fmt.Println(builtinFunctionInfo.name)
 		}
 	}
 }
 
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesVertically() {
-	for _, builtinFunctionInfo := range *manager.lookupTable {
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionNamesVertically() {
+	for _, builtinFunctionInfo := range *mgr.lookupTable {
 		fmt.Println(builtinFunctionInfo.name)
 	}
 }
 
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesAsParagraph() {
-	functionNames := make([]string, len(*manager.lookupTable))
-	for i, builtinFunctionInfo := range *manager.lookupTable {
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionNamesAsParagraph() {
+	functionNames := make([]string, len(*mgr.lookupTable))
+	for i, builtinFunctionInfo := range *mgr.lookupTable {
 		functionNames[i] = builtinFunctionInfo.name
 	}
 	lib.PrintWordsAsParagraph(functionNames)
 }
 
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionsAsTable() {
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionsAsTable() {
 	fmt.Printf("%-30s %-12s %s\n", "Name", "Class", "Args")
-	for _, builtinFunctionInfo := range *manager.lookupTable {
+	for _, builtinFunctionInfo := range *mgr.lookupTable {
 		fmt.Printf("%-30s %-12s %s\n",
 			builtinFunctionInfo.name,
 			builtinFunctionInfo.class,
@@ -2627,68 +2627,68 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionsAsTable() {
 	}
 }
 
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsages() {
-	for i, builtinFunctionInfo := range *manager.lookupTable {
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionUsages() {
+	for i, builtinFunctionInfo := range *mgr.lookupTable {
 		if i > 0 {
 			fmt.Println()
 		}
-		manager.showSingleUsage(&builtinFunctionInfo)
+		mgr.showSingleUsage(&builtinFunctionInfo)
 	}
 }
 
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsagesByClass() {
-	classesList := manager.getBuiltinFunctionClasses()
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionUsagesByClass() {
+	classesList := mgr.getBuiltinFunctionClasses()
 
 	for _, class := range classesList {
 		fmt.Println()
 		fmt.Println(colorizer.MaybeColorizeHelp(strings.ToUpper(class), true))
 		fmt.Println()
-		for _, builtinFunctionInfo := range *manager.lookupTable {
+		for _, builtinFunctionInfo := range *mgr.lookupTable {
 			if string(builtinFunctionInfo.class) != class {
 				continue
 			}
-			manager.showSingleUsage(&builtinFunctionInfo)
+			mgr.showSingleUsage(&builtinFunctionInfo)
 		}
 	}
 }
 
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsage(functionName string) {
-	if !manager.TryListBuiltinFunctionUsage(functionName) {
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionUsage(functionName string) {
+	if !mgr.TryListBuiltinFunctionUsage(functionName) {
 		fmt.Fprintf(os.Stderr, "Function \"%s\" not found.\n", functionName)
 	}
 }
 
-func (manager *BuiltinFunctionManager) TryListBuiltinFunctionUsage(
+func (mgr *BuiltinFunctionManager) TryListBuiltinFunctionUsage(
 	functionName string,
 ) bool {
-	builtinFunctionInfo := manager.LookUp(functionName)
+	builtinFunctionInfo := mgr.LookUp(functionName)
 	if builtinFunctionInfo == nil {
 		return false
 	}
-	manager.listBuiltinFunctionUsageExact(builtinFunctionInfo)
+	mgr.listBuiltinFunctionUsageExact(builtinFunctionInfo)
 	return true
 }
 
-func (manager *BuiltinFunctionManager) TryListBuiltinFunctionUsageApproximate(
+func (mgr *BuiltinFunctionManager) TryListBuiltinFunctionUsageApproximate(
 	searchString string,
 ) bool {
 	found := false
-	for _, builtinFunctionInfo := range *manager.lookupTable {
+	for _, builtinFunctionInfo := range *mgr.lookupTable {
 		if strings.Contains(builtinFunctionInfo.name, searchString) {
-			manager.showSingleUsage(&builtinFunctionInfo)
+			mgr.showSingleUsage(&builtinFunctionInfo)
 			found = true
 		}
 	}
 	return found
 }
 
-func (manager *BuiltinFunctionManager) listBuiltinFunctionUsageExact(
+func (mgr *BuiltinFunctionManager) listBuiltinFunctionUsageExact(
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) {
-	manager.showSingleUsage(builtinFunctionInfo)
+	mgr.showSingleUsage(builtinFunctionInfo)
 }
 
-func (manager *BuiltinFunctionManager) showSingleUsage(
+func (mgr *BuiltinFunctionManager) showSingleUsage(
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) {
 	lib.InternalCodingErrorIf(builtinFunctionInfo.help == "")

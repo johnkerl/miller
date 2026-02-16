@@ -153,22 +153,22 @@ func newFormatterToFloat(goFormatString string) IFormatter {
 	}
 }
 
-func (formatter *formatterToFloat) Format(mv *Mlrval) *Mlrval {
+func (fmtr *formatterToFloat) Format(mv *Mlrval) *Mlrval {
 	floatValue, isFloat := mv.GetFloatValue()
 	if isFloat {
-		formatted := fmt.Sprintf(formatter.goFormatString, floatValue)
+		formatted := fmt.Sprintf(fmtr.goFormatString, floatValue)
 		return TryFromFloatString(formatted)
 	}
 	intValue, isInt := mv.GetIntValue()
 	if isInt {
-		formatted := fmt.Sprintf(formatter.goFormatString, float64(intValue))
+		formatted := fmt.Sprintf(fmtr.goFormatString, float64(intValue))
 		return TryFromFloatString(formatted)
 	}
 	return mv
 }
 
-func (formatter *formatterToFloat) FormatFloat(floatValue float64) string {
-	return fmt.Sprintf(formatter.goFormatString, floatValue)
+func (fmtr *formatterToFloat) FormatFloat(floatValue float64) string {
+	return fmt.Sprintf(fmtr.goFormatString, floatValue)
 }
 
 func getLanguageTag() language.Tag {
@@ -191,22 +191,22 @@ func newFormatterToSeparatedInt(goFormatString string) IFormatter {
 	}
 }
 
-func (formatter *formatterToSeparatedInt) Format(mv *Mlrval) *Mlrval {
+func (fmtr *formatterToSeparatedInt) Format(mv *Mlrval) *Mlrval {
 	intValue, isInt := mv.GetIntValue()
 	if isInt {
-		formatted := formatter.printer.Sprintf(formatter.goFormatString, intValue)
+		formatted := fmtr.printer.Sprintf(fmtr.goFormatString, intValue)
 		return TryFromIntString(formatted)
 	}
 	floatValue, isFloat := mv.GetFloatValue()
 	if isFloat {
-		formatted := formatter.printer.Sprintf(formatter.goFormatString, int(floatValue))
+		formatted := fmtr.printer.Sprintf(fmtr.goFormatString, int(floatValue))
 		return TryFromIntString(formatted)
 	}
 	return mv
 }
 
-func (formatter *formatterToSeparatedInt) FormatFloat(floatValue float64) string {
-	return formatter.printer.Sprintf(formatter.goFormatString, int(floatValue))
+func (fmtr *formatterToSeparatedInt) FormatFloat(floatValue float64) string {
+	return fmtr.printer.Sprintf(fmtr.goFormatString, int(floatValue))
 }
 
 type formatterToSeparatedFloat struct {
@@ -221,22 +221,22 @@ func newFormatterToSeparatedFloat(goFormatString string) IFormatter {
 	}
 }
 
-func (formatter *formatterToSeparatedFloat) Format(mv *Mlrval) *Mlrval {
+func (fmtr *formatterToSeparatedFloat) Format(mv *Mlrval) *Mlrval {
 	floatValue, isFloat := mv.GetFloatValue()
 	if isFloat {
-		formatted := formatter.printer.Sprintf(formatter.goFormatString, floatValue)
+		formatted := fmtr.printer.Sprintf(fmtr.goFormatString, floatValue)
 		return TryFromFloatString(formatted)
 	}
 	intValue, isInt := mv.GetIntValue()
 	if isInt {
-		formatted := formatter.printer.Sprintf(formatter.goFormatString, float64(intValue))
+		formatted := fmtr.printer.Sprintf(fmtr.goFormatString, float64(intValue))
 		return TryFromFloatString(formatted)
 	}
 	return mv
 }
 
-func (formatter *formatterToSeparatedFloat) FormatFloat(floatValue float64) string {
-	return formatter.printer.Sprintf(formatter.goFormatString, floatValue)
+func (fmtr *formatterToSeparatedFloat) FormatFloat(floatValue float64) string {
+	return fmtr.printer.Sprintf(fmtr.goFormatString, floatValue)
 }
 
 type formatterToInt struct {
@@ -249,22 +249,22 @@ func newFormatterToInt(goFormatString string) IFormatter {
 	}
 }
 
-func (formatter *formatterToInt) Format(mv *Mlrval) *Mlrval {
+func (fmtr *formatterToInt) Format(mv *Mlrval) *Mlrval {
 	intValue, isInt := mv.GetIntValue()
 	if isInt {
-		formatted := fmt.Sprintf(formatter.goFormatString, intValue)
+		formatted := fmt.Sprintf(fmtr.goFormatString, intValue)
 		return TryFromIntString(formatted)
 	}
 	floatValue, isFloat := mv.GetFloatValue()
 	if isFloat {
-		formatted := fmt.Sprintf(formatter.goFormatString, int(floatValue))
+		formatted := fmt.Sprintf(fmtr.goFormatString, int(floatValue))
 		return TryFromIntString(formatted)
 	}
 	return mv
 }
 
-func (formatter *formatterToInt) FormatFloat(floatValue float64) string {
-	return fmt.Sprintf(formatter.goFormatString, int(floatValue))
+func (fmtr *formatterToInt) FormatFloat(floatValue float64) string {
+	return fmt.Sprintf(fmtr.goFormatString, int(floatValue))
 }
 
 type formatterToString struct {
@@ -277,15 +277,15 @@ func newFormatterToString(goFormatString string) IFormatter {
 	}
 }
 
-func (formatter *formatterToString) Format(mv *Mlrval) *Mlrval {
+func (fmtr *formatterToString) Format(mv *Mlrval) *Mlrval {
 	return FromString(
 		fmt.Sprintf(
-			formatter.goFormatString,
+			fmtr.goFormatString,
 			mv.String(),
 		),
 	)
 }
 
-func (formatter *formatterToString) FormatFloat(floatValue float64) string {
+func (fmtr *formatterToString) FormatFloat(floatValue float64) string {
 	return strconv.FormatFloat(floatValue, 'g', -1, 64)
 }

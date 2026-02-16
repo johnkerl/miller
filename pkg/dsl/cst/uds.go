@@ -164,8 +164,8 @@ func NewUDSManager() *UDSManager {
 	}
 }
 
-func (manager *UDSManager) LookUp(subroutineName string, callsiteArity int) (*UDS, error) {
-	uds := manager.subroutines[subroutineName]
+func (mgr *UDSManager) LookUp(subroutineName string, callsiteArity int) (*UDS, error) {
+	uds := mgr.subroutines[subroutineName]
 	if uds == nil {
 		return nil, nil
 	}
@@ -181,12 +181,12 @@ func (manager *UDSManager) LookUp(subroutineName string, callsiteArity int) (*UD
 	return uds, nil
 }
 
-func (manager *UDSManager) Install(uds *UDS) {
-	manager.subroutines[uds.signature.funcOrSubrName] = uds
+func (mgr *UDSManager) Install(uds *UDS) {
+	mgr.subroutines[uds.signature.funcOrSubrName] = uds
 }
 
-func (manager *UDSManager) ExistsByName(name string) bool {
-	_, ok := manager.subroutines[name]
+func (mgr *UDSManager) ExistsByName(name string) bool {
+	_, ok := mgr.subroutines[name]
 	return ok
 }
 

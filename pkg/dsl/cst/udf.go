@@ -315,18 +315,18 @@ func NewUDFManager() *UDFManager {
 	}
 }
 
-func (manager *UDFManager) Install(udf *UDF) {
-	manager.functions[udf.signature.funcOrSubrName] = udf
+func (mgr *UDFManager) Install(udf *UDF) {
+	mgr.functions[udf.signature.funcOrSubrName] = udf
 }
 
-func (manager *UDFManager) ExistsByName(name string) bool {
-	_, ok := manager.functions[name]
+func (mgr *UDFManager) ExistsByName(name string) bool {
+	_, ok := mgr.functions[name]
 	return ok
 }
 
 // LookUp is for callsites invoking UDFs whose names are known at CST-build time.
-func (manager *UDFManager) LookUp(functionName string, callsiteArity int) (*UDF, error) {
-	udf := manager.functions[functionName]
+func (mgr *UDFManager) LookUp(functionName string, callsiteArity int) (*UDF, error) {
+	udf := mgr.functions[functionName]
 	if udf == nil {
 		return nil, nil
 	}
@@ -344,8 +344,8 @@ func (manager *UDFManager) LookUp(functionName string, callsiteArity int) (*UDF,
 
 // LookUpDisregardingArity is used for evaluating right-hand sides of 'f = udf'
 // where f will be a local variable of type funct and udf is an existing UDF.
-func (manager *UDFManager) LookUpDisregardingArity(functionName string) *UDF {
-	return manager.functions[functionName] // nil if not found
+func (mgr *UDFManager) LookUpDisregardingArity(functionName string) *UDF {
+	return mgr.functions[functionName] // nil if not found
 }
 
 // Example AST for UDF definition and callsite:

@@ -105,7 +105,7 @@ func ValidateStats2AccumulatorName(
 	return false
 }
 
-func (factory *Stats2AccumulatorFactory) Make(
+func (fac *Stats2AccumulatorFactory) Make(
 	valueFieldName1 string,
 	valueFieldName2 string,
 	accumulatorName string,

@@ -222,18 +222,18 @@ func tryPercentileFromName(accumulatorName string) (float64, bool) {
 }
 
 // For merge-fields wherein percentile-keepers are re-created on each record
-func (factory *Stats1AccumulatorFactory) Reset() {
-	factory.percentileKeepers = make(map[string]map[string]*PercentileKeeper)
+func (fac *Stats1AccumulatorFactory) Reset() {
+	fac.percentileKeepers = make(map[string]map[string]*PercentileKeeper)
 }
 
-func (factory *Stats1AccumulatorFactory) MakeNamedAccumulator(
+func (fac *Stats1AccumulatorFactory) MakeNamedAccumulator(
 	accumulatorName string,
 	groupingKey string,
 	valueFieldName string,
 	doInterpolatedPercentiles bool,
 ) *Stats1NamedAccumulator {
 
-	accumulator := factory.MakeAccumulator(
+	accumulator := fac.MakeAccumulator(
 		accumulatorName,
 		groupingKey,
 		valueFieldName,
@@ -255,7 +255,7 @@ func (factory *Stats1AccumulatorFactory) MakeNamedAccumulator(
 	)
 }
 
-func (factory *Stats1AccumulatorFactory) MakeAccumulator(
+func (fac *Stats1AccumulatorFactory) MakeAccumulator(
 	accumulatorName string,
 	groupingKey string,
 	valueFieldName string,
@@ -264,10 +264,10 @@ func (factory *Stats1AccumulatorFactory) MakeAccumulator(
 	// First try percentiles, which have parameterized names.
 	percentile, ok := tryPercentileFromName(accumulatorName)
 	if ok {
-		percentileKeepersForValueFieldName := factory.percentileKeepers[valueFieldName]
+		percentileKeepersForValueFieldName := fac.percentileKeepers[valueFieldName]
 		if percentileKeepersForValueFieldName == nil {
 			percentileKeepersForValueFieldName = make(map[string]*PercentileKeeper)
-			factory.percentileKeepers[valueFieldName] = percentileKeepersForValueFieldName
+			fac.percentileKeepers[valueFieldName] = percentileKeepersForValueFieldName
 		}
 
 		percentileKeeper := percentileKeepersForValueFieldName[groupingKey]
