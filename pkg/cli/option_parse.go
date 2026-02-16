@@ -1031,6 +1031,15 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name: "--odcf",
+			help: "Use Debian control file (DCF) format for output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "dcf"
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--onidx",
 			help: "Use NIDX format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
