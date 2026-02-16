@@ -1,6 +1,4 @@
-// ================================================================
 // See mlrval_json.go for details. This is the unmarshal/marshal solely for Mlrmap.
-// ================================================================
 
 package mlrval
 
@@ -145,7 +143,6 @@ func (mlrmap *Mlrmap) marshalJSONAuxSingleLine(
 	return buffer.String(), nil
 }
 
-// ----------------------------------------------------------------
 // JSON-stringifies a single field of a record
 func (entry *MlrmapEntry) JSONStringifyInPlace(
 	jsonFormatting TJSONFormatting,
@@ -158,7 +155,6 @@ func (entry *MlrmapEntry) JSONStringifyInPlace(
 	}
 }
 
-// ----------------------------------------------------------------
 // JSON-parses a single field of a record
 func (entry *MlrmapEntry) JSONParseInPlace() {
 	input := entry.Value.String()

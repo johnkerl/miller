@@ -1,4 +1,3 @@
-// ================================================================
 // Top-level handler for a REPL session, including setup/construction, and
 // ingesting command-lines. Command-line strings are triaged and send off to
 // the appropriate handlers: DSL parse/execute if the command is a DSL statement
@@ -11,7 +10,6 @@
 //
 // is a delight. :)
 //
-// ================================================================
 
 package repl
 
@@ -212,7 +210,6 @@ func (repl *Repl) handleSession(istream *os.File) error {
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Context: the "<" or "<<" has already been seen. we read until ">" or ">>".
 
 func (repl *Repl) handleMultiLine(

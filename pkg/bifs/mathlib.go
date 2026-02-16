@@ -1,6 +1,4 @@
-// ================================================================
 // Go math-library functions
-// ================================================================
 
 package bifs
 
@@ -11,7 +9,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
-// ----------------------------------------------------------------
 // Return error (unary math-library func)
 func _math_unary_erro1(input1 *mlrval.Mlrval, f mathLibUnaryFunc, fname string) *mlrval.Mlrval {
 	return mlrval.FromTypeErrorUnary(fname, input1)
@@ -159,7 +156,6 @@ func BIF_sgn(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return imudispo[input1.Type()](input1, lib.Sgn, "sgn")
 } // xxx
 
-// ================================================================
 // Exponentiation: DSL operator '**'.  See also
 // https://johnkerl.org/miller6/reference-main-arithmetic.html
 

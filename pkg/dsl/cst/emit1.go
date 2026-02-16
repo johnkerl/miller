@@ -1,4 +1,3 @@
-// ================================================================
 // The other emit variants (emit, emitp, emitf) need to take only oosvars, etc.
 // -- not arbitrary expressions which *evaluate* to map. Emit1, by contrast,
 // takes any expression which evaluates to a map. So you can do 'emit1
@@ -15,7 +14,6 @@
 // So, we have emit/emitp which permit grammatical complexity in the
 // lashing/indexing/redirection, and emit1 which permits grammatical complexity
 // in the emittable.
-// ================================================================
 
 package cst
 

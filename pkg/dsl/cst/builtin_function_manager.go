@@ -1,4 +1,3 @@
-// ================================================================
 // Adding a new builtin function:
 // * New entry in makeBuiltinFunctionLookupTable
 // * Implement the function in mlrval_functions.go
@@ -8,7 +7,6 @@
 // from Go naming conventions: it makes it easier to mentally pair up
 // Miller-DSL functions with their Go implementations. Please preserve this
 // naming convention.
-// ================================================================
 
 package cst
 
@@ -2789,7 +2787,6 @@ func (info *BuiltinFunctionInfo) JoinHelp() string {
 	return multiSpaceRegex.ReplaceAllString(strings.ReplaceAll(info.help, "\n", " "), " ")
 }
 
-// ================================================================
 // This is a singleton so the online-help functions can query it for listings,
 // online help, etc.
 var BuiltinFunctionManagerInstance *BuiltinFunctionManager = NewBuiltinFunctionManager()

@@ -190,7 +190,6 @@ func (tr *TransformerCut) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 // mlr cut -f a,b,c
 func (tr *TransformerCut) includeWithInputOrder(
 	inrecAndContext *types.RecordAndContext,
@@ -215,7 +214,6 @@ func (tr *TransformerCut) includeWithInputOrder(
 	}
 }
 
-// ----------------------------------------------------------------
 // mlr cut -o -f a,b,c
 func (tr *TransformerCut) includeWithArgOrder(
 	inrecAndContext *types.RecordAndContext,
@@ -239,7 +237,6 @@ func (tr *TransformerCut) includeWithArgOrder(
 	}
 }
 
-// ----------------------------------------------------------------
 // mlr cut -x -f a,b,c
 func (tr *TransformerCut) exclude(
 	inrecAndContext *types.RecordAndContext,

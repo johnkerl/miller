@@ -1,7 +1,5 @@
-// ================================================================
 // This is for things that get us out of statement blocks: break, continue,
 // return.
-// ================================================================
 
 package cst
 

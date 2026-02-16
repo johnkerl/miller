@@ -26,7 +26,6 @@ func CopyMlrvalArray(input []*Mlrval) []*Mlrval {
 	return output
 }
 
-// ---------------------------------------------------------------
 // For the flatten verb and DSL function.
 
 func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {

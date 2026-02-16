@@ -1,4 +1,3 @@
-// ================================================================
 // Logic for executing regression tests via 'mlr regtest'.
 //
 // Why: Basically we're re-implementing a shell, or at least some basic
@@ -51,7 +50,6 @@
 //
 // $cat test/cases/dsl-redirects//0109/mlr
 //  @a[NR]=$a; @b[NR]=$b; emit > stderr, (@a, @b), "NR"
-// ================================================================
 
 package regtest
 
@@ -143,7 +141,6 @@ func (regtester *RegTester) resetCounts() {
 	regtester.caseFailCount = 0
 }
 
-// ----------------------------------------------------------------
 // Top-level entrypoint for the regtester. See the usage function in entry.go
 // for semantics.
 
@@ -227,7 +224,6 @@ func (regtester *RegTester) Execute(
 	}
 }
 
-// ----------------------------------------------------------------
 // Recursively invoked routine to process either a single .cmd file, or a
 // directory of such, or a directory of directories.
 
@@ -317,7 +313,6 @@ func (regtester *RegTester) executeSingleDirectory(
 	return passed, hasCaseSubdirectories
 }
 
-// ----------------------------------------------------------------
 // Sees if a directory contains a single test case. If so, we don't want to
 // print a banner at start and end at the default verbosity level.  In order to
 // manage print volume, we only want to print for directories-of-cases (next
@@ -359,7 +354,6 @@ func (regtester *RegTester) isCaseDirectory(
 	return regtester.FileExists(cmdFilePath)
 }
 
-// ----------------------------------------------------------------
 // This is the main regression-test logic for a single .cmd file (a single mlr
 // invocation) and its associated supporting files.
 func (regtester *RegTester) executeSingleCmdFile(

@@ -1,7 +1,5 @@
-// ================================================================
 // CST build/execute for statements: assignments, bare booleans,
 // break/continue/return, etc.
-// ================================================================
 
 package cst
 

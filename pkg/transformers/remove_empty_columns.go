@@ -87,7 +87,6 @@ func NewTransformerRemoveEmptyColumns() (*TransformerRemoveEmptyColumns, error) 
 	return tr, nil
 }
 
-// ---------------------------------------------------------------
 
 func (tr *TransformerRemoveEmptyColumns) Transform(
 	inrecAndContext *types.RecordAndContext,

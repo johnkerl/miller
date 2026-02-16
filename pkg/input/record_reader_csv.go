@@ -338,7 +338,6 @@ func (reader *RecordReaderCSV) maybeConsumeComment(
 	return false
 }
 
-// ----------------------------------------------------------------
 // BOM-stripping
 //
 // Some CSVs start with a "byte-order mark" which is the 3-byte sequence

@@ -1,7 +1,5 @@
-// ================================================================
 // AST-build methods, for use by callbacks within the GOCC/BNF Miller
 // DSL grammar in mlr.bnf.
-// ================================================================
 
 package dsl
 

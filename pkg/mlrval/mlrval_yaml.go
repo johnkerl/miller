@@ -1,9 +1,7 @@
-// ================================================================
 // YAML decode/encode for Mlrval and Mlrmap.
 // Converts between YAML native types (from gopkg.in/yaml.v3) and Miller's
 // record model. YAML maps become Mlrmap; keys are stringified (YAML allows
 // non-string keys). Used by the YAML record reader and writer.
-// ================================================================
 
 package mlrval
 

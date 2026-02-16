@@ -23,7 +23,6 @@ func BIF_string(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromString(input1.String())
 }
 
-// ================================================================
 // Dot operator, with loose typecasting.
 //
 // For most operations, I don't like loose typecasting -- for example, in PHP
@@ -64,7 +63,6 @@ func BIF_dot(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return dot_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 // substr1(s,m,n) gives substring of s from 1-up position m to n inclusive.
 // Negative indices -len .. -1 alias to 0 .. len-1.
 
@@ -96,7 +94,6 @@ func BIF_substr_1_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromString(string(runes[lowerZindex : upperZindex+1]))
 }
 
-// ================================================================
 // substr0(s,m,n) gives substring of s from 0-up position m to n inclusive.
 // Negative indices -len .. -1 alias to 0 .. len-1.
 
@@ -128,7 +125,6 @@ func BIF_substr_0_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromString(string(runes[lowerZindex : upperZindex+1]))
 }
 
-// ================================================================
 // index(string, substring) returns the index of substring within string (if found), or -1 if not
 // found.
 
@@ -152,7 +148,6 @@ func BIF_index(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(lib.UTF8Strlen(sinput1[:iindex]) + 1)
 }
 
-// ================================================================
 // contains(string, substring) returns true if string contains substring, else false.
 
 func BIF_contains(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {

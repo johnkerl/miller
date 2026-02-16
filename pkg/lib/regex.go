@@ -1,4 +1,3 @@
-// ================================================================
 // Support for regular expressions in Miller.
 //
 // * By and large we use the Go library.
@@ -31,7 +30,6 @@
 //   o "regex" is used for regular-expression strings following Miller's idiosyncratic syntax and
 //     semantics as described above.
 //
-// ================================================================
 
 package lib
 

@@ -1,10 +1,8 @@
-// ================================================================
 // CST build/execute for subroutine nodes.
 //
 // Subroutines can't be used as rvalues; their invocation must be the entire
 // statement. Nonetheless, their name-resolution, argument/parameter binding,
 // etc. are very similar to functions.
-// ================================================================
 
 package cst
 
@@ -13,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
-// ----------------------------------------------------------------
 // Subroutine lookup:
 //
 // * Unlike for functions, There are no built-in subroutines -- the only ones

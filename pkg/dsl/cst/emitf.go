@@ -1,7 +1,5 @@
-// ================================================================
 // This handles emitf statements. This produces new records (in addition to $*)
 // into the output record stream.
-// ================================================================
 
 package cst
 
@@ -16,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ================================================================
 // Examples:
 //   emitf @a
 //   emitf @a, @b
@@ -39,7 +36,6 @@ type EmitFStatementNode struct {
 	outputHandlerManager      output.OutputHandlerManager // for file/pipe targets
 }
 
-// ----------------------------------------------------------------
 // $ mlr -n put -v 'emitf a,$b,@c'
 // DSL EXPRESSION:
 // emitf a,$b,@c
@@ -149,7 +145,6 @@ func (node *EmitFStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 	return nil, err
 }
 
-// ----------------------------------------------------------------
 // Gets the name of a non-indexed oosvar, localvar, or field name; otherwise,
 // returns error.
 //

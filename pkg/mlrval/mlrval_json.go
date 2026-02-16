@@ -1,10 +1,8 @@
-// ================================================================
 // Mlrval implements the Unmarshaler and Marshaler interfaces needed for
 // marshaling/unmarshaling to/from JSON, via the UnmarshalJSON and MarshalJSON
 // methods.
 //
 // Please see also https://golang.org/pkg/encoding/json/
-// ================================================================
 
 package mlrval
 
@@ -31,7 +29,6 @@ const (
 
 var prematureEofError error = errors.New("mlr: JSON parser: unexpected premature EOF")
 
-// ================================================================
 // The JSON decoder (https://golang.org/pkg/encoding/json/#Decoder) is quite
 // nice. What we can have is:
 //
@@ -63,7 +60,6 @@ var prematureEofError error = errors.New("mlr: JSON parser: unexpected premature
 // valid JSON items -- we can use decoder.Buffered() to continue stream
 // processing.
 //
-// ----------------------------------------------------------------
 // json.Token holds one of the following types:
 //
 // * Delim, for the four JSON delimiters [ ] { }
@@ -73,7 +69,6 @@ var prematureEofError error = errors.New("mlr: JSON parser: unexpected premature
 // * string, for JSON string literals
 // * nil, for JSON null
 //
-// ----------------------------------------------------------------
 // Note: we accept a sequence of valid JSON items, not just a JSON item.
 // E.g. either
 //
@@ -304,7 +299,6 @@ func (mv *Mlrval) marshalJSONAux(
 	return "", fmt.Errorf("mlr: Internal coding error detected")
 }
 
-// ================================================================
 // TYPE-SPECIFIC MARSHALERS
 
 func (mv *Mlrval) marshalJSONPending(outputIsStdout bool) (string, error) {

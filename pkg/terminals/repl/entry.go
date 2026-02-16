@@ -1,4 +1,3 @@
-// ================================================================
 // This is the shell command-line entry point to the Miller REPL command line.
 // E.g. at the shell prompt, you type 'mlr repl --json' -- this file will parse
 // that.  It will then hand off control to a REPL session which will handle all
@@ -17,7 +16,6 @@
 //   "pid": 12345
 // }
 // [mlr] :quit
-// ================================================================
 
 package repl
 

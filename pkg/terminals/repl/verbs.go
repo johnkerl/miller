@@ -1,6 +1,4 @@
-// ================================================================
 // Handlers for non-DSL statements like ':open foo.dat' or ':help'.
-// ================================================================
 
 package repl
 
@@ -17,7 +15,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 // Types for the lookup table.
 
 // Handlers should return false if they want their usage function to be called.
@@ -59,7 +56,6 @@ func init() {
 	}
 }
 
-// ----------------------------------------------------------------
 // No hash-table acceleration; things here are small, and the tool is interactive.
 func (repl *Repl) findHandler(verbName string) *handlerInfo {
 	for _, entry := range handlerLookupTable {
@@ -97,7 +93,6 @@ func (repl *Repl) showUsageForHandlerApproximate(searchString string) bool {
 	return foundAny
 }
 
-// ----------------------------------------------------------------
 // Handles a single non-DSL statement like ':open foo.dat' or ':help'.
 func (repl *Repl) handleNonDSLLine(trimmedLine string) bool {
 	args := strings.Fields(trimmedLine)

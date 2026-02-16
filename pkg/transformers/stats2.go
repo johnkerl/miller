@@ -222,7 +222,6 @@ func NewTransformerStats2(
 	return tr, nil
 }
 
-// ================================================================
 // Given: accumulate corr,cov on values x,y group by a,b.
 // Example input:       Example output:
 //   a b x y            a b x_corr x_cov y_corr y_cov
@@ -255,7 +254,6 @@ func NewTransformerStats2(
 //
 // In the iterative case, add to the current record its current group's stats fields.
 // In the non-iterative case, produce output only at the end of the input stream.
-// ================================================================
 
 
 func (tr *TransformerStats2) Transform(

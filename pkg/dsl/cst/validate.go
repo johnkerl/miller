@@ -1,8 +1,6 @@
-// ================================================================
 // Checks for things that are syntax errors but not done in the AST for
 // pragmatic reasons. For example, $anything in begin/end blocks;
 // begin/end/func not at top level; etc.
-// ================================================================
 
 package cst
 

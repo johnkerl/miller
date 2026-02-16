@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 // Note: If OPS is single-character then we can do alignment of the form
 //
 //   ab  123

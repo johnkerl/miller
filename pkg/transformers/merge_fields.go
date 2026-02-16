@@ -178,7 +178,6 @@ func transformerMergeFieldsParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 // Given: accumulate count,sum on values x,y group by a,b.
 //
 // Example input:       Example output:
@@ -441,7 +440,6 @@ func (tr *TransformerMergeFields) transformByNameRegex(
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }
 
-// ----------------------------------------------------------------
 // mlr merge-fields -c in_,out_ -a sum
 // a_in_x  1     a_sum_x 3
 // a_out_x 2     b_sum_y 4

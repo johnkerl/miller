@@ -1,8 +1,6 @@
-// ================================================================
 // Items which might better belong in miller/cli, but which are placed in a
 // deeper package to avoid a package-dependency cycle between miller/cli and
 // miller/transforming.
-// ================================================================
 
 package cli
 

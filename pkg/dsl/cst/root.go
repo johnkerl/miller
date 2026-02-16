@@ -1,7 +1,5 @@
-// ================================================================
 // Top-level entry point for building a CST from an AST at parse time, and for
 // executing the CST at runtime.
-// ================================================================
 
 package cst
 
@@ -57,8 +55,6 @@ func (root *RootNode) WithStrictMode(strictMode bool) *RootNode {
 	root.strictMode = strictMode
 	return root
 }
-
-// ----------------------------------------------------------------
 
 // ASTBuildVisitorFunc is a callback, used by RootNode's Build method, which
 // CST-builder callsites can use to visit parse-to-AST result of multi-string
@@ -145,7 +141,6 @@ func buildASTFromString(dslString string) (*dsl.AST, error) {
 	return astRootNode, nil
 }
 
-// ----------------------------------------------------------------
 
 // If the user has multiple put -f / put -e pieces, we can AST-parse each
 // separately and build them. However we cannot resolve UDF/UDS references
@@ -213,7 +208,6 @@ func (root *RootNode) Resolve() error {
 	return nil
 }
 
-// ----------------------------------------------------------------
 // regexProtectPrePass rewrites string-literal nodes in regex position (e.g.
 // second arg to gsub) to have regex node type. This is so we can have "\t" be
 // a tab character for string literals generally, but remain backslash-t for
@@ -283,7 +277,6 @@ func (root *RootNode) regexProtectPrePassAux(astNode *dsl.ASTNode) {
 
 }
 
-// ----------------------------------------------------------------
 // This builds the CST almost entirely. The only afterwork is that user-defined
 // functions may be called before they are defined, so a follow-up pass will
 // need to resolve those callsites.
@@ -423,7 +416,6 @@ func (root *RootNode) resolveSubroutineCallsites() error {
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Various 'tee > $hostname . ".dat", $*' statements will have
 // OutputHandlerManager instances to track file-descriptors for all unique
 // values of $hostname in the input stream.
@@ -480,7 +472,6 @@ func (root *RootNode) ExecuteEndBlocks(state *runtime.State) error {
 	return nil
 }
 
-// ----------------------------------------------------------------
 // These are for the Miller REPL.
 
 // If a DSL string was parsed into an AST and ingested in 'immediate' mode and

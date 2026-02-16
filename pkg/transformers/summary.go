@@ -417,7 +417,6 @@ func (tr *TransformerSummary) emitTransposed(
 	*oracs = append(*oracs, inrecAndContext) // end-of-stream marker
 }
 
-// ----------------------------------------------------------------
 
 // maybeEmitAccumulatorTransposed is a helper method for emitTransposed,
 // for "count", "sum", "mean", etc.

@@ -1,7 +1,5 @@
-// ================================================================
 // This is for Lvalues, i.e. things on the left-hand-side of an assignment
 // statement.
-// ================================================================
 
 package cst
 
@@ -252,7 +250,6 @@ func (node *IndirectFieldValueLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 // Set the name at 2nd positional index in the current stream record: e.g.
 // '$[[2]] = "abc"
 
@@ -362,7 +359,6 @@ func (node *PositionalFieldNameLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 // Set the value at 2nd positional index in the current stream record: e.g.
 // '$[[[2]]] = "abc"
 
@@ -856,7 +852,6 @@ func (node *LocalVariableLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 // IndexedValueNode is a delegator to base-lvalue types.
 // * The baseLvalue is some IAssignable
 // * The indexEvaluables are an array of IEvaluables

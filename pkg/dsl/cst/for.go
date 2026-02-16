@@ -1,6 +1,4 @@
-// ================================================================
 // This is for various flavors of for-loop
-// ================================================================
 
 package cst
 
@@ -14,7 +12,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
-// ----------------------------------------------------------------
 // Sample AST:
 
 // mlr -n put -v 'for (k in $*) { emit { k : k } }'
@@ -50,7 +47,6 @@ func NewForLoopOneVariableNode(
 	}
 }
 
-// ----------------------------------------------------------------
 // Sample AST:
 
 // mlr -n put -v 'for (k in $*) { emit { k : k } }'
@@ -100,7 +96,6 @@ func (root *RootNode) BuildForLoopOneVariableNode(astNode *dsl.ASTNode) (*ForLoo
 	), nil
 }
 
-// ----------------------------------------------------------------
 // Note: The statement-block has its own push/pop for its localvars.
 // Meanwhile we need to restrict scope of the bindvar to the for-loop.
 //
@@ -224,7 +219,6 @@ func NewForLoopTwoVariableNode(
 	}
 }
 
-// ----------------------------------------------------------------
 // Sample AST:
 
 // mlr -n put -v 'for (k, v in $*) { emit { k : v } }'
@@ -282,7 +276,6 @@ func (root *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoo
 	), nil
 }
 
-// ----------------------------------------------------------------
 // Note: The statement-block has its own push/pop for its localvars.
 // Meanwhile we need to restrict scope of the bindvar to the for-loop.
 //
@@ -416,7 +409,6 @@ func NewForLoopMultivariableNode(
 	}
 }
 
-// ----------------------------------------------------------------
 // Sample AST:
 
 // mlr -n put -v 'for ((k1, k2), v in $*) { }'
@@ -477,7 +469,6 @@ func (root *RootNode) BuildForLoopMultivariableNode(
 	), nil
 }
 
-// ----------------------------------------------------------------
 // Note: The statement-block has its own push/pop for its localvars.
 // Meanwhile we need to restrict scope of the bindvar to the for-loop.
 //
@@ -726,7 +717,6 @@ func NewTripleForLoopNode(
 	}
 }
 
-// ----------------------------------------------------------------
 // Sample ASTs:
 
 // DSL EXPRESSION:
@@ -852,7 +842,6 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 	), nil
 }
 
-// ----------------------------------------------------------------
 // Note: The statement-block has its own push/pop for its localvars.
 // Meanwhile we need to restrict scope of the bindvar to the for-loop.
 //

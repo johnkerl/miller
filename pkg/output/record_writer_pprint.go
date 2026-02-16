@@ -86,7 +86,6 @@ func (writer *RecordWriterPPRINT) Write(
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Returns false if there was nothing but empty record(s), e.g. 'mlr gap -n 10'.
 func (writer *RecordWriterPPRINT) writeHeterogenousList(
 	records []*mlrval.Mlrmap,
@@ -133,7 +132,6 @@ func (writer *RecordWriterPPRINT) writeHeterogenousList(
 	}
 }
 
-// ----------------------------------------------------------------
 // Example:
 //
 // a   b   i  x                    y
@@ -219,7 +217,6 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 	}
 }
 
-// ----------------------------------------------------------------
 // Example:
 //
 // +-----+-----+----+----------------------+---------------------+

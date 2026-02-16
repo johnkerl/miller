@@ -1,4 +1,3 @@
-// ================================================================
 // This handles dump and edump statements.
 // See print.go for comments; this is similar.
 //
@@ -11,7 +10,6 @@
 //
 // * 'print $x,$y,$z' prints all items on one line; 'dump $x,$y,$z' prints each on
 //   its own line.
-// ================================================================
 
 package cst
 
@@ -56,7 +54,6 @@ func (root *RootNode) BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable
 	)
 }
 
-// ----------------------------------------------------------------
 // Common code for building dump/edump nodes
 
 func (root *RootNode) buildDumpxStatementNode(

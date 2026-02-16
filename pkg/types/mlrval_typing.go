@@ -1,7 +1,5 @@
-// ================================================================
 // Support for things like 'num x = $a + $b' in the DSL, wherein we check types
 // at assignment time.
-// ================================================================
 
 package types
 

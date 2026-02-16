@@ -8,7 +8,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
-// ----------------------------------------------------------------
 // We would need a second pass through the data to compute the error-bars given
 // the data and the m and the b.
 //
@@ -61,7 +60,6 @@ func BIF_finalize_mean_eb(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return BIF_sqrt(BIF_divide(mvar, mn))
 }
 
-// ----------------------------------------------------------------
 // Unbiased estimator:
 //    (1/n)   sum{(xi-mean)**3}
 //  -----------------------------
@@ -146,7 +144,6 @@ func BIF_finalize_kurtosis(mn, msum, msum2, msum3, msum4 *mlrval.Mlrval) *mlrval
 
 }
 
-// ================================================================
 // STATS ROUTINES -- other than min/max which are placed separately.
 
 // This is a helper function for BIFs which operate only on array or map.

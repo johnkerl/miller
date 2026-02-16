@@ -9,7 +9,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
-// ================================================================
 // Map/array count. Scalars (including strings) have length 1; strlen is for string length.
 func BIF_length(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	switch input1.Type() {
@@ -325,7 +324,6 @@ func BIF_mapdiff(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromMap(newMap)
 }
 
-// ================================================================
 // joink([1,2,3], ",") -> "1,2,3"
 // joink({"a":3,"b":4,"c":5}, ",") -> "a,b,c"
 func BIF_joink(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -361,7 +359,6 @@ func BIF_joink(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-// ----------------------------------------------------------------
 // joinv([3,4,5], ",") -> "3,4,5"
 // joinv({"a":3,"b":4,"c":5}, ",") -> "3,4,5"
 func BIF_joinv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -397,7 +394,6 @@ func BIF_joinv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-// ----------------------------------------------------------------
 // joinkv([3,4,5], "=", ",") -> "1=3,2=4,3=5"
 // joinkv({"a":3,"b":4,"c":5}, "=", ",") -> "a=3,b=4,c=5"
 func BIF_joinkv(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -442,7 +438,6 @@ func BIF_joinkv(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-// ================================================================
 // splitkv("a=3,b=4,c=5", "=", ",") -> {"a":3,"b":4,"c":5}
 func BIF_splitkv(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
@@ -477,7 +472,6 @@ func BIF_splitkv(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	return output
 }
 
-// ----------------------------------------------------------------
 // splitkvx("a=3,b=4,c=5", "=", ",") -> {"a":"3","b":"4","c":"5"}
 func BIF_splitkvx(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
@@ -513,7 +507,6 @@ func BIF_splitkvx(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	return output
 }
 
-// ----------------------------------------------------------------
 // splitnv("a,b,c", ",") -> {"1":"a","2":"b","3":"c"}
 func BIF_splitnv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
@@ -535,7 +528,6 @@ func BIF_splitnv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return output
 }
 
-// ----------------------------------------------------------------
 // splitnvx("3,4,5", ",") -> {"1":"3","2":"4","3":"5"}
 func BIF_splitnvx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
@@ -557,7 +549,6 @@ func BIF_splitnvx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return output
 }
 
-// ----------------------------------------------------------------
 // splita("3,4,5", ",") -> [3,4,5]
 func BIF_splita(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsLegit() {
@@ -581,7 +572,6 @@ func BIF_splita(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromArray(arrayval)
 }
 
-// ----------------------------------------------------------------
 // BIF_splitax splits a string to an array, without type-inference:
 // e.g. splitax("3,4,5", ",") -> ["3","4","5"]
 func BIF_splitax(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -670,7 +660,6 @@ func BIF_append(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return output
 }
 
-// ----------------------------------------------------------------
 // First argument is prefix.
 // Second argument is delimiter.
 // Third argument is map or array.
@@ -699,7 +688,6 @@ func BIF_flatten_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return BIF_flatten(mlrval.VOID, input2, input1)
 }
 
-// ----------------------------------------------------------------
 // First argument is a map.
 // Second argument is a delimiter string.
 // unflatten({"a.b.c", ".") is {"a": { "b": { "c": 4}}}.
@@ -716,7 +704,6 @@ func BIF_unflatten(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromMap(newmap)
 }
 
-// ----------------------------------------------------------------
 // Converts maps with "1", "2", ... keys into arrays. Recurses nested data structures.
 func BIF_arrayify(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsMap() {

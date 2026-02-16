@@ -1,6 +1,4 @@
-// ================================================================
 // This handles tee statements.
-// ================================================================
 
 package cst
 
@@ -15,7 +13,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 // Examples:
 //   tee > "foo.dat", $*
 //   tee > stderr, $*
@@ -54,7 +51,6 @@ import (
 //         * full record "$*"
 //         * redirect pipe "|"
 //             * string literal "jq ."
-// ----------------------------------------------------------------
 
 type tTeeToRedirectFunc func(
 	outrec *mlrval.Mlrmap,

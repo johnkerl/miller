@@ -1,6 +1,4 @@
-// ================================================================
 // Tests for YAML decode/encode (MlrvalDecodeFromYAML, MlrmapToYAMLNative).
-// ================================================================
 
 package mlrval
 

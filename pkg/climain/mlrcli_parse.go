@@ -1,4 +1,3 @@
-// ================================================================
 // Miller main command-line parsing.
 //
 // Before Miller 6 the ordering was:
@@ -66,7 +65,6 @@
 // foo.csv' the '--csv' looks like it belongs to the 'head' verb. When people
 // use '#!/bin/sh' scripts they need to insert the '--' in 'mlr head -n 10 --
 // --csv foo.csv'; for 'mlr -s' we insert the '--' for them.
-// ================================================================
 
 package climain
 

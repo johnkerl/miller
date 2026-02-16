@@ -255,7 +255,6 @@ func (mlrmap *Mlrmap) PrependCopy(key string, value *Mlrval) {
 	mlrmap.PrependReference(key, value.Copy())
 }
 
-// ----------------------------------------------------------------
 // Merges that into mlrmap.
 func (mlrmap *Mlrmap) Merge(other *Mlrmap) {
 	for pe := other.Head; pe != nil; pe = pe.Next {
@@ -263,7 +262,6 @@ func (mlrmap *Mlrmap) Merge(other *Mlrmap) {
 	}
 }
 
-// ----------------------------------------------------------------
 // Exposed for the 'nest' verb
 func (mlrmap *Mlrmap) GetEntry(key string) *MlrmapEntry {
 	return mlrmap.findEntry(key)
@@ -292,7 +290,6 @@ func (mlrmap *Mlrmap) GetKeysExcept(exceptions map[string]bool) []string {
 	return keys
 }
 
-// ----------------------------------------------------------------
 // TODO: put error-return into this API
 func (mlrmap *Mlrmap) PutNameWithPositionalIndex(position int64, name *Mlrval) {
 	positionalEntry := mlrmap.findEntryByPositionalIndex(position)
@@ -400,7 +397,6 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int64) (string, bool) {
 	return mapEntry.Key, true
 }
 
-// ----------------------------------------------------------------
 // Copies the key and value (deep-copying in case the value is array/map).
 // This is safe for DSL use. See also PutReference.
 
@@ -498,7 +494,6 @@ func (mlrmap *Mlrmap) MoveToTail(key string) {
 	}
 }
 
-// ----------------------------------------------------------------
 // E.g. '$name[1]["foo"] = "bar"' or '$*["foo"][1] = "bar"'
 // In the former case the indices are ["name", 1, "foo"] and in the latter case
 // the indices are ["foo", 1]. See also indexed-lvalues.md.
@@ -542,7 +537,6 @@ func (mlrmap *Mlrmap) GetValuesJoined() string {
 	return buffer.String()
 }
 
-// ----------------------------------------------------------------
 // For group-by in several transformers.  If the record is 'a=x,b=y,c=3,d=4,e=5' and
 // selectedFieldNames is 'a,b,c' then values are 'x,y,3'. This is returned as a
 // comma-joined string.  The boolean ok is false if not all selected field
@@ -658,7 +652,6 @@ func (mlrmap *Mlrmap) HasSelectedKeys(selectedFieldNames []string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 // For mlr nest implode across records.
 func (mlrmap *Mlrmap) GetKeysJoinedExcept(px *MlrmapEntry) string {
 	var buffer bytes.Buffer
@@ -796,7 +789,6 @@ func (mlrmap *Mlrmap) SortByKeyRecursively() {
 	*mlrmap = *other
 }
 
-// ----------------------------------------------------------------
 // Only checks to see if the first entry is a map. For emit/emitp.
 func (mlrmap *Mlrmap) IsNested() bool {
 	if mlrmap.Head == nil {
@@ -809,7 +801,6 @@ func (mlrmap *Mlrmap) IsNested() bool {
 	}
 }
 
-// ================================================================
 // PRIVATE METHODS
 
 func (mlrmap *Mlrmap) Unlink(pe *MlrmapEntry) {
@@ -883,7 +874,6 @@ func (mlrmap *Mlrmap) pop() *MlrmapEntry {
 	}
 }
 
-// ----------------------------------------------------------------
 
 // ToPairsArray is used for sorting maps by key/value/etc, e.g. the sortmf DSL function.
 func (mlrmap *Mlrmap) ToPairsArray() []MlrmapPair {
@@ -908,7 +898,6 @@ func MlrmapFromPairsArray(pairsArray []MlrmapPair) *Mlrmap {
 	return mlrmap
 }
 
-// ----------------------------------------------------------------
 
 // GetFirstPair returns the first key-value pair as its own map.  If the map is
 // empty (i.e. there is no first pair) it returns nil.

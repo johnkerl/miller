@@ -1,4 +1,3 @@
-// ================================================================
 // ABOUT DISPOSITION MATRICES/VECTORS
 //
 // Mlrvals can be of type MT_STRING, MT_INT, MT_FLOAT, MT_BOOLEAN, as well as
@@ -43,7 +42,6 @@
 //   'b' for boolean
 //   'x' for don't-care slots, e.g. eq_b_sx for comparing MT_STRING
 //       ('s') to anything else ('x').
-// ================================================================
 
 package bifs
 
@@ -86,13 +84,11 @@ type VariadicFunc func(inputs []*mlrval.Mlrval) *mlrval.Mlrval
 // Function-pointer type for sorting. Returns < 0 if a < b, 0 if a == b, > 0 if a > b.
 type ComparatorFunc func(*mlrval.Mlrval, *mlrval.Mlrval) int
 
-// ================================================================
 // The following are frequently used in disposition matrices for various
 // operators and are defined here for re-use. The names are VERY short,
 // and all the same length, so that the disposition matrices will look
 // reasonable rectangular even after gofmt has been run.
 
-// ----------------------------------------------------------------
 // Return absent (unary)
 func _absn1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.ABSENT

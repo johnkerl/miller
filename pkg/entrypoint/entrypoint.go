@@ -1,7 +1,5 @@
-// ================================================================
 // All the usual contents of main() are put into this package for ease of
 // testing.
-// ================================================================
 
 package entrypoint
 
@@ -62,7 +60,6 @@ func Main() MainReturn {
 	}
 }
 
-// ----------------------------------------------------------------
 // processToStdout is normal processing without mlr -I.
 
 func processToStdout(
@@ -72,7 +69,6 @@ func processToStdout(
 	return stream.Stream(options.FileNames, options, recordTransformers, os.Stdout, true)
 }
 
-// ----------------------------------------------------------------
 // processFilesInPlace is in-place processing without mlr -I.
 //
 // For in-place mode, reconstruct the transformers on each input file. E.g.

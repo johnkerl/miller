@@ -1,4 +1,3 @@
-// ================================================================
 // Wrapper for os.Open which maps string filename to *os.File, which in turn
 // implements io.ReadCloser, and optional in turn wrapping that in a
 // gzip/zlib/bunzip2 reader. Shared across record-readers for all the various
@@ -15,7 +14,6 @@
 // If a prepipe is specified, it is used; else if an encoding is specified, it
 // is used; otherwise the file suffix (.bz2, .gz, .z) is consulted; otherwise
 // the file is treated as text.
-// ================================================================
 
 package lib
 
@@ -188,7 +186,6 @@ func openEncodedHandleForRead(
 	return handle, nil
 }
 
-// ----------------------------------------------------------------
 // BZip2ReadCloser remedies the fact that bzip2.NewReader does not implement io.ReadCloser.
 type BZip2ReadCloser struct {
 	originalHandle io.ReadCloser
@@ -210,7 +207,6 @@ func (rc *BZip2ReadCloser) Close() error {
 	return rc.originalHandle.Close()
 }
 
-// ----------------------------------------------------------------
 // ZstdReadCloser remedies the fact that zstd.NewReader does not implement io.ReadCloser.
 type ZstdReadCloser struct {
 	originalHandle io.ReadCloser
@@ -236,7 +232,6 @@ func (rc *ZstdReadCloser) Close() error {
 	return rc.originalHandle.Close()
 }
 
-// ----------------------------------------------------------------
 
 // IsEOF handles the following problem: reading past end of files opened with
 // os.Open returns the error which is io.EOF. Reading past close of pipes
@@ -256,7 +251,6 @@ func IsEOF(err error) bool {
 	}
 }
 
-// ----------------------------------------------------------------
 // Functions for in-place mode
 
 // IsUpdateableInPlace tells if we can use the input with mlr -I: not for URLs,

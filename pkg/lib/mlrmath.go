@@ -1,6 +1,4 @@
-// ================================================================
 // Non-mlrval math routines
-// ================================================================
 
 package lib
 
@@ -10,7 +8,6 @@ import (
 	"os"
 )
 
-// ----------------------------------------------------------------
 // Some wrappers around things which aren't one-liners from math.*.
 
 func Sgn(a float64) float64 {
@@ -92,7 +89,6 @@ func Invqnorm(x float64) float64 {
 const JACOBI_TOLERANCE = 1e-12
 const JACOBI_MAXITER = 20
 
-// ----------------------------------------------------------------
 // Jacobi real-symmetric eigensolver. Loosely adapted from Numerical Recipes.
 //
 // Note: this is coded for n=2 (to implement PCA linear regression on 2
@@ -252,7 +248,6 @@ func matmul2t(
 	}
 }
 
-// ================================================================
 // Logisitic regression
 //
 // Real-valued x_0 .. x_{N-1}

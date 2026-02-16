@@ -1,6 +1,4 @@
-// ================================================================
 // For stats2
-// ================================================================
 
 package utils
 
@@ -296,7 +294,6 @@ func (acc *Stats2LogiRegAccumulator) Fit(
 	}
 }
 
-// ================================================================
 // http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient
 // Alternatively, just use sqrt(corr) as defined above.
 
@@ -371,7 +368,6 @@ func (acc *Stats2R2Accumulator) Fit(
 ) {
 }
 
-// ================================================================
 // Shared code for Corr, Cov, CovX, and LinRegPCA.
 // Corr(X,Y) = Cov(X,Y) / sigma_X sigma_Y.
 

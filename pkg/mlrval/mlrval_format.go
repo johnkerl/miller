@@ -27,9 +27,7 @@ import (
 //  bdiouxDOUX fegFEG s
 //
 //  post-stuff
-// ----------------------------------------------------------------
 
-// ----------------------------------------------------------------
 //* callsites:
 //  o fmtnum($mv, "%d")
 //    - numeric only
@@ -39,7 +37,6 @@ import (
 //    - numeric only
 //  k format-values verb
 //    - -i, -f, -s
-// ----------------------------------------------------------------
 
 // Nil means use default format.
 // Set from the CLI parser using mlr --ofmt.

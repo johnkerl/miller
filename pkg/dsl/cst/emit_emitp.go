@@ -1,4 +1,3 @@
-// ================================================================
 // This handles emit and emitp statements. These produce new records (in
 // addition to the current record, $*) into the output record stream.
 //
@@ -34,7 +33,6 @@
 // The third complexlity here is whether we have the '"x", "y"' after the
 // emittables. These control how nested maps are used to generate multiple
 // records (via implicit looping).
-// ================================================================
 
 package cst
 
@@ -50,7 +48,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ================================================================
 // Shared by emit and emitp
 
 type tEmitToRedirectFunc func(
@@ -121,7 +118,6 @@ var EMITX_NAMELESS_NODE_TYPES = map[dsl.TNodeType]bool{
 	dsl.NodeTypeMapLiteral: true,
 }
 
-// ----------------------------------------------------------------
 // EMIT AND EMITP
 
 func (root *RootNode) buildEmitXStatementNode(
@@ -319,7 +315,6 @@ func (node *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 	}
 }
 
-// ----------------------------------------------------------------
 // emit @* (supposing @a and @b exist) means @a and @b material are
 // emitted in separate records.
 //
@@ -416,7 +411,6 @@ func (node *EmitXStatementNode) executeNonIndexedNonLashedEmitP(
 	return nil
 }
 
-// ----------------------------------------------------------------
 // emit (@a, $b) means @a and @b material are lashed together in the
 // same record.
 
@@ -574,7 +568,6 @@ func (node *EmitXStatementNode) executeIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 // Recurses over indices.
 //
 // Example:
@@ -690,7 +683,6 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitAux(
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Example:
 //
 // DSL expression: @count[$a][$b] += 1; @sum[$a][$b] += $n; end { emit (@count, @sum), "a", "b" }
@@ -849,7 +841,6 @@ func (node *EmitXStatementNode) executeIndexedLashedEmitAux(
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Recurses over indices.
 
 func (node *EmitXStatementNode) executeIndexedNonLashedEmitPAux(

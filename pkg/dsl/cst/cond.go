@@ -1,7 +1,5 @@
-// ================================================================
 // This is for awkish pattern-action-blocks, like mlr put 'NR > 10 { ... }'.
 // Just shorthand for if-statements without elif/else.
-// ================================================================
 
 package cst
 
@@ -21,7 +19,6 @@ type CondBlockNode struct {
 	statementBlockNode *StatementBlockNode
 }
 
-// ----------------------------------------------------------------
 // Sample AST:
 
 func (root *RootNode) BuildCondBlockNode(astNode *dsl.ASTNode) (*CondBlockNode, error) {

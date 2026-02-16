@@ -1,10 +1,8 @@
-// ================================================================
 // Output-coloring for Miller
 //
 // Please see mlr --usage-output-colorization for context.
 //
 // Note: code-share with github.com/johnkerl/lumin.
-// ================================================================
 
 package colorizer
 
@@ -15,7 +13,6 @@ import (
 	"github.com/mattn/go-isatty"
 )
 
-// ================================================================
 // External API
 
 // Enum-ish type for when to apply output-coloring
@@ -124,7 +121,6 @@ func ListColorNames() {
 	lumin.ListColorNames()
 }
 
-// ================================================================
 // Internal implementation
 
 func maybeColorize(text string, colorString string, outputIsStdout bool) string {
@@ -172,7 +168,6 @@ func GetColorization(outputIsStdout bool, isKey bool) (string, string) {
 	}
 }
 
-// ================================================================
 // Internal implementation
 
 // Default ANSI color codes

@@ -26,7 +26,6 @@ func (mlrmap *Mlrmap) ToNIDXString() string {
 	return buffer.String()
 }
 
-// ----------------------------------------------------------------
 // Must have non-pointer receiver in order to implement the fmt.Stringer
 // interface to make mlrmap printable via fmt.Println et al.
 func (mlrmap Mlrmap) String() string {

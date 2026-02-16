@@ -1,4 +1,3 @@
-// ================================================================
 // The `Mlrval` structure includes **string, int, float, boolean, void,
 // absent, and error** types (not unlike PHP's `zval`) as well as
 // type-conversion logic for various operators.
@@ -6,7 +5,6 @@
 // Whenever I say "int" and "float" with regard to mlrvals I always mean
 // "int64" and "float64". If I ever miss a spot and use Go int/float types then
 // that is a bug. It would be great to be able to somehow lint for this.
-// ================================================================
 
 // TODO:
 // * why here carefully fenced

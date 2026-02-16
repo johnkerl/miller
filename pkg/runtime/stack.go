@@ -1,4 +1,3 @@
-// ================================================================
 // Stack frames for begin/end/if/for/function blocks
 //
 // A Miller DSL stack has two levels of nesting:
@@ -21,7 +20,6 @@
 //     func f() {         <-- stack frame in a new frameset
 //       a = 2            <-- this should create new inner 'a', not update the outer 'a'
 //     }
-// ================================================================
 
 package runtime
 
@@ -33,7 +31,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ================================================================
 // STACK VARIABLE
 
 // StackVariable is an opaque handle which a callsite can hold onto, which
@@ -62,7 +59,6 @@ func (sv *StackVariable) GetName() string {
 	return sv.name
 }
 
-// ================================================================
 // STACK METHODS
 
 type Stack struct {
@@ -97,7 +93,6 @@ func (stack *Stack) PopStackFrameSet() {
 	stack.head = stack.stackFrameSets[0]
 }
 
-// ----------------------------------------------------------------
 // All of these are simply delegations to the head frameset
 
 // For when an if/for/etc block is being entered
@@ -178,7 +173,6 @@ func (stack *Stack) UnsetIndexed(
 	stack.head.unsetIndexed(stackVariable, indices)
 }
 
-// ================================================================
 // STACKFRAMESET METHODS
 
 const stackFrameSetInitCap = 6
@@ -306,7 +300,6 @@ func (frameset *StackFrameSet) unsetIndexed(
 	}
 }
 
-// ================================================================
 // STACKFRAME METHODS
 
 const stackFrameInitCap = 10

@@ -8,7 +8,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
-// ================================================================
 // Unary plus operator
 
 func upos_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -33,7 +32,6 @@ func BIF_plus_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return upos_dispositions[input1.Type()](input1)
 }
 
-// ================================================================
 // Unary minus operator
 
 func uneg_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -66,7 +64,6 @@ func BIF_minus_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return uneg_dispositions[input1.Type()](input1)
 }
 
-// ================================================================
 // Addition with auto-overflow from int to float when necessary.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -128,7 +125,6 @@ func BIF_plus_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return plus_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 // Subtraction with auto-overflow from int to float when necessary.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -190,7 +186,6 @@ func BIF_minus_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return minus_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 // Multiplication with auto-overflow from int to float when necessary.  See
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -268,7 +263,6 @@ func BIF_times(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return times_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 // Pythonic division.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 //
@@ -335,7 +329,6 @@ func BIF_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return divide_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 // Integer division: DSL operator '//' as in Python.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -400,7 +393,6 @@ func BIF_int_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return int_divide_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 // Non-auto-overflowing addition: DSL operator '.+'.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -440,7 +432,6 @@ func BIF_dot_plus(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return dot_plus_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 // Non-auto-overflowing subtraction: DSL operator '.-'.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -480,7 +471,6 @@ func BIF_dot_minus(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return dotminus_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 // Non-auto-overflowing multiplication: DSL operator '.*'.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -520,7 +510,6 @@ func BIF_dot_times(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return dottimes_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 // 64-bit integer division: DSL operator './'.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -560,7 +549,6 @@ func BIF_dot_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return dotdivide_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 // 64-bit integer division: DSL operator './/'.  See also
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
@@ -625,7 +613,6 @@ func BIF_dot_int_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return dotidivide_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 // Modulus
 
 func modulus_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -693,7 +680,6 @@ func BIF_modulus(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return modulus_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 // Pythonic
 func mlrmod(a, m int64) int64 {
 	retval := a % m
@@ -786,7 +772,6 @@ func BIF_mod_exp(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	return imodop(input1, input2, input3, imodexp, "mexp")
 }
 
-// ================================================================
 // MIN AND MAX
 
 // Sort rules (same for min, max, and comparator):

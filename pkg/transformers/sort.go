@@ -1,4 +1,3 @@
-// ================================================================
 // OVERVIEW
 //
 // * Suppose we are sorting records lexically ascending on field "a" and then
@@ -37,7 +36,6 @@
 // * Note in particular that string keys ["a":"red","x":"1"] and
 //   ["a":"red","x":"1.0"] map to different groups, but will sort equally.
 //
-// ================================================================
 
 package transformers
 
@@ -287,7 +285,6 @@ func transformerSortParseCLI(
 	return transformer
 }
 
-// ----------------------------------------------------------------
 // Example:
 // * mlr sort -f a -n i
 // * group-by field-name list is "a,i"

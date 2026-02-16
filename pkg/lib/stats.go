@@ -1,7 +1,5 @@
-// ================================================================
 // These are intended for streaming (i.e. single-pass) applications. Otherwise
 // the formulas look different (and are more intuitive).
-// ================================================================
 
 package lib
 
@@ -9,9 +7,7 @@ import (
 	"math"
 )
 
-// ----------------------------------------------------------------
 // Univariate linear regression
-// ----------------------------------------------------------------
 // There are N (xi, yi) pairs.
 //
 // minimize E = sum (yi - m xi - b)^2
@@ -84,7 +80,6 @@ func GetLinearRegressionOLS(
 //
 //	output = [m, b, math.sqrt(var_m), math.sqrt(var_b)]
 
-// ----------------------------------------------------------------
 
 // GetVar is the finalizing function for computing variance from streamed
 // accumulator values.
@@ -104,7 +99,6 @@ func GetVar(
 	return numerator / denominator
 }
 
-// ----------------------------------------------------------------
 // Unbiased estimator:
 //    (1/n)   sum{(xi-mean)**3}
 //  -----------------------------
@@ -127,9 +121,7 @@ func GetVar(
 //   = sumx2 - 2 n mean^2 + n mean^2
 //   = sumx2 - n mean^2
 
-// ----------------------------------------------------------------
 
-// ----------------------------------------------------------------
 // Unbiased:
 //  (1/n) sum{(x-mean)**4}
 //  ----------------------- - 3
@@ -144,7 +136,6 @@ func GetVar(
 //   = sumx4 - mean*(4 sumx3 - 6 mean sumx2 + 3 n mean^3)
 //   = sumx4 - mean*(4 sumx3 - mean*(6 sumx2 - 3 n mean^2))
 
-// ----------------------------------------------------------------
 // Non-streaming implementation:
 //
 // def find_sample_covariance(xs, ys):
@@ -193,7 +184,6 @@ func GetCovMatrix(
 	return Q
 }
 
-// ----------------------------------------------------------------
 // Principal component analysis can be used for linear regression:
 //
 // * Compute the covariance matrix for the x's and y's.

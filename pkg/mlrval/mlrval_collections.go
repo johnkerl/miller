@@ -1,4 +1,3 @@
-// ================================================================
 // ABOUT ARRAY/MAP INDEXING
 //
 // Arrays:
@@ -64,7 +63,6 @@
 // * Inside this file I say 'zindex' for the 0-up Go indices and 'mindex'
 //   for 1-up Miller indices.
 //
-// ================================================================
 
 package mlrval
 
@@ -75,7 +73,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
-// ================================================================
 // TODO: copy-reduction refactor
 func (mv *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 	if !mv.IsArray() {
@@ -160,7 +157,6 @@ func UnaliasArrayLengthIndex(n int, mindex int) (int, bool) {
 	}
 }
 
-// ----------------------------------------------------------------
 // TODO: thinking about capacity-resizing
 func (mv *Mlrval) ArrayAppend(value *Mlrval) {
 	if !mv.IsArray() {
@@ -205,7 +201,6 @@ func (mv *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
 	// Silent no-ops are not good UX ...
 }
 
-// ----------------------------------------------------------------
 // This is a multi-level map/array put.
 //
 // E.g. '$name[1]["foo"] = "bar"' or '$*["foo"][1] = "bar"' In the former case
@@ -272,7 +267,6 @@ func (mv *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 	}
 }
 
-// ----------------------------------------------------------------
 // Helper function for Mlrval.PutIndexed, for mlrvals of map type.
 func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 	numIndices := len(indices)
@@ -320,7 +314,6 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 	return baseValue.PutIndexed(indices[1:], rvalue)
 }
 
-// ----------------------------------------------------------------
 // Helper function for Mlrval.PutIndexed, for mlrvals of array type.
 func putIndexedOnArray(
 	baseArray *[]*Mlrval,
@@ -412,7 +405,6 @@ func (mv *Mlrval) RemoveIndexed(indices []*Mlrval) error {
 	}
 }
 
-// ----------------------------------------------------------------
 // Helper function for Mlrval.RemoveIndexed, for mlrvals of map type.
 func removeIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 	numIndices := len(indices)
@@ -450,7 +442,6 @@ func removeIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Helper function for Mlrval.PutIndexed, for mlrvals of array type.
 func removeIndexedOnArray(
 	baseArray *[]*Mlrval,
@@ -497,7 +488,6 @@ func removeIndexedOnArray(
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Nominally for TopKeeper
 
 type BsearchMlrvalArrayFunc func(

@@ -351,7 +351,6 @@ func (tr *TransformerNest) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 // getMatchingFieldNames returns field names matching tr.fieldRegex in record order.
 // When !tr.doRegexes, returns [tr.fieldName] if present, else [].
 func (tr *TransformerNest) getMatchingFieldNames(inrec *mlrval.Mlrmap) []string {

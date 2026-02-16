@@ -1,6 +1,4 @@
-// ================================================================
 // Support for user-defined subroutines
-// ================================================================
 
 package cst
 
@@ -192,7 +190,6 @@ func (manager *UDSManager) ExistsByName(name string) bool {
 	return ok
 }
 
-// ----------------------------------------------------------------
 // Example AST for UDS definition and callsite:
 
 // DSL EXPRESSION:

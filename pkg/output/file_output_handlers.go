@@ -1,4 +1,3 @@
-// ================================================================
 // These are handlers for print, dump, emit, etc in the put/filter verbs.
 //
 // * For "> filename" ">> filename", these handle the open/write/close file operations.

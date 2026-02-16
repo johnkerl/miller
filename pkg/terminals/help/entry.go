@@ -1,6 +1,4 @@
-// ================================================================
 // Online help
-// ================================================================
 
 package help
 
@@ -186,7 +184,6 @@ func init() {
 	}
 }
 
-// ================================================================
 // For things like 'mlr help foo', invoked through the terminals framework which
 // goes through our HelpMain().  Here, the args are the terminal part of the full
 // Miller command line: if the latter was "mlr --some-flag help foo bar" then
@@ -261,7 +258,6 @@ Please see 'mlr help topics' for more information.
 	fmt.Fprintf(o, "Please also see %s\n", lib.DOC_URL)
 }
 
-// ----------------------------------------------------------------
 // For things like 'mlr -F', invoked through the CLI parser which does not
 // go through our HelpMain().
 func ParseTerminalUsage(arg string) bool {
@@ -612,7 +608,6 @@ func helpTypeArithmeticInfoAux(extended bool) {
 	}
 }
 
-// ----------------------------------------------------------------
 // listFlagSections et al. are for webdoc/manpage autogen in the miller/docs
 // and miller/man subdirectories. Unlike showFlagsHelp where all looping over
 // the flags table, its sections, and flags within each section is done within
@@ -853,7 +848,6 @@ func helpForKeyword(args []string) {
 	}
 }
 
-// ----------------------------------------------------------------
 // flagTableNilCheckflagTableNilCheck is invoked by an internal-only
 // command-handler. It's intended to be invoked from a regression-test context.
 // It makes sure (at build time) that the flags-table isn't missing help strings

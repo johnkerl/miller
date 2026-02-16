@@ -1,7 +1,5 @@
-// ================================================================
 // Support for higher-order functions in Miller: select, apply, fold, reduce,
 // sort, any, and every.
-// ================================================================
 
 package cst
 
@@ -194,7 +192,6 @@ func isFunctionOrDie(mlrval *mlrval.Mlrval, hofName string) {
 	}
 }
 
-// ================================================================
 // SELECT HOF
 
 func SelectHOF(
@@ -285,7 +282,6 @@ func selectMap(
 	return mlrval.FromMap(outputMap)
 }
 
-// ================================================================
 // APPLY HOF
 
 func ApplyHOF(
@@ -356,7 +352,6 @@ func applyMap(
 	return mlrval.FromMap(outputMap)
 }
 
-// ================================================================
 // REDUCE HOF
 
 func ReduceHOF(
@@ -435,7 +430,6 @@ func reduceMap(
 	return mlrval.FromMap(accumulator)
 }
 
-// ================================================================
 // FOLD HOF
 
 func FoldHOF(
@@ -514,7 +508,6 @@ func foldMap(
 	return mlrval.FromMap(accumulator)
 }
 
-// ================================================================
 // SORT HOF
 
 func SortHOF(
@@ -560,7 +553,6 @@ func SortHOF(
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Helpers for sort with string flags in place of callback UDF.
 
 type tSortType int
@@ -921,7 +913,6 @@ func sortMF(
 	return mlrval.FromMap(sortedMap)
 }
 
-// ================================================================
 // ANY HOF
 
 func AnyHOF(
@@ -1013,7 +1004,6 @@ func anyMap(
 	return mlrval.FromBool(boolAny)
 }
 
-// ================================================================
 // EVERY HOF
 
 func EveryHOF(

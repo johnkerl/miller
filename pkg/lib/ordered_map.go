@@ -1,9 +1,7 @@
-// ================================================================
 // ORDERED MAP FROM STRING TO GENERIC VALUE TYPE
 //
 // Quite like types.OrderedMap but only with string keys. See orderedMap.go for
 // more information.
-// ================================================================
 
 package lib
 
@@ -30,7 +28,6 @@ func NewOrderedMap[V any]() *OrderedMap[V] {
 	}
 }
 
-// ----------------------------------------------------------------
 // Value-copy is up to the caller -- PutReference and PutCopy
 // are in the public OrderedMap API.
 func newOrderedMapEntry[V any](key *string, value V) *orderedMapEntry[V] {
@@ -106,7 +103,6 @@ func (omap *OrderedMap[V]) GetWithCheck(key string) (V, bool) {
 	return pe.Value, true
 }
 
-// ----------------------------------------------------------------
 // Returns true if it was found and removed
 func (omap *OrderedMap[V]) Remove(key string) bool {
 	pe := omap.findEntry(&key)

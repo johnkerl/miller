@@ -1,6 +1,4 @@
-// ================================================================
 // Wraps 'sh -c foo bar' or 'cmd /c foo bar', nominally for regression-testing.
-// ================================================================
 
 //go:build !windows
 // +build !windows

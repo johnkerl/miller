@@ -1,7 +1,5 @@
-// ================================================================
 // Support for Miller regression testing. Originally bash scripts; ported to Go
 // for ease of Windows-native testing.
-// ================================================================
 
 package terminals
 

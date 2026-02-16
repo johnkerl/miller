@@ -1,6 +1,4 @@
-// ================================================================
 // Support for user-defined functions
-// ================================================================
 
 package cst
 
@@ -305,7 +303,6 @@ func (site *UDFCallsite) EvaluateWithArguments(
 	return blockExitPayload.blockReturnValue.Copy()
 }
 
-// ----------------------------------------------------------------
 
 // UDFManager tracks named UDFs like 'func f(a, b) { return b - a }'
 type UDFManager struct {
@@ -352,7 +349,6 @@ func (manager *UDFManager) LookUpDisregardingArity(functionName string) *UDF {
 	return manager.functions[functionName] // nil if not found
 }
 
-// ----------------------------------------------------------------
 // Example AST for UDF definition and callsite:
 
 // DSL EXPRESSION:
@@ -435,7 +431,6 @@ func genFunctionLiteralName() string {
 	return fmt.Sprintf("function-literal-%06d", namelessFunctionCounter)
 }
 
-// ----------------------------------------------------------------
 
 // UnnamedUDFNode holds function literals like 'func (a, b) { return b - a }'.
 type UnnamedUDFNode struct {
@@ -463,7 +458,6 @@ func (node *UnnamedUDFNode) Evaluate(state *runtime.State) *mlrval.Mlrval {
 	return node.udfAsMlrval
 }
 
-// ================================================================
 
 // BuildUDF is for named UDFs, like `func f(a, b) { return b - a}', or,
 // unnamed UDFs like `func (a, b) { return b - a }'.

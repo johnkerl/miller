@@ -1,6 +1,4 @@
-// ================================================================
 // TODO: comment here
-// ================================================================
 
 package utils
 
@@ -85,7 +83,6 @@ func (keeper *PercentileKeeper) EmitLinearlyInterpolated(percentile float64) *ml
 	return bifs.GetPercentileLinearlyInterpolated(keeper.data, int(len(keeper.data)), percentile)
 }
 
-// ----------------------------------------------------------------
 // TODO: COMMENT
 func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
 	if name == "min" {

@@ -1,6 +1,4 @@
-// ================================================================
 // This handles print, printn, eprint, and eprintn statements.
-// ================================================================
 
 package cst
 
@@ -16,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 // Example ASTs:
 //
 // $ mlr -n put -v 'print $a, $b'
@@ -197,7 +194,6 @@ func (root *RootNode) BuildEprintnStatementNode(astNode *dsl.ASTNode) (IExecutab
 	)
 }
 
-// ----------------------------------------------------------------
 // Common code for building print/eprint/printn/eprintn nodes
 
 func (root *RootNode) buildPrintxStatementNode(

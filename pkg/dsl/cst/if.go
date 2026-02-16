@@ -1,6 +1,4 @@
-// ================================================================
 // This is for if/elif/elif/else chains.
-// ================================================================
 
 package cst
 
@@ -24,7 +22,6 @@ func NewIfChainNode(ifItems []*IfItem) *IfChainNode {
 	}
 }
 
-// ----------------------------------------------------------------
 // For each if/elif/elif/else portion: the conditional part (...) and the
 // statement-block part {...}. For "else", the conditional is nil.
 type IfItem struct {
@@ -33,7 +30,6 @@ type IfItem struct {
 	statementBlockNode *StatementBlockNode
 }
 
-// ----------------------------------------------------------------
 // Sample AST:
 
 // DSL EXPRESSION:

@@ -1,7 +1,5 @@
-// ================================================================
 // Routines for loading strings from files. Nominally for the put/filter verbs
 // to load DSL strings from .mlr files.
-// ================================================================
 
 package lib
 

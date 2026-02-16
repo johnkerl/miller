@@ -244,7 +244,6 @@ func BIF_gmt2localtime_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return BIF_nsec2localtime_ternary(BIF_gmt2nsec(input1), mlrval.FromInt(0), input2)
 }
 
-// ================================================================
 // Argument 1 is int/float seconds since the epoch.
 // Argument 2 is format string like "%Y-%m-%d %H:%M:%S".
 
@@ -386,7 +385,6 @@ func strfntimeHelper(
 	return mlrval.FromString(outputString)
 }
 
-// ----------------------------------------------------------------
 // This is support for %1S .. %9S in format strings, using github.com/lestrrat-go/strftime.
 
 var strftimeExtensions strftime.Option
@@ -467,7 +465,6 @@ func init() {
 	strftimeExtensions = strftime.WithSpecificationSet(ss)
 }
 
-// ================================================================
 // Argument 1 is formatted date string like "2021-03-04 02:59:50".
 // Argument 2 is format string like "%Y-%m-%d %H:%M:%S".
 func BIF_strptime(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {

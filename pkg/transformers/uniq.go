@@ -368,7 +368,6 @@ func (tr *TransformerUniq) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 // Print each unique record only once, with uniqueness counts.  This means
 // non-streaming, with output at end of stream.
 func (tr *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
@@ -404,7 +403,6 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
 
 }
 
-// ----------------------------------------------------------------
 // Print count of unique records.  This means non-streaming, with output at end
 // of stream.
 func (tr *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
@@ -432,7 +430,6 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
 	}
 }
 
-// ----------------------------------------------------------------
 // Print each unique record only once (on first occurrence).
 func (tr *TransformerUniq) transformUniqifyEntireRecords(
 	inrecAndContext *types.RecordAndContext,

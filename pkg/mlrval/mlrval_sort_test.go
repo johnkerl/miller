@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// ----------------------------------------------------------------
 // SORTING
 //
 // Lexical compare is just string-sort on stringify of mlrvals:

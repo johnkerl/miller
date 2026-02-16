@@ -1,7 +1,5 @@
-// ================================================================
 // Signatures for user-defined functions and user-defined subroutines
 // ("UDFs" and "UDSs").
-// ================================================================
 
 package cst
 

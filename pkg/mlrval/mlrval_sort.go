@@ -1,4 +1,3 @@
-// ================================================================
 // For sorting
 //
 // Sort rules (same for min, max, and comparator):
@@ -8,8 +7,6 @@
 // * string compares on strings
 // * numeric compares on numbers
 // * false < true
-// ================================================================
-// ================================================================
 
 package mlrval
 

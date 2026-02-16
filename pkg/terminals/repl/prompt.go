@@ -1,6 +1,4 @@
-// ================================================================
 // Handling for default and customized banners/prompts for the Miller REPL.
-// ================================================================
 
 package repl
 

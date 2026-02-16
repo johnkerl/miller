@@ -165,7 +165,6 @@ func newSampleBucket(sampleCount int64) *sampleBucketType {
 	}
 }
 
-// ----------------------------------------------------------------
 // This is the reservoir-sampling algorithm.  Here we retain an input record
 // (if retained in the sample) or let it be GC'ed (if not retained in the
 // sample).

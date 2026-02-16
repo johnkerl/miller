@@ -1,6 +1,4 @@
-// ================================================================
 // Data structure for mlr top: just a decorated array.
-// ================================================================
 
 package utils
 
@@ -36,7 +34,6 @@ func (keeper *TopKeeper) GetSize() int64 {
 	return keeper.size
 }
 
-// ----------------------------------------------------------------
 // Cases:
 // 1. array size <  capacity
 //    * find destidx

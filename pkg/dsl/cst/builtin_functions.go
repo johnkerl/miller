@@ -1,6 +1,4 @@
-// ================================================================
 // Methods for built-in functions
-// ================================================================
 
 package cst
 
@@ -366,7 +364,6 @@ func (node *TernaryFunctionWithStateCallsiteNode) Evaluate(
 	)
 }
 
-// ----------------------------------------------------------------
 // RegexCaptureBinaryFunctionCallsiteNode special-cases the =~ and !=~
 // operators which set the CST State object's captures array for "\1".."\9".
 // This is identical to BinaryFunctionCallsite except that
@@ -447,7 +444,6 @@ func (node *RegexCaptureBinaryFunctionCallsiteNode) Evaluate(
 	return output
 }
 
-// ----------------------------------------------------------------
 // DotCallsiteNode special-cases the dot operator, which is:
 // * string + string, with coercion to string if either side is int/float/bool/etc.
 // * map attribute access, if the left-hand side is a map.
@@ -869,7 +865,6 @@ func (node *LogicalOROperatorNode) Evaluate(
 	return bifs.BIF_logical_OR(aout, bout)
 }
 
-// ================================================================
 // a ?? b evaluates to b only when a is absent. Example: '$foo ?? 0' when the
 // current record has no field $foo.
 type AbsentCoalesceOperatorNode struct{ a, b IEvaluable }
@@ -892,7 +887,6 @@ func (node *AbsentCoalesceOperatorNode) Evaluate(
 	return node.b.Evaluate(state)
 }
 
-// ================================================================
 // a ?? b evaluates to b only when a is absent or empty. Example: '$foo ?? 0'
 // when the current record has no field $foo, or when $foo is empty..
 type EmptyCoalesceOperatorNode struct{ a, b IEvaluable }
@@ -939,7 +933,6 @@ func (node *StandardTernaryOperatorNode) Evaluate(
 	}
 }
 
-// ================================================================
 // The function-manager logic is designed to make it easy to implement a large
 // number of functions/operators with a small number of keystrokes. The general
 // paradigm is evaluate the arguments, then invoke the function/operator.

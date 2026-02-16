@@ -1,6 +1,4 @@
-// ================================================================
 // Print routines for AST and ASTNode
-// ================================================================
 
 package dsl
 
@@ -9,7 +7,6 @@ import (
 	"strings"
 )
 
-// ================================================================
 // Print is indent-style multiline print.
 // Example, given parse of '$y = 2 * $x + 1':
 //
@@ -52,7 +49,6 @@ func (ast *AST) PrintParexOneLine() {
 	ast.RootNode.PrintParexOneLine()
 }
 
-// ================================================================
 
 // Print is indent-style multiline print.
 func (node *ASTNode) Print() {
@@ -80,7 +76,6 @@ func (node *ASTNode) printAux(depth int) {
 	}
 }
 
-// ----------------------------------------------------------------
 
 // PrintParex is parenthesized-expression print.
 func (node *ASTNode) PrintParex() {
@@ -130,7 +125,6 @@ func (node *ASTNode) printParexAux(depth int) {
 	}
 }
 
-// ----------------------------------------------------------------
 
 // PrintParexOneLine is parenthesized-expression print, all on one line.
 func (node *ASTNode) PrintParexOneLine() {
@@ -153,7 +147,6 @@ func (node *ASTNode) printParexOneLineAux() {
 	}
 }
 
-// ----------------------------------------------------------------
 
 // IsLeaf determines if an AST node is a leaf node.
 func (node *ASTNode) IsLeaf() bool {
@@ -170,7 +163,6 @@ func (node *ASTNode) ChildrenAreAllLeaves() bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 
 // Text makes a human-readable, whitespace-free name for an AST node. Some
 // nodes have non-nil tokens; other, nil. And token-types can have spaces in

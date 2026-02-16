@@ -184,7 +184,6 @@ func (reader *RecordReaderJSON) processHandle(
 	}
 }
 
-// ================================================================
 // JSON comment-stripping
 //
 // Miller lets users (on an opt-in basis) have comments in their data files,

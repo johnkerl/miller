@@ -1,7 +1,5 @@
-// ================================================================
 // CST build/execute for AST array-literal, map-literal, index-access, and
 // slice-access nodes
-// ================================================================
 
 package cst
 
@@ -225,7 +223,6 @@ func (node *ArraySliceAccessNode) Evaluate(
 	return mlrval.FromArray(retval)
 }
 
-// ================================================================
 // For input record 'a=7,b=8,c=9',  $[[2]] = "b"
 
 type PositionalFieldNameNode struct {
@@ -272,7 +269,6 @@ func (node *PositionalFieldNameNode) Evaluate(
 	return mlrval.FromString(name)
 }
 
-// ================================================================
 // For input record 'a=7,b=8,c=9',  $[[2]] = 8
 
 type PositionalFieldValueNode struct {
@@ -318,7 +314,6 @@ func (node *PositionalFieldValueNode) Evaluate(
 	return retval
 }
 
-// ================================================================
 // For x = [7,8,9], x[[2]] = 2
 // For y = {"a":7,"b":8,"c":9}, y[[2]] = "b"
 type ArrayOrMapPositionalNameAccessNode struct {
@@ -398,7 +393,6 @@ func (node *ArrayOrMapPositionalNameAccessNode) Evaluate(
 	}
 }
 
-// ================================================================
 // For x = [7,8,9], x[[2]] = 8
 // For y = {"a":7,"b":8,"c":9}, y[[2]] = 8
 type ArrayOrMapPositionalValueAccessNode struct {
@@ -475,7 +469,6 @@ func (node *ArrayOrMapPositionalValueAccessNode) Evaluate(
 	}
 }
 
-// ================================================================
 // This is for computing map entries at runtime. For example, in
 //
 //   mlr put 'mymap = {"sum": $x + $y, "diff": $x - $y}; ...'
