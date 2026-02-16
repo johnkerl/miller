@@ -820,7 +820,6 @@ func (regtester *RegTester) compareFiles(
 	return expectedContents == actualContents, expectedContents, actualContents, nil
 }
 
-// ----------------------------------------------------------------
 func (regtester *RegTester) loadEnvFile(
 	filename string,
 	caseDir string,
