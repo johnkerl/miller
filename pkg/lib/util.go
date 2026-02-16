@@ -156,7 +156,8 @@ func TryFloatFromString(input string) (float64, bool) {
 func TryBoolFromBoolString(input string) (bool, bool) {
 	if input == "true" {
 		return true, true
-	} else if input == "false" {
+	}
+	if input == "false" {
 		return false, true
 	}
 	return false, false
