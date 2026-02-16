@@ -84,7 +84,6 @@ func NewTransformerUTF8ToLatin1() (*TransformerUTF8ToLatin1, error) {
 	return tr, nil
 }
 
-
 func (tr *TransformerUTF8ToLatin1) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

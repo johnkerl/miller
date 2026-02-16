@@ -124,7 +124,6 @@ func NewTransformerJSONParse(
 	return retval, nil
 }
 
-
 func (tr *TransformerJSONParse) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

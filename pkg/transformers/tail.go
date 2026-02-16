@@ -125,7 +125,6 @@ func NewTransformerTail(
 	return tr, nil
 }
 
-
 func (tr *TransformerTail) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

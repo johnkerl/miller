@@ -103,7 +103,6 @@ func NewTransformerFillEmpty(
 	return tr, nil
 }
 
-
 func (tr *TransformerFillEmpty) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

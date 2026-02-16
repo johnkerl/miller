@@ -121,7 +121,6 @@ func NewTransformerSample(
 	return tr, nil
 }
 
-
 func (tr *TransformerSample) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

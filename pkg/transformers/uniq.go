@@ -347,7 +347,6 @@ func NewTransformerUniq(
 	return tr, nil
 }
 
-
 func (tr *TransformerUniq) getFieldNamesForGrouping(
 	inrec *mlrval.Mlrmap,
 ) []string {

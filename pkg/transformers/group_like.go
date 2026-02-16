@@ -88,7 +88,6 @@ func NewTransformerGroupLike() (*TransformerGroupLike, error) {
 	return tr, nil
 }
 
-
 func (tr *TransformerGroupLike) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

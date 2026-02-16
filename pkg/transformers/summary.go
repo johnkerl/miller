@@ -285,7 +285,6 @@ func NewTransformerSummary(
 	return tr, nil
 }
 
-
 func (tr *TransformerSummary) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -416,7 +415,6 @@ func (tr *TransformerSummary) emitTransposed(
 
 	*oracs = append(*oracs, inrecAndContext) // end-of-stream marker
 }
-
 
 // maybeEmitAccumulatorTransposed is a helper method for emitTransposed,
 // for "count", "sum", "mean", etc.

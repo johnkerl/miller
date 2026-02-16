@@ -184,7 +184,6 @@ func NewTransformerFraction(
 	}, nil
 }
 
-
 func (tr *TransformerFraction) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

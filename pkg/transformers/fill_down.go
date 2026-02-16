@@ -141,7 +141,6 @@ func NewTransformerFillDown(
 	return tr, nil
 }
 
-
 func (tr *TransformerFillDown) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

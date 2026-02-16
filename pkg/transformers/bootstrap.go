@@ -100,7 +100,6 @@ func NewTransformerBootstrap(nout int64) (*TransformerBootstrap, error) {
 	return tr, nil
 }
 
-
 func (tr *TransformerBootstrap) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

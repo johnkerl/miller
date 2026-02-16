@@ -350,7 +350,6 @@ func NewTransformerJoin(
 	return tr, nil
 }
 
-
 func (tr *TransformerJoin) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

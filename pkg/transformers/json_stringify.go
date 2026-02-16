@@ -134,7 +134,6 @@ func NewTransformerJSONStringify(
 	return retval, nil
 }
 
-
 func (tr *TransformerJSONStringify) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

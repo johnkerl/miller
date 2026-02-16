@@ -49,7 +49,6 @@ func BIF_upntime() *mlrval.Mlrval {
 	)
 }
 
-
 func BIF_sec2gmt_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	floatValue, isNumeric := input1.GetNumericToFloatValue()
 	if !isNumeric {
@@ -521,7 +520,6 @@ func BIF_localtime2nsec_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return bif_strptime_unary_aux(input1, ptr_ISO8601_LOCAL_TIME_FORMAT, true, true)
 }
 
-
 func BIF_strptime_local_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return bif_strptime_binary_aux(input1, input2, true, false)
 }
@@ -557,7 +555,6 @@ func bif_strptime_binary_aux(input1, input2 *mlrval.Mlrval, doLocal, produceNano
 		return mlrval.FromFloat(float64(t.UnixNano()) / 1.0e9)
 	}
 }
-
 
 func BIF_strptime_local_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	return bif_strptime_local_ternary_aux(input1, input2, input3, false)

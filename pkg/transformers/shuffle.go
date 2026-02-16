@@ -90,7 +90,6 @@ func NewTransformerShuffle() (*TransformerShuffle, error) {
 	return tr, nil
 }
 
-
 func (tr *TransformerShuffle) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

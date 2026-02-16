@@ -255,7 +255,6 @@ func NewTransformerStats2(
 // In the iterative case, add to the current record its current group's stats fields.
 // In the non-iterative case, produce output only at the end of the input stream.
 
-
 func (tr *TransformerStats2) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

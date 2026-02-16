@@ -298,7 +298,6 @@ func validateForLoopMultivariableUniqueNames(astNode *dsl.ASTNode) error {
 	return nil
 }
 
-
 var VALID_LHS_NODE_TYPES = map[dsl.TNodeType]bool{
 	dsl.NodeTypeArrayOrMapIndexAccess:           true,
 	dsl.NodeTypeDotOperator:                     true,

@@ -232,7 +232,6 @@ func (rc *ZstdReadCloser) Close() error {
 	return rc.originalHandle.Close()
 }
 
-
 // IsEOF handles the following problem: reading past end of files opened with
 // os.Open returns the error which is io.EOF. Reading past close of pipes
 // opened with popen (e.g.  Miller's prepipe, where the file isn't 'foo.dat'

@@ -128,7 +128,6 @@ func NewTransformerTemplate(
 	}, nil
 }
 
-
 func (tr *TransformerTemplate) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

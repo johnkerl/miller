@@ -82,7 +82,6 @@ func NewTransformerSkipTrivialRecords() (*TransformerSkipTrivialRecords, error) 
 	return tr, nil
 }
 
-
 func (tr *TransformerSkipTrivialRecords) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

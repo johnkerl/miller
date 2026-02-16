@@ -143,7 +143,6 @@ func NewTransformerCount(
 	return tr, nil
 }
 
-
 func (tr *TransformerCount) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

@@ -99,7 +99,6 @@ func NewTransformerSec2GMTDate(
 	return tr, nil
 }
 
-
 func (tr *TransformerSec2GMTDate) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

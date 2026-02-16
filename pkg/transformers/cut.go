@@ -179,7 +179,6 @@ func NewTransformerCut(
 	return tr, nil
 }
 
-
 func (tr *TransformerCut) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

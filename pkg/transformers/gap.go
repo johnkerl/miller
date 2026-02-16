@@ -131,7 +131,6 @@ func NewTransformerGap(
 	return tr, nil
 }
 
-
 func (tr *TransformerGap) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

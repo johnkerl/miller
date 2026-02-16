@@ -148,7 +148,6 @@ func NewTransformerGrep(
 	return tr, nil
 }
 
-
 func (tr *TransformerGrep) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

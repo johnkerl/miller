@@ -63,7 +63,6 @@ type BuiltinFunctionInfo struct {
 	variadicFuncWithState  VariadicFuncWithState       // sort
 }
 
-
 func isLetter(c byte) bool {
 	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z')
 }
@@ -2576,7 +2575,6 @@ func hashifyLookupTable(lookupTable *[]BuiltinFunctionInfo) map[string]*BuiltinF
 	return hashTable
 }
 
-
 func (manager *BuiltinFunctionManager) ListBuiltinFunctionClasses() {
 	classesList := manager.getBuiltinFunctionClasses()
 	for _, class := range classesList {
@@ -2597,7 +2595,6 @@ func (manager *BuiltinFunctionManager) getBuiltinFunctionClasses() []string {
 	sort.Strings(classesList)
 	return classesList
 }
-
 
 func (manager *BuiltinFunctionManager) ListBuiltinFunctionsInClass(class string) {
 	for _, builtinFunctionInfo := range *manager.lookupTable {

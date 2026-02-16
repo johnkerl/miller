@@ -103,7 +103,6 @@ func (root *RootNode) BuildEmitPStatementNode(astNode *dsl.ASTNode) (IExecutable
 	return root.buildEmitXStatementNode(astNode, true)
 }
 
-
 var EMITX_NAMED_NODE_TYPES = map[dsl.TNodeType]bool{
 	dsl.NodeTypeLocalVariable:       true,
 	dsl.NodeTypeDirectOosvarValue:   true,

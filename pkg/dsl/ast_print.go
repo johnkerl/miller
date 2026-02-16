@@ -49,7 +49,6 @@ func (ast *AST) PrintParexOneLine() {
 	ast.RootNode.PrintParexOneLine()
 }
 
-
 // Print is indent-style multiline print.
 func (node *ASTNode) Print() {
 	node.printAux(0)
@@ -75,7 +74,6 @@ func (node *ASTNode) printAux(depth int) {
 		child.printAux(depth + 1)
 	}
 }
-
 
 // PrintParex is parenthesized-expression print.
 func (node *ASTNode) PrintParex() {
@@ -125,7 +123,6 @@ func (node *ASTNode) printParexAux(depth int) {
 	}
 }
 
-
 // PrintParexOneLine is parenthesized-expression print, all on one line.
 func (node *ASTNode) PrintParexOneLine() {
 	node.printParexOneLineAux()
@@ -147,7 +144,6 @@ func (node *ASTNode) printParexOneLineAux() {
 	}
 }
 
-
 // IsLeaf determines if an AST node is a leaf node.
 func (node *ASTNode) IsLeaf() bool {
 	return len(node.Children) == 0
@@ -162,7 +158,6 @@ func (node *ASTNode) ChildrenAreAllLeaves() bool {
 	}
 	return true
 }
-
 
 // Text makes a human-readable, whitespace-free name for an AST node. Some
 // nodes have non-nil tokens; other, nil. And token-types can have spaces in

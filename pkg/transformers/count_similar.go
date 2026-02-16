@@ -117,7 +117,6 @@ func NewTransformerCountSimilar(
 	return tr, nil
 }
 
-
 func (tr *TransformerCountSimilar) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

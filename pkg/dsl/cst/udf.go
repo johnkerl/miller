@@ -303,7 +303,6 @@ func (site *UDFCallsite) EvaluateWithArguments(
 	return blockExitPayload.blockReturnValue.Copy()
 }
 
-
 // UDFManager tracks named UDFs like 'func f(a, b) { return b - a }'
 type UDFManager struct {
 	functions map[string]*UDF
@@ -421,7 +420,6 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 	return nil
 }
 
-
 var namelessFunctionCounter int = 0
 
 // genFunctionLiteralName provides a UUID for function-literal nodes like `func (a, b) { return b - a }'.
@@ -430,7 +428,6 @@ func genFunctionLiteralName() string {
 	namelessFunctionCounter++
 	return fmt.Sprintf("function-literal-%06d", namelessFunctionCounter)
 }
-
 
 // UnnamedUDFNode holds function literals like 'func (a, b) { return b - a }'.
 type UnnamedUDFNode struct {
@@ -457,7 +454,6 @@ func (root *RootNode) BuildUnnamedUDFNode(astNode *dsl.ASTNode) (IEvaluable, err
 func (node *UnnamedUDFNode) Evaluate(state *runtime.State) *mlrval.Mlrval {
 	return node.udfAsMlrval
 }
-
 
 // BuildUDF is for named UDFs, like `func f(a, b) { return b - a}', or,
 // unnamed UDFs like `func (a, b) { return b - a }'.

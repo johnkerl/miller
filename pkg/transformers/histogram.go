@@ -190,7 +190,6 @@ func NewTransformerHistogram(
 	return tr, nil
 }
 
-
 func (tr *TransformerHistogram) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

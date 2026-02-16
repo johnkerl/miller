@@ -127,7 +127,6 @@ func NewTransformerFlatten(
 	return retval, nil
 }
 
-
 func (tr *TransformerFlatten) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

@@ -70,7 +70,6 @@ func inferString(mv *Mlrval) *Mlrval {
 	return mv.SetFromString(mv.printrep)
 }
 
-
 // Important: synchronize this with the type-ordering in the scan package.
 var normalInferrerTable []tInferrer = []tInferrer{
 	inferString,

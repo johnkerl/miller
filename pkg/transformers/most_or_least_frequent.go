@@ -197,7 +197,6 @@ func NewTransformerMostOrLeastFrequent(
 	return tr, nil
 }
 
-
 func (tr *TransformerMostOrLeastFrequent) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

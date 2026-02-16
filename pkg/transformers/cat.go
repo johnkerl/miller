@@ -157,7 +157,6 @@ func NewTransformerCat(
 	return tr, nil
 }
 
-
 func (tr *TransformerCat) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

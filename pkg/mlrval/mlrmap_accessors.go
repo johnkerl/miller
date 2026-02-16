@@ -874,7 +874,6 @@ func (mlrmap *Mlrmap) pop() *MlrmapEntry {
 	}
 }
 
-
 // ToPairsArray is used for sorting maps by key/value/etc, e.g. the sortmf DSL function.
 func (mlrmap *Mlrmap) ToPairsArray() []MlrmapPair {
 	pairsArray := make([]MlrmapPair, mlrmap.FieldCount)
@@ -897,7 +896,6 @@ func MlrmapFromPairsArray(pairsArray []MlrmapPair) *Mlrmap {
 
 	return mlrmap
 }
-
 
 // GetFirstPair returns the first key-value pair as its own map.  If the map is
 // empty (i.e. there is no first pair) it returns nil.

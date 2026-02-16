@@ -126,7 +126,6 @@ func NewTransformerUnflatten(
 	return retval, nil
 }
 
-
 func (tr *TransformerUnflatten) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

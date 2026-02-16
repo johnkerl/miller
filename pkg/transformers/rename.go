@@ -181,7 +181,6 @@ func NewTransformerRename(
 	return tr, nil
 }
 
-
 func (tr *TransformerRename) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

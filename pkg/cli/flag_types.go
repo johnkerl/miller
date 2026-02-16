@@ -61,7 +61,6 @@ type FlagParser func(
 	options *TOptions,
 )
 
-
 // FlagTable holds all the flags for Miller, organized into sections.
 type FlagTable struct {
 	sections []*FlagSection
