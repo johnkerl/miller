@@ -34,13 +34,25 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) error {
 	readerOptions.IPS = lib.UnhexStringLiteral(readerOptions.IPS)
 
 	if !readerOptions.ifsWasSpecified {
-		readerOptions.IFS = defaultFSes[readerOptions.InputFileFormat]
+		if fs, ok := defaultFSes[readerOptions.InputFileFormat]; ok {
+			readerOptions.IFS = fs
+		} else {
+			return fmt.Errorf("unrecognized input format %q", readerOptions.InputFileFormat)
+		}
 	}
 	if !readerOptions.ipsWasSpecified {
-		readerOptions.IPS = defaultPSes[readerOptions.InputFileFormat]
+		if ps, ok := defaultPSes[readerOptions.InputFileFormat]; ok {
+			readerOptions.IPS = ps
+		} else {
+			return fmt.Errorf("unrecognized input format %q", readerOptions.InputFileFormat)
+		}
 	}
 	if !readerOptions.irsWasSpecified {
-		readerOptions.IRS = defaultRSes[readerOptions.InputFileFormat]
+		if rs, ok := defaultRSes[readerOptions.InputFileFormat]; ok {
+			readerOptions.IRS = rs
+		} else {
+			return fmt.Errorf("unrecognized input format %q", readerOptions.InputFileFormat)
+		}
 	}
 	if !readerOptions.allowRepeatIFSWasSpecified {
 		// Special case for Miller 6 upgrade -- now that we have regexing for mixes of tabs
@@ -49,7 +61,11 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) error {
 		if readerOptions.InputFileFormat == "nidx" && !readerOptions.ifsWasSpecified {
 			readerOptions.IFSRegex = lib.CompileMillerRegexOrDie(WHITESPACE_REGEX)
 		} else {
-			readerOptions.AllowRepeatIFS = defaultAllowRepeatIFSes[readerOptions.InputFileFormat]
+			if allowRepeatIFS, ok := defaultAllowRepeatIFSes[readerOptions.InputFileFormat]; ok {
+				readerOptions.AllowRepeatIFS = allowRepeatIFS
+			} else {
+				return fmt.Errorf("unrecognized input format %q", readerOptions.InputFileFormat)
+			}
 		}
 	}
 
