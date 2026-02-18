@@ -456,14 +456,10 @@ func (tr *TransformerSort) Transform(
 		// Now output the groups
 		for _, groupingKeyAndMlrvals := range groupingKeysAndMlrvals {
 			recordsInGroup := tr.recordListsByGroup.Get(groupingKeyAndMlrvals.groupingKey)
-			for _, recordAndContext := range *recordsInGroup {
-				*outputRecordsAndContexts = append(*outputRecordsAndContexts, recordAndContext)
-			}
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, *recordsInGroup...)
 		}
 
-		for _, recordAndContext := range tr.spillGroup {
-			*outputRecordsAndContexts = append(*outputRecordsAndContexts, recordAndContext)
-		}
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, tr.spillGroup...)
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}

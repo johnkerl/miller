@@ -625,10 +625,7 @@ func (tr *TransformerJoin) formAndEmitPairs(
 func (tr *TransformerJoin) emitLeftUnpairables(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
-	// Loop over each to-be-paired-with record from the left file.
-	for _, leftRecordAndContext := range tr.leftUnpairableRecordsAndContexts {
-		*outputRecordsAndContexts = append(*outputRecordsAndContexts, leftRecordAndContext)
-	}
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, tr.leftUnpairableRecordsAndContexts...)
 }
 
 func (tr *TransformerJoin) emitLeftUnpairedBuckets(
@@ -637,9 +634,7 @@ func (tr *TransformerJoin) emitLeftUnpairedBuckets(
 	for pe := tr.leftBucketsByJoinFieldValues.Head; pe != nil; pe = pe.Next {
 		bucket := pe.Value
 		if !bucket.WasPaired {
-			for _, recordAndContext := range bucket.RecordsAndContexts {
-				*outputRecordsAndContexts = append(*outputRecordsAndContexts, recordAndContext)
-			}
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, bucket.RecordsAndContexts...)
 		}
 	}
 }

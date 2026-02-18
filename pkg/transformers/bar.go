@@ -330,9 +330,7 @@ func (tr *TransformerBar) processAuto(
 		}
 	}
 
-	for _, recordAndContext := range tr.recordsForAutoMode {
-		*outputRecordsAndContexts = append(*outputRecordsAndContexts, recordAndContext)
-	}
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, tr.recordsForAutoMode...)
 
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // Emit the end-of-stream marker
 }
