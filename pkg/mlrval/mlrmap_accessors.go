@@ -3,6 +3,7 @@ package mlrval
 import (
 	"bytes"
 	"fmt"
+	"slices"
 	"strconv"
 
 	"github.com/johnkerl/miller/v6/pkg/lib"
@@ -751,7 +752,7 @@ func (mlrmap *Mlrmap) Label(newNames []string) {
 func (mlrmap *Mlrmap) SortByKey() {
 	keys := mlrmap.GetKeys()
 
-	lib.SortStrings(keys)
+	slices.Sort(keys)
 
 	other := NewMlrmapAsRecord()
 
@@ -766,7 +767,7 @@ func (mlrmap *Mlrmap) SortByKey() {
 func (mlrmap *Mlrmap) SortByKeyRecursively() {
 	keys := mlrmap.GetKeys()
 
-	lib.SortStrings(keys)
+	slices.Sort(keys)
 
 	other := NewMlrmapAsRecord()
 

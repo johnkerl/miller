@@ -11,6 +11,7 @@ package errors
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/parsing/token"
@@ -60,13 +61,7 @@ func (e *Error) Error() string {
 	if e.Err != nil {
 		fmt.Fprintf(w, "%+v\n", e.Err)
 	} else {
-		suggestSemicolons := false
-		for _, expected := range e.ExpectedTokens {
-			if expected == ";" {
-				suggestSemicolons = true
-				break
-			}
-		}
+		suggestSemicolons := slices.Contains(e.ExpectedTokens, ";")
 
 		if suggestSemicolons {
 			fmt.Fprintf(w, "Please check for missing semicolon.\n")

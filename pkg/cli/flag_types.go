@@ -37,6 +37,7 @@ package cli
 
 import (
 	"fmt"
+	"slices"
 	"sort"
 	"strings"
 
@@ -390,12 +391,7 @@ func (flag *Flag) Owns(input string) bool {
 	if flag.name == input {
 		return true
 	}
-	for _, name := range flag.altNames {
-		if name == input {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(flag.altNames, input)
 }
 
 // Matches is like Owns but is for substring matching, for on-line help with

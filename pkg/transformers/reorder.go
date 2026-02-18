@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
@@ -180,7 +181,7 @@ func NewTransformerReorder(
 				tr.recordTransformerFunc = tr.reorderToStartWithRegex
 			} else {
 				tr.recordTransformerFunc = tr.reorderToStartNoRegex
-				lib.ReverseStringList(tr.fieldNames)
+				slices.Reverse(tr.fieldNames)
 			}
 		}
 	} else {

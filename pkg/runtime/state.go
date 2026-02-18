@@ -5,6 +5,8 @@
 package runtime
 
 import (
+	"slices"
+
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
@@ -78,12 +80,11 @@ func (state *State) Update(
 func (state *State) SetRegexCaptures(
 	captures []string,
 ) {
-	state.regexCapturesByFrame[0] = lib.CopyStringArray(captures)
+	state.regexCapturesByFrame[0] = slices.Clone(captures)
 }
 
 func (state *State) GetRegexCaptures() []string {
-	regexCaptures := state.regexCapturesByFrame[0]
-	return lib.CopyStringArray(regexCaptures)
+	return slices.Clone(state.regexCapturesByFrame[0])
 }
 
 func (state *State) PushRegexCapturesFrame() {
