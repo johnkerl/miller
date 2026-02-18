@@ -90,8 +90,8 @@ func ParseLocation(value, format string, location *time.Location) (time.Time, er
 func Check(format string) error {
 	format = expandShorthands(format)
 
-	parts := strings.Split(format, "%")
-	for _, ps := range parts {
+	parts := strings.SplitSeq(format, "%")
+	for ps := range parts {
 		// Since we split on '%', this is the format code
 
 		// This is for "%%"
