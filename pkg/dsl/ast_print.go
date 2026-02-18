@@ -57,7 +57,7 @@ func (node *ASTNode) Print() {
 // printAux is a recursion-helper for Print.
 func (node *ASTNode) printAux(depth int) {
 	// Indent
-	for i := 0; i < depth; i++ {
+	for range depth {
 		fmt.Print("    ")
 	}
 
@@ -83,14 +83,14 @@ func (node *ASTNode) PrintParex() {
 // printParexAux is a recursion-helper for PrintParex.
 func (node *ASTNode) printParexAux(depth int) {
 	if node.IsLeaf() {
-		for i := 0; i < depth; i++ {
+		for range depth {
 			fmt.Print("    ")
 		}
 		fmt.Println(node.Text())
 
 	} else if node.ChildrenAreAllLeaves() {
 		// E.g. (= sum 0) or (+ 1 2)
-		for i := 0; i < depth; i++ {
+		for range depth {
 			fmt.Print("    ")
 		}
 		fmt.Print("(")
@@ -104,7 +104,7 @@ func (node *ASTNode) printParexAux(depth int) {
 
 	} else {
 		// Parent and opening parenthesis on first line
-		for i := 0; i < depth; i++ {
+		for range depth {
 			fmt.Print("    ")
 		}
 		fmt.Print("(")
@@ -116,7 +116,7 @@ func (node *ASTNode) printParexAux(depth int) {
 		}
 
 		// Closing parenthesis on last line
-		for i := 0; i < depth; i++ {
+		for range depth {
 			fmt.Print("    ")
 		}
 		fmt.Println(")")

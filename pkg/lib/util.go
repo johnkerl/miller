@@ -3,6 +3,7 @@ package lib
 import (
 	"fmt"
 	"os"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -49,35 +50,29 @@ func StringListToSet(stringList []string) map[string]bool {
 	return stringSet
 }
 
+// SortStrings sorts strs in place.
+//
+// Deprecated: use slices.Sort instead.
+//
+//go:fix inline
 func SortStrings(strs []string) {
-	// Go sort API: for ascending sort, return true if element i < element j.
-	sort.Slice(strs, func(i, j int) bool {
-		return strs[i] < strs[j]
-	})
+	slices.Sort(strs)
 }
 
+// ReverseStringList reverses strs in place.
+//
+// Deprecated: use slices.Reverse instead.
+//
+//go:fix inline
 func ReverseStringList(strs []string) {
-	n := len(strs)
-	i := 0
-	j := n - 1
-	for i < j {
-		temp := strs[i]
-		strs[i] = strs[j]
-		strs[j] = temp
-		i++
-		j--
-	}
+	slices.Reverse(strs)
 }
 
+// SortedStrings returns a new slice containing the strings in strs in ascending order.
 func SortedStrings(strs []string) []string {
 	result := make([]string, len(strs))
-	for i, s := range strs {
-		result[i] = s
-	}
-	// Go sort API: for ascending sort, return true if element i < element j.
-	sort.Slice(result, func(i, j int) bool {
-		return result[i] < result[j]
-	})
+	copy(result, strs)
+	slices.Sort(result)
 	return result
 }
 
@@ -202,13 +197,13 @@ func WriteTempFileOrDie(contents string) string {
 	return handle.Name()
 }
 
+// CopyStringArray returns a copy of input.
+//
+// Deprecated: use slices.Clone instead.
+//
+//go:fix inline
 func CopyStringArray(input []string) []string {
-	if input == nil {
-		return nil
-	}
-	output := make([]string, len(input))
-	copy(output, input)
-	return output
+	return slices.Clone(input)
 }
 
 func StripEmpties(input []string) []string {

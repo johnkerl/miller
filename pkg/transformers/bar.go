@@ -246,13 +246,7 @@ func (tr *TransformerBar) processNoAuto(
 			if !ok {
 				continue
 			}
-			idx := int(float64(tr.width) * (floatValue - tr.lo) / (tr.hi - tr.lo))
-			if idx < 0 {
-				idx = 0
-			}
-			if idx > tr.width {
-				idx = tr.width
-			}
+			idx := min(max(int(float64(tr.width)*(floatValue-tr.lo)/(tr.hi-tr.lo)), 0), tr.width)
 			inrec.PutReference(fieldName, mlrval.FromString(tr.bars[idx]))
 		}
 
@@ -322,13 +316,7 @@ func (tr *TransformerBar) processAuto(
 				continue
 			}
 
-			idx := int((float64(tr.width) * (floatValue - lo) / (hi - lo)))
-			if idx < 0 {
-				idx = 0
-			}
-			if idx > tr.width {
-				idx = tr.width
-			}
+			idx := min(max(int((float64(tr.width)*(floatValue-lo)/(hi-lo))), 0), tr.width)
 
 			var buffer bytes.Buffer
 			buffer.WriteString("[")
@@ -342,9 +330,7 @@ func (tr *TransformerBar) processAuto(
 		}
 	}
 
-	for _, recordAndContext := range tr.recordsForAutoMode {
-		*outputRecordsAndContexts = append(*outputRecordsAndContexts, recordAndContext)
-	}
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, tr.recordsForAutoMode...)
 
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // Emit the end-of-stream marker
 }

@@ -263,10 +263,7 @@ func (tr *TransformerMostOrLeastFrequent) Transform(
 		}
 
 		// Emit top n
-		outputLength := inputLength
-		if inputLength > tr.maxOutputLength {
-			outputLength = tr.maxOutputLength
-		}
+		outputLength := min(inputLength, tr.maxOutputLength)
 		for i := int64(0); i < outputLength; i++ {
 			outrec := mlrval.NewMlrmapAsRecord()
 			groupByFieldValues := tr.valuesForGroup[sortPairs[i].groupingKey]

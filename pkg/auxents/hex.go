@@ -108,7 +108,7 @@ func hexDumpFile(istream *os.File, doRaw bool) {
 		}
 
 		// Print hex payload
-		for i := 0; i < bufferSize; i++ {
+		for i := range bufferSize {
 			if i < numBytesRead {
 				fmt.Printf("%02x ", buffer[i])
 			} else {
@@ -125,7 +125,7 @@ func hexDumpFile(istream *os.File, doRaw bool) {
 		if !doRaw {
 			fmt.Printf("|")
 
-			for i := 0; i < numBytesRead; i++ {
+			for i := range numBytesRead {
 				if buffer[i] >= 0x20 && buffer[i] <= 0x7e {
 					fmt.Printf("%c", buffer[i])
 				} else {

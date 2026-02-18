@@ -5,6 +5,7 @@ package repl
 import (
 	"fmt"
 	"os"
+	"slices"
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/colorizer"
@@ -59,10 +60,8 @@ func init() {
 // No hash-table acceleration; things here are small, and the tool is interactive.
 func (repl *Repl) findHandler(verbName string) *handlerInfo {
 	for _, entry := range handlerLookupTable {
-		for _, entryVerbName := range entry.verbNames {
-			if entryVerbName == verbName {
-				return &entry
-			}
+		if slices.Contains(entry.verbNames, verbName) {
+			return &entry
 		}
 	}
 	return nil

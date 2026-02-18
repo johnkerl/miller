@@ -491,7 +491,7 @@ func (mv *Mlrval) marshalJSONArrayMultipleLines(
 		if err != nil {
 			return "", err
 		}
-		for i := 0; i < elementNestingDepth; i++ {
+		for range elementNestingDepth {
 			buffer.WriteString(JSON_INDENT_STRING)
 		}
 		buffer.WriteString(elementString)

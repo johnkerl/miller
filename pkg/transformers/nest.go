@@ -458,8 +458,8 @@ func (tr *TransformerNest) explodeValuesAcrossRecords(
 		svalue := mvalue.String()
 
 		// Not lib.SplitString so 'x=' will map to 'x=', rather than no field at all
-		pieces := strings.Split(svalue, tr.nestedFS)
-		for _, piece := range pieces {
+		pieces := strings.SplitSeq(svalue, tr.nestedFS)
+		for piece := range pieces {
 			outrec := inrec.Copy()
 			outrec.PutReference(fieldName, mlrval.FromString(piece))
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(outrec, &inrecAndContext.Context))

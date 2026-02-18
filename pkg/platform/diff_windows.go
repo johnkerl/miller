@@ -1,7 +1,6 @@
 // Handling diff or fc for regression-test.
 
 //go:build windows
-// +build windows
 
 package platform
 

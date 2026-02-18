@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
@@ -180,7 +181,7 @@ func transformerStats1ParseCLI(
 			if err != nil {
 				return nil, err
 			}
-			groupByFieldNameList = lib.CopyStringArray(valueFieldNameList)
+			groupByFieldNameList = slices.Clone(valueFieldNameList)
 
 		} else if opt == "-i" {
 			doInterpolatedPercentiles = true

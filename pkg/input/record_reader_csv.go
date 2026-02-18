@@ -229,7 +229,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 		if reader.header == nil { // implicit CSV header
 			n := len(csvRecord)
 			reader.header = make([]string, n)
-			for i := 0; i < n; i++ {
+			for i := range n {
 				reader.header[i] = strconv.Itoa(i + 1)
 			}
 		}
@@ -240,7 +240,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 		nd := int64(len(csvRecord))
 
 		if nh == nd {
-			for i := int64(0); i < nh; i++ {
+			for i := range nh {
 				key := reader.header[i]
 				value := mlrval.FromDeferredType(csvRecord[i])
 				_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)

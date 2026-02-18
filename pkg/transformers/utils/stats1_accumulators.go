@@ -515,13 +515,13 @@ func (acc *Stats1MeanAbsDevAccumulator) Emit() *mlrval.Mlrval {
 	mn := mlrval.FromInt(int64(n))
 
 	mean := mlrval.FromInt(0)
-	for i := 0; i < n; i++ {
+	for i := range n {
 		mean = bifs.BIF_plus_binary(mean, acc.samples[i])
 	}
 	mean = bifs.BIF_divide(mean, mn)
 
 	meanAbsDev := mlrval.FromInt(0)
-	for i := 0; i < n; i++ {
+	for i := range n {
 		diff := bifs.BIF_minus_binary(mean, acc.samples[i])
 		meanAbsDev = bifs.BIF_plus_binary(meanAbsDev, bifs.BIF_abs(diff))
 	}

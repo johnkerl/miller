@@ -71,7 +71,7 @@ func (mlrmap *Mlrmap) marshalJSONAuxMultiline(
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		// Write the key which is necessarily string-valued in Miller, and in
 		// JSON for that matter :)
-		for i := 0; i < elementNestingDepth; i++ {
+		for range elementNestingDepth {
 			buffer.WriteString(JSON_INDENT_STRING)
 		}
 		encoded := string(millerJSONEncodeString(pe.Key))

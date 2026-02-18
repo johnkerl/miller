@@ -581,7 +581,7 @@ func compareLexically(
 ) int {
 	lib.InternalCodingErrorIf(len(leftFieldValues) != len(rightFieldValues))
 	n := len(leftFieldValues)
-	for i := 0; i < n; i++ {
+	for i := range n {
 		left := leftFieldValues[i].String()
 		right := rightFieldValues[i].String()
 		// Returns -1, 0, 1 as left <, ==, > right

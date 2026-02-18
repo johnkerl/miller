@@ -8,7 +8,7 @@ import (
 
 func TestIsDecimalDigit(t *testing.T) {
 	var c byte
-	for c = 0x00; c < 0xff; c++ {
+	for c = range byte(0xff) {
 		if c >= '0' && c <= '9' {
 			assert.True(t, isDecimalDigit(c))
 		} else {
@@ -19,7 +19,7 @@ func TestIsDecimalDigit(t *testing.T) {
 
 func TestIsOctalDigit(t *testing.T) {
 	var c byte
-	for c = 0x00; c < 0xff; c++ {
+	for c = range byte(0xff) {
 		if c >= '0' && c <= '7' {
 			assert.True(t, isOctalDigit(c))
 		} else {
@@ -30,7 +30,7 @@ func TestIsOctalDigit(t *testing.T) {
 
 func TestIsHexDigit(t *testing.T) {
 	var c byte
-	for c = 0x00; c < 0xff; c++ {
+	for c = range byte(0xff) {
 		if c >= '0' && c <= '9' {
 			assert.True(t, isHexDigit(c))
 		} else if c >= 'a' && c <= 'f' {
@@ -45,7 +45,7 @@ func TestIsHexDigit(t *testing.T) {
 
 func TestIsFloatDigit(t *testing.T) {
 	var c byte
-	for c = 0x00; c < 0xff; c++ {
+	for c = range byte(0xff) {
 		if c >= '0' && c <= '9' {
 			assert.True(t, isFloatDigit(c))
 		} else if c == '.' || c == '-' || c == '+' || c == 'e' || c == 'E' {

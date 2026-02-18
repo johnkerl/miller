@@ -117,7 +117,7 @@ func GetRealSymmetricEigensystem(
 	n := 2
 
 	found := false
-	for iter := 0; iter < JACOBI_MAXITER; iter++ {
+	for range JACOBI_MAXITER {
 		sum := 0.0
 		for i := 1; i < n; i++ {
 			for j := 0; j < i; j++ {
@@ -129,7 +129,7 @@ func GetRealSymmetricEigensystem(
 			break
 		}
 
-		for p := 0; p < n; p++ {
+		for p := range n {
 			for q := p + 1; q < n; q++ {
 				numer := L[p][p] - L[q][q]
 				denom := L[p][q] + L[q][p]
@@ -145,8 +145,8 @@ func GetRealSymmetricEigensystem(
 				c := 1.0 / math.Sqrt(t*t+1)
 				s := t * c
 
-				for pi := 0; pi < n; pi++ {
-					for pj := 0; pj < n; pj++ {
+				for pi := range n {
+					for pj := range n {
 						if pi == pj {
 							P[pi][pj] = 1.0
 						} else {
@@ -205,18 +205,18 @@ func matmul2(
 ) {
 	var T [2][2]float64
 	n := 2
-	for i := 0; i < n; i++ {
-		for j := 0; j < n; j++ {
+	for i := range n {
+		for j := range n {
 			sum := 0.0
-			for k := 0; k < n; k++ {
+			for k := range n {
 				sum += A[i][k] * B[k][j]
 			}
 			T[i][j] = sum
 		}
 	}
 	// Needs copy in case C's memory is the same as A and/or B
-	for i := 0; i < n; i++ {
-		for j := 0; j < n; j++ {
+	for i := range n {
+		for j := range n {
 			C[i][j] = T[i][j]
 		}
 	}
@@ -230,18 +230,18 @@ func matmul2t(
 ) {
 	var T [2][2]float64
 	n := 2
-	for i := 0; i < n; i++ {
-		for j := 0; j < n; j++ {
+	for i := range n {
+		for j := range n {
 			sum := 0.0
-			for k := 0; k < n; k++ {
+			for k := range n {
 				sum += A[k][i] * B[k][j]
 			}
 			T[i][j] = sum
 		}
 	}
 	// Needs copy in case C's memory is the same as A and/or B
-	for i := 0; i < n; i++ {
-		for j := 0; j < n; j++ {
+	for i := range n {
+		for j := range n {
 			C[i][j] = T[i][j]
 		}
 	}
@@ -353,7 +353,7 @@ func logisticRegressionAux(
 		d2ldb2 := 0.0
 		ell0 := 0.0
 
-		for i := 0; i < n; i++ {
+		for i := range n {
 			xi := xs[i]
 			yi := ys[i]
 			pi := lrp(xi, m0, b0)
@@ -391,7 +391,7 @@ func logisticRegressionAux(
 		b = b0 - Hinvgradb
 
 		ell := 0.0
-		for i := 0; i < n; i++ {
+		for i := range n {
 			xi := xs[i]
 			yi := ys[i]
 			qi := lrq(xi, m, b)

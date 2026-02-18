@@ -283,7 +283,7 @@ func (bsr *JSONCommentEnabledReader) populateFromLine(p []byte) int {
 		numBytesWritten = len(bsr.lineBytes)
 		bsr.lineBytes = nil
 	} else {
-		for i := 0; i < len(p); i++ {
+		for i := range p {
 			p[i] = bsr.lineBytes[i]
 		}
 		numBytesWritten = len(p)

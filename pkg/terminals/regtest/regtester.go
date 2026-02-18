@@ -831,8 +831,8 @@ func (rt *RegTester) loadEnvFile(
 	}
 
 	keyValuePairs := lib.NewOrderedMap[string]()
-	lines := strings.Split(contents, "\n")
-	for _, line := range lines {
+	lines := strings.SplitSeq(contents, "\n")
+	for line := range lines {
 		line = strings.TrimSuffix(line, "\r")
 		if line == "" {
 			continue
@@ -868,8 +868,8 @@ func (rt *RegTester) loadStringPairFile(
 	}
 
 	pairs = []stringPair{}
-	lines := strings.Split(contents, "\n")
-	for _, line := range lines {
+	lines := strings.SplitSeq(contents, "\n")
+	for line := range lines {
 		line = strings.TrimSuffix(line, "\r")
 		if line == "" {
 			continue

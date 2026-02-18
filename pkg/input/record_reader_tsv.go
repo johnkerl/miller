@@ -297,7 +297,7 @@ func getRecordBatchImplicitTSVHeader(
 		if reader.headerStrings == nil {
 			n := len(fields)
 			reader.headerStrings = make([]string, n)
-			for i := 0; i < n; i++ {
+			for i := range n {
 				reader.headerStrings[i] = strconv.Itoa(i + 1)
 			}
 		} else {

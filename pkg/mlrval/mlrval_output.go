@@ -133,9 +133,9 @@ func (mv *Mlrval) StringifyValuesRecursively() {
 }
 
 func (mv *Mlrval) ShowSizes() {
-	fmt.Printf("TOTAL            %p %d\n", mv, reflect.TypeOf(*mv).Size())
+	fmt.Printf("TOTAL            %p %d\n", mv, reflect.TypeFor[Mlrval]().Size())
 	//fmt.Printf("mv.intf          %p %d\n", &mv.intf, reflect.TypeOf(mv.intf).Size())
-	fmt.Printf("mv.printrep      %p %d\n", &mv.printrep, reflect.TypeOf(mv.printrep).Size())
-	fmt.Printf("mv.printrepValid %p %d\n", &mv.printrepValid, reflect.TypeOf(mv.printrepValid).Size())
-	fmt.Printf("mv.mvtype        %p %d\n", &mv.mvtype, reflect.TypeOf(mv.mvtype).Size())
+	fmt.Printf("mv.printrep      %p %d\n", &mv.printrep, reflect.TypeFor[string]().Size())
+	fmt.Printf("mv.printrepValid %p %d\n", &mv.printrepValid, reflect.TypeFor[bool]().Size())
+	fmt.Printf("mv.mvtype        %p %d\n", &mv.mvtype, reflect.TypeFor[MVType]().Size())
 }
