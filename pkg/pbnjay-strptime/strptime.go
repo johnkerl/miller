@@ -289,11 +289,7 @@ func strptime_tz(
 						return time.Time{}, ErrFormatMismatch
 					}
 					// Allow single-digit at end of string (e.g. "1989-1-2" for %Y-%m-%d); we zero-pad when building.
-					if want > remaining {
-						sil = remaining
-					} else {
-						sil = want
-					}
+					sil = min(want, remaining)
 				}
 			}
 
