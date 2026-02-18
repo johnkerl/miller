@@ -50,15 +50,6 @@ func StringListToSet(stringList []string) map[string]bool {
 	return stringSet
 }
 
-// SortStrings sorts strs in place.
-//
-// Deprecated: use slices.Sort instead.
-//
-//go:fix inline
-func SortStrings(strs []string) {
-	slices.Sort(strs)
-}
-
 // ReverseStringList reverses strs in place.
 //
 // Deprecated: use slices.Reverse instead.
