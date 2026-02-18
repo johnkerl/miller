@@ -151,7 +151,7 @@ func ChainTransformer(
 	}
 
 	intermediateDownstreamDoneChannels := make([]chan bool, n)
-	for i = 0; i < n; i++ {
+	for i = range n {
 		intermediateDownstreamDoneChannels[i] = make(chan bool, 1)
 	}
 

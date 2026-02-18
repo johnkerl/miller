@@ -573,7 +573,7 @@ func (tr *TransformerJoin) formAndEmitPairs(
 
 		// Add the joined-on fields to the new output record
 		n := len(tr.opts.leftJoinFieldNames)
-		for i := 0; i < n; i++ {
+		for i := range n {
 			// These arrays are already guaranteed same-length by CLI parser
 			leftJoinFieldName := tr.opts.leftJoinFieldNames[i]
 			outputJoinFieldName := tr.opts.outputJoinFieldNames[i]

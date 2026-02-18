@@ -458,7 +458,7 @@ func BIF_sort_collection(collection *mlrval.Mlrval) *mlrval.Mlrval {
 		arrayval := collection.AcquireArrayValue()
 		n := len(arrayval)
 		array = make([]*mlrval.Mlrval, n)
-		for i := 0; i < n; i++ {
+		for i := range n {
 			array[i] = arrayval[i].Copy()
 		}
 	} else {

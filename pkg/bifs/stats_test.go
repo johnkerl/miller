@@ -11,7 +11,7 @@ import (
 
 func stats_test_array(n int) *mlrval.Mlrval {
 	a := make([]*mlrval.Mlrval, n)
-	for i := 0; i < n; i++ {
+	for i := range n {
 		a[i] = mlrval.FromInt(int64(i))
 	}
 	return mlrval.FromArray(a)
@@ -20,7 +20,7 @@ func stats_test_array(n int) *mlrval.Mlrval {
 func array_to_map_for_test(a *mlrval.Mlrval) *mlrval.Mlrval {
 	array := a.AcquireArrayValue()
 	m := mlrval.NewMlrmap()
-	for i := 0; i < len(array); i++ {
+	for i := range array {
 		key := fmt.Sprint(i)
 		val := array[i]
 		m.PutCopy(key, val)
@@ -34,7 +34,7 @@ func TestBIF_count(t *testing.T) {
 	output := BIF_count(input)
 	assert.True(t, output.IsError())
 
-	for n := 0; n < 5; n++ {
+	for n := range 5 {
 		input = stats_test_array(n)
 		assert.True(t, mlrval.Equals(BIF_count(input), mlrval.FromInt(int64(n))))
 

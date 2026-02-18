@@ -172,7 +172,7 @@ func NewTransformerHistogram(
 	countsByField := make(map[string][]int64)
 	for _, valueFieldName := range valueFieldNames {
 		countsByField[valueFieldName] = make([]int64, nbins)
-		for i := int64(0); i < nbins; i++ {
+		for i := range nbins {
 			countsByField[valueFieldName][i] = 0
 		}
 	}
@@ -323,7 +323,7 @@ func (tr *TransformerHistogram) emitAuto(
 	for _, valueFieldName := range tr.valueFieldNames {
 		vector := tr.vectorsByFieldName[valueFieldName]
 		n := len(vector)
-		for i := 0; i < n; i++ {
+		for i := range n {
 			value := vector[i]
 			if haveLoHi {
 				if lo > value {
@@ -347,7 +347,7 @@ func (tr *TransformerHistogram) emitAuto(
 		counts := tr.countsByField[valueFieldName]
 		lib.InternalCodingErrorIf(counts == nil)
 		n := len(vector)
-		for i := 0; i < n; i++ {
+		for i := range n {
 			value := vector[i]
 			if (value >= lo) && (value < hi) {
 				idx := int(((value - lo) * mul))
@@ -365,7 +365,7 @@ func (tr *TransformerHistogram) emitAuto(
 		countFieldNames[valueFieldName] = tr.outputPrefix + valueFieldName + "_count"
 	}
 
-	for i := int64(0); i < nbins; i++ {
+	for i := range nbins {
 		outrec := mlrval.NewMlrmapAsRecord()
 
 		outrec.PutReference(

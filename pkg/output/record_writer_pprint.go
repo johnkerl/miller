@@ -339,7 +339,7 @@ func (writer *RecordWriterPPRINT) writePadding(
 	textWidth := utf8.RuneCountInString(text)
 	padWidth := fieldWidth - textWidth
 	ofs := writer.writerOptions.OFS
-	for i := 0; i < padWidth; i++ {
+	for range padWidth {
 		bufferedOutputStream.WriteString(ofs)
 	}
 }

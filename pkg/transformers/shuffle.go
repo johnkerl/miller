@@ -104,12 +104,12 @@ func (tr *TransformerShuffle) Transform(
 		// * Make a pseudorandom permutation using pseudorandom swaps in the image map.
 		n := int64(len(tr.recordsAndContexts))
 		images := make([]int64, n)
-		for i := int64(0); i < n; i++ {
+		for i := range n {
 			images[i] = i
 		}
 		unusedStart := int64(0)
 		numUnused := n
-		for i := int64(0); i < n; i++ {
+		for i := range n {
 			// Select a pseudorandom element from the pool of unused images.
 			u := lib.RandRange(unusedStart, unusedStart+numUnused)
 			temp := images[u]
@@ -127,7 +127,7 @@ func (tr *TransformerShuffle) Transform(
 		// Transfer from input array to output list. Because permutations are one-to-one maps,
 		// all input records have ownership transferred exactly once. So, there are no
 		// records to copy here.
-		for i := int64(0); i < n; i++ {
+		for i := range n {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, array[images[i]])
 		}
 
