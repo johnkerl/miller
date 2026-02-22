@@ -54,10 +54,12 @@ For example, if you used `-o csv` then these new records will appear in CSV form
 * See below for more examples.
 
 Note that `dump`, `edump`, `print`, and `eprint` don't output records that participate in
-`then`-chaining: rather, they're just immediate prints to stdout/stderr.  You can use these to print
-arbitrary things, like `"Hello, world!"`, or, you can use them to format your data in a custom
-format of your choice. In particular, you can use this to implement an output format that Miller
-doesn't handle out of the box.
+`then`-chaining: rather, they're just immediate prints to stdout/stderr.
+
+You can use these to print arbitrary things, like `"Hello, world!"`, or, you can use them to format
+your data in [custom output format](#custom-output-formats-with-print-statements) of your choice. In
+particular, you can use this to implement an output format that Miller doesn't handle out of the
+box.
 
 ## Modifying the current record by assignment
 
@@ -91,7 +93,7 @@ $* = {
   "color_shape": $color . " " . $shape,
   "flags": {
     "iflag": $flag == 1,
-    "wflag": $w > 3.0,
+    "w_exceeded": $w > 0.5,
   },
   "uvwx": [$u, $v, $w, $x],
 }
@@ -106,7 +108,7 @@ $* = {
   "color_shape": "yellow triangle",
   "flags": {
     "iflag": true,
-    "wflag": false
+    "w_exceeded": false
   },
   "uvwx": [0.632170, 0.988721, 0.436498, 5.798188]
 },
@@ -114,7 +116,7 @@ $* = {
   "color_shape": "red square",
   "flags": {
     "iflag": true,
-    "wflag": false
+    "w_exceeded": true
   },
   "uvwx": [0.219668, 0.001257, 0.792778, 2.944117]
 }
@@ -144,6 +146,46 @@ The `print` statement is perhaps self-explanatory, but with a few light caveats:
 </pre>
 
 See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
+
+## Custom output formats with print statements
+
+Be sure to use `put -q` to silence the record stream, so that all output is controlled by your print statements:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/colored-shapes-2.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color,shape,flag,i,u,v,w,x
+yellow,triangle,1,56,0.632170,0.988721,0.436498,5.798188
+red,square,1,80,0.219668,0.001257,0.792778,2.944117
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>cat custom-record-formatting.mlr</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+if (NR > 1) { print }
+print "Shape is " . $shape;
+print "Color is " . $color;
+if ($w > 0.5) {
+  print "W HAS EXCEEDED THRESHOLD: " . $w
+} else {
+  print "W is within threshold: " . $w
+}
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -i csv --from data/colored-shapes-2.csv put -q -f custom-record-formatting.mlr</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Shape is triangle
+Color is yellow
+W is within threshold: 0.436498
+
+Shape is square
+Color is red
+W HAS EXCEEDED THRESHOLD: 0.792778
+</pre>
 
 ## Dump statements
 
