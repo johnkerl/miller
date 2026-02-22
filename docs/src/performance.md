@@ -80,7 +80,7 @@ $ ls -lh cell_towers.csv*
 -rw-r--r--  1 kerl  staff   1.2G Feb 22 11:10 cell_towers.csv.gz
 ```
 
-First we see that decompression is much cheaper than compression: 10 seconds vs. 2.5 minutes:
+First we see that decompression is much cheaper than compression: six seconds vs. three minutes:
 
 ```
 $ time gunzip < cell_towers.csv.gz  > /dev/null
