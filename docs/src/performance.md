@@ -42,7 +42,7 @@ then converted to DKVP, JSON, etc.
 
 Notes:
 
-* These benchmarks were run in early 2026 on MacBook Air laptop with M1 processor.
+* These benchmarks were run in early 2026 on MacBook Air laptop with an M1 processor.
 * As of late 2021, Miller was benchmarked using Go compiler versions 1.15.15, 1.16.12, 1.17.5, and 1.18beta1, with no significant performance changes attributable to compiler versions.
 
 For the [first benchmark](https://github.com/johnkerl/miller/blob/main/scripts/perf/time-verbs.py), the format is CSV and the operations were varied:

@@ -54,7 +54,7 @@ def main():
         for mlr in mlrs:
             desc, args = case
             avg = time_runs(desc, mlr, args, nreps)
-            print(f"desc={desc},mlr={mlr},seconds={avg:.3f}")
+            print(f"desc={desc},version={mlr},seconds={avg:.3f}")
 
 # ----------------------------------------------------------------
 def time_runs(desc, mlr, args, nreps):
