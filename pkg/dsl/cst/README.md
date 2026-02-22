@@ -11,7 +11,7 @@ See [../dsl/README.md](../README.md) for more information about Miller's use of 
 
 Go is a strongly typed language, but the AST is polymorphic. This results in if/else or switch statements as an AST is walked.
 
-Also, when we modify code, there can be changes in the [BNF grammar](../../parsing/mlr.bnf) not yet reflected in the [AST](../../pkg/dsl/ast_types.go). Likewise, there can be AST changes not yet reflected here. (Example: you are partway through adding a new binary operator to the grammar.)
+Also, when we modify code, there can be changes in the [BNF grammar](../../parsing/mlr.bnf) not yet reflected in the [AST](../ast_types.go). Likewise, there can be AST changes not yet reflected here. (Example: you are partway through adding a new binary operator to the grammar.)
 
 As a result, throughout the code, there are error checks which may seem redundant but which are in place to make incremental development more pleasant and robust.
 

@@ -20,5 +20,5 @@ TIME IN SECONDS 9.691 -- ./catc
 TIME IN SECONDS 12.975 -- ./catrust
 TIME IN SECONDS 52.282 -- ./catrust2
 
-$ justtime mlr cat ~/tmp/big > /dev/null
-TIME IN SECONDS 79.106 -- mlr cat /Users/kerl/tmp/big
+$ justtime mlr cat ~/data/big > /dev/null
+TIME IN SECONDS 79.106 -- mlr cat /Users/kerl/data/big

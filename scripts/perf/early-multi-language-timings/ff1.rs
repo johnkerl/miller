@@ -20,5 +20,5 @@ fn read_lines_buf_reader(path: &str) -> io::Result<()> {
 }
 
 fn main() {
-  let _ = read_lines_buf_reader("/Users/kerl/tmp/big");
+  let _ = read_lines_buf_reader("/Users/kerl/data/big");
 }

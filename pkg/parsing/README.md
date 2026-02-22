@@ -23,4 +23,4 @@ tools/build-dsl
 
 Making changes to `mlr.bnf` requires several minutes to re-run GOCC. For
 experimental changes, please see the
-[experiments](../../../experiments/dsl-parser) directory.
+[cmd/experiments/dsl_parser](../../../cmd/experiments/dsl_parser) directory.
