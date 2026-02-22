@@ -24,7 +24,7 @@ func main() {
 	goMaxProcsString := os.Getenv("GOMAXPROCS")
 	if goMaxProcsString != "" {
 		goMaxProcs, err := strconv.Atoi(goMaxProcsString)
-		if err != nil {
+		if err == nil {
 			runtime.GOMAXPROCS(goMaxProcs)
 			haveSetGoMaxProcs = true
 		}
