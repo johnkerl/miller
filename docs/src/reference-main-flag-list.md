@@ -397,6 +397,7 @@ These are flags which are applicable to PPRINT format.
 
 * `--barred or --barred-output`: Prints a border around PPRINT output.
 * `--barred-input`: When used in conjunction with --pprint, accepts barred input.
+* `--barred-unicode`: Uses unicode printing chars for barred output
 * `--right`: Right-justifies all fields for PPRINT output.
 
 ## Profiling flags

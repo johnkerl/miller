@@ -541,6 +541,16 @@ var PPRINTOnlyFlagSection = FlagSection{
 		},
 
 		{
+			name: "--barred-unicode",
+			help: "Uses unicode printing chars for barred output",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.BarredPprintOutput = true
+				options.WriterOptions.BarredUseUnicode = true
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--barred-input",
 			help: "When used in conjunction with --pprint, accepts barred input.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
