@@ -38,10 +38,12 @@ For example, if you used `-o csv` then these new records will appear in CSV form
 * See below for more examples.
 
 Note that `dump`, `edump`, `print`, and `eprint` don't output records that participate in
-`then`-chaining: rather, they're just immediate prints to stdout/stderr.  You can use these to print
-arbitrary things, like `"Hello, world!"`, or, you can use them to format your data in a custom
-format of your choice. In particular, you can use this to implement an output format that Miller
-doesn't handle out of the box.
+`then`-chaining: rather, they're just immediate prints to stdout/stderr.
+
+You can use these to print arbitrary things, like `"Hello, world!"`, or, you can use them to format
+your data in [custom output format](#custom-output-formats-with-print-statements) of your choice. In
+particular, you can use this to implement an output format that Miller doesn't handle out of the
+box.
 
 ## Modifying the current record by assignment
 
@@ -93,6 +95,22 @@ mlr --from myfile.dat put 'print > $a.".txt", $x'
 GENMD-EOF
 
 See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
+
+## Custom output formats with print statements
+
+Be sure to use `put -q` to silence the record stream, so that all output is controlled by your print statements:
+
+GENMD-RUN-COMMAND
+cat data/colored-shapes-2.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat custom-record-formatting.mlr
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr -i csv --from data/colored-shapes-2.csv put -q -f custom-record-formatting.mlr
+GENMD-EOF
 
 ## Dump statements
 
