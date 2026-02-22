@@ -1,3 +1,5 @@
+[![deepwiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/johnkerl/miller)
+
 # What is Miller?
 
 **Miller is like awk, sed, cut, join, and sort for data formats such as CSV, TSV, JSON, JSON Lines, and positionally-indexed.**
