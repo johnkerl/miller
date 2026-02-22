@@ -307,16 +307,18 @@ Please see the [section on emit statements](reference-dsl-output-statements.md#e
 ## Performance benchmarks
 
 For performance testing, the [example.csv](https://github.com/johnkerl/miller/blob/main/docs/src/example.csv) file
-[was expanded](https://github.com/johnkerl/miller/blob/main/scripts/make-big-files) into a million-line CSV file,
+[was expanded](https://github.com/johnkerl/miller/blob/main/scripts/prep-perf-data.sh) into a million-line CSV file,
 then converted to DKVP, JSON, etc.
 
 Notes:
 
-* These benchmarks were run on two laptops: a commodity Mac laptop with four CPUs, on MacOS Monterey, using `go1.16.5 darwin/amd64`, and a commodity Linux Lenovo with eight CPUs, on Ubuntu 21.10, using `go1.17.5 linux/amd64`.
+* These benchmarks were run in late 2021 on two laptops: a commodity Mac x86 laptop with four CPUs, on MacOS Monterey, using `go1.16.5 darwin/amd64`, and a commodity Linux Lenovo with eight CPUs, on Ubuntu 21.10, using `go1.17.5 linux/amd64`.
 * Interestingly, I noted a significant slowdown -- for this particular Linux laptop on low battery -- for the Go version but not the C version. Perhaps multicore interacts with power-saving mode.
 * As of late 2021, Miller has been benchmarked using Go compiler versions 1.15.15, 1.16.12, 1.17.5, and 1.18beta1, with no significant performance changes attributable to compiler versions.
 
-For the [first benchmark](https://github.com/johnkerl/miller/blob/main/scripts/chain-cmps.sh), the format is CSV and the operations are varied:
+**The Miller versions shown here are 5.10.3 and 6.0.0.**
+
+For the [first benchmark](https://github.com/johnkerl/miller/blob/main/scripts/perf/time-verbs.py), the format is CSV and the operations are varied:
 
 **Mac**
 
@@ -344,7 +346,7 @@ For the [first benchmark](https://github.com/johnkerl/miller/blob/main/scripts/c
 | CSV stats1 | 2.376 | 1.751 | 1.36x |
 | CSV put expressions | 4.520 | 2.091 | 2.16x |
 
-For the [second benchmark](https://github.com/johnkerl/miller/blob/main/scripts/time-big-files), we have `mlr cat` of those files, varying file types, with processing times shown. Catting out files as-is isn't a particularly useful operation in itself, but it gives an idea of how processing time depends on file format:
+For the [second benchmark](https://github.com/johnkerl/miller/blob/main/scripts/perf/time-verbs.py), we have `mlr cat` of those files, varying file types, with processing times shown. Catting out files as-is isn't a particularly useful operation in itself, but it gives an idea of how processing time depends on file format:
 
 **Mac**
 
@@ -368,7 +370,7 @@ For the [second benchmark](https://github.com/johnkerl/miller/blob/main/scripts/
 | XTAB     | 2.159    | 1.893    | 1.14x   |
 | JSON     | 5.077    | 10.445   | 0.49x   |
 
-For the [third benchmark](https://github.com/johnkerl/miller/blob/main/scripts/chain-lengths.sh), we have longer and longer then-chains: `mlr put ...`, then `mlr put ... then put ...`, etc. -- deepening the then-chain from one to six:
+For the [third benchmark](https://github.com/johnkerl/miller/blob/main/scripts/perf/time-verbs.py), we have longer and longer then-chains: `mlr put ...`, then `mlr put ... then put ...`, etc. -- deepening the then-chain from one to six:
 
 **Mac**
 
