@@ -1,5 +1,3 @@
-[![deepwiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/johnkerl/miller)
-
 # What is Miller?
 
 **Miller is like awk, sed, cut, join, and sort for data formats such as CSV, TSV, JSON, JSON Lines, and positionally-indexed.**
@@ -27,6 +25,8 @@ In the above image you can see how Miller embraces the common themes of
 key-value-pair data in a variety of data formats.
 
 # Getting started
+
+[![deepwiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/johnkerl/miller)
 
 * [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min)
 * [A Guide To Command-Line Data Manipulation](https://www.smashingmagazine.com/2022/12/guide-command-line-data-manipulation-cli-miller)
