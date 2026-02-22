@@ -37,52 +37,44 @@ Miller can do many kinds of processing on key-value-pair data using elapsed time
 ## Some examples
 
 This is some data from [https://community.opencellid.org](https://community.opencellid.org): approximately 40
-million records, 0.9GB compressed, 3.2GB uncompressed.
+million records, 1.2GB compressed, 2.9GB uncompressed:
+
+```
+$ wc -l cell_towers.csv
+ 40496649 cell_towers.csv
+
+$ gunzip < cell_towers.csv.gz | wc -l
+ 40496649
+
+$ ls -lh cell_towers.csv*
+-rw-r--r--  1 kerl  staff   2.9G Feb 22 12:04 cell_towers.csv
+-rw-r--r--  1 kerl  staff   1.2G Feb 22 11:10 cell_towers.csv.gz
+```
 
 First we see that decompression is much cheaper than compression: 10 seconds vs. 2.5 minutes:
 
 ```
-$ time gunzip cell_towers.csv.gz
+$ time gunzip < cell_towers.csv.gz  > /dev/null
+real  0m5.546s
+user  0m5.352s
+sys 0m0.183s
 
-real    0m10.431s
-user    0m9.235s
-sys     0m1.030s
-
-$ ls -lh cell_towers.csv
--rw-r--r--  1 johnkerl  staff   3.2G Sep  8 17:13 cell_towers.csv
-
-$ time gzip cell_towers.csv
-
-real    2m30.171s
-user    2m28.508s
-sys     0m1.257s
-
-$ ls -lh cell_towers.csv.gz
--rw-r--r--  1 johnkerl  staff   917M Sep  7 12:34 cell_towers.csv.gz
-
+$ time gzip < cell_towers.csv  > /dev/null
+real  3m25.274s
+user  3m16.391s
+sys 0m1.618s
 ```
 
 Next we look at system `cut` which needs to split on lines and fields. Since `cut` is in the
 [Unix toolkit](unix-toolkit-context.md) it handles integer column names, starting with 1.
 
-```
-$ gunzip < cell_towers.csv.gz | head -n 5
-radio,mcc,net,area,cell,unit,lon,lat,range,samples,changeable,created,updated,averageSignal
-UMTS,262,2,801,86355,0,13.285512,52.522202,1000,7,1,1282569574,1300155341,0
-GSM,262,2,801,1795,0,13.276907,52.525714,5716,9,1,1282569574,1300155341,0
-GSM,262,2,801,1794,0,13.285064,52.524,6280,13,1,1282569574,1300796207,0
-UMTS,262,2,801,211250,0,13.285446,52.521744,1000,3,1,1282569574,1299466955,0
-UMTS,262,2,801,86353,0,13.293457,52.521515,1000,2,1,1282569574,1291380444,0
-```
-
-This takes about a minute and a half:
+This takes a little over a minute on my M1 MacBook Air:
 
 ```
 $ time cut -d, -f 1,2,12,13 cell_towers.csv > /dev/null
-
-real    1m29.228s
-user    1m26.347s
-sys     0m2.426s
+real  1m8.347s
+user  1m7.051s
+sys 0m1.167s
 ```
 
 Columns `1,2,12,13` are the same as `radio,mcc,created,updated`. Since
@@ -91,30 +83,23 @@ and have Miller read uncompressed data, or have it [decompress
 in-process](reference-main-compressed-data.md#automatic-detection-on-input), or
 use an [external decompressor with
 `--prepipe`](reference-main-compressed-data.md#external-decompressors-on-input),
-the results are about the same. This is not as fast as `cut`, but it's in the ballpark.
+the results are about the same.
 
 ```
+$ time mlr --csv --from cell_towers.csv cut -f radio,mcc,created,updated
+real	1m27.557s
+user	3m8.856s
+sys	0m6.984s
 
-$ gunzip cell_towers.csv.gz
-$ time mlr --csv cut -f radio,mcc,created,updated cell_towers.csv > /dev/null
+----------------------------------------------------------------
+$ time mlr --csv --from cell_towers.csv.gz --gzin cut -f radio,mcc,created,updated
+real	1m35.121s
+user	3m58.336s
+sys	0m6.591s
 
-real    4m10.097s
-user    8m56.975s
-sys     4m40.046s
-
-$ gzip cell_towers.csv
-$ time mlr --csv cut -f radio,mcc,created,updated cell_towers.csv.gz > /dev/null
-
-real    4m14.185s
-user    9m5.044s
-sys     4m23.886s
-
-$ time mlr --csv --prepipe gunzip cut -f radio,mcc,created,updated cell_towers.csv.gz > /dev/null
-
-real    4m13.614s
-user    9m5.623s
-sys     4m57.827s
-
+----------------------------------------------------------------
+$ time mlr --csv --from cell_towers.csv.gz --prepipe gunzip cut -f radio,mcc,created,updated
+real	1m27.430s
+user	3m18.665s
+sys	0m10.017s
 ```
-
-
