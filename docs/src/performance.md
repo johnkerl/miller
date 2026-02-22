@@ -91,13 +91,11 @@ real	1m27.557s
 user	3m8.856s
 sys	0m6.984s
 
-----------------------------------------------------------------
 $ time mlr --csv --from cell_towers.csv.gz --gzin cut -f radio,mcc,created,updated
 real	1m35.121s
 user	3m58.336s
 sys	0m6.591s
 
-----------------------------------------------------------------
 $ time mlr --csv --from cell_towers.csv.gz --prepipe gunzip cut -f radio,mcc,created,updated
 real	1m27.430s
 user	3m18.665s
