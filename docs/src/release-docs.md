@@ -24,6 +24,9 @@ If your `mlr version` says something like `Miller v5.10.2` or `mlr 6.0.0`, witho
 | Release | Docs                                                                | Release notes |
 |---------|---------------------------------------------------------------------|---------------|
 main      | [main branch](https://miller.readthedocs.io/en/main)                | N/A |
+6.17.0     | [Miller 6.17.0](https://miller.readthedocs.io/en/6.17.0)           | [Miller 6.17.0: YAML and DCF file formats; performance improvements; bugfixes](https://github.com/johnkerl/miller/releases/tag/v6.17.0) |
+6.16.0     | [Miller 6.16.0](https://miller.readthedocs.io/en/6.16.0)           | [Miller 6.16.0: Snap support via `snap install miller`](https://github.com/johnkerl/miller/releases/tag/v6.16.0) |
+6.15.0     | [Miller 6.15.0](https://miller.readthedocs.io/en/6.15.0)           | [Miller 6.15.0: Fix double quotes in CSV comments and `mlr -I` mode preservation; `sort -b`](https://github.com/johnkerl/miller/releases/tag/v6.15.0) |
 6.14.0     | [Miller 6.14.0](https://miller.readthedocs.io/en/6.14.0)           | [Survival curve, misc. features and bugfixes](https://github.com/johnkerl/miller/releases/tag/v6.14.0) |
 6.13.0     | [Miller 6.13.0](https://miller.readthedocs.io/en/6.13.0)           | [File-stat DSL function, new stats accumulator, misc. bugfixes](https://github.com/johnkerl/miller/releases/tag/v6.13.0) |
 6.12.0     | [Miller 6.12.0](https://miller.readthedocs.io/en/6.12.0)           | [New sparsify verb, wide-table performance improvement, thousands separator for fmtnum function](https://github.com/johnkerl/miller/releases/tag/v6.12.0) |

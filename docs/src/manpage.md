@@ -749,6 +749,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                                 Prints a border around PPRINT output.
        --barred-input           When used in conjunction with --pprint, accepts
                                 barred input.
+       --barred-unicode         Uses unicode printing chars for barred output
        --right                  Right-justifies all fields for PPRINT output.
 
 1mPROFILING FLAGS0m
@@ -3803,5 +3804,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-02-21                         4mMILLER24m(1)
+                                  2026-02-22                         4mMILLER24m(1)
 </pre>
