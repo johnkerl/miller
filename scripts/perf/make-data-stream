@@ -1,3 +1,5 @@
+#!/bin/bash
+
 stop=1000000000
 profile=""
 
@@ -29,4 +31,3 @@ mlr \
   then rename i,k \
   then cut -xf index \
   then filter '$rate > 2'
-

@@ -9,7 +9,9 @@ import subprocess
 def main():
     mlrs       = [ "mlr" ]
     #
-    kind       = "medium"
+    kind       = "big"
+    #kind      = "medium"
+    #kind      = "small"
     in_csv     = f"$HOME/data/{kind}.csv"
     in_csvlite = f"$HOME/data/{kind}.csv"
     in_dkvp    = f"$HOME/data/{kind}.dkvp"
@@ -26,10 +28,10 @@ def main():
         ["sort-n", f"--csv --from {in_csv} sort -n quantity"],
         ["stats1", f"--csv --from {in_csv} stats1 -a min,mean,max -f quantity,rate -g shape"],
         None,
-        ["chain-1", f"--csv --from {in_csv} put -f scripts/chain-1.mlr"],
-        ["chain-2", f"--csv --from {in_csv} put -f scripts/chain-1.mlr then put -f scripts/chain-1.mlr"],
-        ["chain-3", f"--csv --from {in_csv} put -f scripts/chain-1.mlr then put -f scripts/chain-1.mlr then put -f scripts/chain-1.mlr"],
-        ["chain-4", f"--csv --from {in_csv} put -f scripts/chain-1.mlr then put -f scripts/chain-1.mlr then put -f scripts/chain-1.mlr then put -f scripts/chain-1.mlr"],
+        ["chain-1", f"--csv --from {in_csv} put -f scripts/perf/chain-1.mlr"],
+        ["chain-2", f"--csv --from {in_csv} put -f scripts/perf/chain-1.mlr then put -f scripts/perf/chain-1.mlr"],
+        ["chain-3", f"--csv --from {in_csv} put -f scripts/perf/chain-1.mlr then put -f scripts/perf/chain-1.mlr then put -f scripts/perf/chain-1.mlr"],
+        ["chain-4", f"--csv --from {in_csv} put -f scripts/perf/chain-1.mlr then put -f scripts/perf/chain-1.mlr then put -f scripts/perf/chain-1.mlr then put -f scripts/perf/chain-1.mlr"],
         None,
         ["cat-csv",     f"--csv     --from {in_csv}  cat"],
         ["cat-csvlite", f"--csvlite --from {in_csvlite}  cat"],
