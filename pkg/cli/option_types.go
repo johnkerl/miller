@@ -96,6 +96,7 @@ type TWriterOptions struct {
 
 	HeaderlessOutput         bool
 	BarredPprintOutput       bool
+	BarredUseUnicode         bool
 	RightAlignedPPRINTOutput bool
 	RightAlignedXTABOutput   bool
 

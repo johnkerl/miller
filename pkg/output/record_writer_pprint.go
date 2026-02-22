@@ -228,6 +228,22 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 // | wye | pan | 5  | 0.5732889198020006   | 0.8636244699032729  |
 // +-----+-----+----+----------------------+---------------------+
 
+type barredChars struct {
+	horizontalStart          string
+	horizontalMiddle         string
+	horizontalEnd            string
+	horizontalBar            string
+	verticalStart            string
+	verticalMiddle           string
+	verticalEnd              string
+	firstRowHorizontalStart  string
+	firstRowHorizontalMiddle string
+	firstRowHorizontalEnd    string
+	lastRowHorizontalStart   string
+	lastRowHorizontalMiddle  string
+	lastRowHorizontalEnd     string
+}
+
 func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 	records []*mlrval.Mlrmap,
 	maxWidths map[string]int,
@@ -235,35 +251,65 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 	outputIsStdout bool,
 ) {
 
+	bc := func() barredChars {
+		ofs := writer.writerOptions.OFS
+		if writer.writerOptions.BarredUseUnicode {
+			return barredChars{
+				horizontalStart:          "├─",
+				horizontalMiddle:         "─┼─",
+				horizontalEnd:            "─┤",
+				horizontalBar:            "─",
+				verticalStart:            "│" + ofs,
+				verticalMiddle:           ofs + "│" + ofs,
+				verticalEnd:              ofs + "│",
+				firstRowHorizontalStart:  "┌─",
+				firstRowHorizontalMiddle: "─┬─",
+				firstRowHorizontalEnd:    "─┐",
+				lastRowHorizontalStart:   "└─",
+				lastRowHorizontalMiddle:  "─┴─",
+				lastRowHorizontalEnd:     "─┘",
+			}
+		} else {
+			return barredChars{
+				horizontalStart:          "+-",
+				horizontalMiddle:         "-+-",
+				horizontalEnd:            "-+",
+				horizontalBar:            "-",
+				verticalStart:            "|" + ofs,
+				verticalMiddle:           ofs + "|" + ofs,
+				verticalEnd:              ofs + "|",
+				firstRowHorizontalStart:  "+-",
+				firstRowHorizontalMiddle: "-+-",
+				firstRowHorizontalEnd:    "-+",
+				lastRowHorizontalStart:   "+-",
+				lastRowHorizontalMiddle:  "-+-",
+				lastRowHorizontalEnd:     "-+",
+			}
+		}
+	}()
+
 	horizontalBars := make(map[string]string)
 	for key, width := range maxWidths {
-		horizontalBars[key] = strings.Repeat("-", width)
+		horizontalBars[key] = strings.Repeat(bc.horizontalBar, width)
 	}
-	ofs := writer.writerOptions.OFS
-	horizontalStart := "+-"
-	horizontalMiddle := "-+-"
-	horizontalEnd := "-+"
-	verticalStart := "|" + ofs
-	verticalMiddle := ofs + "|" + ofs
-	verticalEnd := ofs + "|"
 
 	onFirst := true
 	for i, outrec := range records {
 
 		// Print header line
 		if onFirst && !writer.writerOptions.HeaderlessOutput {
-			bufferedOutputStream.WriteString(horizontalStart)
+			bufferedOutputStream.WriteString(bc.firstRowHorizontalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
 				bufferedOutputStream.WriteString(horizontalBars[pe.Key])
 				if pe.Next != nil {
-					bufferedOutputStream.WriteString(horizontalMiddle)
+					bufferedOutputStream.WriteString(bc.firstRowHorizontalMiddle)
 				} else {
-					bufferedOutputStream.WriteString(horizontalEnd)
+					bufferedOutputStream.WriteString(bc.firstRowHorizontalEnd)
 					bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 				}
 			}
 
-			bufferedOutputStream.WriteString(verticalStart)
+			bufferedOutputStream.WriteString(bc.verticalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
 				if !writer.writerOptions.RightAlignedPPRINTOutput { // left-align
 					bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
@@ -273,20 +319,20 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 					bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
 				}
 				if pe.Next != nil {
-					bufferedOutputStream.WriteString(verticalMiddle)
+					bufferedOutputStream.WriteString(bc.verticalMiddle)
 				} else {
-					bufferedOutputStream.WriteString(verticalEnd)
+					bufferedOutputStream.WriteString(bc.verticalEnd)
 					bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 				}
 			}
 
-			bufferedOutputStream.WriteString(horizontalStart)
+			bufferedOutputStream.WriteString(bc.horizontalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
 				bufferedOutputStream.WriteString(horizontalBars[pe.Key])
 				if pe.Next != nil {
-					bufferedOutputStream.WriteString(horizontalMiddle)
+					bufferedOutputStream.WriteString(bc.horizontalMiddle)
 				} else {
-					bufferedOutputStream.WriteString(horizontalEnd)
+					bufferedOutputStream.WriteString(bc.horizontalEnd)
 					bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 				}
 			}
@@ -294,7 +340,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 		onFirst = false
 
 		// Print data lines
-		bufferedOutputStream.WriteString(verticalStart)
+		bufferedOutputStream.WriteString(bc.verticalStart)
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			s := pe.Value.String()
 			if !writer.writerOptions.RightAlignedPPRINTOutput { // left-align
@@ -305,21 +351,22 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 				bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
 			}
 			if pe.Next != nil {
-				bufferedOutputStream.WriteString(fmt.Sprint(verticalMiddle))
+				bufferedOutputStream.WriteString(fmt.Sprint(bc.verticalMiddle))
 			} else {
-				bufferedOutputStream.WriteString(verticalEnd)
+				bufferedOutputStream.WriteString(bc.verticalEnd)
 				bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 			}
 		}
 
+		// Print last line
 		if i == len(records)-1 {
-			bufferedOutputStream.WriteString(horizontalStart)
+			bufferedOutputStream.WriteString(bc.lastRowHorizontalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
 				bufferedOutputStream.WriteString(horizontalBars[pe.Key])
 				if pe.Next != nil {
-					bufferedOutputStream.WriteString(horizontalMiddle)
+					bufferedOutputStream.WriteString(bc.lastRowHorizontalMiddle)
 				} else {
-					bufferedOutputStream.WriteString(horizontalEnd)
+					bufferedOutputStream.WriteString(bc.lastRowHorizontalEnd)
 					bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 				}
 			}
