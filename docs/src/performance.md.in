@@ -1,7 +1,5 @@
 # Performance
 
-See also the [performance-benchmarks section](new-in-miller-6.md#performance-benchmarks).
-
 ## Disclaimer
 
 In a previous version of this page, I compared Miller to some items in the Unix toolkit in terms of run time. But such comparisons are very much not apples-to-apples:
@@ -18,7 +16,38 @@ In a previous version of this page, I compared Miller to some items in the Unix 
 
 Miller can do many kinds of processing on key-value-pair data using elapsed time roughly of the same order of magnitude as items in the Unix toolkit can handle positionally indexed data. Specific results vary widely by platform, implementation details, and multi-core use (or not). Lastly, specific special-purpose non-record-aware processing will run far faster if implemented in `grep`, `sed`, etc.
 
-## Some examples
+## Performance benchmarks
+
+For performance testing, the [example.csv](https://github.com/johnkerl/miller/blob/main/docs/src/example.csv) file
+[was expanded](https://github.com/johnkerl/miller/blob/main/scripts/perf/prep-perf-data.sh) into a million-line CSV file,
+then converted to DKVP, JSON, etc.
+
+Notes:
+
+* These benchmarks were run in early 2026 on MacBook Air laptop with an M1 processor.
+* As of late 2021, Miller was benchmarked using Go compiler versions 1.15.15, 1.16.12, 1.17.5, and 1.18beta1, with no significant performance changes attributable to compiler versions.
+
+For the [first benchmark](https://github.com/johnkerl/miller/blob/main/scripts/perf/time-verbs.py), the format is CSV and the operations were varied:
+
+![perf/2026-02-22-verbs.png](perf/2026-02-22-verbs.png)
+
+For the [second benchmark](https://github.com/johnkerl/miller/blob/main/scripts/perf/time-verbs.py), we have `mlr cat` of those files, varying file types, with processing times shown. Catting out files as-is isn't a particularly useful operation in itself, but it gives an idea of how processing time depends on file format:
+
+![perf/2026-02-22-cats.png](perf/2026-02-22-cats.png)
+
+For the [third benchmark](https://github.com/johnkerl/miller/blob/main/scripts/perf/time-verbs.py), we have longer and longer then-chains: `mlr put ...`, then `mlr put ... then put ...`, etc. -- deepening the then-chain from one to four:
+
+![perf/2026-02-22-chains.png](perf/2026-02-22-chains.png)
+
+Notes:
+
+* CSV processing was particularly improved in Miller 6.
+* Record I/O was improved across the board, except that JSON continues to be a CPU-intensive format. Miller 6 JSON throughput was the same on Mac and Linux; Miller 5 did better than Miller 6 but only on Linux, not Mac.
+* Miller 6.0.0's initial issues with `sort` and JSON processing have been resolved.
+* Even single-verb processing with `put` and `stats1` was significantly faster on both platforms.
+* Longer then-chains benefit even more from Miller 6's [multicore approach](cpu.md).
+
+## Decompression options
 
 This is some data from [https://community.opencellid.org](https://community.opencellid.org): approximately 40
 million records, 1.2GB compressed, 2.9GB uncompressed:

@@ -9,7 +9,7 @@
 Run the profiler:
 
 ```
-mlr --cpuprofile cpu.pprof --csv put -f scripts/chain-1.mlr ~/tmp/big.csv > /dev/null
+mlr --cpuprofile cpu.pprof --csv put -f scripts/perf/chain-1.mlr ~/data/big.csv > /dev/null
 ```
 
 (or whatever command-line flags for Miller).
@@ -39,13 +39,12 @@ Note that you can drill into subcomponents of the flame graph:
 
 Scripts:
 
-* [./scripts/make-big-files](./scripts/make-big-files) -- Create million-record data files in various formats.
-* [./scripts/chain-cmps.sh](./scripts/chain-cmps.sh) -- Run a few processing scenarios on the million-record CSV file.
-  * [./scripts/chain-1.mlr](./scripts/chain-1.mlr) -- An example `mlr put` used by the previous script
-* [./scripts/time-big-files](./scripts/time-big-files) -- Runs `mlr cat` for million-record files of various file formats. Catting files isn't intrinsically interesting but it shows how input and output processing vary over file formats.
-  * [./scripts/time-big-file](./scripts/time-big-file) -- Helper script for the former.
-* [./scripts/chain-lengths.sh](./scripts/chain-lengths.sh) -- Run longer and longer chains of `scripts/chain1.mlr`, showing how Miller handles multicore and concurrency.
-* [./scripts/make-data-stream](./scripts/make-data-stream) -- Create an endless stream of data to be piped into Miller for steady-state load-testing: e.g. `scripts/make-data-stream | mlr ...` then look at `htop` in another window.
+* [./scripts/perf/prep-perf-data.sh](./scripts/perf/prep-perf-data.sh) -- Create million-record data files in various formats.
+* [./scripts/perf/time-verbs.py](./scripts/perf/time-verbs.py) -- Run a few processing scenarios on the million-record CSV file.
+  * One batch of cases times various Miller verbs.
+  * A second batch of cases runs `mlr cat` for million-record files of various file formats. Catting files isn't intrinsically interesting but it shows how input and output processing vary over file formats.
+  * A third batch of cases runs longer and longer chains of `scripts/perf/chain-1.mlr`, showing how Miller handles multicore and concurrency.
+* [./scripts/perf/make-data-stream](./scripts/perf/make-data-stream) -- Create an endless stream of data to be piped into Miller for steady-state load-testing: e.g. `scripts/perf/make-data-stream | mlr ...` then look at `htop` in another window.
 
 Notes:
 
@@ -55,9 +54,9 @@ Notes:
 
 # How to vary compiler versions
 
-* [./scripts/compiler-versions-install](./scripts/compiler-versions-install)
-* [./scripts/compiler-versions-build](./scripts/compiler-versions-build)
-* [./scripts/compiler-versions-time](./scripts/compiler-versions-time)
+* [./scripts/perf/compiler-versions-install](./scripts/compiler-versions-install)
+* [./scripts/perf/compiler-versions-build](./scripts/compiler-versions-build)
+* [./scripts/perf/compiler-versions-time](./scripts/compiler-versions-time)
 
 # How to control garbage collection
 

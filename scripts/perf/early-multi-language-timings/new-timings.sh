@@ -1,0 +1,9 @@
+justtime ./catc < ~/data/big > /dev/null
+justtime ./catc0 < ~/data/big > /dev/null
+justtime ./catm < ~/data/big > /dev/null
+justtime ./catrust < ~/data/big > /dev/null
+justtime ./catrust2 < ~/data/big > /dev/null
+justtime ./ff1 < ~/data/big > /dev/null
+justtime ./ff2 < ~/data/big > /dev/null
+justtime ./ff3 < ~/data/big > /dev/null
+justtime ./catgo < ~/data/big > /dev/null
