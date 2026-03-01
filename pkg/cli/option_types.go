@@ -58,6 +58,8 @@ type TReaderOptions struct {
 	BarredPprintInput    bool
 	IncrementImplicitKey bool
 
+	FixedWidthSpec string
+
 	CommentHandling TCommentHandling
 	CommentString   string
 

@@ -20,6 +20,10 @@ func NewRecordReaderPPRINT(
 	if readerOptions.BarredPprintInput {
 		// Implemented in this file
 
+		if readerOptions.FixedWidthSpec != "" {
+			return nil, fmt.Errorf("--fixed or --fw not allowed with barred input")
+		}
+
 		readerOptions.IFS = "|"
 		readerOptions.AllowRepeatIFS = false
 
@@ -36,6 +40,13 @@ func NewRecordReaderPPRINT(
 		}
 		return reader, nil
 
+	} else if readerOptions.FixedWidthSpec != "" {
+		reader := &RecordReaderPprintFixedSplit{
+			readerOptions:    readerOptions,
+			recordsPerBatch:  recordsPerBatch,
+			separatorMatcher: regexp.MustCompile(`^[-=─ ]*$`),
+		}
+		return reader, nil
 	}
 	// Use the CSVLite record-reader, which is implemented in another file,
 	// with multiple spaces instead of commas
@@ -53,6 +64,234 @@ func NewRecordReaderPPRINT(
 		reader.recordBatchGetter = getRecordBatchExplicitCSVHeader
 	}
 	return reader, nil
+}
+
+type RecordReaderPprintFixedSplit struct {
+	readerOptions   *cli.TReaderOptions
+	recordsPerBatch int64
+
+	separatorMatcher *regexp.Regexp
+	fieldSplitter    *fixedWidthSplitter
+
+	inputLineNumber int64
+	headerStrings   []string
+}
+
+func (reader *RecordReaderPprintFixedSplit) Read(
+	filenames []string,
+	context types.Context,
+	readerChannel chan<- []*types.RecordAndContext,
+	errorChannel chan error,
+	downstreamDoneChannel <-chan bool,
+) {
+	if filenames != nil {
+		if len(filenames) == 0 {
+			handle, err := lib.OpenStdin(
+				reader.readerOptions.Prepipe,
+				reader.readerOptions.PrepipeIsRaw,
+				reader.readerOptions.FileInputEncoding,
+			)
+			if err != nil {
+				errorChannel <- err
+			} else {
+				reader.processHandle(
+					handle,
+					"(stdin)",
+					&context,
+					readerChannel,
+					errorChannel,
+					downstreamDoneChannel,
+				)
+			}
+		} else {
+			for _, filename := range filenames {
+				handle, err := lib.OpenFileForRead(
+					filename,
+					reader.readerOptions.Prepipe,
+					reader.readerOptions.PrepipeIsRaw,
+					reader.readerOptions.FileInputEncoding,
+				)
+				if err != nil {
+					errorChannel <- err
+				} else {
+					reader.processHandle(
+						handle,
+						filename,
+						&context,
+						readerChannel,
+						errorChannel,
+						downstreamDoneChannel,
+					)
+					handle.Close()
+				}
+			}
+		}
+	}
+	readerChannel <- types.NewEndOfStreamMarkerList(&context)
+}
+
+func (reader *RecordReaderPprintFixedSplit) processHandle(
+	handle io.Reader,
+	filename string,
+	context *types.Context,
+	readerChannel chan<- []*types.RecordAndContext,
+	errorChannel chan error,
+	downstreamDoneChannel <-chan bool,
+) {
+	context.UpdateForStartOfFile(filename)
+	reader.inputLineNumber = 0
+	reader.headerStrings = nil
+
+	recordsPerBatch := reader.recordsPerBatch
+	lineReader := NewLineReader(handle, reader.readerOptions.IRS)
+	linesChannel := make(chan []string, recordsPerBatch)
+	go channelizedLineReader(lineReader, linesChannel, downstreamDoneChannel, recordsPerBatch)
+
+	for {
+		recordsAndContexts, eof := reader.getRecords(linesChannel, filename, context, errorChannel)
+		if len(recordsAndContexts) > 0 {
+			readerChannel <- recordsAndContexts
+		}
+		if eof {
+			break
+		}
+	}
+}
+
+func (reader *RecordReaderPprintFixedSplit) getRecords(
+	linesChannel <-chan []string,
+	filename string,
+	context *types.Context,
+	errorChannel chan error,
+) (recordsAndContexts []*types.RecordAndContext, eof bool) {
+	recordsAndContexts = []*types.RecordAndContext{}
+	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
+
+	lines, more := <-linesChannel
+	if !more {
+		return recordsAndContexts, true
+	}
+
+	for _, line := range lines {
+		reader.inputLineNumber++
+
+		if reader.readerOptions.CommentHandling != cli.CommentsAreData {
+			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
+				if reader.readerOptions.CommentHandling == cli.PassComments {
+					recordsAndContexts = append(recordsAndContexts, types.NewOutputString(line+"\n", context))
+					continue
+				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
+					continue
+				}
+			}
+		}
+
+		if line == "" {
+			reader.headerStrings = nil
+			reader.fieldSplitter = nil
+			continue
+		}
+
+		// Skip lines like
+		// ---------------------------------------
+		// =======================================
+		// ───────────────────────────────────────
+		// ----      ---------     -----
+		if reader.separatorMatcher.MatchString(line) {
+			continue
+		}
+
+		if reader.fieldSplitter == nil {
+			var err error
+			reader.fieldSplitter, err = NewFixedWidthSplitter(reader.readerOptions.FixedWidthSpec, line)
+			if err != nil {
+				errorChannel <- err
+				return
+			}
+		}
+
+		fields := reader.fieldSplitter.Split(line)
+		for i, field := range fields {
+			fields[i] = strings.TrimSpace(field)
+		}
+
+		if reader.headerStrings == nil {
+			if reader.readerOptions.UseImplicitHeader {
+				n := len(fields)
+				reader.headerStrings = make([]string, n)
+				for i := range n {
+					reader.headerStrings[i] = strconv.Itoa(i + 1)
+				}
+			} else {
+				reader.headerStrings = fields
+				continue
+			}
+		} else {
+			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
+				err := fmt.Errorf(
+					"Fixed-width header/data length mismatch %d != %d at filename %s line %d",
+					len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
+				)
+				errorChannel <- err
+				return
+			}
+		}
+
+		record := mlrval.NewMlrmapAsRecord()
+		if !reader.readerOptions.AllowRaggedCSVInput {
+			for i, field := range fields {
+				value := mlrval.FromDeferredType(field)
+				_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
+				if err != nil {
+					errorChannel <- err
+					return
+				}
+			}
+		} else {
+			nh := int64(len(reader.headerStrings))
+			nd := int64(len(fields))
+			n := lib.IntMin2(nh, nd)
+			for i := int64(0); i < n; i++ {
+				field := fields[i]
+				value := mlrval.FromDeferredType(field)
+				_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
+				if err != nil {
+					errorChannel <- err
+					return
+				}
+			}
+			if nh < nd {
+				// if header shorter than data: use 1-up itoa keys
+				for i := nh; i < nd; i++ {
+					key := strconv.FormatInt(i+1, 10)
+					value := mlrval.FromDeferredType(fields[i])
+					_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
+					if err != nil {
+						errorChannel <- err
+						return
+					}
+				}
+			}
+			if nh > nd {
+				for i := nd; i < nh; i++ {
+					_, err := record.PutReferenceMaybeDedupe(
+						reader.headerStrings[i],
+						mlrval.VOID.Copy(),
+						dedupeFieldNames,
+					)
+					if err != nil {
+						errorChannel <- err
+						return
+					}
+				}
+			}
+		}
+
+		context.UpdateForInputRecord()
+		recordsAndContexts = append(recordsAndContexts, types.NewRecordAndContext(record, context))
+	}
+
+	return recordsAndContexts, false
 }
 
 type RecordReaderPprintBarredOrMarkdown struct {

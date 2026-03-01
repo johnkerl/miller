@@ -559,6 +559,26 @@ var PPRINTOnlyFlagSection = FlagSection{
 				*pargi += 1
 			},
 		},
+
+		{
+			name: "--fixed",
+			arg:  "{string}",
+			help: "Fixed width specification. One of 'widths:<col1-width>,<col2-width>,...', left-align, left-align-multi-word, right-align, right-align-multi-word",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.FixedWidthSpec = args[*pargi+1]
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--fw",
+			arg:  "{string}",
+			help: "Shortcut for --fixed left-align-multi-word",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.FixedWidthSpec = "left-align-multi-word"
+				*pargi += 1
+			},
+		},
 	},
 }
 
