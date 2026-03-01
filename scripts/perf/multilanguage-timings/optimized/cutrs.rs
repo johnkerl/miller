@@ -5,6 +5,11 @@ use std::collections::HashMap;
 use std::env;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader, Read, Write};
+use std::sync::mpsc;
+use std::sync::Arc;
+use std::thread;
+
+const PIPELINE_CAP: usize = 64;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -34,7 +39,7 @@ fn main() {
 }
 
 fn handle(file_name: &str, step: u32, include_fields: &[&str]) -> bool {
-    let input: Box<dyn Read> = if file_name == "-" {
+    let input: Box<dyn Read + Send> = if file_name == "-" {
         Box::new(io::stdin())
     } else {
         match File::open(file_name) {
@@ -46,80 +51,106 @@ fn handle(file_name: &str, step: u32, include_fields: &[&str]) -> bool {
         }
     };
 
+    let (read_tx, read_rx) = mpsc::sync_channel::<(usize, String)>(PIPELINE_CAP);
+    let (write_tx, write_rx) = mpsc::sync_channel::<(usize, String)>(PIPELINE_CAP);
+    let (err_tx, err_rx) = mpsc::sync_channel::<std::io::Error>(1);
+    let err_tx = Arc::new(err_tx);
+
     const READ_BUF_SIZE: usize = 256 * 1024;
-    let mut reader = BufReader::with_capacity(READ_BUF_SIZE, input);
-    let mut line = String::new();
+    let reader = BufReader::with_capacity(READ_BUF_SIZE, input);
 
-    let mut mymap: HashMap<String, String> = HashMap::new();
-    let mut newmap: HashMap<String, String> = HashMap::with_capacity(include_fields.len());
-    let mut out = String::new();
-
-    loop {
-        line.clear();
-        let n = match reader.read_line(&mut line) {
-            Ok(0) => break,
-            Ok(n) => n,
-            Err(e) => {
-                eprintln!("{}", e);
-                return false;
-            }
-        };
-        if n > 0 && !line.ends_with('\n') {
-            // EOF without newline; line still has content
-        }
-
-        if step <= 1 {
-            continue;
-        }
-
-        // Step 2: line to map (reuse mymap)
-        mymap.clear();
-        for field in line.trim_end_matches('\n').split(',') {
-            let mut kvps = field.splitn(2, '=');
-            if let (Some(k), Some(v)) = (kvps.next(), kvps.next()) {
-                mymap.insert(k.to_string(), v.to_string());
-            }
-        }
-        if step <= 2 {
-            continue;
-        }
-
-        // Step 3: map-to-map transform (reuse newmap; order from include_fields)
-        newmap.clear();
-        for &k in include_fields {
-            if let Some(v) = mymap.get(k) {
-                newmap.insert(k.to_string(), v.clone());
-            }
-        }
-        if step <= 3 {
-            continue;
-        }
-
-        // Step 4–5: map to string + newline (iterate include_fields to preserve order)
-        out.clear();
-        let mut first = true;
-        for &k in include_fields {
-            if let Some(v) = newmap.get(k) {
-                if !first {
-                    out.push(',');
+    let err_tx_reader = Arc::clone(&err_tx);
+    let h_reader = thread::spawn(move || {
+        let mut reader = reader;
+        let mut line = String::new();
+        let mut index = 0;
+        loop {
+            line.clear();
+            match reader.read_line(&mut line) {
+                Ok(0) => break,
+                Ok(_) => {}
+                Err(e) => {
+                    let _ = err_tx_reader.send(e);
+                    break;
                 }
-                out.push_str(k);
-                out.push('=');
-                out.push_str(v);
-                first = false;
+            }
+            if read_tx.send((index, line.clone())).is_err() {
+                break;
+            }
+            index += 1;
+        }
+        drop(read_tx);
+    });
+
+    let inc: Vec<String> = include_fields.iter().map(|s| s.to_string()).collect();
+    let h_processor = thread::spawn(move || {
+        let mut mymap: HashMap<String, String> = HashMap::new();
+        let mut newmap: HashMap<String, String> = HashMap::with_capacity(inc.len());
+        let mut out = String::new();
+        while let Ok((idx, line)) = read_rx.recv() {
+            if step <= 1 {
+                continue;
+            }
+            mymap.clear();
+            for field in line.trim_end_matches('\n').split(',') {
+                let mut kvps = field.splitn(2, '=');
+                if let (Some(k), Some(v)) = (kvps.next(), kvps.next()) {
+                    mymap.insert(k.to_string(), v.to_string());
+                }
+            }
+            if step <= 2 {
+                continue;
+            }
+            newmap.clear();
+            for k in &inc {
+                if let Some(v) = mymap.get(k) {
+                    newmap.insert(k.clone(), v.clone());
+                }
+            }
+            if step <= 3 {
+                continue;
+            }
+            out.clear();
+            let mut first = true;
+            for k in &inc {
+                if let Some(v) = newmap.get(k) {
+                    if !first {
+                        out.push(',');
+                    }
+                    out.push_str(k);
+                    out.push('=');
+                    out.push_str(v);
+                    first = false;
+                }
+            }
+            out.push('\n');
+            if step <= 5 {
+                continue;
+            }
+            if write_tx.send((idx, out.clone())).is_err() {
+                break;
             }
         }
-        out.push('\n');
-        if step <= 5 {
-            continue;
-        }
+        drop(write_tx);
+    });
 
-        // Step 6: write to stdout
-        if let Err(e) = io::stdout().write_all(out.as_bytes()) {
-            eprintln!("{}", e);
-            return false;
+    let err_tx_writer = Arc::clone(&err_tx);
+    let h_writer = thread::spawn(move || {
+        for (_, out) in write_rx {
+            if let Err(e) = io::stdout().write_all(out.as_bytes()) {
+                let _ = err_tx_writer.send(e);
+                return;
+            }
         }
+    });
+
+    let _ = h_reader.join();
+    let _ = h_processor.join();
+    let _ = h_writer.join();
+
+    if let Ok(e) = err_rx.try_recv() {
+        eprintln!("{}", e);
+        return false;
     }
-
     true
 }

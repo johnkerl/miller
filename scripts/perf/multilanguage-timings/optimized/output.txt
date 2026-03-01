@@ -1,0 +1,26 @@
+$ ./run-cut-benchmark.sh 6 color,shape ~/data/small.dkvp
+Cut benchmark: step=6 fields=color,shape files=/Users/kerl/data/small.dkvp (N=5)
+---
+./cutgo   .1663 s (mean of 5 runs)
+./cutcpp  .1657 s (mean of 5 runs)
+./cutnim  .1682 s (mean of 5 runs)
+./cutrs   .1657 s (mean of 5 runs)
+./cutzig  .2239 s (mean of 5 runs)
+
+$ ./run-cut-benchmark.sh 6 color,shape ~/data/medium.dkvp
+Cut benchmark: step=6 fields=color,shape files=/Users/kerl/data/medium.dkvp (N=5)
+---
+./cutgo   .1782 s (mean of 5 runs)
+./cutcpp  .2021 s (mean of 5 runs)
+./cutnim  .2116 s (mean of 5 runs)
+./cutrs   .1824 s (mean of 5 runs)
+./cutzig  .7551 s (mean of 5 runs)
+
+$ ./run-cut-benchmark.sh 6 color,shape ~/data/big.dkvp
+Cut benchmark: step=6 fields=color,shape files=/Users/kerl/data/big.dkvp (N=5)
+---
+./cutgo   1.7837 s (mean of 5 runs)
+./cutcpp  4.0104 s (mean of 5 runs)
+./cutnim  4.7630 s (mean of 5 runs)
+./cutrs   1.9678 s (mean of 5 runs)
+./cutzig  64.1099 s (mean of 5 runs)
