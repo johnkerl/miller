@@ -21,6 +21,26 @@ fn handle(
     var line_buf = try std.ArrayList(u8).initCapacity(allocator, 4096);
     defer line_buf.deinit(allocator);
 
+    var mymap = std.StringHashMap([]const u8).init(allocator);
+    defer {
+        var it = mymap.iterator();
+        while (it.next()) |e| {
+            allocator.free(e.key_ptr.*);
+            allocator.free(e.value_ptr.*);
+        }
+        mymap.deinit();
+    }
+    var newmap = std.StringHashMap([]const u8).init(allocator);
+    defer {
+        var it = newmap.iterator();
+        while (it.next()) |e| {
+            allocator.free(e.value_ptr.*);
+        }
+        newmap.deinit();
+    }
+    var out = try std.ArrayList(u8).initCapacity(allocator, 256);
+    defer out.deinit(allocator);
+
     while (true) {
         const n = file.read(&buf) catch |err| {
             std.debug.print("read: {}\n", .{err});
@@ -36,15 +56,14 @@ fn handle(
 
                 if (step <= 1) continue;
 
-                // Step 2: line to map
-                var mymap = std.StringHashMap([]const u8).init(allocator);
-                defer {
+                // Step 2: line to map (reuse mymap)
+                {
                     var it = mymap.iterator();
                     while (it.next()) |e| {
                         allocator.free(e.key_ptr.*);
                         allocator.free(e.value_ptr.*);
                     }
-                    mymap.deinit();
+                    mymap.clearRetainingCapacity();
                 }
                 var iter = std.mem.splitScalar(u8, line, ',');
                 while (iter.next()) |field| {
@@ -66,14 +85,13 @@ fn handle(
                 }
                 if (step <= 2) continue;
 
-                // Step 3: map-to-map transform (output in include_fields order)
-                var newmap = std.StringHashMap([]const u8).init(allocator);
-                defer {
+                // Step 3: map-to-map transform (reuse newmap; output in include_fields order)
+                {
                     var it = newmap.iterator();
                     while (it.next()) |e| {
                         allocator.free(e.value_ptr.*);
                     }
-                    newmap.deinit();
+                    newmap.clearRetainingCapacity();
                 }
                 for (include_fields) |inc_k| {
                     if (mymap.get(inc_k)) |val| {
@@ -83,9 +101,8 @@ fn handle(
                 }
                 if (step <= 3) continue;
 
-                // Step 4-5: map to string + newline
-                var out = try std.ArrayList(u8).initCapacity(allocator, 256);
-                defer out.deinit(allocator);
+                // Step 4-5: map to string + newline (reuse out)
+                out.clearRetainingCapacity();
                 var first = true;
                 for (include_fields) |k| {
                     if (newmap.get(k)) |v| {
