@@ -14,11 +14,12 @@ type fixedWidthSplitter struct {
 // NewFixedWidthSplitter creates a new fixed-width field splitter based on the spec.
 //
 // The spec parameter supports these formats:
-//  widths:w1,w2,w3...     : Split by explicit widths for each column. Omit last one for variable width ending (e.g., 4,4,5)
-//  left-align             : Parse header with left-aligned fields
-//  left-align-multi-word  : Parse header with multi-word support
-//  right-align            : Parse header with right-aligned fields
-//  right-align-multi-word : Parse header with right-aligned fields and multi-word support
+//
+//	widths:w1,w2,w3...     : Split by explicit widths for each column. Omit last one for variable width ending (e.g., 4,4,5)
+//	left-align             : Parse header with left-aligned fields
+//	left-align-multi-word  : Parse header with multi-word support
+//	right-align            : Parse header with right-aligned fields
+//	right-align-multi-word : Parse header with right-aligned fields and multi-word support
 //
 // For mult-word cases, the column headers can be made up of multiple words
 // e.g. "Seq No". Adjacent columns should be seperated by at least two spaces
