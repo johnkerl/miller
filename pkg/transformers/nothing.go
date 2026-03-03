@@ -55,7 +55,6 @@ func transformerNothingParseCLI(
 			return nil, cli.ErrHelpRequested
 		} else {
 			transformerNothingUsage(os.Stderr)
-			//lint:ignore SA4004 loop is intentionally structured this way
 			return nil, fmt.Errorf("%s %s: option \"%s\" not recognized", "mlr", verbNameNothing, opt)
 		}
 	}

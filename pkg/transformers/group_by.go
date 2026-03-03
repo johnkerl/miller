@@ -55,7 +55,6 @@ func transformerGroupByParseCLI(
 			return nil, cli.ErrHelpRequested
 
 		} else {
-			//lint:ignore SA4004 loop is intentionally structured this way
 			return nil, cli.VerbErrorf(verbNameGroupBy, "option \"%s\" not recognized", opt)
 		}
 	}

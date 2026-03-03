@@ -77,7 +77,7 @@ fmt format:
 # Needs first: go install honnef.co/go/tools/cmd/staticcheck@latest
 # See also: https://staticcheck.io
 staticcheck:
-	staticcheck ./...
+	staticcheck ./pkg/... ./cmd/mlr/...
 
 # ----------------------------------------------------------------
 # For developers before pushing to GitHub.

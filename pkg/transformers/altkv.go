@@ -54,10 +54,10 @@ func transformerAltkvParseCLI(
 		if opt == "-h" || opt == "--help" {
 			transformerAltkvUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
+		} else {
+			transformerAltkvUsage(os.Stderr)
+			return nil, fmt.Errorf("%s %s: option \"%s\" not recognized", "mlr", verbNameAltkv, opt)
 		}
-		transformerAltkvUsage(os.Stderr)
-		//lint:ignore SA4004 loop is intentionally structured this way
-		return nil, fmt.Errorf("%s %s: option \"%s\" not recognized", "mlr", verbNameAltkv, opt)
 	}
 
 	*pargi = argi
