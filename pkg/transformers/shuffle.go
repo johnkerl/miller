@@ -58,7 +58,7 @@ func transformerShuffleParseCLI(
 			return nil, cli.ErrHelpRequested
 
 		} else {
-			//nolint:SA4004
+			//lint:ignore SA4004 loop is intentionally structured this way
 			return nil, cli.VerbErrorf(verbNameShuffle, "option \"%s\" not recognized", opt)
 		}
 	}
