@@ -34,8 +34,8 @@ type Reader struct {
 
 	r *bufio.Reader
 
-	numLine int
-	offset  int64
+	numLine   int
+	offset    int64
 	rawBuffer []byte
 }
 

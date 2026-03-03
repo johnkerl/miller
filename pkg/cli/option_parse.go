@@ -1220,8 +1220,8 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name:     "--dkvpx",
-			help:     "Use DKVPX format for input and output data.",
+			name: "--dkvpx",
+			help: "Use DKVPX format for input and output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvpx"
 				options.WriterOptions.OutputFileFormat = "dkvpx"
