@@ -57,6 +57,7 @@ func transformerUTF8ToLatin1ParseCLI(
 			return nil, cli.ErrHelpRequested
 
 		} else {
+			//lint:ignore SA4004 loop is intentionally structured this way
 			return nil, cli.VerbErrorf(verbNameUTF8ToLatin1, "option \"%s\" not recognized", opt)
 		}
 	}
