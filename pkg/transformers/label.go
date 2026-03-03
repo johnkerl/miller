@@ -59,6 +59,7 @@ func transformerLabelParseCLI(
 			return nil, cli.ErrHelpRequested
 
 		} else {
+			//nolint:SA4004
 			return nil, cli.VerbErrorf(verbNameLabel, "option \"%s\" not recognized", opt)
 		}
 	}

@@ -57,6 +57,7 @@ func transformerUTF8ToLatin1ParseCLI(
 			return nil, cli.ErrHelpRequested
 
 		} else {
+			//nolint:SA4004
 			return nil, cli.VerbErrorf(verbNameUTF8ToLatin1, "option \"%s\" not recognized", opt)
 		}
 	}

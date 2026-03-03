@@ -55,6 +55,7 @@ func transformerRemoveEmptyColumnsParseCLI(
 			return nil, cli.ErrHelpRequested
 
 		} else {
+			//nolint:SA4004
 			return nil, cli.VerbErrorf(verbNameRemoveEmptyColumns, "option \"%s\" not recognized", opt)
 		}
 	}

@@ -56,6 +56,7 @@ func transformerAltkvParseCLI(
 			return nil, cli.ErrHelpRequested
 		}
 		transformerAltkvUsage(os.Stderr)
+		//nolint:SA4004
 		return nil, fmt.Errorf("%s %s: option \"%s\" not recognized", "mlr", verbNameAltkv, opt)
 	}
 

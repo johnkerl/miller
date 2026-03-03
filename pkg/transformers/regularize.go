@@ -56,6 +56,7 @@ func transformerRegularizeParseCLI(
 			return nil, cli.ErrHelpRequested
 
 		} else {
+			//nolint:SA4004
 			return nil, cli.VerbErrorf(verbNameRegularize, "option \"%s\" not recognized", opt)
 		}
 	}

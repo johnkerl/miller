@@ -58,6 +58,7 @@ func transformerSec2GMTDateParseCLI(
 			return nil, cli.ErrHelpRequested
 
 		} else {
+			//nolint:SA4004
 			return nil, cli.VerbErrorf(verbNameSec2GMTDate, "option \"%s\" not recognized", opt)
 		}
 	}

@@ -55,6 +55,7 @@ func transformerGroupByParseCLI(
 			return nil, cli.ErrHelpRequested
 
 		} else {
+			//nolint:SA4004
 			return nil, cli.VerbErrorf(verbNameGroupBy, "option \"%s\" not recognized", opt)
 		}
 	}

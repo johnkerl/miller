@@ -58,6 +58,7 @@ func transformerShuffleParseCLI(
 			return nil, cli.ErrHelpRequested
 
 		} else {
+			//nolint:SA4004
 			return nil, cli.VerbErrorf(verbNameShuffle, "option \"%s\" not recognized", opt)
 		}
 	}

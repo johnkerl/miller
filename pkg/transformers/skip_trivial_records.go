@@ -55,6 +55,7 @@ func transformerSkipTrivialRecordsParseCLI(
 			return nil, cli.ErrHelpRequested
 
 		} else {
+			//nolint:SA4004
 			return nil, cli.VerbErrorf(verbNameSkipTrivialRecords, "option \"%s\" not recognized", opt)
 		}
 	}

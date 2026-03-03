@@ -59,6 +59,7 @@ func transformerCheckParseCLI(
 			return nil, cli.ErrHelpRequested
 
 		} else {
+			//nolint:SA4004
 			return nil, cli.VerbErrorf(verbNameCheck, "option \"%s\" not recognized", opt)
 		}
 	}

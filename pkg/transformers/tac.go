@@ -54,6 +54,7 @@ func transformerTacParseCLI(
 			return nil, cli.ErrHelpRequested
 
 		} else {
+			//nolint:SA4004
 			return nil, cli.VerbErrorf(verbNameTac, "option \"%s\" not recognized", opt)
 		}
 	}

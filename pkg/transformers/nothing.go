@@ -55,6 +55,7 @@ func transformerNothingParseCLI(
 			return nil, cli.ErrHelpRequested
 		} else {
 			transformerNothingUsage(os.Stderr)
+			//nolint:SA4004
 			return nil, fmt.Errorf("%s %s: option \"%s\" not recognized", "mlr", verbNameNothing, opt)
 		}
 	}
