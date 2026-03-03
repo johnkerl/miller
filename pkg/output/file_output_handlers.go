@@ -69,7 +69,7 @@ type MultiOutputHandlerManager struct {
 	lruNodes         map[string]*lruNode // filename -> node (file mode only)
 	lruHead          *lruNode            // MRU
 	lruTail          *lruNode            // LRU
-	evictedFilenames map[string]bool    // filenames we closed; re-open with append
+	evictedFilenames map[string]bool     // filenames we closed; re-open with append
 }
 
 func NewFileOutputHandlerManager(
