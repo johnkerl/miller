@@ -17,11 +17,17 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sync"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
+
+// Maximum number of file handlers to keep open when writing to many files
+// (e.g. mlr split -g field). Evicted handlers are closed; re-opened in append
+// mode when needed again. Prevents "too many open files" (issue #1105).
+const lruFileHandlerCapacity = 256
 
 type OutputHandlerManager interface {
 
@@ -40,6 +46,13 @@ type OutputHandler interface {
 	Close() error
 }
 
+type lruNode struct {
+	key     string
+	handler *FileOutputHandler
+	prev    *lruNode
+	next    *lruNode
+}
+
 type MultiOutputHandlerManager struct {
 	outputHandlers map[string]OutputHandler
 
@@ -50,6 +63,13 @@ type MultiOutputHandlerManager struct {
 	append              bool // True for ">>", false for ">" and "|"
 	pipe                bool // True for "|", false for ">" and ">>"
 	recordWriterOptions *cli.TWriterOptions
+
+	// LRU cache for file handlers: limit open FDs, re-open evicted files in append mode
+	mu               sync.Mutex
+	lruNodes         map[string]*lruNode // filename -> node (file mode only)
+	lruHead          *lruNode            // MRU
+	lruTail          *lruNode            // LRU
+	evictedFilenames map[string]bool    // filenames we closed; re-open with append
 }
 
 func NewFileOutputHandlerManager(
@@ -71,6 +91,8 @@ func NewFileWritetHandlerManager(
 		append:              false,
 		pipe:                false,
 		recordWriterOptions: recordWriterOptions,
+		lruNodes:            make(map[string]*lruNode),
+		evictedFilenames:    make(map[string]bool),
 	}
 }
 
@@ -83,6 +105,8 @@ func NewFileAppendHandlerManager(
 		append:              true,
 		pipe:                false,
 		recordWriterOptions: recordWriterOptions,
+		lruNodes:            make(map[string]*lruNode),
+		evictedFilenames:    make(map[string]bool),
 	}
 }
 
@@ -151,32 +175,99 @@ func (mgr *MultiOutputHandlerManager) getOutputHandlerFor(
 		return mgr.singleHandler, nil
 	}
 
-	// TODO: LRU with close and re-open in case too many files are open
-	outputHandler := mgr.outputHandlers[filename]
-	if outputHandler == nil {
-		var err error
-		if mgr.pipe {
-			outputHandler, err = NewPipeWriteOutputHandler(
-				filename,
-				mgr.recordWriterOptions,
-			)
-		} else if mgr.append {
-			outputHandler, err = NewFileAppendOutputHandler(
-				filename,
-				mgr.recordWriterOptions,
-			)
-		} else {
-			outputHandler, err = NewFileWriteOutputHandler(
-				filename,
-				mgr.recordWriterOptions,
-			)
+	mgr.mu.Lock()
+
+	// Pipe mode: no LRU (pipes cannot be re-opened)
+	if mgr.pipe {
+		outputHandler := mgr.outputHandlers[filename]
+		if outputHandler == nil {
+			var err error
+			outputHandler, err = NewPipeWriteOutputHandler(filename, mgr.recordWriterOptions)
+			if err != nil {
+				mgr.mu.Unlock()
+				return nil, err
+			}
+			mgr.outputHandlers[filename] = outputHandler
 		}
-		if err != nil {
-			return nil, err
-		}
-		mgr.outputHandlers[filename] = outputHandler
+		mgr.mu.Unlock()
+		return outputHandler, nil
 	}
-	return outputHandler, nil
+
+	// File mode: LRU cache with eviction and append-mode re-open
+	node := mgr.lruNodes[filename]
+	if node != nil {
+		mgr.lruTouch(node)
+		mgr.mu.Unlock()
+		return node.handler, nil
+	}
+
+	// Cache miss: evict LRU if at capacity
+	if len(mgr.lruNodes) >= lruFileHandlerCapacity && mgr.lruTail != nil {
+		tail := mgr.lruTail
+		mgr.lruRemove(tail)
+		mgr.evictedFilenames[tail.key] = true
+		handlerToClose := tail.handler
+		mgr.mu.Unlock()
+		_ = handlerToClose.Close() // may block on channel drain
+		mgr.mu.Lock()
+	}
+
+	// Create new handler: use append if re-opening after eviction
+	useAppend := mgr.append || mgr.evictedFilenames[filename]
+	if mgr.evictedFilenames[filename] {
+		delete(mgr.evictedFilenames, filename)
+	}
+
+	var handler *FileOutputHandler
+	var err error
+	if useAppend {
+		handler, err = NewFileAppendOutputHandler(filename, mgr.recordWriterOptions)
+	} else {
+		handler, err = NewFileWriteOutputHandler(filename, mgr.recordWriterOptions)
+	}
+	if err != nil {
+		mgr.mu.Unlock()
+		return nil, err
+	}
+
+	node = &lruNode{key: filename, handler: handler}
+	mgr.lruInsert(node)
+	mgr.mu.Unlock()
+	return handler, nil
+}
+
+func (mgr *MultiOutputHandlerManager) lruTouch(node *lruNode) {
+	if mgr.lruHead == node {
+		return
+	}
+	mgr.lruRemove(node)
+	mgr.lruInsert(node)
+}
+
+func (mgr *MultiOutputHandlerManager) lruRemove(node *lruNode) {
+	if node.prev != nil {
+		node.prev.next = node.next
+	} else {
+		mgr.lruHead = node.next
+	}
+	if node.next != nil {
+		node.next.prev = node.prev
+	} else {
+		mgr.lruTail = node.prev
+	}
+	delete(mgr.lruNodes, node.key)
+}
+
+func (mgr *MultiOutputHandlerManager) lruInsert(node *lruNode) {
+	mgr.lruNodes[node.key] = node
+	node.prev = nil
+	node.next = mgr.lruHead
+	if mgr.lruHead != nil {
+		mgr.lruHead.prev = node
+	} else {
+		mgr.lruTail = node
+	}
+	mgr.lruHead = node
 }
 
 func (mgr *MultiOutputHandlerManager) Close() []error {
@@ -187,7 +278,19 @@ func (mgr *MultiOutputHandlerManager) Close() []error {
 			errs = append(errs, err)
 		}
 	}
-	for _, outputHandler := range mgr.outputHandlers {
+	mgr.mu.Lock()
+	handlersToClose := make([]OutputHandler, 0, len(mgr.outputHandlers)+len(mgr.lruNodes))
+	for _, oh := range mgr.outputHandlers {
+		handlersToClose = append(handlersToClose, oh)
+	}
+	for _, node := range mgr.lruNodes {
+		handlersToClose = append(handlersToClose, node.handler)
+	}
+	mgr.outputHandlers = make(map[string]OutputHandler)
+	mgr.lruNodes = make(map[string]*lruNode)
+	mgr.lruHead, mgr.lruTail = nil, nil
+	mgr.mu.Unlock()
+	for _, outputHandler := range handlersToClose {
 		err := outputHandler.Close()
 		if err != nil {
 			errs = append(errs, err)
