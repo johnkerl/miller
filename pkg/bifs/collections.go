@@ -222,6 +222,8 @@ func BIF_mapselect(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 			for _, element := range selectArg.AcquireArrayValue() {
 				if element.IsString() {
 					newKeys[element.AcquireStringValue()] = true
+				} else if element.IsInt() {
+					newKeys[element.String()] = true
 				} else {
 					return mlrval.FromNotStringError("mapselect", element)
 				}
@@ -260,8 +262,10 @@ func BIF_mapexcept(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 			for _, element := range exceptArg.AcquireArrayValue() {
 				if element.IsString() {
 					newMap.Remove(element.AcquireStringValue())
+				} else if element.IsInt() {
+					newMap.Remove(element.String())
 				} else {
-					return mlrval.FromNotStringError("mapselect", element)
+					return mlrval.FromNotStringError("mapexcept", element)
 				}
 			}
 		} else {
