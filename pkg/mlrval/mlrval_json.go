@@ -27,7 +27,7 @@ const (
 	JSON_MULTILINE   = 2
 )
 
-var prematureEofError error = errors.New("JSON parser: unexpected premature EOF")
+var errPrematureEOF = errors.New("JSON parser: unexpected premature EOF")
 
 // The JSON decoder (https://golang.org/pkg/encoding/json/#Decoder) is quite
 // nice. What we can have is:
@@ -192,7 +192,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 			for decoder.More() {
 				element, eof, err := MlrvalDecodeFromJSON(decoder)
 				if eof {
-					return nil, false, prematureEofError
+					return nil, false, errPrematureEOF
 				}
 				if err != nil {
 					return nil, false, err
@@ -205,7 +205,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 			for decoder.More() {
 				key, eof, err := MlrvalDecodeFromJSON(decoder)
 				if eof {
-					return nil, false, prematureEofError
+					return nil, false, errPrematureEOF
 				}
 				if err != nil {
 					return nil, false, err
@@ -219,7 +219,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 
 				value, eof, err := MlrvalDecodeFromJSON(decoder)
 				if eof {
-					return nil, false, prematureEofError
+					return nil, false, errPrematureEOF
 				}
 				if err != nil {
 					return nil, false, err
@@ -296,7 +296,7 @@ func (mv *Mlrval) marshalJSONAux(
 	case MT_DIM: // MT_DIM is one past the last valid type
 		return "", fmt.Errorf("internal coding error detected")
 	}
-	return "", fmt.Errorf("Internal coding error detected")
+	return "", fmt.Errorf("internal coding error detected")
 }
 
 // TYPE-SPECIFIC MARSHALERS

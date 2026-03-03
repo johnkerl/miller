@@ -52,7 +52,7 @@ func dcfValueString(mv *mlrval.Mlrval) string {
 	}
 	if mv.IsArray() {
 		arr := mv.GetArray()
-		if arr == nil || len(arr) == 0 {
+		if len(arr) == 0 {
 			return ""
 		}
 		parts := make([]string, 0, len(arr))
