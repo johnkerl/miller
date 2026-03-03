@@ -14,6 +14,8 @@ func Create(readerOptions *cli.TReaderOptions, recordsPerBatch int64) (IRecordRe
 		return NewRecordReaderCSVLite(readerOptions, recordsPerBatch)
 	case "dkvp":
 		return NewRecordReaderDKVP(readerOptions, recordsPerBatch)
+	case "dkvpx":
+		return NewRecordReaderDKVPX(readerOptions, recordsPerBatch)
 	case "json":
 		return NewRecordReaderJSON(readerOptions, recordsPerBatch)
 	case "yaml":
