@@ -157,6 +157,7 @@ are overridden in all cases by setting output format to `format2`.
 * `--csvlite`: Use CSV-lite format for input and output data.
 * `--dcf`: Use Debian control file (DCF) format for input and output data.
 * `--dkvp or --d2d`: Use DKVP format for input and output data.
+* `--dkvpx`: Use DKVPX format for input and output data.
 * `--gen-field-name`: Specify field name for --igen. Defaults to "i".
 * `--gen-start`: Specify start value for --igen. Defaults to 1.
 * `--gen-step`: Specify step value for --igen. Defaults to 1.
@@ -398,6 +399,8 @@ These are flags which are applicable to PPRINT format.
 * `--barred or --barred-output`: Prints a border around PPRINT output.
 * `--barred-input`: When used in conjunction with --pprint, accepts barred input.
 * `--barred-unicode`: Uses unicode printing chars for barred output
+* `--fixed {string}`: Fixed width specification. One of 'widths:<col1-width>,<col2-width>,...', left-align, left-align-multi-word, right-align, right-align-multi-word
+* `--fw {string}`: Shortcut for --fixed left-align-multi-word
 * `--right`: Right-justifies all fields for PPRINT output.
 
 ## Profiling flags
@@ -500,6 +503,7 @@ Notes about all other separators:
         csvlite  ","    N/A    "\n"
         dcf      N/A    N/A    N/A
         dkvp     ","    "="    "\n"
+        dkvpx    ","    "="    "\n"
         gen      ","    N/A    "\n"
         json     N/A    N/A    N/A
         markdown " "    N/A    "\n"

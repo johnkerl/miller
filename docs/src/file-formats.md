@@ -103,6 +103,12 @@ DKVP: delimited key-value pairs (Miller default format)
 | dish=7,egg=8,flint  | Record 2: "dish":"7", "egg":"8", "3":"flint"
 +---------------------+
 
+DKVPX: delimited key-value pairs with CSV-style quoting
++----------------------------------+
+| apple=1,bat=2,cog=3              | Record 1: "apple":"1", "bat":"2", "cog":"3"
+| "x,y"="a,b,c",z=3                | Record 2: "x,y":"a,b,c", "z":"3"
++----------------------------------+
+
 NIDX: implicitly numerically indexed (Unix-toolkit style)
 +---------------------+
 | the quick brown     | Record 1: "1":"the", "2":"quick", "3":"brown"
@@ -660,6 +666,12 @@ resource=/some/other/path,loadsec=0.97,ok=false
 etc., and I log them as needed. Then later, I can use `grep`, `mlr --opprint group-like`, etc. to analyze my logs.
 
 See the [separators page](reference-main-separators.md) regarding how to specify separators other than the default equals sign and comma.
+
+## DKVPX: Key-value pairs with CSV-style quoting
+
+DKVPX is like DKVP but with CSV-style double-quote handling. Keys and values that contain comma, equals, newline, or double-quote are quoted as needed; unquoted keys and values work as in DKVP. Examples: `x=1,y=2,z=3` and `"x,y"="a,b,c",z=3`. Use the `--dkvpx` flag for input and output. See the [separators page](reference-main-separators.md) for IFS/IPS. For simpler data without special characters, use [DKVP](#dkvp-key-value-pairs) instead.
+
+The default is DKVP, not DKVPX, since performance tests show DKVP is approximately 30% faster for cases when quoting is not necessary.
 
 ## NIDX: Index-numbered (toolkit style)
 

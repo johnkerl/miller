@@ -154,6 +154,10 @@ of the form `x=1,y=2,z=3`.  For historical reasons, this is Miller's default
 format unless [flags](reference-main-flag-list.md) such as `--csv` are
 supplied.  You can also make CSV your default format using a [.mlrrc file](customization.md).
 
+## DKVPX
+
+Miller [file format](file-formats.md#dkvpx-key-value-pairs-with-csv-style-quoting) for delimited key-value pairs with CSV-style quoting. An extension of [DKVP](#dkvp) where keys and values may contain commas, equals, newlines, and quotes via double-quote escaping. Use the `--dkvpx` [flag](reference-main-flag-list.md).
+
 ## do
 
 A [keyword](#keyword) which is used to indicate the start of a [do-while loop](reference-dsl-control-structures.md)

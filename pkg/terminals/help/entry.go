@@ -430,6 +430,12 @@ DKVP: delimited key-value pairs (Miller default format)
 | dish=7,egg=8,flint  | Record 2: "dish":"7", "egg":"8", "3":"flint"
 +---------------------+
 
+DKVPX: delimited key-value pairs with CSV-style quoting
++----------------------------------+
+| apple=1,bat=2,cog=3              | Record 1: "apple":"1", "bat":"2", "cog":"3"
+| "x,y"="a,b,c",z=3                | Record 2: "x,y":"a,b,c", "z":"3"
++----------------------------------+
+
 NIDX: implicitly numerically indexed (Unix-toolkit style)
 +---------------------+
 | the quick brown     | Record 1: "1":"the", "2":"quick", "3":"brown"

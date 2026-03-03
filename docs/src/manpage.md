@@ -135,6 +135,12 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        | dish=7,egg=8,flint  | Record 2: "dish":"7", "egg":"8", "3":"flint"
        +---------------------+
 
+       DKVPX: delimited key-value pairs with CSV-style quoting
+       +----------------------------------+
+       | apple=1,bat=2,cog=3              | Record 1: "apple":"1", "bat":"2", "cog":"3"
+       | "x,y"="a,b,c",z=3                | Record 2: "x,y":"a,b,c", "z":"3"
+       +----------------------------------+
+
        NIDX: implicitly numerically indexed (Unix-toolkit style)
        +---------------------+
        | the quick brown     | Record 1: "1":"the", "2":"quick", "3":"brown"
@@ -407,6 +413,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        --dcf                    Use Debian control file (DCF) format for input and
                                 output data.
        --dkvp or --d2d          Use DKVP format for input and output data.
+       --dkvpx                  Use DKVPX format for input and output data.
        --gen-field-name         Specify field name for --igen. Defaults to "i".
        --gen-start              Specify start value for --igen. Defaults to 1.
        --gen-step               Specify step value for --igen. Defaults to 1.
@@ -750,6 +757,11 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        --barred-input           When used in conjunction with --pprint, accepts
                                 barred input.
        --barred-unicode         Uses unicode printing chars for barred output
+       --fixed {string}         Fixed width specification. One of
+                                'widths:&lt;col1-width&gt;,&lt;col2-width&gt;,...', left-align,
+                                left-align-multi-word, right-align,
+                                right-align-multi-word
+       --fw {string}            Shortcut for --fixed left-align-multi-word
        --right                  Right-justifies all fields for PPRINT output.
 
 1mPROFILING FLAGS0m
@@ -855,6 +867,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                csvlite  ","    N/A    "\n"
                dcf      N/A    N/A    N/A
                dkvp     ","    "="    "\n"
+               dkvpx    ","    "="    "\n"
                gen      ","    N/A    "\n"
                json     N/A    N/A    N/A
                markdown " "    N/A    "\n"
@@ -3804,5 +3817,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-02-22                         4mMILLER24m(1)
+                                  2026-03-03                         4mMILLER24m(1)
 </pre>
