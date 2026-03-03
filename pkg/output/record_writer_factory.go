@@ -14,6 +14,8 @@ func Create(writerOptions *cli.TWriterOptions) (IRecordWriter, error) {
 		return NewRecordWriterCSVLite(writerOptions)
 	case "dkvp":
 		return NewRecordWriterDKVP(writerOptions)
+	case "dkvpx":
+		return NewRecordWriterDKVPX(writerOptions)
 	case "json":
 		return NewRecordWriterJSON(writerOptions)
 	case "jsonl":
