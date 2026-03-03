@@ -54,8 +54,9 @@ func transformerSkipTrivialRecordsParseCLI(
 			transformerSkipTrivialRecordsUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
+		} else {
+			return nil, cli.VerbErrorf(verbNameSkipTrivialRecords, "option \"%s\" not recognized", opt)
 		}
-		return nil, cli.VerbErrorf(verbNameSkipTrivialRecords, "option \"%s\" not recognized", opt)
 	}
 
 	*pargi = argi

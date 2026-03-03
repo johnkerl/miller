@@ -58,8 +58,9 @@ func transformerLabelParseCLI(
 			transformerLabelUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
+		} else {
+			return nil, cli.VerbErrorf(verbNameLabel, "option \"%s\" not recognized", opt)
 		}
-		return nil, cli.VerbErrorf(verbNameLabel, "option \"%s\" not recognized", opt)
 	}
 
 	// Get the label field names from the command line

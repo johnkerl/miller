@@ -57,8 +57,9 @@ func transformerSec2GMTDateParseCLI(
 			transformerSec2GMTDateUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
+		} else {
+			return nil, cli.VerbErrorf(verbNameSec2GMTDate, "option \"%s\" not recognized", opt)
 		}
-		return nil, cli.VerbErrorf(verbNameSec2GMTDate, "option \"%s\" not recognized", opt)
 	}
 
 	if argi >= argc {

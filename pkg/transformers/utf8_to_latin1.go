@@ -56,8 +56,9 @@ func transformerUTF8ToLatin1ParseCLI(
 			transformerUTF8ToLatin1Usage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
+		} else {
+			return nil, cli.VerbErrorf(verbNameUTF8ToLatin1, "option \"%s\" not recognized", opt)
 		}
-		return nil, cli.VerbErrorf(verbNameUTF8ToLatin1, "option \"%s\" not recognized", opt)
 	}
 
 	*pargi = argi

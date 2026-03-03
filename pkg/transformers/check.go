@@ -58,8 +58,9 @@ func transformerCheckParseCLI(
 			transformerCheckUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
+		} else {
+			return nil, cli.VerbErrorf(verbNameCheck, "option \"%s\" not recognized", opt)
 		}
-		return nil, cli.VerbErrorf(verbNameCheck, "option \"%s\" not recognized", opt)
 	}
 
 	*pargi = argi
