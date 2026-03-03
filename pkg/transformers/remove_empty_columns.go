@@ -54,8 +54,9 @@ func transformerRemoveEmptyColumnsParseCLI(
 			transformerRemoveEmptyColumnsUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
+		} else {
+			return nil, cli.VerbErrorf(verbNameRemoveEmptyColumns, "option \"%s\" not recognized", opt)
 		}
-		return nil, cli.VerbErrorf(verbNameRemoveEmptyColumns, "option \"%s\" not recognized", opt)
 	}
 
 	*pargi = argi

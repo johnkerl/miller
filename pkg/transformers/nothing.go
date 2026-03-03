@@ -53,9 +53,10 @@ func transformerNothingParseCLI(
 		if opt == "-h" || opt == "--help" {
 			transformerNothingUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
+		} else {
+			transformerNothingUsage(os.Stderr)
+			return nil, fmt.Errorf("%s %s: option \"%s\" not recognized", "mlr", verbNameNothing, opt)
 		}
-		transformerNothingUsage(os.Stderr)
-		return nil, fmt.Errorf("%s %s: option \"%s\" not recognized", "mlr", verbNameNothing, opt)
 	}
 
 	*pargi = argi

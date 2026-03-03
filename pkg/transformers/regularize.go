@@ -55,8 +55,9 @@ func transformerRegularizeParseCLI(
 			transformerRegularizeUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
+		} else {
+			return nil, cli.VerbErrorf(verbNameRegularize, "option \"%s\" not recognized", opt)
 		}
-		return nil, cli.VerbErrorf(verbNameRegularize, "option \"%s\" not recognized", opt)
 	}
 
 	*pargi = argi

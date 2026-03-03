@@ -338,7 +338,7 @@ func putIndexedOnArray(
 			return errors.New("zero indices are not supported. Indices are 1-up")
 		}
 		if mindex.intf.(int64) < 0 {
-			return errors.New("Cannot use negative indices to auto-lengthen arrays")
+			return errors.New("cannot use negative indices to auto-lengthen arrays")
 		}
 		// Array is [a,b,c] with mindices 1,2,3. Length is 3. Zindices are 0,1,2.
 		// Given mindex is 4.
@@ -371,7 +371,7 @@ func putIndexedOnArray(
 	} else if mindex.intf.(int64) == 0 {
 		return errors.New("zero indices are not supported. Indices are 1-up")
 	} else if mindex.intf.(int64) < 0 {
-		return errors.New("Cannot use negative indices to auto-lengthen arrays")
+		return errors.New("cannot use negative indices to auto-lengthen arrays")
 	} else {
 		// Already allocated but needs to be longer
 		LengthenMlrvalArray(baseArray, int(mindex.intf.(int64)))

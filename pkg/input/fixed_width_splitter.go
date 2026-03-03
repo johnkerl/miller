@@ -41,7 +41,7 @@ func NewFixedWidthSplitter(spec, referenceRow string) (*fixedWidthSplitter, erro
 	} else if spec == "right-align-multi-word" {
 		indexes = parseRightAlign(referenceRow, true)
 	} else {
-		return nil, fmt.Errorf("Unknown spec: %v", spec)
+		return nil, fmt.Errorf("unknown spec: %v", spec)
 	}
 	return &fixedWidthSplitter{indexes: indexes}, nil
 

@@ -229,7 +229,7 @@ func (reader *RecordReaderPprintFixedSplit) getRecords(
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
 				err := fmt.Errorf(
-					"Fixed-width header/data length mismatch %d != %d at filename %s line %d",
+					"fixed-width header/data length mismatch %d != %d at filename %s line %d",
 					len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
 				)
 				errorChannel <- err

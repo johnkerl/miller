@@ -151,7 +151,7 @@ func (mlrmap *Mlrmap) CopyUnflattened(
 
 		// Check for "" in any of the split pieces; treat the field as terminal if so.
 		legitDots := true
-		for i, _ := range arrayval {
+		for i := range arrayval {
 			piece := arrayval[i].String()
 			if piece == "" {
 				legitDots = false

@@ -54,8 +54,9 @@ func transformerGroupByParseCLI(
 			transformerGroupByUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
+		} else {
+			return nil, cli.VerbErrorf(verbNameGroupBy, "option \"%s\" not recognized", opt)
 		}
-		return nil, cli.VerbErrorf(verbNameGroupBy, "option \"%s\" not recognized", opt)
 	}
 
 	// Get the group-by field names from the command line

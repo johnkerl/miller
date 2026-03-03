@@ -54,8 +54,9 @@ func transformerGroupLikeParseCLI(
 			transformerGroupLikeUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
+		} else {
+			return nil, cli.VerbErrorf(verbNameGroupLike, "option \"%s\" not recognized", opt)
 		}
-		return nil, cli.VerbErrorf(verbNameGroupLike, "option \"%s\" not recognized", opt)
 	}
 
 	*pargi = argi

@@ -4,6 +4,30 @@
 
 Miller is a command-line data processing tool for working with CSV, TSV, JSON, and other data formats. It's written in Go (v1.18+) and provides SQL-like operations on data.
 
+## Initial Setup
+
+### Setting Up staticcheck
+
+The `make staticcheck` target requires the staticcheck tool. To set it up:
+
+```bash
+go install honnef.co/go/tools/cmd/staticcheck@latest
+```
+
+This installs staticcheck to `~/go/bin/` (the default Go binaries directory). For `make staticcheck` to work, you need `~/go/bin` in your `PATH`.
+
+**Add to your shell profile** (`.bashrc`, `.zshrc`, or equivalent):
+```bash
+export PATH="$PATH:$HOME/go/bin"
+```
+
+**Verify the installation:**
+```bash
+staticcheck -version
+```
+
+If this works, you can use `make staticcheck` without any further setup.
+
 ## Build & Test
 
 ### Building
@@ -23,7 +47,7 @@ make bench          # Run benchmarks
 ### Code Quality
 ```bash
 make fmt            # Format code with go fmt
-make staticcheck    # Run static analysis (requires: go install honnef.co/go/tools/cmd/staticcheck@latest)
+make staticcheck    # Run static analysis (see Initial Setup section above)
 ```
 
 ### Full Developer Workflow
