@@ -1,0 +1,34 @@
+panic: runtime error: invalid memory address or nil pointer dereference
+[signal SIGSEGV: segmentation violation code=0x2 addr=0x0 pc=0x102924300]
+
+goroutine 11 [running]:
+github.com/johnkerl/miller/v6/pkg/mlrval.(*Mlrval).Copy(0x0)
+	/Users/kerl/git/johnkerl/miller/pkg/mlrval/mlrval_copy.go:5 +0x30
+github.com/johnkerl/miller/v6/pkg/mlrval.(*Mlrmap).getWithMlrvalArrayIndex(0x1400021a860, 0x1400021ff40)
+	/Users/kerl/git/johnkerl/miller/pkg/mlrval/mlrmap_accessors.go:360 +0xf8
+github.com/johnkerl/miller/v6/pkg/mlrval.(*Mlrmap).GetWithMlrvalIndex(0x1400008e778?, 0x1026ac348?)
+	/Users/kerl/git/johnkerl/miller/pkg/mlrval/mlrmap_accessors.go:336 +0x2c
+github.com/johnkerl/miller/v6/pkg/mlrval.(*Mlrmap).getWithMlrvalArrayIndex(0x1400021a860, 0x14000226040)
+	/Users/kerl/git/johnkerl/miller/pkg/mlrval/mlrmap_accessors.go:350 +0xac
+github.com/johnkerl/miller/v6/pkg/mlrval.(*Mlrmap).GetWithMlrvalIndex(0x1400008e7d8?, 0x1029ab6d4?)
+	/Users/kerl/git/johnkerl/miller/pkg/mlrval/mlrmap_accessors.go:336 +0x2c
+github.com/johnkerl/miller/v6/pkg/mlrval.(*Mlrval).MapGet(0x1400000c948?, 0x14000080f00?)
+	/Users/kerl/git/johnkerl/miller/pkg/mlrval/mlrval_collections.go:171 +0x58
+github.com/johnkerl/miller/v6/pkg/dsl/cst.(*ArrayOrMapIndexAccessNode).Evaluate(0x1400007f7c0, 0x14000080f00)
+	/Users/kerl/git/johnkerl/miller/pkg/dsl/cst/collections.go:93 +0x90
+github.com/johnkerl/miller/v6/pkg/dsl/cst.(*ArrayOrMapIndexAccessNode).Evaluate(0x1400007f7e0, 0x14000080f00)
+	/Users/kerl/git/johnkerl/miller/pkg/dsl/cst/collections.go:85 +0x38
+github.com/johnkerl/miller/v6/pkg/dsl/cst.(*AssignmentNode).Execute(0x1400007f800, 0x14000080f00)
+	/Users/kerl/git/johnkerl/miller/pkg/dsl/cst/assignments.go:48 +0x30
+github.com/johnkerl/miller/v6/pkg/dsl/cst.(*StatementBlockNode).Execute(0x1400000c7f8, 0x14000080f00)
+	/Users/kerl/git/johnkerl/miller/pkg/dsl/cst/blocks.go:93 +0x1a0
+github.com/johnkerl/miller/v6/pkg/dsl/cst.(*RootNode).ExecuteMainBlock(...)
+	/Users/kerl/git/johnkerl/miller/pkg/dsl/cst/root.go:453
+github.com/johnkerl/miller/v6/pkg/transformers.(*TransformerPut).Transform(0x140001cec60, 0x1400021c050, 0x14000224030, 0x0?, 0x1400008c690)
+	/Users/kerl/git/johnkerl/miller/pkg/transformers/put_or_filter.go:526 +0x2b0
+github.com/johnkerl/miller/v6/pkg/transformers.runSingleTransformerBatch({0x1400021c690, 0x1, 0x0?}, {0x102cdc660, 0x140001cec60}, 0x0, 0x140001cc850, 0x1400008c700, 0x1400008c690, 0x140000e4780)
+	/Users/kerl/git/johnkerl/miller/pkg/transformers/aaa_chain_transformer.go:260 +0x268
+github.com/johnkerl/miller/v6/pkg/transformers.runSingleTransformer({0x102cdc660, 0x140001cec60}, 0x0, 0x140001cc7e0, 0x140001cc850, 0x1400008c700, 0x1400008c690, 0x140000e4780)
+	/Users/kerl/git/johnkerl/miller/pkg/transformers/aaa_chain_transformer.go:205 +0x80
+created by github.com/johnkerl/miller/v6/pkg/transformers.ChainTransformer in goroutine 8
+	/Users/kerl/git/johnkerl/miller/pkg/transformers/aaa_chain_transformer.go:180 +0x17c
