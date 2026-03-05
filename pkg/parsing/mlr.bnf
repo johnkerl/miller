@@ -2753,8 +2753,6 @@ ENV
 // ----------------------------------------------------------------
 MlrvalOrFunction
   : ArrayOrMapIndexAccess
-  | ArrayOrMapPositionalNameAccess
-  | ArrayOrMapPositionalValueAccess
   | ArraySliceAccess ;
 
 ArrayOrMapIndexAccess
@@ -2763,36 +2761,6 @@ ArrayOrMapIndexAccess
       dsl.NewASTNodeWithErrorReturn(
         dsl.NewASTToken("[]", $1),
         dsl.NodeTypeArrayOrMapIndexAccess,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-;
-
-ArrayOrMapPositionalNameAccess
-  : MlrvalOrFunction "[[" Rvalue "]" "]" // Not "]]" since that would define a token, making '$foo[bar[1]]' a syntax error
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("[]", $1),
-        dsl.NodeTypeArrayOrMapPositionalNameAccess,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-;
-
-ArrayOrMapPositionalValueAccess
-  : MlrvalOrFunction "[[[" Rvalue "]" "]" "]" // Not "]]]" since that would define a token, making '$foo[bar[baz[1]]]' a syntax error
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("[]", $1),
-        dsl.NodeTypeArrayOrMapPositionalValueAccess,
         []interface{}{
           $0,
           $2,

@@ -34,19 +34,7 @@ func (root *RootNode) BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, erro
 	case dsl.NodeTypeArraySliceAccess: // myarray[lo:hi]
 		return root.BuildArraySliceAccessNode(astNode)
 
-	case dsl.NodeTypePositionalFieldName: // $[[...]]
-		return root.BuildPositionalFieldNameNode(astNode)
-
-	case dsl.NodeTypePositionalFieldValue: // $[[[...]]]
-		return root.BuildPositionalFieldValueNode(astNode)
-
-	case dsl.NodeTypeArrayOrMapPositionalNameAccess: // mymap[[...]]]
-		return root.BuildArrayOrMapPositionalNameAccessNode(astNode)
-
-	case dsl.NodeTypeArrayOrMapPositionalValueAccess: // mymap[[[...]]]
-		return root.BuildArrayOrMapPositionalValueAccessNode(astNode)
-
-	case dsl.NodeTypeIndirectFieldValue: // $[...]
+	case dsl.NodeTypeIndirectFieldValue: // $[...] (includes $[[n]] and $[[[n]]])
 		return root.BuildIndirectFieldValueNode(astNode)
 	case dsl.NodeTypeIndirectOosvarValue: // $[...]
 		return root.BuildIndirectOosvarValueNode(astNode)
@@ -87,11 +75,33 @@ type IndirectFieldValueNode struct {
 
 func (root *RootNode) BuildIndirectFieldValueNode(
 	astNode *dsl.ASTNode,
-) (*IndirectFieldValueNode, error) {
+) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectFieldValue)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
-	fieldNameEvaluable, err := root.BuildEvaluableNode(astNode.Children[0])
+
+	child := astNode.Children[0]
+	if child.Type == dsl.NodeTypeArrayLiteral && len(child.Children) == 1 {
+		inner := child.Children[0]
+		if inner.Type == dsl.NodeTypeArrayLiteral && len(inner.Children) == 1 {
+			// $[[[n]]] → positional field value
+			indexASTNode := inner.Children[0]
+			syntheticAST := &dsl.ASTNode{
+				Type:     dsl.NodeTypePositionalFieldValue,
+				Children: []*dsl.ASTNode{indexASTNode},
+			}
+			return root.BuildPositionalFieldValueNode(syntheticAST)
+		}
+		// $[[n]] → positional field name
+		indexASTNode := inner
+		syntheticAST := &dsl.ASTNode{
+			Type:     dsl.NodeTypePositionalFieldName,
+			Children: []*dsl.ASTNode{indexASTNode},
+		}
+		return root.BuildPositionalFieldNameNode(syntheticAST)
+	}
+
+	fieldNameEvaluable, err := root.BuildEvaluableNode(child)
 	if err != nil {
 		return nil, err
 	}
