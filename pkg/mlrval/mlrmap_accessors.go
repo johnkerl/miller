@@ -351,6 +351,9 @@ func (mlrmap *Mlrmap) getWithMlrvalArrayIndex(index *Mlrval) (*Mlrval, error) {
 		if err != nil {
 			return nil, err
 		}
+		if next == nil {
+			return nil, nil
+		}
 		if i < n-1 {
 			if !next.IsMap() {
 				return nil, fmt.Errorf("cannot multi-index non-map")
@@ -360,7 +363,6 @@ func (mlrmap *Mlrmap) getWithMlrvalArrayIndex(index *Mlrval) (*Mlrval, error) {
 			retval = next.Copy()
 		}
 	}
-	lib.InternalCodingErrorIf(retval == nil)
 	return retval, nil
 }
 
