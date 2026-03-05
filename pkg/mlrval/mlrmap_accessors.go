@@ -239,6 +239,7 @@ func (mlrmap *Mlrmap) findEntryByPositionalIndex(position int64) *MlrmapEntry {
 }
 
 func (mlrmap *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
+	// $[3] acts as $["3"]
 	if key.IsStringOrInt() {
 		mlrmap.PutCopy(key.String(), value)
 		return nil
@@ -367,6 +368,7 @@ func (mlrmap *Mlrmap) getWithMlrvalSingleIndex(index *Mlrval) (*Mlrval, error) {
 	if index.IsString() {
 		return mlrmap.Get(index.printrep), nil
 	} else if index.IsInt() {
+		// $[3] acts as $["3"]
 		return mlrmap.Get(index.String()), nil
 	}
 	return nil, fmt.Errorf(
