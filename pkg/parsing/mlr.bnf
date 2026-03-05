@@ -1351,8 +1351,6 @@ FieldValue
   : DirectFieldValue
   | IndirectFieldValue
   | BracedFieldValue
-  | PositionalFieldName
-  | PositionalFieldValue
 ;
 
 // Note: the field name is "$name" not "name" since field_name
@@ -1389,34 +1387,6 @@ BracedFieldValue
   : braced_field_name
     <<
       dsl.NewASTNodeStripDollarOrAtSignAndCurlyBraces($0, dsl.NodeTypeDirectFieldValue)
-    >>
-
-;
-
-PositionalFieldName
-  : "$[[" Rvalue "]" "]" // Not "]]" since that would define a token, making '$foo[bar[1]]' a syntax error
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("$[]", $0),
-        dsl.NodeTypePositionalFieldName,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-
-;
-
-PositionalFieldValue
-  : "$[[[" Rvalue "]" "]" "]" // Not "]]]" since that would define a token, making '$foo[bar[baz[1]]]' a syntax error
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("$[]", $0),
-        dsl.NodeTypePositionalFieldValue,
-        []interface{}{
-          $1,
-        },
-      )
     >>
 
 ;
@@ -2783,8 +2753,6 @@ ENV
 // ----------------------------------------------------------------
 MlrvalOrFunction
   : ArrayOrMapIndexAccess
-  | ArrayOrMapPositionalNameAccess
-  | ArrayOrMapPositionalValueAccess
   | ArraySliceAccess ;
 
 ArrayOrMapIndexAccess
@@ -2793,36 +2761,6 @@ ArrayOrMapIndexAccess
       dsl.NewASTNodeWithErrorReturn(
         dsl.NewASTToken("[]", $1),
         dsl.NodeTypeArrayOrMapIndexAccess,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-;
-
-ArrayOrMapPositionalNameAccess
-  : MlrvalOrFunction "[[" Rvalue "]" "]" // Not "]]" since that would define a token, making '$foo[bar[1]]' a syntax error
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("[]", $1),
-        dsl.NodeTypeArrayOrMapPositionalNameAccess,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-;
-
-ArrayOrMapPositionalValueAccess
-  : MlrvalOrFunction "[[[" Rvalue "]" "]" "]" // Not "]]]" since that would define a token, making '$foo[bar[baz[1]]]' a syntax error
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("[]", $1),
-        dsl.NodeTypeArrayOrMapPositionalValueAccess,
         []interface{}{
           $0,
           $2,

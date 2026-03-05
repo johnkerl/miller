@@ -24,10 +24,6 @@ func (root *RootNode) BuildAssignableNode(
 		return root.BuildDirectFieldValueLvalueNode(astNode)
 	case dsl.NodeTypeIndirectFieldValue:
 		return root.BuildIndirectFieldValueLvalueNode(astNode)
-	case dsl.NodeTypePositionalFieldName:
-		return root.BuildPositionalFieldNameLvalueNode(astNode)
-	case dsl.NodeTypePositionalFieldValue:
-		return root.BuildPositionalFieldValueLvalueNode(astNode)
 
 	case dsl.NodeTypeFullSrec:
 		return root.BuildFullSrecLvalueNode(astNode)
@@ -40,15 +36,6 @@ func (root *RootNode) BuildAssignableNode(
 		return root.BuildFullOosvarLvalueNode(astNode)
 	case dsl.NodeTypeLocalVariable:
 		return root.BuildLocalVariableLvalueNode(astNode)
-
-	case dsl.NodeTypeArrayOrMapPositionalNameAccess:
-		return nil, fmt.Errorf(
-			"'[[...]]' is allowed on assignment left-hand sides only when immediately preceded by '$'",
-		)
-	case dsl.NodeTypeArrayOrMapPositionalValueAccess:
-		return nil, fmt.Errorf(
-			"'[[[...]]]' is allowed on assignment left-hand sides only when immediately preceded by '$'",
-		)
 
 	case dsl.NodeTypeArrayOrMapIndexAccess:
 		return root.BuildIndexedLvalueNode(astNode)
@@ -162,11 +149,32 @@ func (root *RootNode) BuildIndirectFieldValueLvalueNode(
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectFieldValue)
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
-	lhsFieldNameExpression, err := root.BuildEvaluableNode(astNode.Children[0])
+
+	child := astNode.Children[0]
+	if child.Type == dsl.NodeTypeArrayLiteral && len(child.Children) == 1 {
+		inner := child.Children[0]
+		if inner.Type == dsl.NodeTypeArrayLiteral && len(inner.Children) == 1 {
+			// $[[[n]]] → positional field value lvalue
+			indexASTNode := inner.Children[0]
+			syntheticAST := &dsl.ASTNode{
+				Type:     dsl.NodeTypePositionalFieldValue,
+				Children: []*dsl.ASTNode{indexASTNode},
+			}
+			return root.BuildPositionalFieldValueLvalueNode(syntheticAST)
+		}
+		// $[[n]] → positional field name lvalue
+		indexASTNode := inner
+		syntheticAST := &dsl.ASTNode{
+			Type:     dsl.NodeTypePositionalFieldName,
+			Children: []*dsl.ASTNode{indexASTNode},
+		}
+		return root.BuildPositionalFieldNameLvalueNode(syntheticAST)
+	}
+
+	lhsFieldNameExpression, err := root.BuildEvaluableNode(child)
 	if err != nil {
 		return nil, err
 	}
-
 	return NewIndirectFieldValueLvalueNode(lhsFieldNameExpression), nil
 }
 

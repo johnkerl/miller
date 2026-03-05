@@ -8,5 +8,5 @@
       "t": [9,5,1],
     },
   };
-  # Expect "(error)" in the output data since strings are not map-indexable
+  # Expect no assignment here since $o is absent
   $z = $o[[1]]["x"];

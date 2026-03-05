@@ -85,6 +85,64 @@ func (node *ArrayOrMapIndexAccessNode) Evaluate(
 	baseMlrval := node.baseEvaluable.Evaluate(state)
 	indexMlrval := node.indexEvaluable.Evaluate(state)
 
+	// Handle x[[n]] and x[[[n]]] when index is array literal [n] or [[n]]
+	if indexMlrval.IsArray() {
+		arr := indexMlrval.GetArray()
+		if len(arr) == 1 {
+			inner := arr[0]
+			if inner != nil && inner.IsArray() {
+				innerArr := inner.GetArray()
+				if len(innerArr) == 1 {
+					// x[[[n]]] positional value
+					idxMv := innerArr[0]
+					index, ok := idxMv.GetIntValue()
+					if !ok {
+						return mlrval.FromNotIntError("$[[...]]", idxMv)
+					}
+					if baseMlrval.IsArray() {
+						n, _ := baseMlrval.GetArrayLength()
+						zindex, ok := mlrval.UnaliasArrayLengthIndex(int(n), int(index))
+						if ok {
+							elt := baseMlrval.GetArray()[zindex]
+							if elt != nil {
+								return elt
+							}
+						}
+						return mlrval.ABSENT
+					}
+					if baseMlrval.IsMap() {
+						retval := baseMlrval.GetMap().GetWithPositionalIndex(index)
+						if retval == nil {
+							return mlrval.ABSENT
+						}
+						return retval
+					}
+				}
+			} else {
+				// x[[n]] positional name
+				index, ok := inner.GetIntValue()
+				if !ok {
+					return mlrval.FromNotIntError("$[[...]]", inner)
+				}
+				if baseMlrval.IsArray() {
+					n, _ := baseMlrval.GetArrayLength()
+					zindex, ok := mlrval.UnaliasArrayLengthIndex(int(n), int(index))
+					if ok {
+						return mlrval.FromInt(int64(zindex + 1))
+					}
+					return mlrval.ABSENT
+				}
+				if baseMlrval.IsMap() {
+					name, ok := baseMlrval.GetMap().GetNameAtPositionalIndex(index)
+					if !ok {
+						return mlrval.ABSENT
+					}
+					return mlrval.FromString(name)
+				}
+			}
+		}
+	}
+
 	// Base-is-array and index-is-int will be checked there
 	if baseMlrval.IsArray() {
 		output := baseMlrval.ArrayGet(indexMlrval)
