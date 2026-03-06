@@ -29,6 +29,9 @@ type BinaryFuncWithState func(
 	state *runtime.State,
 ) *mlrval.Mlrval
 
+// ZaryFuncWithState is for next() in mlr script.
+type ZaryFuncWithState func(state *runtime.State) *mlrval.Mlrval
+
 // TernaryFuncWithState is for fold.
 type TernaryFuncWithState func(
 	input1 *mlrval.Mlrval,

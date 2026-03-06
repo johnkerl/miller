@@ -58,6 +58,7 @@ type BuiltinFunctionInfo struct {
 	variadicFunc           bifs.VariadicFunc
 	unaryFuncWithContext   bifs.UnaryFuncWithContext   // asserting_{typename}
 	regexCaptureBinaryFunc bifs.RegexCaptureBinaryFunc // =~ and !=~
+	zaryFuncWithState      ZaryFuncWithState           // next
 	binaryFuncWithState    BinaryFuncWithState         // select, apply, reduce
 	ternaryFuncWithState   TernaryFuncWithState        // fold
 	variadicFuncWithState  VariadicFuncWithState       // sort
@@ -2504,6 +2505,14 @@ Run a command via executable, path, args and environment, yielding its stdout mi
 			help:     `Returns the Miller version as a string.`,
 			zaryFunc: bifs.BIF_version,
 		},
+
+		// next() is for mlr script: reads next record from input, returns true/false.
+		{
+			name:              "next",
+			class:             FUNC_CLASS_SYSTEM,
+			help:              `In mlr script mode only: reads the next record from input. Returns true if a record was read (and sets $* to it), false at end of stream (and $* becomes false).`,
+			zaryFuncWithState: BIF_next,
+		},
 	}
 
 	// Sort the function table.  Useful for online help and autogenned docs / manpage.
@@ -2734,7 +2743,7 @@ func describeNargs(info *BuiltinFunctionInfo) string {
 		return strings.Join(pieces, ",")
 
 	}
-	if info.zaryFunc != nil {
+	if info.zaryFunc != nil || info.zaryFuncWithState != nil {
 		return "0"
 	}
 	if info.unaryFunc != nil {

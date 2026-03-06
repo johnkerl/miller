@@ -43,6 +43,13 @@ type State struct {
 	// NoExitOnFunctionNotFound is used by the REPL: when true, a call to an
 	// undefined function returns an error mlrval instead of exiting the process.
 	NoExitOnFunctionNotFound bool
+
+	// NextRecordFunc is set by mlr script. When called, reads next record from input.
+	// Returns (record, context, hasMore). When hasMore is false, record and context are for end-of-stream.
+	NextRecordFunc func() (*mlrval.Mlrmap, *types.Context, bool)
+
+	// AtEndOfStream is set when next() returns false. Makes $* evaluate to boolean false.
+	AtEndOfStream bool
 }
 
 func NewEmptyState(options *cli.TOptions, strictMode bool) *State {

@@ -298,15 +298,15 @@ func validateForLoopMultivariableUniqueNames(astNode *dsl.ASTNode) error {
 }
 
 var VALID_LHS_NODE_TYPES = map[dsl.TNodeType]bool{
-	dsl.NodeTypeArrayOrMapIndexAccess:  true,
-	dsl.NodeTypeDotOperator:            true,
+	dsl.NodeTypeArrayOrMapIndexAccess: true,
+	dsl.NodeTypeDotOperator:           true,
 	dsl.NodeTypeArraySliceAccess:      true,
-	dsl.NodeTypeDirectFieldValue:       true,
-	dsl.NodeTypeDirectOosvarValue:      true,
-	dsl.NodeTypeEnvironmentVariable:    true,
-	dsl.NodeTypeFullOosvar:             true,
-	dsl.NodeTypeFullSrec:               true,
-	dsl.NodeTypeIndirectFieldValue:     true, // includes $[[n]] and $[[[n]]]
-	dsl.NodeTypeIndirectOosvarValue:    true,
-	dsl.NodeTypeLocalVariable:          true,
+	dsl.NodeTypeDirectFieldValue:      true,
+	dsl.NodeTypeDirectOosvarValue:     true,
+	dsl.NodeTypeEnvironmentVariable:   true,
+	dsl.NodeTypeFullOosvar:            true,
+	dsl.NodeTypeFullSrec:              true,
+	dsl.NodeTypeIndirectFieldValue:    true, // includes $[[n]] and $[[[n]]]
+	dsl.NodeTypeIndirectOosvarValue:   true,
+	dsl.NodeTypeLocalVariable:         true,
 }

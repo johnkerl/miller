@@ -1,0 +1,1 @@
+mlr script --csv -e '@sum=0; while(next()){@sum+=$x}; print @sum' ./${CASEDIR}/input

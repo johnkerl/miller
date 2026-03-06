@@ -28,6 +28,7 @@ const (
 	DSLInstanceTypePut = iota
 	DSLInstanceTypeFilter
 	DSLInstanceTypeREPL
+	DSLInstanceTypeScript
 )
 
 // Please see root.go for context and comments.

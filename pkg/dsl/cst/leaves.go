@@ -122,6 +122,10 @@ func (node *FullSrecRvalueNode) Evaluate(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
+		// In mlr script, after next() returns false, $* is boolean false.
+		if state.AtEndOfStream {
+			return mlrval.FromBool(false)
+		}
 		return mlrval.ABSENT.StrictModeCheck(state.StrictMode, "$*")
 	}
 	return mlrval.FromMap(state.Inrec)
