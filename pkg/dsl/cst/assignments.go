@@ -3,16 +3,18 @@
 package cst
 
 import (
-	"github.com/johnkerl/miller/v6/pkg/dsl"
+	"fmt"
+
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 func (root *RootNode) BuildAssignmentNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (*AssignmentNode, error) {
 
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeAssignment)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeAssignment))
 	err := astNode.CheckArity(2)
 	if err != nil {
 		return nil, err
@@ -37,6 +39,99 @@ func (root *RootNode) BuildAssignmentNode(
 	}, nil
 }
 
+func (root *RootNode) BuildCompoundAssignmentNode(
+	astNode *asts.ASTNode,
+) (*AssignmentNode, error) {
+
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeCompoundAssignment))
+	err := astNode.CheckArity(3)
+	if err != nil {
+		return nil, err
+	}
+
+	lhsASTNode := astNode.Children[0]
+	opASTNode := astNode.Children[1]
+	rhsASTNode := astNode.Children[2]
+
+	compoundOp := tokenLit(opASTNode)
+	baseOp := compoundOpToBaseOp(compoundOp)
+	if baseOp == "" {
+		return nil, fmt.Errorf("unknown compound assignment operator: %s", compoundOp)
+	}
+
+	lvalueNode, err := root.BuildAssignableNode(lhsASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	lvalueAsRvalue, err := root.BuildEvaluableNode(lhsASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	rvalueNode, err := root.BuildEvaluableNode(rhsASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	compoundRvalueNode, err := root.buildBinaryOperatorFromEvaluables(baseOp, lvalueAsRvalue, rvalueNode, rhsASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	return &AssignmentNode{
+		lvalueNode: lvalueNode,
+		rvalueNode: compoundRvalueNode,
+	}, nil
+}
+
+// compoundOpToBaseOp maps compound assignment operators to their base operator.
+// E.g. "+=" -> "+", "**=" -> "**".
+func compoundOpToBaseOp(compound string) string {
+	switch compound {
+	case "||=":
+		return "||"
+	case "^^=":
+		return "^^"
+	case "&&=":
+		return "&&"
+	case "??=":
+		return "??"
+	case "???=":
+		return "???"
+	case "|=":
+		return "|"
+	case "&=":
+		return "&"
+	case "^=":
+		return "^"
+	case "<<=":
+		return "<<"
+	case ">>=":
+		return ">>"
+	case ">>>=":
+		return ">>>"
+	case "+=":
+		return "+"
+	case ".=":
+		return "."
+	case "-=":
+		return "-"
+	case "*=":
+		return "*"
+	case "/=":
+		return "/"
+	case "//=":
+		return "//"
+	case "%=":
+		return "%"
+	case "**=":
+		return "**"
+	default:
+		return ""
+	}
+}
+
 type AssignmentNode struct {
 	lvalueNode IAssignable
 	rvalueNode IEvaluable
@@ -56,10 +151,10 @@ func (node *AssignmentNode) Execute(
 }
 
 func (root *RootNode) BuildUnsetNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (*UnsetNode, error) {
 
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeUnset)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeUnset))
 
 	lvalueNodes := make([]IAssignable, len(astNode.Children))
 

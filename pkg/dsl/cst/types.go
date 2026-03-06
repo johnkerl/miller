@@ -4,10 +4,10 @@ package cst
 
 import (
 	"github.com/johnkerl/miller/v6/pkg/cli"
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/output"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 // DSLInstanceType is for minor differences in DSL handling between mlr put,
@@ -50,7 +50,7 @@ type RootNode struct {
 
 // Many functions have this signature. This type-alias is for function-name
 // lookup tables.
-type NodeBuilder func(astNode *dsl.ASTNode) (IEvaluable, error)
+type NodeBuilder func(astNode *asts.ASTNode) (IEvaluable, error)
 
 // This is for all statements and statement blocks within the CST.
 type IExecutable interface {

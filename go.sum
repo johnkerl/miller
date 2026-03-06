@@ -15,6 +15,8 @@ github.com/google/pprof v0.0.0-20211214055906-6f57359322fd/go.mod h1:KgnwoLYCZ8I
 github.com/ianlancetaylor/demangle v0.0.0-20210905161508-09a460cdf81d/go.mod h1:aYm2/VgdVmcIU8iMfdMvDMsRAQjcfZSKFby6HOFvi/w=
 github.com/johnkerl/lumin v1.0.0 h1:CV34cHZOJ92Y02RbQ0rd4gA0C06Qck9q8blOyaPoWpU=
 github.com/johnkerl/lumin v1.0.0/go.mod h1:eLf5AdQOaLvzZ2zVy4REr/DSeEwG+CZreHwNLICqv9E=
+github.com/johnkerl/pgpg/go v0.2.0 h1:tR7JkJXC9THYDK+CZrAICOmz3Mc4YIhFkqtxJ/MQocA=
+github.com/johnkerl/pgpg/go v0.2.0/go.mod h1:Jh0kkya72bexXymdoZwWJPu6bEOTPLDa5V+gBkKVWL0=
 github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 h1:Z9n2FFNUXsshfwJMBgNA0RU6/i7WVaAegv3PtuIHPMs=
 github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51/go.mod h1:CzGEWj7cYgsdH8dAjBGEr58BoE7ScuLd+fwFZ44+/x8=
 github.com/klauspost/compress v1.18.4 h1:RPhnKRAQ4Fh8zU2FY/6ZFDwTVTxgJ/EMydqSTzE9a2c=

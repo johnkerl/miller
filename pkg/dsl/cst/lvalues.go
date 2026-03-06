@@ -8,42 +8,42 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 func (root *RootNode) BuildAssignableNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IAssignable, error) {
 
 	switch astNode.Type {
 
-	case dsl.NodeTypeDirectFieldValue:
+	case asts.NodeType(NodeTypeDirectFieldValue), asts.NodeType(NodeTypeBracedFieldValue):
 		return root.BuildDirectFieldValueLvalueNode(astNode)
-	case dsl.NodeTypeIndirectFieldValue:
+	case asts.NodeType(NodeTypeIndirectFieldValue):
 		return root.BuildIndirectFieldValueLvalueNode(astNode)
 
-	case dsl.NodeTypeFullSrec:
+	case asts.NodeType(NodeTypeFullSrec):
 		return root.BuildFullSrecLvalueNode(astNode)
 
-	case dsl.NodeTypeDirectOosvarValue:
+	case asts.NodeType(NodeTypeDirectOosvarValue), asts.NodeType(NodeTypeBracedOosvarValue):
 		return root.BuildDirectOosvarValueLvalueNode(astNode)
-	case dsl.NodeTypeIndirectOosvarValue:
+	case asts.NodeType(NodeTypeIndirectOosvarValue):
 		return root.BuildIndirectOosvarValueLvalueNode(astNode)
-	case dsl.NodeTypeFullOosvar:
+	case asts.NodeType(NodeTypeFullOosvar):
 		return root.BuildFullOosvarLvalueNode(astNode)
-	case dsl.NodeTypeLocalVariable:
+	case asts.NodeType(NodeTypeLocalVariable):
 		return root.BuildLocalVariableLvalueNode(astNode)
 
-	case dsl.NodeTypeArrayOrMapIndexAccess:
+	case asts.NodeType(NodeTypeArrayOrMapIndexAccess):
 		return root.BuildIndexedLvalueNode(astNode)
 
-	case dsl.NodeTypeDotOperator:
+	case asts.NodeType(NodeTypeDotOperator):
 		return root.BuildIndexedLvalueNode(astNode)
 
-	case dsl.NodeTypeEnvironmentVariable:
+	case asts.NodeType(NodeTypeEnvironmentVariable):
 		return root.BuildEnvironmentVariableLvalueNode(astNode)
 	}
 
@@ -57,11 +57,18 @@ type DirectFieldValueLvalueNode struct {
 }
 
 func (root *RootNode) BuildDirectFieldValueLvalueNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDirectFieldValue)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeDirectFieldValue) &&
+		astNode.Type != asts.NodeType(NodeTypeBracedFieldValue))
 
-	lhsFieldName := mlrval.FromString(string(astNode.Token.Lit))
+	var name string
+	if astNode.Type == asts.NodeType(NodeTypeBracedFieldValue) {
+		name = tokenLitStripBraced(astNode)
+	} else {
+		name = tokenLitStripDollarOrAt(astNode)
+	}
+	lhsFieldName := mlrval.FromString(name)
 	return NewDirectFieldValueLvalueNode(lhsFieldName), nil
 }
 
@@ -144,30 +151,24 @@ type IndirectFieldValueLvalueNode struct {
 }
 
 func (root *RootNode) BuildIndirectFieldValueLvalueNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectFieldValue)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeIndirectFieldValue))
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 
 	child := astNode.Children[0]
-	if child.Type == dsl.NodeTypeArrayLiteral && len(child.Children) == 1 {
+	if child.Type == asts.NodeType(NodeTypeArrayLiteral) && len(child.Children) == 1 {
 		inner := child.Children[0]
-		if inner.Type == dsl.NodeTypeArrayLiteral && len(inner.Children) == 1 {
+		if inner.Type == asts.NodeType(NodeTypeArrayLiteral) && len(inner.Children) == 1 {
 			// $[[[n]]] → positional field value lvalue
 			indexASTNode := inner.Children[0]
-			syntheticAST := &dsl.ASTNode{
-				Type:     dsl.NodeTypePositionalFieldValue,
-				Children: []*dsl.ASTNode{indexASTNode},
-			}
+			syntheticAST := asts.NewASTNode(nil, asts.NodeType(NodeTypePositionalFieldValue), []*asts.ASTNode{indexASTNode})
 			return root.BuildPositionalFieldValueLvalueNode(syntheticAST)
 		}
 		// $[[n]] → positional field name lvalue
 		indexASTNode := inner
-		syntheticAST := &dsl.ASTNode{
-			Type:     dsl.NodeTypePositionalFieldName,
-			Children: []*dsl.ASTNode{indexASTNode},
-		}
+		syntheticAST := asts.NewASTNode(nil, asts.NodeType(NodeTypePositionalFieldName), []*asts.ASTNode{indexASTNode})
 		return root.BuildPositionalFieldNameLvalueNode(syntheticAST)
 	}
 
@@ -264,9 +265,9 @@ type PositionalFieldNameLvalueNode struct {
 }
 
 func (root *RootNode) BuildPositionalFieldNameLvalueNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePositionalFieldName)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypePositionalFieldName))
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 	lhsFieldIndexExpression, err := root.BuildEvaluableNode(astNode.Children[0])
@@ -372,9 +373,9 @@ type PositionalFieldValueLvalueNode struct {
 }
 
 func (root *RootNode) BuildPositionalFieldValueLvalueNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePositionalFieldValue)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypePositionalFieldValue))
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 	lhsFieldIndexExpression, err := root.BuildEvaluableNode(astNode.Children[0])
@@ -485,8 +486,8 @@ func (node *PositionalFieldValueLvalueNode) UnassignIndexed(
 type FullSrecLvalueNode struct {
 }
 
-func (root *RootNode) BuildFullSrecLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFullSrec)
+func (root *RootNode) BuildFullSrecLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeFullSrec))
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(astNode.Children != nil)
 	return NewFullSrecLvalueNode(), nil
@@ -559,10 +560,17 @@ type DirectOosvarValueLvalueNode struct {
 	lhsOosvarName *mlrval.Mlrval
 }
 
-func (root *RootNode) BuildDirectOosvarValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDirectOosvarValue)
+func (root *RootNode) BuildDirectOosvarValueLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeDirectOosvarValue) &&
+		astNode.Type != asts.NodeType(NodeTypeBracedOosvarValue))
 
-	lhsOosvarName := mlrval.FromString(string(astNode.Token.Lit))
+	var name string
+	if astNode.Type == asts.NodeType(NodeTypeBracedOosvarValue) {
+		name = tokenLitStripBraced(astNode)
+	} else {
+		name = tokenLitStripDollarOrAt(astNode)
+	}
+	lhsOosvarName := mlrval.FromString(name)
 	return NewDirectOosvarValueLvalueNode(lhsOosvarName), nil
 }
 
@@ -624,9 +632,9 @@ type IndirectOosvarValueLvalueNode struct {
 }
 
 func (root *RootNode) BuildIndirectOosvarValueLvalueNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectOosvarValue)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeIndirectOosvarValue))
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 
@@ -702,8 +710,8 @@ func (node *IndirectOosvarValueLvalueNode) UnassignIndexed(
 type FullOosvarLvalueNode struct {
 }
 
-func (root *RootNode) BuildFullOosvarLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFullOosvar)
+func (root *RootNode) BuildFullOosvarLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeFullOosvar))
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(astNode.Children != nil)
 	return NewFullOosvarLvalueNode(), nil
@@ -767,25 +775,19 @@ type LocalVariableLvalueNode struct {
 	defineTypedAtScope bool
 }
 
-func (root *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeLocalVariable)
+func (root *RootNode) BuildLocalVariableLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeLocalVariable))
 
 	// TODO require type mask in strict mode
 
-	variableName := string(astNode.Token.Lit)
+	variableName := tokenLit(astNode)
 	typeName := "any"
 	defineTypedAtScope := false
-	if astNode.Children == nil { // untyped, like 'x = 3'
-		if root.strictMode {
-			return nil, fmt.Errorf(
-				`need typedecl such as "var", "str", "num", etc. for variable "%s" in strict mode`,
-				variableName,
-			)
-		}
-	} else { // typed, like 'num x = 3'
+	// PGPG: LocalVariable is terminal (children nil or empty). Miller had typed params with Children[0]=Typedecl.
+	if astNode.Children != nil && len(astNode.Children) > 0 { // typed, like 'num x = 3'
 		typeNode := astNode.Children[0]
-		lib.InternalCodingErrorIf(typeNode.Type != dsl.NodeTypeTypedecl)
-		typeName = string(typeNode.Token.Lit)
+		lib.InternalCodingErrorIf(typeNode.Type != asts.NodeType(NodeTypeTypedecl))
+		typeName = tokenLit(typeNode)
 		defineTypedAtScope = true
 	}
 	return NewLocalVariableLvalueNode(
@@ -870,8 +872,8 @@ type IndexedLvalueNode struct {
 
 // Either 'mymap["attr"]' or 'mymap.attr'. Furthermore they can be mixed as in
 // 'mymap["foo"].bar' or 'mymap.foo["bar"]'.
-func (root *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapIndexAccess && astNode.Type != dsl.NodeTypeDotOperator)
+func (root *RootNode) BuildIndexedLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeArrayOrMapIndexAccess) && astNode.Type != asts.NodeType(NodeTypeDotOperator))
 	lib.InternalCodingErrorIf(astNode == nil)
 
 	var baseLvalue IAssignable = nil
@@ -895,7 +897,7 @@ func (root *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable,
 	// then the base Lvalue.
 	walkerNode := astNode
 	for {
-		if walkerNode.Type == dsl.NodeTypeArrayOrMapIndexAccess {
+		if walkerNode.Type == asts.NodeType(NodeTypeArrayOrMapIndexAccess) {
 			lib.InternalCodingErrorIf(walkerNode == nil)
 			lib.InternalCodingErrorIf(len(walkerNode.Children) != 2)
 			indexEvaluable, err := root.BuildEvaluableNode(walkerNode.Children[1])
@@ -904,10 +906,10 @@ func (root *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable,
 			}
 			indexEvaluables = append([]IEvaluable{indexEvaluable}, indexEvaluables...)
 			walkerNode = walkerNode.Children[0]
-		} else if walkerNode.Type == dsl.NodeTypeDotOperator {
+		} else if walkerNode.Type == asts.NodeType(NodeTypeDotOperator) {
 			lib.InternalCodingErrorIf(walkerNode == nil)
 			lib.InternalCodingErrorIf(len(walkerNode.Children) != 2)
-			indexEvaluable := root.BuildStringLiteralNode(string(walkerNode.Children[1].Token.Lit))
+			indexEvaluable := root.BuildStringLiteralNode(tokenLit(walkerNode.Children[1]))
 			indexEvaluables = append([]IEvaluable{indexEvaluable}, indexEvaluables...)
 
 			walkerNode = walkerNode.Children[0]
@@ -990,8 +992,8 @@ type EnvironmentVariableLvalueNode struct {
 	nameExpression IEvaluable
 }
 
-func (root *RootNode) BuildEnvironmentVariableLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEnvironmentVariable)
+func (root *RootNode) BuildEnvironmentVariableLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeEnvironmentVariable))
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 	nameExpression, err := root.BuildEvaluableNode(astNode.Children[0])

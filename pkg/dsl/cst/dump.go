@@ -19,11 +19,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/output"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 	"github.com/johnkerl/miller/v6/pkg/types"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 type tDumpToRedirectFunc func(
@@ -38,16 +38,16 @@ type DumpStatementNode struct {
 	outputHandlerManager      output.OutputHandlerManager // for file/pipe targets
 }
 
-func (root *RootNode) BuildDumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDumpStatement)
+func (root *RootNode) BuildDumpStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeDumpStatement))
 	return root.buildDumpxStatementNode(
 		astNode,
 		os.Stdout,
 	)
 }
 
-func (root *RootNode) BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEdumpStatement)
+func (root *RootNode) BuildEdumpStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeEdumpStatement))
 	return root.buildDumpxStatementNode(
 		astNode,
 		os.Stderr,
@@ -57,24 +57,55 @@ func (root *RootNode) BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable
 // Common code for building dump/edump nodes
 
 func (root *RootNode) buildDumpxStatementNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	defaultOutputStream *os.File,
 ) (IExecutable, error) {
-	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
-	expressionsNode := astNode.Children[0]
-	redirectorNode := astNode.Children[1]
+	// Normalize PGPG AST to 2-child layout (expressions, redirector).
+	// PGPG produces: 0 children (dump), 1 child (dump s or dump > file), 2+ children (dump s,t or dump > file, s).
+	// With "dump Redirector comma FcnArgs", children are [Redirector, FcnArgs].
+	// With "dump FcnArgs" (with_adopted_grandchildren), children are the Rvalues directly.
+	var expressionsNode, redirectorNode *asts.ASTNode
+	isRedirector := func(n *asts.ASTNode) bool {
+		return n.Type == asts.NodeType(NodeTypeRedirectWrite) ||
+			n.Type == asts.NodeType(NodeTypeRedirectAppend) ||
+			n.Type == asts.NodeType(NodeTypeRedirectPipe)
+	}
+	switch len(astNode.Children) {
+	case 0:
+		expressionsNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+	case 1:
+		if isRedirector(astNode.Children[0]) {
+			expressionsNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+			redirectorNode = astNode.Children[0]
+		} else {
+			expressionsNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), astNode.Children)
+			redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		}
+	default:
+		if isRedirector(astNode.Children[0]) {
+			// dump Redirector comma FcnArgs -> [Redirector, FcnArgs]
+			expressionsNode = astNode.Children[1]
+			redirectorNode = astNode.Children[0]
+		} else {
+			// dump FcnArgs with_adopted_grandchildren -> [Rvalue, Rvalue, ...]
+			expressionsNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), astNode.Children)
+			redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		}
+	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Things to be dumped, e.g. $a and $b in 'dump > "foo.dat", $a, $b'.
 
 	var expressionEvaluables []IEvaluable = nil
 
-	if expressionsNode.Type == dsl.NodeTypeNoOp {
+	if expressionsNode.Type == asts.NodeType(NodeTypeNoOp) {
 		// Just 'dump' without 'dump $something'
 		expressionEvaluables = make([]IEvaluable, 1)
 		expressionEvaluable := root.BuildFullOosvarRvalueNode()
 		expressionEvaluables[0] = expressionEvaluable
-	} else if expressionsNode.Type == dsl.NodeTypeFunctionCallsite {
+	} else if expressionsNode.Type == asts.NodeType(NodeTypeFunctionCallsite) ||
+		expressionsNode.Type == asts.NodeType(NodeTypeFcnArgs) {
 		expressionEvaluables = make([]IEvaluable, len(expressionsNode.Children))
 		for i, childNode := range expressionsNode.Children {
 			expressionEvaluable, err := root.BuildEvaluableNode(childNode)
@@ -97,7 +128,7 @@ func (root *RootNode) buildDumpxStatementNode(
 		outputHandlerManager:      nil,
 	}
 
-	if redirectorNode.Type == dsl.NodeTypeNoOp {
+	if redirectorNode.Type == asts.NodeType(NodeTypeNoOp) {
 		// No > >> or | was provided.
 		if defaultOutputStream == os.Stdout {
 			retval.dumpToRedirectFunc = retval.dumpToStdout
@@ -113,9 +144,9 @@ func (root *RootNode) buildDumpxStatementNode(
 		redirectorTargetNode := redirectorNode.Children[0]
 		var err error
 
-		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
+		if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetStdout) {
 			retval.dumpToRedirectFunc = retval.dumpToStdout
-		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
+		} else if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetStderr) {
 			retval.dumpToRedirectFunc = retval.dumpToStderr
 		} else {
 			retval.dumpToRedirectFunc = retval.dumpToFileOrPipe
@@ -125,11 +156,11 @@ func (root *RootNode) buildDumpxStatementNode(
 				return nil, err
 			}
 
-			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
+			if redirectorNode.Type == asts.NodeType(NodeTypeRedirectWrite) {
 				retval.outputHandlerManager = output.NewFileWritetHandlerManager(root.recordWriterOptions)
-			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
+			} else if redirectorNode.Type == asts.NodeType(NodeTypeRedirectAppend) {
 				retval.outputHandlerManager = output.NewFileAppendHandlerManager(root.recordWriterOptions)
-			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
+			} else if redirectorNode.Type == asts.NodeType(NodeTypeRedirectPipe) {
 				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
 				return nil, fmt.Errorf("unhandled redirector node type %s", string(redirectorNode.Type))

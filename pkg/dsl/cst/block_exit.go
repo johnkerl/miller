@@ -6,16 +6,17 @@ package cst
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 type BreakNode struct {
 }
 
-func (root *RootNode) BuildBreakNode(astNode *dsl.ASTNode) (*BreakNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeBreak)
+func (root *RootNode) BuildBreakNode(astNode *asts.ASTNode) (*BreakNode, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeBreakStatement))
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 0)
 
@@ -32,8 +33,8 @@ func (node *BreakNode) Execute(state *runtime.State) (*BlockExitPayload, error) 
 type ContinueNode struct {
 }
 
-func (root *RootNode) BuildContinueNode(astNode *dsl.ASTNode) (*ContinueNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeContinue)
+func (root *RootNode) BuildContinueNode(astNode *asts.ASTNode) (*ContinueNode, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeContinueStatement))
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 0)
 
@@ -51,8 +52,8 @@ type ReturnNode struct {
 	returnValueExpression IEvaluable
 }
 
-func (root *RootNode) BuildReturnNode(astNode *dsl.ASTNode) (*ReturnNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeReturn)
+func (root *RootNode) BuildReturnNode(astNode *asts.ASTNode) (*ReturnNode, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeReturnStatement))
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	if len(astNode.Children) == 0 {
 		return &ReturnNode{returnValueExpression: nil}, nil

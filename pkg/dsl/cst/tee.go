@@ -5,12 +5,12 @@ package cst
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/output"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 	"github.com/johnkerl/miller/v6/pkg/types"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 // Examples:
@@ -64,8 +64,8 @@ type TeeStatementNode struct {
 	outputHandlerManager      output.OutputHandlerManager // for file/pipe targets
 }
 
-func (root *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeTeeStatement)
+func (root *RootNode) BuildTeeStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeTeeStatement))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 	expressionNode := astNode.Children[0]
 	redirectorNode := astNode.Children[1]
@@ -73,7 +73,7 @@ func (root *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Expression to be teed, which is $*.
 
-	lib.InternalCodingErrorIf(expressionNode.Type != dsl.NodeTypeFullSrec)
+	lib.InternalCodingErrorIf(expressionNode.Type != asts.NodeType(NodeTypeFullSrec))
 	expressionEvaluable := root.BuildFullSrecRvalueNode()
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -92,11 +92,11 @@ func (root *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 	redirectorTargetNode := redirectorNode.Children[0]
 	var err error
 
-	if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
+	if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetStdout) {
 		retval.teeToRedirectFunc = retval.teeToFileOrPipe
 		retval.outputHandlerManager = output.NewStdoutWriteHandlerManager(root.recordWriterOptions)
 		retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stdout)")
-	} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
+	} else if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetStderr) {
 		retval.teeToRedirectFunc = retval.teeToFileOrPipe
 		retval.outputHandlerManager = output.NewStderrWriteHandlerManager(root.recordWriterOptions)
 		retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stderr)")
@@ -108,11 +108,11 @@ func (root *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 			return nil, err
 		}
 
-		if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
+		if redirectorNode.Type == asts.NodeType(NodeTypeRedirectWrite) {
 			retval.outputHandlerManager = output.NewFileWritetHandlerManager(root.recordWriterOptions)
-		} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
+		} else if redirectorNode.Type == asts.NodeType(NodeTypeRedirectAppend) {
 			retval.outputHandlerManager = output.NewFileAppendHandlerManager(root.recordWriterOptions)
-		} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
+		} else if redirectorNode.Type == asts.NodeType(NodeTypeRedirectPipe) {
 			retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 		} else {
 			return nil, fmt.Errorf("unhandled redirector node type %s", string(redirectorNode.Type))

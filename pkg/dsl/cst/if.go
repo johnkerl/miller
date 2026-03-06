@@ -5,11 +5,11 @@ package cst
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
-	"github.com/johnkerl/miller/v6/pkg/parsing/token"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
+	"github.com/johnkerl/pgpg/go/lib/pkg/tokens"
 )
 
 type IfChainNode struct {
@@ -26,7 +26,7 @@ func NewIfChainNode(ifItems []*IfItem) *IfChainNode {
 // statement-block part {...}. For "else", the conditional is nil.
 type IfItem struct {
 	conditionNode      IEvaluable
-	conditionToken     *token.Token
+	conditionToken     *tokens.Token
 	statementBlockNode *StatementBlockNode
 }
 
@@ -67,16 +67,16 @@ type IfItem struct {
 //                     * DirectFieldValue "z"
 //                     * IntLiteral "900"
 
-func (root *RootNode) BuildIfChainNode(astNode *dsl.ASTNode) (*IfChainNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIfChain)
+func (root *RootNode) BuildIfChainNode(astNode *asts.ASTNode) (*IfChainNode, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeIfChain))
 
 	ifItems := []*IfItem{}
 
 	astChildren := astNode.Children
 
 	for _, astChild := range astChildren {
-		lib.InternalCodingErrorIf(astChild.Type != dsl.NodeTypeIfItem)
-		token := string(astChild.Token.Lit) // "if", "elif", "else"
+		lib.InternalCodingErrorIf(astChild.Type != asts.NodeType(NodeTypeIfItem))
+		token := tokenLit(astChild) // "if", "elif", "else"
 		if token == "if" || token == "elif" {
 			lib.InternalCodingErrorIf(len(astChild.Children) != 2)
 			conditionNode, err := root.BuildEvaluableNode(astChild.Children[0])
@@ -125,7 +125,7 @@ func (node *IfChainNode) Execute(state *runtime.State) (*BlockExitPayload, error
 		if !isBool {
 			return nil, fmt.Errorf(
 				"conditional expression did not evaluate to boolean%s",
-				dsl.TokenToLocationInfo(ifItem.conditionToken),
+				pgpgTokenToLocationInfo(ifItem.conditionToken),
 			)
 		}
 		if boolValue {

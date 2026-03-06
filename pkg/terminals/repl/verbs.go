@@ -9,11 +9,11 @@ import (
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/colorizer"
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/dsl/cst"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/types"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 // Types for the lookup table.
@@ -462,7 +462,7 @@ func handleSkipOrProcessUntil(repl *Repl, dslString string, processingNotSkippin
 		cst.DSLInstanceTypeREPL,
 		true, // isReplImmediate
 		repl.doWarnings,
-		func(dslString string, astNode *dsl.AST) {
+		func(dslString string, astNode *asts.AST) {
 			if repl.astPrintMode == ASTPrintParex {
 				astNode.PrintParex()
 			} else if repl.astPrintMode == ASTPrintParexOneLine {

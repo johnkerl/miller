@@ -9,13 +9,14 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
+
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 // Returns true if there are no warnings.
 func WarnOnAST(
-	ast *dsl.AST,
+	ast *asts.AST,
 ) bool {
 	variableNamesWrittenTo := make(map[string]bool)
 	inAssignment := false
@@ -80,7 +81,7 @@ func WarnOnAST(
 
 // Returns true if there are no warnings
 func warnOnASTAux(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	variableNamesWrittenTo map[string]bool,
 	inAssignment bool,
 ) bool {
@@ -89,8 +90,8 @@ func warnOnASTAux(
 
 	// Check local-variable references, and see if they're reads or writes
 	// based on the AST parenting of this node.
-	if astNode.Type == dsl.NodeTypeLocalVariable {
-		variableName := string(astNode.Token.Lit)
+	if astNode.Type == asts.NodeType(NodeTypeLocalVariable) {
+		variableName := tokenLit(astNode)
 		if inAssignment {
 			variableNamesWrittenTo[variableName] = true
 		} else {
@@ -99,27 +100,27 @@ func warnOnASTAux(
 					os.Stderr,
 					"Variable name %s might not have been assigned yet%s.\n",
 					variableName,
-					dsl.TokenToLocationInfo(astNode.Token),
+					pgpgTokenToLocationInfo(astNode.Token),
 				)
 				ok = false
 			}
 		}
 
-	} else if astNode.Type == dsl.NodeTypeBeginBlock {
+	} else if astNode.Type == asts.NodeType(NodeTypeBeginBlock) {
 		// Locals are confined to begin/end blocks and func/subr blocks.
 		// Reset for this part of the treewalk.
 		variableNamesWrittenTo = make(map[string]bool)
-	} else if astNode.Type == dsl.NodeTypeEndBlock {
+	} else if astNode.Type == asts.NodeType(NodeTypeEndBlock) {
 		// Locals are confined to begin/end blocks and func/subr blocks.
 		// Reset for this part of the treewalk.
 		variableNamesWrittenTo = make(map[string]bool)
 
-	} else if astNode.Type == dsl.NodeTypeNamedFunctionDefinition {
+	} else if astNode.Type == asts.NodeType(NodeTypeNamedFunctionDefinition) {
 		// Locals are confined to begin/end blocks and func/subr blocks.  Reset
 		// for this part of the treewalk, except mark the parameters as
 		// defined.
 		variableNamesWrittenTo = noteParametersForWarnings(astNode)
-	} else if astNode.Type == dsl.NodeTypeSubroutineDefinition {
+	} else if astNode.Type == asts.NodeType(NodeTypeSubroutineDefinition) {
 		// Locals are confined to begin/end blocks and func/subr blocks.  Reset
 		// for this part of the treewalk, except mark the parameters as
 		// defined.
@@ -131,21 +132,21 @@ func warnOnASTAux(
 	for i, astChild := range astNode.Children {
 		childInAssignment := inAssignment
 
-		if astNode.Type == dsl.NodeTypeAssignment && i == 0 {
+		if (astNode.Type == asts.NodeType(NodeTypeAssignment) || astNode.Type == asts.NodeType(NodeTypeCompoundAssignment)) && i == 0 {
 			// LHS of assignment statements
 			childInAssignment = true
-		} else if astNode.Type == dsl.NodeTypeForLoopOneVariable && i == 0 {
+		} else if astNode.Type == asts.NodeType(NodeTypeForLoopOneVariable) && i == 0 {
 			// The 'k' in 'for (k in $*)'
 			childInAssignment = true
-		} else if astNode.Type == dsl.NodeTypeForLoopTwoVariable && (i == 0 || i == 1) {
+		} else if astNode.Type == asts.NodeType(NodeTypeForLoopTwoVariable) && (i == 0 || i == 1) {
 			// The 'k' and 'v' in 'for (k,v in $*)'
 			childInAssignment = true
-		} else if astNode.Type == dsl.NodeTypeForLoopMultivariable && (i == 0 || i == 1) {
+		} else if astNode.Type == asts.NodeType(NodeTypeForLoopMultivariable) && (i == 0 || i == 1) {
 			// The 'k1', 'k2', and 'v' in 'for ((k1,k2),v in $*)'
 			childInAssignment = true
-		} else if astNode.Type == dsl.NodeTypeParameterList {
+		} else if astNode.Type == asts.NodeType(NodeTypeParameterList) {
 			childInAssignment = true
-		} else if inAssignment && astNode.Type == dsl.NodeTypeArrayOrMapIndexAccess {
+		} else if inAssignment && astNode.Type == asts.NodeType(NodeTypeArrayOrMapIndexAccess) {
 			// In 'z[i] = 1', the 'i' is a read and the 'z' is a write.
 			//
 			// mlr --from r put -v -W 'z[i] = 1'
@@ -181,26 +182,29 @@ func warnOnASTAux(
 // lib.InternalCodingErrorIf parts are shape-assertions to make sure this code
 // is in sync with the BNF grammar which builds the AST from a Miller-DSL
 // source string.
+//
+// PGPG: Parameter has one child which is LocalVariable (not ParameterName).
 func noteParametersForWarnings(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) map[string]bool {
 
 	variableNamesWrittenTo := make(map[string]bool)
 
 	lib.InternalCodingErrorIf(
-		astNode.Type != dsl.NodeTypeNamedFunctionDefinition &&
-			astNode.Type != dsl.NodeTypeSubroutineDefinition)
+		astNode.Type != asts.NodeType(NodeTypeNamedFunctionDefinition) &&
+			astNode.Type != asts.NodeType(NodeTypeSubroutineDefinition))
 	lib.InternalCodingErrorIf(len(astNode.Children) < 1)
 	parameterListNode := astNode.Children[0]
 
-	lib.InternalCodingErrorIf(parameterListNode.Type != dsl.NodeTypeParameterList)
+	lib.InternalCodingErrorIf(parameterListNode.Type != asts.NodeType(NodeTypeParameterList))
 
 	for _, parameterNode := range parameterListNode.Children {
-		lib.InternalCodingErrorIf(parameterNode.Type != dsl.NodeTypeParameter)
+		lib.InternalCodingErrorIf(parameterNode.Type != asts.NodeType(NodeTypeParameter))
 		lib.InternalCodingErrorIf(len(parameterNode.Children) != 1)
-		parameterNameNode := parameterNode.Children[0]
-		lib.InternalCodingErrorIf(parameterNameNode.Type != dsl.NodeTypeParameterName)
-		parameterName := string(parameterNameNode.Token.Lit)
+		// PGPG: Parameter's child is LocalVariable, not ParameterName
+		paramNameNode := parameterNode.Children[0]
+		lib.InternalCodingErrorIf(paramNameNode.Type != asts.NodeType(NodeTypeLocalVariable))
+		parameterName := tokenLit(paramNameNode)
 		variableNamesWrittenTo[parameterName] = true
 	}
 

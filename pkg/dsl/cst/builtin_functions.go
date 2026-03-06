@@ -7,10 +7,10 @@ import (
 	"fmt"
 
 	"github.com/johnkerl/miller/v6/pkg/bifs"
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 // BIF_next is for mlr script: reads next record from input stream.
@@ -31,16 +31,21 @@ func BIF_next(state *runtime.State) *mlrval.Mlrval {
 }
 
 func (root *RootNode) BuildBuiltinFunctionCallsiteNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(
-		astNode.Type != dsl.NodeTypeFunctionCallsite &&
-			astNode.Type != dsl.NodeTypeOperator,
+		astNode.Type != asts.NodeType(NodeTypeFunctionCallsite) &&
+			astNode.Type != asts.NodeType(NodeTypeOperator),
 	)
 	lib.InternalCodingErrorIf(astNode.Token == nil)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 
-	functionName := string(astNode.Token.Lit)
+	functionName := tokenLit(astNode)
+
+	// PGPG produces ternary with "?" token; builtin is registered as "?:"
+	if functionName == "?" && len(astNode.Children) == 3 {
+		functionName = "?:"
+	}
 
 	builtinFunctionInfo := BuiltinFunctionManagerInstance.LookUp(functionName)
 	if builtinFunctionInfo != nil {
@@ -79,7 +84,7 @@ func (root *RootNode) BuildBuiltinFunctionCallsiteNode(
 }
 
 func (root *RootNode) BuildMultipleArityFunctionCallsiteNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
@@ -104,7 +109,7 @@ type ZaryFunctionCallsiteNode struct {
 }
 
 func BuildZaryFunctionCallsiteNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
@@ -125,7 +130,7 @@ func BuildZaryFunctionCallsiteNode(
 }
 
 func BuildZaryFunctionWithStateCallsiteNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
@@ -167,7 +172,7 @@ type UnaryFunctionCallsiteNode struct {
 }
 
 func (root *RootNode) BuildUnaryFunctionCallsiteNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
@@ -205,7 +210,7 @@ type UnaryFunctionWithContextCallsiteNode struct {
 }
 
 func (root *RootNode) BuildUnaryFunctionWithContextCallsiteNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
@@ -244,7 +249,7 @@ type BinaryFunctionCallsiteNode struct {
 }
 
 func (root *RootNode) BuildBinaryFunctionCallsiteNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
@@ -301,6 +306,56 @@ func (root *RootNode) BuildBinaryFunctionCallsiteNode(
 	}, nil
 }
 
+// buildBinaryOperatorFromEvaluables builds an IEvaluable for (a baseOp b) from
+// evaluables, without going through the AST. Used by compound assignment (e.g.
+// @sum += $x -> @sum = @sum + $x). rhsASTNode is used for the dot operator's
+// string2 (map key) when baseOp is ".".
+func (root *RootNode) buildBinaryOperatorFromEvaluables(
+	baseOp string,
+	evaluable1, evaluable2 IEvaluable,
+	rhsASTNode *asts.ASTNode,
+) (IEvaluable, error) {
+	if baseOp == "." {
+		return &DotCallsiteNode{
+			evaluable1: evaluable1,
+			evaluable2: evaluable2,
+			string2:    tokenLit(rhsASTNode),
+		}, nil
+	}
+
+	builtinFunctionInfo := BuiltinFunctionManagerInstance.LookUp(baseOp)
+	if builtinFunctionInfo == nil {
+		return nil, fmt.Errorf("compound assignment: unknown operator %q", baseOp)
+	}
+	if builtinFunctionInfo.binaryFunc != nil {
+		if baseOp == "&&" {
+			return BuildLogicalANDOperatorNode(evaluable1, evaluable2), nil
+		}
+		if baseOp == "||" {
+			return BuildLogicalOROperatorNode(evaluable1, evaluable2), nil
+		}
+		if baseOp == "??" {
+			return BuildAbsentCoalesceOperatorNode(evaluable1, evaluable2), nil
+		}
+		if baseOp == "???" {
+			return BuildEmptyCoalesceOperatorNode(evaluable1, evaluable2), nil
+		}
+		return &BinaryFunctionCallsiteNode{
+			binaryFunc: builtinFunctionInfo.binaryFunc,
+			evaluable1: evaluable1,
+			evaluable2: evaluable2,
+		}, nil
+	}
+	if builtinFunctionInfo.binaryFuncWithState != nil {
+		return &BinaryFunctionWithStateCallsiteNode{
+			binaryFuncWithState: builtinFunctionInfo.binaryFuncWithState,
+			evaluable1:          evaluable1,
+			evaluable2:          evaluable2,
+		}, nil
+	}
+	return nil, fmt.Errorf("compound assignment: operator %q not implemented", baseOp)
+}
+
 func (node *BinaryFunctionCallsiteNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
@@ -317,7 +372,7 @@ type BinaryFunctionWithStateCallsiteNode struct {
 }
 
 func (root *RootNode) BuildBinaryFunctionWithStateCallsiteNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
@@ -366,7 +421,7 @@ type TernaryFunctionWithStateCallsiteNode struct {
 }
 
 func (root *RootNode) BuildTernaryFunctionWithStateCallsiteNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
@@ -451,7 +506,7 @@ type RegexCaptureBinaryFunctionCallsiteNode struct {
 }
 
 func (root *RootNode) BuildRegexCaptureBinaryFunctionCallsiteNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
@@ -503,7 +558,7 @@ type DotCallsiteNode struct {
 }
 
 func (root *RootNode) BuildDotCallsiteNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
 	expectedArity := 2
@@ -529,7 +584,7 @@ func (root *RootNode) BuildDotCallsiteNode(
 	return &DotCallsiteNode{
 		evaluable1: evaluable1,
 		evaluable2: evaluable2,
-		string2:    string(astNode.Children[1].Token.Lit),
+		string2:    tokenLit(astNode.Children[1]),
 	}, nil
 }
 
@@ -562,7 +617,7 @@ type TernaryFunctionCallsiteNode struct {
 }
 
 func (root *RootNode) BuildTernaryFunctionCallsiteNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
@@ -623,7 +678,7 @@ type VariadicFunctionCallsiteNode struct {
 }
 
 func (root *RootNode) BuildVariadicFunctionCallsiteNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Children == nil)
@@ -680,7 +735,7 @@ type VariadicFunctionWithStateCallsiteNode struct {
 }
 
 func (root *RootNode) BuildVariadicFunctionWithStateCallsiteNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Children == nil)

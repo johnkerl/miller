@@ -20,23 +20,23 @@ package cst
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 	"github.com/johnkerl/miller/v6/pkg/types"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 type Emit1StatementNode struct {
 	evaluable IEvaluable
 }
 
-func (root *RootNode) BuildEmit1StatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmit1Statement)
+func (root *RootNode) BuildEmit1StatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeEmit1Statement))
 	return root.buildEmit1StatementNode(astNode, false)
 }
 
 func (root *RootNode) buildEmit1StatementNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	isEmitP bool,
 ) (IExecutable, error) {
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)

@@ -10,12 +10,13 @@ import (
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/output"
 	"github.com/johnkerl/miller/v6/pkg/parsing/lexer"
 	"github.com/johnkerl/miller/v6/pkg/parsing/parser"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 // NewEmptyRoot sets up an empty CST, before ingesting any DSL strings.  For
@@ -59,7 +60,7 @@ func (root *RootNode) WithStrictMode(strictMode bool) *RootNode {
 // ASTBuildVisitorFunc is a callback, used by RootNode's Build method, which
 // CST-builder callsites can use to visit parse-to-AST result of multi-string
 // DSL inputs. Nominal use: mlr put -v, mlr put -d, etc.
-type ASTBuildVisitorFunc func(dslString string, astNode *dsl.AST)
+type ASTBuildVisitorFunc func(dslString string, astNode *asts.AST)
 
 // Used by DSL -> AST -> CST callsites including mlr put, mlr filter, and mlr
 // repl. The RootNode must be separately instantiated (e.g. NewEmptyRoot())
@@ -102,7 +103,7 @@ func (root *RootNode) Build(
 	return hadWarnings, err
 }
 
-func buildASTFromStringWithMessage(dslString string) (*dsl.AST, error) {
+func buildASTFromStringWithMessage(dslString string) (*asts.AST, error) {
 	astRootNode, err := buildASTFromString(dslString)
 	if err != nil {
 		// Leave this out until we get better control over the error-messaging.
@@ -113,13 +114,13 @@ func buildASTFromStringWithMessage(dslString string) (*dsl.AST, error) {
 	return astRootNode, nil
 }
 
-func buildASTFromString(dslString string) (*dsl.AST, error) {
+func buildASTFromString(dslString string) (*asts.AST, error) {
 	// For non-Windows, already stripped by the shell; helpful here for Windows.
 	if strings.HasPrefix(dslString, "'") && strings.HasSuffix(dslString, "'") {
 		dslString = dslString[1 : len(dslString)-1]
 	}
 
-	// The comment-stripping lex expression in Miller's GOCC grammar matches from '#' to '\n' ... in
+	// The comment-stripping lex expression in Miller's grammar matches from '#' to '\n' ... in
 	// the case where there is a '#', then comment text, then end-of-string without any final
 	// newline, the comment text does _not_ get stripped out and is a parse error.
 	// It's simplest to ensure, here, that DSL-expression strings have a final newline.
@@ -128,13 +129,8 @@ func buildASTFromString(dslString string) (*dsl.AST, error) {
 	}
 
 	theLexer := lexer.NewLexer([]byte(dslString))
-	theParser := parser.NewParser()
-	interfaceAST, err := theParser.Parse(theLexer)
-	if err != nil {
-		return nil, err
-	}
-	astRootNode := interfaceAST.(*dsl.AST)
-	return astRootNode, nil
+	theParser := parser.NewMlrParser()
+	return theParser.Parse(theLexer, "")
 }
 
 // If the user has multiple put -f / put -e pieces, we can AST-parse each
@@ -142,7 +138,7 @@ func buildASTFromString(dslString string) (*dsl.AST, error) {
 // until after they're all ingested -- e.g. first piece calls a function which
 // the second defines, or mutual recursion across pieces, etc.
 func (root *RootNode) IngestAST(
-	ast *dsl.AST,
+	ast *asts.AST,
 	// False for non-REPL use. Also false for bulk-load REPL use.  True for
 	// interactive REPL statements which are intended to be executed once
 	// (immediately) but not retained.
@@ -231,37 +227,33 @@ func (root *RootNode) Resolve() error {
 //             * string literal "	"
 //             * string literal "TAB"
 
-func (root *RootNode) regexProtectPrePass(ast *dsl.AST) {
+func (root *RootNode) regexProtectPrePass(ast *asts.AST) {
 	root.regexProtectPrePassAux(ast.RootNode)
 }
 
-func (root *RootNode) regexProtectPrePassAux(astNode *dsl.ASTNode) {
+func (root *RootNode) regexProtectPrePassAux(astNode *asts.ASTNode) {
 
 	if len(astNode.Children) == 0 {
 		return
 	}
 
 	isCallsiteOfInterest := false
-	if astNode.Type == dsl.NodeTypeOperator {
-		if astNode.Token != nil {
-			nodeName := string(astNode.Token.Lit)
-			if nodeName == "=~" || nodeName == "!=~" {
-				isCallsiteOfInterest = true
-			}
+	if astNode.Type == asts.NodeType(NodeTypeOperator) {
+		nodeName := tokenLit(astNode)
+		if nodeName == "=~" || nodeName == "!=~" {
+			isCallsiteOfInterest = true
 		}
-	} else if astNode.Type == dsl.NodeTypeFunctionCallsite {
-		if astNode.Token != nil {
-			nodeName := string(astNode.Token.Lit)
-			if nodeName == "sub" || nodeName == "gsub" || nodeName == "regextract" || nodeName == "regextract_or_else" {
-				isCallsiteOfInterest = true
-			}
+	} else if astNode.Type == asts.NodeType(NodeTypeFunctionCallsite) {
+		nodeName := tokenLit(astNode)
+		if nodeName == "sub" || nodeName == "gsub" || nodeName == "regextract" || nodeName == "regextract_or_else" {
+			isCallsiteOfInterest = true
 		}
 	}
 
 	for i, astChild := range astNode.Children {
 		if isCallsiteOfInterest && i == 1 {
-			if astChild.Type == dsl.NodeTypeStringLiteral {
-				astChild.Type = dsl.NodeTypeRegex
+			if astChild.Type == asts.NodeType(NodeTypeStringLiteral) {
+				astChild.Type = asts.NodeType(NodeTypeRegex)
 			}
 		}
 		root.regexProtectPrePassAux(astChild)
@@ -273,9 +265,9 @@ func (root *RootNode) regexProtectPrePassAux(astNode *dsl.ASTNode) {
 // functions may be called before they are defined, so a follow-up pass will
 // need to resolve those callsites.
 
-func (root *RootNode) buildMainPass(ast *dsl.AST, isReplImmediate bool) error {
+func (root *RootNode) buildMainPass(ast *asts.AST, isReplImmediate bool) error {
 
-	if ast.RootNode.Type != dsl.NodeTypeStatementBlock {
+	if ast.RootNode.Type != asts.NodeType(NodeTypeStatementBlock) {
 		return fmt.Errorf("at CST root build: non-statement-block AST root node unhandled")
 	}
 	astChildren := ast.RootNode.Children
@@ -304,25 +296,25 @@ func (root *RootNode) buildMainPass(ast *dsl.AST, isReplImmediate bool) error {
 
 	for _, astChild := range astChildren {
 
-		if astChild.Type == dsl.NodeTypeNamedFunctionDefinition {
+		if astChild.Type == asts.NodeType(NodeTypeNamedFunctionDefinition) {
 			err := root.BuildAndInstallUDF(astChild)
 			if err != nil {
 				return err
 			}
 
-		} else if astChild.Type == dsl.NodeTypeSubroutineDefinition {
+		} else if astChild.Type == asts.NodeType(NodeTypeSubroutineDefinition) {
 			err := root.BuildAndInstallUDS(astChild)
 			if err != nil {
 				return err
 			}
 
-		} else if astChild.Type == dsl.NodeTypeBeginBlock || astChild.Type == dsl.NodeTypeEndBlock {
+		} else if astChild.Type == asts.NodeType(NodeTypeBeginBlock) || astChild.Type == asts.NodeType(NodeTypeEndBlock) {
 			statementBlockNode, err := root.BuildStatementBlockNodeFromBeginOrEnd(astChild)
 			if err != nil {
 				return err
 			}
 
-			if astChild.Type == dsl.NodeTypeBeginBlock {
+			if astChild.Type == asts.NodeType(NodeTypeBeginBlock) {
 				root.beginBlocks = append(root.beginBlocks, statementBlockNode)
 			} else {
 				root.endBlocks = append(root.endBlocks, statementBlockNode)

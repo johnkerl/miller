@@ -6,12 +6,12 @@ import (
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/dsl/cst"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 	"github.com/johnkerl/miller/v6/pkg/types"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 const verbNamePut = "put"
@@ -425,7 +425,7 @@ func NewTransformerPut(
 		false, // isReplImmediate
 		doWarnings,
 
-		func(dslString string, astNode *dsl.AST) {
+		func(dslString string, astNode *asts.AST) {
 
 			if echoDSLString {
 				fmt.Println("DSL EXPRESSION:")

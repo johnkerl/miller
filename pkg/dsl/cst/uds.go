@@ -5,11 +5,11 @@ package cst
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 	"github.com/johnkerl/miller/v6/pkg/types"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 type UDS struct {
@@ -228,12 +228,12 @@ func (mgr *UDSManager) ExistsByName(name string) bool {
 //         * SubroutineCallsite "f"
 //             * DirectFieldValue "x"
 
-func (root *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeSubroutineDefinition)
+func (root *RootNode) BuildAndInstallUDS(astNode *asts.ASTNode) error {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeSubroutineDefinition))
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2 && len(astNode.Children) != 3)
 
-	subroutineName := string(astNode.Token.Lit)
+	subroutineName := tokenLit(astNode)
 
 	if !root.allowUDFUDSRedefinitions {
 		if root.udsManager.ExistsByName(subroutineName) {
@@ -247,25 +247,21 @@ func (root *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
 	parameterListASTNode := astNode.Children[0]
 	subroutineBodyASTNode := astNode.Children[1]
 
-	lib.InternalCodingErrorIf(parameterListASTNode.Type != dsl.NodeTypeParameterList)
+	lib.InternalCodingErrorIf(parameterListASTNode.Type != asts.NodeType(NodeTypeParameterList))
 	lib.InternalCodingErrorIf(parameterListASTNode.Children == nil)
 	arity := len(parameterListASTNode.Children)
 	typeGatedParameterNames := make([]*types.TypeGatedMlrvalName, arity)
 	for i, parameterASTNode := range parameterListASTNode.Children {
-		lib.InternalCodingErrorIf(parameterASTNode.Type != dsl.NodeTypeParameter)
+		lib.InternalCodingErrorIf(parameterASTNode.Type != asts.NodeType(NodeTypeParameter))
 		lib.InternalCodingErrorIf(parameterASTNode.Children == nil)
 		lib.InternalCodingErrorIf(len(parameterASTNode.Children) != 1)
 		typeGatedParameterNameASTNode := parameterASTNode.Children[0]
 
-		lib.InternalCodingErrorIf(typeGatedParameterNameASTNode.Type != dsl.NodeTypeParameterName)
-		variableName := string(typeGatedParameterNameASTNode.Token.Lit)
+		// PGPG: Parameter's child is LocalVariable (not ParameterName)
+		lib.InternalCodingErrorIf(typeGatedParameterNameASTNode.Type != asts.NodeType(NodeTypeLocalVariable))
+		variableName := tokenLit(typeGatedParameterNameASTNode)
 		typeName := "any"
-		if typeGatedParameterNameASTNode.Children != nil { // typed parameter like 'num x'
-			lib.InternalCodingErrorIf(len(typeGatedParameterNameASTNode.Children) != 1)
-			typeNode := typeGatedParameterNameASTNode.Children[0]
-			lib.InternalCodingErrorIf(typeNode.Type != dsl.NodeTypeTypedecl)
-			typeName = string(typeNode.Token.Lit)
-		}
+		// PGPG grammar does not support typed parameters; use "any"
 		typeGatedParameterName, err := types.NewTypeGatedMlrvalName(
 			variableName,
 			typeName,

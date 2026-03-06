@@ -40,12 +40,12 @@ import (
 	"fmt"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/output"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 	"github.com/johnkerl/miller/v6/pkg/types"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 // Shared by emit and emitp
@@ -94,40 +94,74 @@ type EmitXStatementNode struct {
 	flatsep     string
 }
 
-func (root *RootNode) BuildEmitStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitStatement)
+func (root *RootNode) BuildEmitStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeEmitStatement))
 	return root.buildEmitXStatementNode(astNode, false)
 }
-func (root *RootNode) BuildEmitPStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitPStatement)
+func (root *RootNode) BuildEmitPStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeEmitPStatement))
 	return root.buildEmitXStatementNode(astNode, true)
 }
 
-var EMITX_NAMED_NODE_TYPES = map[dsl.TNodeType]bool{
-	dsl.NodeTypeLocalVariable:       true,
-	dsl.NodeTypeDirectOosvarValue:   true,
-	dsl.NodeTypeIndirectOosvarValue: true,
-	dsl.NodeTypeDirectFieldValue:    true,
-	dsl.NodeTypeIndirectFieldValue:  true,
+var EMITX_NAMED_NODE_TYPES = map[asts.NodeType]bool{
+	asts.NodeType(NodeTypeLocalVariable):       true,
+	asts.NodeType(NodeTypeDirectOosvarValue):   true,
+	asts.NodeType(NodeTypeIndirectOosvarValue): true,
+	asts.NodeType(NodeTypeDirectFieldValue):    true,
+	asts.NodeType(NodeTypeIndirectFieldValue):  true,
 }
 
-var EMITX_NAMELESS_NODE_TYPES = map[dsl.TNodeType]bool{
-	dsl.NodeTypeFullSrec:   true,
-	dsl.NodeTypeFullOosvar: true,
-	dsl.NodeTypeMapLiteral: true,
+var EMITX_NAMELESS_NODE_TYPES = map[asts.NodeType]bool{
+	asts.NodeType(NodeTypeFullSrec):   true,
+	asts.NodeType(NodeTypeFullOosvar): true,
+	asts.NodeType(NodeTypeMapLiteral): true,
+}
+
+// emitKeyName extracts the key name for emit/emitp output. Strips leading $ or @
+// so that @sum emits as "sum" and $x emits as "x". GOCC stripped at parse time;
+// PGPG may not, so we always strip here.
+func emitKeyName(childNode *asts.ASTNode) string {
+	s := tokenLitStripDollarOrAt(childNode)
+	if s == "" && childNode.Children != nil && len(childNode.Children) > 0 {
+		s = tokenLitStripDollarOrAt(childNode.Children[0])
+	}
+	if s == "" {
+		s = tokenLit(childNode)
+	}
+	if len(s) >= 1 && (s[0] == '$' || s[0] == '@') {
+		return s[1:]
+	}
+	return s
 }
 
 // EMIT AND EMITP
 
 func (root *RootNode) buildEmitXStatementNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	isEmitP bool,
 ) (IExecutable, error) {
-	lib.InternalCodingErrorIf(len(astNode.Children) != 3)
-
-	emittablesNode := astNode.Children[0]
-	keysNode := astNode.Children[1]
-	redirectorNode := astNode.Children[2]
+	// Normalize PGPG AST to GOCC-style 3-child layout (emittables, keys, redirector).
+	// PGPG produces 1 child (emitp @s) or 2 children (emitp > file, @s); GOCC always produces 3.
+	var emittablesNode, keysNode, redirectorNode *asts.ASTNode
+	switch len(astNode.Children) {
+	case 1:
+		// PGPG: kw_emitp FcnArgs with with_adopted_grandchildren -> single child is emittable(s)
+		emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{astNode.Children[0]})
+		keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+	case 2:
+		// PGPG: kw_emitp Redirector comma FcnArgs -> children: [Redirector, FcnArgs]
+		emittablesNode = astNode.Children[1]
+		keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		redirectorNode = astNode.Children[0]
+	case 3:
+		// GOCC format
+		emittablesNode = astNode.Children[0]
+		keysNode = astNode.Children[1]
+		redirectorNode = astNode.Children[2]
+	default:
+		lib.InternalCodingErrorIf(true) // unexpected child count
+	}
 
 	retval := &EmitXStatementNode{
 		isEmitP:     isEmitP,
@@ -147,7 +181,7 @@ func (root *RootNode) buildEmitXStatementNode(
 
 		if EMITX_NAMED_NODE_TYPES[childNode.Type] {
 			retval.topLevelNameList = make([]string, 1)
-			retval.topLevelNameList[0] = string(childNode.Token.Lit)
+			retval.topLevelNameList[0] = emitKeyName(childNode)
 
 			retval.topLevelEvaluableList = make([]IEvaluable, 1)
 			evaluable, err := root.BuildEvaluableNode(childNode)
@@ -184,7 +218,7 @@ func (root *RootNode) buildEmitXStatementNode(
 		retval.topLevelNameList = make([]string, len(emittablesNode.Children))
 		retval.topLevelEvaluableList = make([]IEvaluable, len(emittablesNode.Children))
 		for i, childNode := range emittablesNode.Children {
-			retval.topLevelNameList[i] = string(childNode.Token.Lit)
+			retval.topLevelNameList[i] = emitKeyName(childNode)
 			evaluable, err := root.BuildEvaluableNode(childNode)
 			if err != nil {
 				return nil, err
@@ -197,8 +231,8 @@ func (root *RootNode) buildEmitXStatementNode(
 	// Indices (if any) on the emittables
 
 	isIndexed := false
-	if keysNode.Type != dsl.NodeTypeNoOp { // There are "x","y" present
-		lib.InternalCodingErrorIf(keysNode.Type != dsl.NodeTypeEmitKeys)
+	if keysNode.Type != asts.NodeType(NodeTypeNoOp) { // There are "x","y" present
+		lib.InternalCodingErrorIf(keysNode.Type != asts.NodeType(NodeTypeEmitKeys))
 		isIndexed = true
 		numKeys := len(keysNode.Children)
 		retval.indexEvaluables = make([]IEvaluable, numKeys)
@@ -232,7 +266,7 @@ func (root *RootNode) buildEmitXStatementNode(
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Redirections and redirection targets (the thing after > >> |, if any).
 
-	if redirectorNode.Type == dsl.NodeTypeNoOp {
+	if redirectorNode.Type == asts.NodeType(NodeTypeNoOp) {
 		// No > >> or | was provided.
 		retval.emitToRedirectFunc = retval.emitRecordToRecordStream
 	} else {
@@ -242,11 +276,11 @@ func (root *RootNode) buildEmitXStatementNode(
 		redirectorTargetNode := redirectorNode.Children[0]
 		var err error
 
-		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
+		if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetStdout) {
 			retval.emitToRedirectFunc = retval.emitRecordToFileOrPipe
 			retval.outputHandlerManager = output.NewStdoutWriteHandlerManager(root.recordWriterOptions)
 			retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stdout)")
-		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
+		} else if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetStderr) {
 			retval.emitToRedirectFunc = retval.emitRecordToFileOrPipe
 			retval.outputHandlerManager = output.NewStderrWriteHandlerManager(root.recordWriterOptions)
 			retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stderr)")
@@ -258,11 +292,11 @@ func (root *RootNode) buildEmitXStatementNode(
 				return nil, err
 			}
 
-			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
+			if redirectorNode.Type == asts.NodeType(NodeTypeRedirectWrite) {
 				retval.outputHandlerManager = output.NewFileWritetHandlerManager(root.recordWriterOptions)
-			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
+			} else if redirectorNode.Type == asts.NodeType(NodeTypeRedirectAppend) {
 				retval.outputHandlerManager = output.NewFileAppendHandlerManager(root.recordWriterOptions)
-			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
+			} else if redirectorNode.Type == asts.NodeType(NodeTypeRedirectPipe) {
 				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
 				return nil, fmt.Errorf("unhandled redirector node type %s", string(redirectorNode.Type))

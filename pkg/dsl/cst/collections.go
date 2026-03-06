@@ -7,10 +7,10 @@ import (
 	"fmt"
 
 	"github.com/johnkerl/miller/v6/pkg/bifs"
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 type ArrayLiteralNode struct {
@@ -18,9 +18,9 @@ type ArrayLiteralNode struct {
 }
 
 func (node *RootNode) BuildArrayLiteralNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayLiteral)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeArrayLiteral))
 	// An empty array should have non-nil zero-length children, not nil
 	// children
 	lib.InternalCodingErrorIf(astNode.Children == nil)
@@ -56,9 +56,9 @@ type ArrayOrMapIndexAccessNode struct {
 }
 
 func (node *RootNode) BuildArrayOrMapIndexAccessNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapIndexAccess)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeArrayOrMapIndexAccess))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 
 	baseASTNode := astNode.Children[0]
@@ -198,30 +198,81 @@ type ArraySliceAccessNode struct {
 }
 
 func (node *RootNode) BuildArraySliceAccessNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArraySliceAccess)
-	lib.InternalCodingErrorIf(len(astNode.Children) != 3)
+	// PGPG produces ArraySliceLoHi (3 children), ArraySliceHiOnly (2), ArraySliceLoOnly (2), ArraySliceFull (1)
+	switch astNode.Type {
+	case asts.NodeType(NodeTypeArraySliceLoHi):
+		// [lo:hi]
+		lib.InternalCodingErrorIf(len(astNode.Children) != 3)
+		return node.buildArraySliceAccessNodeFromChildren(astNode.Children[0], astNode.Children[1], astNode.Children[2])
+	case asts.NodeType(NodeTypeArraySliceHiOnly):
+		// [:hi] - lower defaults to 1
+		lib.InternalCodingErrorIf(len(astNode.Children) != 2)
+		synthLower, _ := node.BuildArraySliceEmptyLowerIndexNode(asts.NewASTNode(nil, asts.NodeType(NodeTypeArraySliceEmptyLowerIndex), nil))
+		baseEval, err := node.BuildEvaluableNode(astNode.Children[0])
+		if err != nil {
+			return nil, err
+		}
+		upperEval, err := node.BuildEvaluableNode(astNode.Children[1])
+		if err != nil {
+			return nil, err
+		}
+		return node.buildArraySliceAccessFromEvaluables(baseEval, synthLower, upperEval)
+	case asts.NodeType(NodeTypeArraySliceLoOnly):
+		// [lo:] - upper defaults to n
+		lib.InternalCodingErrorIf(len(astNode.Children) != 2)
+		synthUpper, _ := node.BuildArraySliceEmptyUpperIndexNode(asts.NewASTNode(nil, asts.NodeType(NodeTypeArraySliceEmptyUpperIndex), nil))
+		baseEval, err := node.BuildEvaluableNode(astNode.Children[0])
+		if err != nil {
+			return nil, err
+		}
+		lowerEval, err := node.BuildEvaluableNode(astNode.Children[1])
+		if err != nil {
+			return nil, err
+		}
+		return node.buildArraySliceAccessFromEvaluables(baseEval, lowerEval, synthUpper)
+	case asts.NodeType(NodeTypeArraySliceFull):
+		// [:]
+		lib.InternalCodingErrorIf(len(astNode.Children) != 1)
+		synthLower, _ := node.BuildArraySliceEmptyLowerIndexNode(asts.NewASTNode(nil, asts.NodeType(NodeTypeArraySliceEmptyLowerIndex), nil))
+		synthUpper, _ := node.BuildArraySliceEmptyUpperIndexNode(asts.NewASTNode(nil, asts.NodeType(NodeTypeArraySliceEmptyUpperIndex), nil))
+		baseEval, err := node.BuildEvaluableNode(astNode.Children[0])
+		if err != nil {
+			return nil, err
+		}
+		return node.buildArraySliceAccessFromEvaluables(baseEval, synthLower, synthUpper)
+	default:
+		lib.InternalCodingErrorIf(true)
+		return nil, nil
+	}
+}
 
-	baseASTNode := astNode.Children[0]
-	lowerIndexASTNode := astNode.Children[1]
-	upperIndexASTNode := astNode.Children[2]
-
+func (node *RootNode) buildArraySliceAccessNodeFromChildren(
+	baseASTNode *asts.ASTNode,
+	lowerIndexASTNode *asts.ASTNode,
+	upperIndexASTNode *asts.ASTNode,
+) (IEvaluable, error) {
 	baseEvaluable, err := node.BuildEvaluableNode(baseASTNode)
 	if err != nil {
 		return nil, err
 	}
-
 	lowerIndexEvaluable, err := node.BuildEvaluableNode(lowerIndexASTNode)
 	if err != nil {
 		return nil, err
 	}
-
 	upperIndexEvaluable, err := node.BuildEvaluableNode(upperIndexASTNode)
 	if err != nil {
 		return nil, err
 	}
+	return node.buildArraySliceAccessFromEvaluables(baseEvaluable, lowerIndexEvaluable, upperIndexEvaluable)
+}
 
+func (node *RootNode) buildArraySliceAccessFromEvaluables(
+	baseEvaluable IEvaluable,
+	lowerIndexEvaluable IEvaluable,
+	upperIndexEvaluable IEvaluable,
+) (IEvaluable, error) {
 	return &ArraySliceAccessNode{
 		baseEvaluable:       baseEvaluable,
 		lowerIndexEvaluable: lowerIndexEvaluable,
@@ -287,9 +338,9 @@ type PositionalFieldNameNode struct {
 }
 
 func (node *RootNode) BuildPositionalFieldNameNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePositionalFieldName)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypePositionalFieldName))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 
 	indexASTNode := astNode.Children[0]
@@ -333,9 +384,9 @@ type PositionalFieldValueNode struct {
 }
 
 func (node *RootNode) BuildPositionalFieldValueNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePositionalFieldValue)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypePositionalFieldValue))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 
 	indexASTNode := astNode.Children[0]
@@ -379,9 +430,9 @@ type ArrayOrMapPositionalNameAccessNode struct {
 }
 
 func (node *RootNode) BuildArrayOrMapPositionalNameAccessNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapPositionalNameAccess)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeArrayOrMapPositionalNameAccess))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 
 	baseASTNode := astNode.Children[0]
@@ -455,9 +506,9 @@ type ArrayOrMapPositionalValueAccessNode struct {
 }
 
 func (node *RootNode) BuildArrayOrMapPositionalValueAccessNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapPositionalValueAccess)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeArrayOrMapPositionalValueAccess))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 
 	baseASTNode := astNode.Children[0]
@@ -546,9 +597,9 @@ type MapLiteralNode struct {
 }
 
 func (node *RootNode) BuildMapLiteralNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeMapLiteral)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeMapLiteral))
 	// An empty array should have non-nil zero-length children, not nil
 	// children
 	lib.InternalCodingErrorIf(astNode.Children == nil)

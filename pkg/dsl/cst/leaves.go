@@ -5,48 +5,54 @@ package cst
 import (
 	"fmt"
 	"math"
+	"strings"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 func (root *RootNode) BuildLeafNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Children != nil)
-	sval := string(astNode.Token.Lit)
+	// PGPG uses empty slice for terminals; GOCC used nil. PGPG may also produce
+	// reduced literal nodes (float_literal, int_literal) with one child (the terminal).
+	lib.InternalCodingErrorIf(astNode.Children != nil && len(astNode.Children) > 1)
+	sval := tokenLit(astNode)
+	if sval == "" && astNode.Children != nil && len(astNode.Children) == 1 {
+		sval = tokenLit(astNode.Children[0])
+	}
 
 	switch astNode.Type {
 
-	case dsl.NodeTypeDirectFieldValue:
-		return root.BuildDirectFieldRvalueNode(sval), nil
-	case dsl.NodeTypeFullSrec:
+	case asts.NodeType(NodeTypeDirectFieldValue):
+		return root.BuildDirectFieldRvalueNode(tokenLitStripDollarOrAt(astNode)), nil
+	case asts.NodeType(NodeTypeFullSrec):
 		return root.BuildFullSrecRvalueNode(), nil
 
-	case dsl.NodeTypeDirectOosvarValue:
-		return root.BuildDirectOosvarRvalueNode(sval), nil
-	case dsl.NodeTypeFullOosvar:
+	case asts.NodeType(NodeTypeDirectOosvarValue):
+		return root.BuildDirectOosvarRvalueNode(tokenLitStripDollarOrAt(astNode)), nil
+	case asts.NodeType(NodeTypeFullOosvar):
 		return root.BuildFullOosvarRvalueNode(), nil
 
-	case dsl.NodeTypeLocalVariable:
+	case asts.NodeType(NodeTypeLocalVariable):
 		return root.BuildLocalVariableNode(sval), nil
 
-	case dsl.NodeTypeStringLiteral:
+	case asts.NodeType(NodeTypeStringLiteral):
 		return root.BuildStringLiteralNode(sval), nil
 
-	case dsl.NodeTypeRegex:
+	case asts.NodeType(NodeTypeRegex):
 		// During the BNF parse all string literals -- "foo" or "(..)_(...)"
-		// regexes etc -- are marked as dsl.NodeTypeStringLiteral. However, a
+		// regexes etc -- are marked as asts.NodeType(NodeTypeStringLiteral). However, a
 		// CST-build pre-pass relabels second argument to sub/gsub etc -- any
-		// known regex positions -- from dsl.NodeTypeStringLiteral to
-		// dsl.NodeTypeRegex. The RegexLiteralNode is responsible for
+		// known regex positions -- from asts.NodeType(NodeTypeStringLiteral) to
+		// asts.NodeType(NodeTypeRegex). The RegexLiteralNode is responsible for
 		// handling backslash sequences for regex literals differently from
 		// those for non-regex string literals.
 		return root.BuildRegexLiteralNode(sval), nil
 
-	case dsl.NodeTypeRegexCaseInsensitive:
+	case asts.NodeType(NodeTypeRegexCaseInsensitive):
 		// StringLiteral nodes like '"abc"' entered by the user come in from
 		// the AST as 'abc', with double quotes removed. Case-insensitive
 		// regexes like '"a.*b"i' come in with initial '"' and final '"i'
@@ -55,26 +61,59 @@ func (root *RootNode) BuildLeafNode(
 		// from string.)
 		return root.BuildRegexLiteralNode(sval), nil
 
-	case dsl.NodeTypeIntLiteral:
+	case asts.NodeType(NodeTypeIntLiteral):
 		return root.BuildIntLiteralNode(sval), nil
-	case dsl.NodeTypeFloatLiteral:
+	case asts.NodeType(NodeTypeFloatLiteral):
 		return root.BuildFloatLiteralNode(sval), nil
-	case dsl.NodeTypeBoolLiteral:
+	case asts.NodeType(NodeTypeBoolLiteral):
 		return root.BuildBoolLiteralNode(sval), nil
-	case dsl.NodeTypeNullLiteral:
+	case asts.NodeType(NodeTypeNullLiteral):
 		return root.BuildNullLiteralNode(), nil
-	case dsl.NodeTypeContextVariable:
+	case asts.NodeType(NodeTypeContextVariable):
 		return root.BuildContextVariableNode(astNode)
-	case dsl.NodeTypeConstant:
+	case asts.NodeType(NodeTypeConstant):
 		return root.BuildConstantNode(astNode)
 
-	case dsl.NodeTypeArraySliceEmptyLowerIndex:
+	case asts.NodeType(NodeTypeArraySliceEmptyLowerIndex):
 		return root.BuildArraySliceEmptyLowerIndexNode(astNode)
-	case dsl.NodeTypeArraySliceEmptyUpperIndex:
+	case asts.NodeType(NodeTypeArraySliceEmptyUpperIndex):
 		return root.BuildArraySliceEmptyUpperIndexNode(astNode)
 
-	case dsl.NodeTypePanic:
+	case asts.NodeType(NodeTypePanic):
 		return root.BuildPanicNode(astNode)
+	}
+
+	// PGPG may use different type strings; try string comparison for known leaf types
+	switch string(astNode.Type) {
+	case "DirectFieldValue":
+		return root.BuildDirectFieldRvalueNode(tokenLitStripDollarOrAt(astNode)), nil
+	case "FullSrec":
+		return root.BuildFullSrecRvalueNode(), nil
+	case "DirectOosvarValue":
+		return root.BuildDirectOosvarRvalueNode(tokenLitStripDollarOrAt(astNode)), nil
+	case "BracedFieldValue":
+		return root.BuildDirectFieldRvalueNode(tokenLitStripBraced(astNode)), nil
+	case "FullOosvar":
+		return root.BuildFullOosvarRvalueNode(), nil
+	case "BracedOosvarValue":
+		return root.BuildDirectOosvarRvalueNode(tokenLitStripBraced(astNode)), nil
+	case "LocalVariable":
+		return root.BuildLocalVariableNode(sval), nil
+	case "string_literal":
+		return root.BuildStringLiteralNode(sval), nil
+	case "int_literal":
+		return root.BuildIntLiteralNode(sval), nil
+	case "float_literal":
+		return root.BuildFloatLiteralNode(sval), nil
+	case "bool_literal":
+		return root.BuildBoolLiteralNode(sval), nil
+	case "null_literal":
+		return root.BuildNullLiteralNode(), nil
+	}
+
+	// PGPG produces ctx_NF, ctx_NR, etc. as terminal types; treat as ContextVariable
+	if strings.HasPrefix(string(astNode.Type), "ctx_") {
+		return root.BuildContextVariableNode(astNode)
 	}
 
 	return nil, fmt.Errorf("at CST BuildLeafNode: unhandled AST node %s", string(astNode.Type))
@@ -203,9 +242,9 @@ func (node *LocalVariableNode) Evaluate(
 }
 
 // During the BNF parse all string literals -- "foo" or "(..)_(...)" regexes
-// etc -- are marked as dsl.NodeTypeStringLiteral. However, a CST-build
+// etc -- are marked as asts.NodeType(NodeTypeStringLiteral). However, a CST-build
 // pre-pass relabels second argument to sub/gsub etc -- any known regex
-// positions -- from dsl.NodeTypeStringLiteral to dsl.NodeTypeRegex. The
+// positions -- from asts.NodeType(NodeTypeStringLiteral) to asts.NodeType(NodeTypeRegex). The
 // RegexLiteralNode is responsible for handling backslash sequences for
 // regex literals differently from those for non-regex string literals.
 
@@ -379,9 +418,9 @@ func (node *MlrvalLiteralNode) Evaluate(
 	return node.literal
 }
 
-func (root *RootNode) BuildContextVariableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+func (root *RootNode) BuildContextVariableNode(astNode *asts.ASTNode) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Token == nil)
-	sval := string(astNode.Token.Lit)
+	sval := tokenLit(astNode)
 
 	switch sval {
 
@@ -562,9 +601,9 @@ func (node *FLATSEPNode) Evaluate(
 	return mlrval.FromString(state.Options.WriterOptions.FLATSEP)
 }
 
-func (root *RootNode) BuildConstantNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+func (root *RootNode) BuildConstantNode(astNode *asts.ASTNode) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Token == nil)
-	sval := string(astNode.Token.Lit)
+	sval := tokenLit(astNode)
 
 	switch sval {
 
@@ -608,9 +647,9 @@ type LiteralOneNode struct {
 // In array slices like 'myarray[:4]', the lower index is always 1 since Miller
 // user-space indices are 1-up.
 func (root *RootNode) BuildArraySliceEmptyLowerIndexNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (*LiteralOneNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArraySliceEmptyLowerIndex)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeArraySliceEmptyLowerIndex))
 	return &LiteralOneNode{}, nil
 }
 func (node *LiteralOneNode) Evaluate(
@@ -627,9 +666,9 @@ type LiteralEmptyStringNode struct {
 // we don't have access to the array length in this AST node so we return ""
 // so the slice-index CST node can compute it.
 func (root *RootNode) BuildArraySliceEmptyUpperIndexNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (*LiteralEmptyStringNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArraySliceEmptyUpperIndex)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeArraySliceEmptyUpperIndex))
 	return &LiteralEmptyStringNode{}, nil
 }
 func (node *LiteralEmptyStringNode) Evaluate(
@@ -645,7 +684,7 @@ func (node *LiteralEmptyStringNode) Evaluate(
 type PanicNode struct {
 }
 
-func (root *RootNode) BuildPanicNode(astNode *dsl.ASTNode) (*PanicNode, error) {
+func (root *RootNode) BuildPanicNode(astNode *asts.ASTNode) (*PanicNode, error) {
 	return &PanicNode{}, nil
 }
 func (node *PanicNode) Evaluate(

@@ -5,21 +5,21 @@ package cst
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
-	"github.com/johnkerl/miller/v6/pkg/parsing/token"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
+	"github.com/johnkerl/pgpg/go/lib/pkg/tokens"
 )
 
 type WhileLoopNode struct {
 	conditionNode      IEvaluable
-	conditionToken     *token.Token
+	conditionToken     *tokens.Token
 	statementBlockNode *StatementBlockNode
 }
 
 func NewWhileLoopNode(
 	conditionNode IEvaluable,
-	conditionToken *token.Token,
+	conditionToken *tokens.Token,
 	statementBlockNode *StatementBlockNode,
 ) *WhileLoopNode {
 	return &WhileLoopNode{
@@ -29,8 +29,8 @@ func NewWhileLoopNode(
 	}
 }
 
-func (root *RootNode) BuildWhileLoopNode(astNode *dsl.ASTNode) (*WhileLoopNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeWhileLoop)
+func (root *RootNode) BuildWhileLoopNode(astNode *asts.ASTNode) (*WhileLoopNode, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeWhileLoop))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 
 	conditionNode, err := root.BuildEvaluableNode(astNode.Children[0])
@@ -57,7 +57,7 @@ func (node *WhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, err
 		if !isBool {
 			return nil, fmt.Errorf(
 				"conditional expression did not evaluate to boolean%s",
-				dsl.TokenToLocationInfo(node.conditionToken),
+				pgpgTokenToLocationInfo(node.conditionToken),
 			)
 		}
 		if !boolValue {
@@ -89,13 +89,13 @@ func (node *WhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, err
 type DoWhileLoopNode struct {
 	statementBlockNode *StatementBlockNode
 	conditionNode      IEvaluable
-	conditionToken     *token.Token
+	conditionToken     *tokens.Token
 }
 
 func NewDoWhileLoopNode(
 	statementBlockNode *StatementBlockNode,
 	conditionNode IEvaluable,
-	conditionToken *token.Token,
+	conditionToken *tokens.Token,
 ) *DoWhileLoopNode {
 	return &DoWhileLoopNode{
 		statementBlockNode: statementBlockNode,
@@ -104,8 +104,8 @@ func NewDoWhileLoopNode(
 	}
 }
 
-func (root *RootNode) BuildDoWhileLoopNode(astNode *dsl.ASTNode) (*DoWhileLoopNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDoWhileLoop)
+func (root *RootNode) BuildDoWhileLoopNode(astNode *asts.ASTNode) (*DoWhileLoopNode, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeDoWhileLoop))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 
 	statementBlockNode, err := root.BuildStatementBlockNode(astNode.Children[0])
@@ -152,7 +152,7 @@ func (node *DoWhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, e
 		if !isBool {
 			return nil, fmt.Errorf(
 				"conditional expression did not evaluate to boolean%s",
-				dsl.TokenToLocationInfo(node.conditionToken),
+				pgpgTokenToLocationInfo(node.conditionToken),
 			)
 		}
 		if !boolValue {

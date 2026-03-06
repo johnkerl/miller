@@ -1,0 +1,60 @@
+#!/bin/bash
+# ================================================================
+# Generate lexer and parser from mlr-pgpg.bnf using PGPG.
+# Replaces GOCC-based tools/build-dsl.
+#
+# Run from the Miller repo root. Output goes to pkg/parsing/lexer/
+# and pkg/parsing/parser/.
+# ================================================================
+
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+bnf="pkg/parsing/mlr-pgpg.bnf"
+
+if [ ! -f "$bnf" ]; then
+  echo "build-dsl-pgpg: grammar file not found: $bnf"
+  exit 1
+fi
+
+# Intermediate JSON files (not checked in)
+mkdir -p pkg/parsing/gen
+lexjson="pkg/parsing/gen/lexer.json"
+parsejson="pkg/parsing/gen/parser.json"
+
+echo "build-dsl-pgpg: generating lexer tables..."
+go run github.com/johnkerl/pgpg/go/generators/cmd/lexgen-tables \
+  -o "$lexjson" \
+  "$bnf"
+
+echo "build-dsl-pgpg: generating lexer code..."
+go run github.com/johnkerl/pgpg/go/generators/cmd/lexgen-code \
+  -o pkg/parsing/lexer/lexer.go \
+  -package lexer \
+  -type MlrLexer \
+  "$lexjson"
+
+echo "build-dsl-pgpg: generating parser tables..."
+go run github.com/johnkerl/pgpg/go/generators/cmd/parsegen-tables \
+  -o "$parsejson" \
+  "$bnf"
+
+echo "build-dsl-pgpg: generating parser code..."
+go run github.com/johnkerl/pgpg/go/generators/cmd/parsegen-code \
+  -o pkg/parsing/parser/parser.go \
+  -package parser \
+  -type MlrParser \
+  "$parsejson"
+
+# Remove GOCC-generated files that are no longer needed
+rm -f pkg/parsing/lexer/acttab.go \
+      pkg/parsing/lexer/transitiontable.go \
+      pkg/parsing/parser/action.go \
+      pkg/parsing/parser/actiontable.go \
+      pkg/parsing/parser/context.go \
+      pkg/parsing/parser/gototable.go \
+      pkg/parsing/parser/productionstable.go \
+  2>/dev/null || true
+
+gofmt -w pkg/parsing/lexer/lexer.go pkg/parsing/parser/parser.go
+echo "build-dsl-pgpg: done."

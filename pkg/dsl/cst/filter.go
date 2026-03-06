@@ -17,9 +17,9 @@
 package cst
 
 import (
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 // BareBooleanStatementNode is for implicit filter statements such as mlr
@@ -31,8 +31,8 @@ type BareBooleanStatementNode struct {
 	writeToState         bool
 }
 
-func (root *RootNode) BuildBareBooleanStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeBareBoolean)
+func (root *RootNode) BuildBareBooleanStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeBareBoolean))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 
 	bareBooleanEvaluable, err := root.BuildEvaluableNode(astNode.Children[0])
@@ -65,8 +65,8 @@ type FilterStatementNode struct {
 	filterEvaluable IEvaluable
 }
 
-func (root *RootNode) BuildFilterStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFilterStatement)
+func (root *RootNode) BuildFilterStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeFilterStatement))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 
 	filterEvaluable, err := root.BuildEvaluableNode(astNode.Children[0])

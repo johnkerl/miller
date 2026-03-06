@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/output"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 	"github.com/johnkerl/miller/v6/pkg/types"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 // Example ASTs:
@@ -158,8 +158,8 @@ type PrintStatementNode struct {
 	outputHandlerManager      output.OutputHandlerManager // for file/pipe targets
 }
 
-func (root *RootNode) BuildPrintStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePrintStatement)
+func (root *RootNode) BuildPrintStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypePrintStatement))
 	return root.buildPrintxStatementNode(
 		astNode,
 		os.Stdout,
@@ -167,8 +167,8 @@ func (root *RootNode) BuildPrintStatementNode(astNode *dsl.ASTNode) (IExecutable
 	)
 }
 
-func (root *RootNode) BuildPrintnStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePrintnStatement)
+func (root *RootNode) BuildPrintnStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypePrintnStatement))
 	return root.buildPrintxStatementNode(
 		astNode,
 		os.Stdout,
@@ -176,8 +176,8 @@ func (root *RootNode) BuildPrintnStatementNode(astNode *dsl.ASTNode) (IExecutabl
 	)
 }
 
-func (root *RootNode) BuildEprintStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEprintStatement)
+func (root *RootNode) BuildEprintStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeEprintStatement))
 	return root.buildPrintxStatementNode(
 		astNode,
 		os.Stderr,
@@ -185,8 +185,8 @@ func (root *RootNode) BuildEprintStatementNode(astNode *dsl.ASTNode) (IExecutabl
 	)
 }
 
-func (root *RootNode) BuildEprintnStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEprintnStatement)
+func (root *RootNode) BuildEprintnStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeEprintnStatement))
 	return root.buildPrintxStatementNode(
 		astNode,
 		os.Stderr,
@@ -197,25 +197,56 @@ func (root *RootNode) BuildEprintnStatementNode(astNode *dsl.ASTNode) (IExecutab
 // Common code for building print/eprint/printn/eprintn nodes
 
 func (root *RootNode) buildPrintxStatementNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	defaultOutputStream *os.File,
 	terminator string,
 ) (IExecutable, error) {
-	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
-	expressionsNode := astNode.Children[0]
-	redirectorNode := astNode.Children[1]
+	// Normalize PGPG AST to 2-child layout (expressions, redirector).
+	// PGPG produces: 0 children (print), 1 child (print s or print > file), 2+ children (print s,t or print > file, s).
+	// With "print Redirector comma FcnArgs", children are [Redirector, FcnArgs].
+	// With "print FcnArgs" (with_adopted_grandchildren), children are the Rvalues directly.
+	var expressionsNode, redirectorNode *asts.ASTNode
+	isRedirector := func(n *asts.ASTNode) bool {
+		return n.Type == asts.NodeType(NodeTypeRedirectWrite) ||
+			n.Type == asts.NodeType(NodeTypeRedirectAppend) ||
+			n.Type == asts.NodeType(NodeTypeRedirectPipe)
+	}
+	switch len(astNode.Children) {
+	case 0:
+		expressionsNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+	case 1:
+		if isRedirector(astNode.Children[0]) {
+			expressionsNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+			redirectorNode = astNode.Children[0]
+		} else {
+			expressionsNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), astNode.Children)
+			redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		}
+	default:
+		if isRedirector(astNode.Children[0]) {
+			// print Redirector comma FcnArgs -> [Redirector, FcnArgs]
+			expressionsNode = astNode.Children[1]
+			redirectorNode = astNode.Children[0]
+		} else {
+			// print FcnArgs with_adopted_grandchildren -> [Rvalue, Rvalue, ...]
+			expressionsNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), astNode.Children)
+			redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		}
+	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Things to be printed, e.g. $a and $b in 'print > "foo.dat", $a, $b'.
 
 	var expressionEvaluables []IEvaluable = nil
 
-	if expressionsNode.Type == dsl.NodeTypeNoOp {
+	if expressionsNode.Type == asts.NodeType(NodeTypeNoOp) {
 		// Just 'print' without 'print $something'
 		expressionEvaluables = make([]IEvaluable, 1)
 		expressionEvaluable := root.BuildStringLiteralNode("")
 		expressionEvaluables[0] = expressionEvaluable
-	} else if expressionsNode.Type == dsl.NodeTypeFunctionCallsite {
+	} else if expressionsNode.Type == asts.NodeType(NodeTypeFunctionCallsite) ||
+		expressionsNode.Type == asts.NodeType(NodeTypeFcnArgs) {
 		expressionEvaluables = make([]IEvaluable, len(expressionsNode.Children))
 		for i, childNode := range expressionsNode.Children {
 			expressionEvaluable, err := root.BuildEvaluableNode(childNode)
@@ -239,7 +270,7 @@ func (root *RootNode) buildPrintxStatementNode(
 		outputHandlerManager:      nil,
 	}
 
-	if redirectorNode.Type == dsl.NodeTypeNoOp {
+	if redirectorNode.Type == asts.NodeType(NodeTypeNoOp) {
 		// No > >> or | was provided.
 		if defaultOutputStream == os.Stdout {
 			retval.printToRedirectFunc = retval.printToStdout
@@ -255,9 +286,9 @@ func (root *RootNode) buildPrintxStatementNode(
 		redirectorTargetNode := redirectorNode.Children[0]
 		var err error
 
-		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
+		if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetStdout) {
 			retval.printToRedirectFunc = retval.printToStdout
-		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
+		} else if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetStderr) {
 			retval.printToRedirectFunc = retval.printToStderr
 		} else {
 			retval.printToRedirectFunc = retval.printToFileOrPipe
@@ -267,11 +298,11 @@ func (root *RootNode) buildPrintxStatementNode(
 				return nil, err
 			}
 
-			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
+			if redirectorNode.Type == asts.NodeType(NodeTypeRedirectWrite) {
 				retval.outputHandlerManager = output.NewFileWritetHandlerManager(root.recordWriterOptions)
-			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
+			} else if redirectorNode.Type == asts.NodeType(NodeTypeRedirectAppend) {
 				retval.outputHandlerManager = output.NewFileAppendHandlerManager(root.recordWriterOptions)
-			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
+			} else if redirectorNode.Type == asts.NodeType(NodeTypeRedirectPipe) {
 				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
 				return nil, fmt.Errorf("unhandled redirector node type %s", string(redirectorNode.Type))

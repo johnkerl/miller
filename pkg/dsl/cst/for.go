@@ -5,11 +5,11 @@ package cst
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
-	"github.com/johnkerl/miller/v6/pkg/parsing/token"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
+	"github.com/johnkerl/pgpg/go/lib/pkg/tokens"
 )
 
 // Sample AST:
@@ -65,17 +65,17 @@ func NewForLoopOneVariableNode(
 //                         * LocalVariable "k"
 //                         * LocalVariable "v"
 
-func (root *RootNode) BuildForLoopOneVariableNode(astNode *dsl.ASTNode) (*ForLoopOneVariableNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopOneVariable)
+func (root *RootNode) BuildForLoopOneVariableNode(astNode *asts.ASTNode) (*ForLoopOneVariableNode, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeForLoopOneVariable))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 3)
 
 	variableASTNode := astNode.Children[0]
 	indexableASTNode := astNode.Children[1]
 	blockASTNode := astNode.Children[2]
 
-	lib.InternalCodingErrorIf(variableASTNode.Type != dsl.NodeTypeLocalVariable)
+	lib.InternalCodingErrorIf(variableASTNode.Type != asts.NodeType(NodeTypeLocalVariable))
 	lib.InternalCodingErrorIf(variableASTNode.Token == nil)
-	variableName := string(variableASTNode.Token.Lit)
+	variableName := tokenLit(variableASTNode)
 
 	// TODO: error if loop-over node isn't map/array (inasmuch as can be
 	// detected at CST-build time)
@@ -237,8 +237,8 @@ func NewForLoopTwoVariableNode(
 //                         * LocalVariable "k"
 //                         * LocalVariable "v"
 
-func (root *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoopTwoVariableNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopTwoVariable)
+func (root *RootNode) BuildForLoopTwoVariableNode(astNode *asts.ASTNode) (*ForLoopTwoVariableNode, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeForLoopTwoVariable))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 4)
 
 	keyVariableASTNode := astNode.Children[0]
@@ -246,14 +246,14 @@ func (root *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoo
 	indexableASTNode := astNode.Children[2]
 	blockASTNode := astNode.Children[3]
 
-	lib.InternalCodingErrorIf(keyVariableASTNode.Type != dsl.NodeTypeLocalVariable)
+	lib.InternalCodingErrorIf(keyVariableASTNode.Type != asts.NodeType(NodeTypeLocalVariable))
 	lib.InternalCodingErrorIf(keyVariableASTNode.Token == nil)
-	keyVariableName := string(keyVariableASTNode.Token.Lit)
+	keyVariableName := tokenLit(keyVariableASTNode)
 	keyIndexVariable := runtime.NewStackVariable(keyVariableName)
 
-	lib.InternalCodingErrorIf(valueVariableASTNode.Type != dsl.NodeTypeLocalVariable)
+	lib.InternalCodingErrorIf(valueVariableASTNode.Type != asts.NodeType(NodeTypeLocalVariable))
 	lib.InternalCodingErrorIf(valueVariableASTNode.Token == nil)
-	valueVariableName := string(valueVariableASTNode.Token.Lit)
+	valueVariableName := tokenLit(valueVariableASTNode)
 	valueIndexVariable := runtime.NewStackVariable(valueVariableName)
 
 	// TODO: error if loop-over node isn't map/array (inasmuch as can be
@@ -425,9 +425,9 @@ func NewForLoopMultivariableNode(
 //         * statement block
 
 func (root *RootNode) BuildForLoopMultivariableNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (*ForLoopMultivariableNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopMultivariable)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeForLoopMultivariable))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 4)
 
 	keyVariablesASTNode := astNode.Children[0]
@@ -435,18 +435,18 @@ func (root *RootNode) BuildForLoopMultivariableNode(
 	indexableASTNode := astNode.Children[2]
 	blockASTNode := astNode.Children[3]
 
-	lib.InternalCodingErrorIf(keyVariablesASTNode.Type != dsl.NodeTypeParameterList)
+	lib.InternalCodingErrorIf(keyVariablesASTNode.Type != asts.NodeType(NodeTypeParameterList))
 	lib.InternalCodingErrorIf(keyVariablesASTNode.Children == nil)
 	keyIndexVariables := make([]*runtime.StackVariable, len(keyVariablesASTNode.Children))
 	for i, keyVariableASTNode := range keyVariablesASTNode.Children {
 		lib.InternalCodingErrorIf(keyVariableASTNode.Token == nil)
-		keyIndexVariableName := string(keyVariableASTNode.Token.Lit)
+		keyIndexVariableName := tokenLit(keyVariableASTNode)
 		keyIndexVariables[i] = runtime.NewStackVariable(keyIndexVariableName)
 	}
 
-	lib.InternalCodingErrorIf(valueVariableASTNode.Type != dsl.NodeTypeLocalVariable)
+	lib.InternalCodingErrorIf(valueVariableASTNode.Type != asts.NodeType(NodeTypeLocalVariable))
 	lib.InternalCodingErrorIf(valueVariableASTNode.Token == nil)
-	valueVariableName := string(valueVariableASTNode.Token.Lit)
+	valueVariableName := tokenLit(valueVariableASTNode)
 	valueIndexVariable := runtime.NewStackVariable(valueVariableName)
 
 	// TODO: error if loop-over node isn't map/array (inasmuch as can be
@@ -693,7 +693,7 @@ type TripleForLoopNode struct {
 	startBlockNode              *StatementBlockNode
 	precontinuationAssignments  []IExecutable
 	continuationExpressionNode  IEvaluable
-	continuationExpressionToken *token.Token
+	continuationExpressionToken *tokens.Token
 	updateBlockNode             *StatementBlockNode
 	bodyBlockNode               *StatementBlockNode
 }
@@ -702,7 +702,7 @@ func NewTripleForLoopNode(
 	startBlockNode *StatementBlockNode,
 	precontinuationAssignments []IExecutable,
 	continuationExpressionNode IEvaluable,
-	continuationExpressionToken *token.Token,
+	continuationExpressionToken *tokens.Token,
 	updateBlockNode *StatementBlockNode,
 	bodyBlockNode *StatementBlockNode,
 ) *TripleForLoopNode {
@@ -756,8 +756,8 @@ func NewTripleForLoopNode(
 //                     * DirectFieldValue "i"
 //                     * LocalVariable "i"
 
-func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLoopNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeTripleForLoop)
+func (root *RootNode) BuildTripleForLoopNode(astNode *asts.ASTNode) (*TripleForLoopNode, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeTripleForLoop))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 4)
 
 	startBlockASTNode := astNode.Children[0]
@@ -765,10 +765,10 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 	updateBlockASTNode := astNode.Children[2]
 	bodyBlockASTNode := astNode.Children[3]
 
-	lib.InternalCodingErrorIf(startBlockASTNode.Type != dsl.NodeTypeStatementBlock)
-	lib.InternalCodingErrorIf(continuationExpressionASTNode.Type != dsl.NodeTypeStatementBlock)
-	lib.InternalCodingErrorIf(updateBlockASTNode.Type != dsl.NodeTypeStatementBlock)
-	lib.InternalCodingErrorIf(bodyBlockASTNode.Type != dsl.NodeTypeStatementBlock)
+	lib.InternalCodingErrorIf(startBlockASTNode.Type != asts.NodeType(NodeTypeStatementBlock))
+	lib.InternalCodingErrorIf(continuationExpressionASTNode.Type != asts.NodeType(NodeTypeStatementBlock))
+	lib.InternalCodingErrorIf(updateBlockASTNode.Type != asts.NodeType(NodeTypeStatementBlock))
+	lib.InternalCodingErrorIf(bodyBlockASTNode.Type != asts.NodeType(NodeTypeStatementBlock))
 
 	startBlockNode, err := root.BuildStatementBlockNode(startBlockASTNode)
 	if err != nil {
@@ -780,20 +780,26 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 	// for (int i = 0; c += 1, i < 10; i += 1) { ... }
 	var precontinuationAssignments []IExecutable = nil
 	var continuationExpressionNode IEvaluable = nil
-	var continuationExpressionToken *token.Token = nil
+	var continuationExpressionToken *tokens.Token = nil
 	if len(continuationExpressionASTNode.Children) > 0 { // empty is true
 		n := len(continuationExpressionASTNode.Children)
 		if n > 1 {
 			precontinuationAssignments = make([]IExecutable, n-1)
 			for i := 0; i < n-1; i++ {
-				if continuationExpressionASTNode.Children[i].Type != dsl.NodeTypeAssignment {
+				childType := continuationExpressionASTNode.Children[i].Type
+				if childType != asts.NodeType(NodeTypeAssignment) &&
+					childType != asts.NodeType(NodeTypeCompoundAssignment) {
 					return nil, fmt.Errorf(
 						"the non-final triple-for continuation statements must be assignments",
 					)
 				}
-				precontinuationAssignment, err := root.BuildAssignmentNode(
-					continuationExpressionASTNode.Children[i],
-				)
+				var precontinuationAssignment IExecutable
+				var err error
+				if childType == asts.NodeType(NodeTypeCompoundAssignment) {
+					precontinuationAssignment, err = root.BuildCompoundAssignmentNode(continuationExpressionASTNode.Children[i])
+				} else {
+					precontinuationAssignment, err = root.BuildAssignmentNode(continuationExpressionASTNode.Children[i])
+				}
 				if err != nil {
 					return nil, err
 				}
@@ -802,7 +808,7 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 		}
 
 		bareBooleanASTNode := continuationExpressionASTNode.Children[n-1]
-		if bareBooleanASTNode.Type != dsl.NodeTypeBareBoolean {
+		if bareBooleanASTNode.Type != asts.NodeType(NodeTypeBareBoolean) {
 			if n == 1 {
 				return nil, fmt.Errorf(
 					"the triple-for continuation statement must be a bare boolean",
@@ -881,7 +887,7 @@ func (node *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload,
 			if !isBool {
 				return nil, fmt.Errorf(
 					"for-loop continuation did not evaluate to boolean%s",
-					dsl.TokenToLocationInfo(node.continuationExpressionToken),
+					pgpgTokenToLocationInfo(node.continuationExpressionToken),
 				)
 			}
 			if !boolValue {

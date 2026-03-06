@@ -21,9 +21,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/dsl/cst"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 func (repl *Repl) handleDSLStringImmediate(dslString string, doWarnings bool) error {
@@ -51,7 +51,7 @@ func (repl *Repl) handleDSLStringAux(
 		cst.DSLInstanceTypeREPL,
 		isReplImmediate,
 		doWarnings,
-		func(dslString string, astNode *dsl.AST) {
+		func(dslString string, astNode *asts.AST) {
 			if repl.astPrintMode == ASTPrintParex {
 				astNode.PrintParex()
 			} else if repl.astPrintMode == ASTPrintParexOneLine {

@@ -1,0 +1,658 @@
+# Miller DSL grammar for miller-pgpg.
+# Expanded from Miller's mlr.bnf, excluding positional-indexing ($[[n]], $[[[n]]], x[[n]], x[[[n]]])
+# which are handled in eval. Uses PGPG -> {...} directives.
+
+# ----------------------------------------------------------------
+# Lexer (PGPG uses ::= for all rules)
+# ----------------------------------------------------------------
+
+!whitespace ::= ' ' | '\t' | '\n' | '\r' ;
+!comment ::= '#' { . } '\n' ;
+
+_letter ::= 'a'-'z' | 'A'-'Z' | '\u00a0'-'\u00ff' | '\u0100'-'\U0010ffff' ;
+_decdig ::= '0'-'9' ;
+_hexdig ::= '0'-'9' | 'a'-'f' | 'A'-'F' ;
+_idchar ::= _letter | _decdig | '_' ;
+_leading_idchar ::= _letter | '_' ;
+
+field_name ::= '$' _idchar { _idchar } ;
+dollar_lbrack ::= '$' '[' ;
+_braced_char ::= 'A'-'Z' | 'a'-'z' | '0'-'9'
+  | ' ' | '!' | '#' | '$' | '%' | '&' | '\'' | '\\'
+  | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/'
+  | ':' | ';' | '<' | '=' | '>' | '?' | '@' | '['
+  | ']' | '^' | '_' | '`' | '|' | '~'
+  | ( '\\' '{' ) | ( '\\' '}' )
+  | '\u00a0'-'\u00ff' | '\u0100'-'\U0010ffff'
+;
+braced_field_name ::= '$' '{' _braced_char { _braced_char } '}' ;
+full_srec ::= '$' '*' ;
+oosvar_name ::= '@' _leading_idchar { _idchar } ;
+braced_oosvar_name ::= '@' '{' _braced_char { _braced_char } '}' ;
+full_oosvar ::= '@' '*' ;
+# Keywords must precede non_sigil_name so they match instead of identifiers
+kw_unset ::= 'u' 'n' 's' 'e' 't' ;
+kw_filter ::= 'f' 'i' 'l' 't' 'e' 'r' ;
+kw_print ::= 'p' 'r' 'i' 'n' 't' ;
+kw_printn ::= 'p' 'r' 'i' 'n' 't' 'n' ;
+kw_eprint ::= 'e' 'p' 'r' 'i' 'n' 't' ;
+kw_eprintn ::= 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
+kw_dump ::= 'd' 'u' 'm' 'p' ;
+kw_edump ::= 'e' 'd' 'u' 'm' 'p' ;
+kw_tee ::= 't' 'e' 'e' ;
+kw_emit1 ::= 'e' 'm' 'i' 't' '1' ;
+kw_emit ::= 'e' 'm' 'i' 't' ;
+kw_emitp ::= 'e' 'm' 'i' 't' 'p' ;
+kw_emitf ::= 'e' 'm' 'i' 't' 'f' ;
+kw_begin ::= 'b' 'e' 'g' 'i' 'n' ;
+kw_end ::= 'e' 'n' 'd' ;
+kw_if ::= 'i' 'f' ;
+kw_elif ::= 'e' 'l' 'i' 'f' ;
+kw_else ::= 'e' 'l' 's' 'e' ;
+kw_for ::= 'f' 'o' 'r' ;
+kw_in ::= 'i' 'n' ;
+kw_while ::= 'w' 'h' 'i' 'l' 'e' ;
+kw_do ::= 'd' 'o' ;
+kw_break ::= 'b' 'r' 'e' 'a' 'k' ;
+kw_continue ::= 'c' 'o' 'n' 't' 'i' 'n' 'u' 'e' ;
+kw_return ::= 'r' 'e' 't' 'u' 'r' 'n' ;
+kw_call ::= 'c' 'a' 'l' 'l' ;
+kw_func ::= 'f' 'u' 'n' 'c' ;
+kw_subr ::= 's' 'u' 'b' 'r' ;
+kw_arr ::= 'a' 'r' 'r' ;
+kw_bool ::= 'b' 'o' 'o' 'l' ;
+kw_float ::= 'f' 'l' 'o' 'a' 't' ;
+kw_int ::= 'i' 'n' 't' ;
+kw_map ::= 'm' 'a' 'p' ;
+kw_num ::= 'n' 'u' 'm' ;
+kw_str ::= 's' 't' 'r' ;
+kw_var ::= 'v' 'a' 'r' ;
+kw_funct ::= 'f' 'u' 'n' 'c' 't' ;
+kw_stdout ::= 's' 't' 'd' 'o' 'u' 't' ;
+kw_stderr ::= 's' 't' 'd' 'e' 'r' 'r' ;
+kw_env ::= 'E' 'N' 'V' ;
+# Context variables (must precede non_sigil_name so NF matches ctx_NF not identifier)
+ctx_IPS ::= 'I' 'P' 'S' ;
+ctx_IFS ::= 'I' 'F' 'S' ;
+ctx_IRS ::= 'I' 'R' 'S' ;
+ctx_OPS ::= 'O' 'P' 'S' ;
+ctx_OFS ::= 'O' 'F' 'S' ;
+ctx_ORS ::= 'O' 'R' 'S' ;
+ctx_FLATSEP ::= 'F' 'L' 'A' 'T' 'S' 'E' 'P' ;
+ctx_NF ::= 'N' 'F' ;
+ctx_NR ::= 'N' 'R' ;
+ctx_FNR ::= 'F' 'N' 'R' ;
+ctx_FILENAME ::= 'F' 'I' 'L' 'E' 'N' 'A' 'M' 'E' ;
+ctx_FILENUM ::= 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
+non_sigil_name ::= _leading_idchar { _idchar } ;
+
+_hex ::= '0'-'9' | 'A'-'F' | 'a'-'f' ;
+_string_char ::= "\u0020"-"\u0021" | "\u0023"-"\u005B" | "\u005D"-"\uFFFF" ;
+_escape ::= '\\' ( '"' | '\\' | '/' | 'b' | 'f' | 'n' | 'r' | 't' | 'u' _hex _hex _hex _hex ) ;
+string_literal ::= '"' { _string_char | _escape } '"' ;
+literal_true ::= 't' 'r' 'u' 'e' ;
+literal_false ::= 'f' 'a' 'l' 's' 'e' ;
+null_literal ::= 'n' 'u' 'l' 'l' ;
+inf_literal ::= 'I' 'n' 'f' ;
+nan_literal ::= 'N' 'a' 'N' ;
+
+_frac ::= '.' _decdig { _decdig } ;
+_exp ::= ( 'e' | 'E' ) [ '+' | '-' ] _decdig { _decdig } ;
+float_literal ::= _decdig { _decdig } _frac [ _exp ]
+  | '.' _decdig { _decdig } [ _exp ]
+  | _decdig { _decdig } _exp
+;
+int_literal ::= _decdig { _decdig } ;
+
+equals ::= '=' ;
+semicolon ::= ';' ;
+lbrack ::= '[' ;
+rbrack ::= ']' ;
+lbrace ::= '{' ;
+rbrace ::= '}' ;
+lparen ::= '(' ;
+rparen ::= ')' ;
+comma ::= ',' ;
+colon ::= ':' ;
+
+op_ternary ::= '?' ;
+op_colon ::= ':' ;
+op_logical_or ::= '|' '|' ;
+op_logical_xor ::= '^' '^' ;
+op_logical_and ::= '&' '&' ;
+op_eqtilde ::= '=' '~' ;
+op_negtilde ::= '!' '=' '~' ;
+op_eqeq ::= '=' '=' ;
+op_ne ::= '!' '=' ;
+op_spaceship ::= '<' '=' '>' ;
+op_gt ::= '>' ;
+op_ge ::= '>' '=' ;
+op_lt ::= '<' ;
+op_le ::= '<' '=' ;
+op_bit_or ::= '|' ;
+op_bit_xor ::= '^' ;
+op_bit_and ::= '&' ;
+op_shift_left ::= '<' '<' ;
+op_shift_right ::= '>' '>' ;
+op_shift_right_unsigned ::= '>' '>' '>' ;
+op_plus ::= '+' ;
+op_minus ::= '-' ;
+op_dot_plus ::= '.' '+' ;
+op_dot_minus ::= '.' '-' ;
+op_star ::= '*' ;
+op_slash ::= '/' ;
+op_slash_slash ::= '/' '/' ;
+op_percent ::= '%' ;
+op_dot_star ::= '.' '*' ;
+op_dot_slash ::= '.' '/' ;
+op_dot_slash_slash ::= '.' '/' '/' ;
+op_dot ::= '.' ;
+op_unary_plus ::= '+' ;
+op_unary_minus ::= '-' ;
+op_bang ::= '!' ;
+op_tilde ::= '~' ;
+op_absent_coalesce ::= '?' '?' ;
+op_empty_coalesce ::= '?' '?' '?' ;
+op_pow ::= '*' '*' ;
+
+# Compound assignment operators (longer sequences first for lexer)
+op_or_equals                    ::= '|' '|' '=' ;
+op_xor_equals                   ::= '^' '^' '=' ;
+op_and_equals                   ::= '&' '&' '=' ;
+op_empty_coalesce_equals         ::= '?' '?' '?' '=' ;
+op_absent_coalesce_equals        ::= '?' '?' '=' ;
+op_shift_right_unsigned_equals   ::= '>' '>' '>' '=' ;
+op_shift_right_equals            ::= '>' '>' '=' ;
+op_shift_left_equals             ::= '<' '<' '=' ;
+op_bit_or_equals                ::= '|' '=' ;
+op_bit_and_equals               ::= '&' '=' ;
+op_bit_xor_equals               ::= '^' '=' ;
+op_pow_equals                   ::= '*' '*' '=' ;
+op_slash_slash_equals            ::= '/' '/' '=' ;
+op_slash_equals                 ::= '/' '=' ;
+op_star_equals                  ::= '*' '=' ;
+op_percent_equals               ::= '%' '=' ;
+op_plus_equals                  ::= '+' '=' ;
+op_dot_equals                   ::= '.' '=' ;
+op_minus_equals                 ::= '-' '=' ;
+
+op_redirect_write ::= '>' ;
+op_redirect_append ::= '>' '>' ;
+op_redirect_pipe ::= '|' ;
+
+# ----------------------------------------------------------------
+# Parser with AST hints
+# ----------------------------------------------------------------
+
+Root ::= StatementBlock ;
+
+# Empty allows mlr put "" and scripts with only comments/whitespace (e.g. "  # comment").
+# Trailing semicolon (e.g. "$x=1; $y=2;") via StatementBlock ::= empty in the recursion.
+StatementBlock ::=
+    empty -> { "parent_literal": "block", "children": [], "type": "StatementBlock" }
+  | Statement -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
+  | Statement semicolon StatementBlock -> { "parent": 2, "with_prepended_children": [0], "type": "StatementBlock" }
+;
+
+StatementBlockInBraces ::= lbrace StatementBlock rbrace -> { "parent": 1, "children": [1], "type": "StatementBlockInBraces" } ;
+
+Statement ::=
+    Assignment
+  | Unset
+  | BareBoolean
+  | FilterStatement
+  | PrintStatement
+  | PrintnStatement
+  | EprintStatement
+  | EprintnStatement
+  | DumpStatement
+  | EdumpStatement
+  | TeeStatement
+  | Emit1Statement
+  | EmitStatement
+  | EmitPStatement
+  | EmitFStatement
+  | DoWhileLoop
+  | BreakStatement
+  | ContinueStatement
+  | ReturnStatement
+  | SubroutineCallsite
+  | BeginBlock
+  | EndBlock
+  | CondBlock
+  | IfChain
+  | WhileLoop
+  | ForLoop
+  | NamedFunctionDefinition
+  | SubroutineDefinition
+;
+
+CompoundAssignOp ::=
+    op_or_equals | op_xor_equals | op_and_equals
+  | op_absent_coalesce_equals | op_empty_coalesce_equals
+  | op_bit_or_equals | op_bit_and_equals | op_bit_xor_equals
+  | op_shift_left_equals | op_shift_right_equals | op_shift_right_unsigned_equals
+  | op_plus_equals | op_dot_equals | op_minus_equals
+  | op_star_equals | op_slash_equals | op_slash_slash_equals
+  | op_percent_equals | op_pow_equals
+;
+
+Assignment ::=
+    Lvalue equals Rvalue -> { "parent": 1, "children": [0, 2], "type": "Assignment" }
+  | Lvalue CompoundAssignOp Rvalue -> { "parent": 1, "children": [0, 1, 2], "type": "CompoundAssignment" }
+;
+
+Unset ::= kw_unset FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "Unset" } ;
+
+BareBoolean ::= Rvalue -> { "parent": 0, "children": [0], "type": "BareBoolean" } ;
+
+FilterStatement ::= kw_filter Rvalue -> { "parent": 0, "children": [1], "type": "FilterStatement" } ;
+
+RedirectTarget ::=
+    kw_stdout -> { "parent": 0, "children": [], "type": "RedirectTargetStdout" }
+  | kw_stderr -> { "parent": 0, "children": [], "type": "RedirectTargetStderr" }
+  | Rvalue -> { "parent": 0, "children": [0], "type": "RedirectTargetRvalue" }
+;
+
+Redirector ::=
+    op_redirect_write RedirectTarget -> { "parent": 0, "children": [1], "type": "RedirectWrite" }
+  | op_redirect_append RedirectTarget -> { "parent": 0, "children": [1], "type": "RedirectAppend" }
+  | op_redirect_pipe RedirectTarget -> { "parent": 0, "children": [1], "type": "RedirectPipe" }
+;
+
+PrintStatement ::=
+    kw_print -> { "parent": 0, "children": [], "type": "PrintStatement" }
+  | kw_print Redirector -> { "parent": 0, "children": [1], "type": "PrintStatement" }
+  | kw_print FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "PrintStatement" }
+  | kw_print Redirector comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "PrintStatement" }
+;
+
+PrintnStatement ::=
+    kw_printn -> { "parent": 0, "children": [], "type": "PrintnStatement" }
+  | kw_printn Redirector -> { "parent": 0, "children": [1], "type": "PrintnStatement" }
+  | kw_printn FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "PrintnStatement" }
+  | kw_printn Redirector comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "PrintnStatement" }
+;
+
+EprintStatement ::=
+    kw_eprint -> { "parent": 0, "children": [], "type": "EprintStatement" }
+  | kw_eprint FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EprintStatement" }
+;
+
+EprintnStatement ::=
+    kw_eprintn -> { "parent": 0, "children": [], "type": "EprintnStatement" }
+  | kw_eprintn FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EprintnStatement" }
+;
+
+DumpStatement ::=
+    kw_dump -> { "parent": 0, "children": [], "type": "DumpStatement" }
+  | kw_dump Redirector -> { "parent": 0, "children": [1], "type": "DumpStatement" }
+  | kw_dump FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "DumpStatement" }
+  | kw_dump Redirector comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "DumpStatement" }
+;
+
+EdumpStatement ::=
+    kw_edump -> { "parent": 0, "children": [], "type": "EdumpStatement" }
+  | kw_edump FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EdumpStatement" }
+;
+
+TeeStatement ::= kw_tee Redirector comma FullSrec -> { "parent": 0, "children": [1, 3], "type": "TeeStatement" } ;
+
+Emit1Statement ::= kw_emit1 Rvalue -> { "parent": 0, "children": [1], "type": "Emit1Statement" } ;
+
+# Emit/emitp/emitf take FcnArgs (like emit1) to avoid reduce-reduce with Emittable vs MlrvalOrFunction.
+# Full EmittableList (oosvars, map literals) can be added later with grammar refactor.
+EmitStatement ::=
+    kw_emit FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EmitStatement" }
+  | kw_emit Redirector comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "EmitStatement" }
+;
+
+EmitPStatement ::=
+    kw_emitp FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EmitPStatement" }
+  | kw_emitp Redirector comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "EmitPStatement" }
+;
+
+EmitFStatement ::=
+    kw_emitf FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EmitFStatement" }
+  | kw_emitf Redirector comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "EmitFStatement" }
+;
+
+BeginBlock ::= kw_begin StatementBlockInBraces -> { "parent": 0, "children": [1], "type": "BeginBlock" } ;
+
+EndBlock ::= kw_end StatementBlockInBraces -> { "parent": 0, "children": [1], "type": "EndBlock" } ;
+
+CondBlock ::= Rvalue StatementBlockInBraces -> { "parent": 0, "children": [0, 1], "type": "CondBlock" } ;
+
+IfBlock ::= kw_if lparen Rvalue rparen StatementBlockInBraces -> { "parent": 0, "children": [2, 4], "type": "IfItem" } ;
+
+ElifBlock ::= kw_elif lparen Rvalue rparen StatementBlockInBraces -> { "parent": 0, "children": [2, 4], "type": "IfItem" } ;
+
+ElseBlock ::= kw_else StatementBlockInBraces -> { "parent": 0, "children": [1], "type": "IfItem" } ;
+
+IfChain ::=
+    IfBlock -> { "parent_literal": "if_chain", "children": [0], "type": "IfChain" }
+  | IfChain ElifBlock -> { "parent": 0, "with_appended_children": [1], "type": "IfChain" }
+  | IfChain ElseBlock -> { "parent": 0, "with_appended_children": [1], "type": "IfChain" }
+;
+
+WhileLoop ::= kw_while lparen Rvalue rparen StatementBlockInBraces -> { "parent": 0, "children": [2, 4], "type": "WhileLoop" } ;
+
+DoWhileLoop ::= kw_do StatementBlockInBraces kw_while lparen Rvalue rparen -> { "parent": 0, "children": [1, 4], "type": "DoWhileLoop" } ;
+
+ForLoopOneVariable ::= kw_for lparen LocalVariable kw_in Rvalue rparen StatementBlockInBraces -> { "parent": 0, "children": [2, 4, 6], "type": "ForLoopOneVariable" } ;
+
+ForLoopTwoVariable ::= kw_for lparen LocalVariable comma LocalVariable kw_in Rvalue rparen StatementBlockInBraces -> { "parent": 0, "children": [2, 4, 6, 8], "type": "ForLoopTwoVariable" } ;
+
+MultiIndex ::=
+    LocalVariable comma LocalVariable -> { "parent_literal": "multi_index", "children": [0, 2], "type": "MultiIndex" }
+  | MultiIndex comma LocalVariable -> { "parent": 0, "with_appended_children": [2], "type": "MultiIndex" }
+;
+
+ForLoopMultivariable ::= kw_for lparen lparen MultiIndex rparen comma LocalVariable kw_in Rvalue rparen StatementBlockInBraces -> { "parent": 0, "children": [3, 6, 8, 10], "type": "ForLoopMultivariable" } ;
+
+# Optional for-loop parts: use StatementBlock with possible empty child list.
+# For for(;;) we need empty; PGPG has no epsilon. Use OptionalForBlock matching
+# semicolon-semicolon to imply empty, or require at least one item.
+# Miller allows for(;;body), for(i=0;;), for(;i<n;). We support only non-empty parts:
+# for(i=0;i<n;i++) and for(i=0;i<n;) and for(;i<n;i++) etc - omit TripleForLoop
+# for now to avoid empty RHS. Alternative: TripleFor* each require 1+ items.
+TripleForStart ::=
+    Assignment -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
+  | TripleForStart comma Assignment -> { "parent": 0, "with_appended_children": [2], "type": "StatementBlock" }
+;
+
+TripleForContinuationItem ::= Assignment | BareBoolean ;
+
+TripleForContinuation ::=
+    TripleForContinuationItem -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
+  | TripleForContinuation comma TripleForContinuationItem -> { "parent": 0, "with_appended_children": [2], "type": "StatementBlock" }
+;
+
+TripleForUpdate ::=
+    Assignment -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
+  | TripleForUpdate comma Assignment -> { "parent": 0, "with_appended_children": [2], "type": "StatementBlock" }
+;
+
+TripleForLoop ::= kw_for lparen TripleForStart semicolon TripleForContinuation semicolon TripleForUpdate rparen StatementBlockInBraces -> { "parent": 0, "children": [2, 4, 6, 8], "type": "TripleForLoop" } ;
+
+ForLoop ::= ForLoopOneVariable | ForLoopTwoVariable | ForLoopMultivariable | TripleForLoop ;
+
+BreakStatement ::= kw_break -> { "parent": 0, "children": [], "type": "BreakStatement" } ;
+
+ContinueStatement ::= kw_continue -> { "parent": 0, "children": [], "type": "ContinueStatement" } ;
+
+ReturnStatement ::= kw_return -> { "parent": 0, "children": [], "type": "ReturnStatement" }
+  | kw_return Rvalue -> { "parent": 0, "children": [1], "type": "ReturnStatement" }
+;
+
+SubroutineName ::= non_sigil_name ;
+
+SubroutineCallsite ::=
+    kw_call SubroutineName lparen rparen -> { "parent": 1, "children": [], "type": "SubroutineCallsite" }
+  | kw_call SubroutineName lparen FcnArgs rparen -> { "parent": 1, "with_adopted_grandchildren": [3], "type": "SubroutineCallsite" }
+;
+
+# func f(a,b) { body } or func f(): int { body }
+NamedFunctionDefinition ::=
+    kw_func non_sigil_name FuncParams StatementBlockInBraces
+      -> { "parent": 1, "children": [2, 3], "type": "NamedFunctionDefinition" }
+  | kw_func non_sigil_name FuncParams colon Typedecl StatementBlockInBraces
+      -> { "parent": 1, "children": [2, 4, 5], "type": "NamedFunctionDefinition" }
+;
+
+# func (a,b) { body } - anonymous function
+UnnamedFunctionDefinition ::=
+    kw_func FuncParams StatementBlockInBraces
+      -> { "parent": 0, "children": [1, 2], "type": "UnnamedFunctionDefinition" }
+  | kw_func FuncParams colon Typedecl StatementBlockInBraces
+      -> { "parent": 0, "children": [1, 3, 4], "type": "UnnamedFunctionDefinition" }
+;
+
+# subr name(a,b) { body }
+SubroutineDefinition ::=
+    kw_subr non_sigil_name FuncParams StatementBlockInBraces
+      -> { "parent": 1, "children": [2, 3], "type": "SubroutineDefinition" }
+;
+
+# () or (a,b,...) - contains lparen/rparen so empty case is lparen rparen
+FuncParams ::=
+    lparen rparen -> { "parent_literal": "params", "children": [], "type": "ParameterList" }
+  | lparen FuncOrSubrParameterList rparen -> { "parent": 1, "children": [1], "type": "ParameterList" }
+;
+
+FuncOrSubrParameterList ::=
+    FuncOrSubrParameter -> { "parent_literal": "params", "children": [0], "type": "ParameterList" }
+  | FuncOrSubrParameter comma FuncOrSubrParameterList -> { "parent": 2, "with_prepended_children": [0], "type": "ParameterList" }
+;
+
+FuncOrSubrParameter ::=
+    LocalVariable -> { "parent": 0, "children": [0], "type": "Parameter" }
+;
+
+Typedecl ::= kw_arr | kw_bool | kw_float | kw_int | kw_map | kw_num | kw_str | kw_var | kw_funct ;
+
+Lvalue ::= Rvalue ;
+
+# Rvalue is the top of the operator precedence chain
+Rvalue ::= PrecedenceChainStart ;
+
+PrecedenceChainStart ::= TernaryTerm ;
+
+TernaryTerm ::=
+    LogicalOrTerm op_ternary TernaryTerm colon TernaryTerm -> { "parent": 1, "children": [0, 2, 4], "type": "Operator" }
+  | LogicalOrTerm
+;
+
+LogicalOrTerm ::=
+    LogicalOrTerm op_logical_or LogicalXORTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | LogicalXORTerm
+;
+
+LogicalXORTerm ::=
+    LogicalXORTerm op_logical_xor LogicalAndTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | LogicalAndTerm
+;
+
+LogicalAndTerm ::=
+    LogicalAndTerm op_logical_and EqneTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | EqneTerm
+;
+
+EqneTerm ::=
+    EqneTerm op_eqtilde   CmpTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | EqneTerm op_negtilde  CmpTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | EqneTerm op_eqeq      CmpTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | EqneTerm op_ne        CmpTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | EqneTerm op_spaceship CmpTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+
+  | CmpTerm
+;
+
+CmpTerm ::=
+    CmpTerm op_gt BitwiseORTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | CmpTerm op_ge BitwiseORTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | CmpTerm op_lt BitwiseORTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | CmpTerm op_le BitwiseORTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | BitwiseORTerm
+;
+
+BitwiseORTerm ::=
+    BitwiseORTerm op_bit_or BitwiseXORTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | BitwiseXORTerm
+;
+
+BitwiseXORTerm ::=
+    BitwiseXORTerm op_bit_xor BitwiseANDTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | BitwiseANDTerm
+;
+
+BitwiseANDTerm ::=
+    BitwiseANDTerm op_bit_and BitwiseShiftTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | BitwiseShiftTerm
+;
+
+BitwiseShiftTerm ::=
+    BitwiseShiftTerm op_shift_left AddsubdotTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | BitwiseShiftTerm op_shift_right AddsubdotTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | BitwiseShiftTerm op_shift_right_unsigned AddsubdotTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | AddsubdotTerm
+;
+
+# Note: Miller uses "." for both string concat and map key access; PGPG has shift/reduce
+# conflict with that. We keep "." only for map access (DotFactor). Use ".+" or ".=" for
+# concatenation, or add a concat() function later.
+AddsubdotTerm ::=
+    AddsubdotTerm op_plus      MuldivTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | AddsubdotTerm op_minus     MuldivTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | AddsubdotTerm op_dot_plus  MuldivTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | AddsubdotTerm op_dot_minus MuldivTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | MuldivTerm
+;
+
+MuldivTerm ::=
+    MuldivTerm op_star            DotFactor -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | MuldivTerm op_slash           DotFactor -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | MuldivTerm op_slash_slash     DotFactor -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | MuldivTerm op_percent         DotFactor -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | MuldivTerm op_dot_star        DotFactor -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | MuldivTerm op_dot_slash       DotFactor -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | MuldivTerm op_dot_slash_slash DotFactor -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | DotFactor
+;
+
+DotFactor ::=
+    DotFactor op_dot UnaryOpTerm -> { "parent": 1, "children": [0, 2], "type": "DotOperator" }
+  | UnaryOpTerm
+;
+
+UnaryOpTerm ::=
+    op_unary_plus      UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_unary_minus     UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_dot_plus        UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_dot_minus       UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_bang            UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_tilde           UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | AbsentCoalesceTerm
+;
+
+AbsentCoalesceTerm ::=
+    AbsentCoalesceTerm op_absent_coalesce EmptyCoalesceTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | EmptyCoalesceTerm
+;
+
+EmptyCoalesceTerm ::=
+    EmptyCoalesceTerm op_empty_coalesce PowTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | PowTerm
+;
+
+PowTerm ::=
+    PrecedenceChainEnd op_pow PowTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | PrecedenceChainEnd
+;
+
+PrecedenceChainEnd ::=
+    lparen Rvalue rparen -> { "parent": 1, "children": [1], "type": "Parenthesized" }
+  | MlrvalOrFunction
+;
+
+# Atoms: literals, field access, maps, arrays, index access, function calls, func literals
+MlrvalOrFunction ::=
+    DirectFieldValue
+  | IndirectFieldValue
+  | BracedFieldValue
+  | FullSrec
+  | EnvironmentVariable
+  | DirectOosvarValue
+  | IndirectOosvarValue
+  | BracedOosvarValue
+  | FullOosvar
+  | ContextVariable
+  | LocalVariable
+  | IntLiteral
+  | FloatLiteral
+  | StringLiteral
+  | BoolLiteral
+  | NullLiteral
+  | ArrayLiteral
+  | MapLiteral
+  | ArrayOrMapIndexAccess
+  | ArraySliceAccess
+  | FunctionCallsite
+  | UnnamedFunctionDefinition
+;
+
+FullSrec ::= full_srec -> { "parent": 0, "children": [], "type": "FullSrec" } ;
+
+DirectOosvarValue ::= oosvar_name -> { "parent": 0, "children": [], "type": "DirectOosvarValue" } ;
+IndirectOosvarValue ::= '@' lbrack Rvalue rbrack -> { "parent_literal": "@[]", "children": [1], "type": "IndirectOosvarValue" } ;
+BracedOosvarValue ::= braced_oosvar_name -> { "parent": 0, "children": [], "type": "BracedOosvarValue" } ;
+FullOosvar ::= full_oosvar -> { "parent": 0, "children": [], "type": "FullOosvar" } ;
+LocalVariable ::= non_sigil_name -> { "parent": 0, "children": [], "type": "LocalVariable" } ;
+
+ContextVariable ::=
+    ctx_IPS | ctx_IFS | ctx_IRS | ctx_OPS | ctx_OFS | ctx_ORS | ctx_FLATSEP
+  | ctx_NF | ctx_NR | ctx_FNR | ctx_FILENAME | ctx_FILENUM
+  -> { "parent": 0, "children": [], "type": "ContextVariable" }
+;
+
+DirectFieldValue ::= field_name -> { "parent": 0, "children": [], "type": "DirectFieldValue" } ;
+IndirectFieldValue ::= dollar_lbrack Rvalue rbrack -> { "parent_literal": "$[]", "children": [1], "type": "IndirectFieldValue" } ;
+BracedFieldValue ::= braced_field_name -> { "parent": 0, "children": [], "type": "BracedFieldValue" } ;
+
+# ENV["FOO"] and ENV.FOO (environment variable access)
+EnvironmentVariable ::=
+    kw_env lbrack Rvalue rbrack -> { "parent": 0, "children": [2], "type": "EnvironmentVariable" }
+  | kw_env op_dot non_sigil_name -> { "parent": 0, "children": [2], "type": "EnvironmentVariable" }
+;
+
+IntLiteral ::= int_literal -> { "parent": 0, "children": [], "type": "int_literal" } ;
+FloatLiteral ::= float_literal -> { "parent": 0, "children": [], "type": "float_literal" } ;
+StringLiteral ::= string_literal -> { "parent": 0, "children": [], "type": "string_literal" } ;
+BoolLiteral ::= literal_true -> { "parent": 0, "children": [], "type": "bool_literal" }
+  | literal_false -> { "parent": 0, "children": [], "type": "bool_literal" }
+;
+NullLiteral ::= null_literal -> { "parent": 0, "children": [], "type": "null_literal" } ;
+
+ArrayLiteral ::=
+    lbrack rbrack -> { "parent_literal": "[]", "children": [], "type": "ArrayLiteral" }
+  | lbrack ArrayLiteralElements rbrack -> { "parent_literal": "[]", "with_adopted_grandchildren": [1], "type": "ArrayLiteral" }
+;
+
+ArrayLiteralElements ::=
+    Rvalue -> { "parent_literal": "[]", "children": [0], "type": "ArrayLiteral" }
+  | Rvalue comma -> { "parent_literal": "[]", "children": [0], "type": "ArrayLiteral" }
+  | Rvalue comma ArrayLiteralElements -> { "parent": 2, "with_prepended_children": [0], "type": "ArrayLiteral" }
+;
+
+MapLiteral ::=
+    lbrace rbrace -> { "parent_literal": "{}", "children": [], "type": "MapLiteral" }
+  | lbrace MapLiteralKeyValuePairs rbrace -> { "parent_literal": "{}", "with_adopted_grandchildren": [1], "type": "MapLiteral" }
+;
+
+MapLiteralKeyValuePairs ::=
+    MapLiteralKeyValuePair -> { "parent_literal": "{}", "children": [0], "type": "MapLiteral" }
+  | MapLiteralKeyValuePair comma -> { "parent_literal": "{}", "children": [0], "type": "MapLiteral" }
+  | MapLiteralKeyValuePair comma MapLiteralKeyValuePairs -> { "parent": 2, "with_prepended_children": [0], "type": "MapLiteral" }
+;
+
+MapLiteralKeyValuePair ::= Rvalue colon Rvalue -> { "parent": 1, "children": [0, 2], "type": "MapLiteralKeyValuePair" } ;
+
+ArrayOrMapIndexAccess ::= MlrvalOrFunction lbrack Rvalue rbrack -> { "parent_literal": "[]", "children": [0, 2], "type": "ArrayOrMapIndexAccess" } ;
+
+ArraySliceAccess ::=
+    MlrvalOrFunction lbrack Rvalue colon Rvalue rbrack -> { "parent_literal": "[]", "children": [0, 2, 4], "type": "ArraySliceLoHi" }
+  | MlrvalOrFunction lbrack colon Rvalue rbrack -> { "parent_literal": "[]", "children": [0, 3], "type": "ArraySliceHiOnly" }
+  | MlrvalOrFunction lbrack Rvalue colon rbrack -> { "parent_literal": "[]", "children": [0, 2], "type": "ArraySliceLoOnly" }
+  | MlrvalOrFunction lbrack colon rbrack -> { "parent_literal": "[]", "children": [0], "type": "ArraySliceFull" }
+;
+
+FunctionCallsite ::=
+    non_sigil_name lparen rparen -> { "parent": 0, "children": [], "type": "FunctionCallsite" }
+  | non_sigil_name lparen FcnArgs rparen -> { "parent": 0, "with_adopted_grandchildren": [2], "type": "FunctionCallsite" }
+;
+
+FcnArgs ::=
+    Rvalue -> { "parent_literal": "args", "children": [0], "type": "FcnArgs" }
+  | Rvalue comma -> { "parent_literal": "args", "children": [0], "type": "FcnArgs" }
+  | Rvalue comma FcnArgs -> { "parent": 2, "with_prepended_children": [0], "type": "FcnArgs" }
+;

@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 	"github.com/johnkerl/miller/v6/pkg/types"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
 type UDF struct {
@@ -391,12 +391,12 @@ func (mgr *UDFManager) LookUpDisregardingArity(functionName string) *UDF {
 //             * DirectFieldValue "x"
 
 // BuildAndInstallUDF is for named UDFs, like `func f(a, b) { return b - a}'.
-func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeNamedFunctionDefinition)
+func (root *RootNode) BuildAndInstallUDF(astNode *asts.ASTNode) error {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeNamedFunctionDefinition))
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2 && len(astNode.Children) != 3)
 
-	functionName := string(astNode.Token.Lit)
+	functionName := tokenLit(astNode)
 
 	if BuiltinFunctionManagerInstance.LookUp(functionName) != nil {
 		return fmt.Errorf(
@@ -438,8 +438,8 @@ type UnnamedUDFNode struct {
 	udfAsMlrval *mlrval.Mlrval
 }
 
-func (root *RootNode) BuildUnnamedUDFNode(astNode *dsl.ASTNode) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeUnnamedFunctionDefinition)
+func (root *RootNode) BuildUnnamedUDFNode(astNode *asts.ASTNode) (IEvaluable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeUnnamedFunctionDefinition))
 
 	name := genFunctionLiteralName()
 
@@ -459,16 +459,35 @@ func (node *UnnamedUDFNode) Evaluate(state *runtime.State) *mlrval.Mlrval {
 	return node.udfAsMlrval
 }
 
+// flattenParameterList recurses through nested ParameterList nodes and returns
+// a flat list of Parameter or LocalVariable nodes. PGPG produces (params (params (Parameter) (Parameter))).
+func flattenParameterList(nodes []*asts.ASTNode) []*asts.ASTNode {
+	var out []*asts.ASTNode
+	for _, n := range nodes {
+		if n == nil {
+			continue
+		}
+		if string(n.Type) == NodeTypeParameterList || n.Type == asts.NodeType(NodeTypeParameterList) {
+			if n.Children != nil {
+				out = append(out, flattenParameterList(n.Children)...)
+			}
+			continue
+		}
+		out = append(out, n)
+	}
+	return out
+}
+
 // BuildUDF is for named UDFs, like `func f(a, b) { return b - a}', or,
 // unnamed UDFs like `func (a, b) { return b - a }'.
 func (root *RootNode) BuildUDF(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	functionName string,
 	isFunctionLiteral bool,
 ) (*UDF, error) {
 	lib.InternalCodingErrorIf(
-		(astNode.Type != dsl.NodeTypeNamedFunctionDefinition) &&
-			(astNode.Type != dsl.NodeTypeUnnamedFunctionDefinition))
+		(astNode.Type != asts.NodeType(NodeTypeNamedFunctionDefinition)) &&
+			(astNode.Type != asts.NodeType(NodeTypeUnnamedFunctionDefinition)))
 
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2 && len(astNode.Children) != 3)
@@ -479,8 +498,8 @@ func (root *RootNode) BuildUDF(
 	returnValueTypeName := "any"
 	if len(astNode.Children) == 3 {
 		typeNode := astNode.Children[2]
-		lib.InternalCodingErrorIf(typeNode.Type != dsl.NodeTypeTypedecl)
-		returnValueTypeName = string(typeNode.Token.Lit)
+		lib.InternalCodingErrorIf(typeNode.Type != asts.NodeType(NodeTypeTypedecl))
+		returnValueTypeName = tokenLit(typeNode)
 	}
 	typeGatedReturnValue, err := types.NewTypeGatedMlrvalName(
 		"function return value",
@@ -490,25 +509,46 @@ func (root *RootNode) BuildUDF(
 		return nil, err
 	}
 
-	lib.InternalCodingErrorIf(parameterListASTNode.Type != dsl.NodeTypeParameterList)
+	// PGPG may use different type strings; accept ParameterList by structure
+	if string(parameterListASTNode.Type) != NodeTypeParameterList && parameterListASTNode.Type != asts.NodeType(NodeTypeParameterList) {
+		lib.InternalCodingErrorWithMessageIf(true, "expected ParameterList node")
+	}
 	lib.InternalCodingErrorIf(parameterListASTNode.Children == nil)
-	arity := len(parameterListASTNode.Children)
-	typeGatedParameterNames := make([]*types.TypeGatedMlrvalName, arity)
-	for i, parameterASTNode := range parameterListASTNode.Children {
-		lib.InternalCodingErrorIf(parameterASTNode.Type != dsl.NodeTypeParameter)
-		lib.InternalCodingErrorIf(parameterASTNode.Children == nil)
-		lib.InternalCodingErrorIf(len(parameterASTNode.Children) != 1)
-		typeGatedParameterNameASTNode := parameterASTNode.Children[0]
 
-		lib.InternalCodingErrorIf(typeGatedParameterNameASTNode.Type != dsl.NodeTypeParameterName)
-		variableName := string(typeGatedParameterNameASTNode.Token.Lit)
-		typeName := "any"
-		if typeGatedParameterNameASTNode.Children != nil { // typed parameter like 'num x'
-			lib.InternalCodingErrorIf(len(typeGatedParameterNameASTNode.Children) != 1)
-			typeNode := typeGatedParameterNameASTNode.Children[0]
-			lib.InternalCodingErrorIf(typeNode.Type != dsl.NodeTypeTypedecl)
-			typeName = string(typeNode.Token.Lit)
+	// PGPG produces nested ParameterList (params contains params contains Parameter, Parameter).
+	// Flatten to a list of Parameter or LocalVariable nodes.
+	flatParams := flattenParameterList(parameterListASTNode.Children)
+	arity := len(flatParams)
+	typeGatedParameterNames := make([]*types.TypeGatedMlrvalName, arity)
+	for i, parameterASTNode := range flatParams {
+		// PGPG: Parameter has one child (LocalVariable), or with_prepended_children may give LocalVariable directly.
+		var variableName string
+		if parameterASTNode.Children != nil && len(parameterASTNode.Children) == 1 {
+			typeGatedParameterNameASTNode := parameterASTNode.Children[0]
+			if string(typeGatedParameterNameASTNode.Type) != NodeTypeLocalVariable &&
+				typeGatedParameterNameASTNode.Type != asts.NodeType(NodeTypeLocalVariable) {
+				lib.InternalCodingErrorWithMessageIf(true, "expected LocalVariable as parameter name")
+			}
+			variableName = tokenLit(typeGatedParameterNameASTNode)
+		} else if parameterASTNode.Children == nil || len(parameterASTNode.Children) == 0 {
+			// Direct LocalVariable (e.g. from with_prepended_children flattening)
+			if string(parameterASTNode.Type) != NodeTypeLocalVariable &&
+				parameterASTNode.Type != asts.NodeType(NodeTypeLocalVariable) {
+				lib.InternalCodingErrorWithMessageIf(true, "expected Parameter or LocalVariable")
+			}
+			variableName = tokenLit(parameterASTNode)
+		} else {
+			// PGPG may produce Parameter with multiple children; try first child, then node itself
+			typeGatedParameterNameASTNode := parameterASTNode.Children[0]
+			variableName = tokenLit(typeGatedParameterNameASTNode)
+			if variableName == "" {
+				variableName = tokenLit(parameterASTNode)
+			}
+			if variableName == "" {
+				lib.InternalCodingErrorWithMessageIf(true, "expected Parameter node with one child")
+			}
 		}
+		typeName := "any"
 		typeGatedParameterName, err := types.NewTypeGatedMlrvalName(
 			variableName,
 			typeName,

@@ -8,64 +8,104 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
-func (root *RootNode) BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
-
-	if astNode.Children == nil {
-		return root.BuildLeafNode(astNode)
+func (root *RootNode) BuildEvaluableNode(astNode *asts.ASTNode) (IEvaluable, error) {
+	// Try BuildLeafNode first for terminals (PGPG uses empty slice, GOCC used nil)
+	if astNode.Children == nil || len(astNode.Children) == 0 {
+		if leaf, err := root.BuildLeafNode(astNode); err == nil {
+			return leaf, nil
+		}
+		// Fall through to switch for leaf types BuildLeafNode doesn't know
 	}
 
 	switch astNode.Type {
 
-	case dsl.NodeTypeArrayLiteral: // [...]
+	case asts.NodeType(NodeTypeArrayLiteral): // [...]
 		return root.BuildArrayLiteralNode(astNode)
 
-	case dsl.NodeTypeMapLiteral: // {...}
+	case asts.NodeType(NodeTypeMapLiteral): // {...}
 		return root.BuildMapLiteralNode(astNode)
 
-	case dsl.NodeTypeArrayOrMapIndexAccess: // x[...]
+	case asts.NodeType(NodeTypeArrayOrMapIndexAccess): // x[...]
 		return root.BuildArrayOrMapIndexAccessNode(astNode)
 
-	case dsl.NodeTypeArraySliceAccess: // myarray[lo:hi]
+	case asts.NodeType(NodeTypeArraySliceLoHi), asts.NodeType(NodeTypeArraySliceHiOnly),
+		asts.NodeType(NodeTypeArraySliceLoOnly), asts.NodeType(NodeTypeArraySliceFull): // myarray[lo:hi]
 		return root.BuildArraySliceAccessNode(astNode)
 
-	case dsl.NodeTypeIndirectFieldValue: // $[...] (includes $[[n]] and $[[[n]]])
+	case asts.NodeType(NodeTypeIndirectFieldValue): // $[...] (includes $[[n]] and $[[[n]]])
 		return root.BuildIndirectFieldValueNode(astNode)
-	case dsl.NodeTypeIndirectOosvarValue: // $[...]
+	case asts.NodeType(NodeTypeIndirectOosvarValue): // $[...]
 		return root.BuildIndirectOosvarValueNode(astNode)
 
-	case dsl.NodeTypeEnvironmentVariable: // ENV["NAME"]
+	case asts.NodeType(NodeTypeEnvironmentVariable): // ENV["NAME"]
 		return root.BuildEnvironmentVariableNode(astNode)
 
 	// Operators are just functions with infix syntax so we treat them like
 	// functions in the CST. (The distinction between infix syntax, e.g.
 	// '1+2', and prefix syntax, e.g. 'plus(1,2)' disappears post-parse -- both
 	// parse to the same-shape AST.)
-	case dsl.NodeTypeOperator:
+	case asts.NodeType(NodeTypeOperator):
 		return root.BuildFunctionCallsiteNode(astNode)
-	case dsl.NodeTypeFunctionCallsite:
+	case asts.NodeType(NodeTypeFunctionCallsite):
 		return root.BuildFunctionCallsiteNode(astNode)
 
-		// The dot operator is a little different from other operators since it's
-		// type-dependent: for strings/int/bools etc it's just concatenation of
-		// string representations, but if the left-hand side is a map, it's a
-		// key-lookup with an unquoted literal on the right. E.g. mymap.foo is the
-		// same as mymap["foo"].
-	case dsl.NodeTypeDotOperator:
+	// The dot operator is a little different from other operators since it's
+	// type-dependent: for strings/int/bools etc it's just concatenation of
+	// string representations, but if the left-hand side is a map, it's a
+	// key-lookup with an unquoted literal on the right. E.g. mymap.foo is the
+	// same as mymap["foo"].
+	case asts.NodeType(NodeTypeDotOperator):
 		return root.BuildDotCallsiteNode(astNode)
 
+	case asts.NodeType(NodeTypeParenthesized):
+		// (expr) — unwrap and build the inner expression
+		lib.InternalCodingErrorIf(astNode.Children == nil || len(astNode.Children) != 1)
+		return root.BuildEvaluableNode(astNode.Children[0])
+
 	// Function literals like 'func (a,b) { return b - a }'
-	case dsl.NodeTypeUnnamedFunctionDefinition:
+	case asts.NodeType(NodeTypeUnnamedFunctionDefinition):
 		return root.BuildUnnamedUDFNode(astNode)
+
+	// Leaf/terminal types (PGPG may give them non-nil empty Children)
+	case asts.NodeType(NodeTypeDirectFieldValue), asts.NodeType(NodeTypeBracedFieldValue),
+		asts.NodeType(NodeTypeFullSrec), asts.NodeType(NodeTypeDirectOosvarValue),
+		asts.NodeType(NodeTypeBracedOosvarValue), asts.NodeType(NodeTypeFullOosvar),
+		asts.NodeType(NodeTypeLocalVariable),
+		asts.NodeType(NodeTypeIntLiteral), asts.NodeType(NodeTypeFloatLiteral),
+		asts.NodeType(NodeTypeStringLiteral), asts.NodeType(NodeTypeBoolLiteral),
+		asts.NodeType(NodeTypeNullLiteral), asts.NodeType(NodeTypeRegex):
+		return root.BuildLeafNode(astNode)
+	}
+
+	// Parenthesized: (expr) — unwrap and build the inner expression.
+	// Use string comparison in case asts.NodeType differs from astNode.Type's type.
+	if string(astNode.Type) == NodeTypeParenthesized && astNode.Children != nil && len(astNode.Children) == 1 {
+		return root.BuildEvaluableNode(astNode.Children[0])
+	}
+
+	// EnvironmentVariable: ENV["FOO"] or ENV.FOO
+	if string(astNode.Type) == NodeTypeEnvironmentVariable && astNode.Children != nil && len(astNode.Children) == 1 {
+		return root.BuildEnvironmentVariableNode(astNode)
+	}
+
+	// Fallback: try BuildLeafNode for unhandled types (e.g. DirectFieldValue,
+	// IntLiteral - PGPG may structure terminals differently than GOCC).
+	// Only for leaf-like nodes (0 or 1 child); nodes with 2+ children are not leaves.
+	if astNode.Children == nil || len(astNode.Children) <= 1 {
+		if leaf, err := root.BuildLeafNode(astNode); err == nil {
+			return leaf, nil
+		}
 	}
 
 	return nil, fmt.Errorf(
-		"at CST BuildEvaluableNode: unhandled AST node type %s", string(astNode.Type),
+		"at CST BuildEvaluableNode: unhandled AST node type %q (len=%d)", string(astNode.Type), len(astNode.Children),
 	)
 }
 
@@ -74,30 +114,24 @@ type IndirectFieldValueNode struct {
 }
 
 func (root *RootNode) BuildIndirectFieldValueNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectFieldValue)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeIndirectFieldValue))
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 
 	child := astNode.Children[0]
-	if child.Type == dsl.NodeTypeArrayLiteral && len(child.Children) == 1 {
+	if child.Type == asts.NodeType(NodeTypeArrayLiteral) && len(child.Children) == 1 {
 		inner := child.Children[0]
-		if inner.Type == dsl.NodeTypeArrayLiteral && len(inner.Children) == 1 {
+		if inner.Type == asts.NodeType(NodeTypeArrayLiteral) && len(inner.Children) == 1 {
 			// $[[[n]]] → positional field value
 			indexASTNode := inner.Children[0]
-			syntheticAST := &dsl.ASTNode{
-				Type:     dsl.NodeTypePositionalFieldValue,
-				Children: []*dsl.ASTNode{indexASTNode},
-			}
+			syntheticAST := asts.NewASTNode(nil, asts.NodeType(NodeTypePositionalFieldValue), []*asts.ASTNode{indexASTNode})
 			return root.BuildPositionalFieldValueNode(syntheticAST)
 		}
 		// $[[n]] → positional field name
 		indexASTNode := inner
-		syntheticAST := &dsl.ASTNode{
-			Type:     dsl.NodeTypePositionalFieldName,
-			Children: []*dsl.ASTNode{indexASTNode},
-		}
+		syntheticAST := asts.NewASTNode(nil, asts.NodeType(NodeTypePositionalFieldName), []*asts.ASTNode{indexASTNode})
 		return root.BuildPositionalFieldNameNode(syntheticAST)
 	}
 
@@ -145,9 +179,9 @@ type IndirectOosvarValueNode struct {
 }
 
 func (root *RootNode) BuildIndirectOosvarValueNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (*IndirectOosvarValueNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectOosvarValue)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeIndirectOosvarValue))
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 	oosvarNameEvaluable, err := root.BuildEvaluableNode(astNode.Children[0])
