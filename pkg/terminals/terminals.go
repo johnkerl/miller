@@ -11,6 +11,7 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/terminals/help"
 	"github.com/johnkerl/miller/v6/pkg/terminals/regtest"
 	"github.com/johnkerl/miller/v6/pkg/terminals/repl"
+	"github.com/johnkerl/miller/v6/pkg/terminals/script"
 	"github.com/johnkerl/miller/v6/pkg/version"
 )
 
@@ -34,6 +35,7 @@ func init() {
 		{"help", help.HelpMain},
 		{"regtest", regtest.RegTestMain},
 		{"repl", repl.ReplMain},
+		{"script", script.ScriptMain},
 		{"version", showVersion},
 	}
 }

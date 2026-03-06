@@ -13,6 +13,23 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 )
 
+// BIF_next is for mlr script: reads next record from input stream.
+func BIF_next(state *runtime.State) *mlrval.Mlrval {
+	if state.NextRecordFunc == nil {
+		return mlrval.FromErrorString("next() is only available in mlr script mode")
+	}
+	record, context, hasMore := state.NextRecordFunc()
+	if hasMore {
+		state.Update(record, context)
+		state.AtEndOfStream = false
+		return mlrval.FromBool(true)
+	}
+	state.Inrec = nil
+	state.Context = context
+	state.AtEndOfStream = true
+	return mlrval.FromBool(false)
+}
+
 func (root *RootNode) BuildBuiltinFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
@@ -29,6 +46,8 @@ func (root *RootNode) BuildBuiltinFunctionCallsiteNode(
 	if builtinFunctionInfo != nil {
 		if builtinFunctionInfo.hasMultipleArities { // E.g. "+" and "-"
 			return root.BuildMultipleArityFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.zaryFuncWithState != nil {
+			return BuildZaryFunctionWithStateCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.zaryFunc != nil {
 			return BuildZaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.unaryFunc != nil {
@@ -103,6 +122,37 @@ func BuildZaryFunctionCallsiteNode(
 	return &ZaryFunctionCallsiteNode{
 		zaryFunc: builtinFunctionInfo.zaryFunc,
 	}, nil
+}
+
+func BuildZaryFunctionWithStateCallsiteNode(
+	astNode *dsl.ASTNode,
+	builtinFunctionInfo *BuiltinFunctionInfo,
+) (IEvaluable, error) {
+	callsiteArity := len(astNode.Children)
+	expectedArity := 0
+	if callsiteArity != expectedArity {
+		return nil, fmt.Errorf(
+			"function %s invoked with %d argument%s; expected %d",
+			builtinFunctionInfo.name,
+			callsiteArity,
+			lib.Plural(callsiteArity),
+			expectedArity,
+		)
+	}
+
+	return &ZaryFunctionWithStateCallsiteNode{
+		zaryFuncWithState: builtinFunctionInfo.zaryFuncWithState,
+	}, nil
+}
+
+type ZaryFunctionWithStateCallsiteNode struct {
+	zaryFuncWithState ZaryFuncWithState
+}
+
+func (node *ZaryFunctionWithStateCallsiteNode) Evaluate(
+	state *runtime.State,
+) *mlrval.Mlrval {
+	return node.zaryFuncWithState(state)
 }
 
 func (node *ZaryFunctionCallsiteNode) Evaluate(
