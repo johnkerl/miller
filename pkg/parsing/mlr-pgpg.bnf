@@ -108,7 +108,7 @@ float_literal ::= _decdig { _decdig } _frac [ _exp ]
   | '.' _decdig { _decdig } [ _exp ]
   | _decdig { _decdig } _exp
 ;
-int_literal ::= _decdig { _decdig } | '0' 'x' _hexdig { _hexdig } ;
+int_literal ::= _decdig { _decdig } | '0' 'x' _hexdig { _hexdig } | '0' 'o' _octaldig { _octaldig } ;
 
 equals ::= '=' ;
 semicolon ::= ';' ;

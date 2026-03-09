@@ -435,7 +435,9 @@ func (root *RootNode) BuildForLoopMultivariableNode(
 	indexableASTNode := astNode.Children[2]
 	blockASTNode := astNode.Children[3]
 
-	lib.InternalCodingErrorIf(keyVariablesASTNode.Type != asts.NodeType(NodeTypeParameterList))
+	// PGPG produces MultiIndex; legacy produced ParameterList. Both have LocalVariable children.
+	lib.InternalCodingErrorIf(keyVariablesASTNode.Type != asts.NodeType(NodeTypeParameterList) &&
+		keyVariablesASTNode.Type != asts.NodeType(NodeTypeMultiIndex))
 	lib.InternalCodingErrorIf(keyVariablesASTNode.Children == nil)
 	keyIndexVariables := make([]*runtime.StackVariable, len(keyVariablesASTNode.Children))
 	for i, keyVariableASTNode := range keyVariablesASTNode.Children {

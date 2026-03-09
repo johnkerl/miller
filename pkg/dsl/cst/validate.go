@@ -275,7 +275,9 @@ func validateForLoopMultivariableUniqueNames(astNode *asts.ASTNode) error {
 	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeForLoopMultivariable))
 	keyVarsNode := astNode.Children[0]
 	valVarNode := astNode.Children[1]
-	lib.InternalCodingErrorIf(keyVarsNode.Type != asts.NodeType(NodeTypeParameterList))
+	// PGPG produces MultiIndex; legacy produced ParameterList. Both have LocalVariable children.
+	lib.InternalCodingErrorIf(keyVarsNode.Type != asts.NodeType(NodeTypeParameterList) &&
+		keyVarsNode.Type != asts.NodeType(NodeTypeMultiIndex))
 	lib.InternalCodingErrorIf(valVarNode.Type != asts.NodeType(NodeTypeLocalVariable))
 
 	seen := make(map[string]bool)
