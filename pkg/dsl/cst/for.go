@@ -765,6 +765,12 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *asts.ASTNode) (*TripleForL
 	updateBlockASTNode := astNode.Children[2]
 	bodyBlockASTNode := astNode.Children[3]
 
+	// PGPG: body is StatementBlockInBraces; unwrap to get StatementBlock
+	if bodyBlockASTNode.Type == asts.NodeType(NodeTypeStatementBlockInBraces) &&
+		len(bodyBlockASTNode.Children) == 1 {
+		bodyBlockASTNode = bodyBlockASTNode.Children[0]
+	}
+
 	lib.InternalCodingErrorIf(startBlockASTNode.Type != asts.NodeType(NodeTypeStatementBlock))
 	lib.InternalCodingErrorIf(continuationExpressionASTNode.Type != asts.NodeType(NodeTypeStatementBlock))
 	lib.InternalCodingErrorIf(updateBlockASTNode.Type != asts.NodeType(NodeTypeStatementBlock))

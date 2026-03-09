@@ -87,8 +87,14 @@ ctx_FILENUM ::= 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 non_sigil_name ::= _leading_idchar { _idchar } ;
 
 _hex ::= '0'-'9' | 'A'-'F' | 'a'-'f' ;
+_octaldig ::= '0'-'7' ;
 _string_char ::= "\u0020"-"\u0021" | "\u0023"-"\u005B" | "\u005D"-"\uFFFF" ;
-_escape ::= '\\' ( '"' | '\\' | '/' | 'b' | 'f' | 'n' | 'r' | 't' | 'u' _hex _hex _hex _hex ) ;
+# Octal \123, hex \x42, regex backref \0-\9
+_escape ::= '\\' ( '"' | '\\' | '/' | 'b' | 'f' | 'n' | 'r' | 't' | 'u' _hex _hex _hex _hex
+         | 'x' _hex _hex | 'X' _hex _hex
+         | _octaldig _octaldig _octaldig | _octaldig _octaldig | _octaldig
+         | '8' | '9'
+         ) ;
 string_literal ::= '"' { _string_char | _escape } '"' ;
 literal_true ::= 't' 'r' 'u' 'e' ;
 literal_false ::= 'f' 'a' 'l' 's' 'e' ;
@@ -102,7 +108,7 @@ float_literal ::= _decdig { _decdig } _frac [ _exp ]
   | '.' _decdig { _decdig } [ _exp ]
   | _decdig { _decdig } _exp
 ;
-int_literal ::= _decdig { _decdig } ;
+int_literal ::= _decdig { _decdig } | '0' 'x' _hexdig { _hexdig } ;
 
 equals ::= '=' ;
 semicolon ::= ';' ;
@@ -189,11 +195,13 @@ Root ::= StatementBlock ;
 # Empty allows mlr put "" and scripts with only comments/whitespace (e.g. "  # comment").
 # Trailing semicolon (e.g. "$x=1; $y=2;") via StatementBlock ::= empty in the recursion.
 # BracefulStatement BracelessStatement/BracefulStatement avoid forcing semicolon after }.
+# BracefulStatement BracelessStatement without semicolon: } $x=1 } (semicolon optional before })
 StatementBlock ::=
     empty -> { "parent_literal": "block", "children": [], "type": "StatementBlock" }
   | Statement -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
   | Statement semicolon StatementBlock -> { "parent": 2, "with_prepended_children": [0], "type": "StatementBlock" }
   | BracefulStatement BracelessStatement semicolon StatementBlock -> { "parent": 3, "with_prepended_children": [0, 1], "type": "StatementBlock" }
+  | BracefulStatement BracelessStatement -> { "parent_literal": "block", "with_prepended_children": [0, 1], "type": "StatementBlock" }
   | BracefulStatement BracefulStatement StatementBlock -> { "parent": 2, "with_prepended_children": [0, 1], "type": "StatementBlock" }
 ;
 
