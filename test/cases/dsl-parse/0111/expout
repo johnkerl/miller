@@ -3,7 +3,7 @@ unset x
 
 
 AST:
-* statement block
-    * unset "unset"
-        * local variable "x"
+"block" [tt:block] [nt:StatementBlock]
+    "unset" [tt:kw_unset] [nt:Unset]
+        "x" [tt:non_sigil_name] [nt:LocalVariable]
 

@@ -3,11 +3,11 @@ nr=NR; $nr=nr
 
 
 AST:
-* statement block
-    * assignment "="
-        * local variable "nr"
-        * context variable "NR"
-    * assignment "="
-        * direct field value "nr"
-        * local variable "nr"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "nr" [tt:non_sigil_name] [nt:LocalVariable]
+        "NR" [tt:ctx_NR] [nt:ctx_NR]
+    "=" [tt:equals] [nt:Assignment]
+        "$nr" [tt:field_name] [nt:DirectFieldValue]
+        "nr" [tt:non_sigil_name] [nt:LocalVariable]
 

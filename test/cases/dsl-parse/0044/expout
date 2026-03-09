@@ -3,14 +3,14 @@ $z = {"a":"1", "b":2}
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "z"
-        * map literal "{}"
-            * map-literal key-value pair ":"
-                * string literal "a"
-                * string literal "1"
-            * map-literal key-value pair ":"
-                * string literal "b"
-                * int literal "2"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$z" [tt:field_name] [nt:DirectFieldValue]
+        "{}" [tt:{}] [nt:MapLiteral]
+            ":" [tt:colon] [nt:MapLiteralKeyValuePair]
+                ""a"" [tt:string_literal] [nt:string_literal]
+                ""1"" [tt:string_literal] [nt:string_literal]
+            ":" [tt:colon] [nt:MapLiteralKeyValuePair]
+                ""b"" [tt:string_literal] [nt:string_literal]
+                "2" [tt:int_literal] [nt:int_literal]
 

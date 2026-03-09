@@ -3,11 +3,11 @@ $y = 1 ? 2 : 3
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "y"
-        * operator "?:"
-            * int literal "1"
-            * int literal "2"
-            * int literal "3"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$y" [tt:field_name] [nt:DirectFieldValue]
+        "?" [tt:op_ternary] [nt:Operator]
+            "1" [tt:int_literal] [nt:int_literal]
+            "2" [tt:int_literal] [nt:int_literal]
+            "3" [tt:int_literal] [nt:int_literal]
 

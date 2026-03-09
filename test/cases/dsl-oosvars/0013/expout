@@ -3,36 +3,36 @@ end{@mean=@sum/@count; emitf @mean}; begin {@count=0; @sum=0.0}; @count=@count+1
 
 
 AST:
-* statement block
-    * end block
-        * statement block
-            * assignment "="
-                * direct oosvar value "mean"
-                * operator "/"
-                    * direct oosvar value "sum"
-                    * direct oosvar value "count"
-            * emitf statement "emitf"
-                * emittable list
-                    * direct oosvar value "mean"
-                * no-op
-    * begin block
-        * statement block
-            * assignment "="
-                * direct oosvar value "count"
-                * int literal "0"
-            * assignment "="
-                * direct oosvar value "sum"
-                * float literal "0.0"
-    * assignment "="
-        * direct oosvar value "count"
-        * operator "+"
-            * direct oosvar value "count"
-            * int literal "1"
-    * assignment "="
-        * direct oosvar value "sum"
-        * operator "+"
-            * direct oosvar value "sum"
-            * direct field value "x"
+"block" [tt:block] [nt:StatementBlock]
+    "end" [tt:kw_end] [nt:EndBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "=" [tt:equals] [nt:Assignment]
+                    "@mean" [tt:oosvar_name] [nt:DirectOosvarValue]
+                    "/" [tt:op_slash] [nt:Operator]
+                        "@sum" [tt:oosvar_name] [nt:DirectOosvarValue]
+                        "@count" [tt:oosvar_name] [nt:DirectOosvarValue]
+                "emitf" [tt:kw_emitf] [nt:EmitFStatement]
+                    "@mean" [tt:oosvar_name] [nt:DirectOosvarValue]
+    "begin" [tt:kw_begin] [nt:BeginBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "=" [tt:equals] [nt:Assignment]
+                    "@count" [tt:oosvar_name] [nt:DirectOosvarValue]
+                    "0" [tt:int_literal] [nt:int_literal]
+                "=" [tt:equals] [nt:Assignment]
+                    "@sum" [tt:oosvar_name] [nt:DirectOosvarValue]
+                    "0.0" [tt:float_literal] [nt:float_literal]
+    "=" [tt:equals] [nt:Assignment]
+        "@count" [tt:oosvar_name] [nt:DirectOosvarValue]
+        "+" [tt:op_plus] [nt:Operator]
+            "@count" [tt:oosvar_name] [nt:DirectOosvarValue]
+            "1" [tt:int_literal] [nt:int_literal]
+    "=" [tt:equals] [nt:Assignment]
+        "@sum" [tt:oosvar_name] [nt:DirectOosvarValue]
+        "+" [tt:op_plus] [nt:Operator]
+            "@sum" [tt:oosvar_name] [nt:DirectOosvarValue]
+            "$x" [tt:field_name] [nt:DirectFieldValue]
 
 a   b   i  x          y
 pan pan 1  0.34679014 0.72680286

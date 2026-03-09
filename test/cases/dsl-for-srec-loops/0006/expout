@@ -3,17 +3,18 @@ for(k,v in $*) {$[string(v)]=k}
 
 
 AST:
-* statement block
-    * double-variable for-loop "for"
-        * local variable "k"
-        * local variable "v"
-        * full record "$*"
-        * statement block
-            * assignment "="
-                * indirect field value "$[]"
-                    * function callsite "string"
-                        * local variable "v"
-                * local variable "k"
+"block" [tt:block] [nt:StatementBlock]
+    "for" [tt:kw_for] [nt:ForLoopTwoVariable]
+        "k" [tt:non_sigil_name] [nt:LocalVariable]
+        "v" [tt:non_sigil_name] [nt:LocalVariable]
+        "$*" [tt:full_srec] [nt:FullSrec]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "=" [tt:equals] [nt:Assignment]
+                    "$[]" [tt:$[]] [nt:IndirectFieldValue]
+                        "string" [tt:non_sigil_name] [nt:FunctionCallsite]
+                            "v" [tt:non_sigil_name] [nt:LocalVariable]
+                    "k" [tt:non_sigil_name] [nt:LocalVariable]
 
 a=pan,b=pan,i=1,x=0.34679014,y=0.72680286,pan=b,1=i,0.34679014=x,0.72680286=y
 a=eks,b=pan,i=2,x=0.75867996,y=0.52215111,eks=a,pan=b,2=i,0.75867996=x,0.52215111=y

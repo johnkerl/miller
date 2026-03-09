@@ -3,11 +3,11 @@ $new = $["a"]
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "new"
-        * indirect field value "$[]"
-            * string literal "a"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$new" [tt:field_name] [nt:DirectFieldValue]
+        "$[]" [tt:$[]] [nt:IndirectFieldValue]
+            ""a"" [tt:string_literal] [nt:string_literal]
 
 a   b   i x          y          new
 pan pan 1 0.34679014 0.72680286 pan

@@ -3,9 +3,10 @@ if (1) {}
 
 
 AST:
-* statement block
-    * if-chain
-        * if-item "if"
-            * int literal "1"
-            * statement block
+"block" [tt:block] [nt:StatementBlock]
+    "if_chain" [tt:if_chain] [nt:IfChain]
+        "if" [tt:kw_if] [nt:IfItem]
+            "1" [tt:int_literal] [nt:int_literal]
+            "block" [tt:block] [nt:StatementBlockInBraces]
+                "block" [tt:block] [nt:StatementBlock]
 

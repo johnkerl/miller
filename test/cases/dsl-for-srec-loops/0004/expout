@@ -3,24 +3,26 @@ for(k,v in $*) {if (k != "x") {unset $[k]}}; $j = NR
 
 
 AST:
-* statement block
-    * double-variable for-loop "for"
-        * local variable "k"
-        * local variable "v"
-        * full record "$*"
-        * statement block
-            * if-chain
-                * if-item "if"
-                    * operator "!="
-                        * local variable "k"
-                        * string literal "x"
-                    * statement block
-                        * unset "unset"
-                            * indirect field value "$[]"
-                                * local variable "k"
-    * assignment "="
-        * direct field value "j"
-        * context variable "NR"
+"block" [tt:block] [nt:StatementBlock]
+    "for" [tt:kw_for] [nt:ForLoopTwoVariable]
+        "k" [tt:non_sigil_name] [nt:LocalVariable]
+        "v" [tt:non_sigil_name] [nt:LocalVariable]
+        "$*" [tt:full_srec] [nt:FullSrec]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "if_chain" [tt:if_chain] [nt:IfChain]
+                    "if" [tt:kw_if] [nt:IfItem]
+                        "!=" [tt:op_ne] [nt:Operator]
+                            "k" [tt:non_sigil_name] [nt:LocalVariable]
+                            ""x"" [tt:string_literal] [nt:string_literal]
+                        "block" [tt:block] [nt:StatementBlockInBraces]
+                            "block" [tt:block] [nt:StatementBlock]
+                                "unset" [tt:kw_unset] [nt:Unset]
+                                    "$[]" [tt:$[]] [nt:IndirectFieldValue]
+                                        "k" [tt:non_sigil_name] [nt:LocalVariable]
+    "=" [tt:equals] [nt:Assignment]
+        "$j" [tt:field_name] [nt:DirectFieldValue]
+        "NR" [tt:ctx_NR] [nt:ctx_NR]
 
 x=0.34679014,j=1
 x=0.75867996,j=2

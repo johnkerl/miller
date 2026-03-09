@@ -3,26 +3,29 @@ $x = ($a + $b) + $c; $y = $a + ($b + $c); $z = $a + ($b)+ $c
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "x"
-        * operator "+"
-            * operator "+"
-                * direct field value "a"
-                * direct field value "b"
-            * direct field value "c"
-    * assignment "="
-        * direct field value "y"
-        * operator "+"
-            * direct field value "a"
-            * operator "+"
-                * direct field value "b"
-                * direct field value "c"
-    * assignment "="
-        * direct field value "z"
-        * operator "+"
-            * operator "+"
-                * direct field value "a"
-                * direct field value "b"
-            * direct field value "c"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$x" [tt:field_name] [nt:DirectFieldValue]
+        "+" [tt:op_plus] [nt:Operator]
+            "+" [tt:op_plus] [nt:Parenthesized]
+                "+" [tt:op_plus] [nt:Operator]
+                    "$a" [tt:field_name] [nt:DirectFieldValue]
+                    "$b" [tt:field_name] [nt:DirectFieldValue]
+            "$c" [tt:field_name] [nt:DirectFieldValue]
+    "=" [tt:equals] [nt:Assignment]
+        "$y" [tt:field_name] [nt:DirectFieldValue]
+        "+" [tt:op_plus] [nt:Operator]
+            "$a" [tt:field_name] [nt:DirectFieldValue]
+            "+" [tt:op_plus] [nt:Parenthesized]
+                "+" [tt:op_plus] [nt:Operator]
+                    "$b" [tt:field_name] [nt:DirectFieldValue]
+                    "$c" [tt:field_name] [nt:DirectFieldValue]
+    "=" [tt:equals] [nt:Assignment]
+        "$z" [tt:field_name] [nt:DirectFieldValue]
+        "+" [tt:op_plus] [nt:Operator]
+            "+" [tt:op_plus] [nt:Operator]
+                "$a" [tt:field_name] [nt:DirectFieldValue]
+                "$b" [tt:field_name] [nt:Parenthesized]
+                    "$b" [tt:field_name] [nt:DirectFieldValue]
+            "$c" [tt:field_name] [nt:DirectFieldValue]
 

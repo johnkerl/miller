@@ -3,14 +3,14 @@ DSL EXPRESSION:
 
 
 AST:
-* statement block
-    * bare boolean
-        * operator "||"
-            * operator "=="
-                * int literal "1"
-                * int literal "0"
-            * bool literal "false"
-    * assignment "="
-        * direct field value "x"
-        * int literal "3"
+"block" [tt:block] [nt:StatementBlock]
+    "||" [tt:op_logical_or] [nt:BareBoolean]
+        "||" [tt:op_logical_or] [nt:Operator]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "1" [tt:int_literal] [nt:int_literal]
+                "0" [tt:int_literal] [nt:int_literal]
+            "false" [tt:literal_false] [nt:bool_literal]
+    "=" [tt:equals] [nt:Assignment]
+        "$x" [tt:field_name] [nt:DirectFieldValue]
+        "3" [tt:int_literal] [nt:int_literal]
 

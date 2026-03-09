@@ -3,15 +3,15 @@ $d=$x/@ox; @ox=$x
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "d"
-        * operator "/"
-            * direct field value "x"
-            * direct oosvar value "ox"
-    * assignment "="
-        * direct oosvar value "ox"
-        * direct field value "x"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$d" [tt:field_name] [nt:DirectFieldValue]
+        "/" [tt:op_slash] [nt:Operator]
+            "$x" [tt:field_name] [nt:DirectFieldValue]
+            "@ox" [tt:oosvar_name] [nt:DirectOosvarValue]
+    "=" [tt:equals] [nt:Assignment]
+        "@ox" [tt:oosvar_name] [nt:DirectOosvarValue]
+        "$x" [tt:field_name] [nt:DirectFieldValue]
 
 a   b   i  x          y          d           x_ratio
 pan pan 1  0.34679014 0.72680286 0.34679014  1

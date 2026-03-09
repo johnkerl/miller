@@ -2,5 +2,5 @@ DSL EXPRESSION:
 
 
 AST:
-* statement block
+"block" [tt:block] [nt:StatementBlock]
 

@@ -3,9 +3,9 @@ $[2] = 3
 
 
 AST:
-* statement block
-    * assignment "="
-        * indirect field value "$[]"
-            * int literal "2"
-        * int literal "3"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$[]" [tt:$[]] [nt:IndirectFieldValue]
+            "2" [tt:int_literal] [nt:int_literal]
+        "3" [tt:int_literal] [nt:int_literal]
 

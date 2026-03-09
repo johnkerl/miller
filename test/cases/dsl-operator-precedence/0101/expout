@@ -3,17 +3,17 @@ $x = $a==1 ? $b == 2 : $c == 3
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "x"
-        * operator "?:"
-            * operator "=="
-                * direct field value "a"
-                * int literal "1"
-            * operator "=="
-                * direct field value "b"
-                * int literal "2"
-            * operator "=="
-                * direct field value "c"
-                * int literal "3"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$x" [tt:field_name] [nt:DirectFieldValue]
+        "?" [tt:op_ternary] [nt:Operator]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "$a" [tt:field_name] [nt:DirectFieldValue]
+                "1" [tt:int_literal] [nt:int_literal]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "$b" [tt:field_name] [nt:DirectFieldValue]
+                "2" [tt:int_literal] [nt:int_literal]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "$c" [tt:field_name] [nt:DirectFieldValue]
+                "3" [tt:int_literal] [nt:int_literal]
 

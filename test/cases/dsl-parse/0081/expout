@@ -3,9 +3,10 @@ for (k in $*) {}
 
 
 AST:
-* statement block
-    * single-variable for-loop "for"
-        * local variable "k"
-        * full record "$*"
-        * statement block
+"block" [tt:block] [nt:StatementBlock]
+    "for" [tt:kw_for] [nt:ForLoopOneVariable]
+        "k" [tt:non_sigil_name] [nt:LocalVariable]
+        "$*" [tt:full_srec] [nt:FullSrec]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
 

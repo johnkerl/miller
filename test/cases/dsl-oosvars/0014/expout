@@ -3,37 +3,39 @@ begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end{@f[@g[5][@h]] = 6}
 
 
 AST:
-* statement block
-    * begin block
-        * statement block
-            * assignment "="
-                * direct oosvar value "a"
-                * array or map index access "[]"
-                    * direct oosvar value "b"
-                    * int literal "1"
-    * assignment "="
-        * direct field value "c"
-        * direct oosvar value "d"
-    * assignment "="
-        * array or map index access "[]"
-            * array or map index access "[]"
-                * array or map index access "[]"
-                    * direct oosvar value "e"
-                    * direct field value "i"
-                * operator "+"
-                    * int literal "2"
-                    * direct field value "j"
-            * int literal "3"
-        * direct field value "4"
-    * end block
-        * statement block
-            * assignment "="
-                * array or map index access "[]"
-                    * direct oosvar value "f"
-                    * array or map index access "[]"
-                        * array or map index access "[]"
-                            * direct oosvar value "g"
-                            * int literal "5"
-                        * direct oosvar value "h"
-                * int literal "6"
+"block" [tt:block] [nt:StatementBlock]
+    "begin" [tt:kw_begin] [nt:BeginBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "=" [tt:equals] [nt:Assignment]
+                    "@a" [tt:oosvar_name] [nt:DirectOosvarValue]
+                    "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                        "@b" [tt:oosvar_name] [nt:DirectOosvarValue]
+                        "1" [tt:int_literal] [nt:int_literal]
+    "=" [tt:equals] [nt:Assignment]
+        "$c" [tt:field_name] [nt:DirectFieldValue]
+        "@d" [tt:oosvar_name] [nt:DirectOosvarValue]
+    "=" [tt:equals] [nt:Assignment]
+        "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+            "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                    "@e" [tt:oosvar_name] [nt:DirectOosvarValue]
+                    "$i" [tt:field_name] [nt:DirectFieldValue]
+                "+" [tt:op_plus] [nt:Operator]
+                    "2" [tt:int_literal] [nt:int_literal]
+                    "$j" [tt:field_name] [nt:DirectFieldValue]
+            "3" [tt:int_literal] [nt:int_literal]
+        "$4" [tt:field_name] [nt:DirectFieldValue]
+    "end" [tt:kw_end] [nt:EndBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "=" [tt:equals] [nt:Assignment]
+                    "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                        "@f" [tt:oosvar_name] [nt:DirectOosvarValue]
+                        "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                            "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                                "@g" [tt:oosvar_name] [nt:DirectOosvarValue]
+                                "5" [tt:int_literal] [nt:int_literal]
+                            "@h" [tt:oosvar_name] [nt:DirectOosvarValue]
+                    "6" [tt:int_literal] [nt:int_literal]
 

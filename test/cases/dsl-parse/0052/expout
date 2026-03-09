@@ -3,11 +3,11 @@ $z = $a[1:2]
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "z"
-        * array-slice access "[]"
-            * direct field value "a"
-            * int literal "1"
-            * int literal "2"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$z" [tt:field_name] [nt:DirectFieldValue]
+        "[]" [tt:[]] [nt:ArraySliceLoHi]
+            "$a" [tt:field_name] [nt:DirectFieldValue]
+            "1" [tt:int_literal] [nt:int_literal]
+            "2" [tt:int_literal] [nt:int_literal]
 

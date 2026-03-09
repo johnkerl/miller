@@ -3,8 +3,8 @@ $x = "abc"
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "x"
-        * string literal "abc"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$x" [tt:field_name] [nt:DirectFieldValue]
+        ""abc"" [tt:string_literal] [nt:string_literal]
 

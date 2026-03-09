@@ -3,35 +3,39 @@ if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } elif (NR == 3) { $z = 300 
 
 
 AST:
-* statement block
-    * if-chain
-        * if-item "if"
-            * operator "=="
-                * context variable "NR"
-                * int literal "1"
-            * statement block
-                * assignment "="
-                    * direct field value "z"
-                    * int literal "100"
-        * if-item "elif"
-            * operator "=="
-                * context variable "NR"
-                * int literal "2"
-            * statement block
-                * assignment "="
-                    * direct field value "z"
-                    * int literal "200"
-        * if-item "elif"
-            * operator "=="
-                * context variable "NR"
-                * int literal "3"
-            * statement block
-                * assignment "="
-                    * direct field value "z"
-                    * int literal "300"
-        * if-item "else"
-            * statement block
-                * assignment "="
-                    * direct field value "z"
-                    * int literal "900"
+"block" [tt:block] [nt:StatementBlock]
+    "if_chain" [tt:if_chain] [nt:IfChain]
+        "if" [tt:kw_if] [nt:IfItem]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "NR" [tt:ctx_NR] [nt:ctx_NR]
+                "1" [tt:int_literal] [nt:int_literal]
+            "block" [tt:block] [nt:StatementBlockInBraces]
+                "block" [tt:block] [nt:StatementBlock]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$z" [tt:field_name] [nt:DirectFieldValue]
+                        "100" [tt:int_literal] [nt:int_literal]
+        "elif" [tt:kw_elif] [nt:IfItem]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "NR" [tt:ctx_NR] [nt:ctx_NR]
+                "2" [tt:int_literal] [nt:int_literal]
+            "block" [tt:block] [nt:StatementBlockInBraces]
+                "block" [tt:block] [nt:StatementBlock]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$z" [tt:field_name] [nt:DirectFieldValue]
+                        "200" [tt:int_literal] [nt:int_literal]
+        "elif" [tt:kw_elif] [nt:IfItem]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "NR" [tt:ctx_NR] [nt:ctx_NR]
+                "3" [tt:int_literal] [nt:int_literal]
+            "block" [tt:block] [nt:StatementBlockInBraces]
+                "block" [tt:block] [nt:StatementBlock]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$z" [tt:field_name] [nt:DirectFieldValue]
+                        "300" [tt:int_literal] [nt:int_literal]
+        "else" [tt:kw_else] [nt:IfItem]
+            "block" [tt:block] [nt:StatementBlockInBraces]
+                "block" [tt:block] [nt:StatementBlock]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$z" [tt:field_name] [nt:DirectFieldValue]
+                        "900" [tt:int_literal] [nt:int_literal]
 

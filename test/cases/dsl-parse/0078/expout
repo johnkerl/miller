@@ -3,7 +3,8 @@ end {}
 
 
 AST:
-* statement block
-    * end block
-        * statement block
+"block" [tt:block] [nt:StatementBlock]
+    "end" [tt:kw_end] [nt:EndBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
 

@@ -3,8 +3,8 @@ $* = @v
 
 
 AST:
-* statement block
-    * assignment "="
-        * full record "$*"
-        * direct oosvar value "v"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$*" [tt:full_srec] [nt:FullSrec]
+        "@v" [tt:oosvar_name] [nt:DirectOosvarValue]
 

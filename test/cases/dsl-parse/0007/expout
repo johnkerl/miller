@@ -3,12 +3,12 @@ $y = $a * $b * $c
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "y"
-        * operator "*"
-            * operator "*"
-                * direct field value "a"
-                * direct field value "b"
-            * direct field value "c"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$y" [tt:field_name] [nt:DirectFieldValue]
+        "*" [tt:op_star] [nt:Operator]
+            "*" [tt:op_star] [nt:Operator]
+                "$a" [tt:field_name] [nt:DirectFieldValue]
+                "$b" [tt:field_name] [nt:DirectFieldValue]
+            "$c" [tt:field_name] [nt:DirectFieldValue]
 

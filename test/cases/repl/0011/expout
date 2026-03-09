@@ -1,4 +1,4 @@
-(statement-block
+(block
     (=
         y
         (+ x 1)

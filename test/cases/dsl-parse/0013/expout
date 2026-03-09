@@ -3,9 +3,9 @@ $[FILENAME] = FNR
 
 
 AST:
-* statement block
-    * assignment "="
-        * indirect field value "$[]"
-            * context variable "FILENAME"
-        * context variable "FNR"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$[]" [tt:$[]] [nt:IndirectFieldValue]
+            "FILENAME" [tt:ctx_FILENAME] [nt:ctx_FILENAME]
+        "FNR" [tt:ctx_FNR] [nt:ctx_FNR]
 

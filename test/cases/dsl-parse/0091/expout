@@ -3,8 +3,9 @@ func f(){}
 
 
 AST:
-* statement block
-    * function definition "f"
-        * parameter list
-        * statement block
+"block" [tt:block] [nt:StatementBlock]
+    "f" [tt:non_sigil_name] [nt:NamedFunctionDefinition]
+        "params" [tt:params] [nt:ParameterList]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
 

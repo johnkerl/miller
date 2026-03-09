@@ -3,13 +3,13 @@ $x = ~1 |  2 &  3
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "x"
-        * operator "|"
-            * operator "~"
-                * int literal "1"
-            * operator "&"
-                * int literal "2"
-                * int literal "3"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$x" [tt:field_name] [nt:DirectFieldValue]
+        "|" [tt:op_bit_or] [nt:Operator]
+            "~" [tt:op_tilde] [nt:Operator]
+                "1" [tt:int_literal] [nt:int_literal]
+            "&" [tt:op_bit_and] [nt:Operator]
+                "2" [tt:int_literal] [nt:int_literal]
+                "3" [tt:int_literal] [nt:int_literal]
 

@@ -3,12 +3,11 @@ $i *= 2
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "i"
-        * operator "*"
-            * direct field value "i"
-            * int literal "2"
+"block" [tt:block] [nt:StatementBlock]
+    "*=" [tt:op_star_equals] [nt:CompoundAssignment]
+        "$i" [tt:field_name] [nt:DirectFieldValue]
+        "*=" [tt:op_star_equals] [nt:op_star_equals]
+        "2" [tt:int_literal] [nt:int_literal]
 
 a   b   i x          y
 pan pan 2 0.34679014 0.72680286

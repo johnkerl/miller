@@ -3,7 +3,7 @@ unset $*
 
 
 AST:
-* statement block
-    * unset "unset"
-        * full record "$*"
+"block" [tt:block] [nt:StatementBlock]
+    "unset" [tt:kw_unset] [nt:Unset]
+        "$*" [tt:full_srec] [nt:FullSrec]
 

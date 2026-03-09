@@ -3,13 +3,14 @@ NR == 3 {$* = @v    }
 
 
 AST:
-* statement block
-    * cond block
-        * operator "=="
-            * context variable "NR"
-            * int literal "3"
-        * statement block
-            * assignment "="
-                * full record "$*"
-                * direct oosvar value "v"
+"block" [tt:block] [nt:StatementBlock]
+    "==" [tt:op_eqeq] [nt:CondBlock]
+        "==" [tt:op_eqeq] [nt:Operator]
+            "NR" [tt:ctx_NR] [nt:ctx_NR]
+            "3" [tt:int_literal] [nt:int_literal]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "=" [tt:equals] [nt:Assignment]
+                    "$*" [tt:full_srec] [nt:FullSrec]
+                    "@v" [tt:oosvar_name] [nt:DirectOosvarValue]
 

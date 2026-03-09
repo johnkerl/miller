@@ -3,8 +3,8 @@ $x = true
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "x"
-        * bool literal "true"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$x" [tt:field_name] [nt:DirectFieldValue]
+        "true" [tt:literal_true] [nt:bool_literal]
 

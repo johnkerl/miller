@@ -3,7 +3,7 @@ unset @x
 
 
 AST:
-* statement block
-    * unset "unset"
-        * direct oosvar value "x"
+"block" [tt:block] [nt:StatementBlock]
+    "unset" [tt:kw_unset] [nt:Unset]
+        "@x" [tt:oosvar_name] [nt:DirectOosvarValue]
 

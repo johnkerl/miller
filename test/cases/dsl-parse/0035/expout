@@ -3,8 +3,8 @@ $z = []
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "z"
-        * array literal "[]"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$z" [tt:field_name] [nt:DirectFieldValue]
+        "[]" [tt:[]] [nt:ArrayLiteral]
 

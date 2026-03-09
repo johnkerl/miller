@@ -3,14 +3,16 @@ func f(a,b,c){}
 
 
 AST:
-* statement block
-    * function definition "f"
-        * parameter list
-            * parameter
-                * parameter name "a"
-            * parameter
-                * parameter name "b"
-            * parameter
-                * parameter name "c"
-        * statement block
+"block" [tt:block] [nt:StatementBlock]
+    "f" [tt:non_sigil_name] [nt:NamedFunctionDefinition]
+        "params" [tt:params] [nt:ParameterList]
+            "params" [tt:params] [nt:ParameterList]
+                "a" [tt:non_sigil_name] [nt:Parameter]
+                    "a" [tt:non_sigil_name] [nt:LocalVariable]
+                "b" [tt:non_sigil_name] [nt:Parameter]
+                    "b" [tt:non_sigil_name] [nt:LocalVariable]
+                "c" [tt:non_sigil_name] [nt:Parameter]
+                    "c" [tt:non_sigil_name] [nt:LocalVariable]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
 

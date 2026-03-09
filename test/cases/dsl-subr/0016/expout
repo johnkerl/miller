@@ -11,36 +11,36 @@ DSL EXPRESSION:
 
 
 AST:
-* statement block
-    * function definition "s"
-        * parameter list
-            * parameter
-                * parameter name "x"
-        * statement block
-            * return "return"
-                * operator "*"
-                    * local variable "x"
-                    * int literal "2"
-    * subroutine definition "s"
-        * parameter list
-            * parameter
-                * parameter name "a"
-        * statement block
-            * print statement "print"
-                * function callsite
-                    * dot operator "."
-                        * dot operator "."
-                            * string literal "HELLO, "
-                            * local variable "a"
-                        * string literal "!"
-                * no-op
-    * print statement "print"
-        * function callsite
-            * function callsite "s"
-                * context variable "NR"
-        * no-op
-    * subroutine callsite "s"
-        * string literal "WORLD"
+"block" [tt:block] [nt:StatementBlock]
+    "s" [tt:non_sigil_name] [nt:NamedFunctionDefinition]
+        "params" [tt:params] [nt:ParameterList]
+            "params" [tt:params] [nt:ParameterList]
+                "x" [tt:non_sigil_name] [nt:Parameter]
+                    "x" [tt:non_sigil_name] [nt:LocalVariable]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "return" [tt:kw_return] [nt:ReturnStatement]
+                    "*" [tt:op_star] [nt:Operator]
+                        "x" [tt:non_sigil_name] [nt:LocalVariable]
+                        "2" [tt:int_literal] [nt:int_literal]
+    "s" [tt:non_sigil_name] [nt:SubroutineDefinition]
+        "params" [tt:params] [nt:ParameterList]
+            "params" [tt:params] [nt:ParameterList]
+                "a" [tt:non_sigil_name] [nt:Parameter]
+                    "a" [tt:non_sigil_name] [nt:LocalVariable]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "print" [tt:kw_print] [nt:PrintStatement]
+                    "." [tt:op_dot] [nt:DotOperator]
+                        "." [tt:op_dot] [nt:DotOperator]
+                            ""HELLO, "" [tt:string_literal] [nt:string_literal]
+                            "a" [tt:non_sigil_name] [nt:LocalVariable]
+                        ""!"" [tt:string_literal] [nt:string_literal]
+    "print" [tt:kw_print] [nt:PrintStatement]
+        "s" [tt:non_sigil_name] [nt:FunctionCallsite]
+            "NR" [tt:ctx_NR] [nt:ctx_NR]
+    "s" [tt:non_sigil_name] [nt:SubroutineCallsite]
+        ""WORLD"" [tt:string_literal] [nt:string_literal]
 
 2
 HELLO, WORLD!

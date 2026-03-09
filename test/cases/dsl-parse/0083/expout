@@ -3,8 +3,9 @@ while (false) {}
 
 
 AST:
-* statement block
-    * while loop "while"
-        * bool literal "false"
-        * statement block
+"block" [tt:block] [nt:StatementBlock]
+    "while" [tt:kw_while] [nt:WhileLoop]
+        "false" [tt:literal_false] [nt:bool_literal]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
 

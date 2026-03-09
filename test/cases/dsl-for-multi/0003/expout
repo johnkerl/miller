@@ -2,12 +2,13 @@ DSL EXPRESSION:
 for ((k1,k2), v in @*) {}
 
 AST:
-* statement block
-    * multi-variable for-loop "for"
-        * parameter list
-            * local variable "k1"
-            * local variable "k2"
-        * local variable "v"
-        * full oosvar "@*"
-        * statement block
+"block" [tt:block] [nt:StatementBlock]
+    "for" [tt:kw_for] [nt:ForLoopMultivariable]
+        "multi_index" [tt:multi_index] [nt:MultiIndex]
+            "k1" [tt:non_sigil_name] [nt:LocalVariable]
+            "k2" [tt:non_sigil_name] [nt:LocalVariable]
+        "v" [tt:non_sigil_name] [nt:LocalVariable]
+        "@*" [tt:full_oosvar] [nt:FullOosvar]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
 

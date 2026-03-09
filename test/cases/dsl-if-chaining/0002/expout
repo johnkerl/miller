@@ -9,27 +9,29 @@ DSL EXPRESSION:
 
 
 AST:
-* statement block
-    * if-chain
-        * if-item "if"
-            * operator "=="
-                * context variable "NR"
-                * int literal "4"
-            * statement block
-                * assignment "="
-                    * direct field value "x"
-                    * int literal "5"
-                * assignment "="
-                    * direct field value "y"
-                    * int literal "6"
-        * if-item "else"
-            * statement block
-                * assignment "="
-                    * direct field value "x"
-                    * int literal "1007"
-                * assignment "="
-                    * direct field value "y"
-                    * int literal "1008"
+"block" [tt:block] [nt:StatementBlock]
+    "if_chain" [tt:if_chain] [nt:IfChain]
+        "if" [tt:kw_if] [nt:IfItem]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "NR" [tt:ctx_NR] [nt:ctx_NR]
+                "4" [tt:int_literal] [nt:int_literal]
+            "block" [tt:block] [nt:StatementBlockInBraces]
+                "block" [tt:block] [nt:StatementBlock]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$x" [tt:field_name] [nt:DirectFieldValue]
+                        "5" [tt:int_literal] [nt:int_literal]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$y" [tt:field_name] [nt:DirectFieldValue]
+                        "6" [tt:int_literal] [nt:int_literal]
+        "else" [tt:kw_else] [nt:IfItem]
+            "block" [tt:block] [nt:StatementBlockInBraces]
+                "block" [tt:block] [nt:StatementBlock]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$x" [tt:field_name] [nt:DirectFieldValue]
+                        "1007" [tt:int_literal] [nt:int_literal]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$y" [tt:field_name] [nt:DirectFieldValue]
+                        "1008" [tt:int_literal] [nt:int_literal]
 
 i=1,x=1007,y=1008
 i=2,x=1007,y=1008
