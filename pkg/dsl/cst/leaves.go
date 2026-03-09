@@ -291,6 +291,11 @@ type RegexCaptureReplacementNode struct {
 }
 
 func (root *RootNode) BuildStringLiteralNode(literal string) IEvaluable {
+	// PGPG lexer produces string_literal token with surrounding quotes in the lexeme.
+	// Strip them so "a" becomes a. GOCC may have produced content without quotes.
+	if len(literal) >= 2 && literal[0] == '"' && literal[len(literal)-1] == '"' {
+		literal = literal[1 : len(literal)-1]
+	}
 	// Convert "\t" to tab character, "\"" to double-quote character, etc.
 	// This is intentionally done for StringLiteralNode but not for
 	// RegexLiteralNode.  See also https://github.com/johnkerl/miller/issues/297.

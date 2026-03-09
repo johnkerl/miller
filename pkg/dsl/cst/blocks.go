@@ -59,12 +59,13 @@ func (root *RootNode) BuildStatementBlockNodeFromBeginOrEnd(
 	//         * IntLiteral "4"
 
 	astStatementBlockNode := astBeginOrEndNode.Children[0]
-	// PGPG: BeginBlock/EndBlock have StatementBlockInBraces as child; unwrap to get StatementBlock.
+	// PGPG: BeginBlock/EndBlock have StatementBlockInBraces as child.
+	// With "parent":1,"children":[1], StatementBlockInBraces.Children[0] is the StatementBlock.
+	// Unwrap so we pass StatementBlock to BuildStatementBlockNode.
 	if astStatementBlockNode.Type == asts.NodeType(NodeTypeStatementBlockInBraces) {
 		lib.InternalCodingErrorIf(astStatementBlockNode.Children == nil || len(astStatementBlockNode.Children) < 1)
 		astStatementBlockNode = astStatementBlockNode.Children[0]
 	}
-	lib.InternalCodingErrorIf(astStatementBlockNode.Type != asts.NodeType(NodeTypeStatementBlock))
 	statementBlockNode, err := root.BuildStatementBlockNode(astStatementBlockNode)
 	if err != nil {
 		return nil, err
@@ -75,7 +76,12 @@ func (root *RootNode) BuildStatementBlockNodeFromBeginOrEnd(
 func (root *RootNode) BuildStatementBlockNode(
 	astNode *asts.ASTNode,
 ) (*StatementBlockNode, error) {
-
+	// PGPG: StatementBlockInBraces has "children":[1] so its child is StatementBlock; unwrap.
+	if astNode.Type == asts.NodeType(NodeTypeStatementBlockInBraces) &&
+		astNode.Children != nil && len(astNode.Children) == 1 &&
+		astNode.Children[0].Type == asts.NodeType(NodeTypeStatementBlock) {
+		astNode = astNode.Children[0]
+	}
 	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeStatementBlock))
 
 	statementBlockNode := NewStatementBlockNode()

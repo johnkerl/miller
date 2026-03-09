@@ -141,26 +141,57 @@ func (root *RootNode) buildEmitXStatementNode(
 	isEmitP bool,
 ) (IExecutable, error) {
 	// Normalize PGPG AST to GOCC-style 3-child layout (emittables, keys, redirector).
-	// PGPG produces 1 child (emitp @s) or 2 children (emitp > file, @s); GOCC always produces 3.
+	// PGPG produces: 1 child (emitp @s), 2 children (emitp > file, @s OR emitp @s, "key"),
+	// or 3+ adopted children (emitp @s, "k1", "k2"). GOCC always produces 3.
 	var emittablesNode, keysNode, redirectorNode *asts.ASTNode
+	isRedirector := func(n *asts.ASTNode) bool {
+		return n.Type == asts.NodeType(NodeTypeRedirectWrite) ||
+			n.Type == asts.NodeType(NodeTypeRedirectAppend) ||
+			n.Type == asts.NodeType(NodeTypeRedirectPipe)
+	}
 	switch len(astNode.Children) {
 	case 1:
-		// PGPG: kw_emitp FcnArgs with with_adopted_grandchildren -> single child is emittable(s)
-		emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{astNode.Children[0]})
-		keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
-		redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		child := astNode.Children[0]
+		if child.Type == asts.NodeType(NodeTypeFcnArgs) && child.Children != nil && len(child.Children) >= 1 {
+			// PGPG gave us FcnArgs directly (no adoption): [emittable] or [emittable, key1, key2, ...]
+			if len(child.Children) == 1 {
+				emittablesNode = child
+				keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+			} else {
+				emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{child.Children[0]})
+				keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeEmitKeys), child.Children[1:])
+			}
+			redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		} else {
+			// PGPG: kw_emitp FcnArgs with with_adopted_grandchildren -> single child is emittable
+			emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{child})
+			keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+			redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		}
 	case 2:
-		// PGPG: kw_emitp Redirector comma FcnArgs -> children: [Redirector, FcnArgs]
-		emittablesNode = astNode.Children[1]
-		keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
-		redirectorNode = astNode.Children[0]
-	case 3:
-		// GOCC format
-		emittablesNode = astNode.Children[0]
-		keysNode = astNode.Children[1]
-		redirectorNode = astNode.Children[2]
+		if isRedirector(astNode.Children[0]) {
+			// PGPG: kw_emitp Redirector comma FcnArgs -> children: [Redirector, FcnArgs]
+			emittablesNode = astNode.Children[1]
+			keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+			redirectorNode = astNode.Children[0]
+		} else {
+			// PGPG: kw_emitp FcnArgs with adoption -> [emittable, key]; first is emittable, rest are keys
+			emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{astNode.Children[0]})
+			keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeEmitKeys), []*asts.ASTNode{astNode.Children[1]})
+			redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		}
 	default:
-		lib.InternalCodingErrorIf(true) // unexpected child count
+		if isRedirector(astNode.Children[0]) {
+			// emitp Redirector comma FcnArgs -> [Redirector, FcnArgs]; FcnArgs may have multiple children
+			emittablesNode = astNode.Children[1]
+			keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+			redirectorNode = astNode.Children[0]
+		} else {
+			// emitp FcnArgs with adoption -> [emittable, key1, key2, ...]
+			emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{astNode.Children[0]})
+			keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeEmitKeys), astNode.Children[1:])
+			redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		}
 	}
 
 	retval := &EmitXStatementNode{

@@ -521,9 +521,20 @@ func (root *RootNode) BuildUDF(
 	arity := len(flatParams)
 	typeGatedParameterNames := make([]*types.TypeGatedMlrvalName, arity)
 	for i, parameterASTNode := range flatParams {
-		// PGPG: Parameter has one child (LocalVariable), or with_prepended_children may give LocalVariable directly.
+		// PGPG: Parameter has one child (LocalVariable), or two (Typedecl, LocalVariable) for typed params.
 		var variableName string
-		if parameterASTNode.Children != nil && len(parameterASTNode.Children) == 1 {
+		var typeName string = "any"
+		if parameterASTNode.Children != nil && len(parameterASTNode.Children) == 2 {
+			// Typedecl LocalVariable -> [Typedecl, LocalVariable]
+			typeNode := parameterASTNode.Children[0]
+			nameNode := parameterASTNode.Children[1]
+			if string(typeNode.Type) == NodeTypeTypedecl || typeNode.Type == asts.NodeType(NodeTypeTypedecl) {
+				typeName = tokenLit(typeNode)
+			}
+			if string(nameNode.Type) == NodeTypeLocalVariable || nameNode.Type == asts.NodeType(NodeTypeLocalVariable) {
+				variableName = tokenLit(nameNode)
+			}
+		} else if parameterASTNode.Children != nil && len(parameterASTNode.Children) == 1 {
 			typeGatedParameterNameASTNode := parameterASTNode.Children[0]
 			if string(typeGatedParameterNameASTNode.Type) != NodeTypeLocalVariable &&
 				typeGatedParameterNameASTNode.Type != asts.NodeType(NodeTypeLocalVariable) {
@@ -548,7 +559,6 @@ func (root *RootNode) BuildUDF(
 				lib.InternalCodingErrorWithMessageIf(true, "expected Parameter node with one child")
 			}
 		}
-		typeName := "any"
 		typeGatedParameterName, err := types.NewTypeGatedMlrvalName(
 			variableName,
 			typeName,

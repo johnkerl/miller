@@ -427,6 +427,7 @@ FuncOrSubrParameterList ::=
 
 FuncOrSubrParameter ::=
     LocalVariable -> { "parent": 0, "children": [0], "type": "Parameter" }
+  | Typedecl LocalVariable -> { "parent": 0, "children": [0, 1], "type": "Parameter" }
 ;
 
 Typedecl ::= kw_arr | kw_bool | kw_float | kw_int | kw_map | kw_num | kw_str | kw_var | kw_funct ;
