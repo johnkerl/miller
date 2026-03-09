@@ -249,19 +249,33 @@ func (root *RootNode) BuildAndInstallUDS(astNode *asts.ASTNode) error {
 
 	lib.InternalCodingErrorIf(parameterListASTNode.Type != asts.NodeType(NodeTypeParameterList))
 	lib.InternalCodingErrorIf(parameterListASTNode.Children == nil)
-	arity := len(parameterListASTNode.Children)
+	flatParams := flattenParameterList(parameterListASTNode.Children)
+	arity := len(flatParams)
 	typeGatedParameterNames := make([]*types.TypeGatedMlrvalName, arity)
-	for i, parameterASTNode := range parameterListASTNode.Children {
-		lib.InternalCodingErrorIf(parameterASTNode.Type != asts.NodeType(NodeTypeParameter))
-		lib.InternalCodingErrorIf(parameterASTNode.Children == nil)
-		lib.InternalCodingErrorIf(len(parameterASTNode.Children) != 1)
-		typeGatedParameterNameASTNode := parameterASTNode.Children[0]
-
-		// PGPG: Parameter's child is LocalVariable (not ParameterName)
-		lib.InternalCodingErrorIf(typeGatedParameterNameASTNode.Type != asts.NodeType(NodeTypeLocalVariable))
-		variableName := tokenLit(typeGatedParameterNameASTNode)
-		typeName := "any"
-		// PGPG grammar does not support typed parameters; use "any"
+	for i, parameterASTNode := range flatParams {
+		var variableName string
+		var typeName string = "any"
+		if parameterASTNode.Children != nil && len(parameterASTNode.Children) == 2 {
+			// Typedecl LocalVariable -> [Typedecl, LocalVariable]
+			typeNode := parameterASTNode.Children[0]
+			nameNode := parameterASTNode.Children[1]
+			typeName = tokenLit(typeNode)
+			if typeName == "" && typeNode.Children != nil && len(typeNode.Children) > 0 {
+				typeName = tokenLit(typeNode.Children[0])
+			}
+			if typeName == "" {
+				typeName = typedDeclNodeTypeToName(string(typeNode.Type))
+			}
+			if string(nameNode.Type) == NodeTypeLocalVariable || nameNode.Type == asts.NodeType(NodeTypeLocalVariable) {
+				variableName = tokenLit(nameNode)
+			}
+		} else if parameterASTNode.Children != nil && len(parameterASTNode.Children) == 1 {
+			typeGatedParameterNameASTNode := parameterASTNode.Children[0]
+			lib.InternalCodingErrorIf(typeGatedParameterNameASTNode.Type != asts.NodeType(NodeTypeLocalVariable))
+			variableName = tokenLit(typeGatedParameterNameASTNode)
+		} else {
+			lib.InternalCodingErrorWithMessageIf(true, "expected Parameter with 1 or 2 children")
+		}
 		typeGatedParameterName, err := types.NewTypeGatedMlrvalName(
 			variableName,
 			typeName,
@@ -269,7 +283,6 @@ func (root *RootNode) BuildAndInstallUDS(astNode *asts.ASTNode) error {
 		if err != nil {
 			return err
 		}
-
 		typeGatedParameterNames[i] = typeGatedParameterName
 	}
 

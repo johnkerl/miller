@@ -459,6 +459,33 @@ func (node *UnnamedUDFNode) Evaluate(state *runtime.State) *mlrval.Mlrval {
 	return node.udfAsMlrval
 }
 
+// typedDeclNodeTypeToName maps PGPG type-keyword node types to TypeNameToMask names.
+func typedDeclNodeTypeToName(nodeType string) string {
+	switch nodeType {
+	case "kw_int", "int":
+		return "int"
+	case "kw_float", "float":
+		return "float"
+	case "kw_num":
+		return "num"
+	case "kw_bool", "bool":
+		return "bool"
+	case "kw_str", "str":
+		return "str"
+	case "kw_arr", "arr":
+		return "arr"
+	case "kw_map", "map":
+		return "map"
+	case "kw_var", "var":
+		return "var"
+	case "kw_funct", "funct":
+		return "funct"
+	case "Typedecl":
+		return "any"
+	}
+	return "any"
+}
+
 // flattenParameterList recurses through nested ParameterList nodes and returns
 // a flat list of Parameter or LocalVariable nodes. PGPG produces (params (params (Parameter) (Parameter))).
 func flattenParameterList(nodes []*asts.ASTNode) []*asts.ASTNode {
@@ -493,13 +520,21 @@ func (root *RootNode) BuildUDF(
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2 && len(astNode.Children) != 3)
 
 	parameterListASTNode := astNode.Children[0]
-	functionBodyASTNode := astNode.Children[1]
-
+	var functionBodyASTNode *asts.ASTNode
 	returnValueTypeName := "any"
 	if len(astNode.Children) == 3 {
-		typeNode := astNode.Children[2]
-		lib.InternalCodingErrorIf(typeNode.Type != asts.NodeType(NodeTypeTypedecl))
+		// PGPG: children [2, 4, 5] = [FuncParams, Typedecl, StatementBlockInBraces]
+		typeNode := astNode.Children[1]
+		functionBodyASTNode = astNode.Children[2]
 		returnValueTypeName = tokenLit(typeNode)
+		if returnValueTypeName == "" && typeNode.Children != nil && len(typeNode.Children) > 0 {
+			returnValueTypeName = tokenLit(typeNode.Children[0])
+		}
+		if returnValueTypeName == "" {
+			returnValueTypeName = typedDeclNodeTypeToName(string(typeNode.Type))
+		}
+	} else {
+		functionBodyASTNode = astNode.Children[1]
 	}
 	typeGatedReturnValue, err := types.NewTypeGatedMlrvalName(
 		"function return value",
@@ -528,8 +563,13 @@ func (root *RootNode) BuildUDF(
 			// Typedecl LocalVariable -> [Typedecl, LocalVariable]
 			typeNode := parameterASTNode.Children[0]
 			nameNode := parameterASTNode.Children[1]
-			if string(typeNode.Type) == NodeTypeTypedecl || typeNode.Type == asts.NodeType(NodeTypeTypedecl) {
-				typeName = tokenLit(typeNode)
+			typeName = tokenLit(typeNode)
+			if typeName == "" && typeNode.Children != nil && len(typeNode.Children) > 0 {
+				typeName = tokenLit(typeNode.Children[0])
+			}
+			if typeName == "" {
+				// PGPG may produce type keywords (kw_int etc) without token on node; use node type
+				typeName = typedDeclNodeTypeToName(string(typeNode.Type))
 			}
 			if string(nameNode.Type) == NodeTypeLocalVariable || nameNode.Type == asts.NodeType(NodeTypeLocalVariable) {
 				variableName = tokenLit(nameNode)

@@ -188,13 +188,31 @@ Root ::= StatementBlock ;
 
 # Empty allows mlr put "" and scripts with only comments/whitespace (e.g. "  # comment").
 # Trailing semicolon (e.g. "$x=1; $y=2;") via StatementBlock ::= empty in the recursion.
+# BracefulStatement BracelessStatement/BracefulStatement avoid forcing semicolon after }.
 StatementBlock ::=
     empty -> { "parent_literal": "block", "children": [], "type": "StatementBlock" }
   | Statement -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
   | Statement semicolon StatementBlock -> { "parent": 2, "with_prepended_children": [0], "type": "StatementBlock" }
+  | BracefulStatement BracelessStatement semicolon StatementBlock -> { "parent": 3, "with_prepended_children": [0, 1], "type": "StatementBlock" }
+  | BracefulStatement BracefulStatement StatementBlock -> { "parent": 2, "with_prepended_children": [0, 1], "type": "StatementBlock" }
 ;
 
 StatementBlockInBraces ::= lbrace StatementBlock rbrace -> { "parent": 1, "children": [1], "type": "StatementBlockInBraces" } ;
+
+# Statements ending with }; no semicolon required before next statement.
+BracefulStatement ::=
+    BeginBlock | EndBlock | CondBlock | IfChain | WhileLoop | ForLoop
+  | NamedFunctionDefinition | SubroutineDefinition
+;
+
+# Statements not ending with }; semicolon required after when following BracefulStatement.
+BracelessStatement ::=
+    Assignment | Unset | BareBoolean | FilterStatement
+  | PrintStatement | PrintnStatement | EprintStatement | EprintnStatement
+  | DumpStatement | EdumpStatement
+  | TeeStatement | Emit1Statement | EmitStatement | EmitPStatement | EmitFStatement
+  | DoWhileLoop | BreakStatement | ContinueStatement | ReturnStatement | SubroutineCallsite
+;
 
 Statement ::=
     Assignment
