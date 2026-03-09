@@ -118,8 +118,12 @@ func (root *RootNode) BuildEmitFStatementNode(astNode *asts.ASTNode) (IExecutabl
 			retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stderr)")
 		} else {
 			retval.emitfToRedirectFunc = retval.emitfToFileOrPipe
-
-			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(redirectorTargetNode)
+			targetNode := redirectorTargetNode
+			if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetRvalue) &&
+				redirectorTargetNode.Children != nil && len(redirectorTargetNode.Children) > 0 {
+				targetNode = redirectorTargetNode.Children[0]
+			}
+			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(targetNode)
 			if err != nil {
 				return nil, err
 			}

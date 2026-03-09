@@ -150,8 +150,12 @@ func (root *RootNode) buildDumpxStatementNode(
 			retval.dumpToRedirectFunc = retval.dumpToStderr
 		} else {
 			retval.dumpToRedirectFunc = retval.dumpToFileOrPipe
-
-			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(redirectorTargetNode)
+			targetNode := redirectorTargetNode
+			if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetRvalue) &&
+				redirectorTargetNode.Children != nil && len(redirectorTargetNode.Children) > 0 {
+				targetNode = redirectorTargetNode.Children[0]
+			}
+			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(targetNode)
 			if err != nil {
 				return nil, err
 			}

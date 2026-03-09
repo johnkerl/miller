@@ -272,10 +272,14 @@ RedirectTarget ::=
   | Rvalue -> { "parent": 0, "children": [0], "type": "RedirectTargetRvalue" }
 ;
 
+# Lexer may produce op_gt/op_bit_or for '>'/'|' in redirect context; accept both.
 Redirector ::=
     op_redirect_write RedirectTarget -> { "parent": 0, "children": [1], "type": "RedirectWrite" }
+  | op_gt RedirectTarget -> { "parent": 0, "children": [1], "type": "RedirectWrite" }
   | op_redirect_append RedirectTarget -> { "parent": 0, "children": [1], "type": "RedirectAppend" }
+  | op_shift_right RedirectTarget -> { "parent": 0, "children": [1], "type": "RedirectAppend" }
   | op_redirect_pipe RedirectTarget -> { "parent": 0, "children": [1], "type": "RedirectPipe" }
+  | op_bit_or RedirectTarget -> { "parent": 0, "children": [1], "type": "RedirectPipe" }
 ;
 
 PrintStatement ::=
@@ -544,9 +548,11 @@ DotFactor ::=
   | UnaryOpTerm
 ;
 
+# Lexer may emit op_minus for "-"; accept in unary context (e.g. x[-1], 2**-3)
 UnaryOpTerm ::=
     op_unary_plus      UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
   | op_unary_minus     UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_minus           UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
   | op_dot_plus        UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
   | op_dot_minus       UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
   | op_bang            UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }

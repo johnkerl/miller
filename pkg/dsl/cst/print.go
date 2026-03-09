@@ -292,8 +292,13 @@ func (root *RootNode) buildPrintxStatementNode(
 			retval.printToRedirectFunc = retval.printToStderr
 		} else {
 			retval.printToRedirectFunc = retval.printToFileOrPipe
-
-			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(redirectorTargetNode)
+			// RedirectTargetRvalue wraps Rvalue; unwrap to build the expression
+			targetNode := redirectorTargetNode
+			if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetRvalue) &&
+				redirectorTargetNode.Children != nil && len(redirectorTargetNode.Children) > 0 {
+				targetNode = redirectorTargetNode.Children[0]
+			}
+			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(targetNode)
 			if err != nil {
 				return nil, err
 			}
