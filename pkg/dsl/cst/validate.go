@@ -314,4 +314,5 @@ var VALID_LHS_NODE_TYPES = map[string]bool{
 	NodeTypeIndirectFieldValue:    true, // includes $[[n]] and $[[[n]]]
 	NodeTypeIndirectOosvarValue:   true,
 	NodeTypeLocalVariable:         true,
+	"TypedeclLocalVariable":       true, // int a = 5; etc
 }

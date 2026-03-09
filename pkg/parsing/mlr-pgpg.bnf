@@ -84,6 +84,12 @@ ctx_NR ::= 'N' 'R' ;
 ctx_FNR ::= 'F' 'N' 'R' ;
 ctx_FILENAME ::= 'F' 'I' 'L' 'E' 'N' 'A' 'M' 'E' ;
 ctx_FILENUM ::= 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
+# Literals must precede non_sigil_name so "true"/"false"/"null" etc match as literals
+literal_true ::= 't' 'r' 'u' 'e' ;
+literal_false ::= 'f' 'a' 'l' 's' 'e' ;
+null_literal ::= 'n' 'u' 'l' 'l' ;
+inf_literal ::= 'I' 'n' 'f' ;
+nan_literal ::= 'N' 'a' 'N' ;
 non_sigil_name ::= _leading_idchar { _idchar } ;
 
 _hex ::= '0'-'9' | 'A'-'F' | 'a'-'f' ;
@@ -96,11 +102,6 @@ _escape ::= '\\' ( '"' | '\\' | '/' | 'b' | 'f' | 'n' | 'r' | 't' | 'u' _hex _he
          | '8' | '9'
          ) ;
 string_literal ::= '"' { _string_char | _escape } '"' ;
-literal_true ::= 't' 'r' 'u' 'e' ;
-literal_false ::= 'f' 'a' 'l' 's' 'e' ;
-null_literal ::= 'n' 'u' 'l' 'l' ;
-inf_literal ::= 'I' 'n' 'f' ;
-nan_literal ::= 'N' 'a' 'N' ;
 
 _frac ::= '.' _decdig { _decdig } ;
 _exp ::= ( 'e' | 'E' ) [ '+' | '-' ] _decdig { _decdig } ;
@@ -462,7 +463,10 @@ FuncOrSubrParameter ::=
 
 Typedecl ::= kw_arr | kw_bool | kw_float | kw_int | kw_map | kw_num | kw_str | kw_var | kw_funct ;
 
-Lvalue ::= Rvalue ;
+Lvalue ::=
+    Rvalue
+  | Typedecl LocalVariable -> { "parent": 0, "children": [0, 1], "type": "TypedeclLocalVariable" }
+;
 
 # Rvalue is the top of the operator precedence chain
 Rvalue ::= PrecedenceChainStart ;

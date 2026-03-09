@@ -45,6 +45,9 @@ func (root *RootNode) BuildAssignableNode(
 
 	case asts.NodeType(NodeTypeEnvironmentVariable):
 		return root.BuildEnvironmentVariableLvalueNode(astNode)
+
+	case asts.NodeType("TypedeclLocalVariable"):
+		return root.BuildTypedeclLocalVariableLvalueNode(astNode)
 	}
 
 	return nil, errors.New(
@@ -774,6 +777,21 @@ type LocalVariableLvalueNode struct {
 	//   var b = 4; <-- defineTypedAtScope is true;  creates new inner b
 	// }
 	defineTypedAtScope bool
+}
+
+func (root *RootNode) BuildTypedeclLocalVariableLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Children == nil || len(astNode.Children) < 2)
+	typeNode := astNode.Children[0]
+	varNode := astNode.Children[1]
+	// PGPG Typedecl produces kw_int, kw_bool, etc. (no Typedecl wrapper node)
+	lib.InternalCodingErrorIf(varNode.Type != asts.NodeType(NodeTypeLocalVariable))
+	typeName := tokenLit(typeNode)
+	variableName := tokenLit(varNode)
+	return NewLocalVariableLvalueNode(
+		runtime.NewStackVariable(variableName),
+		typeName,
+		true, // defineTypedAtScope
+	), nil
 }
 
 func (root *RootNode) BuildLocalVariableLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {

@@ -2,6 +2,6 @@ DSL EXPRESSION:
 break
 
 AST:
-* statement block
-    * break "break"
+"block" [tt:block] [nt:StatementBlock]
+    "break" [tt:kw_break] [nt:BreakStatement]
 

@@ -2,10 +2,11 @@ DSL EXPRESSION:
 begin{@v=$*}
 
 AST:
-* statement block
-    * begin block
-        * statement block
-            * assignment "="
-                * direct oosvar value "v"
-                * full record "$*"
+"block" [tt:block] [nt:StatementBlock]
+    "begin" [tt:kw_begin] [nt:BeginBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "=" [tt:equals] [nt:Assignment]
+                    "@v" [tt:oosvar_name] [nt:DirectOosvarValue]
+                    "$*" [tt:full_srec] [nt:FullSrec]
 

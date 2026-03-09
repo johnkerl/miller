@@ -2,6 +2,6 @@ DSL EXPRESSION:
 continue
 
 AST:
-* statement block
-    * continue "continue"
+"block" [tt:block] [nt:StatementBlock]
+    "continue" [tt:kw_continue] [nt:ContinueStatement]
 
