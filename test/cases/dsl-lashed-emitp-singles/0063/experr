@@ -1,5 +1,1 @@
-mlr: cannot parse DSL expression.
-mlr: Parse error on token "." at line 1 column 10.
-Expected one of:
-  , )
-
+mlr: unlashed-emit node types must be local variables, field names, oosvars, or maps; got DotOperator
