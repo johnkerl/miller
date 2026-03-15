@@ -181,13 +181,18 @@ func (root *RootNode) buildEmitXStatementNode(
 	case 1:
 		child := astNode.Children[0]
 		if child.Type == asts.NodeType(NodeTypeFcnArgs) && child.Children != nil && len(child.Children) >= 1 {
-			// PGPG gave us FcnArgs directly (no adoption): [emittable] or [emittable, key1, key2, ...]
+			// PGPG gave us FcnArgs directly: [emittable], [emittable, emittable, ...] (lashed), or [emittable, key1, key2, ...]
 			if len(child.Children) == 1 {
 				emittablesNode = child
 				keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
-			} else {
+			} else if len(child.Children) >= 2 && EMITX_NAMED_NODE_TYPES[child.Children[0].Type] &&
+				!EMITX_NAMED_NODE_TYPES[child.Children[1].Type] {
+				// First is emittable, rest are index keys
 				emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{child.Children[0]})
 				keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeEmitKeys), child.Children[1:])
+			} else {
+				emittablesNode = child
+				keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
 			}
 			redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
 		} else {
@@ -199,11 +204,12 @@ func (root *RootNode) buildEmitXStatementNode(
 	case 2:
 		if isRedirector(astNode.Children[0]) {
 			// PGPG: kw_emit Redirector comma FcnArgs -> children: [Redirector, FcnArgs]
-			// FcnArgs may be [emittable] or [emittable, key1, key2, ...]
+			// FcnArgs may be [emittable], [emittable, emittable, ...] (lashed), or [emittable, key1, key2, ...]
 			fcnArgs := astNode.Children[1]
 			if fcnArgs.Type == asts.NodeType(NodeTypeFcnArgs) && fcnArgs.Children != nil && len(fcnArgs.Children) >= 2 &&
-				EMITX_NAMED_NODE_TYPES[fcnArgs.Children[0].Type] {
-				// First is emittable, rest are index keys
+				EMITX_NAMED_NODE_TYPES[fcnArgs.Children[0].Type] &&
+				!EMITX_NAMED_NODE_TYPES[fcnArgs.Children[1].Type] {
+				// First is emittable, rest are index keys (string literals)
 				emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{fcnArgs.Children[0]})
 				keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeEmitKeys), fcnArgs.Children[1:])
 			} else {
@@ -240,7 +246,8 @@ func (root *RootNode) buildEmitXStatementNode(
 			} else {
 				fcnArgs := astNode.Children[1]
 				if fcnArgs.Type == asts.NodeType(NodeTypeFcnArgs) && fcnArgs.Children != nil && len(fcnArgs.Children) >= 2 &&
-					EMITX_NAMED_NODE_TYPES[fcnArgs.Children[0].Type] {
+					EMITX_NAMED_NODE_TYPES[fcnArgs.Children[0].Type] &&
+					!EMITX_NAMED_NODE_TYPES[fcnArgs.Children[1].Type] {
 					emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{fcnArgs.Children[0]})
 					keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeEmitKeys), fcnArgs.Children[1:])
 				} else {
