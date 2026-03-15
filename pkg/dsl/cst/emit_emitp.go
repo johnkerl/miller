@@ -186,9 +186,18 @@ func (root *RootNode) buildEmitXStatementNode(
 		}
 	case 2:
 		if isRedirector(astNode.Children[0]) {
-			// PGPG: kw_emitp Redirector comma FcnArgs -> children: [Redirector, FcnArgs]
-			emittablesNode = astNode.Children[1]
-			keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+			// PGPG: kw_emit Redirector comma FcnArgs -> children: [Redirector, FcnArgs]
+			// FcnArgs may be [emittable] or [emittable, key1, key2, ...]
+			fcnArgs := astNode.Children[1]
+			if fcnArgs.Type == asts.NodeType(NodeTypeFcnArgs) && fcnArgs.Children != nil && len(fcnArgs.Children) >= 2 &&
+				EMITX_NAMED_NODE_TYPES[fcnArgs.Children[0].Type] {
+				// First is emittable, rest are index keys
+				emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{fcnArgs.Children[0]})
+				keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeEmitKeys), fcnArgs.Children[1:])
+			} else {
+				emittablesNode = fcnArgs
+				keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+			}
 			redirectorNode = astNode.Children[0]
 		} else if astNode.Children[0].Type == asts.NodeType(NodeTypeFcnArgs) &&
 			astNode.Children[0].Children != nil && len(astNode.Children[0].Children) >= 2 &&
@@ -210,9 +219,23 @@ func (root *RootNode) buildEmitXStatementNode(
 		}
 	default:
 		if isRedirector(astNode.Children[0]) {
-			// emitp Redirector comma FcnArgs -> [Redirector, FcnArgs]; FcnArgs may have multiple children
-			emittablesNode = astNode.Children[1]
-			keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+			// len 3: emit Redirector comma FcnArgsParen comma FcnArgs -> [Redirector, emittables, keys]
+			// len 2: emit Redirector comma FcnArgs -> [Redirector, FcnArgs]; split if FcnArgs=[emittable, keys...]
+			if len(astNode.Children) >= 3 && astNode.Children[2].Type == asts.NodeType(NodeTypeFcnArgs) &&
+				astNode.Children[2].Children != nil {
+				emittablesNode = astNode.Children[1]
+				keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeEmitKeys), astNode.Children[2].Children)
+			} else {
+				fcnArgs := astNode.Children[1]
+				if fcnArgs.Type == asts.NodeType(NodeTypeFcnArgs) && fcnArgs.Children != nil && len(fcnArgs.Children) >= 2 &&
+					EMITX_NAMED_NODE_TYPES[fcnArgs.Children[0].Type] {
+					emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{fcnArgs.Children[0]})
+					keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeEmitKeys), fcnArgs.Children[1:])
+				} else {
+					emittablesNode = fcnArgs
+					keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+				}
+			}
 			redirectorNode = astNode.Children[0]
 		} else if allChildrenAreNamedNodes(astNode.Children) {
 			// PGPG: kw_emitp FcnArgsParen with 3+ args -> lashed emitp (@a, @b, @c)

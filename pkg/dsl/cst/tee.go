@@ -67,8 +67,9 @@ type TeeStatementNode struct {
 func (root *RootNode) BuildTeeStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeTeeStatement))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
-	expressionNode := astNode.Children[0]
-	redirectorNode := astNode.Children[1]
+	// PGPG: kw_tee Redirector comma FullSrec -> children [1,3] = [Redirector, FullSrec]
+	redirectorNode := astNode.Children[0]
+	expressionNode := astNode.Children[1]
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Expression to be teed, which is $*.
