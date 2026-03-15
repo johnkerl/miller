@@ -235,6 +235,11 @@ func (root *RootNode) buildEmitXStatementNode(
 	lib.InternalCodingErrorIf(len(emittablesNode.Children) < 1)
 	if len(emittablesNode.Children) == 1 {
 		childNode := emittablesNode.Children[0]
+		// Unwrap Parenthesized: emitp (@a) parses as Parenthesized containing @a
+		if childNode.Type == asts.NodeType(NodeTypeParenthesized) &&
+			childNode.Children != nil && len(childNode.Children) == 1 {
+			childNode = childNode.Children[0]
+		}
 
 		if EMITX_NAMED_NODE_TYPES[childNode.Type] {
 			retval.topLevelNameList = make([]string, 1)

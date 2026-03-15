@@ -717,7 +717,7 @@ type FullOosvarLvalueNode struct {
 func (root *RootNode) BuildFullOosvarLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeFullOosvar))
 	lib.InternalCodingErrorIf(astNode == nil)
-	lib.InternalCodingErrorIf(astNode.Children != nil)
+	lib.InternalCodingErrorIf(astNode.Children != nil && len(astNode.Children) > 0)
 	return NewFullOosvarLvalueNode(), nil
 }
 
