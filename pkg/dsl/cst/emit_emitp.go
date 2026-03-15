@@ -105,7 +105,7 @@ func (root *RootNode) BuildEmitPStatementNode(astNode *asts.ASTNode) (IExecutabl
 
 func allChildrenAreNamedNodes(children []*asts.ASTNode) bool {
 	for _, c := range children {
-		if !EMITX_NAMED_NODE_TYPES[c.Type] {
+		if !EMITX_NAMED_NODE_TYPES[c.Type] && !EMITX_NAMELESS_NODE_TYPES[c.Type] {
 			return false
 		}
 	}
@@ -185,7 +185,8 @@ func (root *RootNode) buildEmitXStatementNode(
 			if len(child.Children) == 1 {
 				emittablesNode = child
 				keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
-			} else if len(child.Children) >= 2 && EMITX_NAMED_NODE_TYPES[child.Children[0].Type] &&
+			} else if len(child.Children) >= 2 &&
+				(EMITX_NAMED_NODE_TYPES[child.Children[0].Type] || EMITX_NAMELESS_NODE_TYPES[child.Children[0].Type]) &&
 				!EMITX_NAMED_NODE_TYPES[child.Children[1].Type] {
 				// First is emittable, rest are index keys
 				emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{child.Children[0]})
@@ -207,7 +208,7 @@ func (root *RootNode) buildEmitXStatementNode(
 			// FcnArgs may be [emittable], [emittable, emittable, ...] (lashed), or [emittable, key1, key2, ...]
 			fcnArgs := astNode.Children[1]
 			if fcnArgs.Type == asts.NodeType(NodeTypeFcnArgs) && fcnArgs.Children != nil && len(fcnArgs.Children) >= 2 &&
-				EMITX_NAMED_NODE_TYPES[fcnArgs.Children[0].Type] &&
+				(EMITX_NAMED_NODE_TYPES[fcnArgs.Children[0].Type] || EMITX_NAMELESS_NODE_TYPES[fcnArgs.Children[0].Type]) &&
 				!EMITX_NAMED_NODE_TYPES[fcnArgs.Children[1].Type] {
 				// First is emittable, rest are index keys (string literals)
 				emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{fcnArgs.Children[0]})
@@ -246,7 +247,7 @@ func (root *RootNode) buildEmitXStatementNode(
 			} else {
 				fcnArgs := astNode.Children[1]
 				if fcnArgs.Type == asts.NodeType(NodeTypeFcnArgs) && fcnArgs.Children != nil && len(fcnArgs.Children) >= 2 &&
-					EMITX_NAMED_NODE_TYPES[fcnArgs.Children[0].Type] &&
+					(EMITX_NAMED_NODE_TYPES[fcnArgs.Children[0].Type] || EMITX_NAMELESS_NODE_TYPES[fcnArgs.Children[0].Type]) &&
 					!EMITX_NAMED_NODE_TYPES[fcnArgs.Children[1].Type] {
 					emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{fcnArgs.Children[0]})
 					keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeEmitKeys), fcnArgs.Children[1:])
@@ -321,9 +322,9 @@ func (root *RootNode) buildEmitXStatementNode(
 	} else {
 		retval.isLashed = true
 		for _, childNode := range emittablesNode.Children {
-			if !EMITX_NAMED_NODE_TYPES[childNode.Type] {
+			if !EMITX_NAMED_NODE_TYPES[childNode.Type] && !EMITX_NAMELESS_NODE_TYPES[childNode.Type] {
 				return nil, fmt.Errorf(
-					"lashed-emit node types must be local variables, field names, or oosvars; got %s",
+					"lashed-emit node types must be local variables, field names, oosvars, or maps; got %s",
 					childNode.Type,
 				)
 			}
