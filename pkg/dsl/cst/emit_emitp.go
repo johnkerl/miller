@@ -103,6 +103,15 @@ func (root *RootNode) BuildEmitPStatementNode(astNode *asts.ASTNode) (IExecutabl
 	return root.buildEmitXStatementNode(astNode, true)
 }
 
+func allChildrenAreNamedNodes(children []*asts.ASTNode) bool {
+	for _, c := range children {
+		if !EMITX_NAMED_NODE_TYPES[c.Type] {
+			return false
+		}
+	}
+	return len(children) > 0
+}
+
 var EMITX_NAMED_NODE_TYPES = map[asts.NodeType]bool{
 	asts.NodeType(NodeTypeLocalVariable):       true,
 	asts.NodeType(NodeTypeDirectOosvarValue):   true,
@@ -174,6 +183,18 @@ func (root *RootNode) buildEmitXStatementNode(
 			emittablesNode = astNode.Children[1]
 			keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
 			redirectorNode = astNode.Children[0]
+		} else if astNode.Children[0].Type == asts.NodeType(NodeTypeFcnArgs) &&
+			astNode.Children[0].Children != nil && len(astNode.Children[0].Children) >= 2 &&
+			astNode.Children[1].Type == asts.NodeType(NodeTypeFcnArgs) {
+			// PGPG: kw_emitp FcnArgsParen comma FcnArgs -> [emittables, keys]
+			emittablesNode = astNode.Children[0]
+			keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeEmitKeys), astNode.Children[1].Children)
+			redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		} else if EMITX_NAMED_NODE_TYPES[astNode.Children[0].Type] && EMITX_NAMED_NODE_TYPES[astNode.Children[1].Type] {
+			// PGPG: kw_emitp FcnArgsParen -> lashed emitp (@a, @b), both are emittables
+			emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), astNode.Children)
+			keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+			redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
 		} else {
 			// PGPG: kw_emitp FcnArgs with adoption -> [emittable, key]; first is emittable, rest are keys
 			emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{astNode.Children[0]})
@@ -186,6 +207,11 @@ func (root *RootNode) buildEmitXStatementNode(
 			emittablesNode = astNode.Children[1]
 			keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
 			redirectorNode = astNode.Children[0]
+		} else if allChildrenAreNamedNodes(astNode.Children) {
+			// PGPG: kw_emitp FcnArgsParen with 3+ args -> lashed emitp (@a, @b, @c)
+			emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), astNode.Children)
+			keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+			redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
 		} else {
 			// emitp FcnArgs with adoption -> [emittable, key1, key2, ...]
 			emittablesNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), []*asts.ASTNode{astNode.Children[0]})

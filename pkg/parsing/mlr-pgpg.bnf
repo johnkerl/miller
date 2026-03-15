@@ -333,19 +333,35 @@ Emit1Statement ::= kw_emit1 Rvalue -> { "parent": 0, "children": [1], "type": "E
 
 # Emit/emitp/emitf take FcnArgs (like emit1) to avoid reduce-reduce with Emittable vs MlrvalOrFunction.
 # Full EmittableList (oosvars, map literals) can be added later with grammar refactor.
+# Parenthesized form: emit(p) (@a, @b) - requires 2+ args to avoid shift/reduce with PrecedenceChainEnd.
+# FcnArgsParen = lparen Rvalue comma FcnArgs rparen (min 2 args when using parens)
+FcnArgsParen ::= lparen Rvalue comma FcnArgs rparen -> { "parent": 3, "with_prepended_children": [1], "type": "FcnArgs" } ;
+
 EmitStatement ::=
     kw_emit FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EmitStatement" }
+  | kw_emit FcnArgsParen -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EmitStatement" }
+  | kw_emit FcnArgsParen comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "EmitStatement" }
   | kw_emit Redirector comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "EmitStatement" }
+  | kw_emit Redirector comma FcnArgsParen -> { "parent": 0, "children": [1, 3], "type": "EmitStatement" }
+  | kw_emit Redirector comma FcnArgsParen comma FcnArgs -> { "parent": 0, "children": [1, 3, 5], "type": "EmitStatement" }
 ;
 
 EmitPStatement ::=
     kw_emitp FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EmitPStatement" }
+  | kw_emitp FcnArgsParen -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EmitPStatement" }
+  | kw_emitp FcnArgsParen comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "EmitPStatement" }
   | kw_emitp Redirector comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "EmitPStatement" }
+  | kw_emitp Redirector comma FcnArgsParen -> { "parent": 0, "children": [1, 3], "type": "EmitPStatement" }
+  | kw_emitp Redirector comma FcnArgsParen comma FcnArgs -> { "parent": 0, "children": [1, 3, 5], "type": "EmitPStatement" }
 ;
 
 EmitFStatement ::=
     kw_emitf FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EmitFStatement" }
+  | kw_emitf FcnArgsParen -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EmitFStatement" }
+  | kw_emitf FcnArgsParen comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "EmitFStatement" }
   | kw_emitf Redirector comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "EmitFStatement" }
+  | kw_emitf Redirector comma FcnArgsParen -> { "parent": 0, "children": [1, 3], "type": "EmitFStatement" }
+  | kw_emitf Redirector comma FcnArgsParen comma FcnArgs -> { "parent": 0, "children": [1, 3, 5], "type": "EmitFStatement" }
 ;
 
 BeginBlock ::= kw_begin StatementBlockInBraces -> { "parent": 0, "children": [1], "type": "BeginBlock" } ;
