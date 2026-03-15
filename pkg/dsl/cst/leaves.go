@@ -53,12 +53,14 @@ func (root *RootNode) BuildLeafNode(
 		return root.BuildRegexLiteralNode(sval), nil
 
 	case asts.NodeType(NodeTypeRegexCaseInsensitive):
-		// StringLiteral nodes like '"abc"' entered by the user come in from
-		// the AST as 'abc', with double quotes removed. Case-insensitive
-		// regexes like '"a.*b"i' come in with initial '"' and final '"i'
-		// intact. We let the sub/regextract/etc functions deal with this.
-		// (The alternative would be to make a separate Mlrval type separate
-		// from string.)
+		// PGPG: RegexCaseInsensitive has string_literal child. CompileMillerRegex
+		// expects "a.*b"i format for case-insensitive; append "i" if not present.
+		if sval == "" && astNode.Children != nil && len(astNode.Children) > 0 {
+			sval = tokenLit(astNode.Children[0])
+		}
+		if sval != "" && !strings.HasSuffix(sval, "i") {
+			sval = sval + "i"
+		}
 		return root.BuildRegexLiteralNode(sval), nil
 
 	case asts.NodeType(NodeTypeIntLiteral):
@@ -109,6 +111,14 @@ func (root *RootNode) BuildLeafNode(
 		return root.BuildBoolLiteralNode(sval), nil
 	case "null_literal":
 		return root.BuildNullLiteralNode(), nil
+	case "RegexCaseInsensitive", "regex_case_insensitive":
+		if sval == "" && astNode.Children != nil && len(astNode.Children) > 0 {
+			sval = tokenLit(astNode.Children[0])
+		}
+		if sval != "" && !strings.HasSuffix(sval, "i") {
+			sval = sval + "i"
+		}
+		return root.BuildRegexLiteralNode(sval), nil
 	}
 
 	// PGPG produces ctx_NF, ctx_NR, etc. as terminal types; treat as ContextVariable

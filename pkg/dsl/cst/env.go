@@ -30,6 +30,15 @@ func (root *RootNode) BuildEnvironmentVariableNode(astNode *asts.ASTNode) (*Envi
 	if string(child.Type) == NodeTypeParenthesized && child.Children != nil && len(child.Children) == 1 {
 		child = child.Children[0]
 	}
+	// ENV.FOO: child is non_sigil_name (identifier FOO) -> use as env var name directly
+	if string(child.Type) == "non_sigil_name" || string(child.Type) == NodeTypeLocalVariable {
+		sval := tokenLit(child)
+		if sval != "" {
+			return &EnvironmentVariableNode{
+				nameEvaluable: root.BuildStringLiteralNode(sval),
+			}, nil
+		}
+	}
 	// PGPG may put the string literal's text on the node or its child; extract it directly
 	// so we get the correct env var name even when BuildEvaluableNode would yield empty.
 	if string(child.Type) == NodeTypeStringLiteral || string(child.Type) == "string_literal" {

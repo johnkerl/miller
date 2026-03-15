@@ -1015,11 +1015,19 @@ func (root *RootNode) BuildEnvironmentVariableLvalueNode(astNode *asts.ASTNode) 
 	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeEnvironmentVariable))
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
-	nameExpression, err := root.BuildEvaluableNode(astNode.Children[0])
-	if err != nil {
-		return nil, err
+	child := astNode.Children[0]
+	var nameExpression IEvaluable
+	// ENV.FOO: child is non_sigil_name; BuildEvaluableNode doesn't handle bare identifiers
+	if string(child.Type) == "non_sigil_name" {
+		sval := tokenLit(child)
+		nameExpression = root.BuildStringLiteralNode(sval)
+	} else {
+		var err error
+		nameExpression, err = root.BuildEvaluableNode(child)
+		if err != nil {
+			return nil, err
+		}
 	}
-
 	return NewEnvironmentVariableLvalueNode(nameExpression), nil
 }
 

@@ -199,6 +199,7 @@ Root ::= StatementBlock ;
 # BracefulStatement BracelessStatement without semicolon: } $x=1 } (semicolon optional before })
 StatementBlock ::=
     empty -> { "parent_literal": "block", "children": [], "type": "StatementBlock" }
+  | semicolon StatementBlock -> { "parent": 1, "children": [], "type": "StatementBlock" }
   | Statement -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
   | Statement semicolon StatementBlock -> { "parent": 2, "with_prepended_children": [0], "type": "StatementBlock" }
   | BracefulStatement BracelessStatement semicolon StatementBlock -> { "parent": 3, "with_prepended_children": [0, 1], "type": "StatementBlock" }
@@ -397,26 +398,24 @@ MultiIndex ::=
 
 ForLoopMultivariable ::= kw_for lparen lparen MultiIndex rparen comma LocalVariable kw_in Rvalue rparen StatementBlockInBraces -> { "parent": 0, "children": [3, 6, 8, 10], "type": "ForLoopMultivariable" } ;
 
-# Optional for-loop parts: use StatementBlock with possible empty child list.
-# For for(;;) we need empty; PGPG has no epsilon. Use OptionalForBlock matching
-# semicolon-semicolon to imply empty, or require at least one item.
-# Miller allows for(;;body), for(i=0;;), for(;i<n;). We support only non-empty parts:
-# for(i=0;i<n;i++) and for(i=0;i<n;) and for(;i<n;i++) etc - omit TripleForLoop
-# for now to avoid empty RHS. Alternative: TripleFor* each require 1+ items.
+# Miller allows for(;;body), for(i=0;;), for(;i<n;), for(i=0;i<n;i++), etc.
 TripleForStart ::=
-    Assignment -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
+    empty -> { "parent_literal": "block", "children": [], "type": "StatementBlock" }
+  | Assignment -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
   | TripleForStart comma Assignment -> { "parent": 0, "with_appended_children": [2], "type": "StatementBlock" }
 ;
 
 TripleForContinuationItem ::= Assignment | BareBoolean ;
 
 TripleForContinuation ::=
-    TripleForContinuationItem -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
+    empty -> { "parent_literal": "block", "children": [], "type": "StatementBlock" }
+  | TripleForContinuationItem -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
   | TripleForContinuation comma TripleForContinuationItem -> { "parent": 0, "with_appended_children": [2], "type": "StatementBlock" }
 ;
 
 TripleForUpdate ::=
-    Assignment -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
+    empty -> { "parent_literal": "block", "children": [], "type": "StatementBlock" }
+  | Assignment -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
   | TripleForUpdate comma Assignment -> { "parent": 0, "with_appended_children": [2], "type": "StatementBlock" }
 ;
 
@@ -599,8 +598,15 @@ EmptyCoalesceTerm ::=
   | PowTerm
 ;
 
+# For x**-2 and x**+2: exponent can have leading unary -/+ (like mlr.bnf)
+UnarySignedPowRhs ::=
+    op_minus PowTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_unary_plus PowTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | PowTerm
+;
+
 PowTerm ::=
-    PrecedenceChainEnd op_pow PowTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+    PrecedenceChainEnd op_pow UnarySignedPowRhs -> { "parent": 1, "children": [0, 2], "type": "Operator" }
   | PrecedenceChainEnd
 ;
 
@@ -624,6 +630,7 @@ MlrvalOrFunction ::=
   | LocalVariable
   | IntLiteral
   | FloatLiteral
+  | RegexCaseInsensitive
   | StringLiteral
   | BoolLiteral
   | NullLiteral
@@ -661,6 +668,8 @@ EnvironmentVariable ::=
 
 IntLiteral ::= int_literal -> { "parent": 0, "children": [], "type": "int_literal" } ;
 FloatLiteral ::= float_literal -> { "parent": 0, "children": [], "type": "float_literal" } ;
+# Miller regex: "a.*b" (case-sensitive) or "a.*b"i (case-insensitive). Must precede StringLiteral.
+RegexCaseInsensitive ::= string_literal non_sigil_name -> { "parent": 0, "children": [0], "type": "RegexCaseInsensitive" } ;
 StringLiteral ::= string_literal -> { "parent": 0, "children": [], "type": "string_literal" } ;
 BoolLiteral ::= literal_true -> { "parent": 0, "children": [], "type": "bool_literal" }
   | literal_false -> { "parent": 0, "children": [], "type": "bool_literal" }
@@ -700,9 +709,14 @@ ArraySliceAccess ::=
   | MlrvalOrFunction lbrack colon rbrack -> { "parent_literal": "[]", "children": [0], "type": "ArraySliceFull" }
 ;
 
+# int and float are type-decl keywords but also function names for type conversion
 FunctionCallsite ::=
     non_sigil_name lparen rparen -> { "parent": 0, "children": [], "type": "FunctionCallsite" }
   | non_sigil_name lparen FcnArgs rparen -> { "parent": 0, "with_adopted_grandchildren": [2], "type": "FunctionCallsite" }
+  | kw_int lparen rparen -> { "parent": 0, "children": [], "type": "FunctionCallsite" }
+  | kw_int lparen FcnArgs rparen -> { "parent": 0, "with_adopted_grandchildren": [2], "type": "FunctionCallsite" }
+  | kw_float lparen rparen -> { "parent": 0, "children": [], "type": "FunctionCallsite" }
+  | kw_float lparen FcnArgs rparen -> { "parent": 0, "with_adopted_grandchildren": [2], "type": "FunctionCallsite" }
 ;
 
 FcnArgs ::=

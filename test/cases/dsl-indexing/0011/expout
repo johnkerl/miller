@@ -3,12 +3,12 @@ ${new} = $a . $b
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "new"
-        * dot operator "."
-            * direct field value "a"
-            * direct field value "b"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "${new}" [tt:braced_field_name] [nt:BracedFieldValue]
+        "." [tt:op_dot] [nt:DotOperator]
+            "$a" [tt:field_name] [nt:DirectFieldValue]
+            "$b" [tt:field_name] [nt:DirectFieldValue]
 
 a   b   i x          y          new
 pan pan 1 0.34679014 0.72680286 panpan

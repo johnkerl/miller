@@ -308,6 +308,8 @@ var VALID_LHS_NODE_TYPES = map[string]bool{
 	NodeTypeArraySliceLoOnly:      true,
 	NodeTypeArraySliceFull:        true,
 	NodeTypeDirectFieldValue:      true,
+	NodeTypeBracedFieldValue:      true, // ${foo}, ${x+y}
+	NodeTypeEnvironmentVariable:   true, // ENV["FOO"] = "bar"
 	NodeTypeDirectOosvarValue:     true,
 	NodeTypeFullOosvar:            true,
 	NodeTypeFullSrec:              true,

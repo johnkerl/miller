@@ -2,7 +2,8 @@ DSL EXPRESSION:
 begin {;;;}
 
 AST:
-* statement block
-    * begin block
-        * statement block
+"block" [tt:block] [nt:StatementBlock]
+    "begin" [tt:kw_begin] [nt:BeginBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
 
