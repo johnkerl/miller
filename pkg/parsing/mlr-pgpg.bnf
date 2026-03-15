@@ -561,10 +561,11 @@ DotFactor ::=
 ;
 
 # Lexer may emit op_minus for "-"; accept in unary context (e.g. x[-1], 2**-3)
+# op_unary_plus/minus and op_minus take AbsentCoalesceTerm (not UnaryOpTerm) to reject ++1, --1
 UnaryOpTerm ::=
-    op_unary_plus      UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
-  | op_unary_minus     UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
-  | op_minus           UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+    op_unary_plus      AbsentCoalesceTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_unary_minus     AbsentCoalesceTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_minus           AbsentCoalesceTerm -> { "parent": 0, "children": [1], "type": "Operator" }
   | op_dot_plus        UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
   | op_dot_minus       UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
   | op_bang            UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
