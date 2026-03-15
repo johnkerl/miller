@@ -27,6 +27,7 @@ _braced_char ::= 'A'-'Z' | 'a'-'z' | '0'-'9'
 ;
 braced_field_name ::= '$' '{' _braced_char { _braced_char } '}' ;
 full_srec ::= '$' '*' ;
+at_lbrack ::= '@' '[' ;
 oosvar_name ::= '@' _leading_idchar { _idchar } ;
 braced_oosvar_name ::= '@' '{' _braced_char { _braced_char } '}' ;
 full_oosvar ::= '@' '*' ;
@@ -645,7 +646,7 @@ MlrvalOrFunction ::=
 FullSrec ::= full_srec -> { "parent": 0, "children": [], "type": "FullSrec" } ;
 
 DirectOosvarValue ::= oosvar_name -> { "parent": 0, "children": [], "type": "DirectOosvarValue" } ;
-IndirectOosvarValue ::= '@' lbrack Rvalue rbrack -> { "parent_literal": "@[]", "children": [1], "type": "IndirectOosvarValue" } ;
+IndirectOosvarValue ::= at_lbrack Rvalue rbrack -> { "parent_literal": "@[]", "children": [1], "type": "IndirectOosvarValue" } ;
 BracedOosvarValue ::= braced_oosvar_name -> { "parent": 0, "children": [], "type": "BracedOosvarValue" } ;
 FullOosvar ::= full_oosvar -> { "parent": 0, "children": [], "type": "FullOosvar" } ;
 LocalVariable ::= non_sigil_name -> { "parent": 0, "children": [], "type": "LocalVariable" } ;
