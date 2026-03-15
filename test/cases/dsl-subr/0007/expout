@@ -3,10 +3,11 @@ subr s() {return 2}
 
 
 AST:
-* statement block
-    * subroutine definition "s"
-        * parameter list
-        * statement block
-            * return "return"
-                * int literal "2"
+"block" [tt:block] [nt:StatementBlock]
+    "s" [tt:non_sigil_name] [nt:SubroutineDefinition]
+        "params" [tt:params] [nt:ParameterList]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "return" [tt:kw_return] [nt:ReturnStatement]
+                    "2" [tt:int_literal] [nt:int_literal]
 

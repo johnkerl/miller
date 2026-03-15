@@ -3,10 +3,11 @@ for (;;) {}
 
 
 AST:
-* statement block
-    * triple-for loop "for"
-        * statement block
-        * statement block
-        * statement block
-        * statement block
+"block" [tt:block] [nt:StatementBlock]
+    "for" [tt:kw_for] [nt:TripleForLoop]
+        "block" [tt:block] [nt:StatementBlock]
+        "block" [tt:block] [nt:StatementBlock]
+        "block" [tt:block] [nt:StatementBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
 

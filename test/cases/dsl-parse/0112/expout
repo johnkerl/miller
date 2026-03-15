@@ -3,7 +3,7 @@ unset 3
 
 
 AST:
-* statement block
-    * unset "unset"
-        * int literal "3"
+"block" [tt:block] [nt:StatementBlock]
+    "unset" [tt:kw_unset] [nt:Unset]
+        "3" [tt:int_literal] [nt:int_literal]
 

@@ -131,6 +131,18 @@ var EMITX_NAMELESS_NODE_TYPES = map[asts.NodeType]bool{
 // emitKeyName extracts the key name for emit/emitp output. Strips leading $ or @
 // and for braced forms strips ${ } or @{ } so that @sum emits as "sum", ${x+y} as "x+y".
 func emitKeyName(childNode *asts.ASTNode) string {
+	// Walk to base for ArrayOrMapIndexAccess/DotOperator (e.g. @v[1][1] -> "v")
+	walker := childNode
+	for walker != nil &&
+		(walker.Type == asts.NodeType(NodeTypeArrayOrMapIndexAccess) ||
+			walker.Type == asts.NodeType(NodeTypeDotOperator)) &&
+		walker.Children != nil && len(walker.Children) > 0 {
+		walker = walker.Children[0]
+	}
+	if walker != nil {
+		childNode = walker
+	}
+
 	var s string
 	if childNode.Type == asts.NodeType(NodeTypeBracedFieldValue) ||
 		childNode.Type == asts.NodeType(NodeTypeBracedOosvarValue) {
@@ -271,7 +283,10 @@ func (root *RootNode) buildEmitXStatementNode(
 			childNode = childNode.Children[0]
 		}
 
-		if EMITX_NAMED_NODE_TYPES[childNode.Type] {
+		if childNode.Type == asts.NodeType(NodeTypeLocalVariable) && tokenLit(childNode) == "all" {
+			// "emit all" / "emitp all" means emit all out-of-stream variables (same as @*)
+			retval.topLevelEvaluableMap = root.BuildFullOosvarRvalueNode()
+		} else if EMITX_NAMED_NODE_TYPES[childNode.Type] {
 			retval.topLevelNameList = make([]string, 1)
 			retval.topLevelNameList[0] = emitKeyName(childNode)
 

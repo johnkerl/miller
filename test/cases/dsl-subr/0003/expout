@@ -3,9 +3,9 @@ call s(1,2,3)
 
 
 AST:
-* statement block
-    * subroutine callsite "s"
-        * int literal "1"
-        * int literal "2"
-        * int literal "3"
+"block" [tt:block] [nt:StatementBlock]
+    "s" [tt:non_sigil_name] [nt:SubroutineCallsite]
+        "1" [tt:int_literal] [nt:int_literal]
+        "2" [tt:int_literal] [nt:int_literal]
+        "3" [tt:int_literal] [nt:int_literal]
 

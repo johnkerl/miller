@@ -3,7 +3,7 @@ unset @*
 
 
 AST:
-* statement block
-    * unset "unset"
-        * full oosvar "@*"
+"block" [tt:block] [nt:StatementBlock]
+    "unset" [tt:kw_unset] [nt:Unset]
+        "@*" [tt:full_oosvar] [nt:FullOosvar]
 
