@@ -91,22 +91,27 @@ literal_false ::= 'f' 'a' 'l' 's' 'e' ;
 null_literal ::= 'n' 'u' 'l' 'l' ;
 inf_literal ::= 'I' 'n' 'f' ;
 nan_literal ::= 'N' 'a' 'N' ;
+# %%%panic%%% - special token for short-circuit tests (causes panic when evaluated)
+panic ::= '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
 non_sigil_name ::= _leading_idchar { _idchar } ;
 
 _hex ::= '0'-'9' | 'A'-'F' | 'a'-'f' ;
 _octaldig ::= '0'-'7' ;
 _string_char ::= "\u0020"-"\u0021" | "\u0023"-"\u005B" | "\u005D"-"\uFFFF" ;
 # Octal \123, hex \x42, regex backref \0-\9
+# Regex escapes: \. \* \% \^ \$ \+ \( \) \& for regex patterns like "0\.5"
 _escape ::= '\\' ( '"' | '\\' | '/' | 'b' | 'f' | 'n' | 'r' | 't' | 'u' _hex _hex _hex _hex
          | 'x' _hex _hex | 'X' _hex _hex
          | _octaldig _octaldig _octaldig | _octaldig _octaldig | _octaldig
          | '8' | '9'
+         | '.' | '*' | '%' | '^' | '$' | '+' | '(' | ')' | '&'
          ) ;
 string_literal ::= '"' { _string_char | _escape } '"' ;
 
 _frac ::= '.' _decdig { _decdig } ;
 _exp ::= ( 'e' | 'E' ) [ '+' | '-' ] _decdig { _decdig } ;
 float_literal ::= _decdig { _decdig } _frac [ _exp ]
+  | _decdig { _decdig } '.' [ _exp ]
   | '.' _decdig { _decdig } [ _exp ]
   | _decdig { _decdig } _exp
 ;
@@ -635,6 +640,7 @@ MlrvalOrFunction ::=
   | StringLiteral
   | BoolLiteral
   | NullLiteral
+  | PanicLiteral
   | ArrayLiteral
   | MapLiteral
   | ArrayOrMapIndexAccess
@@ -676,6 +682,7 @@ BoolLiteral ::= literal_true -> { "parent": 0, "children": [], "type": "bool_lit
   | literal_false -> { "parent": 0, "children": [], "type": "bool_literal" }
 ;
 NullLiteral ::= null_literal -> { "parent": 0, "children": [], "type": "null_literal" } ;
+PanicLiteral ::= panic -> { "parent": 0, "children": [], "type": "Panic" } ;
 
 ArrayLiteral ::=
     lbrack rbrack -> { "parent_literal": "[]", "children": [], "type": "ArrayLiteral" }
