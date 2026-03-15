@@ -113,11 +113,13 @@ func allChildrenAreNamedNodes(children []*asts.ASTNode) bool {
 }
 
 var EMITX_NAMED_NODE_TYPES = map[asts.NodeType]bool{
-	asts.NodeType(NodeTypeLocalVariable):       true,
-	asts.NodeType(NodeTypeDirectOosvarValue):   true,
-	asts.NodeType(NodeTypeIndirectOosvarValue): true,
-	asts.NodeType(NodeTypeDirectFieldValue):    true,
-	asts.NodeType(NodeTypeIndirectFieldValue):  true,
+	asts.NodeType(NodeTypeLocalVariable):         true,
+	asts.NodeType(NodeTypeDirectOosvarValue):     true,
+	asts.NodeType(NodeTypeIndirectOosvarValue):   true,
+	asts.NodeType(NodeTypeBracedOosvarValue):     true, // @{variable.name}
+	asts.NodeType(NodeTypeDirectFieldValue):      true,
+	asts.NodeType(NodeTypeIndirectFieldValue):    true,
+	asts.NodeType(NodeTypeArrayOrMapIndexAccess): true, // $x[1], @a[111], etc.
 }
 
 var EMITX_NAMELESS_NODE_TYPES = map[asts.NodeType]bool{
@@ -127,10 +129,15 @@ var EMITX_NAMELESS_NODE_TYPES = map[asts.NodeType]bool{
 }
 
 // emitKeyName extracts the key name for emit/emitp output. Strips leading $ or @
-// so that @sum emits as "sum" and $x emits as "x". GOCC stripped at parse time;
-// PGPG may not, so we always strip here.
+// and for braced forms strips ${ } or @{ } so that @sum emits as "sum", ${x+y} as "x+y".
 func emitKeyName(childNode *asts.ASTNode) string {
-	s := tokenLitStripDollarOrAt(childNode)
+	var s string
+	if childNode.Type == asts.NodeType(NodeTypeBracedFieldValue) ||
+		childNode.Type == asts.NodeType(NodeTypeBracedOosvarValue) {
+		s = tokenLitStripBraced(childNode)
+	} else {
+		s = tokenLitStripDollarOrAt(childNode)
+	}
 	if s == "" && childNode.Children != nil && len(childNode.Children) > 0 {
 		s = tokenLitStripDollarOrAt(childNode.Children[0])
 	}

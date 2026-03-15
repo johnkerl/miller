@@ -311,6 +311,7 @@ var VALID_LHS_NODE_TYPES = map[string]bool{
 	NodeTypeBracedFieldValue:      true, // ${foo}, ${x+y}
 	NodeTypeEnvironmentVariable:   true, // ENV["FOO"] = "bar"
 	NodeTypeDirectOosvarValue:     true,
+	NodeTypeBracedOosvarValue:     true, // @{foo}, @{variable.name}
 	NodeTypeFullOosvar:            true,
 	NodeTypeFullSrec:              true,
 	NodeTypeIndirectFieldValue:    true, // includes $[[n]] and $[[[n]]]
