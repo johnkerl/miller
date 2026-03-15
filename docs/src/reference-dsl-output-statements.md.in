@@ -209,7 +209,7 @@ to files.
 Keep in mind that out-of-stream variables are a nested, multi-level [map](reference-main-maps.md) (directly viewable as JSON using `dump`), while Miller record values are as well during processing -- but records may be flattened down for output to tabular formats. See the page [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md) for more information.
 
 * You can use `emit1` to emit any map-valued expression, including `$*`, map-valued out-of-stream variables, the entire out-of-stream-variable collection `@*`, map-valued local variables, map literals, or map-valued function return values.
-* For `emit`, `emitp`, and `emitf`, you can emit map-valued local variables, map-valued field attributes (with `$`), map-va out-of-stream variables (with `@`), `$*`, `@*`, or map literals (with outermost `{...}`) -- but not arbitrary expressions which evaluate to map (such as function return values).
+* For `emit`, `emitp`, and `emitf`, you can emit map-valued local variables, map-valued field attributes (with `$`), map-valued out-of-stream variables (with `@`), `$*`, `@*`, map literals (with outermost `{...}`), or map-valued function return values (e.g. `emit f($a, $b)`).
 
 The reason for this is partly historical and partly technical. As we'll see below, you can do lots of syntactical things with `emit`, `emitp`, and `emitf`, including printing them side-by-side, indexing them, redirecting the output to files, etc. What this means syntactically is that Miller's parser needs to handle all sorts of commas, parentheses, and so on:
 
