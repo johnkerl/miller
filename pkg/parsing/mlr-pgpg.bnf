@@ -105,6 +105,7 @@ _escape ::= '\\' ( '"' | '\\' | '/' | 'b' | 'f' | 'n' | 'r' | 't' | 'u' _hex _he
          | _octaldig _octaldig _octaldig | _octaldig _octaldig | _octaldig
          | '8' | '9'
          | '.' | '*' | '%' | '^' | '$' | '+' | '(' | ')' | '&'
+         | '[' | ']'
          ) ;
 string_literal ::= '"' { _string_char | _escape } '"' ;
 

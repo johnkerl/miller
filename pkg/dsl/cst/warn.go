@@ -178,6 +178,19 @@ func warnOnASTAux(
 	return ok
 }
 
+// collectParameterNodes flattens ParameterList (which may nest in PGPG grammar) into Parameter nodes.
+func collectParameterNodes(parameterListNode *asts.ASTNode) []*asts.ASTNode {
+	var out []*asts.ASTNode
+	for _, ch := range parameterListNode.Children {
+		if ch.Type == asts.NodeType(NodeTypeParameterList) {
+			out = append(out, collectParameterNodes(ch)...)
+		} else if ch.Type == asts.NodeType(NodeTypeParameter) {
+			out = append(out, ch)
+		}
+	}
+	return out
+}
+
 // Given a func/subr block, find the names of its parameters.  All the
 // lib.InternalCodingErrorIf parts are shape-assertions to make sure this code
 // is in sync with the BNF grammar which builds the AST from a Miller-DSL
@@ -198,14 +211,12 @@ func noteParametersForWarnings(
 
 	lib.InternalCodingErrorIf(parameterListNode.Type != asts.NodeType(NodeTypeParameterList))
 
-	for _, parameterNode := range parameterListNode.Children {
-		lib.InternalCodingErrorIf(parameterNode.Type != asts.NodeType(NodeTypeParameter))
-		lib.InternalCodingErrorIf(len(parameterNode.Children) != 1)
-		// PGPG: Parameter's child is LocalVariable, not ParameterName
-		paramNameNode := parameterNode.Children[0]
+	// PGPG: ParameterList can nest (FuncParams wraps FuncOrSubrParameterList, which builds list recursively).
+	for _, ch := range collectParameterNodes(parameterListNode) {
+		lib.InternalCodingErrorIf(len(ch.Children) != 1)
+		paramNameNode := ch.Children[0]
 		lib.InternalCodingErrorIf(paramNameNode.Type != asts.NodeType(NodeTypeLocalVariable))
-		parameterName := tokenLit(paramNameNode)
-		variableNamesWrittenTo[parameterName] = true
+		variableNamesWrittenTo[tokenLit(paramNameNode)] = true
 	}
 
 	return variableNamesWrittenTo
