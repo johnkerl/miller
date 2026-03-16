@@ -1,5 +1,2 @@
 mlr: cannot parse DSL expression.
-mlr: Parse error on token "" at line 2 column 1.
-Expected one of:
-  (
-
+mlr: parse error: unexpected EOF ("")
