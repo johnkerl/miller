@@ -91,6 +91,9 @@ literal_false ::= 'f' 'a' 'l' 's' 'e' ;
 null_literal ::= 'n' 'u' 'l' 'l' ;
 inf_literal ::= 'I' 'n' 'f' ;
 nan_literal ::= 'N' 'a' 'N' ;
+# Mathematical constants (must precede non_sigil_name so M_PI matches as constant not identifier)
+const_M_PI ::= 'M' '_' 'P' 'I' ;
+const_M_E  ::= 'M' '_' 'E' ;
 # %%%panic%%% - special token for short-circuit tests (causes panic when evaluated)
 panic ::= '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
 non_sigil_name ::= _leading_idchar { _idchar } ;
@@ -635,6 +638,7 @@ MlrvalOrFunction ::=
   | BracedOosvarValue
   | FullOosvar
   | ContextVariable
+  | Constant
   | LocalVariable
   | IntLiteral
   | FloatLiteral
@@ -663,6 +667,12 @@ ContextVariable ::=
     ctx_IPS | ctx_IFS | ctx_IRS | ctx_OPS | ctx_OFS | ctx_ORS | ctx_FLATSEP
   | ctx_NF | ctx_NR | ctx_FNR | ctx_FILENAME | ctx_FILENUM
   -> { "parent": 0, "children": [], "type": "ContextVariable" }
+;
+
+# Mathematical constants M_PI and M_E
+Constant ::=
+    const_M_PI -> { "parent": 0, "children": [], "type": "Constant" }
+  | const_M_E  -> { "parent": 0, "children": [], "type": "Constant" }
 ;
 
 DirectFieldValue ::= field_name -> { "parent": 0, "children": [], "type": "DirectFieldValue" } ;
