@@ -19,7 +19,7 @@ go 1.25.0
 require (
 	github.com/facette/natsort v0.0.0-20181210072756-2cd4dd1e2dcb
 	github.com/johnkerl/lumin v1.0.0
-	github.com/johnkerl/pgpg/go v0.2.0
+	github.com/johnkerl/pgpg/go v1.0.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/klauspost/compress v1.18.4
 	github.com/kshedden/statmodel v0.0.0-20210519035403-ee97d3e48df1
