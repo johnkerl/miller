@@ -209,7 +209,7 @@ Root ::= StatementBlock ;
 # BracefulStatement BracelessStatement without semicolon: } $x=1 } (semicolon optional before })
 StatementBlock ::=
     empty -> { "parent_literal": "block", "children": [], "type": "StatementBlock" }
-  | semicolon StatementBlock -> { "parent": 1, "children": [], "type": "StatementBlock" }
+  | semicolon StatementBlock -> { "passthrough": 1 }
   | Statement -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
   | Statement semicolon StatementBlock -> { "parent": 2, "with_prepended_children": [0], "type": "StatementBlock" }
   | BracefulStatement BracelessStatement semicolon StatementBlock -> { "parent": 3, "with_prepended_children": [0, 1], "type": "StatementBlock" }
