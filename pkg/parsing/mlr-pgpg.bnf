@@ -478,6 +478,7 @@ FuncParams ::=
 
 FuncOrSubrParameterList ::=
     FuncOrSubrParameter -> { "parent_literal": "params", "children": [0], "type": "ParameterList" }
+  | FuncOrSubrParameter comma -> { "parent_literal": "params", "children": [0], "type": "ParameterList" }
   | FuncOrSubrParameter comma FuncOrSubrParameterList -> { "parent": 2, "with_prepended_children": [0], "type": "ParameterList" }
 ;
 
