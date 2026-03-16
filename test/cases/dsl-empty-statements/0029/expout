@@ -9,4 +9,7 @@ AST:
                 "=" [tt:equals] [nt:Assignment]
                     "@x" [tt:oosvar_name] [nt:DirectOosvarValue]
                     "1" [tt:int_literal] [nt:int_literal]
+                "=" [tt:equals] [nt:Assignment]
+                    "@y" [tt:oosvar_name] [nt:DirectOosvarValue]
+                    "2" [tt:int_literal] [nt:int_literal]
 

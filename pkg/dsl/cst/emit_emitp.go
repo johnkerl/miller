@@ -120,8 +120,8 @@ var EMITX_NAMED_NODE_TYPES = map[asts.NodeType]bool{
 	asts.NodeType(NodeTypeDirectFieldValue):      true,
 	asts.NodeType(NodeTypeIndirectFieldValue):    true,
 	asts.NodeType(NodeTypeArrayOrMapIndexAccess): true, // $x[1], @a[111], etc.
-	asts.NodeType(NodeTypeDotOperator):            true, // $a.$b (string concat or map access)
-	asts.NodeType(NodeTypeFunctionCallsite):       true,
+	asts.NodeType(NodeTypeDotOperator):           true, // $a.$b (string concat or map access)
+	asts.NodeType(NodeTypeFunctionCallsite):      true,
 }
 
 var EMITX_NAMELESS_NODE_TYPES = map[asts.NodeType]bool{
