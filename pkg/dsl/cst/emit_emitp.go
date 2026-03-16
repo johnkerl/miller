@@ -170,9 +170,9 @@ func (root *RootNode) buildEmitXStatementNode(
 	astNode *asts.ASTNode,
 	isEmitP bool,
 ) (IExecutable, error) {
-	// Normalize PGPG AST to GOCC-style 3-child layout (emittables, keys, redirector).
+	// Normalize PGPG AST to 3-child layout: emittables, keys, redirector.
 	// PGPG produces: 1 child (emitp @s), 2 children (emitp > file, @s OR emitp @s, "key"),
-	// or 3+ adopted children (emitp @s, "k1", "k2"). GOCC always produces 3.
+	// or 3+ adopted children (emitp @s, "k1", "k2").
 	var emittablesNode, keysNode, redirectorNode *asts.ASTNode
 	isRedirector := func(n *asts.ASTNode) bool {
 		return n.Type == asts.NodeType(NodeTypeRedirectWrite) ||
@@ -183,7 +183,8 @@ func (root *RootNode) buildEmitXStatementNode(
 	case 1:
 		child := astNode.Children[0]
 		if child.Type == asts.NodeType(NodeTypeFcnArgs) && child.Children != nil && len(child.Children) >= 1 {
-			// PGPG gave us FcnArgs directly: [emittable], [emittable, emittable, ...] (lashed), or [emittable, key1, key2, ...]
+			// PGPG gave us FcnArgs directly: [emittable], [emittable, emittable, ...] (lashed), or
+			// [emittable, key1, key2, ...]
 			if len(child.Children) == 1 {
 				emittablesNode = child
 				keysNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)

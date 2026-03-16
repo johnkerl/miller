@@ -1,2980 +1,260 @@
-// ================================================================
-// If you edit this file, please run tools/build-dsl to autogenerate Go code
-// from it, using the GOCC tool. See also tools/format-go-in-bnf (which reads
-// `stdin` and writes `stdout`) for automated code formatting of the Go bits.
-// ================================================================
+# Miller DSL grammar. Uses PGPG -> {...} directives.
+# Positional-indexing ($[[n]], $[[[n]]], x[[n]], x[[[n]]]) is handled in eval.
 
-// ================================================================
-// GRAMMAR FOR THE MILLER DOMAIN-SPECIFIC LANGUAGE
-//
-// This is the Miller DSL's BNF grammar, using the awesome GOCC tool framework
-// from https://github.com/goccmack/gocc (forked at https://github.com/johnkerl/gocc).
-//
-// The first section is lexical elements and the second section is syntactical
-// elements. These are the analogs of lex and yacc, respectively, using a
-// classical C/lex/yacc framework -- although for lex/yacc one would have
-// separate .l and .y files, whereas here there is a single .bnf file.
-//
-// Notes:
-//
-// * This grammar is used to auto-generate Go code, using bin/gocc.
-//
-// * Lexical items are either literals inlined within the syntactical section,
-//   such as "/", or snake-cased named tokens within the lexical section, such
-//   as field_name.
-//
-// * Syntactical items are all camel-cased, such as MapLiteral.
-//
-// * Everything is delivered to the rest of Miller in the form of an abstract
-//   syntax tree (AST), via <<...>>> code segments within this file's
-//   syntactical section, to be processed by hand-written Go code. That code,
-//   in turn, turns the AST into a CST (concrete syntax tree) which is what the
-//   DSL runtime executes.
-//
-// * The <<...>> code called by the gocc framework must accept interface{} at
-//   all parameters, to be generic, but in practice all arguments end up being
-//   either token.Token (regcognizable here via string-literals or snake-cased
-//   namees) or *dsl.AstNode (recognizable here via camel-cased names).
-//
-// * Another pattern worth pointing out is that in the gocc framework,
-//   return-types from AST methods must be a pair of (interface{}, error),
-//   whereas arguments going into those same methods are interface{} only.
-//   Hence a few methods in the Miller AST API which don't return a pair of
-//   interface{}/error since they are meant for nesting as arguments here
-//   within this file.
-//
-// * Please see pkg/dsl/ast*.go for more about what the <<...>>
-//   code here is calling.
-// ================================================================
+# ----------------------------------------------------------------
+# Lexer (PGPG uses ::= for all rules)
+# ----------------------------------------------------------------
 
-// ================================================================
-// LEXICAL ELEMENTS
-// ================================================================
+!whitespace ::= ' ' | '\t' | '\n' | '\r' ;
+!comment ::= '#' { . | '\r' } '\n' ;
 
-// ----------------------------------------------------------------
-// CHARACTER CLASSES
-// ----------------------------------------------------------------
+_letter ::= 'a'-'z' | 'A'-'Z' | '\u00a0'-'\u00ff' | '\u0100'-'\U0010ffff' ;
+_decdig ::= '0'-'9' ;
+_hexdig ::= '0'-'9' | 'a'-'f' | 'A'-'F' ;
+_idchar ::= _letter | _decdig | '_' ;
+_leading_idchar ::= _letter | '_' ;
 
-_letter : 'a'-'z' | 'A'-'Z' | '\u00a0'-'\u00ff' | '\u0100'-'\U0010ffff';
-_decdig : '0'-'9' ;
-_hexdig : '0'-'9' | 'a'-'f' | 'A'-'F';
-_octdig : '0'-'7' ;
-_bindig : '0'-'1' ;
-_leading_idchar : _letter | '_' ;
-_idchar : _letter | _decdig | '_' ;
-!whitespace : ' ' | '\t' | '\n' | '\r' ;
-!comment : '#'  {.} '\n' ;
-
-// ----------------------------------------------------------------
-// STRING/INT/FLOAT/BOOLEAN LITERALS
-// ----------------------------------------------------------------
-
-// Notes on string literals:
-// * " isn't included here -- need \" handling to put that inside strings
-// * GOCC seems to lack a '[^"] notation ...
-// * \[ \] \n etc special cases are a bit tedious to keystroke out ...
-//   these are most important for put/filter print/emit/tee/etc with "|"
-//   to arbitrary shell commands. E.g. in
-//
-//     mlr put 'print | "tr \[a-z\] \[A-Z\]", $something'
-//
-//   the shell command is the 'tr ...' string and we need to spell out the
-//   escape sequence used by tr.
-// * See https://github.com/google/re2/wiki/Syntax
-
-_string_literal_element
-  : 'A'-'Z' | 'a'-'z' | '0'-'9'
-  | '\n'
-
+field_name ::= '$' _idchar { _idchar } ;
+dollar_lbrack ::= '$' '[' ;
+_braced_char ::= 'A'-'Z' | 'a'-'z' | '0'-'9'
   | ' ' | '!' | '#' | '$' | '%' | '&' | '\'' | '\\'
   | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/'
   | ':' | ';' | '<' | '=' | '>' | '?' | '@' | '['
-  | ']' | '^' | '_' | '`' | '{' | '|' | '}' | '~'
-
-  | ( '\\' '\\' ) | ( '\\' '"' ) | ( '\\' '[' ) | ( '\\' ']' )
-  | ( '\\' '.' ) | ( '\\' '*' ) | ( '\\' '%' )
-  | ( '\\' '^' ) | ( '\\' '$' ) | ( '\\' '+' )
-  | ( '\\' '(' ) | ( '\\' ')' ) | ( '\\' '&' )
-
-  | ( '\\' 'A') | ( '\\' 'B') | ( '\\' 'C') | ( '\\' 'D') | ( '\\' 'G') | ( '\\' 'H')
-  | ( '\\' 'K') | ( '\\' 'L') | ( '\\' 'N') | ( '\\' 'P') | ( '\\' 'R') | ( '\\' 'S')
-  | ( '\\' 'U') | ( '\\' 'V') | ( '\\' 'W') | ( '\\' 'X') | ( '\\' 'Z')
-  | ( '\\' 'a') | ( '\\' 'b') | ( '\\' 'c') | ( '\\' 'd') | ( '\\' 'f') | ( '\\' 'g')
-  | ( '\\' 'h') | ( '\\' 'k') | ( '\\' 'l') | ( '\\' 'n') | ( '\\' 'p') | ( '\\' 'r')
-  | ( '\\' 's') | ( '\\' 't') | ( '\\' 'u') | ( '\\' 'v') | ( '\\' 'w') | ( '\\' 'x')
-  | ( '\\' 'z')
-
-  | ( '\\' '0' ) | ( '\\' '1' ) | ( '\\' '2' ) | ( '\\' '3' ) | ( '\\' '4' )
-  | ( '\\' '5' ) | ( '\\' '6' ) | ( '\\' '7' ) | ( '\\' '8' ) | ( '\\' '9' )
-
-  | '\u00a0'-'\u00ff'
-  | '\u0100'-'\U0010ffff'
-;
-string_literal : '"' {_string_literal_element} '"' ;
-
-// Miller regexes are of the form "a.*b" for case-sensitive, or "a.*b"i for case-insensitive.
-regex_case_insensitive : '"' {_string_literal_element} '"' 'i';
-
-// Notes on int literals:
-// * Leading minus sign is handled via the unary-minus operator, not here.
-int_literal
-  : _decdig { _decdig }
-  | '0' 'x' _hexdig { _hexdig }
-  | '0' 'o' _octdig { _octdig }
-  | '0' 'b' _bindig { _bindig }
-;
-
-// Notes on float literals:
-// * Leading minus sign is handled via the unary-minus operator, not here.
-// * The various shapes are for scientific notation. Examples:
-//   123
-//   123.
-//   123.4
-//   .234
-//   1e2
-//   1e-2
-//   1.2e3 1.e3
-//   1.2e-3 1.e-3
-//   .2e3
-//   .2e-3 1.e-3
-_scinotE : 'e' | 'E' ;
-float_literal
-  :         { _decdig} '.' { _decdig }
-  | _decdig { _decdig} '.' { _decdig }
-  | _decdig { _decdig}                        _scinotE     _decdig { _decdig}
-  | _decdig { _decdig}                        _scinotE '-' _decdig { _decdig}
-  | _decdig { _decdig}                        _scinotE '+' _decdig { _decdig}
-  | _decdig { _decdig} '.'         { _decdig} _scinotE     _decdig { _decdig}
-  | _decdig { _decdig} '.'         { _decdig} _scinotE '-' _decdig { _decdig}
-  | _decdig { _decdig} '.'         { _decdig} _scinotE '+' _decdig { _decdig}
-  |         { _decdig} '.' _decdig { _decdig} _scinotE     _decdig { _decdig}
-  |         { _decdig} '.' _decdig { _decdig} _scinotE '-' _decdig { _decdig}
-  |         { _decdig} '.' _decdig { _decdig} _scinotE '+' _decdig { _decdig}
-;
-
-const_M_PI : 'M' '_' 'P' 'I' ;
-const_M_E  : 'M' '_' 'E' ;
-
-// Notes on boolean literals:
-// * true and false should be defined here rather than as "true" / "false"
-//   within the grammar below -- this forces them to be keywords, not legal as
-//   variable names. We want them as keywords -- we don't want to allow things
-//   like 'true = 3'.
-_literal_true : 't' 'r' 'u' 'e' ;
-_literal_false : 'f' 'a' 'l' 's' 'e';
-boolean_literal : ( _literal_true | _literal_false );
-
-null_literal  : 'n' 'u' 'l' 'l';
-
-inf_literal   : 'I' 'n' 'f';
-nan_literal   : 'N' 'a' 'N';
-
-// ----------------------------------------------------------------
-// MILLER CONTEXT VARIABLES
-// ----------------------------------------------------------------
-
-// I want to call these simply "IPS" et al. but GOCC is has leading-case (and
-// leading-underscore) semantics for token names.
-
-ctx_IPS : 'I' 'P' 'S' ;
-ctx_IFS : 'I' 'F' 'S' ;
-ctx_IRS : 'I' 'R' 'S' ;
-
-ctx_OPS : 'O' 'P' 'S' ;
-ctx_OFS : 'O' 'F' 'S' ;
-ctx_ORS : 'O' 'R' 'S' ;
-ctx_FLATSEP : 'F' 'L' 'A' 'T' 'S' 'E' 'P';
-
-ctx_NF  : 'N' 'F' ;
-ctx_NR  : 'N' 'R' ;
-ctx_FNR : 'F' 'N' 'R' ;
-
-ctx_FILENAME : 'F' 'I' 'L' 'E' 'N' 'A' 'M' 'E' ;
-ctx_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
-
-env   : 'E' 'N' 'V' ;
-
-// ----------------------------------------------------------------
-// MILLER KEYWORDS
-// ----------------------------------------------------------------
-
-// Notes on keywords:
-// * Any new keywords defined here should also be documented
-//   in dsl/mlr_dsl_cst.c's mlr_dsl_keyword_usage() et al.
-// * true and false (boolean literals) are also keywords, defined above.
-
-begin    : 'b' 'e' 'g' 'i' 'n' ;
-do       : 'd' 'o' ;
-elif     : 'e' 'l' 'i' 'f' ;
-else     : 'e' 'l' 's' 'e' ;
-end      : 'e' 'n' 'd' ;
-filter   : 'f' 'i' 'l' 't' 'e' 'r' ;
-for      : 'f' 'o' 'r' ;
-if       : 'i' 'f' ;
-in       : 'i' 'n' ;
-while    : 'w' 'h' 'i' 'l' 'e' ;
-break    : 'b' 'r' 'e' 'a' 'k' ;
-continue : 'c' 'o' 'n' 't' 'i' 'n' 'u' 'e' ;
-
-return   : 'r' 'e' 't' 'u' 'r' 'n' ;
-func     : 'f' 'u' 'n' 'c' ;
-subr     : 's' 'u' 'b' 'r' ;
-call     : 'c' 'a' 'l' 'l' ;
-
-arr   : 'a' 'r' 'r' ;
-bool  : 'b' 'o' 'o' 'l' ;
-float : 'f' 'l' 'o' 'a' 't' ;
-int   : 'i' 'n' 't' ;
-map   : 'm' 'a' 'p' ;
-num   : 'n' 'u' 'm' ;
-str   : 's' 't' 'r' ;
-var   : 'v' 'a' 'r' ;
-funct    : 'f' 'u' 'n' 'c' 't';
-
-unset    : 'u' 'n' 's' 'e' 't' ;
-
-dump     : 'd' 'u' 'm' 'p' ;
-edump    : 'e' 'd' 'u' 'm' 'p' ;
-emit1    : 'e' 'm' 'i' 't' '1' ;
-emit     : 'e' 'm' 'i' 't' ;
-emitp    : 'e' 'm' 'i' 't' 'p' ;
-emitf    : 'e' 'm' 'i' 't' 'f' ;
-eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
-eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
-print    : 'p' 'r' 'i' 'n' 't' ;
-printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
-tee      : 't' 'e' 'e' ;
-
-stdout   : 's' 't' 'd' 'o' 'u' 't' ;
-stderr   : 's' 't' 'd' 'e' 'r' 'r' ;
-
-// ----------------------------------------------------------------
-// FIELD NAMES, OUT-OF-STREAM VARIABLES, LOCAL VARIABLES
-// ----------------------------------------------------------------
-
-// Note: the parser depends on the dollar sign being here. If this is changed,
-// that needs to be changed as well.
-//
-// Also note: if we omit the '$' here and include it in the parser section
-// below as "$", then we get an LR-1 conflict. So this must be dealt with at
-// the AST level.
-//
-// Also note $1 is a valid field name but @1 is not a valid oosvar name; hence
-// _leading_idchar vs _idchar.
-field_name : '$' _idchar { _idchar } ;
-
-// This is for literal strings but where the field name might have spaces in it
-// or somesuch.
-_braced_char
-  : 'A'-'Z' | 'a'-'z' | '0'-'9'
-  | ' ' | '!' | '#' | '$' | '%' | '&' | '\'' | '\\'
-  | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/'
-  | ':' | ';' | '<' | '=' | '>' | '?' | '@' | '['
-  | ']' | '^' | '_' | '`'       | '|'       | '~'
+  | ']' | '^' | '_' | '`' | '|' | '~'
   | ( '\\' '{' ) | ( '\\' '}' )
-  | '\u00a0'-'\u00ff'
-  | '\u0100'-'\U0010FFFF'
+  | '\u00a0'-'\u00ff' | '\u0100'-'\U0010ffff'
 ;
-braced_field_name: '$' '{' _braced_char { _braced_char } '}' ;
+braced_field_name ::= '$' '{' _braced_char { _braced_char } '}' ;
+full_srec ::= '$' '*' ;
+at_lbrack ::= '@' '[' ;
+oosvar_name ::= '@' _leading_idchar { _idchar } ;
+braced_oosvar_name ::= '@' '{' _braced_char { _braced_char } '}' ;
+full_oosvar ::= '@' '*' ;
+# Keywords must precede non_sigil_name so they match instead of identifiers
+kw_unset ::= 'u' 'n' 's' 'e' 't' ;
+kw_filter ::= 'f' 'i' 'l' 't' 'e' 'r' ;
+kw_print ::= 'p' 'r' 'i' 'n' 't' ;
+kw_printn ::= 'p' 'r' 'i' 'n' 't' 'n' ;
+kw_eprint ::= 'e' 'p' 'r' 'i' 'n' 't' ;
+kw_eprintn ::= 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
+kw_dump ::= 'd' 'u' 'm' 'p' ;
+kw_edump ::= 'e' 'd' 'u' 'm' 'p' ;
+kw_tee ::= 't' 'e' 'e' ;
+kw_emit1 ::= 'e' 'm' 'i' 't' '1' ;
+kw_emit ::= 'e' 'm' 'i' 't' ;
+kw_emitp ::= 'e' 'm' 'i' 't' 'p' ;
+kw_emitf ::= 'e' 'm' 'i' 't' 'f' ;
+kw_begin ::= 'b' 'e' 'g' 'i' 'n' ;
+kw_end ::= 'e' 'n' 'd' ;
+kw_if ::= 'i' 'f' ;
+kw_elif ::= 'e' 'l' 'i' 'f' ;
+kw_else ::= 'e' 'l' 's' 'e' ;
+kw_for ::= 'f' 'o' 'r' ;
+kw_in ::= 'i' 'n' ;
+kw_while ::= 'w' 'h' 'i' 'l' 'e' ;
+kw_do ::= 'd' 'o' ;
+kw_break ::= 'b' 'r' 'e' 'a' 'k' ;
+kw_continue ::= 'c' 'o' 'n' 't' 'i' 'n' 'u' 'e' ;
+kw_return ::= 'r' 'e' 't' 'u' 'r' 'n' ;
+kw_call ::= 'c' 'a' 'l' 'l' ;
+kw_func ::= 'f' 'u' 'n' 'c' ;
+kw_subr ::= 's' 'u' 'b' 'r' ;
+kw_arr ::= 'a' 'r' 'r' ;
+kw_bool ::= 'b' 'o' 'o' 'l' ;
+kw_float ::= 'f' 'l' 'o' 'a' 't' ;
+kw_int ::= 'i' 'n' 't' ;
+kw_map ::= 'm' 'a' 'p' ;
+kw_num ::= 'n' 'u' 'm' ;
+kw_str ::= 's' 't' 'r' ;
+kw_var ::= 'v' 'a' 'r' ;
+kw_funct ::= 'f' 'u' 'n' 'c' 't' ;
+kw_stdout ::= 's' 't' 'd' 'o' 'u' 't' ;
+kw_stderr ::= 's' 't' 'd' 'e' 'r' 'r' ;
+kw_env ::= 'E' 'N' 'V' ;
+# Context variables (must precede non_sigil_name so NF matches ctx_NF not identifier)
+ctx_IPS ::= 'I' 'P' 'S' ;
+ctx_IFS ::= 'I' 'F' 'S' ;
+ctx_IRS ::= 'I' 'R' 'S' ;
+ctx_OPS ::= 'O' 'P' 'S' ;
+ctx_OFS ::= 'O' 'F' 'S' ;
+ctx_ORS ::= 'O' 'R' 'S' ;
+ctx_FLATSEP ::= 'F' 'L' 'A' 'T' 'S' 'E' 'P' ;
+ctx_NF ::= 'N' 'F' ;
+ctx_NR ::= 'N' 'R' ;
+ctx_FNR ::= 'F' 'N' 'R' ;
+ctx_FILENAME ::= 'F' 'I' 'L' 'E' 'N' 'A' 'M' 'E' ;
+ctx_FILENUM ::= 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
+# Literals must precede non_sigil_name so "true"/"false"/"null" etc match as literals
+literal_true ::= 't' 'r' 'u' 'e' ;
+literal_false ::= 'f' 'a' 'l' 's' 'e' ;
+null_literal ::= 'n' 'u' 'l' 'l' ;
+inf_literal ::= 'I' 'n' 'f' ;
+nan_literal ::= 'N' 'a' 'N' ;
+# Mathematical constants (must precede non_sigil_name so M_PI matches as constant not identifier)
+const_M_PI ::= 'M' '_' 'P' 'I' ;
+const_M_E  ::= 'M' '_' 'E' ;
+# %%%panic%%% - special token for short-circuit tests (causes panic when evaluated)
+panic ::= '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
+non_sigil_name ::= _leading_idchar { _idchar } ;
 
-full_srec : '$' '*' ;
+_hex ::= '0'-'9' | 'A'-'F' | 'a'-'f' ;
+_octaldig ::= '0'-'7' ;
+_string_char ::= "\u0020"-"\u0021" | "\u0023"-"\u005B" | "\u005D"-"\uFFFF" ;
+# Octal \123, hex \x42, regex backref \0-\9
+# Regex escapes: \. \* \% \^ \$ \+ \( \) \& for regex patterns like "0\.5"
+_escape ::= '\\' ( '"' | '\\' | '/' | 'b' | 'f' | 'n' | 'r' | 't' | 'u' _hex _hex _hex _hex
+         | 'x' _hex _hex | 'X' _hex _hex
+         | _octaldig _octaldig _octaldig | _octaldig _octaldig | _octaldig
+         | '8' | '9'
+         | '.' | '*' | '%' | '^' | '$' | '+' | '(' | ')' | '&'
+         | '[' | ']'
+         ) ;
+string_literal ::= '"' { _string_char | _escape } '"' ;
 
-oosvar_name : '@' _leading_idchar { _idchar } ;
-
-// This is for literal strings but where the oosvar name might have spaces in it
-// or somesuch.
-braced_oosvar_name: '@' '{' _braced_char { _braced_char } '}' ;
-
-full_oosvar : '@' '*' ;
-all         : 'a' 'l' 'l' ;
-
-// ----------------------------------------------------------------
-// FUNCTIONS AND LOCAL VARIABLES
-
-non_sigil_name : _leading_idchar { _idchar } ;
-
-// ----------------------------------------------------------------
-// PANIC TOKEN
-// ----------------------------------------------------------------
-
-// This is for testing short-circuiting of "&&", "||", etc in the CST.  The
-// sole job of the CST evaluator for this token is to panic the process -- so
-// we'll know if we're evaluating something we should not.
-panic : '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
-
-// ================================================================
-// SYNTAX ELEMENTS
-// ================================================================
-
-// ================================================================
-// Parsing goes through three formats:
-//
-// (1) Source code which is a string of characters.
-//
-// (2) Abstract syntax tree (AST):
-//
-//    * Parentheses, commas, semicolons, line endings, whitespace are all stripped away
-//    * Variable names and literal values remain as leaf nodes of the AST
-//    * = + - * / ** {function names} remain as non-leaf nodes of the AST
-//
-// (3) Concrete syntax tree (CST): a reshaping of the AST with pre-processed
-//     setup of function pointers to handle each type of statement on a
-//     per-record basis. The if/else and/or switch statements to decide what to
-//     do with each AST node are done at CST-build time, so they don't need to
-//     be re-done when the syntax tree is executed once on every data record.
-//
-// The job of this parser is to turn (1) into (2).
-//
-// Note: This parser accepts many things that are invalid, e.g.
-// * begin{end{}} -- begin/end not at top level
-// * begin{$x=1} -- references to stream records at begin/end (there is no $x when
-//   there is no input record yet)
-// * break/continue outside of for/while/do-while
-// * return outside of a function definition
-// * $x=x -- boundvars outside of for-loop variable bindings
-//
-// All of the above are enforced by the CST builder's semantic-analysis logic,
-// which takes this parser's output AST as input.  This is done (a) to keep
-// this grammar from being overly complex, and (b) so we can get more
-// informative error messages.
-//
-// For clearer visuals on what the ASTs look like, you can do
-//
-//   mlr -n put -v 'your expression goes here'
-//
-// Also see reg_test/run's filter -v and put -v outputs, e.g. in
-// reg_test/expected/out.
-// ================================================================
-
-// Import the AST/ASTNode types and functions
-<< import "github.com/johnkerl/miller/v6/pkg/dsl" >>
-
-// ================================================================
-// TOP-LEVEL PRODUCTION RULE FOR THE MILLER DSL
-
-// ----------------------------------------------------------------
-Root
-  : StatementBlock
-    <<
-      dsl.NewASTWithErrorReturn($0)
-    >>
+_frac ::= '.' _decdig { _decdig } ;
+_exp ::= ( 'e' | 'E' ) [ '+' | '-' ] _decdig { _decdig } ;
+float_literal ::= _decdig { _decdig } _frac [ _exp ]
+  | _decdig { _decdig } '.' [ _exp ]
+  | '.' _decdig { _decdig } [ _exp ]
+  | _decdig { _decdig } _exp
 ;
+int_literal ::= _decdig { _decdig } | '0' 'x' _hexdig { _hexdig } | '0' 'o' _octaldig { _octaldig } ;
 
-// ----------------------------------------------------------------
-// A StatementBlock is a sequence of statements: either the stuff in between
-// (but not including) the curly braces in things like 'if (NR > 2) { $x = 1;
-// $y = 2 }', or, top-level Miller DSL statements like '$x = 1; $y = 2'.
+equals ::= '=' ;
+semicolon ::= ';' ;
+lbrack ::= '[' ;
+rbrack ::= ']' ;
+lbrace ::= '{' ;
+rbrace ::= '}' ;
+lparen ::= '(' ;
+rparen ::= ')' ;
+comma ::= ',' ;
+colon ::= ':' ;
 
-StatementBlock
+op_ternary ::= '?' ;
+op_colon ::= ':' ;
+op_logical_or ::= '|' '|' ;
+op_logical_xor ::= '^' '^' ;
+op_logical_and ::= '&' '&' ;
+op_eqtilde ::= '=' '~' ;
+op_negtilde ::= '!' '=' '~' ;
+op_eqeq ::= '=' '=' ;
+op_ne ::= '!' '=' ;
+op_spaceship ::= '<' '=' '>' ;
+op_gt ::= '>' ;
+op_ge ::= '>' '=' ;
+op_lt ::= '<' ;
+op_le ::= '<' '=' ;
+op_bit_or ::= '|' ;
+op_bit_xor ::= '^' ;
+op_bit_and ::= '&' ;
+op_shift_left ::= '<' '<' ;
+op_shift_right ::= '>' '>' ;
+op_shift_right_unsigned ::= '>' '>' '>' ;
+op_plus ::= '+' ;
+op_minus ::= '-' ;
+op_dot_plus ::= '.' '+' ;
+op_dot_minus ::= '.' '-' ;
+op_star ::= '*' ;
+op_slash ::= '/' ;
+op_slash_slash ::= '/' '/' ;
+op_percent ::= '%' ;
+op_dot_star ::= '.' '*' ;
+op_dot_slash ::= '.' '/' ;
+op_dot_slash_slash ::= '.' '/' '/' ;
+op_dot ::= '.' ;
+op_unary_plus ::= '+' ;
+op_unary_minus ::= '-' ;
+op_bang ::= '!' ;
+op_tilde ::= '~' ;
+op_absent_coalesce ::= '?' '?' ;
+op_empty_coalesce ::= '?' '?' '?' ;
+op_pow ::= '*' '*' ;
 
-  // Empty statement. This allows for 'mlr put ""', as well as repeated semicolons.
-  : empty
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeStatementBlock,
-        []interface{}{},
-      )
-    >>
+# Compound assignment operators (longer sequences first for lexer)
+op_or_equals                    ::= '|' '|' '=' ;
+op_xor_equals                   ::= '^' '^' '=' ;
+op_and_equals                   ::= '&' '&' '=' ;
+op_empty_coalesce_equals         ::= '?' '?' '?' '=' ;
+op_absent_coalesce_equals        ::= '?' '?' '=' ;
+op_shift_right_unsigned_equals   ::= '>' '>' '>' '=' ;
+op_shift_right_equals            ::= '>' '>' '=' ;
+op_shift_left_equals             ::= '<' '<' '=' ;
+op_bit_or_equals                ::= '|' '=' ;
+op_bit_and_equals               ::= '&' '=' ;
+op_bit_xor_equals               ::= '^' '=' ;
+op_pow_equals                   ::= '*' '*' '=' ;
+op_slash_slash_equals            ::= '/' '/' '=' ;
+op_slash_equals                 ::= '/' '=' ;
+op_star_equals                  ::= '*' '=' ;
+op_percent_equals               ::= '%' '=' ;
+op_plus_equals                  ::= '+' '=' ;
+op_dot_equals                   ::= '.' '=' ;
+op_minus_equals                 ::= '-' '=' ;
 
-  | NonEmptyStatementBlock
-    <<
-      dsl.WithErrorReturn($0)
-    >>
+op_redirect_write ::= '>' ;
+op_redirect_append ::= '>' '>' ;
+op_redirect_pipe ::= '|' ;
 
-;
+# ----------------------------------------------------------------
+# Parser with AST hints
+# ----------------------------------------------------------------
 
-// ----------------------------------------------------------------
-// NonEmptyStatementBlock is split out from StatementBlock to avoid LR-1
-// conflicts in parsing things like 'begin {...} x=1; y=2; end{...}' wherein we
-// want to avoid forcing people to type a semicolon after the first closing
-// brace.
+Root ::= StatementBlock ;
 
-NonEmptyStatementBlock
-  // ---------------------- Terminal rules
-
-  // Things not ending in a curly brace, like assignments -- and also do-while.
-  : BracelessStatement
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeStatementBlock,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-  // Things ending in a curly brace, like for/do/while, begin/end, and pattern-acction blocks
-  | BracefulStatement
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeStatementBlock,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-  // ---------------------- Recursive rules
-
-  // So statements can start with a semicolon
-  | ";" StatementBlock
-    <<
-      dsl.WithErrorReturn($1)
-    >>
-
-  // Normal case for sequential statements like '$x=1; $y=2'
-  | BracelessStatement ";" StatementBlock
-    <<
-      dsl.WithChildPrepended($2, $0)
-    >>
-
-  // For 'begin {...} ; $x=1'
-  | BracefulStatement ";" StatementBlock
-    <<
-      dsl.WithChildPrepended($2, $0)
-    >>
-
-  // These are for things like 'begin {...} begin {...} ...' -- where people
-  // shouldn't have to put semicolons after the closing curly braces.
-  //
-  // We get LR-1 conflicts with the following, so we need a pair of more
-  // explicit lookahead-by-more production rules instead. (By using two
-  // Statement rules and a (recursive) StatementBlock rule, with
-  // WithTwoChildrenPreprended, we are effectively getting lookahead-by-two.)
-  //
-  // | BracefulStatement StatementBlock
-  //    <<dsl.WithChildPrepended($1, $0) >>
-
-  // E.g. 'begin {...} begin {...} $x=1'
-  | BracefulStatement BracefulStatement StatementBlock
-    <<
-      dsl.WithTwoChildrenPreprended($2, $0, $1)
-    >>
-
-  // E.g. 'begin {...} $x=1'
-  | BracefulStatement BracelessStatement
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeStatementBlock,
-        []interface{}{
-          $0,
-          $1,
-        },
-      )
-    >>
-
-  // E.g. 'begin {...} $x=1 ;'
-  | BracefulStatement BracelessStatement ";"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeStatementBlock,
-        []interface{}{
-          $0,
-          $1,
-        },
-      )
-    >>
-
-  | BracefulStatement BracelessStatement ";" NonEmptyStatementBlock
-    <<
-      dsl.WithTwoChildrenPreprended($3, $0, $1)
-    >>
+# Empty allows mlr put "" and scripts with only comments/whitespace (e.g. "  # comment").
+# Trailing semicolon (e.g. "$x=1; $y=2;") via StatementBlock ::= empty in the recursion.
+# BracefulStatement BracelessStatement/BracefulStatement avoid forcing semicolon after }.
+# BracefulStatement BracelessStatement without semicolon: } $x=1 } (semicolon optional before })
+StatementBlock ::=
+    empty -> { "parent_literal": "block", "children": [], "type": "StatementBlock" }
+  | semicolon StatementBlock -> { "passthrough": 1 }
+  | Statement -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
+  | Statement semicolon StatementBlock -> { "parent": 2, "with_prepended_children": [0], "type": "StatementBlock" }
+  | BracefulStatement BracelessStatement semicolon StatementBlock -> { "parent": 3, "with_prepended_children": [0, 1], "type": "StatementBlock" }
+  | BracefulStatement BracelessStatement -> { "parent_literal": "block", "with_prepended_children": [0, 1], "type": "StatementBlock" }
+  | BracefulStatement BracefulStatement StatementBlock -> { "parent": 2, "with_prepended_children": [0, 1], "type": "StatementBlock" }
 ;
 
-// ----------------------------------------------------------------
-// Simply a keystroke-saver for all the various if/for/do/while/begin/end/etc
-// which use curly-braced bodies.
-StatementBlockInBraces
-  : "{" StatementBlock "}"
-    <<
-      dsl.WithErrorReturn($1)
-    >>
+StatementBlockInBraces ::= lbrace StatementBlock rbrace -> { "parent": 1, "children": [1], "type": "StatementBlockInBraces" } ;
+
+# Statements ending with }; no semicolon required before next statement.
+BracefulStatement ::=
+    BeginBlock | EndBlock | CondBlock | IfChain | WhileLoop | ForLoop
+  | NamedFunctionDefinition | SubroutineDefinition
 ;
 
-// ================================================================
-// ASSIGNMENT STATEMENTS
+# Statements not ending with }; semicolon required after when following BracefulStatement.
+BracelessStatement ::=
+    Assignment | Unset | BareBoolean | FilterStatement
+  | PrintStatement | PrintnStatement | EprintStatement | EprintnStatement
+  | DumpStatement | EdumpStatement
+  | TeeStatement | Emit1Statement | EmitStatement | EmitPStatement | EmitFStatement
+  | DoWhileLoop | BreakStatement | ContinueStatement | ReturnStatement | SubroutineCallsite
+;
 
-BracelessStatement
-  : Assignment
+Statement ::=
+    Assignment
   | Unset
   | BareBoolean
   | FilterStatement
-
   | PrintStatement
   | PrintnStatement
   | EprintStatement
   | EprintnStatement
-
   | DumpStatement
   | EdumpStatement
-
   | TeeStatement
   | Emit1Statement
   | EmitStatement
   | EmitPStatement
   | EmitFStatement
-
-  // Has braces but does not *end* in braces -- so it requires semicolon after.
   | DoWhileLoop
   | BreakStatement
   | ContinueStatement
   | ReturnStatement
   | SubroutineCallsite
-;
-
-Assignment
-  : Lvalue "=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-;
-
-Unset
-  : unset FcnArgs
-    <<
-      dsl.WithChildrenAdopted(
-        dsl.NewASTNodeTerminal(
-          $0,
-          dsl.NodeTypeUnset,
-        ),
-        $1,
-      )
-    >>
-;
-
-// Semantically there are far fewer things which are valid lvalues than valid
-// rvalues. For example, in '1+2=3+4', the right-hand side is fine while the
-// left-hand side is not.
-//
-// We can limit the things expressible on the left-hand side here in the AST,
-// via Lvalue production rules much narrower than Rvalue production rules.
-// However, this results in LR-1 conflicts for bare-boolean and pattern-action
-// blocks which start with something of rvalue form -- the parser needs more
-// than one lookahead symbol to realize what's going on.
-//
-// Instead, we use the same production rule for lvalues and rvalues here in the
-// grammar, deferring lvalue restrictions to the CST builder where we have more
-// flexibility. As an added bonuys, we get more expressive ability in our error
-// messages.
-
-Lvalue
-  : Rvalue
-  | Typedecl LocalVariable
-    <<
-      dsl.WithChildAppended($1, $0)
-    >>
-;
-
-BareBoolean
-  : Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeBareBoolean,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-;
-
-FilterStatement
-  : filter Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeFilterStatement,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-;
-
-// ----------------------------------------------------------------
-// For dump, emit, tee, print
-
-Redirector
-  : ">"  RedirectTarget
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeRedirectWrite,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-
-  | ">>" RedirectTarget
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeRedirectAppend,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-
-  | "|"  RedirectTarget
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeRedirectPipe,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-;
-
-RedirectTarget
-  : stdout
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeRedirectTargetStdout,
-        []interface{}{},
-      )
-    >>
-
-  | stderr
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeRedirectTargetStderr,
-        []interface{}{},
-      )
-    >>
-
-  | Rvalue
-;
-
-// ----------------------------------------------------------------
-PrintStatement
-  : print
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypePrintStatement, // no redirect
-        []interface{}{
-          // print
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-          // no printable
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-        },
-      )
-    >>
-
-  | print Redirector
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypePrintStatement, // redirect
-        []interface{}{
-          // print
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-          // no printable
-          $1,
-        },
-      )
-    >>
-
-  | print FcnArgs
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypePrintStatement, // no redirect
-        []interface{}{
-          // print
-          $1,
-          // printables
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-        },
-      )
-    >>
-
-  | print Redirector "," FcnArgs
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypePrintStatement, // redirect
-        []interface{}{
-          // print
-          $3,
-          // printables
-          $1,
-        },
-      )
-    >>
-;
-
-// ----------------------------------------------------------------
-PrintnStatement
-  : printn
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypePrintnStatement, // no redirect
-        []interface{}{
-          // printn
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-          // no printable
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-        },
-      )
-    >>
-
-  | printn Redirector
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypePrintnStatement, // redirect
-        []interface{}{
-          // printn
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-          // no printable
-          $1,
-        },
-      )
-    >>
-
-  | printn FcnArgs
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypePrintnStatement, // no redirect
-        []interface{}{
-          // printn
-          $1,
-          // printables
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-        },
-      )
-    >>
-
-  | printn Redirector "," FcnArgs
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypePrintnStatement, // redirect
-        []interface{}{
-          // printn
-          $3,
-          // printables
-          $1,
-        },
-      )
-    >>
-;
-
-// ----------------------------------------------------------------
-EprintStatement
-  : eprint
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEprintStatement, // no redirect
-        []interface{}{
-          // eprint
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-          // no printables
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-        },
-      )
-    >>
-
-  | eprint FcnArgs
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEprintStatement, // no redirect
-        []interface{}{
-          // eprint
-          $1,
-          // printables
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-        },
-      )
-    >>
-
-;
-
-// ----------------------------------------------------------------
-EprintnStatement
-  : eprintn
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEprintnStatement, // no redirect
-        []interface{}{
-          // eprint
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-          // no printables
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-        },
-      )
-    >>
-
-  | eprintn FcnArgs
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEprintnStatement, // no redirect
-        []interface{}{
-          // eprintn
-          $1,
-          // printables
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-        },
-      )
-    >>
-
-;
-
-// ----------------------------------------------------------------
-DumpStatement
-  : dump
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeDumpStatement, // no redirect
-        []interface{}{
-          // dump
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-          // no dumpable
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-        },
-      )
-    >>
-
-  | dump Redirector
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeDumpStatement, // redirect
-        []interface{}{
-          // dump
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-          // no dumpable
-          $1,
-        },
-      )
-    >>
-
-  | dump FcnArgs
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeDumpStatement, // no redirect
-        []interface{}{
-          $1, // dump
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // printables
-        },
-      )
-    >>
-
-  | dump Redirector "," FcnArgs
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeDumpStatement, // redirect
-        []interface{}{
-          $3, // dump
-          $1, // printables
-        },
-      )
-    >>
-
-;
-
-// ----------------------------------------------------------------
-EdumpStatement
-  : edump
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEdumpStatement, // no redirect
-        []interface{}{
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // edump
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no dumpable
-        },
-      )
-    >>
-
-  | edump FcnArgs
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEdumpStatement, // no redirect
-        []interface{}{
-          $1, // edump
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // printables
-        },
-      )
-    >>
-
-;
-
-// ----------------------------------------------------------------
-TeeStatement
-  : tee Redirector "," FullSrec
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeTeeStatement,
-        []interface{}{
-          $3,
-          $1,
-        },
-      )
-    >>
-
-;
-
-// ----------------------------------------------------------------
-// Examples:
-//   emitf @a
-//   emitf @a, b, $c
-// Each argument must be a non-indexed oosvar/localvar/fieldname, so we can use
-// their names as keys in the emitted record.
-
-EmitFStatement
-
-  : emitf EmittableList
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        // no redirect
-        dsl.NodeTypeEmitFStatement,
-        []interface{}{
-          // emitf
-          $1,
-          // emittables
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp),
-        },
-      )
-    >>
-
-  | emitf Redirector "," EmittableList
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitFStatement, // redirect
-        []interface{}{
-          $3, // emitf
-          $1, // emittables
-        },
-      )
-    >>
-
-;
-
-// ----------------------------------------------------------------
-// The other emit variants need to take only oosvars, etc. -- not arbitrary
-// expressions which *evaluate* to map. Emit1, by contrast, takes any
-// expression which evaluates to a map. So you can do 'emit1 mapsum({"id":
-// $id}, $some_map_valued_field})'.
-//
-// The reason for this is LR1 shift-reduce conflicts. When I originally
-// implemented emit/emitp, I permitted a lot of options for lashing together
-// multiple oosvars, indexing, redirection, etc. When we try to let emit (not
-// emit1) take arbitrary Rvalue as argument, we get LR1 conflicts since the
-// parse can't disambiguate between all the possibilities for commas and
-// parentheses for emit-lashing and emit-indexing, and all the possibilities
-// for commas and parentheses for the Rvalue expression itself.
-//
-// So, we have emit/emitp which permit grammatical complexity in the
-// lashing/indexing, and emit1 which permits grammatical complexity in the
-// emittable.
-
-Emit1Statement
-  : emit1 Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmit1Statement, // Emittable
-        []interface{}{
-          $1, // emit
-        },
-      )
-    >>
-
-;
-
-// ----------------------------------------------------------------
-// Examples for emit:
-//   emit @a
-//   emit (@a, @b)
-//   emit @a, "x", "y"
-//   emit (@a, @b), "x", "y"
-//
-// Examples for emitp: syntactically identical to emit.
-//
-// First argument (single or in parentheses) must be non-indexed
-// oosvar/localvar/fieldname, so we can use their names as keys in the emitted
-// record.
-//
-// We use the Emittable production rule to limit the things being emitted.  It
-// might be fine to use more generally Rvalue -- anything *evaluating* to a
-// map, including function calls -- except that the legacy punctuation design
-// of 'emit (#, #), #, #' means that allowing parenthesized expressions within
-// the '(...)' results in shift-reduce conflicts at parser-gen time.
-//
-// One backward-compatible solution (used here) is to limit the types of
-// expression within the parentheses. Another (backward-incompatible) solution
-// would be to modify the punctuation, e.g. 'emit [#, #], # #' or
-// 'emit ([#, #], # #)' perhaps.
-//
-// However: we shouldn't bother. The reason is that emittables need names which
-// are known.
-// * emit @a -- the name is "a"
-// * emit (@a, @b) -- the names are ["a", "b"]
-// * emit @* -- the names are the map keys
-// * emit $* -- the names are the map keys
-// * emit {...} -- the names are the map keys
-// If we allow emit of arbitrary expressions, we open ourselves up to things
-// which are unnameable such as the return value from map-valued functions such
-// as mapdiff, etc. etc.
-
-EmitStatement
-
-  : emit EmittableAsList
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitStatement, // no redirect
-        []interface{}{
-          $1, // emit
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // Emittable
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
-        },
-      )
-    >>
-
-  | emit Redirector "," EmittableAsList
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitStatement, // redirect
-        []interface{}{
-          $3, // emit
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // Emittable
-          $1, // no keys
-        },
-      )
-    >>
-
-  | emit "(" EmittableList ")"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitStatement, // no redirect
-        []interface{}{
-          $2, // emit
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // emittables
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
-        },
-      )
-    >>
-
-  | emit Redirector "," "(" EmittableList ")"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitStatement, // redirect
-        []interface{}{
-          $4, // emit
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // emittables
-          $1, // no keys
-        },
-      )
-    >>
-
-  | emit EmittableAsList "," EmitKeys
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitStatement,
-        // no redirect
-        []interface{}{
-          $1, // emit
-          $3, // emittable
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // keys
-        },
-      )
-    >>
-
-  | emit Redirector "," EmittableAsList "," EmitKeys
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitStatement, // redirect
-        []interface{}{
-          $3, // emit
-          $5, // emittable
-          $1, // keys
-        },
-      )
-    >>
-
-  | emit "(" EmittableList ")" "," EmitKeys
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitStatement, // no redirect
-        []interface{}{
-          $2, // emit
-          $5, // emittable
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // keys
-        },
-      )
-    >>
-
-  | emit Redirector "," "(" EmittableList ")" "," EmitKeys
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitStatement, // redirect
-        []interface{}{
-          $4, // emit
-          $7, // emittables
-          $1, // keys
-        },
-      )
-    >>
-
-;
-
-// ----------------------------------------------------------------
-EmitPStatement
-  : emitp EmittableAsList
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitPStatement, // no redirect
-        []interface{}{
-          $1, // emitp
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // emittable
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
-        },
-      )
-    >>
-
-  | emitp Redirector "," EmittableAsList
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitPStatement, // redirect
-        []interface{}{
-          $3, // emitp
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // emittable
-          $1, // no keys
-        },
-      )
-    >>
-
-  | emitp "(" EmittableList ")"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitPStatement, // no redirect
-        []interface{}{
-          $2, // emitp
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // emittables
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // no keys
-        },
-      )
-    >>
-
-  | emitp Redirector "," "(" EmittableList ")"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitPStatement, // redirect
-        []interface{}{
-          $4, // emitp
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // emittables
-          $1, // no keys
-        },
-      )
-    >>
-
-  | emitp EmittableAsList "," EmitKeys
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitPStatement, // no redirect
-        []interface{}{
-          $1, // emitp
-          $3, // emittable
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // keys
-        },
-      )
-    >>
-
-  | emitp Redirector "," EmittableAsList "," EmitKeys
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitPStatement, // redirect
-        []interface{}{
-          $3, // emitp
-          $5, // emittable
-          $1, // keys
-        },
-      )
-    >>
-
-  | emitp "(" EmittableList ")" "," EmitKeys
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitPStatement, // no redirect
-        []interface{}{
-          $2, // emitp
-          $5, // emittable
-          dsl.NewASTNodeTerminal(nil, dsl.NodeTypeNoOp), // keys
-        },
-      )
-    >>
-
-  | emitp Redirector "," "(" EmittableList ")" "," EmitKeys
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEmitPStatement, // redirect
-        []interface{}{
-          $4, // emitp
-          $7, // emittable
-          $1, // keys
-        },
-      )
-    >>
-
-;
-
-// ----------------------------------------------------------------
-EmittableList
-  : Emittable
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeEmittableList,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-  // Allow trailing final comma, especially for multiline statements
-  | Emittable "," EmittableList
-    <<
-      dsl.WithChildPrepended(
-        $2,
-        $0,
-      )
-    >>
-
-;
-
-// Wraps a single emittable in a list-of-one node.
-EmittableAsList
-  : Emittable
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeEmittableList,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-;
-
-Emittable
-  : LocalVariable
-
-  | DirectOosvarValue
-  | BracedOosvarValue
-  | IndirectOosvarValue
-
-  | DirectFieldValue
-  | BracedFieldValue
-  | IndirectFieldValue
-
-  | FullSrec
-  | FullOosvar
-  | MapLiteral
-  ;
-
-// ----------------------------------------------------------------
-EmitKeys
-
-  : Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeEmitKeys,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-  | Rvalue "," EmitKeys
-    <<
-      dsl.WithChildPrepended(
-        $2,
-        $0,
-      )
-    >>
-
-;
-
-// ----------------------------------------------------------------
-FieldValue
-  : DirectFieldValue
-  | IndirectFieldValue
-  | BracedFieldValue
-;
-
-// Note: the field name is "$name" not "name" since field_name
-// includes the '$'.  If we omit the '$' there and include it in the parser
-// section here as "$", then we get an LR-1 conflict. So this must be dealt
-// with at the AST level. Hence the NewASTNodeStripDollarOrAtSign.
-DirectFieldValue
-  : field_name
-    <<
-      dsl.NewASTNodeStripDollarOrAtSign($0, dsl.NodeTypeDirectFieldValue)
-    >>
-
-;
-
-IndirectFieldValue
-  : "$[" Rvalue "]"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("$[]", $0),
-        dsl.NodeTypeIndirectFieldValue,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-
-;
-
-// * Direct is '$name'
-// * Indirect is '$["name"]'
-// * Braced is '${name}' -- note no double-quotes. This is for when the field
-//   name has spaces or somesuch in it.
-BracedFieldValue
-  : braced_field_name
-    <<
-      dsl.NewASTNodeStripDollarOrAtSignAndCurlyBraces($0, dsl.NodeTypeDirectFieldValue)
-    >>
-
-;
-
-FullSrec
-  : full_srec
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeFullSrec)
-    >>
-
-;
-
-// ----------------------------------------------------------------
-OosvarValue
-  : DirectOosvarValue
-  | IndirectOosvarValue
-  | BracedOosvarValue
-;
-
-// Note: the oosvar name is "@name" not "name" since oosvar_name
-// includes the '@'.  If we omit the '@' there and include it in the parser
-// section here as "$", then we get an LR-1 conflict. So this must be dealt
-// with at the AST level. Hence the NewASTNodeStripDollarOrAtSign.
-DirectOosvarValue
-  : oosvar_name
-    <<
-      dsl.NewASTNodeStripDollarOrAtSign($0, dsl.NodeTypeDirectOosvarValue)
-    >>
-
-;
-
-IndirectOosvarValue
-  : "@[" Rvalue "]"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("@[]", $0),
-        dsl.NodeTypeIndirectOosvarValue,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-
-;
-
-// * Direct is '@name'
-// * Indirect is '@["name"]'
-// * Braced is '@{name}' -- note no double-quotes. This is for when the oosvar
-//   name has spaces or somesuch in it.
-BracedOosvarValue
-  : braced_oosvar_name
-    <<
-      dsl.NewASTNodeStripDollarOrAtSignAndCurlyBraces($0, dsl.NodeTypeDirectOosvarValue)
-    >>
-
-;
-
-FullOosvar
-  : full_oosvar
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeFullOosvar)
-    >>
-
-  | all
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeFullOosvar)
-    >>
-
-;
-
-// ----------------------------------------------------------------
-LocalVariable
-  : non_sigil_name
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeLocalVariable)
-    >>
-
-;
-
-Typedecl
-  : arr
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl)
-    >>
-
-  | bool
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl)
-    >>
-
-  | float
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl)
-    >>
-
-  | int
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl)
-    >>
-
-  | map
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl)
-    >>
-
-  | num
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl)
-    >>
-
-  | str
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl)
-    >>
-
-  | var
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl)
-    >>
-
-  | funct
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeTypedecl)
-    >>
-
-;
-
-// ----------------------------------------------------------------
-// REWRITE COMPOUND ASSIGNMENT OPERATORS
-//
-// Transform '$x += 1' which would have AST
-//
-//   +=
-//       $x
-//       1
-//
-// into '$x = $x + 1' with AST
-//
-//   =
-//       $x
-//       +
-//           $x
-//           1
-//
-// right here in the parser.
-//
-// Use the NewASTToken to clone the "||=" into "||" and so on.
-
-Assignment
-
-  : Lvalue "||=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("||", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue "^^=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("^^", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue "&&=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("&&", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue "??=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("??", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue "???=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("???", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue "|=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("|", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue "&=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("^", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue "^=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("^", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue "<<=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("<<", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue ">>=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken(">"+">", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue ">>>=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken(">"+">"+">", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue "+=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("+", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue ".=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken(".", $1), dsl.NodeTypeDotOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue "-=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("-", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue "*=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("*", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue "/=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("/", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue "//=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("//", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue "%=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("%", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-  | Lvalue "**=" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("=", $1),
-        dsl.NodeTypeAssignment,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(dsl.NewASTToken("**", $1), dsl.NodeTypeOperator, []interface{}{$0, $2}),
-        },
-      )
-    >>
-
-;
-
-// ================================================================
-// BEGIN RVALUE OPERATOR-PRECEDENCE CHAIN
-// ================================================================
-
-Rvalue : PrecedenceChainStart ;
-
-PrecedenceChainStart : TernaryTerm ;
-
-TernaryTerm
-  : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("?:", $1),
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-          $4,
-        },
-      )
-    >>
-
-  | LogicalOrTerm
-;
-
-LogicalOrTerm
-  : LogicalOrTerm "||" LogicalXORTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | LogicalXORTerm
-;
-
-LogicalXORTerm
-  : LogicalXORTerm "^^" LogicalAndTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | LogicalAndTerm
-;
-
-LogicalAndTerm
-  : LogicalAndTerm "&&" EqneTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | EqneTerm
-;
-
-EqneTerm
-  : EqneTerm "=~"  CmpTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | EqneTerm "!=~" CmpTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | EqneTerm "=="  CmpTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | EqneTerm "!="  CmpTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | EqneTerm "<=>" CmpTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | CmpTerm
-;
-
-CmpTerm
-  : CmpTerm ">"  BitwiseORTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | CmpTerm ">=" BitwiseORTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | CmpTerm "<"  BitwiseORTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | CmpTerm "<=" BitwiseORTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | BitwiseORTerm
-;
-
-BitwiseORTerm
-  : BitwiseORTerm "|" BitwiseXORTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | BitwiseXORTerm
-;
-
-BitwiseXORTerm
-  : BitwiseXORTerm "^" BitwiseANDTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | BitwiseANDTerm
-;
-
-BitwiseANDTerm
-  : BitwiseANDTerm "&" BitwiseShiftTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | BitwiseShiftTerm
-;
-
-BitwiseShiftTerm
-  : BitwiseShiftTerm "<<"  AddsubdotTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | BitwiseShiftTerm ">>"  AddsubdotTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | BitwiseShiftTerm ">>>" AddsubdotTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | AddsubdotTerm
-;
-
-AddsubdotTerm
-  : AddsubdotTerm "+"  MuldivTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | AddsubdotTerm "-"  MuldivTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | AddsubdotTerm ".+" MuldivTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | AddsubdotTerm ".-" MuldivTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | MuldivTerm
-;
-
-MuldivTerm
-  : MuldivTerm "*"   DotTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | MuldivTerm "/"   DotTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | MuldivTerm "//"  DotTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | MuldivTerm "%"   DotTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | MuldivTerm ".*"  DotTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | MuldivTerm "./"  DotTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | MuldivTerm ".//" DotTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | DotTerm
-;
-
-DotTerm
-  : DotTerm "."  UnaryOpTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeDotOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | UnaryOpTerm
-;
-
-UnaryOpTerm
-  : "+"  UnaryOpTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-
-  | "-"  UnaryOpTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-
-  | ".+" UnaryOpTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-
-  | ".-" UnaryOpTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-
-  | "!"  UnaryOpTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-
-  | "~"  UnaryOpTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-
-  | AbsentCoalesceTerm
-;
-
-AbsentCoalesceTerm
-  : AbsentCoalesceTerm "??" EmptyCoalesceTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | EmptyCoalesceTerm
-;
-
-EmptyCoalesceTerm
-  : EmptyCoalesceTerm "???" PowTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | PowTerm
-;
-
-PowTerm
-  : PrecedenceChainEnd "**"     PowTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  // In the Miller-DSL grammar, the leading -/+ isn't part of the int/float token -- it's treated as
-  // a unary operator. (Making it part of the token leads to LR1 conflicts, and is also inelegant.)
-  // However, this means things like '2 ** -3' result in mashup of two operators next to one
-  // another. For '2 + -3' and '2 * -3', this happens fine down the precedence chain since
-  // AddsubdotTerm and MuldivTerm are above UnaryOpTerm. Since PowTerm is below UnaryOpTerm, though,
-  // we need to be explicit about '2 ** -3' in a way that we do not need to for '2 * -3'.  Also, we
-  // can't use 'PrecedenceChainEnd "**" UnaryOpTerm', as this also results in LR1 conflicts.
-
-  | PrecedenceChainEnd "**" "-" PowTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          dsl.NewASTNode($2, dsl.NodeTypeOperator, []interface{}{$3}),
-        },
-      )
-    >>
-
-  | PrecedenceChainEnd "**" "+" PowTerm
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeOperator,
-        []interface{}{
-          $0,
-          dsl.NewASTNode(
-            $2,
-            dsl.NodeTypeOperator,
-            []interface{}{$3},
-          ),
-        },
-      )
-    >>
-
-  | PrecedenceChainEnd
-;
-
-// Please Excuse My Dear Aunt Sally! :) We've gotten to the 'P' so we're done
-// with the operator-precedence chain. :)
-
-PrecedenceChainEnd
-  : "(" Rvalue ")"
-    <<
-      dsl.WithErrorReturn($1)
-    >>
-;
-
-PrecedenceChainEnd : MlrvalOrFunction ;
-
-// ================================================================
-// END RVALUE OPERATOR-PRECEDENCE CHAIN
-// ================================================================
-
-// ================================================================
-// Leaf-ish nodes, i.e. expressions without operators ... in things like '$y =
-// 3 * $x + 4', the Rvalue operator-parse separates out the '3', the '$x', and
-// the '4' ... but they could have as well been '$y = 3 * $x[7] + f($a,$b,$c)'.
-//
-// Grammar rules here have to do with nodes like '3', or '$x[7]', or
-// 'f($a,$b,$c)'.
-//
-// At the moment I call these MlrvalOrFunction.
-
-// ----------------------------------------------------------------
-MlrvalOrFunction
-  : FieldValue
-  | FullSrec
-  | OosvarValue
-  | FullOosvar
-  | LocalVariable
-  | UnnamedFunctionDefinition
-;
-
-// ----------------------------------------------------------------
-// STRING/INT/FLOAT/BOOL LITERALS
-
-// As with '$' on field_name, so too for string_literal we
-// get LR-1 conflicts if we attempt to put the double quotes here.  Hence the
-// quote-stripper AST method. Also, since string literals can have
-// backslash-escaped double-quotes like "...\"...\"...", we also unbackslash
-// in the same method.
-
-// For Miller-style case-insensitive regexes -- of the form "a.*b"i with the
-// trailing 'i' -- we don't strip the initial '"' or the final '"i'.
-
-MlrvalOrFunction
-  : string_literal
-    <<
-      dsl.NewASTNodeStripDoubleQuotePair($0, dsl.NodeTypeStringLiteral)
-    >>
-
-  | regex_case_insensitive
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeRegexCaseInsensitive)
-    >>
-
-  | int_literal
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeIntLiteral)
-    >>
-
-  | float_literal
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeFloatLiteral)
-    >>
-
-  | boolean_literal
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeBoolLiteral)
-    >>
-
-  | null_literal
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeNullLiteral)
-    >>
-
-  | inf_literal
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeFloatLiteral)
-    >>
-
-  | nan_literal
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeFloatLiteral)
-    >>
-
-  | const_M_PI
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn(
-        $0,
-        dsl.NodeTypeConstant,
-      )
-    >>
-
-  | const_M_E
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn(
-        $0,
-        dsl.NodeTypeConstant,
-      )
-    >>
-
-  | panic
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypePanic)
-    >>
-;
-
-// ================================================================
-// Array literals in Miller are JSON-ish.
-
-MlrvalOrFunction : ArrayLiteral ;
-
-// ----------------------------------------------------------------
-ArrayLiteral
-
-  : "[" "]"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("[]", $0),
-        dsl.NodeTypeArrayLiteral,
-        []interface{}{},
-      )
-    >>
-
-  | "[" ArrayLiteralElements "]"
-    // As parsed there's an intermediate node between ArrayLiteral
-    // and the children. Now we can remove it.
-    //
-    // Before:
-    // * ArrayLiteral "[]"
-    //     * ArrayLiteral
-    //         * StringLiteral "a"
-    //         * StringLiteral "b"
-    //
-    // After:
-    // * ArrayLiteral "[]"
-    //     * StringLiteral "a"
-    //     * StringLiteral "b"
-    <<
-      dsl.WithChildrenAdopted(
-        dsl.NewASTNodeTerminal(
-          dsl.NewASTToken("[]", $0),
-          dsl.NodeTypeArrayLiteral,
-        ),
-        $1,
-      )
-    >>
-;
-
-// ----------------------------------------------------------------
-ArrayLiteralElements
-
-  : Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeArrayLiteral,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-  // Allow trailing final comma, especially for multiline statements
-  | Rvalue ","
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeArrayLiteral,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-  // Allow trailing final comma, especially for multiline statements
-  | Rvalue "," ArrayLiteralElements
-    <<
-      dsl.WithChildPrepended(
-        $2,
-        $0,
-      )
-    >>
-
-;
-
-// ================================================================
-// Map literals in Miller are JSON-ish.
-
-MlrvalOrFunction : MapLiteral ;
-
-// ----------------------------------------------------------------
-MapLiteral
-
-  : "{" "}"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("{}", $0),
-        dsl.NodeTypeMapLiteral,
-        []interface{}{},
-      )
-    >>
-
-  | "{" MapLiteralKeyValuePairs "}"
-    // As parsed there's an intermediate node between MapLiteral
-    // and the children. Now we can remove it.
-    //
-    // Before:
-    // * MapLiteral "{}"
-    //     * MapLiteral
-    //         * MapLiteralKeyValuePair ":"
-    //             * StringLiteral "a"
-    //             * StringLiteral "1"
-    //         * MapLiteralKeyValuePair ":"
-    //             * StringLiteral "b"
-    //             * IntLiteral "2"
-    //
-    // After:
-    // * MapLiteral "{}"
-    //     * MapLiteralKeyValuePair ":"
-    //         * StringLiteral "a"
-    //         * StringLiteral "1"
-    //     * MapLiteralKeyValuePair ":"
-    //         * StringLiteral "b"
-    //         * IntLiteral "2"
-    <<
-      dsl.WithChildrenAdopted(
-        dsl.NewASTNodeTerminal(
-          dsl.NewASTToken("{}", $0),
-          dsl.NodeTypeMapLiteral,
-        ),
-        $1,
-      )
-    >>
-
-;
-
-// ----------------------------------------------------------------
-MapLiteralKeyValuePairs
-
-  : MapLiteralKeyValuePair
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeMapLiteral,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-  // Allow trailing final comma, especially for multiline statements
-  | MapLiteralKeyValuePair ","
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeMapLiteral,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-  // Allow trailing final comma, especially for multiline statements
-  | MapLiteralKeyValuePair "," MapLiteralKeyValuePairs
-    <<
-      dsl.WithChildPrepended(
-        $2,
-        $0,
-      )
-    >>
-
-;
-
-// ----------------------------------------------------------------
-MapLiteralKeyValuePair
-  : Rvalue ":" Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeMapLiteralKeyValuePair,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-;
-
-// ================================================================
-MlrvalOrFunction : ContextVariable ;
-
-ContextVariable
-  : ctx_IPS
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-    >>
-
-  | ctx_IFS
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-    >>
-
-  | ctx_IRS
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-    >>
-
-  | ctx_OPS
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-    >>
-
-  | ctx_OFS
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-    >>
-
-  | ctx_ORS
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-    >>
-
-  | ctx_FLATSEP
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-    >>
-
-  | ctx_NF
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-    >>
-
-  | ctx_NR
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-    >>
-
-  | ctx_FNR
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-    >>
-
-  | ctx_FILENAME
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-    >>
-
-  | ctx_FILENUM
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeContextVariable)
-    >>
-
-;
-
-// ----------------------------------------------------------------
-MlrvalOrFunction : ENV ;
-
-// Only ENV["FOO"]; not arbitrarily indexable like maps are.
-// Alternate syntax: ENV.FOO.
-
-ENV
-  : env "[" Rvalue "]"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEnvironmentVariable,
-        []interface{}{
-          $2,
-        },
-      )
-    >>
-
-  | env "." non_sigil_name
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeEnvironmentVariable,
-        []interface{}{
-          dsl.NewASTNodeTerminal($2, dsl.NodeTypeStringLiteral),
-        },
-      )
-    >>
-
-;
-
-// ================================================================
-// INDEXED ACCESS
-//
-// For Array or Map -- which one, to be determined at runtime.
-
-// ----------------------------------------------------------------
-MlrvalOrFunction
-  : ArrayOrMapIndexAccess
-  | ArraySliceAccess ;
-
-ArrayOrMapIndexAccess
-  : MlrvalOrFunction "[" Rvalue "]"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("[]", $1),
-        dsl.NodeTypeArrayOrMapIndexAccess,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-;
-
-ArraySliceAccess
-
-  : MlrvalOrFunction "[" Rvalue ":" Rvalue "]"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("[]", $1),
-        dsl.NodeTypeArraySliceAccess,
-        []interface{}{
-          $0,
-          $2,
-          $4,
-        },
-      )
-    >>
-
-  | MlrvalOrFunction "[" ":" Rvalue "]"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("[]", $1),
-        dsl.NodeTypeArraySliceAccess,
-        []interface{}{
-          $0,
-          dsl.NewASTNodeTerminal(
-            $2,
-            dsl.NodeTypeArraySliceEmptyLowerIndex,
-          ),
-          $3,
-        },
-      )
-    >>
-
-  | MlrvalOrFunction "[" Rvalue ":" "]"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("[]", $1),
-        dsl.NodeTypeArraySliceAccess,
-        []interface{}{
-          $0,
-          $2,
-          dsl.NewASTNodeTerminal(
-            $3,
-            dsl.NodeTypeArraySliceEmptyUpperIndex,
-          ),
-        },
-      )
-    >>
-
-  | MlrvalOrFunction "[" ":" "]"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        dsl.NewASTToken("[]", $1),
-        dsl.NodeTypeArraySliceAccess,
-        []interface{}{
-          $0,
-          dsl.NewASTNodeTerminal(
-            $2,
-            dsl.NodeTypeArraySliceEmptyLowerIndex,
-          ),
-          dsl.NewASTNodeTerminal(
-            $2,
-            dsl.NodeTypeArraySliceEmptyUpperIndex,
-          ),
-        },
-      )
-    >>
-
-;
-
-// ================================================================
-// FUNCTION/SUBROUTINE CALLS
-
-MlrvalOrFunction
-  : FunctionCallsite
-;
-
-FunctionCallsite
-
-  : FunctionName "(" ")"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeFunctionCallsite,
-        []interface{}{},
-      )
-    >>
-
-  | FunctionName "(" FcnArgs ")"
-    // As parsed there's an intermediate node between FunctionCallsite
-    // and the children. Now we can remove it.
-    //
-    // Before:
-    // * FunctionCallsite "[]"
-    //     * FunctionCallsite
-    //         * StringLiteral "a"
-    //         * StringLiteral "b"
-    //
-    // After:
-    // * FunctionCallsite "[]"
-    //     * StringLiteral "a"
-    //     * StringLiteral "b"
-    <<
-      dsl.WithChildrenAdopted(
-        dsl.NewASTNodeTerminal(
-          $0,
-          dsl.NodeTypeFunctionCallsite,
-        ),
-        $2,
-      )
-    >>
-
-;
-
-// For most functions it suffices to use the non_sigil_name pattern.
-// But int and float are keywords in the lexer so we need to spell those out
-// explicitly.  (They're type-decl keywords but they're also the names of
-// type-conversion functions.)
-FunctionName
-  : non_sigil_name
-  | int
-  | float
-;
-
-// ----------------------------------------------------------------
-FcnArgs
-
-  : Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeFunctionCallsite,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-  // Allow trailing final comma, especially for multiline statements
-  | Rvalue ","
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeFunctionCallsite,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-  // Allow trailing final comma, especially for multiline statements
-  | Rvalue "," FcnArgs
-    <<
-      dsl.WithChildPrepended(
-        $2,
-        $0,
-      )
-    >>
-
-;
-
-// ----------------------------------------------------------------
-// Subroutine callsite
-
-SubroutineCallsite
-  : call SubroutineName "(" ")"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        dsl.NodeTypeSubroutineCallsite,
-        []interface{}{},
-      )
-    >>
-
-  | call SubroutineName "(" FcnArgs ")"
-    // As parsed there's an intermediate node between SubroutineCallsite
-    // and the children. Now we can remove it.
-    //
-    // Before:
-    // * SubroutineCallsite "[]"
-    //     * SubroutineCallsite
-    //         * StringLiteral "a"
-    //         * StringLiteral "b"
-    //
-    // After:
-    // * SubroutineCallsite "[]"
-    //     * StringLiteral "a"
-    //     * StringLiteral "b"
-    <<
-      dsl.WithChildrenAdopted(
-        dsl.NewASTNodeTerminal(
-          $1,
-          dsl.NodeTypeSubroutineCallsite,
-        ),
-        $3,
-      )
-    >>
-
-;
-
-SubroutineName : non_sigil_name;
-
-// ================================================================
-// BEGIN/END BLOCKS
-
-BracefulStatement
-  : BeginBlock
+  | BeginBlock
   | EndBlock
   | CondBlock
   | IfChain
@@ -2984,657 +264,483 @@ BracefulStatement
   | SubroutineDefinition
 ;
 
-BeginBlock
-  : begin StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeBeginBlock,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-
-;
-EndBlock
-  : end StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeEndBlock,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-
-;
-// ================================================================
-// PATTERN-ACTION BLOCKS (AWKISH)
-// E.g. mlr put 'NR > 10 { ... }'.
-// Just shorthand for mlr put 'if (NR > 10) { ... }' without any elif/else.
-
-CondBlock
-  := Rvalue StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeCondBlock,
-        []interface{}{
-          $0,
-          $1,
-        },
-      )
-    >>
-
+CompoundAssignOp ::=
+    op_or_equals | op_xor_equals | op_and_equals
+  | op_absent_coalesce_equals | op_empty_coalesce_equals
+  | op_bit_or_equals | op_bit_and_equals | op_bit_xor_equals
+  | op_shift_left_equals | op_shift_right_equals | op_shift_right_unsigned_equals
+  | op_plus_equals | op_dot_equals | op_minus_equals
+  | op_star_equals | op_slash_equals | op_slash_slash_equals
+  | op_percent_equals | op_pow_equals
 ;
 
-// ================================================================
-// IF-STATEMENTS
-
-// Cases:
-//   if elif*
-//   if elif* else
-
-IfChain
-  : IfElifStar
-  | IfElifStar ElseBlock
-    <<
-      dsl.WithChildAppended($0, $1)
-    >>
-
+Assignment ::=
+    Lvalue equals Rvalue -> { "parent": 1, "children": [0, 2], "type": "Assignment" }
+  | Lvalue CompoundAssignOp Rvalue -> { "parent": 1, "children": [0, 1, 2], "type": "CompoundAssignment" }
 ;
 
-IfElifStar
-  : IfBlock
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeIfChain,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
+Unset ::= kw_unset FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "Unset" } ;
 
-  | IfElifStar ElifBlock
-    <<
-      dsl.WithChildAppended($0, $1)
-    >>
+BareBoolean ::= Rvalue -> { "parent": 0, "children": [0], "type": "BareBoolean" } ;
 
+FilterStatement ::= kw_filter Rvalue -> { "parent": 0, "children": [1], "type": "FilterStatement" } ;
+
+RedirectTarget ::=
+    kw_stdout -> { "parent": 0, "children": [], "type": "RedirectTargetStdout" }
+  | kw_stderr -> { "parent": 0, "children": [], "type": "RedirectTargetStderr" }
+  | Rvalue -> { "parent": 0, "children": [0], "type": "RedirectTargetRvalue" }
 ;
 
-IfBlock
-  : if "(" Rvalue ")" StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeIfItem,
-        []interface{}{
-          $2,
-          $4,
-        },
-      )
-    >>
-
+# Lexer may produce op_gt/op_bit_or for '>'/'|' in redirect context; accept both.
+Redirector ::=
+    op_redirect_write RedirectTarget -> { "parent": 0, "children": [1], "type": "RedirectWrite" }
+  | op_gt RedirectTarget -> { "parent": 0, "children": [1], "type": "RedirectWrite" }
+  | op_redirect_append RedirectTarget -> { "parent": 0, "children": [1], "type": "RedirectAppend" }
+  | op_shift_right RedirectTarget -> { "parent": 0, "children": [1], "type": "RedirectAppend" }
+  | op_redirect_pipe RedirectTarget -> { "parent": 0, "children": [1], "type": "RedirectPipe" }
+  | op_bit_or RedirectTarget -> { "parent": 0, "children": [1], "type": "RedirectPipe" }
 ;
 
-ElifBlock
-  : elif "(" Rvalue ")" StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeIfItem,
-        []interface{}{
-          $2,
-          $4,
-        },
-      )
-    >>
-
+PrintStatement ::=
+    kw_print -> { "parent": 0, "children": [], "type": "PrintStatement" }
+  | kw_print Redirector -> { "parent": 0, "children": [1], "type": "PrintStatement" }
+  | kw_print FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "PrintStatement" }
+  | kw_print Redirector comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "PrintStatement" }
 ;
 
-ElseBlock
-  : else StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeIfItem,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
-
+PrintnStatement ::=
+    kw_printn -> { "parent": 0, "children": [], "type": "PrintnStatement" }
+  | kw_printn Redirector -> { "parent": 0, "children": [1], "type": "PrintnStatement" }
+  | kw_printn FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "PrintnStatement" }
+  | kw_printn Redirector comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "PrintnStatement" }
 ;
 
-// ================================================================
-// WHILE AND DO-WHILE -LOOPS
-
-WhileLoop
-  : while "(" Rvalue ")" StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeWhileLoop,
-        []interface{}{
-          $2,
-          $4,
-        },
-      )
-    >>
+EprintStatement ::=
+    kw_eprint -> { "parent": 0, "children": [], "type": "EprintStatement" }
+  | kw_eprint FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EprintStatement" }
 ;
 
-DoWhileLoop
-  : do StatementBlockInBraces while "(" Rvalue ")"
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeDoWhileLoop,
-        []interface{}{
-          $1,
-          $4,
-        },
-      )
-    >>
+EprintnStatement ::=
+    kw_eprintn -> { "parent": 0, "children": [], "type": "EprintnStatement" }
+  | kw_eprintn FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EprintnStatement" }
 ;
 
-// ================================================================
-// FOR-LOOPS
-
-// ----------------------------------------------------------------
-ForLoop
-  : ForLoopOneVariable
-  | ForLoopTwoVariable
-  | ForLoopMultivariable
-  | TripleForLoop
+DumpStatement ::=
+    kw_dump -> { "parent": 0, "children": [], "type": "DumpStatement" }
+  | kw_dump Redirector -> { "parent": 0, "children": [1], "type": "DumpStatement" }
+  | kw_dump FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "DumpStatement" }
+  | kw_dump Redirector comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "DumpStatement" }
 ;
 
-// ----------------------------------------------------------------
-// for(k in $*) { ... }
-ForLoopOneVariable
-  : for
-    "("
-      LocalVariable
-      in
-      Rvalue
-    ")"
-    StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0, // "for"
-        dsl.NodeTypeForLoopOneVariable,
-        []interface{}{
-          $2, // k, etc.
-          $4, // $*, etc.
-          $6, // { ... }
-        },
-      )
-    >>
+EdumpStatement ::=
+    kw_edump -> { "parent": 0, "children": [], "type": "EdumpStatement" }
+  | kw_edump FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EdumpStatement" }
 ;
 
-// ----------------------------------------------------------------
-// for(k, v in $*) { ... }
-ForLoopTwoVariable
-  : for
-    "("
-      LocalVariable
-      ","
-      LocalVariable
-      in
-      Rvalue
-    ")"
-    StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0, // "for"
-        dsl.NodeTypeForLoopTwoVariable,
-        []interface{}{
-          $2, // k, etc.
-          $4, // v, etc.
-          $6, // $*, etc.
-          $8, // { ... }
-        },
-      )
-    >>
+TeeStatement ::= kw_tee Redirector comma FullSrec -> { "parent": 0, "children": [1, 3], "type": "TeeStatement" } ;
 
+Emit1Statement ::= kw_emit1 Rvalue -> { "parent": 0, "children": [1], "type": "Emit1Statement" } ;
+
+# Emit/emitp/emitf take FcnArgs (like emit1) to avoid reduce-reduce with Emittable vs MlrvalOrFunction.
+# Full EmittableList (oosvars, map literals) can be added later with grammar refactor.
+# Parenthesized form: emit(p) (@a, @b) - requires 2+ args to avoid shift/reduce with PrecedenceChainEnd.
+# FcnArgsParen = lparen Rvalue comma FcnArgs rparen (min 2 args when using parens)
+FcnArgsParen ::= lparen Rvalue comma FcnArgs rparen -> { "parent": 3, "with_prepended_children": [1], "type": "FcnArgs" } ;
+
+EmitStatement ::=
+    kw_emit FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EmitStatement" }
+  | kw_emit FcnArgsParen -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EmitStatement" }
+  | kw_emit FcnArgsParen comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "EmitStatement" }
+  | kw_emit Redirector comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "EmitStatement" }
+  | kw_emit Redirector comma FcnArgsParen -> { "parent": 0, "children": [1, 3], "type": "EmitStatement" }
+  | kw_emit Redirector comma FcnArgsParen comma FcnArgs -> { "parent": 0, "children": [1, 3, 5], "type": "EmitStatement" }
 ;
 
-// ----------------------------------------------------------------
-// for((k1, k2), v in $*) { ... }
-ForLoopMultivariable
-  :
-    for
-    "("
-      "("
-        MultiIndex
-      ")"
-      ","
-      LocalVariable
-      in
-      Rvalue
-    ")"
-    StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0, // "for"
-        dsl.NodeTypeForLoopMultivariable,
-        []interface{}{
-          $3,  // (k1, k2), etc.
-          $6,  // v, etc.
-          $8,  // $*, etc.
-          $10, // { ... }
-        },
-      )
-    >>
-
+EmitPStatement ::=
+    kw_emitp FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EmitPStatement" }
+  | kw_emitp FcnArgsParen -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EmitPStatement" }
+  | kw_emitp FcnArgsParen comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "EmitPStatement" }
+  | kw_emitp Redirector comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "EmitPStatement" }
+  | kw_emitp Redirector comma FcnArgsParen -> { "parent": 0, "children": [1, 3], "type": "EmitPStatement" }
+  | kw_emitp Redirector comma FcnArgsParen comma FcnArgs -> { "parent": 0, "children": [1, 3, 5], "type": "EmitPStatement" }
 ;
 
-MultiIndex
-
-  : LocalVariable "," LocalVariable
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeParameterList,
-        []interface{}{
-          $0,
-          $2,
-        },
-      )
-    >>
-
-  | MultiIndex "," LocalVariable
-    <<
-      dsl.WithChildAppended(
-        $0,
-        $2,
-      )
-    >>
-
+EmitFStatement ::=
+    kw_emitf FcnArgs -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EmitFStatement" }
+  | kw_emitf FcnArgsParen -> { "parent": 0, "with_adopted_grandchildren": [1], "type": "EmitFStatement" }
+  | kw_emitf FcnArgsParen comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "EmitFStatement" }
+  | kw_emitf Redirector comma FcnArgs -> { "parent": 0, "children": [1, 3], "type": "EmitFStatement" }
+  | kw_emitf Redirector comma FcnArgsParen -> { "parent": 0, "children": [1, 3], "type": "EmitFStatement" }
+  | kw_emitf Redirector comma FcnArgsParen comma FcnArgs -> { "parent": 0, "children": [1, 3, 5], "type": "EmitFStatement" }
 ;
 
-// ----------------------------------------------------------------
-TripleForLoop
-  :
-    for
-    "("
-      TripleForStart
-      ";"
-      TripleForContinuation
-      ";"
-      TripleForUpdate
-    ")"
-    StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0, // for
-        dsl.NodeTypeTripleForLoop,
-        []interface{}{
-          $2, // start
-          $4, // continuation
-          $6, // update
-          $8, // body
-        },
-      )
-    >>
+BeginBlock ::= kw_begin StatementBlockInBraces -> { "parent": 0, "children": [1], "type": "BeginBlock" } ;
 
+EndBlock ::= kw_end StatementBlockInBraces -> { "parent": 0, "children": [1], "type": "EndBlock" } ;
+
+CondBlock ::= Rvalue StatementBlockInBraces -> { "parent": 0, "children": [0, 1], "type": "CondBlock" } ;
+
+IfBlock ::= kw_if lparen Rvalue rparen StatementBlockInBraces -> { "parent": 0, "children": [2, 4], "type": "IfItem" } ;
+
+ElifBlock ::= kw_elif lparen Rvalue rparen StatementBlockInBraces -> { "parent": 0, "children": [2, 4], "type": "IfItem" } ;
+
+ElseBlock ::= kw_else StatementBlockInBraces -> { "parent": 0, "children": [1], "type": "IfItem" } ;
+
+IfChain ::=
+    IfBlock -> { "parent_literal": "if_chain", "children": [0], "type": "IfChain" }
+  | IfChain ElifBlock -> { "parent": 0, "with_appended_children": [1], "type": "IfChain" }
+  | IfChain ElseBlock -> { "parent": 0, "with_appended_children": [1], "type": "IfChain" }
 ;
 
-TripleForStart
-  : empty
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeStatementBlock,
-        []interface{}{},
-      )
-    >>
+WhileLoop ::= kw_while lparen Rvalue rparen StatementBlockInBraces -> { "parent": 0, "children": [2, 4], "type": "WhileLoop" } ;
 
-  | Assignment
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeStatementBlock,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
+DoWhileLoop ::= kw_do StatementBlockInBraces kw_while lparen Rvalue rparen -> { "parent": 0, "children": [1, 4], "type": "DoWhileLoop" } ;
 
-  | TripleForStart "," Assignment
-    <<
-      dsl.WithChildAppended($0, $2)
-    >>
+ForLoopOneVariable ::= kw_for lparen LocalVariable kw_in Rvalue rparen StatementBlockInBraces -> { "parent": 0, "children": [2, 4, 6], "type": "ForLoopOneVariable" } ;
 
+ForLoopTwoVariable ::= kw_for lparen LocalVariable comma LocalVariable kw_in Rvalue rparen StatementBlockInBraces -> { "parent": 0, "children": [2, 4, 6, 8], "type": "ForLoopTwoVariable" } ;
+
+MultiIndex ::=
+    LocalVariable comma LocalVariable -> { "parent_literal": "multi_index", "children": [0, 2], "type": "MultiIndex" }
+  | MultiIndex comma LocalVariable -> { "parent": 0, "with_appended_children": [2], "type": "MultiIndex" }
 ;
 
-// Enforced in the CST, not here: the last must be a bare boolean; the ones
-// before must be assignments.
-TripleForContinuation
-  : empty
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeStatementBlock,
-        []interface{}{},
-      )
-    >>
+ForLoopMultivariable ::= kw_for lparen lparen MultiIndex rparen comma LocalVariable kw_in Rvalue rparen StatementBlockInBraces -> { "parent": 0, "children": [3, 6, 8, 10], "type": "ForLoopMultivariable" } ;
 
-  | TripleForContinuationItem
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeStatementBlock,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-  | TripleForContinuation "," TripleForContinuationItem
-    <<
-      dsl.WithChildAppended($0, $2)
-    >>
-
+# Miller allows for(;;body), for(i=0;;), for(;i<n;), for(i=0;i<n;i++), etc.
+TripleForStart ::=
+    empty -> { "parent_literal": "block", "children": [], "type": "StatementBlock" }
+  | Assignment -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
+  | TripleForStart comma Assignment -> { "parent": 0, "with_appended_children": [2], "type": "StatementBlock" }
 ;
 
-TripleForContinuationItem
-  : Assignment
-  | BareBoolean
+TripleForContinuationItem ::= Assignment | BareBoolean ;
+
+TripleForContinuation ::=
+    empty -> { "parent_literal": "block", "children": [], "type": "StatementBlock" }
+  | TripleForContinuationItem -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
+  | TripleForContinuation comma TripleForContinuationItem -> { "parent": 0, "with_appended_children": [2], "type": "StatementBlock" }
 ;
 
-TripleForUpdate
-  : empty
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeStatementBlock,
-        []interface{}{},
-      )
-    >>
-
-  | Assignment
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeStatementBlock,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-  | TripleForUpdate "," Assignment
-    <<
-      dsl.WithChildAppended($0, $2)
-    >>
+TripleForUpdate ::=
+    empty -> { "parent_literal": "block", "children": [], "type": "StatementBlock" }
+  | Assignment -> { "parent_literal": "block", "children": [0], "type": "StatementBlock" }
+  | TripleForUpdate comma Assignment -> { "parent": 0, "with_appended_children": [2], "type": "StatementBlock" }
 ;
 
-// ----------------------------------------------------------------
-BreakStatement
-  : break
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeBreak,
-        []interface{}{},
-      )
-    >>
+TripleForLoop ::= kw_for lparen TripleForStart semicolon TripleForContinuation semicolon TripleForUpdate rparen StatementBlockInBraces -> { "parent": 0, "children": [2, 4, 6, 8], "type": "TripleForLoop" } ;
+
+ForLoop ::= ForLoopOneVariable | ForLoopTwoVariable | ForLoopMultivariable | TripleForLoop ;
+
+BreakStatement ::= kw_break -> { "parent": 0, "children": [], "type": "BreakStatement" } ;
+
+ContinueStatement ::= kw_continue -> { "parent": 0, "children": [], "type": "ContinueStatement" } ;
+
+ReturnStatement ::= kw_return -> { "parent": 0, "children": [], "type": "ReturnStatement" }
+  | kw_return Rvalue -> { "parent": 0, "children": [1], "type": "ReturnStatement" }
 ;
 
-ContinueStatement
-  : continue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeContinue,
-        []interface{}{},
-      )
-    >>
+SubroutineName ::= non_sigil_name ;
+
+SubroutineCallsite ::=
+    kw_call SubroutineName lparen rparen -> { "parent": 1, "children": [], "type": "SubroutineCallsite" }
+  | kw_call SubroutineName lparen FcnArgs rparen -> { "parent": 1, "with_adopted_grandchildren": [3], "type": "SubroutineCallsite" }
 ;
 
-// ================================================================
-// FUNCTION AND SUBROUTINE DEFINITIONS
-
-// Example: 'func f(a, b) { return b - a }'
-NamedFunctionDefinition
-
-  // Without return-type annotation
-  : func
-    non_sigil_name
-    "("
-    FuncOrSubrParameterList
-    ")"
-    StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        // { ... }
-        dsl.NodeTypeNamedFunctionDefinition,
-        []interface{}{
-          $3,
-          // parameter list
-          $5,
-        },
-      )
-    >>
-
-  // With return-type annotation
-  | func
-    non_sigil_name
-    "("
-    FuncOrSubrParameterList
-    ")"
-    ":"
-    Typedecl
-    StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        // return type
-        dsl.NodeTypeNamedFunctionDefinition,
-        []interface{}{
-          $3,
-          // parameter list
-          $7,
-          // {...}
-          $6,
-        },
-      )
-    >>
+# func f(a,b) { body } or func f(): int { body }
+NamedFunctionDefinition ::=
+    kw_func non_sigil_name FuncParams StatementBlockInBraces
+      -> { "parent": 1, "children": [2, 3], "type": "NamedFunctionDefinition" }
+  | kw_func non_sigil_name FuncParams colon Typedecl StatementBlockInBraces
+      -> { "parent": 1, "children": [2, 4, 5], "type": "NamedFunctionDefinition" }
 ;
 
-// Example: RHS of 'f = func (a, b) { return b - a }'
-UnnamedFunctionDefinition
-
-  // Without return-type annotation
-  : func
-    "("
-    FuncOrSubrParameterList
-    ")"
-    StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        // { ... }
-        dsl.NodeTypeUnnamedFunctionDefinition,
-        []interface{}{
-          $2,
-          // parameter list
-          $4,
-        },
-      )
-    >>
-
-  // With return-type annotation
-  | func
-    "("
-    FuncOrSubrParameterList
-    ")"
-    ":"
-    Typedecl
-    StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        // return type
-        dsl.NodeTypeUnnamedFunctionDefinition,
-        []interface{}{
-          $2,
-          // parameter list
-          $6,
-          // {...}
-          $5,
-        },
-      )
-    >>
-
+# func (a,b) { body } - anonymous function
+UnnamedFunctionDefinition ::=
+    kw_func FuncParams StatementBlockInBraces
+      -> { "parent": 0, "children": [1, 2], "type": "UnnamedFunctionDefinition" }
+  | kw_func FuncParams colon Typedecl StatementBlockInBraces
+      -> { "parent": 0, "children": [1, 3, 4], "type": "UnnamedFunctionDefinition" }
 ;
 
-SubroutineDefinition
-  : subr
-    non_sigil_name
-    "("
-    FuncOrSubrParameterList
-    ")"
-    StatementBlockInBraces
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $1,
-        // { ... }
-        dsl.NodeTypeSubroutineDefinition,
-        []interface{}{
-          $3,
-          // parameter list
-          $5,
-        },
-      )
-    >>
-
+# subr name(a,b) { body }
+SubroutineDefinition ::=
+    kw_subr non_sigil_name FuncParams StatementBlockInBraces
+      -> { "parent": 1, "children": [2, 3], "type": "SubroutineDefinition" }
 ;
 
-// ----------------------------------------------------------------
-FuncOrSubrParameterList
-  : empty
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeParameterList,
-        []interface{}{},
-      )
-    >>
-
-  | FuncOrSubrNonEmptyParameterList
-    <<
-      dsl.WithErrorReturn($0)
-    >>
-
+# () or (a,b,...) - contains lparen/rparen so empty case is lparen rparen
+FuncParams ::=
+    lparen rparen -> { "parent_literal": "params", "children": [], "type": "ParameterList" }
+  | lparen FuncOrSubrParameterList rparen -> { "parent": 1, "children": [1], "type": "ParameterList" }
 ;
 
-FuncOrSubrNonEmptyParameterList
-  : FuncOrSubrParameter
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeParameterList,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-  | FuncOrSubrParameter ","
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeParameterList,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-  | FuncOrSubrParameter "," FuncOrSubrNonEmptyParameterList
-    <<
-      dsl.WithChildPrepended($2, $0)
-    >>
-
+FuncOrSubrParameterList ::=
+    FuncOrSubrParameter -> { "parent_literal": "params", "children": [0], "type": "ParameterList" }
+  | FuncOrSubrParameter comma -> { "parent_literal": "params", "children": [0], "type": "ParameterList" }
+  | FuncOrSubrParameter comma FuncOrSubrParameterList -> { "parent": 2, "with_prepended_children": [0], "type": "ParameterList" }
 ;
 
-FuncOrSubrParameter
-  // Untyped parameter, e.g. "x". Produce this AST:
-  // Parameter
-  // -> ParameterName "x"
-  : UntypedFuncOrSubrParameterName
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeParameter,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
-  // Typed parameter, e.g. "num x". Produce this AST:
-  // Parameter
-  // -> ParameterName "x"
-  //   -> Typedecl "num"
-  | TypedFuncOrSubrParameterName
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        nil,
-        dsl.NodeTypeParameter,
-        []interface{}{
-          $0,
-        },
-      )
-    >>
-
+FuncOrSubrParameter ::=
+    LocalVariable -> { "parent": 0, "children": [0], "type": "Parameter" }
+  | Typedecl LocalVariable -> { "parent": 0, "children": [0, 1], "type": "Parameter" }
 ;
 
-UntypedFuncOrSubrParameterName
-  : non_sigil_name
-    <<
-      dsl.NewASTNodeTerminalWithErrorReturn($0, dsl.NodeTypeParameterName)
-    >>
+Typedecl ::= kw_arr | kw_bool | kw_float | kw_int | kw_map | kw_num | kw_str | kw_var | kw_funct ;
 
+Lvalue ::=
+    Rvalue
+  | Typedecl LocalVariable -> { "parent": 0, "children": [0, 1], "type": "TypedeclLocalVariable" }
 ;
 
-TypedFuncOrSubrParameterName
-  : Typedecl UntypedFuncOrSubrParameterName
-    <<
-      dsl.WithChildAppended($1, $0)
-    >>
+# Rvalue is the top of the operator precedence chain
+Rvalue ::= PrecedenceChainStart ;
 
+PrecedenceChainStart ::= TernaryTerm ;
+
+TernaryTerm ::=
+    LogicalOrTerm op_ternary TernaryTerm colon TernaryTerm -> { "parent": 1, "children": [0, 2, 4], "type": "Operator" }
+  | LogicalOrTerm
 ;
 
-// ----------------------------------------------------------------
-// Return statements for user-defined functions and subroutines
+LogicalOrTerm ::=
+    LogicalOrTerm op_logical_or LogicalXORTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | LogicalXORTerm
+;
 
-ReturnStatement
-  // For user-defined functions: return a value
-  : return Rvalue
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeReturn,
-        []interface{}{
-          $1,
-        },
-      )
-    >>
+LogicalXORTerm ::=
+    LogicalXORTerm op_logical_xor LogicalAndTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | LogicalAndTerm
+;
 
-  // For user-defined subroutines
-  | return
-    <<
-      dsl.NewASTNodeWithErrorReturn(
-        $0,
-        dsl.NodeTypeReturn,
-        []interface{}{},
-      )
-    >>
+LogicalAndTerm ::=
+    LogicalAndTerm op_logical_and EqneTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | EqneTerm
+;
 
+EqneTerm ::=
+    EqneTerm op_eqtilde   CmpTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | EqneTerm op_negtilde  CmpTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | EqneTerm op_eqeq      CmpTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | EqneTerm op_ne        CmpTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | EqneTerm op_spaceship CmpTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+
+  | CmpTerm
+;
+
+CmpTerm ::=
+    CmpTerm op_gt BitwiseORTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | CmpTerm op_ge BitwiseORTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | CmpTerm op_lt BitwiseORTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | CmpTerm op_le BitwiseORTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | BitwiseORTerm
+;
+
+BitwiseORTerm ::=
+    BitwiseORTerm op_bit_or BitwiseXORTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | BitwiseXORTerm
+;
+
+BitwiseXORTerm ::=
+    BitwiseXORTerm op_bit_xor BitwiseANDTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | BitwiseANDTerm
+;
+
+BitwiseANDTerm ::=
+    BitwiseANDTerm op_bit_and BitwiseShiftTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | BitwiseShiftTerm
+;
+
+BitwiseShiftTerm ::=
+    BitwiseShiftTerm op_shift_left AddsubdotTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | BitwiseShiftTerm op_shift_right AddsubdotTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | BitwiseShiftTerm op_shift_right_unsigned AddsubdotTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | AddsubdotTerm
+;
+
+# Note: Miller uses "." for both string concat and map key access; PGPG has shift/reduce
+# conflict with that. We keep "." only for map access (DotFactor). Use ".+" or ".=" for
+# concatenation, or add a concat() function later.
+AddsubdotTerm ::=
+    AddsubdotTerm op_plus      MuldivTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | AddsubdotTerm op_minus     MuldivTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | AddsubdotTerm op_dot_plus  MuldivTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | AddsubdotTerm op_dot_minus MuldivTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | MuldivTerm
+;
+
+MuldivTerm ::=
+    MuldivTerm op_star            DotFactor -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | MuldivTerm op_slash           DotFactor -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | MuldivTerm op_slash_slash     DotFactor -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | MuldivTerm op_percent         DotFactor -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | MuldivTerm op_dot_star        DotFactor -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | MuldivTerm op_dot_slash       DotFactor -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | MuldivTerm op_dot_slash_slash DotFactor -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | DotFactor
+;
+
+DotFactor ::=
+    DotFactor op_dot UnaryOpTerm -> { "parent": 1, "children": [0, 2], "type": "DotOperator" }
+  | UnaryOpTerm
+;
+
+# Lexer may emit op_plus/op_minus for "+" and "-"; accept in unary context.
+# Allow nesting (++1, --1) by using UnaryOpTerm on RHS.
+UnaryOpTerm ::=
+    op_unary_plus      UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_unary_minus     UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_plus            UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_minus           UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_dot_plus        UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_dot_minus       UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_bang            UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_tilde           UnaryOpTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | AbsentCoalesceTerm
+;
+
+AbsentCoalesceTerm ::=
+    AbsentCoalesceTerm op_absent_coalesce EmptyCoalesceTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | EmptyCoalesceTerm
+;
+
+EmptyCoalesceTerm ::=
+    EmptyCoalesceTerm op_empty_coalesce PowTerm -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | PowTerm
+;
+
+# For x**-2 and x**+2: exponent can have leading unary -/+ (like mlr.bnf)
+UnarySignedPowRhs ::=
+    op_minus PowTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | op_unary_plus PowTerm -> { "parent": 0, "children": [1], "type": "Operator" }
+  | PowTerm
+;
+
+PowTerm ::=
+    PrecedenceChainEnd op_pow UnarySignedPowRhs -> { "parent": 1, "children": [0, 2], "type": "Operator" }
+  | PrecedenceChainEnd
+;
+
+PrecedenceChainEnd ::=
+    lparen Rvalue rparen -> { "parent": 1, "children": [1], "type": "Parenthesized" }
+  | MlrvalOrFunction
+;
+
+# Atoms: literals, field access, maps, arrays, index access, function calls, func literals
+MlrvalOrFunction ::=
+    DirectFieldValue
+  | IndirectFieldValue
+  | BracedFieldValue
+  | FullSrec
+  | EnvironmentVariable
+  | DirectOosvarValue
+  | IndirectOosvarValue
+  | BracedOosvarValue
+  | FullOosvar
+  | ContextVariable
+  | Constant
+  | LocalVariable
+  | IntLiteral
+  | FloatLiteral
+  | RegexCaseInsensitive
+  | StringLiteral
+  | BoolLiteral
+  | NullLiteral
+  | PanicLiteral
+  | ArrayLiteral
+  | MapLiteral
+  | ArrayOrMapIndexAccess
+  | ArraySliceAccess
+  | FunctionCallsite
+  | UnnamedFunctionDefinition
+;
+
+FullSrec ::= full_srec -> { "parent": 0, "children": [], "type": "FullSrec" } ;
+
+DirectOosvarValue ::= oosvar_name -> { "parent": 0, "children": [], "type": "DirectOosvarValue" } ;
+IndirectOosvarValue ::= at_lbrack Rvalue rbrack -> { "parent_literal": "@[]", "children": [1], "type": "IndirectOosvarValue" } ;
+BracedOosvarValue ::= braced_oosvar_name -> { "parent": 0, "children": [], "type": "BracedOosvarValue" } ;
+FullOosvar ::= full_oosvar -> { "parent": 0, "children": [], "type": "FullOosvar" } ;
+LocalVariable ::= non_sigil_name -> { "parent": 0, "children": [], "type": "LocalVariable" } ;
+
+ContextVariable ::=
+    ctx_IPS | ctx_IFS | ctx_IRS | ctx_OPS | ctx_OFS | ctx_ORS | ctx_FLATSEP
+  | ctx_NF | ctx_NR | ctx_FNR | ctx_FILENAME | ctx_FILENUM
+  -> { "parent": 0, "children": [], "type": "ContextVariable" }
+;
+
+# Mathematical constants M_PI and M_E
+Constant ::=
+    const_M_PI -> { "parent": 0, "children": [], "type": "Constant" }
+  | const_M_E  -> { "parent": 0, "children": [], "type": "Constant" }
+;
+
+DirectFieldValue ::= field_name -> { "parent": 0, "children": [], "type": "DirectFieldValue" } ;
+IndirectFieldValue ::= dollar_lbrack Rvalue rbrack -> { "parent_literal": "$[]", "children": [1], "type": "IndirectFieldValue" } ;
+BracedFieldValue ::= braced_field_name -> { "parent": 0, "children": [], "type": "BracedFieldValue" } ;
+
+# ENV["FOO"] and ENV.FOO (environment variable access)
+EnvironmentVariable ::=
+    kw_env lbrack Rvalue rbrack -> { "parent": 0, "children": [2], "type": "EnvironmentVariable" }
+  | kw_env op_dot non_sigil_name -> { "parent": 0, "children": [2], "type": "EnvironmentVariable" }
+;
+
+IntLiteral ::= int_literal -> { "parent": 0, "children": [], "type": "int_literal" } ;
+FloatLiteral ::= float_literal -> { "parent": 0, "children": [], "type": "float_literal" } ;
+# Miller regex: "a.*b" (case-sensitive) or "a.*b"i (case-insensitive). Must precede StringLiteral.
+RegexCaseInsensitive ::= string_literal non_sigil_name -> { "parent": 0, "children": [0], "type": "RegexCaseInsensitive" } ;
+StringLiteral ::= string_literal -> { "parent": 0, "children": [], "type": "string_literal" } ;
+BoolLiteral ::= literal_true -> { "parent": 0, "children": [], "type": "bool_literal" }
+  | literal_false -> { "parent": 0, "children": [], "type": "bool_literal" }
+;
+NullLiteral ::= null_literal -> { "parent": 0, "children": [], "type": "null_literal" } ;
+PanicLiteral ::= panic -> { "parent": 0, "children": [], "type": "Panic" } ;
+
+ArrayLiteral ::=
+    lbrack rbrack -> { "parent_literal": "[]", "children": [], "type": "ArrayLiteral" }
+  | lbrack ArrayLiteralElements rbrack -> { "parent_literal": "[]", "with_adopted_grandchildren": [1], "type": "ArrayLiteral" }
+;
+
+ArrayLiteralElements ::=
+    Rvalue -> { "parent_literal": "[]", "children": [0], "type": "ArrayLiteral" }
+  | Rvalue comma -> { "parent_literal": "[]", "children": [0], "type": "ArrayLiteral" }
+  | Rvalue comma ArrayLiteralElements -> { "parent": 2, "with_prepended_children": [0], "type": "ArrayLiteral" }
+;
+
+MapLiteral ::=
+    lbrace rbrace -> { "parent_literal": "{}", "children": [], "type": "MapLiteral" }
+  | lbrace MapLiteralKeyValuePairs rbrace -> { "parent_literal": "{}", "with_adopted_grandchildren": [1], "type": "MapLiteral" }
+;
+
+MapLiteralKeyValuePairs ::=
+    MapLiteralKeyValuePair -> { "parent_literal": "{}", "children": [0], "type": "MapLiteral" }
+  | MapLiteralKeyValuePair comma -> { "parent_literal": "{}", "children": [0], "type": "MapLiteral" }
+  | MapLiteralKeyValuePair comma MapLiteralKeyValuePairs -> { "parent": 2, "with_prepended_children": [0], "type": "MapLiteral" }
+;
+
+MapLiteralKeyValuePair ::= Rvalue colon Rvalue -> { "parent": 1, "children": [0, 2], "type": "MapLiteralKeyValuePair" } ;
+
+ArrayOrMapIndexAccess ::= MlrvalOrFunction lbrack Rvalue rbrack -> { "parent_literal": "[]", "children": [0, 2], "type": "ArrayOrMapIndexAccess" } ;
+
+ArraySliceAccess ::=
+    MlrvalOrFunction lbrack Rvalue colon Rvalue rbrack -> { "parent_literal": "[]", "children": [0, 2, 4], "type": "ArraySliceLoHi" }
+  | MlrvalOrFunction lbrack colon Rvalue rbrack -> { "parent_literal": "[]", "children": [0, 3], "type": "ArraySliceHiOnly" }
+  | MlrvalOrFunction lbrack Rvalue colon rbrack -> { "parent_literal": "[]", "children": [0, 2], "type": "ArraySliceLoOnly" }
+  | MlrvalOrFunction lbrack colon rbrack -> { "parent_literal": "[]", "children": [0], "type": "ArraySliceFull" }
+;
+
+# int and float are type-decl keywords but also function names for type conversion
+FunctionCallsite ::=
+    non_sigil_name lparen rparen -> { "parent": 0, "children": [], "type": "FunctionCallsite" }
+  | non_sigil_name lparen FcnArgs rparen -> { "parent": 0, "with_adopted_grandchildren": [2], "type": "FunctionCallsite" }
+  | kw_int lparen rparen -> { "parent": 0, "children": [], "type": "FunctionCallsite" }
+  | kw_int lparen FcnArgs rparen -> { "parent": 0, "with_adopted_grandchildren": [2], "type": "FunctionCallsite" }
+  | kw_float lparen rparen -> { "parent": 0, "children": [], "type": "FunctionCallsite" }
+  | kw_float lparen FcnArgs rparen -> { "parent": 0, "with_adopted_grandchildren": [2], "type": "FunctionCallsite" }
+;
+
+FcnArgs ::=
+    Rvalue -> { "parent_literal": "args", "children": [0], "type": "FcnArgs" }
+  | Rvalue comma -> { "parent_literal": "args", "children": [0], "type": "FcnArgs" }
+  | Rvalue comma FcnArgs -> { "parent": 2, "with_prepended_children": [0], "type": "FcnArgs" }
 ;

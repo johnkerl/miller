@@ -95,8 +95,7 @@ func (root *RootNode) BuildEvaluableNode(astNode *asts.ASTNode) (IEvaluable, err
 		return root.BuildEnvironmentVariableNode(astNode)
 	}
 
-	// Fallback: try BuildLeafNode for unhandled types (e.g. DirectFieldValue,
-	// IntLiteral - PGPG may structure terminals differently than GOCC).
+	// Fallback: try BuildLeafNode for unhandled types (e.g. DirectFieldValue, IntLiteral).
 	// Only for leaf-like nodes (0 or 1 child); nodes with 2+ children are not leaves.
 	if astNode.Children == nil || len(astNode.Children) <= 1 {
 		if leaf, err := root.BuildLeafNode(astNode); err == nil {

@@ -371,7 +371,6 @@ o JIT neatens
 
 ? gzout, bz2out -- ? make sure this works through tee? bleah ...
 ? golinter?
-? go exe 17MB b/c gocc -- gogll ?
 
 ================================================================
 INFO

@@ -94,15 +94,12 @@ So, in broad overview, the key packages are:
 ### Dependencies
 
 * Miller dependencies are all in the Go standard library, except two:
-  * GOCC lexer/parser code-generator from [github.com/goccmack/gocc](https://github.com/goccmack/gocc):
-    * Forked at [github.com/johnkerl/gocc](github.com/johnkerl/gocc).
-    * This package defines the grammar for Miller's domain-specific language (DSL) for the Miller `put` and `filter` verbs. And, GOCC is a joy to use. :)
-    * It is used on the terms of its open-source license.
+  * PGPG lexer/parser code-generator from [github.com/johnkerl/pgpg](https://github.com/johnkerl/pgpg):
+    * This package defines the grammar for Miller's domain-specific language (DSL) for the Miller `put` and `filter` verbs.
   * [golang.org/x/term](https://pkg.go.dev/golang.org/x/term):
     * Just a one-line Miller callsite for is-a-terminal checking for the [Miller REPL](./pkg/terminals/repl/README.md).
     * It is used on the terms of its open-source license.
 * See also [./go.mod](go.mod). Setup:
-  * `go get github.com/johnkerl/gocc`
   * `go get golang.org/x/term`
 
 ### Miller per se
@@ -120,9 +117,9 @@ So, in broad overview, the key packages are:
 * [pkg/input](./pkg/input) is as above -- one record-reader type per supported input file format, and a factory method.
 * [pkg/output](./pkg/output) is as above -- one record-writer type per supported output file format, and a factory method.
 * [pkg/transformers](./pkg/transformers) contains the abstract record-transformer interface datatype, as well as the Go-channel chaining mechanism for piping one transformer into the next. It also contains all the concrete record-transformers such as `cat`, `tac`, `sort`, `put`, and so on.
-* [pkg/parsing](./pkg/parsing) contains a single source file, `mlr.bnf`, which is the lexical/semantic grammar file for the Miller `put`/`filter` DSL using the GOCC framework. All subdirectories of `pkg/parsing/` are autogen code created by GOCC's processing of `mlr.bnf`. If you need to edit `mlr.bnf`, please use [tools/build-dsl](./tools/build-dsl) to autogenerate Go code from it (using the GOCC tool). (This takes several minutes to run.) See also [tools/format-go-in-bnf](./tools/format-go-in-bnf) (which reads `stdin` and writes `stdout`) for automated formatting of the Go bits.
-* [pkg/dsl](./pkg/dsl) contains [`ast_types.go`](pkg/dsl/ast_types.go) which is the abstract syntax tree datatype shared between GOCC and Miller. I didn't use a `pkg/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
-* [pkg/dsl/cst](./pkg/dsl/cst) is the concrete syntax tree, constructed from an AST produced by GOCC. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the [pkg/dsl/cst/README.md](./pkg/dsl/cst/README.md) for more information.
+* [pkg/parsing](./pkg/parsing) contains a single source file, `mlr.bnf`, which is the lexical/semantic grammar file for the Miller `put`/`filter` DSL using the PGPG framework. All subdirectories of `pkg/parsing/` are autogen code created by PGPG's processing of `mlr.bnf`. If you need to edit `mlr.bnf`, please use [tools/build-dsl](./tools/build-dsl) to autogenerate Go code from it (using the PGPG tool). (This takes several minutes to run.) See also [tools/format-go-in-bnf](./tools/format-go-in-bnf) (which reads `stdin` and writes `stdout`) for automated formatting of the Go bits.
+* [pkg/dsl](./pkg/dsl) contains [`ast_types.go`](pkg/dsl/ast_types.go) which is the abstract syntax tree datatype shared between PGPG and Miller. I didn't use a `pkg/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
+* [pkg/dsl/cst](./pkg/dsl/cst) is the concrete syntax tree, constructed from an AST produced by PGPG. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the [pkg/dsl/cst/README.md](./pkg/dsl/cst/README.md) for more information.
 
 ## Nil-record conventions
 

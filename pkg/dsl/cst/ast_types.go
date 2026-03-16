@@ -1,5 +1,5 @@
 // PGPG AST node type constants. These match the "type" field values
-// produced by the mlr-pgpg.bnf grammar. The CST uses these when
+// produced by the mlr.bnf grammar. The CST uses these when
 // comparing asts.ASTNode.Type (asts.NodeType is string).
 
 package cst
@@ -103,7 +103,7 @@ const NodeTypeNoOp = "NoOp"
 // NodeTypePanic: special token for testing short-circuit (not in grammar)
 const NodeTypePanic = "Panic"
 
-// Types not in mlr-pgpg.bnf (positional indexing, ENV, context vars excluded).
+// Types not in mlr.bnf (positional indexing, ENV, context vars excluded).
 // Added so CST compiles; extend grammar to support.
 const (
 	NodeTypeArraySliceAccess                = "ArraySliceAccess" // alias for any of ArraySliceLoHi etc
@@ -126,7 +126,6 @@ func tokenLit(node *asts.ASTNode) string {
 
 // tokenLitStripDollarOrAt returns the lexeme with leading $ or @ stripped.
 // Used for DirectFieldValue ($n -> n) and DirectOosvarValue (@x -> x).
-// GOCC did this in the grammar via NewASTNodeStripDollarOrAtSign.
 func tokenLitStripDollarOrAt(node *asts.ASTNode) string {
 	s := tokenLit(node)
 	if len(s) >= 1 && (s[0] == '$' || s[0] == '@') {
@@ -137,7 +136,6 @@ func tokenLitStripDollarOrAt(node *asts.ASTNode) string {
 
 // tokenLitStripBraced returns the lexeme with ${ / @{ and } stripped.
 // Used for BracedFieldValue (${foo} -> foo) and BracedOosvarValue (@{bar} -> bar).
-// GOCC did this via NewASTNodeStripDollarOrAtSignAndCurlyBraces.
 func tokenLitStripBraced(node *asts.ASTNode) string {
 	s := tokenLit(node)
 	if len(s) >= 4 && (s[0] == '$' || s[0] == '@') && s[1] == '{' && s[len(s)-1] == '}' {

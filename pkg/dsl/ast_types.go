@@ -1,20 +1,8 @@
-// AST and ASTNode data structures for the Miller DSL parser
+// TNodeType constants for the Miller DSL parser.
+// The CST builder uses asts.ASTNode from github.com/johnkerl/pgpg;
+// these types identify node kinds when converting PGPG ASTs to CST nodes.
 
 package dsl
-
-import (
-	"github.com/johnkerl/miller/v6/pkg/parsing/token"
-)
-
-type AST struct {
-	RootNode *ASTNode
-}
-
-type ASTNode struct {
-	Token    *token.Token // Nil for tokenless/structural nodes
-	Type     TNodeType
-	Children []*ASTNode
-}
 
 type TNodeType string
 

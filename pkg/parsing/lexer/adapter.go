@@ -10,7 +10,7 @@ import (
 )
 
 // NewLexer creates a lexer from a byte slice. This matches the API expected by
-// pkg/dsl/cst/root.go (same signature as the former GOCC lexer).
+// pkg/dsl/cst/root.go (same signature as the former PGPG lexer).
 func NewLexer(src []byte) liblexers.AbstractLexer {
 	return NewMlrLexer(bytes.NewReader(src))
 }
