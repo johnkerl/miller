@@ -16,8 +16,8 @@ import (
 func (root *RootNode) BuildLeafNode(
 	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	// PGPG uses empty slice for terminals; GOCC used nil. PGPG may also produce
-	// reduced literal nodes (float_literal, int_literal) with one child (the terminal).
+	// The BNF uses empty slice for terminals. It may also produce reduced literal nodes
+	// (float_literal, int_literal) with one child (the terminal).
 	lib.InternalCodingErrorIf(astNode.Children != nil && len(astNode.Children) > 1)
 	sval := tokenLit(astNode)
 	if sval == "" && astNode.Children != nil && len(astNode.Children) == 1 {
@@ -301,8 +301,8 @@ type RegexCaptureReplacementNode struct {
 }
 
 func (root *RootNode) BuildStringLiteralNode(literal string) IEvaluable {
-	// PGPG lexer produces string_literal token with surrounding quotes in the lexeme.
-	// Strip them so "a" becomes a. GOCC may have produced content without quotes.
+	// The PGPG lexer produces string_literal token with surrounding quotes in the lexeme.
+	// Strip them so "a" becomes a.
 	if len(literal) >= 2 && literal[0] == '"' && literal[len(literal)-1] == '"' {
 		literal = literal[1 : len(literal)-1]
 	}

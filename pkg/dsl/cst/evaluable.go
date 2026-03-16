@@ -16,7 +16,7 @@ import (
 )
 
 func (root *RootNode) BuildEvaluableNode(astNode *asts.ASTNode) (IEvaluable, error) {
-	// Try BuildLeafNode first for terminals (PGPG uses empty slice, GOCC used nil)
+	// Try BuildLeafNode first for terminals
 	if astNode.Children == nil || len(astNode.Children) == 0 {
 		if leaf, err := root.BuildLeafNode(astNode); err == nil {
 			return leaf, nil

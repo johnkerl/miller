@@ -492,7 +492,7 @@ type FullSrecLvalueNode struct {
 func (root *RootNode) BuildFullSrecLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeFullSrec))
 	lib.InternalCodingErrorIf(astNode == nil)
-	// PGPG FullSrec has "children": []; GOCC had nil. Allow both.
+	// PGPG FullSrec has empty list as children
 	lib.InternalCodingErrorIf(astNode.Children != nil && len(astNode.Children) > 0)
 	return NewFullSrecLvalueNode(), nil
 }
