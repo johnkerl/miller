@@ -1,5 +1,2 @@
 mlr: cannot parse DSL expression.
-mlr: Parse error on token "," at line 1 column 14.
-Expected one of:
-  ) non_sigil_name arr bool float int map num str var funct
-
+mlr: parse error: unexpected comma (",")

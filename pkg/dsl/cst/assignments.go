@@ -159,9 +159,16 @@ func (root *RootNode) BuildUnsetNode(
 	lvalueNodes := make([]IAssignable, len(astNode.Children))
 
 	for i, lhsASTNode := range astNode.Children {
-		lvalueNode, err := root.BuildAssignableNode(lhsASTNode)
-		if err != nil {
-			return nil, err
+		var lvalueNode IAssignable
+		var err error
+		// "all" is a synonym for @* (full oosvar) in unset context.
+		if lhsASTNode.Type == asts.NodeType(NodeTypeLocalVariable) && tokenLit(lhsASTNode) == "all" {
+			lvalueNode = NewFullOosvarLvalueNode()
+		} else {
+			lvalueNode, err = root.BuildAssignableNode(lhsASTNode)
+			if err != nil {
+				return nil, err
+			}
 		}
 		lvalueNodes[i] = lvalueNode
 	}
