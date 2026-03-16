@@ -776,12 +776,7 @@ As of September 2021, immediately invoked function expressions (IIFEs) are not p
 </pre>
 <pre class="pre-non-highlight-in-pair">
 mlr: cannot parse DSL expression.
-mlr: Parse error on token "(" at line 4 column 35.
-Please check for missing semicolon.
-Expected one of:
-  ; } > >> | ? || ^^ && =~ !=~ == != <=> >= < <= ^ & << >>> + - .+ .- * /
-  // % .* ./ .// . ?? ??? **
-
+mlr: parse error: unexpected lparen ("(")
 </pre>
 
 but this does:

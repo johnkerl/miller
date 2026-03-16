@@ -64,12 +64,7 @@ error.
 </pre>
 <pre class="pre-non-highlight-in-pair">
 mlr: cannot parse DSL expression.
-mlr: Parse error on token "$y" at line 6 column 3.
-Please check for missing semicolon.
-Expected one of:
-  ␚ ; > >> | ? || ^^ && =~ !=~ == != <=> >= < <= ^ & << >>> + - .+ .- *
-  / // % .* ./ .// . ?? ??? ** [
-
+mlr: parse error: unexpected field_name ("$y")
 </pre>
 
 ## elif
