@@ -21,7 +21,7 @@ require (
 	github.com/johnkerl/lumin v1.0.0
 	github.com/johnkerl/pgpg/go v1.0.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
-	github.com/klauspost/compress v1.18.4
+	github.com/klauspost/compress v1.18.5
 	github.com/kshedden/statmodel v0.0.0-20210519035403-ee97d3e48df1
 	github.com/lestrrat-go/strftime v1.1.1
 	github.com/mattn/go-isatty v0.0.20
