@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"strings"
-	"unicode/utf8"
+	"unicode"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/colorizer"
@@ -20,6 +20,20 @@ type RecordWriterPPRINT struct {
 	// State:
 	lastJoinedHeader *string
 	batch            []*mlrval.Mlrmap
+}
+
+func displayWidth(s string) int {
+	width := 0
+	for _, r := range s {
+		if unicode.Is(unicode.Mn, r) || unicode.Is(unicode.Me, r) || unicode.Is(unicode.Cf, r) {
+			continue
+		}
+		if r < 32 || (r >= 0x7f && r < 0xa0) {
+			continue
+		}
+		width++
+	}
+	return width
 }
 
 func NewRecordWriterPPRINT(writerOptions *cli.TWriterOptions) (*RecordWriterPPRINT, error) {
@@ -102,7 +116,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousList(
 			maxNR = nr
 		}
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
-			width := utf8.RuneCountInString(pe.Value.String())
+			width := displayWidth(pe.Value.String())
 			if width == 0 {
 				width = 1 // We'll rewrite "" to "-" below
 			}
@@ -118,7 +132,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousList(
 	}
 	// Column name may be longer/shorter than all data values in the column
 	for key, oldMaxWidth := range maxWidths {
-		width := utf8.RuneCountInString(key)
+		width := displayWidth(key)
 		if width > oldMaxWidth {
 			maxWidths[key] = width
 		}
