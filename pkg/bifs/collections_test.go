@@ -40,6 +40,71 @@ func TestBIF_depth(t *testing.T) {
 	assert.Equal(t, int64(1), intval)
 }
 
+func TestBIF_hasvalue(t *testing.T) {
+	t.Run("array with existing value", func(t *testing.T) {
+		arrayval := make([]*mlrval.Mlrval, 3)
+		arrayval[0] = mlrval.FromInt(1)
+		arrayval[1] = mlrval.FromInt(2)
+		arrayval[2] = mlrval.FromInt(3)
+		input1 := mlrval.FromArray(arrayval)
+		input2 := mlrval.FromInt(2)
+
+		output := BIF_hasvalue(input1, input2)
+		boolval, ok := output.GetBoolValue()
+		assert.True(t, ok)
+		assert.True(t, boolval)
+	})
+
+	t.Run("array without existing value", func(t *testing.T) {
+		arrayval := make([]*mlrval.Mlrval, 3)
+		arrayval[0] = mlrval.FromInt(1)
+		arrayval[1] = mlrval.FromInt(2)
+		arrayval[2] = mlrval.FromInt(3)
+		input1 := mlrval.FromArray(arrayval)
+		input2 := mlrval.FromInt(5)
+
+		output := BIF_hasvalue(input1, input2)
+		boolval, ok := output.GetBoolValue()
+		assert.True(t, ok)
+		assert.False(t, boolval)
+	})
+
+	t.Run("map with existing value", func(t *testing.T) {
+		mapval := mlrval.NewMlrmap()
+		mapval.PutReference("a", mlrval.FromString("apple"))
+		mapval.PutReference("b", mlrval.FromString("banana"))
+		mapval.PutReference("c", mlrval.FromString("cherry"))
+		input1 := mlrval.FromMap(mapval)
+		input2 := mlrval.FromString("banana")
+
+		output := BIF_hasvalue(input1, input2)
+		boolval, ok := output.GetBoolValue()
+		assert.True(t, ok)
+		assert.True(t, boolval)
+	})
+
+	t.Run("map without existing value", func(t *testing.T) {
+		mapval := mlrval.NewMlrmap()
+		mapval.PutReference("a", mlrval.FromString("apple"))
+		mapval.PutReference("b", mlrval.FromString("banana"))
+		input1 := mlrval.FromMap(mapval)
+		input2 := mlrval.FromString("orange")
+
+		output := BIF_hasvalue(input1, input2)
+		boolval, ok := output.GetBoolValue()
+		assert.True(t, ok)
+		assert.False(t, boolval)
+	})
+
+	t.Run("not a collection - should error", func(t *testing.T) {
+		input1 := mlrval.FromInt(123)
+		input2 := mlrval.FromInt(1)
+
+		output := BIF_hasvalue(input1, input2)
+		assert.False(t, output.IsBool())
+	})
+}
+
 // TODO: copy in more unit-test cases from existing regression-test data
 
 // func leafcount_from_array(input1 *mlrval.Mlrval) *mlrval.Mlrval

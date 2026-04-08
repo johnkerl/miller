@@ -2251,6 +2251,14 @@ or true/false if array index is in bounds / out of bounds.  Error if 1st argumen
 		},
 
 		{
+			name:  "hasvalue",
+			class: FUNC_CLASS_COLLECTIONS,
+			help: `True/false if map/array has/hasn't value, e.g. 'hasvalue($*, "a")' or 'hasvalue(myarray, myvalue)',
+returns true if the value is present in the collection. Error if 1st argument is not a map or array.`,
+			binaryFunc: bifs.BIF_hasvalue,
+		},
+
+		{
 			name:      "json_parse",
 			class:     FUNC_CLASS_COLLECTIONS,
 			help:      `Converts value from JSON-formatted string.`,

@@ -185,6 +185,35 @@ func BIF_haskey(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromNotCollectionError("haskey", input1)
 }
 
+func has_value_in_array(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	arrayval := input1.AcquireArrayValue()
+	for _, element := range arrayval {
+		if mlrval.Equals(element, input2) {
+			return mlrval.TRUE
+		}
+	}
+	return mlrval.FALSE
+}
+
+func has_value_in_map(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	mapval := input1.AcquireMapValue()
+	for pe := mapval.Head; pe != nil; pe = pe.Next {
+		if mlrval.Equals(pe.Value, input2) {
+			return mlrval.TRUE
+		}
+	}
+	return mlrval.FALSE
+}
+
+func BIF_hasvalue(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.IsArray() {
+		return has_value_in_array(input1, input2)
+	} else if input1.IsMap() {
+		return has_value_in_map(input1, input2)
+	}
+	return mlrval.FromNotCollectionError("hasvalue", input1)
+}
+
 func BIF_concat(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	output := mlrval.FromEmptyArray()
 
