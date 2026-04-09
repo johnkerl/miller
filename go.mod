@@ -24,7 +24,7 @@ require (
 	github.com/klauspost/compress v1.18.5
 	github.com/kshedden/statmodel v0.0.0-20210519035403-ee97d3e48df1
 	github.com/lestrrat-go/strftime v1.1.1
-	github.com/mattn/go-isatty v0.0.20
+	github.com/mattn/go-isatty v0.0.21
 	github.com/nine-lives-later/go-windows-terminal-sequences v1.0.4
 	github.com/pkg/profile v1.7.0
 	github.com/stretchr/testify v1.11.1
