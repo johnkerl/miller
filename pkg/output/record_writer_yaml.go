@@ -14,8 +14,8 @@ import (
 
 type RecordWriterYAML struct {
 	writerOptions   *cli.TWriterOptions
-	bufferedRecords []interface{} // used when WrapYAMLOutputInOuterList is true
-	wroteAnyRecords bool          // for multi-doc: emit "---\n" before 2nd and later docs
+	bufferedRecords []*yaml.Node // used when WrapYAMLOutputInOuterList is true
+	wroteAnyRecords bool         // for multi-doc: emit "---\n" before 2nd and later docs
 }
 
 func NewRecordWriterYAML(writerOptions *cli.TWriterOptions) (*RecordWriterYAML, error) {
@@ -46,7 +46,7 @@ func (writer *RecordWriterYAML) writeWithListWrap(
 ) {
 	if outrec != nil {
 		if writer.bufferedRecords == nil {
-			writer.bufferedRecords = []interface{}{}
+			writer.bufferedRecords = []*yaml.Node{}
 		}
 		native, err := mlrval.MlrmapToYAMLNative(outrec)
 		if err != nil {
@@ -56,7 +56,9 @@ func (writer *RecordWriterYAML) writeWithListWrap(
 		writer.bufferedRecords = append(writer.bufferedRecords, native)
 	} else {
 		// End of stream: emit single YAML document as array
-		out, err := yaml.Marshal(writer.bufferedRecords)
+		seqNode := &yaml.Node{Kind: yaml.SequenceNode, Tag: "!!seq"}
+		seqNode.Content = writer.bufferedRecords
+		out, err := yaml.Marshal(seqNode)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)

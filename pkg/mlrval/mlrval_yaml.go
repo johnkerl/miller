@@ -138,63 +138,79 @@ func mlrvalFromYAMLArray(a []interface{}) (*Mlrval, error) {
 	return out, nil
 }
 
-// MlrmapToYAMLNative converts an Mlrmap to a Go value suitable for
-// yaml.Marshal: map[string]interface{} with nested maps/arrays.
-func MlrmapToYAMLNative(mlrmap *Mlrmap) (interface{}, error) {
+// MlrmapToYAMLNative converts an Mlrmap to a *yaml.Node that preserves
+// key insertion order. The returned node is suitable for yaml.Marshal.
+func MlrmapToYAMLNative(mlrmap *Mlrmap) (*yaml.Node, error) {
 	if mlrmap == nil {
-		return nil, nil
+		return &yaml.Node{Kind: yaml.MappingNode, Tag: "!!map"}, nil
 	}
-	out := make(map[string]interface{})
+	node := &yaml.Node{
+		Kind: yaml.MappingNode,
+		Tag:  "!!map",
+	}
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
-		v, err := mlrvalToYAMLNative(pe.Value)
+		keyNode, err := encodeScalarNode(pe.Key)
 		if err != nil {
 			return nil, err
 		}
-		out[pe.Key] = v
+		valNode, err := mlrvalToYAMLNode(pe.Value)
+		if err != nil {
+			return nil, err
+		}
+		node.Content = append(node.Content, keyNode, valNode)
 	}
-	return out, nil
+	return node, nil
 }
 
-// mlrvalToYAMLNative converts *Mlrval to a Go value for yaml.Marshal.
-func mlrvalToYAMLNative(mv *Mlrval) (interface{}, error) {
+// encodeScalarNode creates a yaml.Node by delegating to yaml.v3's Encode,
+// which handles edge cases like NaN/Inf floats and non-UTF-8 strings.
+func encodeScalarNode(v interface{}) (*yaml.Node, error) {
+	node := &yaml.Node{}
+	if err := node.Encode(v); err != nil {
+		return nil, err
+	}
+	return node, nil
+}
+
+// mlrvalToYAMLNode converts *Mlrval to a *yaml.Node for yaml.Marshal.
+func mlrvalToYAMLNode(mv *Mlrval) (*yaml.Node, error) {
 	if mv == nil {
-		return nil, nil
+		return encodeScalarNode(nil)
 	}
 	switch mv.Type() {
 	case MT_ABSENT, MT_VOID, MT_NULL:
-		return nil, nil
+		return encodeScalarNode(nil)
 	case MT_STRING:
 		s, _ := mv.GetStringValue()
-		return s, nil
+		return encodeScalarNode(s)
 	case MT_INT:
 		i, _ := mv.GetIntValue()
-		return i, nil
+		return encodeScalarNode(i)
 	case MT_FLOAT:
 		f, _ := mv.GetFloatValue()
-		return f, nil
+		return encodeScalarNode(f)
 	case MT_BOOL:
 		b, _ := mv.GetBoolValue()
-		return b, nil
+		return encodeScalarNode(b)
 	case MT_ARRAY:
 		arr := mv.GetArray()
-		if arr == nil {
-			return []interface{}{}, nil
-		}
-		out := make([]interface{}, 0, len(arr))
-		for _, elem := range arr {
-			v, err := mlrvalToYAMLNative(elem)
-			if err != nil {
-				return nil, err
+		seqNode := &yaml.Node{Kind: yaml.SequenceNode, Tag: "!!seq"}
+		if arr != nil {
+			for _, elem := range arr {
+				v, err := mlrvalToYAMLNode(elem)
+				if err != nil {
+					return nil, err
+				}
+				seqNode.Content = append(seqNode.Content, v)
 			}
-			out = append(out, v)
 		}
-		return out, nil
+		return seqNode, nil
 	case MT_MAP:
 		m := mv.GetMap()
 		return MlrmapToYAMLNative(m)
 	case MT_ERROR, MT_PENDING:
-		return mv.String(), nil
+		return encodeScalarNode(mv.String())
 	default:
-		return mv.String(), nil
+		return encodeScalarNode(mv.String())
 	}
 }

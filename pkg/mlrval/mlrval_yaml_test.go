@@ -177,6 +177,28 @@ func TestYAMLKeyStringNonStringKeys(t *testing.T) {
 	assert.True(t, v.IsInt())
 }
 
+func TestMlrmapToYAMLNativeKeyOrder(t *testing.T) {
+	rec := NewMlrmapAsRecord()
+	rec.PutReference("b", FromInt(22))
+	rec.PutReference("c", FromInt(33))
+	rec.PutReference("a", FromInt(11))
+
+	native, err := MlrmapToYAMLNative(rec)
+	assert.NoError(t, err)
+	out, err := yaml.Marshal(native)
+	assert.NoError(t, err)
+	// Keys must appear in insertion order (b, c, a), not sorted (a, b, c).
+	s := string(out)
+	bIdx := strings.Index(s, "b:")
+	cIdx := strings.Index(s, "c:")
+	aIdx := strings.Index(s, "a:")
+	assert.True(t, bIdx >= 0, "b: must be present in output")
+	assert.True(t, cIdx >= 0, "c: must be present in output")
+	assert.True(t, aIdx >= 0, "a: must be present in output")
+	assert.True(t, bIdx < cIdx, "b should appear before c")
+	assert.True(t, cIdx < aIdx, "c should appear before a")
+}
+
 func TestMlrmapToYAMLNativeNested(t *testing.T) {
 	inner := NewMlrmapAsRecord()
 	inner.PutReference("p", FromInt(1))
