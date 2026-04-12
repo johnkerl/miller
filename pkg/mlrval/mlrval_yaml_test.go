@@ -187,16 +187,26 @@ func TestMlrmapToYAMLNativeKeyOrder(t *testing.T) {
 	assert.NoError(t, err)
 	out, err := yaml.Marshal(native)
 	assert.NoError(t, err)
+
+	var node yaml.Node
+	err = yaml.Unmarshal(out, &node)
+	assert.NoError(t, err)
+	if !assert.Len(t, node.Content, 1, "expected a single YAML document node") {
+		return
+	}
+
+	mapping := node.Content[0]
+	if !assert.Equal(t, yaml.MappingNode, mapping.Kind, "expected top-level YAML mapping") {
+		return
+	}
+
 	// Keys must appear in insertion order (b, c, a), not sorted (a, b, c).
-	s := string(out)
-	bIdx := strings.Index(s, "b:")
-	cIdx := strings.Index(s, "c:")
-	aIdx := strings.Index(s, "a:")
-	assert.True(t, bIdx >= 0, "b: must be present in output")
-	assert.True(t, cIdx >= 0, "c: must be present in output")
-	assert.True(t, aIdx >= 0, "a: must be present in output")
-	assert.True(t, bIdx < cIdx, "b should appear before c")
-	assert.True(t, cIdx < aIdx, "c should appear before a")
+	if !assert.GreaterOrEqual(t, len(mapping.Content), 6, "expected at least three key/value pairs") {
+		return
+	}
+	assert.Equal(t, "b", mapping.Content[0].Value)
+	assert.Equal(t, "c", mapping.Content[2].Value)
+	assert.Equal(t, "a", mapping.Content[4].Value)
 }
 
 func TestMlrmapToYAMLNativeNested(t *testing.T) {
