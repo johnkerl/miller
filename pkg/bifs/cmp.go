@@ -243,6 +243,10 @@ func eq_b_aa(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	// Same-length arrays: return false if any slot is not equal, else true.
 	for i := range a {
 		eq := BIF_equals(a[i], b[i])
+		// Treat invalid comparison as false
+		if eq.Type() == mlrval.MT_ABSENT {
+			return mlrval.FALSE
+		}
 		lib.InternalCodingErrorIf(eq.Type() != mlrval.MT_BOOL)
 		if !eq.AcquireBoolValue() {
 			return mlrval.FALSE
