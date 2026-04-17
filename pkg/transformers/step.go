@@ -431,6 +431,17 @@ func (tr *TransformerStep) handleRecord(
 	for i, valueFieldName := range tr.valueFieldNames {
 		valueFieldValue := valueFieldValues[i]
 		if valueFieldValue == nil { // not present in the current record
+			// Notify any steppers that cache prev values so they don't carry stale state.
+			accFieldToAccState := groupToAccField[valueFieldName]
+			if accFieldToAccState != nil {
+				for _, stepperInput := range tr.stepperInputs {
+					if stepper, present := accFieldToAccState[stepperInput.name]; present {
+						if sc, ok := stepper.(tStepperPrevCacheClearer); ok {
+							sc.clearPrevValue()
+						}
+					}
+				}
+			}
 			continue
 		}
 
@@ -488,6 +499,17 @@ func (tr *TransformerStep) handleDrainRecord(
 	for i, valueFieldName := range tr.valueFieldNames {
 		valueFieldValue := valueFieldValues[i]
 		if valueFieldValue == nil { // not present in the current record
+			// Notify any steppers that cache prev values so they don't carry stale state.
+			accFieldToAccState := steppers[valueFieldName]
+			if accFieldToAccState != nil {
+				for _, stepperInput := range tr.stepperInputs {
+					if stepper, present := accFieldToAccState[stepperInput.name]; present {
+						if sc, ok := stepper.(tStepperPrevCacheClearer); ok {
+							sc.clearPrevValue()
+						}
+					}
+				}
+			}
 			continue
 		}
 
@@ -568,6 +590,17 @@ type tStepperInput struct {
 
 type tStepper interface {
 	process(windowKeeper *utils.TWindowKeeper)
+}
+
+// tStepperPrevCacheClearer is an optional interface for steppers that cache the
+// previous record's field value. When a record does not contain the target field,
+// handleRecord calls clearPrevValue() so that the cached state reflects "no previous
+// value", preventing stale values from leaking across absent-field records. This
+// also allows these steppers to set numRecordsBackward=0, eliminating the race
+// condition that arises when a downstream transformer (running in a separate goroutine)
+// modifies a record that the upstream transformer's window keeper still references.
+type tStepperPrevCacheClearer interface {
+	clearPrevValue()
 }
 
 type tStepperLookup struct {
@@ -703,14 +736,19 @@ func allocateStepper(
 type tStepperDelta struct {
 	inputFieldName  string
 	outputFieldName string
+	prevValue       *mlrval.Mlrval
+	hasPrev         bool
 }
 
 func stepperDeltaInputFromName(
 	stepperName string,
 ) *tStepperInput {
 	return &tStepperInput{
-		name:               stepperName,
-		numRecordsBackward: 1,
+		name: stepperName,
+		// numRecordsBackward is 0: delta caches the previous value in its own struct
+		// rather than reading from the window keeper's stored (already-emitted) records,
+		// which avoids a race condition when downstream transformers run concurrently.
+		numRecordsBackward: 0,
 		numRecordsForward:  0,
 	}
 }
@@ -739,35 +777,44 @@ func (stepper *tStepperDelta) process(
 	currval := currec.Get(stepper.inputFieldName)
 
 	if currval.IsVoid() {
+		stepper.prevValue = nil
+		stepper.hasPrev = true
 		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 		return
 	}
 
 	delta := mlrval.FromInt(0)
-
-	iprev := windowKeeper.Get(-1)
-	if iprev != nil {
-		prevrec := iprev.(*types.RecordAndContext).Record
-		prevval := prevrec.Get(stepper.inputFieldName)
-		if prevval != nil {
-			delta = bifs.BIF_minus_binary(currval, prevval)
-		}
+	if stepper.hasPrev && stepper.prevValue != nil {
+		delta = bifs.BIF_minus_binary(currval, stepper.prevValue)
 	}
 	currec.PutCopy(stepper.outputFieldName, delta.Copy())
+
+	stepper.prevValue = currval.Copy()
+	stepper.hasPrev = true
 }
 
-// shift is an alias for shift
+func (stepper *tStepperDelta) clearPrevValue() {
+	stepper.prevValue = nil
+	stepper.hasPrev = true
+}
+
+// shift is an alias for shift_lag
 type tStepperShiftLag struct {
 	inputFieldName  string
 	outputFieldName string
+	prevValue       *mlrval.Mlrval
+	hasPrev         bool
 }
 
 func stepperShiftInputFromName(
 	stepperName string,
 ) *tStepperInput {
 	return &tStepperInput{
-		name:               stepperName,
-		numRecordsBackward: 1,
+		name: stepperName,
+		// numRecordsBackward is 0: shift caches the previous value in its own struct
+		// rather than reading from the window keeper's stored (already-emitted) records,
+		// which avoids a race condition when downstream transformers run concurrently.
+		numRecordsBackward: 0,
 		numRecordsForward:  0,
 	}
 }
@@ -776,8 +823,11 @@ func stepperShiftLagInputFromName(
 	stepperName string,
 ) *tStepperInput {
 	return &tStepperInput{
-		name:               stepperName,
-		numRecordsBackward: 1,
+		name: stepperName,
+		// numRecordsBackward is 0: shift_lag caches the previous value in its own struct
+		// rather than reading from the window keeper's stored (already-emitted) records,
+		// which avoids a race condition when downstream transformers run concurrently.
+		numRecordsBackward: 0,
 		numRecordsForward:  0,
 	}
 }
@@ -816,19 +866,25 @@ func (stepper *tStepperShiftLag) process(
 	currecAndContext := icur.(*types.RecordAndContext)
 	currec := currecAndContext.Record
 
-	iprev := windowKeeper.Get(-1)
-	if iprev == nil {
-		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
-		return
-	}
-	prevrec := iprev.(*types.RecordAndContext).Record
-	prevval := prevrec.Get(stepper.inputFieldName)
+	curval := currec.Get(stepper.inputFieldName)
 
-	if prevval == nil {
+	if !stepper.hasPrev || stepper.prevValue == nil {
 		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 	} else {
-		currec.PutCopy(stepper.outputFieldName, prevval.Copy())
+		currec.PutCopy(stepper.outputFieldName, stepper.prevValue.Copy())
 	}
+
+	if curval != nil {
+		stepper.prevValue = curval.Copy()
+	} else {
+		stepper.prevValue = nil
+	}
+	stepper.hasPrev = true
+}
+
+func (stepper *tStepperShiftLag) clearPrevValue() {
+	stepper.prevValue = nil
+	stepper.hasPrev = true
 }
 
 type tStepperShiftLead struct {
@@ -933,14 +989,19 @@ func (stepper *tStepperFromFirst) process(
 type tStepperRatio struct {
 	inputFieldName  string
 	outputFieldName string
+	prevValue       *mlrval.Mlrval
+	hasPrev         bool
 }
 
 func stepperRatioInputFromName(
 	stepperName string,
 ) *tStepperInput {
 	return &tStepperInput{
-		name:               stepperName,
-		numRecordsBackward: 1,
+		name: stepperName,
+		// numRecordsBackward is 0: ratio caches the previous value in its own struct
+		// rather than reading from the window keeper's stored (already-emitted) records,
+		// which avoids a race condition when downstream transformers run concurrently.
+		numRecordsBackward: 0,
 		numRecordsForward:  0,
 	}
 }
@@ -969,21 +1030,25 @@ func (stepper *tStepperRatio) process(
 	currval := currec.Get(stepper.inputFieldName)
 
 	if currval.IsVoid() {
+		stepper.prevValue = nil
+		stepper.hasPrev = true
 		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 		return
 	}
 
 	ratio := mlrval.FromInt(1)
-
-	iprev := windowKeeper.Get(-1)
-	if iprev != nil {
-		prevrec := iprev.(*types.RecordAndContext).Record
-		prevval := prevrec.Get(stepper.inputFieldName)
-		if prevval != nil {
-			ratio = bifs.BIF_divide(currval, prevval)
-		}
+	if stepper.hasPrev && stepper.prevValue != nil {
+		ratio = bifs.BIF_divide(currval, stepper.prevValue)
 	}
 	currec.PutCopy(stepper.outputFieldName, ratio.Copy())
+
+	stepper.prevValue = currval.Copy()
+	stepper.hasPrev = true
+}
+
+func (stepper *tStepperRatio) clearPrevValue() {
+	stepper.prevValue = nil
+	stepper.hasPrev = true
 }
 
 type tStepperRprod struct {
