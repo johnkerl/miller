@@ -1,0 +1,4 @@
+mlr: field name "@" contains separator "@" but cannot be auto-unflattened; treating as a literal string. Use --no-auto-unflatten to suppress this warning.
+mlr: field name "x@" contains separator "@" but cannot be auto-unflattened; treating as a literal string. Use --no-auto-unflatten to suppress this warning.
+mlr: field name "@y" contains separator "@" but cannot be auto-unflattened; treating as a literal string. Use --no-auto-unflatten to suppress this warning.
+mlr: field name "x@@y" contains separator "@" but cannot be auto-unflattened; treating as a literal string. Use --no-auto-unflatten to suppress this warning.

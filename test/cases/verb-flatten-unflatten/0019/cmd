@@ -1,0 +1,1 @@
+mlr --c2j head -n 2 then tail -n 1 test/input/issue-1983.csv
