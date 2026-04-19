@@ -32,8 +32,9 @@
 #
 # Every mutating action is echoed before execution, every phase is framed by a
 # banner, and every phase begins with an idempotency check so the script is
-# safe to re-run after a partial failure.  RPM tooling (`rpmbuild`, `rpmlint`)
-# is mandatory for `pre-release`; the script aborts in phase 0 if missing.
+# safe to re-run after a partial failure.  `rpmbuild` is mandatory for
+# `pre-release` and the script aborts in phase 0 if missing; `rpmlint` is
+# optional (phase 3 runs it if installed, otherwise skips the lint step).
 
 set -euo pipefail
 
@@ -190,9 +191,10 @@ preflight_common() {
 }
 
 preflight_pre_release_extras() {
-  # RPM tooling is mandatory: the SRPM is a required release artifact.
+  # rpmbuild is mandatory: the SRPM is a required release artifact.
+  # rpmlint is optional: if present we run it as a lint; if absent we skip.
   command -v rpmbuild >/dev/null 2>&1 || die "rpmbuild not found on PATH; SRPMs are required -- install rpm-build"
-  command -v rpmlint  >/dev/null 2>&1 || die "rpmlint not found on PATH; install rpmlint"
+  command -v rpmlint  >/dev/null 2>&1 || warn "rpmlint not found on PATH; phase 3 will skip the lint step"
   command -v shasum   >/dev/null 2>&1 || die "shasum not found on PATH"
 
   # create-release-tarball needs a tar that supports --transform; on macOS
@@ -444,13 +446,15 @@ phase_3_srpm() {
   run_cmd cp miller.spec "$rpm_top/SPECS/"
   run_cmd cp "$tgz"      "$rpm_top/SOURCES/"
 
-  banner "PHASE 3: rpmlint miller.spec"
-  # rpmlint is informational -- warnings are fine, but a hard error exits the
-  # script because the spec file is likely broken.
-  if [ "$DRY_RUN" != "yes" ]; then
-    rpmlint "$rpm_top/SPECS/miller.spec" || warn "rpmlint produced warnings; review above"
+  banner "PHASE 3: rpmlint miller.spec (optional)"
+  if command -v rpmlint >/dev/null 2>&1; then
+    if [ "$DRY_RUN" != "yes" ]; then
+      rpmlint "$rpm_top/SPECS/miller.spec" || warn "rpmlint produced warnings; review above"
+    else
+      note "(dry-run) would run rpmlint"
+    fi
   else
-    note "(dry-run) would run rpmlint"
+    note "rpmlint not installed -- skipping lint step"
   fi
 
   banner "PHASE 3: rpmbuild -bs"

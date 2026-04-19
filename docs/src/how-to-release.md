@@ -28,7 +28,7 @@ Much of the mechanical work below is automated by `tools/release.sh`, which has 
 * `./tools/release.sh v6.3.0 docs` -- creates the `6.3.0` docs branch and edits `docs/mkdocs.yml`. Refuses to run while the GitHub release is still marked pre-release.
 * `./tools/release.sh v6.3.0 afterwork` -- flips `pkg/version/version.go` back to `6.3.0-dev`, commits/pushes, and prints the brew/macports/ReadTheDocs reminders with a pre-filled `brew bump-formula-pr` command.
 
-RPM tooling (`rpmbuild`, `rpmlint`) is mandatory for `pre-release`. The ReadTheDocs admin steps and the flip from pre-release to public remain manual. Each subcommand is idempotent, so a partial run can be re-invoked safely.
+`rpmbuild` is mandatory for `pre-release` (the SRPM is a required release artifact); `rpmlint` is optional and is run only if installed. The ReadTheDocs admin steps and the flip from pre-release to public remain manual. Each subcommand is idempotent, so a partial run can be re-invoked safely.
 
 ## Manual steps
 
