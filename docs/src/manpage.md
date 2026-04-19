@@ -1333,6 +1333,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Usage: mlr gsub [options]
        Replaces old string with new string in specified field(s), with regex support
        for the old string and handling multiple matches, like the `gsub` DSL function.
+       The replacement string supports C-style backslash escapes such as \n, \t,
+       and \x1f. Write \\ to get a literal backslash.
        See also the `sub` and `ssub` verbs.
        Options:
        -f {a,b,c}  Field names to convert.
@@ -1980,7 +1982,10 @@ This is simply a copy of what you should see on running `man mlr` at a command p
    1mssub0m
        Usage: mlr ssub [options]
        Replaces old string with new string in specified field(s), without regex support for
-       the old string, like the `ssub` DSL function. See also the `gsub` and `sub` verbs.
+       the old string, like the `ssub` DSL function.
+       Both the search and replacement strings support C-style backslash escapes such
+       as \n, \t, and \x1f. Write \\ to get a literal backslash.
+       See also the `gsub` and `sub` verbs.
        Options:
        -f {a,b,c}  Field names to convert.
        -r {regex}  Regular expression for field names to convert.
@@ -2129,6 +2134,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Usage: mlr sub [options]
        Replaces old string with new string in specified field(s), with regex support
        for the old string and not handling multiple matches, like the `sub` DSL function.
+       The replacement string supports C-style backslash escapes such as \n, \t,
+       and \x1f. Write \\ to get a literal backslash.
        See also the `gsub` and `ssub` verbs.
        Options:
        -f {a,b,c}  Field names to convert.
@@ -3823,5 +3830,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-04-08                         4mMILLER24m(1)
+                                  2026-04-19                         4mMILLER24m(1)
 </pre>
