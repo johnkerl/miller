@@ -1461,6 +1461,8 @@ record_count resource
 Usage: mlr gsub [options]
 Replaces old string with new string in specified field(s), with regex support
 for the old string and handling multiple matches, like the `gsub` DSL function.
+The replacement string supports C-style backslash escapes such as \n, \t,
+and \x1f. Write \\ to get a literal backslash.
 See also the `sub` and `ssub` verbs.
 Options:
 -f {a,b,c}  Field names to convert.
@@ -3219,7 +3221,10 @@ See also the "tee" DSL function which lets you do more ad-hoc customization.
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr ssub [options]
 Replaces old string with new string in specified field(s), without regex support for
-the old string, like the `ssub` DSL function. See also the `gsub` and `sub` verbs.
+the old string, like the `ssub` DSL function.
+Both the search and replacement strings support C-style backslash escapes such
+as \n, \t, and \x1f. Write \\ to get a literal backslash.
+See also the `gsub` and `sub` verbs.
 Options:
 -f {a,b,c}  Field names to convert.
 -r {regex}  Regular expression for field names to convert.
@@ -3725,6 +3730,8 @@ $ each 10 uptime | mlr -p step -a delta -f 11
 Usage: mlr sub [options]
 Replaces old string with new string in specified field(s), with regex support
 for the old string and not handling multiple matches, like the `sub` DSL function.
+The replacement string supports C-style backslash escapes such as \n, \t,
+and \x1f. Write \\ to get a literal backslash.
 See also the `gsub` and `ssub` verbs.
 Options:
 -f {a,b,c}  Field names to convert.

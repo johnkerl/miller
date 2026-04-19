@@ -44,6 +44,8 @@ func transformerSubUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameSub)
 	fmt.Fprintf(o, "Replaces old string with new string in specified field(s), with regex support\n")
 	fmt.Fprintf(o, "for the old string and not handling multiple matches, like the `sub` DSL function.\n")
+	fmt.Fprintf(o, "The replacement string supports C-style backslash escapes such as \\n, \\t,\n")
+	fmt.Fprintf(o, "and \\x1f. Write \\\\ to get a literal backslash.\n")
 	fmt.Fprintf(o, "See also the `gsub` and `ssub` verbs.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c}  Field names to convert.\n")
@@ -58,6 +60,8 @@ func transformerGsubUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameGsub)
 	fmt.Fprintf(o, "Replaces old string with new string in specified field(s), with regex support\n")
 	fmt.Fprintf(o, "for the old string and handling multiple matches, like the `gsub` DSL function.\n")
+	fmt.Fprintf(o, "The replacement string supports C-style backslash escapes such as \\n, \\t,\n")
+	fmt.Fprintf(o, "and \\x1f. Write \\\\ to get a literal backslash.\n")
 	fmt.Fprintf(o, "See also the `sub` and `ssub` verbs.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c}  Field names to convert.\n")
@@ -71,7 +75,10 @@ func transformerSsubUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameSsub)
 	fmt.Fprintf(o, "Replaces old string with new string in specified field(s), without regex support for\n")
-	fmt.Fprintf(o, "the old string, like the `ssub` DSL function. See also the `gsub` and `sub` verbs.\n")
+	fmt.Fprintf(o, "the old string, like the `ssub` DSL function.\n")
+	fmt.Fprintf(o, "Both the search and replacement strings support C-style backslash escapes such\n")
+	fmt.Fprintf(o, "as \\n, \\t, and \\x1f. Write \\\\ to get a literal backslash.\n")
+	fmt.Fprintf(o, "See also the `gsub` and `sub` verbs.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c}  Field names to convert.\n")
 	fmt.Fprintf(o, "-r {regex}  Regular expression for field names to convert.\n")
@@ -98,7 +105,7 @@ func transformerSubParseCLI(
 	opts *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) (RecordTransformer, error) {
-	return transformerSubsParseCLI(pargi, argc, args, opts, doConstruct, transformerSubUsage, NewTransformerSub)
+	return transformerSubsParseCLI(pargi, argc, args, opts, doConstruct, transformerSubUsage, NewTransformerSub, false)
 }
 
 func transformerGsubParseCLI(
@@ -108,7 +115,7 @@ func transformerGsubParseCLI(
 	opts *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) (RecordTransformer, error) {
-	return transformerSubsParseCLI(pargi, argc, args, opts, doConstruct, transformerGsubUsage, NewTransformerGsub)
+	return transformerSubsParseCLI(pargi, argc, args, opts, doConstruct, transformerGsubUsage, NewTransformerGsub, false)
 }
 
 func transformerSsubParseCLI(
@@ -118,10 +125,12 @@ func transformerSsubParseCLI(
 	opts *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) (RecordTransformer, error) {
-	return transformerSubsParseCLI(pargi, argc, args, opts, doConstruct, transformerSsubUsage, NewTransformerSsub)
+	return transformerSubsParseCLI(pargi, argc, args, opts, doConstruct, transformerSsubUsage, NewTransformerSsub, true)
 }
 
 // transformerSubsParseCLI is a shared CLI-parser for the sub, gsub, and ssub verbs.
+// When unbackslashOldText is true (ssub only), the search string is also unescaped;
+// for sub/gsub the search string is a regex and Go's regexp engine handles \n/\t/etc.
 func transformerSubsParseCLI(
 	pargi *int,
 	argc int,
@@ -130,6 +139,7 @@ func transformerSubsParseCLI(
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 	usageFunc TransformerUsageFunc,
 	constructorFunc subConstructorFunc,
+	unbackslashOldText bool,
 ) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -191,6 +201,18 @@ func transformerSubsParseCLI(
 	}
 	oldText = args[argi]
 	newText = args[argi+1]
+
+	// Interpret C-style backslash escapes ("\n", "\t", "\x1f", etc.) in the
+	// replacement string the same way the DSL string-literal parser does, so
+	// that e.g. `mlr sub -a r "\n"` matches `sub($x, "r", "\n")` in the DSL.
+	// For sub/gsub the search string is a regex and Go's regexp engine already
+	// handles \n/\r/\t inside patterns; pre-unescaping would corrupt user-
+	// supplied regex metachars like \d or \s. For ssub the search string is a
+	// literal, so we unescape it too.
+	newText = lib.UnbackslashStringLiteral(newText)
+	if unbackslashOldText {
+		oldText = lib.UnbackslashStringLiteral(oldText)
+	}
 
 	argi += 2
 
