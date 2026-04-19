@@ -3073,8 +3073,13 @@ a=3
 Usage: mlr sort-within-records [options]
 Outputs records sorted lexically ascending by keys.
 Options:
--r        Recursively sort subobjects/submaps, e.g. for JSON input.
--h|--help Show this message.
+-f {names}   Sort only these keys; others preserve record order.
+-r {regex}   Sort only keys matching this regex; others preserve record order.
+             Example: -r '^[xy]' sorts keys starting with x or y.
+             With no regex argument, -r recursively sorts subobjects/submaps
+             (e.g. for JSON input), or combines with -f to treat names as regex.
+-n           Sort field names naturally (e.g. 2 before 12). Combines with -f/-r.
+-h|--help    Show this message.
 </pre>
 
 <pre class="pre-highlight-in-pair">
