@@ -1,0 +1,1 @@
+mlr sort-within-records: regex mode takes a single pattern; got 2 names: a,b. Use alternation in the regex (e.g. 'a|b') instead of a comma-list.
