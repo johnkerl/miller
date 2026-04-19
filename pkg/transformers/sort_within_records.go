@@ -29,9 +29,10 @@ func transformerSortWithinRecordsUsage(
 	fmt.Fprintln(o, "Outputs records sorted lexically ascending by keys.")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {names}   Sort only these keys; others preserve record order.\n")
-	fmt.Fprintf(o, "-r {names}   Like -f but use regular expressions to match field names.\n");
-	fmt.Fprintf(o, "             Example: -f '^[xy]' -r sorts keys starting with x or y.\n")
-	fmt.Fprintf(o, "             Without -f, -r recursively sorts subobjects/submaps (e.g. for JSON input).\n")
+	fmt.Fprintf(o, "-r {regex}   Sort only keys matching this regex; others preserve record order.\n")
+	fmt.Fprintf(o, "             Example: -r '^[xy]' sorts keys starting with x or y.\n")
+	fmt.Fprintf(o, "             With no regex argument, -r recursively sorts subobjects/submaps\n")
+	fmt.Fprintf(o, "             (e.g. for JSON input), or combines with -f to treat names as regex.\n")
 	fmt.Fprintf(o, "-h|--help    Show this message.\n")
 }
 
@@ -66,7 +67,14 @@ func transformerSortWithinRecordsParseCLI(
 			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-r" {
-			if fieldNames != nil {
+			// If the next token exists and isn't another flag, consume it as
+			// the regex pattern. Otherwise -r is arity-0: combined with a
+			// preceding -f it means regex mode; standalone it means recursive.
+			if argi < argc && !strings.HasPrefix(args[argi], "-") {
+				fieldNames = []string{args[argi]}
+				argi++
+				doRegexes = true
+			} else if fieldNames != nil {
 				doRegexes = true
 			} else {
 				doRecurse = true
