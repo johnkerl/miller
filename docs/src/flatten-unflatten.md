@@ -390,6 +390,10 @@ f.g  6
   }
 }
 ]
+mlr: field name "b." contains separator "." but cannot be auto-unflattened; treating as a literal string. Use --no-auto-unflatten to suppress this warning.
+mlr: field name ".c" contains separator "." but cannot be auto-unflattened; treating as a literal string. Use --no-auto-unflatten to suppress this warning.
+mlr: field name "." contains separator "." but cannot be auto-unflattened; treating as a literal string. Use --no-auto-unflatten to suppress this warning.
+mlr: field name "d..e" contains separator "." but cannot be auto-unflattened; treating as a literal string. Use --no-auto-unflatten to suppress this warning.
 </pre>
 
 ## Manual control
