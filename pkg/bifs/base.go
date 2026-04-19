@@ -1,4 +1,3 @@
-// ================================================================
 // ABOUT DISPOSITION MATRICES/VECTORS
 //
 // Mlrvals can be of type MT_STRING, MT_INT, MT_FLOAT, MT_BOOLEAN, as well as
@@ -43,7 +42,6 @@
 //   'b' for boolean
 //   'x' for don't-care slots, e.g. eq_b_sx for comparing MT_STRING
 //       ('s') to anything else ('x').
-// ================================================================
 
 package bifs
 
@@ -86,13 +84,11 @@ type VariadicFunc func(inputs []*mlrval.Mlrval) *mlrval.Mlrval
 // Function-pointer type for sorting. Returns < 0 if a < b, 0 if a == b, > 0 if a > b.
 type ComparatorFunc func(*mlrval.Mlrval, *mlrval.Mlrval) int
 
-// ================================================================
 // The following are frequently used in disposition matrices for various
 // operators and are defined here for re-use. The names are VERY short,
 // and all the same length, so that the disposition matrices will look
 // reasonable rectangular even after gofmt has been run.
 
-// ----------------------------------------------------------------
 // Return absent (unary)
 func _absn1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.ABSENT
@@ -219,9 +215,8 @@ func recurseUnaryFuncOnInput1(unaryFunc UnaryFunc, input1 *mlrval.Mlrval) *mlrva
 			outputMap.PutReference(pe.Key, unaryFunc(pe.Value))
 		}
 		return mlrval.FromMap(outputMap)
-	} else {
-		return unaryFunc(input1)
 	}
+	return unaryFunc(input1)
 }
 
 // recurseBinaryFuncOnInput1 is for fmtifnum and other functions which apply themselves recursively
@@ -243,14 +238,13 @@ func recurseBinaryFuncOnInput1(binaryFunc BinaryFunc, input1, input2 *mlrval.Mlr
 			outputMap.PutReference(pe.Key, binaryFunc(pe.Value, input2))
 		}
 		return mlrval.FromMap(outputMap)
-	} else {
-		return binaryFunc(input1, input2)
 	}
+	return binaryFunc(input1, input2)
 }
 
 func type_error_named_argument(
 	funcname string,
-	expected_type_name string,
+	expectedTypeName string,
 	varname string,
 	varval *mlrval.Mlrval,
 ) *mlrval.Mlrval {
@@ -259,7 +253,7 @@ func type_error_named_argument(
 			"%s: %s should be a %s; got type %s with value %s",
 			funcname,
 			varname,
-			expected_type_name,
+			expectedTypeName,
 			varval.GetTypeName(),
 			varval.StringMaybeQuoted(),
 		),

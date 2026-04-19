@@ -3,16 +3,16 @@ $x = 123. + 1e-2 / .2e3 + 1.e-3 + 2e+1
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "x"
-        * operator "+"
-            * operator "+"
-                * operator "+"
-                    * float literal "123."
-                    * operator "/"
-                        * float literal "1e-2"
-                        * float literal ".2e3"
-                * float literal "1.e-3"
-            * float literal "2e+1"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$x" [tt:field_name] [nt:DirectFieldValue]
+        "+" [tt:op_plus] [nt:Operator]
+            "+" [tt:op_plus] [nt:Operator]
+                "+" [tt:op_plus] [nt:Operator]
+                    "123." [tt:float_literal] [nt:float_literal]
+                    "/" [tt:op_slash] [nt:Operator]
+                        "1e-2" [tt:float_literal] [nt:float_literal]
+                        ".2e3" [tt:float_literal] [nt:float_literal]
+                "1.e-3" [tt:float_literal] [nt:float_literal]
+            "2e+1" [tt:float_literal] [nt:float_literal]
 

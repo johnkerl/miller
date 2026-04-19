@@ -1,0 +1,4 @@
+# Issue #1784: mapexcept with array of ints should work like mapexcept with individual ints
+$y = splitnv($x, ".");
+$z1 = mapexcept($y, 1, 3, 5);
+$z2 = mapexcept($y, [1, 3, 5]);

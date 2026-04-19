@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameRename = "rename"
 
 var RenameSetup = TransformerSetup{
@@ -56,7 +55,7 @@ func transformerRenameParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -77,7 +76,7 @@ func transformerRenameParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerRenameUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-r" {
 			doRegexes = true
@@ -86,8 +85,7 @@ func transformerRenameParseCLI(
 			doGsub = true
 
 		} else {
-			transformerRenameUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verbNameRename, "option \"%s\" not recognized", opt)
 		}
 	}
 
@@ -97,19 +95,17 @@ func transformerRenameParseCLI(
 
 	// Get the rename field names from the command line
 	if argi >= argc {
-		transformerRenameUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verbNameRename, "old1,new1,old2,new2,... required")
 	}
 	names := lib.SplitString(args[argi], ",")
 	if len(names)%2 != 0 {
-		transformerRenameUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verbNameRename, "names string must have even length")
 	}
 	argi++
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerRename(
@@ -118,14 +114,12 @@ func transformerRenameParseCLI(
 		doGsub,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type tRegexAndReplacement struct {
 	regex                    *regexp.Regexp
 	replacement              string
@@ -163,7 +157,7 @@ func NewTransformerRename(
 		tr.doGsub = false
 		tr.recordTransformerFunc = tr.transformWithoutRegexes
 	} else {
-		tr.regexesAndReplacements = make([]*tRegexAndReplacement, 0)
+		tr.regexesAndReplacements = []*tRegexAndReplacement{}
 		for pe := oldToNewNames.Head; pe != nil; pe = pe.Next {
 			regexString := pe.Key
 			regex := lib.CompileMillerRegexOrDie(regexString)
@@ -183,8 +177,6 @@ func NewTransformerRename(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerRename) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -195,7 +187,6 @@ func (tr *TransformerRename) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerRename) transformWithoutRegexes(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -216,7 +207,6 @@ func (tr *TransformerRename) transformWithoutRegexes(
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // including end-of-stream marker
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerRename) transformWithRegexes(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

@@ -1,7 +1,5 @@
-// ================================================================
 // CST build/execute for AST array-literal, map-literal, index-access, and
 // slice-access nodes
-// ================================================================
 
 package cst
 
@@ -9,21 +7,20 @@ import (
 	"fmt"
 
 	"github.com/johnkerl/miller/v6/pkg/bifs"
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
-// ----------------------------------------------------------------
 type ArrayLiteralNode struct {
 	evaluables []IEvaluable
 }
 
 func (node *RootNode) BuildArrayLiteralNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayLiteral)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeArrayLiteral))
 	// An empty array should have non-nil zero-length children, not nil
 	// children
 	lib.InternalCodingErrorIf(astNode.Children == nil)
@@ -53,16 +50,15 @@ func (node *ArrayLiteralNode) Evaluate(
 	return mlrval.FromArray(mlrvals)
 }
 
-// ----------------------------------------------------------------
 type ArrayOrMapIndexAccessNode struct {
 	baseEvaluable  IEvaluable
 	indexEvaluable IEvaluable
 }
 
 func (node *RootNode) BuildArrayOrMapIndexAccessNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapIndexAccess)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeArrayOrMapIndexAccess))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 
 	baseASTNode := astNode.Children[0]
@@ -88,6 +84,64 @@ func (node *ArrayOrMapIndexAccessNode) Evaluate(
 ) *mlrval.Mlrval {
 	baseMlrval := node.baseEvaluable.Evaluate(state)
 	indexMlrval := node.indexEvaluable.Evaluate(state)
+
+	// Handle x[[n]] and x[[[n]]] when index is array literal [n] or [[n]]
+	if indexMlrval.IsArray() {
+		arr := indexMlrval.GetArray()
+		if len(arr) == 1 {
+			inner := arr[0]
+			if inner != nil && inner.IsArray() {
+				innerArr := inner.GetArray()
+				if len(innerArr) == 1 {
+					// x[[[n]]] positional value
+					idxMv := innerArr[0]
+					index, ok := idxMv.GetIntValue()
+					if !ok {
+						return mlrval.FromNotIntError("$[[...]]", idxMv)
+					}
+					if baseMlrval.IsArray() {
+						n, _ := baseMlrval.GetArrayLength()
+						zindex, ok := mlrval.UnaliasArrayLengthIndex(int(n), int(index))
+						if ok {
+							elt := baseMlrval.GetArray()[zindex]
+							if elt != nil {
+								return elt
+							}
+						}
+						return mlrval.ABSENT
+					}
+					if baseMlrval.IsMap() {
+						retval := baseMlrval.GetMap().GetWithPositionalIndex(index)
+						if retval == nil {
+							return mlrval.ABSENT
+						}
+						return retval
+					}
+				}
+			} else {
+				// x[[n]] positional name
+				index, ok := inner.GetIntValue()
+				if !ok {
+					return mlrval.FromNotIntError("$[[...]]", inner)
+				}
+				if baseMlrval.IsArray() {
+					n, _ := baseMlrval.GetArrayLength()
+					zindex, ok := mlrval.UnaliasArrayLengthIndex(int(n), int(index))
+					if ok {
+						return mlrval.FromInt(int64(zindex + 1))
+					}
+					return mlrval.ABSENT
+				}
+				if baseMlrval.IsMap() {
+					name, ok := baseMlrval.GetMap().GetNameAtPositionalIndex(index)
+					if !ok {
+						return mlrval.ABSENT
+					}
+					return mlrval.FromString(name)
+				}
+			}
+		}
+	}
 
 	// Base-is-array and index-is-int will be checked there
 	if baseMlrval.IsArray() {
@@ -127,18 +181,16 @@ func (node *ArrayOrMapIndexAccessNode) Evaluate(
 	} else if baseMlrval.IsAbsent() {
 		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
-	} else {
-		return mlrval.FromError(
-			fmt.Errorf(
-				"cannot index base value %s of type %s, which is not array, map, or string",
-				baseMlrval.StringMaybeQuoted(),
-				baseMlrval.GetTypeName(),
-			),
-		)
 	}
+	return mlrval.FromError(
+		fmt.Errorf(
+			"cannot index base value %s of type %s, which is not array, map, or string",
+			baseMlrval.StringMaybeQuoted(),
+			baseMlrval.GetTypeName(),
+		),
+	)
 }
 
-// ----------------------------------------------------------------
 type ArraySliceAccessNode struct {
 	baseEvaluable       IEvaluable
 	lowerIndexEvaluable IEvaluable
@@ -146,30 +198,81 @@ type ArraySliceAccessNode struct {
 }
 
 func (node *RootNode) BuildArraySliceAccessNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArraySliceAccess)
-	lib.InternalCodingErrorIf(len(astNode.Children) != 3)
+	// PGPG produces ArraySliceLoHi (3 children), ArraySliceHiOnly (2), ArraySliceLoOnly (2), ArraySliceFull (1)
+	switch astNode.Type {
+	case asts.NodeType(NodeTypeArraySliceLoHi):
+		// [lo:hi]
+		lib.InternalCodingErrorIf(len(astNode.Children) != 3)
+		return node.buildArraySliceAccessNodeFromChildren(astNode.Children[0], astNode.Children[1], astNode.Children[2])
+	case asts.NodeType(NodeTypeArraySliceHiOnly):
+		// [:hi] - lower defaults to 1
+		lib.InternalCodingErrorIf(len(astNode.Children) != 2)
+		synthLower, _ := node.BuildArraySliceEmptyLowerIndexNode(asts.NewASTNode(nil, asts.NodeType(NodeTypeArraySliceEmptyLowerIndex), nil))
+		baseEval, err := node.BuildEvaluableNode(astNode.Children[0])
+		if err != nil {
+			return nil, err
+		}
+		upperEval, err := node.BuildEvaluableNode(astNode.Children[1])
+		if err != nil {
+			return nil, err
+		}
+		return node.buildArraySliceAccessFromEvaluables(baseEval, synthLower, upperEval)
+	case asts.NodeType(NodeTypeArraySliceLoOnly):
+		// [lo:] - upper defaults to n
+		lib.InternalCodingErrorIf(len(astNode.Children) != 2)
+		synthUpper, _ := node.BuildArraySliceEmptyUpperIndexNode(asts.NewASTNode(nil, asts.NodeType(NodeTypeArraySliceEmptyUpperIndex), nil))
+		baseEval, err := node.BuildEvaluableNode(astNode.Children[0])
+		if err != nil {
+			return nil, err
+		}
+		lowerEval, err := node.BuildEvaluableNode(astNode.Children[1])
+		if err != nil {
+			return nil, err
+		}
+		return node.buildArraySliceAccessFromEvaluables(baseEval, lowerEval, synthUpper)
+	case asts.NodeType(NodeTypeArraySliceFull):
+		// [:]
+		lib.InternalCodingErrorIf(len(astNode.Children) != 1)
+		synthLower, _ := node.BuildArraySliceEmptyLowerIndexNode(asts.NewASTNode(nil, asts.NodeType(NodeTypeArraySliceEmptyLowerIndex), nil))
+		synthUpper, _ := node.BuildArraySliceEmptyUpperIndexNode(asts.NewASTNode(nil, asts.NodeType(NodeTypeArraySliceEmptyUpperIndex), nil))
+		baseEval, err := node.BuildEvaluableNode(astNode.Children[0])
+		if err != nil {
+			return nil, err
+		}
+		return node.buildArraySliceAccessFromEvaluables(baseEval, synthLower, synthUpper)
+	default:
+		lib.InternalCodingErrorIf(true)
+		return nil, nil
+	}
+}
 
-	baseASTNode := astNode.Children[0]
-	lowerIndexASTNode := astNode.Children[1]
-	upperIndexASTNode := astNode.Children[2]
-
+func (node *RootNode) buildArraySliceAccessNodeFromChildren(
+	baseASTNode *asts.ASTNode,
+	lowerIndexASTNode *asts.ASTNode,
+	upperIndexASTNode *asts.ASTNode,
+) (IEvaluable, error) {
 	baseEvaluable, err := node.BuildEvaluableNode(baseASTNode)
 	if err != nil {
 		return nil, err
 	}
-
 	lowerIndexEvaluable, err := node.BuildEvaluableNode(lowerIndexASTNode)
 	if err != nil {
 		return nil, err
 	}
-
 	upperIndexEvaluable, err := node.BuildEvaluableNode(upperIndexASTNode)
 	if err != nil {
 		return nil, err
 	}
+	return node.buildArraySliceAccessFromEvaluables(baseEvaluable, lowerIndexEvaluable, upperIndexEvaluable)
+}
 
+func (node *RootNode) buildArraySliceAccessFromEvaluables(
+	baseEvaluable IEvaluable,
+	lowerIndexEvaluable IEvaluable,
+	upperIndexEvaluable IEvaluable,
+) (IEvaluable, error) {
 	return &ArraySliceAccessNode{
 		baseEvaluable:       baseEvaluable,
 		lowerIndexEvaluable: lowerIndexEvaluable,
@@ -228,7 +331,6 @@ func (node *ArraySliceAccessNode) Evaluate(
 	return mlrval.FromArray(retval)
 }
 
-// ================================================================
 // For input record 'a=7,b=8,c=9',  $[[2]] = "b"
 
 type PositionalFieldNameNode struct {
@@ -236,9 +338,9 @@ type PositionalFieldNameNode struct {
 }
 
 func (node *RootNode) BuildPositionalFieldNameNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePositionalFieldName)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypePositionalFieldName))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 
 	indexASTNode := astNode.Children[0]
@@ -275,7 +377,6 @@ func (node *PositionalFieldNameNode) Evaluate(
 	return mlrval.FromString(name)
 }
 
-// ================================================================
 // For input record 'a=7,b=8,c=9',  $[[2]] = 8
 
 type PositionalFieldValueNode struct {
@@ -283,9 +384,9 @@ type PositionalFieldValueNode struct {
 }
 
 func (node *RootNode) BuildPositionalFieldValueNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePositionalFieldValue)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypePositionalFieldValue))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 
 	indexASTNode := astNode.Children[0]
@@ -321,7 +422,6 @@ func (node *PositionalFieldValueNode) Evaluate(
 	return retval
 }
 
-// ================================================================
 // For x = [7,8,9], x[[2]] = 2
 // For y = {"a":7,"b":8,"c":9}, y[[2]] = "b"
 type ArrayOrMapPositionalNameAccessNode struct {
@@ -330,9 +430,9 @@ type ArrayOrMapPositionalNameAccessNode struct {
 }
 
 func (node *RootNode) BuildArrayOrMapPositionalNameAccessNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapPositionalNameAccess)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeArrayOrMapPositionalNameAccess))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 
 	baseASTNode := astNode.Children[0]
@@ -374,34 +474,30 @@ func (node *ArrayOrMapPositionalNameAccessNode) Evaluate(
 		zindex, ok := mlrval.UnaliasArrayLengthIndex(int(n), int(index))
 		if ok {
 			return mlrval.FromInt(int64(zindex + 1)) // Miller user-space indices are 1-up
-		} else {
-			return mlrval.ABSENT
 		}
+		return mlrval.ABSENT
 
 	} else if baseMlrval.IsMap() {
 		name, ok := baseMlrval.GetMap().GetNameAtPositionalIndex(index)
 		if !ok {
 			return mlrval.ABSENT
-		} else {
-			return mlrval.FromString(name)
 		}
+		return mlrval.FromString(name)
 
 	} else if baseMlrval.IsAbsent() {
 		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
 
-	} else {
-		return mlrval.FromError(
-			fmt.Errorf(
-				"cannot index base value %s of type %s, which is not array, map, or string",
-				baseMlrval.StringMaybeQuoted(),
-				baseMlrval.GetTypeName(),
-			),
-		)
 	}
+	return mlrval.FromError(
+		fmt.Errorf(
+			"cannot index base value %s of type %s, which is not array, map, or string",
+			baseMlrval.StringMaybeQuoted(),
+			baseMlrval.GetTypeName(),
+		),
+	)
 }
 
-// ================================================================
 // For x = [7,8,9], x[[2]] = 8
 // For y = {"a":7,"b":8,"c":9}, y[[2]] = 8
 type ArrayOrMapPositionalValueAccessNode struct {
@@ -410,9 +506,9 @@ type ArrayOrMapPositionalValueAccessNode struct {
 }
 
 func (node *RootNode) BuildArrayOrMapPositionalValueAccessNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapPositionalValueAccess)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeArrayOrMapPositionalValueAccess))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 
 	baseASTNode := astNode.Children[0]
@@ -467,18 +563,16 @@ func (node *ArrayOrMapPositionalValueAccessNode) Evaluate(
 		// For strict mode, absence should be detected on the baseMlrval and indexMlrval evaluators.
 		return mlrval.ABSENT
 
-	} else {
-		return mlrval.FromError(
-			fmt.Errorf(
-				"cannot index base value %s of type %s, which is not array, map, or string",
-				baseMlrval.StringMaybeQuoted(),
-				baseMlrval.GetTypeName(),
-			),
-		)
 	}
+	return mlrval.FromError(
+		fmt.Errorf(
+			"cannot index base value %s of type %s, which is not array, map, or string",
+			baseMlrval.StringMaybeQuoted(),
+			baseMlrval.GetTypeName(),
+		),
+	)
 }
 
-// ================================================================
 // This is for computing map entries at runtime. For example, in
 //
 //   mlr put 'mymap = {"sum": $x + $y, "diff": $x - $y}; ...'
@@ -498,15 +592,14 @@ func NewEvaluablePair(key IEvaluable, value IEvaluable) *EvaluablePair {
 	}
 }
 
-// ----------------------------------------------------------------
 type MapLiteralNode struct {
 	evaluablePairs []*EvaluablePair
 }
 
 func (node *RootNode) BuildMapLiteralNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeMapLiteral)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeMapLiteral))
 	// An empty array should have non-nil zero-length children, not nil
 	// children
 	lib.InternalCodingErrorIf(astNode.Children == nil)

@@ -3,9 +3,11 @@ begin{} end {}
 
 
 AST:
-* statement block
-    * begin block
-        * statement block
-    * end block
-        * statement block
+"block" [tt:block] [nt:StatementBlock]
+    "begin" [tt:kw_begin] [nt:BeginBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+    "end" [tt:kw_end] [nt:EndBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
 

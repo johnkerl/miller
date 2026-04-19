@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameCountSimilar = "count-similar"
 
 var CountSimilarSetup = TransformerSetup{
@@ -39,7 +38,7 @@ func transformerCountSimilarParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -49,6 +48,7 @@ func transformerCountSimilarParseCLI(
 	var groupByFieldNames []string = nil
 	counterFieldName := "count"
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -61,28 +61,32 @@ func transformerCountSimilarParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerCountSimilarUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-g" {
-			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-o" {
-			counterFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			counterFieldName, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else {
-			transformerCountSimilarUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	if groupByFieldNames == nil {
-		transformerCountSimilarUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-g field names required")
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerCountSimilar(
@@ -90,14 +94,12 @@ func transformerCountSimilarParseCLI(
 		counterFieldName,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerCountSimilar struct {
 	// Input:
 	groupByFieldNames []string
@@ -107,7 +109,6 @@ type TransformerCountSimilar struct {
 	recordListsByGroup *lib.OrderedMap[*[]*types.RecordAndContext] // map from string to records
 }
 
-// ----------------------------------------------------------------
 func NewTransformerCountSimilar(
 	groupByFieldNames []string,
 	counterFieldName string,
@@ -119,8 +120,6 @@ func NewTransformerCountSimilar(
 	}
 	return tr, nil
 }
-
-// ----------------------------------------------------------------
 
 func (tr *TransformerCountSimilar) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -139,7 +138,7 @@ func (tr *TransformerCountSimilar) Transform(
 
 		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
 		if recordListForGroup == nil { // first time
-			records := make([]*types.RecordAndContext, 0)
+			records := []*types.RecordAndContext{}
 			recordListForGroup = &records
 			tr.recordListsByGroup.Put(groupingKey, recordListForGroup)
 		}

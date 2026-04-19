@@ -46,9 +46,8 @@ func FindScanType(sinput string) ScanType {
 	if i0 == '.' {
 		if len(input) == 1 {
 			return scanTypeString
-		} else {
-			return findScanTypePositiveDecimalOrFloatOrString(input)
 		}
+		return findScanTypePositiveDecimalOrFloatOrString(input)
 	}
 
 	return scanTypeString
@@ -78,23 +77,20 @@ func findScanTypePositiveNumberOrString(input []byte) ScanType {
 			if i1 == 'x' || i1 == 'X' {
 				if len(input) == 2 {
 					return scanTypeString
-				} else {
-					return findScanTypePositiveHexOrString(input[2:])
 				}
+				return findScanTypePositiveHexOrString(input[2:])
 			}
 			if i1 == 'o' || i1 == 'O' {
 				if len(input) == 2 {
 					return scanTypeString
-				} else {
-					return findScanTypePositiveOctalOrString(input[2:])
 				}
+				return findScanTypePositiveOctalOrString(input[2:])
 			}
 			if i1 == 'b' || i1 == 'B' {
 				if len(input) == 2 {
 					return scanTypeString
-				} else {
-					return findScanTypePositiveBinaryOrString(input[2:])
 				}
+				return findScanTypePositiveBinaryOrString(input[2:])
 			}
 
 			allOctal := true
@@ -149,9 +145,8 @@ func findScanTypePositiveDecimalOrFloatOrString(input []byte) ScanType {
 	}
 	if maybeInt {
 		return scanTypeDecimalInt
-	} else {
-		return scanTypeMaybeFloat
 	}
+	return scanTypeMaybeFloat
 }
 
 // Leading 0o has already been stripped

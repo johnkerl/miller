@@ -3,10 +3,11 @@ begin { @u    = @v }
 
 
 AST:
-* statement block
-    * begin block
-        * statement block
-            * assignment "="
-                * direct oosvar value "u"
-                * direct oosvar value "v"
+"block" [tt:block] [nt:StatementBlock]
+    "begin" [tt:kw_begin] [nt:BeginBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "=" [tt:equals] [nt:Assignment]
+                    "@u" [tt:oosvar_name] [nt:DirectOosvarValue]
+                    "@v" [tt:oosvar_name] [nt:DirectOosvarValue]
 

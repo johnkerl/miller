@@ -1,12 +1,10 @@
-// ================================================================
 // Constants/singletons of various types
-// ================================================================
 
 package mlrval
 
 // These are made singletons as part of a copy-reduction effort.  They're not
 // marked const (I haven't figured out the right way to get that to compile;
-// just using `const` isn't enough) but the gentelpersons' agreement is that
+// just using `const` isn't enough) but the gentlepersons' agreement is that
 // the caller should never modify these.
 
 var TRUE = &Mlrval{

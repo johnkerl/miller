@@ -31,7 +31,7 @@ See also [Differences from other programming languages](reference-dsl-difference
 
 Miller's input and output are all text-oriented: all the
 [file formats supported by Miller](file-formats.md) are human-readable text,
-such as CSV, TSV, and JSON; binary formats such as
+such as CSV, TSV, JSON, and DCF; binary formats such as
 [BSON](https://bsonspec.org/) and [Parquet](https://parquet.apache.org/) are
 not supported (as of mid-2021). In this sense, everything is a string in and out of
 Miller -- be it in data files, or in DSL expressions you key in.

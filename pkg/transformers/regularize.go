@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameRegularize = "regularize"
 
 var RegularizeSetup = TransformerSetup{
@@ -36,7 +35,7 @@ func transformerRegularizeParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -54,29 +53,26 @@ func transformerRegularizeParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerRegularizeUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else {
-			transformerRegularizeUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verbNameRegularize, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerRegularize()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerRegularize struct {
 	// map from string to []string
 	sortedToOriginal map[string][]string
@@ -88,8 +84,6 @@ func NewTransformerRegularize() (*TransformerRegularize, error) {
 	}
 	return tr, nil
 }
-
-// ----------------------------------------------------------------
 
 func (tr *TransformerRegularize) Transform(
 	inrecAndContext *types.RecordAndContext,

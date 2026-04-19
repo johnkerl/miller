@@ -1,11 +1,9 @@
-// ================================================================
 // ORDERED MAP FROM STRING TO MLRVAL
 //
 // This is an implementation of insertion-ordered key-value pairs for Miller's
 // fundamental record data structure. It's also an ordered-map data structure,
 // suitable for Miller JSON decode/encode.
 //
-// ----------------------------------------------------------------
 // DESIGN
 //
 // * It keeps a doubly-linked list of key-value pairs.
@@ -29,7 +27,6 @@
 // This may be useful in certain contexts, even though it's not the default
 // chosen for stream-records.
 //
-// ----------------------------------------------------------------
 // MOTIVATION
 //
 // * The use case for records in Miller is that *all* fields are read from
@@ -53,7 +50,6 @@
 //
 // * Added benefit: the field-rename operation (preserving field order) becomes
 //   trivial.
-// ================================================================
 
 package mlrval
 
@@ -67,7 +63,6 @@ func HashRecords(onOff bool) {
 	hashRecords = onOff
 }
 
-// ----------------------------------------------------------------
 type Mlrmap struct {
 	FieldCount int64
 	Head       *MlrmapEntry
@@ -97,13 +92,11 @@ type MlrmapPair struct {
 	Value *Mlrval
 }
 
-// ----------------------------------------------------------------
 func NewMlrmapAsRecord() *Mlrmap {
 	if hashRecords {
 		return newMlrmapHashed()
-	} else {
-		return newMlrmapUnhashed()
 	}
+	return newMlrmapUnhashed()
 }
 func NewMlrmap() *Mlrmap {
 	return newMlrmapHashed()
@@ -133,16 +126,14 @@ func newMlrmapHashed() *Mlrmap {
 func NewMlrmapMaybeHashed(wantHashing bool) *Mlrmap {
 	if wantHashing {
 		return newMlrmapHashed()
-	} else {
-		return newMlrmapUnhashed()
 	}
+	return newMlrmapUnhashed()
 }
 
 func (mlrmap *Mlrmap) isHashed() bool {
 	return mlrmap.keysToEntries != nil
 }
 
-// ----------------------------------------------------------------
 // Value-copy is up to the caller -- PutReference and PutCopy
 // are in the public Mlrmap API.
 func newMlrmapEntry(key string, value *Mlrval) *MlrmapEntry {

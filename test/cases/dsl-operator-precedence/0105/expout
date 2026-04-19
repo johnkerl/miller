@@ -3,14 +3,14 @@ true || 1==0; $x = 3
 
 
 AST:
-* statement block
-    * bare boolean
-        * operator "||"
-            * bool literal "true"
-            * operator "=="
-                * int literal "1"
-                * int literal "0"
-    * assignment "="
-        * direct field value "x"
-        * int literal "3"
+"block" [tt:block] [nt:StatementBlock]
+    "||" [tt:op_logical_or] [nt:BareBoolean]
+        "||" [tt:op_logical_or] [nt:Operator]
+            "true" [tt:literal_true] [nt:bool_literal]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "1" [tt:int_literal] [nt:int_literal]
+                "0" [tt:int_literal] [nt:int_literal]
+    "=" [tt:equals] [nt:Assignment]
+        "$x" [tt:field_name] [nt:DirectFieldValue]
+        "3" [tt:int_literal] [nt:int_literal]
 

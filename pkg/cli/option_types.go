@@ -1,8 +1,6 @@
-// ================================================================
 // Items which might better belong in miller/cli, but which are placed in a
 // deeper package to avoid a package-dependency cycle between miller/cli and
 // miller/transforming.
-// ================================================================
 
 package cli
 
@@ -60,6 +58,8 @@ type TReaderOptions struct {
 	BarredPprintInput    bool
 	IncrementImplicitKey bool
 
+	FixedWidthSpec string
+
 	CommentHandling TCommentHandling
 	CommentString   string
 
@@ -80,7 +80,6 @@ type TReaderOptions struct {
 	RecordsPerBatch int64
 }
 
-// ----------------------------------------------------------------
 type TWriterOptions struct {
 	OutputFileFormat string
 	ORS              string
@@ -99,6 +98,7 @@ type TWriterOptions struct {
 
 	HeaderlessOutput         bool
 	BarredPprintOutput       bool
+	BarredUseUnicode         bool
 	RightAlignedPPRINTOutput bool
 	RightAlignedXTABOutput   bool
 
@@ -179,7 +179,6 @@ type TWriterOptions struct {
 	FailOnDataError bool
 }
 
-// ----------------------------------------------------------------
 type TOptions struct {
 	ReaderOptions TReaderOptions
 	WriterOptions TWriterOptions
@@ -213,8 +212,8 @@ func DefaultOptions() *TOptions {
 		ReaderOptions: DefaultReaderOptions(),
 		WriterOptions: DefaultWriterOptions(),
 
-		FileNames:           make([]string, 0),
-		DSLPreloadFileNames: make([]string, 0),
+		FileNames:           []string{},
+		DSLPreloadFileNames: []string{},
 		NoInput:             false,
 	}
 }

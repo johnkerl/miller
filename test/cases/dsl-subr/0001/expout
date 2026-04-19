@@ -3,6 +3,6 @@ call s()
 
 
 AST:
-* statement block
-    * subroutine callsite "s"
+"block" [tt:block] [nt:StatementBlock]
+    "s" [tt:non_sigil_name] [nt:SubroutineCallsite]
 

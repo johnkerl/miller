@@ -1,0 +1,8 @@
+$* = {
+  "color_shape": $color . " " . $shape,
+  "flags": {
+    "iflag": $flag == 1,
+    "w_exceeded": $w > 0.5,
+  },
+  "uvwx": [$u, $v, $w, $x],
+}

@@ -3,11 +3,12 @@ for (k in $*) {2}
 
 
 AST:
-* statement block
-    * single-variable for-loop "for"
-        * local variable "k"
-        * full record "$*"
-        * statement block
-            * bare boolean
-                * int literal "2"
+"block" [tt:block] [nt:StatementBlock]
+    "for" [tt:kw_for] [nt:ForLoopOneVariable]
+        "k" [tt:non_sigil_name] [nt:LocalVariable]
+        "$*" [tt:full_srec] [nt:FullSrec]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "2" [tt:int_literal] [nt:BareBoolean]
+                    "2" [tt:int_literal] [nt:int_literal]
 

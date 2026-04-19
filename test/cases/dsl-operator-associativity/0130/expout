@@ -3,13 +3,13 @@ DSL EXPRESSION:
 
 
 AST:
-* statement block
-    * bare boolean
-        * operator "?:"
-            * int literal "1"
-            * int literal "2"
-            * operator "?:"
-                * int literal "3"
-                * int literal "4"
-                * int literal "5"
+"block" [tt:block] [nt:StatementBlock]
+    "?" [tt:op_ternary] [nt:BareBoolean]
+        "?" [tt:op_ternary] [nt:Operator]
+            "1" [tt:int_literal] [nt:int_literal]
+            "2" [tt:int_literal] [nt:int_literal]
+            "?" [tt:op_ternary] [nt:Operator]
+                "3" [tt:int_literal] [nt:int_literal]
+                "4" [tt:int_literal] [nt:int_literal]
+                "5" [tt:int_literal] [nt:int_literal]
 

@@ -3,17 +3,17 @@ do {$i += 1} while($i < 5)
 
 
 AST:
-* statement block
-    * do-while`loop "do"
-        * statement block
-            * assignment "="
-                * direct field value "i"
-                * operator "+"
-                    * direct field value "i"
-                    * int literal "1"
-        * operator "<"
-            * direct field value "i"
-            * int literal "5"
+"block" [tt:block] [nt:StatementBlock]
+    "do" [tt:kw_do] [nt:DoWhileLoop]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "+=" [tt:op_plus_equals] [nt:CompoundAssignment]
+                    "$i" [tt:field_name] [nt:DirectFieldValue]
+                    "+=" [tt:op_plus_equals] [nt:op_plus_equals]
+                    "1" [tt:int_literal] [nt:int_literal]
+        "<" [tt:op_lt] [nt:Operator]
+            "$i" [tt:field_name] [nt:DirectFieldValue]
+            "5" [tt:int_literal] [nt:int_literal]
 
 a=pan,b=pan,i=5,x=0.34679014,y=0.72680286
 a=eks,b=pan,i=5,x=0.75867996,y=0.52215111

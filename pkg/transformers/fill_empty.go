@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameFillEmpty = "fill-empty"
 const defaultFillEmptyString = "N/A"
 
@@ -37,7 +36,7 @@ func transformerFillEmptyParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -47,6 +46,7 @@ func transformerFillEmptyParseCLI(
 	fillString := defaultFillEmptyString
 	inferType := true
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -59,35 +59,35 @@ func transformerFillEmptyParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerFillEmptyUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-v" {
-			fillString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			fillString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-S" {
 			inferType = false
 
 		} else {
-			transformerFillEmptyUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerFillEmpty(fillString, inferType)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerFillEmpty struct {
 	fillValue *mlrval.Mlrval
 }
@@ -104,8 +104,6 @@ func NewTransformerFillEmpty(
 	}
 	return tr, nil
 }
-
-// ----------------------------------------------------------------
 
 func (tr *TransformerFillEmpty) Transform(
 	inrecAndContext *types.RecordAndContext,

@@ -1,19 +1,16 @@
-// ================================================================
 // CST build/execute for subroutine nodes.
 //
 // Subroutines can't be used as rvalues; their invocation must be the entire
 // statement. Nonetheless, their name-resolution, argument/parameter binding,
 // etc. are very similar to functions.
-// ================================================================
 
 package cst
 
 import (
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
-// ----------------------------------------------------------------
 // Subroutine lookup:
 //
 // * Unlike for functions, There are no built-in subroutines -- the only ones
@@ -25,15 +22,15 @@ import (
 //   o On a next pass, we will walk that list resolving against all encountered
 //     UDS definitions. (It will be an error then if it's still unresolvable.)
 
-func (root *RootNode) BuildSubroutineCallsiteNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildSubroutineCallsiteNode(astNode *asts.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(
-		astNode.Type != dsl.NodeTypeSubroutineCallsite &&
-			astNode.Type != dsl.NodeTypeOperator,
+		astNode.Type != asts.NodeType(NodeTypeSubroutineCallsite) &&
+			astNode.Type != asts.NodeType(NodeTypeOperator),
 	)
 	lib.InternalCodingErrorIf(astNode.Token == nil)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 
-	subroutineName := string(astNode.Token.Lit)
+	subroutineName := tokenLit(astNode)
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Look for a user-defined subroutine with the given name.
@@ -71,8 +68,7 @@ func (root *RootNode) BuildSubroutineCallsiteNode(astNode *dsl.ASTNode) (IExecut
 		udsCallsiteNode := NewUDSCallsite(argumentNodes, uds)
 		root.rememberUnresolvedSubroutineCallsite(udsCallsiteNode)
 		return udsCallsiteNode, nil
-	} else {
-		udsCallsiteNode := NewUDSCallsite(argumentNodes, uds)
-		return udsCallsiteNode, nil
 	}
+	udsCallsiteNode := NewUDSCallsite(argumentNodes, uds)
+	return udsCallsiteNode, nil
 }

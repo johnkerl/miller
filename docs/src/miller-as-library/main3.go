@@ -57,7 +57,7 @@ func convert_csv_to_json(fileNames []string) error {
 	if err != nil {
 		return err
 	}
-	recordTransformers := []transformers.IRecordTransformer{cat}
+	recordTransformers := []transformers.RecordTransformer{cat}
 
 	// Set up the reader-to-transformer and transformer-to-writer channels.
 	readerChannel := make(chan *list.List, 2) // list of *types.RecordAndContext

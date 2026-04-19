@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameShuffle = "shuffle"
 
 var ShuffleSetup = TransformerSetup{
@@ -38,7 +37,7 @@ func transformerShuffleParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -56,29 +55,26 @@ func transformerShuffleParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerShuffleUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else {
-			transformerShuffleUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verbNameShuffle, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerShuffle()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerShuffle struct {
 	recordsAndContexts []*types.RecordAndContext
 }
@@ -86,13 +82,11 @@ type TransformerShuffle struct {
 func NewTransformerShuffle() (*TransformerShuffle, error) {
 
 	tr := &TransformerShuffle{
-		recordsAndContexts: make([]*types.RecordAndContext, 0),
+		recordsAndContexts: []*types.RecordAndContext{},
 	}
 
 	return tr, nil
 }
-
-// ----------------------------------------------------------------
 
 func (tr *TransformerShuffle) Transform(
 	inrecAndContext *types.RecordAndContext,
@@ -111,12 +105,12 @@ func (tr *TransformerShuffle) Transform(
 		// * Make a pseudorandom permutation using pseudorandom swaps in the image map.
 		n := int64(len(tr.recordsAndContexts))
 		images := make([]int64, n)
-		for i := int64(0); i < n; i++ {
+		for i := range n {
 			images[i] = i
 		}
 		unusedStart := int64(0)
 		numUnused := n
-		for i := int64(0); i < n; i++ {
+		for i := range n {
 			// Select a pseudorandom element from the pool of unused images.
 			u := lib.RandRange(unusedStart, unusedStart+numUnused)
 			temp := images[u]
@@ -134,7 +128,7 @@ func (tr *TransformerShuffle) Transform(
 		// Transfer from input array to output list. Because permutations are one-to-one maps,
 		// all input records have ownership transferred exactly once. So, there are no
 		// records to copy here.
-		for i := int64(0); i < n; i++ {
+		for i := range n {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, array[images[i]])
 		}
 

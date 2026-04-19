@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameJSONStringify = "json-stringify"
 
 var JSONStringifySetup = TransformerSetup{
@@ -41,7 +40,7 @@ func transformerJSONStringifyParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -51,6 +50,7 @@ func transformerJSONStringifyParseCLI(
 	var fieldNames []string = nil
 	jvStack := false // TODO: ??
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -63,10 +63,13 @@ func transformerJSONStringifyParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerJSONStringifyUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-f" {
-			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "--jvstack" {
 			jvStack = true
@@ -75,8 +78,7 @@ func transformerJSONStringifyParseCLI(
 			jvStack = false
 
 		} else {
-			transformerJSONStringifyUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
@@ -89,7 +91,7 @@ func transformerJSONStringifyParseCLI(
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerJSONStringify(
@@ -97,14 +99,12 @@ func transformerJSONStringifyParseCLI(
 		fieldNames,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerJSONStringify struct {
 	// input
 	jsonFormatting mlrval.TJSONFormatting
@@ -136,8 +136,6 @@ func NewTransformerJSONStringify(
 	return retval, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerJSONStringify) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -148,7 +146,6 @@ func (tr *TransformerJSONStringify) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerJSONStringify) jsonStringifyAll(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -166,7 +163,6 @@ func (tr *TransformerJSONStringify) jsonStringifyAll(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerJSONStringify) jsonStringifySome(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

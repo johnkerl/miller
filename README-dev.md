@@ -94,15 +94,12 @@ So, in broad overview, the key packages are:
 ### Dependencies
 
 * Miller dependencies are all in the Go standard library, except two:
-  * GOCC lexer/parser code-generator from [github.com/goccmack/gocc](https://github.com/goccmack/gocc):
-    * Forked at [github.com/johnkerl/gocc](github.com/johnkerl/gocc).
-    * This package defines the grammar for Miller's domain-specific language (DSL) for the Miller `put` and `filter` verbs. And, GOCC is a joy to use. :)
-    * It is used on the terms of its open-source license.
+  * PGPG lexer/parser code-generator from [github.com/johnkerl/pgpg](https://github.com/johnkerl/pgpg):
+    * This package defines the grammar for Miller's domain-specific language (DSL) for the Miller `put` and `filter` verbs.
   * [golang.org/x/term](https://pkg.go.dev/golang.org/x/term):
     * Just a one-line Miller callsite for is-a-terminal checking for the [Miller REPL](./pkg/terminals/repl/README.md).
     * It is used on the terms of its open-source license.
 * See also [./go.mod](go.mod). Setup:
-  * `go get github.com/johnkerl/gocc`
   * `go get golang.org/x/term`
 
 ### Miller per se
@@ -111,8 +108,8 @@ So, in broad overview, the key packages are:
 * [pkg/entrypoint](./pkg/entrypoint): All the usual contents of `main()` are here, for ease of testing.
 * [pkg/platform](./pkg/platform): Platform-dependent code, which as of early 2021 is the command-line parser. Handling single quotes and double quotes is different on Windows unless particular care is taken, which is what this package does.
 * [pkg/lib](./pkg/lib):
-  * Implementation of the [`Mlrval`](./pkg/types/mlrval.go) datatype which includes string/int/float/boolean/void/absent/error types. These are used for record values, as well as expression/variable values in the Miller `put`/`filter` DSL. See also below for more details.
-  * [`Mlrmap`](./pkg/types/mlrmap.go) is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see [mlrmap.go](./pkg/types/mlrmap.go) for more details.
+  * Implementation of the [`Mlrval`](./pkg/mlrval/) datatype which includes string/int/float/boolean/void/absent/error types. These are used for record values, as well as expression/variable values in the Miller `put`/`filter` DSL. See also below for more details.
+  * [`Mlrmap`](./pkg/mlrval/mlrmap.go) is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see [mlrmap.go](./pkg/mlrval/mlrmap.go) for more details.
   * [`context`](./pkg/types/context.go) supports AWK-like variables such as `FILENAME`, `NF`, `NR`, and so on.
 * [pkg/cli](./pkg/cli) is the flag-parsing logic for supporting Miller's command-line interface. When you type something like `mlr --icsv --ojson put '$sum = $a + $b' then filter '$sum > 1000' myfile.csv`, it's the CLI parser which makes it possible for Miller to construct a CSV record-reader, a transformer-chain of `put` then `filter`, and a JSON record-writer.
 * [pkg/climain](./pkg/climain) contains a layer which invokes `pkg/cli`, which was split out to avoid a Go package-import cycle.
@@ -120,9 +117,9 @@ So, in broad overview, the key packages are:
 * [pkg/input](./pkg/input) is as above -- one record-reader type per supported input file format, and a factory method.
 * [pkg/output](./pkg/output) is as above -- one record-writer type per supported output file format, and a factory method.
 * [pkg/transformers](./pkg/transformers) contains the abstract record-transformer interface datatype, as well as the Go-channel chaining mechanism for piping one transformer into the next. It also contains all the concrete record-transformers such as `cat`, `tac`, `sort`, `put`, and so on.
-* [pkg/parsing](./pkg/parsing) contains a single source file, `mlr.bnf`, which is the lexical/semantic grammar file for the Miller `put`/`filter` DSL using the GOCC framework. All subdirectories of `pkg/parsing/` are autogen code created by GOCC's processing of `mlr.bnf`. If you need to edit `mlr.bnf`, please use [tools/build-dsl](./tools/build-dsl) to autogenerate Go code from it (using the GOCC tool). (This takes several minutes to run.) See also [tools/format-go-in-bnf](./tools/format-go-in-bnf) (which reads `stdin` and writes `stdout`) for automated formatting of the Go bits.
-* [pkg/dsl](./pkg/dsl) contains [`ast_types.go`](pkg/dsl/ast_types.go) which is the abstract syntax tree datatype shared between GOCC and Miller. I didn't use a `pkg/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
-* [pkg/dsl/cst](./pkg/dsl/cst) is the concrete syntax tree, constructed from an AST produced by GOCC. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the [pkg/dsl/cst/README.md](./pkg/dsl/cst/README.md) for more information.
+* [pkg/parsing](./pkg/parsing) contains a single source file, `mlr.bnf`, which is the lexical/semantic grammar file for the Miller `put`/`filter` DSL using the PGPG framework. All subdirectories of `pkg/parsing/` are autogen code created by PGPG's processing of `mlr.bnf`. If you need to edit `mlr.bnf`, please use [tools/build-dsl](./tools/build-dsl) to autogenerate Go code from it (using the PGPG tool). (This takes several minutes to run.) See also [tools/format-go-in-bnf](./tools/format-go-in-bnf) (which reads `stdin` and writes `stdout`) for automated formatting of the Go bits.
+* [pkg/dsl](./pkg/dsl) contains [`ast_types.go`](pkg/dsl/ast_types.go) which is the abstract syntax tree datatype shared between PGPG and Miller. I didn't use a `pkg/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
+* [pkg/dsl/cst](./pkg/dsl/cst) is the concrete syntax tree, constructed from an AST produced by PGPG. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the [pkg/dsl/cst/README.md](./pkg/dsl/cst/README.md) for more information.
 
 ## Nil-record conventions
 
@@ -154,7 +151,7 @@ nil through the reader/transformer/writer sequence.
 
 ## More about mlrvals
 
-[`Mlrval`](./pkg/types/mlrval.go) is the datatype of record values, as well as expression/variable values in the Miller `put`/`filter` DSL. It includes string/int/float/boolean/void/absent/error types, not unlike PHP's `zval`.
+[`Mlrval`](./pkg/mlrval/) is the datatype of record values, as well as expression/variable values in the Miller `put`/`filter` DSL. It includes string/int/float/boolean/void/absent/error types, not unlike PHP's `zval`.
 
 * Miller's `absent` type is like Javascript's `undefined` -- it's for times when there is no such key, as in a DSL expression `$out = $foo` when the input record is `$x=3,y=4` -- there is no `$foo` so `$foo` has `absent` type. Nothing is written to the `$out` field in this case. See also [here](https://miller.readthedocs.io/en/latest/reference-main-null-data) for more information.
 * Miller's `void` type is like Javascript's `null` -- it's for times when there is a key with no value, as in `$out = $x` when the input record is `$x=,$y=4`. This is an overlap with `string` type, since a void value looks like an empty string. I've gone back and forth on this (including when I was writing the C implementation) -- whether to retain `void` as a distinct type from empty-string, or not. I ended up keeping it as it made the `Mlrval` logic easier to understand.
@@ -162,7 +159,7 @@ nil through the reader/transformer/writer sequence.
 * Miller's number handling makes auto-overflow from int to float transparent, while preserving the possibility of 64-bit bitwise arithmetic.
   * This is different from JavaScript, which has only double-precision floats and thus no support for 64-bit numbers (note however that there is now [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)).
   * This is also different from C and Go, wherein casts are necessary -- without which int arithmetic overflows.
-  * See also [here](https://miller.readthedocs.io/en/latest/reference-main-arithmetic) for the semantics of Miller arithmetic, which the [`Mlrval`](./pkg/types/mlrval.go) class implements.
+  * See also [here](https://miller.readthedocs.io/en/latest/reference-main-arithmetic) for the semantics of Miller arithmetic, which the [`Mlrval`](./pkg/mlrval/) package implements.
 
 ## Performance optimizations
 

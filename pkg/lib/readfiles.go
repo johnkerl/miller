@@ -1,7 +1,5 @@
-// ================================================================
 // Routines for loading strings from files. Nominally for the put/filter verbs
 // to load DSL strings from .mlr files.
-// ================================================================
 
 package lib
 
@@ -23,13 +21,12 @@ func LoadStringsFromFileOrDir(path string, extension string) ([]string, error) {
 	}
 	if fileInfo.IsDir() {
 		return LoadStringsFromDir(path, extension)
+	}
+	dslString, err := LoadStringFromFile(path)
+	if err != nil {
+		return nil, err
 	} else {
-		dslString, err := LoadStringFromFile(path)
-		if err != nil {
-			return nil, err
-		} else {
-			return []string{dslString}, nil
-		}
+		return []string{dslString}, nil
 	}
 }
 
@@ -48,7 +45,7 @@ func LoadStringFromFile(filename string) (string, error) {
 // will load /u/myfiles/foo.mlr and /u/myfiles/bar.mlr but will skip over
 // /u/myfiles/data.csv and /u/myfiles/todo.txt.
 func LoadStringsFromDir(dirname string, extension string) ([]string, error) {
-	dslStrings := make([]string, 0)
+	dslStrings := []string{}
 
 	f, err := os.Open(dirname)
 	if err != nil {

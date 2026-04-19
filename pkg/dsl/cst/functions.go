@@ -1,19 +1,16 @@
-// ================================================================
 // CST build/execute for AST operator/function nodes.
 //
 // Operators and functions are semantically the same thing -- they differ only
 // syntactically. Binary operators are infix, like '1+2', while functions are
 // prefix, like 'max(1,2)'. Both parse to the same AST shape.
-// ================================================================
 
 package cst
 
 import (
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
-// ----------------------------------------------------------------
 // Function lookup:
 //
 // * Try builtins first
@@ -24,15 +21,20 @@ import (
 //   o On a next pass, we will walk that list resolving against all encountered
 //     UDF definitions. (It will be an error then if it's still unresolvable.)
 
-func (root *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+func (root *RootNode) BuildFunctionCallsiteNode(astNode *asts.ASTNode) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(
-		astNode.Type != dsl.NodeTypeFunctionCallsite &&
-			astNode.Type != dsl.NodeTypeOperator,
+		astNode.Type != asts.NodeType(NodeTypeFunctionCallsite) &&
+			astNode.Type != asts.NodeType(NodeTypeOperator),
 	)
 	lib.InternalCodingErrorIf(astNode.Token == nil)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 
-	functionName := string(astNode.Token.Lit)
+	functionName := tokenLit(astNode)
+
+	// PGPG produces ternary (cond ? a : b) with "?" token; builtin is registered as "?:"
+	if functionName == "?" && len(astNode.Children) == 3 {
+		functionName = "?:"
+	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Special-case the dot operator, which is:
@@ -94,8 +96,7 @@ func (root *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 		udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)
 		root.rememberUnresolvedFunctionCallsite(udfCallsiteNode)
 		return udfCallsiteNode, nil
-	} else {
-		udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)
-		return udfCallsiteNode, nil
 	}
+	udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)
+	return udfCallsiteNode, nil
 }

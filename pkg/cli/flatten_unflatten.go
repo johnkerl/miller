@@ -1,10 +1,8 @@
 package cli
 
-// ================================================================
 // Decide whether to insert a flatten or unflatten verb at the end of the
 // chain.  See also repl/verbs.go which handles the same issue in the REPL.
 //
-// ----------------------------------------------------------------
 // PROBLEM TO BE SOLVED:
 //
 // JSON has nested structures and CSV et al. do not. For example:
@@ -22,7 +20,6 @@ package cli
 //   "req.path":   "api/check"
 // }
 //
-// ----------------------------------------------------------------
 // APPROACH:
 //
 // Use the Principle of Least Surprise (POLS).
@@ -56,12 +53,12 @@ package cli
 // * Overriding these: if the last verb the user has explicitly provided is
 //   flatten, don't undo that by putting an unflatten right after.
 //
-// ================================================================
 
 func DecideFinalFlatten(writerOptions *TWriterOptions) bool {
 	ofmt := writerOptions.OutputFileFormat
 	if writerOptions.AutoFlatten {
-		if ofmt != "json" {
+		// Preserve nested/array structure for formats that support it.
+		if ofmt != "json" && ofmt != "jsonl" && ofmt != "dcf" {
 			return true
 		}
 	}

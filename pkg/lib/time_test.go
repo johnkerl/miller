@@ -1,7 +1,5 @@
-// ================================================================
 // Most Miller tests (thousands of them) are command-line-driven via
 // mlr regtest. Here are some cases needing special focus.
-// ================================================================
 
 package lib
 
@@ -12,7 +10,6 @@ import (
 	"testing"
 )
 
-// ----------------------------------------------------------------
 type tDataForSec2GMT struct {
 	epochSeconds     float64
 	numDecimalPlaces int
@@ -32,7 +29,6 @@ func TestSec2GMT(t *testing.T) {
 	}
 }
 
-// ----------------------------------------------------------------
 type tDataForNsec2GMT struct {
 	epochNanoseconds int64
 	numDecimalPlaces int
@@ -61,7 +57,6 @@ func TestNsec2GMT(t *testing.T) {
 	}
 }
 
-// ----------------------------------------------------------------
 type tDataForEpochSecondsToGMT struct {
 	epochSeconds   float64
 	expectedOutput time.Time
@@ -79,7 +74,6 @@ func TestEpochSecondsToGMT(t *testing.T) {
 	}
 }
 
-// ----------------------------------------------------------------
 type tDataForEpochNanosecondsToGMT struct {
 	epochNanoseconds int64
 	expectedOutput   time.Time

@@ -1,0 +1,1 @@
+mlr -N --p2j --ragged --fixed widths:11,2,6,13 cat test/cases/cli-fixed-width/0005/input

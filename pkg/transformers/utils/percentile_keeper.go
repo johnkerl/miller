@@ -1,6 +1,4 @@
-// ================================================================
 // TODO: comment here
-// ================================================================
 
 package utils
 
@@ -22,7 +20,6 @@ type PercentileKeeper struct {
 var fenceInnerK = mlrval.FromFloat(1.5)
 var fenceOuterK = mlrval.FromFloat(3.0)
 
-// ----------------------------------------------------------------
 func NewPercentileKeeper(
 	doInterpolatedPercentiles bool,
 ) *PercentileKeeper {
@@ -38,7 +35,6 @@ func (keeper *PercentileKeeper) Reset() {
 	keeper.sorted = false
 }
 
-// ----------------------------------------------------------------
 func (keeper *PercentileKeeper) Ingest(value *mlrval.Mlrval) {
 	if len(keeper.data) >= cap(keeper.data) {
 		newData := make([]*mlrval.Mlrval, len(keeper.data), 2*cap(keeper.data))
@@ -54,7 +50,6 @@ func (keeper *PercentileKeeper) Ingest(value *mlrval.Mlrval) {
 	keeper.sorted = false
 }
 
-// ----------------------------------------------------------------
 func (keeper *PercentileKeeper) sortIfNecessary() {
 	if !keeper.sorted {
 		sort.Slice(keeper.data, func(i, j int) bool {
@@ -64,13 +59,11 @@ func (keeper *PercentileKeeper) sortIfNecessary() {
 	}
 }
 
-// ----------------------------------------------------------------
 func (keeper *PercentileKeeper) Emit(percentile float64) *mlrval.Mlrval {
 	if keeper.doInterpolatedPercentiles {
 		return keeper.EmitLinearlyInterpolated(percentile)
-	} else {
-		return keeper.EmitNonInterpolated(percentile)
 	}
+	return keeper.EmitNonInterpolated(percentile)
 }
 
 func (keeper *PercentileKeeper) EmitNonInterpolated(percentile float64) *mlrval.Mlrval {
@@ -89,7 +82,6 @@ func (keeper *PercentileKeeper) EmitLinearlyInterpolated(percentile float64) *ml
 	return bifs.GetPercentileLinearlyInterpolated(keeper.data, int(len(keeper.data)), percentile)
 }
 
-// ----------------------------------------------------------------
 // TODO: COMMENT
 func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
 	if name == "min" {
@@ -108,49 +100,43 @@ func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
 		p75 := keeper.EmitNonInterpolated(75.0)
 		if p25.IsNumeric() && p75.IsNumeric() {
 			return bifs.BIF_minus_binary(p75, p25)
-		} else {
-			return mlrval.VOID
 		}
+		return mlrval.VOID
 
 	} else if name == "lof" {
 		p25 := keeper.EmitNonInterpolated(25.0)
 		iqr := keeper.EmitNamed("iqr")
 		if p25.IsNumeric() && iqr.IsNumeric() {
 			return bifs.BIF_minus_binary(p25, bifs.BIF_times(fenceOuterK, iqr))
-		} else {
-			return mlrval.VOID
 		}
+		return mlrval.VOID
 
 	} else if name == "lif" {
 		p25 := keeper.EmitNonInterpolated(25.0)
 		iqr := keeper.EmitNamed("iqr")
 		if p25.IsNumeric() && iqr.IsNumeric() {
 			return bifs.BIF_minus_binary(p25, bifs.BIF_times(fenceInnerK, iqr))
-		} else {
-			return mlrval.VOID
 		}
+		return mlrval.VOID
 
 	} else if name == "uif" {
 		p75 := keeper.EmitNonInterpolated(75.0)
 		iqr := keeper.EmitNamed("iqr")
 		if p75.IsNumeric() && iqr.IsNumeric() {
 			return bifs.BIF_plus_binary(p75, bifs.BIF_times(fenceInnerK, iqr))
-		} else {
-			return mlrval.VOID
 		}
+		return mlrval.VOID
 
 	} else if name == "uof" {
 		p75 := keeper.EmitNonInterpolated(75.0)
 		iqr := keeper.EmitNamed("iqr")
 		if p75.IsNumeric() && iqr.IsNumeric() {
 			return bifs.BIF_plus_binary(p75, bifs.BIF_times(fenceOuterK, iqr))
-		} else {
-			return mlrval.VOID
 		}
+		return mlrval.VOID
 
-	} else {
-		return mlrval.FromError(
-			fmt.Errorf(`stats1: unrecognized percentilename "%s"`, name),
-		)
 	}
+	return mlrval.FromError(
+		fmt.Errorf(`stats1: unrecognized percentilename "%s"`, name),
+	)
 }

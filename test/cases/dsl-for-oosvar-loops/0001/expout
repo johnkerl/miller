@@ -12,73 +12,72 @@ DSL EXPRESSION:
 
 
 AST:
-* statement block
-    * assignment "="
-        * array or map index access "[]"
-            * array or map index access "[]"
-                * array or map index access "[]"
-                    * array or map index access "[]"
-                        * direct oosvar value "o"
-                        * int literal "1"
-                    * int literal "1"
-                * string literal "text1"
-            * context variable "NR"
-        * direct field value "a"
-    * assignment "="
-        * array or map index access "[]"
-            * array or map index access "[]"
-                * array or map index access "[]"
-                    * array or map index access "[]"
-                        * direct oosvar value "o"
-                        * int literal "1"
-                    * int literal "2"
-                * string literal "text2"
-            * context variable "NR"
-        * direct field value "b"
-    * assignment "="
-        * array or map index access "[]"
-            * array or map index access "[]"
-                * array or map index access "[]"
-                    * array or map index access "[]"
-                        * direct oosvar value "o"
-                        * int literal "1"
-                    * int literal "2"
-                * direct field value "a"
-            * operator "*"
-                * direct field value "i"
-                * int literal "100"
-        * direct field value "x"
-    * multi-variable for-loop "for"
-        * parameter list
-            * local variable "k1"
-            * local variable "k2"
-        * local variable "v"
-        * array or map index access "[]"
-            * array or map index access "[]"
-                * direct oosvar value "o"
-                * int literal "1"
-            * int literal "2"
-        * statement block
-            * assignment "="
-                * array or map index access "[]"
-                    * array or map index access "[]"
-                        * array or map index access "[]"
-                            * array or map index access "[]"
-                                * direct oosvar value "n"
-                                * int literal "3"
-                            * int literal "4"
-                        * local variable "k2"
-                    * local variable "k1"
-                * local variable "v"
-    * end block
-        * statement block
-            * emit statement "emit"
-                * emittable list
-                    * direct oosvar value "n"
-                * emit keys
-                    * string literal "a"
-                    * string literal "b"
-                    * string literal "c"
-                    * string literal "d"
-                * no-op
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+            "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                    "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                        "@o" [tt:oosvar_name] [nt:DirectOosvarValue]
+                        "1" [tt:int_literal] [nt:int_literal]
+                    "1" [tt:int_literal] [nt:int_literal]
+                ""text1"" [tt:string_literal] [nt:string_literal]
+            "NR" [tt:ctx_NR] [nt:ctx_NR]
+        "$a" [tt:field_name] [nt:DirectFieldValue]
+    "=" [tt:equals] [nt:Assignment]
+        "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+            "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                    "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                        "@o" [tt:oosvar_name] [nt:DirectOosvarValue]
+                        "1" [tt:int_literal] [nt:int_literal]
+                    "2" [tt:int_literal] [nt:int_literal]
+                ""text2"" [tt:string_literal] [nt:string_literal]
+            "NR" [tt:ctx_NR] [nt:ctx_NR]
+        "$b" [tt:field_name] [nt:DirectFieldValue]
+    "=" [tt:equals] [nt:Assignment]
+        "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+            "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                    "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                        "@o" [tt:oosvar_name] [nt:DirectOosvarValue]
+                        "1" [tt:int_literal] [nt:int_literal]
+                    "2" [tt:int_literal] [nt:int_literal]
+                "$a" [tt:field_name] [nt:DirectFieldValue]
+            "*" [tt:op_star] [nt:Operator]
+                "$i" [tt:field_name] [nt:DirectFieldValue]
+                "100" [tt:int_literal] [nt:int_literal]
+        "$x" [tt:field_name] [nt:DirectFieldValue]
+    "for" [tt:kw_for] [nt:ForLoopMultivariable]
+        "multi_index" [tt:multi_index] [nt:MultiIndex]
+            "k1" [tt:non_sigil_name] [nt:LocalVariable]
+            "k2" [tt:non_sigil_name] [nt:LocalVariable]
+        "v" [tt:non_sigil_name] [nt:LocalVariable]
+        "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+            "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                "@o" [tt:oosvar_name] [nt:DirectOosvarValue]
+                "1" [tt:int_literal] [nt:int_literal]
+            "2" [tt:int_literal] [nt:int_literal]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "=" [tt:equals] [nt:Assignment]
+                    "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                        "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                            "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                                "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                                    "@n" [tt:oosvar_name] [nt:DirectOosvarValue]
+                                    "3" [tt:int_literal] [nt:int_literal]
+                                "4" [tt:int_literal] [nt:int_literal]
+                            "k2" [tt:non_sigil_name] [nt:LocalVariable]
+                        "k1" [tt:non_sigil_name] [nt:LocalVariable]
+                    "v" [tt:non_sigil_name] [nt:LocalVariable]
+    "end" [tt:kw_end] [nt:EndBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "emit" [tt:kw_emit] [nt:EmitStatement]
+                    "@n" [tt:oosvar_name] [nt:DirectOosvarValue]
+                    ""a"" [tt:string_literal] [nt:string_literal]
+                    ""b"" [tt:string_literal] [nt:string_literal]
+                    ""c"" [tt:string_literal] [nt:string_literal]
+                    ""d"" [tt:string_literal] [nt:string_literal]
 

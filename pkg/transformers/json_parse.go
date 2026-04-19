@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameJSONParse = "json-parse"
 
 var JSONParseSetup = TransformerSetup{
@@ -41,7 +40,7 @@ func transformerJSONParseParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -51,6 +50,7 @@ func transformerJSONParseParseCLI(
 
 	var fieldNames []string = nil
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -63,23 +63,25 @@ func transformerJSONParseParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerJSONParseUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-f" {
-			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-k" {
 			keepFailed = true
 
 		} else {
-			transformerJSONParseUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerJSONParse(
@@ -87,14 +89,12 @@ func transformerJSONParseParseCLI(
 		keepFailed,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerJSONParse struct {
 	// input
 	fieldNameSet map[string]bool
@@ -126,8 +126,6 @@ func NewTransformerJSONParse(
 	return retval, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerJSONParse) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -138,7 +136,6 @@ func (tr *TransformerJSONParse) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerJSONParse) jsonParseAll(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -160,7 +157,6 @@ func (tr *TransformerJSONParse) jsonParseAll(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerJSONParse) jsonParseSome(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

@@ -1,0 +1,17 @@
+[
+{
+  "Name": "JohnDoe",
+  "Place": "New York",
+  "Thing": "Bottle"
+},
+{
+  "Name": "FooBar12",
+  "Place": "Seattle",
+  "Thing": "Pen"
+},
+{
+  "Name": "Max",
+  "Place": "London",
+  "Thing": "cup"
+}
+]

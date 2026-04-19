@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameUnsparsify = "unsparsify"
 
 var UnsparsifySetup = TransformerSetup{
@@ -51,7 +50,7 @@ func transformerUnsparsifyParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -61,6 +60,7 @@ func transformerUnsparsifyParseCLI(
 	fillerString := ""
 	var specifiedFieldNames []string = nil
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -73,23 +73,28 @@ func transformerUnsparsifyParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerUnsparsifyUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "--fill-with" {
-			fillerString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			fillerString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-f" {
-			specifiedFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			specifiedFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else {
-			transformerUnsparsifyUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerUnsparsify(
@@ -97,14 +102,12 @@ func transformerUnsparsifyParseCLI(
 		specifiedFieldNames,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerUnsparsify struct {
 	fillerMlrval          *mlrval.Mlrval
 	recordsAndContexts    []*types.RecordAndContext
@@ -124,7 +127,7 @@ func NewTransformerUnsparsify(
 
 	tr := &TransformerUnsparsify{
 		fillerMlrval:       mlrval.FromString(fillerString),
-		recordsAndContexts: make([]*types.RecordAndContext, 0),
+		recordsAndContexts: []*types.RecordAndContext{},
 		fieldNamesSeen:     fieldNamesSeen,
 	}
 
@@ -137,8 +140,6 @@ func NewTransformerUnsparsify(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerUnsparsify) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -149,7 +150,6 @@ func (tr *TransformerUnsparsify) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerUnsparsify) transformNonStreaming(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -186,7 +186,6 @@ func (tr *TransformerUnsparsify) transformNonStreaming(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerUnsparsify) transformStreaming(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

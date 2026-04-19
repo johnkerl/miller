@@ -12,41 +12,44 @@ DSL EXPRESSION:
 
 
 AST:
-* statement block
-    * if-chain
-        * if-item "if"
-            * operator "=="
-                * context variable "NR"
-                * int literal "10"
-            * statement block
-                * assignment "="
-                    * direct field value "x"
-                    * int literal "11"
-                * assignment "="
-                    * direct field value "y"
-                    * int literal "12"
-        * if-item "elif"
-            * operator "=="
-                * context variable "NR"
-                * int literal "13"
-            * statement block
-                * assignment "="
-                    * direct field value "x"
-                    * int literal "14"
-                * assignment "="
-                    * direct field value "y"
-                    * int literal "15"
-        * if-item "elif"
-            * operator "=="
-                * context variable "NR"
-                * int literal "16"
-            * statement block
-                * assignment "="
-                    * direct field value "x"
-                    * int literal "17"
-                * assignment "="
-                    * direct field value "y"
-                    * int literal "18"
+"block" [tt:block] [nt:StatementBlock]
+    "if_chain" [tt:if_chain] [nt:IfChain]
+        "if" [tt:kw_if] [nt:IfItem]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "NR" [tt:ctx_NR] [nt:ctx_NR]
+                "10" [tt:int_literal] [nt:int_literal]
+            "block" [tt:block] [nt:StatementBlockInBraces]
+                "block" [tt:block] [nt:StatementBlock]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$x" [tt:field_name] [nt:DirectFieldValue]
+                        "11" [tt:int_literal] [nt:int_literal]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$y" [tt:field_name] [nt:DirectFieldValue]
+                        "12" [tt:int_literal] [nt:int_literal]
+        "elif" [tt:kw_elif] [nt:IfItem]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "NR" [tt:ctx_NR] [nt:ctx_NR]
+                "13" [tt:int_literal] [nt:int_literal]
+            "block" [tt:block] [nt:StatementBlockInBraces]
+                "block" [tt:block] [nt:StatementBlock]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$x" [tt:field_name] [nt:DirectFieldValue]
+                        "14" [tt:int_literal] [nt:int_literal]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$y" [tt:field_name] [nt:DirectFieldValue]
+                        "15" [tt:int_literal] [nt:int_literal]
+        "elif" [tt:kw_elif] [nt:IfItem]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "NR" [tt:ctx_NR] [nt:ctx_NR]
+                "16" [tt:int_literal] [nt:int_literal]
+            "block" [tt:block] [nt:StatementBlockInBraces]
+                "block" [tt:block] [nt:StatementBlock]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$x" [tt:field_name] [nt:DirectFieldValue]
+                        "17" [tt:int_literal] [nt:int_literal]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$y" [tt:field_name] [nt:DirectFieldValue]
+                        "18" [tt:int_literal] [nt:int_literal]
 
 i=1,x=101,y=201
 i=2,x=102,y=202

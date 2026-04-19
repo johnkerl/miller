@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameLabel = "label"
 
 var LabelSetup = TransformerSetup{
@@ -39,7 +38,7 @@ func transformerLabelParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -57,40 +56,35 @@ func transformerLabelParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerLabelUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else {
-			transformerLabelUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verbNameLabel, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	// Get the label field names from the command line
 	if argi >= argc {
-		transformerLabelUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verbNameLabel, "field names required")
 	}
 	newNames := lib.SplitString(args[argi], ",")
 	argi++
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerLabel(
 		newNames,
 	)
 	if err != nil {
-		fmt.Fprint(os.Stderr, err)
-		os.Exit(1)
-		// TODO: return nil to caller and have it exit, maybe
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerLabel struct {
 	newNames []string
 }
@@ -114,8 +108,6 @@ func NewTransformerLabel(
 
 	return tr, nil
 }
-
-// ----------------------------------------------------------------
 
 func (tr *TransformerLabel) Transform(
 	inrecAndContext *types.RecordAndContext,

@@ -3,17 +3,17 @@ $a==1 && $b == 1 || $c == 1
 
 
 AST:
-* statement block
-    * bare boolean
-        * operator "||"
-            * operator "&&"
-                * operator "=="
-                    * direct field value "a"
-                    * int literal "1"
-                * operator "=="
-                    * direct field value "b"
-                    * int literal "1"
-            * operator "=="
-                * direct field value "c"
-                * int literal "1"
+"block" [tt:block] [nt:StatementBlock]
+    "||" [tt:op_logical_or] [nt:BareBoolean]
+        "||" [tt:op_logical_or] [nt:Operator]
+            "&&" [tt:op_logical_and] [nt:Operator]
+                "==" [tt:op_eqeq] [nt:Operator]
+                    "$a" [tt:field_name] [nt:DirectFieldValue]
+                    "1" [tt:int_literal] [nt:int_literal]
+                "==" [tt:op_eqeq] [nt:Operator]
+                    "$b" [tt:field_name] [nt:DirectFieldValue]
+                    "1" [tt:int_literal] [nt:int_literal]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "$c" [tt:field_name] [nt:DirectFieldValue]
+                "1" [tt:int_literal] [nt:int_literal]
 

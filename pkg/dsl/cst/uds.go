@@ -1,20 +1,17 @@
-// ================================================================
 // Support for user-defined subroutines
-// ================================================================
 
 package cst
 
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 	"github.com/johnkerl/miller/v6/pkg/types"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
-// ----------------------------------------------------------------
 type UDS struct {
 	signature      *Signature
 	subroutineBody *StatementBlockNode
@@ -41,7 +38,6 @@ func NewUnresolvedUDS(
 	return uds
 }
 
-// ----------------------------------------------------------------
 type UDSCallsite struct {
 	argumentNodes []IEvaluable
 	uds           *UDS
@@ -158,7 +154,6 @@ func (site *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error
 	return blockExitPayload, nil
 }
 
-// ----------------------------------------------------------------
 type UDSManager struct {
 	subroutines map[string]*UDS
 }
@@ -169,14 +164,14 @@ func NewUDSManager() *UDSManager {
 	}
 }
 
-func (manager *UDSManager) LookUp(subroutineName string, callsiteArity int) (*UDS, error) {
-	uds := manager.subroutines[subroutineName]
+func (mgr *UDSManager) LookUp(subroutineName string, callsiteArity int) (*UDS, error) {
+	uds := mgr.subroutines[subroutineName]
 	if uds == nil {
 		return nil, nil
 	}
 	if uds.signature.arity != callsiteArity {
 		return nil, fmt.Errorf(
-			"mlr: subroutine %s invoked with %d argument%s; expected %d",
+			"subroutine %s invoked with %d argument%s; expected %d",
 			subroutineName,
 			callsiteArity,
 			lib.Plural(callsiteArity),
@@ -186,16 +181,15 @@ func (manager *UDSManager) LookUp(subroutineName string, callsiteArity int) (*UD
 	return uds, nil
 }
 
-func (manager *UDSManager) Install(uds *UDS) {
-	manager.subroutines[uds.signature.funcOrSubrName] = uds
+func (mgr *UDSManager) Install(uds *UDS) {
+	mgr.subroutines[uds.signature.funcOrSubrName] = uds
 }
 
-func (manager *UDSManager) ExistsByName(name string) bool {
-	_, ok := manager.subroutines[name]
+func (mgr *UDSManager) ExistsByName(name string) bool {
+	_, ok := mgr.subroutines[name]
 	return ok
 }
 
-// ----------------------------------------------------------------
 // Example AST for UDS definition and callsite:
 
 // DSL EXPRESSION:
@@ -234,17 +228,17 @@ func (manager *UDSManager) ExistsByName(name string) bool {
 //         * SubroutineCallsite "f"
 //             * DirectFieldValue "x"
 
-func (root *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeSubroutineDefinition)
+func (root *RootNode) BuildAndInstallUDS(astNode *asts.ASTNode) error {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeSubroutineDefinition))
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2 && len(astNode.Children) != 3)
 
-	subroutineName := string(astNode.Token.Lit)
+	subroutineName := tokenLit(astNode)
 
 	if !root.allowUDFUDSRedefinitions {
 		if root.udsManager.ExistsByName(subroutineName) {
 			return fmt.Errorf(
-				`mlr: subroutine named "%s" has already been defined`,
+				`subroutine named "%s" has already been defined`,
 				subroutineName,
 			)
 		}
@@ -253,24 +247,34 @@ func (root *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
 	parameterListASTNode := astNode.Children[0]
 	subroutineBodyASTNode := astNode.Children[1]
 
-	lib.InternalCodingErrorIf(parameterListASTNode.Type != dsl.NodeTypeParameterList)
+	lib.InternalCodingErrorIf(parameterListASTNode.Type != asts.NodeType(NodeTypeParameterList))
 	lib.InternalCodingErrorIf(parameterListASTNode.Children == nil)
-	arity := len(parameterListASTNode.Children)
+	flatParams := flattenParameterList(parameterListASTNode.Children)
+	arity := len(flatParams)
 	typeGatedParameterNames := make([]*types.TypeGatedMlrvalName, arity)
-	for i, parameterASTNode := range parameterListASTNode.Children {
-		lib.InternalCodingErrorIf(parameterASTNode.Type != dsl.NodeTypeParameter)
-		lib.InternalCodingErrorIf(parameterASTNode.Children == nil)
-		lib.InternalCodingErrorIf(len(parameterASTNode.Children) != 1)
-		typeGatedParameterNameASTNode := parameterASTNode.Children[0]
-
-		lib.InternalCodingErrorIf(typeGatedParameterNameASTNode.Type != dsl.NodeTypeParameterName)
-		variableName := string(typeGatedParameterNameASTNode.Token.Lit)
-		typeName := "any"
-		if typeGatedParameterNameASTNode.Children != nil { // typed parameter like 'num x'
-			lib.InternalCodingErrorIf(len(typeGatedParameterNameASTNode.Children) != 1)
-			typeNode := typeGatedParameterNameASTNode.Children[0]
-			lib.InternalCodingErrorIf(typeNode.Type != dsl.NodeTypeTypedecl)
-			typeName = string(typeNode.Token.Lit)
+	for i, parameterASTNode := range flatParams {
+		var variableName string
+		var typeName string = "any"
+		if parameterASTNode.Children != nil && len(parameterASTNode.Children) == 2 {
+			// Typedecl LocalVariable -> [Typedecl, LocalVariable]
+			typeNode := parameterASTNode.Children[0]
+			nameNode := parameterASTNode.Children[1]
+			typeName = tokenLit(typeNode)
+			if typeName == "" && typeNode.Children != nil && len(typeNode.Children) > 0 {
+				typeName = tokenLit(typeNode.Children[0])
+			}
+			if typeName == "" {
+				typeName = typedDeclNodeTypeToName(string(typeNode.Type))
+			}
+			if string(nameNode.Type) == NodeTypeLocalVariable || nameNode.Type == asts.NodeType(NodeTypeLocalVariable) {
+				variableName = tokenLit(nameNode)
+			}
+		} else if parameterASTNode.Children != nil && len(parameterASTNode.Children) == 1 {
+			typeGatedParameterNameASTNode := parameterASTNode.Children[0]
+			lib.InternalCodingErrorIf(typeGatedParameterNameASTNode.Type != asts.NodeType(NodeTypeLocalVariable))
+			variableName = tokenLit(typeGatedParameterNameASTNode)
+		} else {
+			lib.InternalCodingErrorWithMessageIf(true, "expected Parameter with 1 or 2 children")
 		}
 		typeGatedParameterName, err := types.NewTypeGatedMlrvalName(
 			variableName,
@@ -279,7 +283,6 @@ func (root *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
 		if err != nil {
 			return err
 		}
-
 		typeGatedParameterNames[i] = typeGatedParameterName
 	}
 

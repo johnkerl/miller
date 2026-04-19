@@ -15,49 +15,53 @@ DSL EXPRESSION:
 
 
 AST:
-* statement block
-    * if-chain
-        * if-item "if"
-            * operator "=="
-                * context variable "NR"
-                * int literal "17"
-            * statement block
-                * assignment "="
-                    * direct field value "x"
-                    * int literal "18"
-                * assignment "="
-                    * direct field value "y"
-                    * int literal "19"
-        * if-item "elif"
-            * operator "=="
-                * context variable "NR"
-                * int literal "20"
-            * statement block
-                * assignment "="
-                    * direct field value "x"
-                    * int literal "21"
-                * assignment "="
-                    * direct field value "y"
-                    * int literal "22"
-        * if-item "elif"
-            * operator "=="
-                * context variable "NR"
-                * int literal "23"
-            * statement block
-                * assignment "="
-                    * direct field value "x"
-                    * int literal "24"
-                * assignment "="
-                    * direct field value "y"
-                    * int literal "25"
-        * if-item "else"
-            * statement block
-                * assignment "="
-                    * direct field value "x"
-                    * int literal "1026"
-                * assignment "="
-                    * direct field value "y"
-                    * int literal "1027"
+"block" [tt:block] [nt:StatementBlock]
+    "if_chain" [tt:if_chain] [nt:IfChain]
+        "if" [tt:kw_if] [nt:IfItem]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "NR" [tt:ctx_NR] [nt:ctx_NR]
+                "17" [tt:int_literal] [nt:int_literal]
+            "block" [tt:block] [nt:StatementBlockInBraces]
+                "block" [tt:block] [nt:StatementBlock]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$x" [tt:field_name] [nt:DirectFieldValue]
+                        "18" [tt:int_literal] [nt:int_literal]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$y" [tt:field_name] [nt:DirectFieldValue]
+                        "19" [tt:int_literal] [nt:int_literal]
+        "elif" [tt:kw_elif] [nt:IfItem]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "NR" [tt:ctx_NR] [nt:ctx_NR]
+                "20" [tt:int_literal] [nt:int_literal]
+            "block" [tt:block] [nt:StatementBlockInBraces]
+                "block" [tt:block] [nt:StatementBlock]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$x" [tt:field_name] [nt:DirectFieldValue]
+                        "21" [tt:int_literal] [nt:int_literal]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$y" [tt:field_name] [nt:DirectFieldValue]
+                        "22" [tt:int_literal] [nt:int_literal]
+        "elif" [tt:kw_elif] [nt:IfItem]
+            "==" [tt:op_eqeq] [nt:Operator]
+                "NR" [tt:ctx_NR] [nt:ctx_NR]
+                "23" [tt:int_literal] [nt:int_literal]
+            "block" [tt:block] [nt:StatementBlockInBraces]
+                "block" [tt:block] [nt:StatementBlock]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$x" [tt:field_name] [nt:DirectFieldValue]
+                        "24" [tt:int_literal] [nt:int_literal]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$y" [tt:field_name] [nt:DirectFieldValue]
+                        "25" [tt:int_literal] [nt:int_literal]
+        "else" [tt:kw_else] [nt:IfItem]
+            "block" [tt:block] [nt:StatementBlockInBraces]
+                "block" [tt:block] [nt:StatementBlock]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$x" [tt:field_name] [nt:DirectFieldValue]
+                        "1026" [tt:int_literal] [nt:int_literal]
+                    "=" [tt:equals] [nt:Assignment]
+                        "$y" [tt:field_name] [nt:DirectFieldValue]
+                        "1027" [tt:int_literal] [nt:int_literal]
 
 i=1,x=1026,y=1027
 i=2,x=1026,y=1027

@@ -1,7 +1,5 @@
-// ================================================================
 // This is for Lvalues, i.e. things on the left-hand-side of an assignment
 // statement.
-// ================================================================
 
 package cst
 
@@ -10,57 +8,46 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
-// ----------------------------------------------------------------
 func (root *RootNode) BuildAssignableNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IAssignable, error) {
 
 	switch astNode.Type {
 
-	case dsl.NodeTypeDirectFieldValue:
+	case asts.NodeType(NodeTypeDirectFieldValue), asts.NodeType(NodeTypeBracedFieldValue):
 		return root.BuildDirectFieldValueLvalueNode(astNode)
-	case dsl.NodeTypeIndirectFieldValue:
+	case asts.NodeType(NodeTypeIndirectFieldValue):
 		return root.BuildIndirectFieldValueLvalueNode(astNode)
-	case dsl.NodeTypePositionalFieldName:
-		return root.BuildPositionalFieldNameLvalueNode(astNode)
-	case dsl.NodeTypePositionalFieldValue:
-		return root.BuildPositionalFieldValueLvalueNode(astNode)
 
-	case dsl.NodeTypeFullSrec:
+	case asts.NodeType(NodeTypeFullSrec):
 		return root.BuildFullSrecLvalueNode(astNode)
 
-	case dsl.NodeTypeDirectOosvarValue:
+	case asts.NodeType(NodeTypeDirectOosvarValue), asts.NodeType(NodeTypeBracedOosvarValue):
 		return root.BuildDirectOosvarValueLvalueNode(astNode)
-	case dsl.NodeTypeIndirectOosvarValue:
+	case asts.NodeType(NodeTypeIndirectOosvarValue):
 		return root.BuildIndirectOosvarValueLvalueNode(astNode)
-	case dsl.NodeTypeFullOosvar:
+	case asts.NodeType(NodeTypeFullOosvar):
 		return root.BuildFullOosvarLvalueNode(astNode)
-	case dsl.NodeTypeLocalVariable:
+	case asts.NodeType(NodeTypeLocalVariable):
 		return root.BuildLocalVariableLvalueNode(astNode)
 
-	case dsl.NodeTypeArrayOrMapPositionalNameAccess:
-		return nil, fmt.Errorf(
-			"mlr: '[[...]]' is allowed on assignment left-hand sides only when immediately preceded by '$'",
-		)
-	case dsl.NodeTypeArrayOrMapPositionalValueAccess:
-		return nil, fmt.Errorf(
-			"mlr: '[[[...]]]' is allowed on assignment left-hand sides only when immediately preceded by '$'",
-		)
-
-	case dsl.NodeTypeArrayOrMapIndexAccess:
+	case asts.NodeType(NodeTypeArrayOrMapIndexAccess):
 		return root.BuildIndexedLvalueNode(astNode)
 
-	case dsl.NodeTypeDotOperator:
+	case asts.NodeType(NodeTypeDotOperator):
 		return root.BuildIndexedLvalueNode(astNode)
 
-	case dsl.NodeTypeEnvironmentVariable:
+	case asts.NodeType(NodeTypeEnvironmentVariable):
 		return root.BuildEnvironmentVariableLvalueNode(astNode)
+
+	case asts.NodeType("TypedeclLocalVariable"):
+		return root.BuildTypedeclLocalVariableLvalueNode(astNode)
 	}
 
 	return nil, errors.New(
@@ -68,17 +55,23 @@ func (root *RootNode) BuildAssignableNode(
 	)
 }
 
-// ----------------------------------------------------------------
 type DirectFieldValueLvalueNode struct {
 	lhsFieldName *mlrval.Mlrval
 }
 
 func (root *RootNode) BuildDirectFieldValueLvalueNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDirectFieldValue)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeDirectFieldValue) &&
+		astNode.Type != asts.NodeType(NodeTypeBracedFieldValue))
 
-	lhsFieldName := mlrval.FromString(string(astNode.Token.Lit))
+	var name string
+	if astNode.Type == asts.NodeType(NodeTypeBracedFieldValue) {
+		name = tokenLitStripBraced(astNode)
+	} else {
+		name = tokenLitStripDollarOrAt(astNode)
+	}
+	lhsFieldName := mlrval.FromString(name)
 	return NewDirectFieldValueLvalueNode(lhsFieldName), nil
 }
 
@@ -118,12 +111,11 @@ func (node *DirectFieldValueLvalueNode) AssignIndexed(
 			return err
 		}
 		return nil
-	} else {
-		return state.Inrec.PutIndexed(
-			append([]*mlrval.Mlrval{node.lhsFieldName}, indices...),
-			rvalue,
-		)
 	}
+	return state.Inrec.PutIndexed(
+		append([]*mlrval.Mlrval{node.lhsFieldName}, indices...),
+		rvalue,
+	)
 }
 
 func (node *DirectFieldValueLvalueNode) Unassign(
@@ -157,22 +149,36 @@ func (node *DirectFieldValueLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 type IndirectFieldValueLvalueNode struct {
 	lhsFieldNameExpression IEvaluable
 }
 
 func (root *RootNode) BuildIndirectFieldValueLvalueNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectFieldValue)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeIndirectFieldValue))
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
-	lhsFieldNameExpression, err := root.BuildEvaluableNode(astNode.Children[0])
+
+	child := astNode.Children[0]
+	if child.Type == asts.NodeType(NodeTypeArrayLiteral) && len(child.Children) == 1 {
+		inner := child.Children[0]
+		if inner.Type == asts.NodeType(NodeTypeArrayLiteral) && len(inner.Children) == 1 {
+			// $[[[n]]] → positional field value lvalue
+			indexASTNode := inner.Children[0]
+			syntheticAST := asts.NewASTNode(nil, asts.NodeType(NodeTypePositionalFieldValue), []*asts.ASTNode{indexASTNode})
+			return root.BuildPositionalFieldValueLvalueNode(syntheticAST)
+		}
+		// $[[n]] → positional field name lvalue
+		indexASTNode := inner
+		syntheticAST := asts.NewASTNode(nil, asts.NodeType(NodeTypePositionalFieldName), []*asts.ASTNode{indexASTNode})
+		return root.BuildPositionalFieldNameLvalueNode(syntheticAST)
+	}
+
+	lhsFieldNameExpression, err := root.BuildEvaluableNode(child)
 	if err != nil {
 		return nil, err
 	}
-
 	return NewIndirectFieldValueLvalueNode(lhsFieldNameExpression), nil
 }
 
@@ -217,12 +223,11 @@ func (node *IndirectFieldValueLvalueNode) AssignIndexed(
 			return err
 		}
 		return nil
-	} else {
-		return state.Inrec.PutIndexed(
-			append([]*mlrval.Mlrval{lhsFieldName.Copy()}, indices...),
-			rvalue,
-		)
 	}
+	return state.Inrec.PutIndexed(
+		append([]*mlrval.Mlrval{lhsFieldName.Copy()}, indices...),
+		rvalue,
+	)
 }
 
 func (node *IndirectFieldValueLvalueNode) Unassign(
@@ -255,7 +260,6 @@ func (node *IndirectFieldValueLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 // Set the name at 2nd positional index in the current stream record: e.g.
 // '$[[2]] = "abc"
 
@@ -264,9 +268,9 @@ type PositionalFieldNameLvalueNode struct {
 }
 
 func (root *RootNode) BuildPositionalFieldNameLvalueNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePositionalFieldName)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypePositionalFieldName))
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 	lhsFieldIndexExpression, err := root.BuildEvaluableNode(astNode.Children[0])
@@ -309,12 +313,11 @@ func (node *PositionalFieldNameLvalueNode) Assign(
 		// TODO: incorporate error-return into this API
 		state.Inrec.PutNameWithPositionalIndex(index, rvalue)
 		return nil
-	} else {
-		return fmt.Errorf(
-			"mlr: positional index for $[[...]] assignment must be integer; got %s",
-			lhsFieldIndex.GetTypeName(),
-		)
 	}
+	return fmt.Errorf(
+		"positional index for $[[...]] assignment must be integer; got %s",
+		lhsFieldIndex.GetTypeName(),
+	)
 }
 
 func (node *PositionalFieldNameLvalueNode) AssignIndexed(
@@ -325,7 +328,7 @@ func (node *PositionalFieldNameLvalueNode) AssignIndexed(
 	// TODO: reconsider this if /when we decide to allow string-slice
 	// assignments.
 	return fmt.Errorf(
-		"mlr: $[[...]] = ... expressions are not indexable",
+		"$[[...]] = ... expressions are not indexable",
 	)
 }
 
@@ -365,7 +368,6 @@ func (node *PositionalFieldNameLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 // Set the value at 2nd positional index in the current stream record: e.g.
 // '$[[[2]]] = "abc"
 
@@ -374,9 +376,9 @@ type PositionalFieldValueLvalueNode struct {
 }
 
 func (root *RootNode) BuildPositionalFieldValueLvalueNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePositionalFieldValue)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypePositionalFieldValue))
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 	lhsFieldIndexExpression, err := root.BuildEvaluableNode(astNode.Children[0])
@@ -433,12 +435,11 @@ func (node *PositionalFieldValueLvalueNode) AssignIndexed(
 			//return nil
 			state.Inrec.PutCopyWithPositionalIndex(index, rvalue)
 			return nil
-		} else {
-			return fmt.Errorf(
-				"mlr: positional index for $[[[...]]] assignment must be integer; got %s",
-				lhsFieldIndex.GetTypeName(),
-			)
 		}
+		return fmt.Errorf(
+			"positional index for $[[[...]]] assignment must be integer; got %s",
+			lhsFieldIndex.GetTypeName(),
+		)
 	} else {
 		// xxx positional
 		return state.Inrec.PutIndexed(
@@ -485,14 +486,14 @@ func (node *PositionalFieldValueLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 type FullSrecLvalueNode struct {
 }
 
-func (root *RootNode) BuildFullSrecLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFullSrec)
+func (root *RootNode) BuildFullSrecLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeFullSrec))
 	lib.InternalCodingErrorIf(astNode == nil)
-	lib.InternalCodingErrorIf(astNode.Children != nil)
+	// PGPG FullSrec has empty list as children
+	lib.InternalCodingErrorIf(astNode.Children != nil && len(astNode.Children) > 0)
 	return NewFullSrecLvalueNode(), nil
 }
 
@@ -559,15 +560,21 @@ func (node *FullSrecLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 type DirectOosvarValueLvalueNode struct {
 	lhsOosvarName *mlrval.Mlrval
 }
 
-func (root *RootNode) BuildDirectOosvarValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDirectOosvarValue)
+func (root *RootNode) BuildDirectOosvarValueLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeDirectOosvarValue) &&
+		astNode.Type != asts.NodeType(NodeTypeBracedOosvarValue))
 
-	lhsOosvarName := mlrval.FromString(string(astNode.Token.Lit))
+	var name string
+	if astNode.Type == asts.NodeType(NodeTypeBracedOosvarValue) {
+		name = tokenLitStripBraced(astNode)
+	} else {
+		name = tokenLitStripDollarOrAt(astNode)
+	}
+	lhsOosvarName := mlrval.FromString(name)
 	return NewDirectOosvarValueLvalueNode(lhsOosvarName), nil
 }
 
@@ -597,12 +604,11 @@ func (node *DirectOosvarValueLvalueNode) AssignIndexed(
 			return err
 		}
 		return nil
-	} else {
-		return state.Oosvars.PutIndexed(
-			append([]*mlrval.Mlrval{node.lhsOosvarName}, indices...),
-			rvalue,
-		)
 	}
+	return state.Oosvars.PutIndexed(
+		append([]*mlrval.Mlrval{node.lhsOosvarName}, indices...),
+		rvalue,
+	)
 }
 
 func (node *DirectOosvarValueLvalueNode) Unassign(
@@ -625,15 +631,14 @@ func (node *DirectOosvarValueLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 type IndirectOosvarValueLvalueNode struct {
 	lhsOosvarNameExpression IEvaluable
 }
 
 func (root *RootNode) BuildIndirectOosvarValueLvalueNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 ) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectOosvarValue)
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeIndirectOosvarValue))
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 
@@ -677,12 +682,11 @@ func (node *IndirectOosvarValueLvalueNode) AssignIndexed(
 			return err
 		}
 		return nil
-	} else {
-		return state.Oosvars.PutIndexed(
-			append([]*mlrval.Mlrval{lhsOosvarName.Copy()}, indices...),
-			rvalue,
-		)
 	}
+	return state.Oosvars.PutIndexed(
+		append([]*mlrval.Mlrval{lhsOosvarName.Copy()}, indices...),
+		rvalue,
+	)
 }
 
 func (node *IndirectOosvarValueLvalueNode) Unassign(
@@ -707,14 +711,13 @@ func (node *IndirectOosvarValueLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 type FullOosvarLvalueNode struct {
 }
 
-func (root *RootNode) BuildFullOosvarLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFullOosvar)
+func (root *RootNode) BuildFullOosvarLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeFullOosvar))
 	lib.InternalCodingErrorIf(astNode == nil)
-	lib.InternalCodingErrorIf(astNode.Children != nil)
+	lib.InternalCodingErrorIf(astNode.Children != nil && len(astNode.Children) > 0)
 	return NewFullOosvarLvalueNode(), nil
 }
 
@@ -763,7 +766,6 @@ func (node *FullOosvarLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 type LocalVariableLvalueNode struct {
 	stackVariable *runtime.StackVariable
 	typeName      string
@@ -777,25 +779,34 @@ type LocalVariableLvalueNode struct {
 	defineTypedAtScope bool
 }
 
-func (root *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeLocalVariable)
+func (root *RootNode) BuildTypedeclLocalVariableLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Children == nil || len(astNode.Children) < 2)
+	typeNode := astNode.Children[0]
+	varNode := astNode.Children[1]
+	// PGPG Typedecl produces kw_int, kw_bool, etc. (no Typedecl wrapper node)
+	lib.InternalCodingErrorIf(varNode.Type != asts.NodeType(NodeTypeLocalVariable))
+	typeName := tokenLit(typeNode)
+	variableName := tokenLit(varNode)
+	return NewLocalVariableLvalueNode(
+		runtime.NewStackVariable(variableName),
+		typeName,
+		true, // defineTypedAtScope
+	), nil
+}
+
+func (root *RootNode) BuildLocalVariableLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeLocalVariable))
 
 	// TODO require type mask in strict mode
 
-	variableName := string(astNode.Token.Lit)
+	variableName := tokenLit(astNode)
 	typeName := "any"
 	defineTypedAtScope := false
-	if astNode.Children == nil { // untyped, like 'x = 3'
-		if root.strictMode {
-			return nil, fmt.Errorf(
-				`mlr: need typedecl such as "var", "str", "num", etc. for variable "%s" in strict mode`,
-				variableName,
-			)
-		}
-	} else { // typed, like 'num x = 3'
+	// PGPG: LocalVariable is terminal (children nil or empty). Miller had typed params with Children[0]=Typedecl.
+	if astNode.Children != nil && len(astNode.Children) > 0 { // typed, like 'num x = 3'
 		typeNode := astNode.Children[0]
-		lib.InternalCodingErrorIf(typeNode.Type != dsl.NodeTypeTypedecl)
-		typeName = string(typeNode.Token.Lit)
+		lib.InternalCodingErrorIf(typeNode.Type != asts.NodeType(NodeTypeTypedecl))
+		typeName = tokenLit(typeNode)
 		defineTypedAtScope = true
 	}
 	return NewLocalVariableLvalueNode(
@@ -831,7 +842,7 @@ func (node *LocalVariableLvalueNode) AssignIndexed(
 ) error {
 	// AssignmentNode checks for absent, so we just assign whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
-	var err error = nil
+	var err error
 	if indices == nil {
 		if node.defineTypedAtScope {
 			err = state.Stack.DefineTypedAtScope(node.stackVariable, node.typeName, rvalue)
@@ -864,7 +875,6 @@ func (node *LocalVariableLvalueNode) UnassignIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 // IndexedValueNode is a delegator to base-lvalue types.
 // * The baseLvalue is some IAssignable
 // * The indexEvaluables are an array of IEvaluables
@@ -874,7 +884,6 @@ func (node *LocalVariableLvalueNode) UnassignIndexed(
 //   o error if ith mlrval is string and that level isn't a map
 //   o error for any other types -- maybe absent-handling for heterogeneity ...
 
-// ----------------------------------------------------------------
 type IndexedLvalueNode struct {
 	baseLvalue      IAssignable
 	indexEvaluables []IEvaluable
@@ -882,13 +891,13 @@ type IndexedLvalueNode struct {
 
 // Either 'mymap["attr"]' or 'mymap.attr'. Furthermore they can be mixed as in
 // 'mymap["foo"].bar' or 'mymap.foo["bar"]'.
-func (root *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapIndexAccess && astNode.Type != dsl.NodeTypeDotOperator)
+func (root *RootNode) BuildIndexedLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeArrayOrMapIndexAccess) && astNode.Type != asts.NodeType(NodeTypeDotOperator))
 	lib.InternalCodingErrorIf(astNode == nil)
 
 	var baseLvalue IAssignable = nil
-	indexEvaluables := make([]IEvaluable, 0)
-	var err error = nil
+	indexEvaluables := []IEvaluable{}
+	var err error
 
 	// $ mlr -n put -v '$x[1][2]=3'
 	// DSL EXPRESSION:
@@ -907,7 +916,7 @@ func (root *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable,
 	// then the base Lvalue.
 	walkerNode := astNode
 	for {
-		if walkerNode.Type == dsl.NodeTypeArrayOrMapIndexAccess {
+		if walkerNode.Type == asts.NodeType(NodeTypeArrayOrMapIndexAccess) {
 			lib.InternalCodingErrorIf(walkerNode == nil)
 			lib.InternalCodingErrorIf(len(walkerNode.Children) != 2)
 			indexEvaluable, err := root.BuildEvaluableNode(walkerNode.Children[1])
@@ -916,10 +925,10 @@ func (root *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable,
 			}
 			indexEvaluables = append([]IEvaluable{indexEvaluable}, indexEvaluables...)
 			walkerNode = walkerNode.Children[0]
-		} else if walkerNode.Type == dsl.NodeTypeDotOperator {
+		} else if walkerNode.Type == asts.NodeType(NodeTypeDotOperator) {
 			lib.InternalCodingErrorIf(walkerNode == nil)
 			lib.InternalCodingErrorIf(len(walkerNode.Children) != 2)
-			indexEvaluable := root.BuildStringLiteralNode(string(walkerNode.Children[1].Token.Lit))
+			indexEvaluable := root.BuildStringLiteralNode(tokenLit(walkerNode.Children[1]))
 			indexEvaluables = append([]IEvaluable{indexEvaluable}, indexEvaluables...)
 
 			walkerNode = walkerNode.Children[0]
@@ -998,20 +1007,27 @@ func (node *IndexedLvalueNode) UnassignIndexed(
 	lib.InternalCodingErrorIf(true)
 }
 
-// ----------------------------------------------------------------
 type EnvironmentVariableLvalueNode struct {
 	nameExpression IEvaluable
 }
 
-func (root *RootNode) BuildEnvironmentVariableLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEnvironmentVariable)
+func (root *RootNode) BuildEnvironmentVariableLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeEnvironmentVariable))
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
-	nameExpression, err := root.BuildEvaluableNode(astNode.Children[0])
-	if err != nil {
-		return nil, err
+	child := astNode.Children[0]
+	var nameExpression IEvaluable
+	// ENV.FOO: child is non_sigil_name; BuildEvaluableNode doesn't handle bare identifiers
+	if string(child.Type) == "non_sigil_name" {
+		sval := tokenLit(child)
+		nameExpression = root.BuildStringLiteralNode(sval)
+	} else {
+		var err error
+		nameExpression, err = root.BuildEvaluableNode(child)
+		if err != nil {
+			return nil, err
+		}
 	}
-
 	return NewEnvironmentVariableLvalueNode(nameExpression), nil
 }
 
@@ -1061,7 +1077,7 @@ func (node *EnvironmentVariableLvalueNode) AssignIndexed(
 	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
-	return fmt.Errorf("mlr: ENV[...] cannot be indexed")
+	return fmt.Errorf("ENV[...] cannot be indexed")
 }
 
 func (node *EnvironmentVariableLvalueNode) Unassign(

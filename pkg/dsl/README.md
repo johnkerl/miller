@@ -4,7 +4,7 @@ Parsing a Miller DSL (domain-specific language) expression goes through three re
 * Abstract syntax tree (AST)
 * Concrete syntax tree (AST)
 
-The job of the GOCC parser is to turn the DSL string into an AST.
+The job of the PGPG parser is to turn the DSL string into an AST.
 
 The job of the CST builder is to turn the AST into a CST.
 

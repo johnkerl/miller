@@ -26,7 +26,6 @@ func NewRecordWriterMarkdown(writerOptions *cli.TWriterOptions) (*RecordWriterMa
 	}, nil
 }
 
-// ----------------------------------------------------------------
 func (writer *RecordWriterMarkdown) Write(
 	outrec *mlrval.Mlrmap,
 	_ *types.Context,

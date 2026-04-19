@@ -23,9 +23,8 @@ func BIF_hostname() *mlrval.Mlrval {
 	hostname, err := os.Hostname()
 	if err != nil {
 		return mlrval.FromErrorString("could not retrieve system hostname")
-	} else {
-		return mlrval.FromString(hostname)
 	}
+	return mlrval.FromString(hostname)
 }
 
 func BIF_system(input1 *mlrval.Mlrval) *mlrval.Mlrval {

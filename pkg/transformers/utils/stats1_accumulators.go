@@ -1,6 +1,4 @@
-// ================================================================
 // For stats1 as well as merge-fields
-// ================================================================
 
 package utils
 
@@ -14,14 +12,12 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
-// ----------------------------------------------------------------
 type IStats1Accumulator interface {
 	Ingest(value *mlrval.Mlrval)
 	Emit() *mlrval.Mlrval
 	Reset() // for merge-fields where we reset after each record instead of replace/recreate
 }
 
-// ----------------------------------------------------------------
 type newStats1AccumulatorFunc func() IStats1Accumulator
 
 type stats1AccumulatorInfo struct {
@@ -127,7 +123,6 @@ var stats1AccumulatorInfos []stats1AccumulatorInfo = []stats1AccumulatorInfo{
 	},
 }
 
-// ================================================================
 // TODO: comment
 
 type Stats1NamedAccumulator struct {
@@ -162,7 +157,6 @@ func (nacc *Stats1NamedAccumulator) Reset() {
 	nacc.accumulator.Reset()
 }
 
-// ----------------------------------------------------------------
 // If we are asked for p90 and p95 on the same column, we reuse the
 // percentile-keeper object to reduce runtime memory consumption.  This
 // two-level map is keyed by value-field name and grouping key.  E.g. for 'mlr
@@ -179,7 +173,6 @@ func NewStats1AccumulatorFactory() *Stats1AccumulatorFactory {
 	}
 }
 
-// ----------------------------------------------------------------
 func ListStats1Accumulators(o *os.File) {
 	for _, info := range stats1AccumulatorInfos {
 		fmt.Fprintf(o, "  %-8s %s\n", info.name, info.description)
@@ -228,20 +221,19 @@ func tryPercentileFromName(accumulatorName string) (float64, bool) {
 	return 0.0, false
 }
 
-// ----------------------------------------------------------------
 // For merge-fields wherein percentile-keepers are re-created on each record
-func (factory *Stats1AccumulatorFactory) Reset() {
-	factory.percentileKeepers = make(map[string]map[string]*PercentileKeeper)
+func (fac *Stats1AccumulatorFactory) Reset() {
+	fac.percentileKeepers = make(map[string]map[string]*PercentileKeeper)
 }
 
-func (factory *Stats1AccumulatorFactory) MakeNamedAccumulator(
+func (fac *Stats1AccumulatorFactory) MakeNamedAccumulator(
 	accumulatorName string,
 	groupingKey string,
 	valueFieldName string,
 	doInterpolatedPercentiles bool,
 ) *Stats1NamedAccumulator {
 
-	accumulator := factory.MakeAccumulator(
+	accumulator := fac.MakeAccumulator(
 		accumulatorName,
 		groupingKey,
 		valueFieldName,
@@ -263,7 +255,7 @@ func (factory *Stats1AccumulatorFactory) MakeNamedAccumulator(
 	)
 }
 
-func (factory *Stats1AccumulatorFactory) MakeAccumulator(
+func (fac *Stats1AccumulatorFactory) MakeAccumulator(
 	accumulatorName string,
 	groupingKey string,
 	valueFieldName string,
@@ -272,10 +264,10 @@ func (factory *Stats1AccumulatorFactory) MakeAccumulator(
 	// First try percentiles, which have parameterized names.
 	percentile, ok := tryPercentileFromName(accumulatorName)
 	if ok {
-		percentileKeepersForValueFieldName := factory.percentileKeepers[valueFieldName]
+		percentileKeepersForValueFieldName := fac.percentileKeepers[valueFieldName]
 		if percentileKeepersForValueFieldName == nil {
 			percentileKeepersForValueFieldName = make(map[string]*PercentileKeeper)
-			factory.percentileKeepers[valueFieldName] = percentileKeepersForValueFieldName
+			fac.percentileKeepers[valueFieldName] = percentileKeepersForValueFieldName
 		}
 
 		percentileKeeper := percentileKeepersForValueFieldName[groupingKey]
@@ -304,7 +296,6 @@ func (factory *Stats1AccumulatorFactory) MakeAccumulator(
 	return nil
 }
 
-// ================================================================
 type Stats1CountAccumulator struct {
 	count int64
 }
@@ -324,7 +315,6 @@ func (acc *Stats1CountAccumulator) Reset() {
 	acc.count = 0
 }
 
-// ================================================================
 type Stats1NullCountAccumulator struct {
 	count int64
 }
@@ -346,7 +336,6 @@ func (acc *Stats1NullCountAccumulator) Reset() {
 	acc.count = 0
 }
 
-// ================================================================
 // Stats1DistinctCountAccumulator determines distinctness by string values.
 // Here, 4.1 and 4.10 are counted as distinct values.
 type Stats1DistinctCountAccumulator struct {
@@ -375,7 +364,6 @@ func (acc *Stats1DistinctCountAccumulator) Reset() {
 	acc.distincts = lib.NewOrderedMap[int64]()
 }
 
-// ----------------------------------------------------------------
 type Stats1ModeAccumulator struct {
 	// Needs to be an ordered map to guarantee Miller's semantics that
 	// first-found breaks ties.
@@ -416,7 +404,6 @@ func (acc *Stats1ModeAccumulator) Reset() {
 	acc.countsByValue = lib.NewOrderedMap[int64]()
 }
 
-// ----------------------------------------------------------------
 type Stats1AntimodeAccumulator struct {
 	// Needs to be an ordered map to guarantee Miller's semantics that
 	// first-found breaks ties.
@@ -457,7 +444,6 @@ func (acc *Stats1AntimodeAccumulator) Reset() {
 	acc.countsByValue = lib.NewOrderedMap[int64]()
 }
 
-// ----------------------------------------------------------------
 type Stats1SumAccumulator struct {
 	sum *mlrval.Mlrval
 }
@@ -479,7 +465,6 @@ func (acc *Stats1SumAccumulator) Reset() {
 	acc.sum = mlrval.FromInt(0)
 }
 
-// ----------------------------------------------------------------
 type Stats1MeanAccumulator struct {
 	sum   *mlrval.Mlrval
 	count int64
@@ -500,16 +485,14 @@ func (acc *Stats1MeanAccumulator) Ingest(value *mlrval.Mlrval) {
 func (acc *Stats1MeanAccumulator) Emit() *mlrval.Mlrval {
 	if acc.count == 0 {
 		return mlrval.VOID
-	} else {
-		return bifs.BIF_divide(acc.sum, mlrval.FromInt(acc.count))
 	}
+	return bifs.BIF_divide(acc.sum, mlrval.FromInt(acc.count))
 }
 func (acc *Stats1MeanAccumulator) Reset() {
 	acc.sum = mlrval.FromInt(0)
 	acc.count = 0
 }
 
-// ----------------------------------------------------------------
 type Stats1MeanAbsDevAccumulator struct {
 	samples []*mlrval.Mlrval
 }
@@ -532,13 +515,13 @@ func (acc *Stats1MeanAbsDevAccumulator) Emit() *mlrval.Mlrval {
 	mn := mlrval.FromInt(int64(n))
 
 	mean := mlrval.FromInt(0)
-	for i := 0; i < n; i++ {
+	for i := range n {
 		mean = bifs.BIF_plus_binary(mean, acc.samples[i])
 	}
 	mean = bifs.BIF_divide(mean, mn)
 
 	meanAbsDev := mlrval.FromInt(0)
-	for i := 0; i < n; i++ {
+	for i := range n {
 		diff := bifs.BIF_minus_binary(mean, acc.samples[i])
 		meanAbsDev = bifs.BIF_plus_binary(meanAbsDev, bifs.BIF_abs(diff))
 	}
@@ -550,7 +533,6 @@ func (acc *Stats1MeanAbsDevAccumulator) Reset() {
 	acc.samples = make([]*mlrval.Mlrval, 0, 1000)
 }
 
-// ----------------------------------------------------------------
 type Stats1MinAccumulator struct {
 	min *mlrval.Mlrval
 }
@@ -566,15 +548,13 @@ func (acc *Stats1MinAccumulator) Ingest(value *mlrval.Mlrval) {
 func (acc *Stats1MinAccumulator) Emit() *mlrval.Mlrval {
 	if acc.min.IsAbsent() {
 		return mlrval.VOID
-	} else {
-		return acc.min.Copy()
 	}
+	return acc.min.Copy()
 }
 func (acc *Stats1MinAccumulator) Reset() {
 	acc.min = mlrval.ABSENT
 }
 
-// ----------------------------------------------------------------
 type Stats1MaxAccumulator struct {
 	max *mlrval.Mlrval
 }
@@ -590,15 +570,13 @@ func (acc *Stats1MaxAccumulator) Ingest(value *mlrval.Mlrval) {
 func (acc *Stats1MaxAccumulator) Emit() *mlrval.Mlrval {
 	if acc.max.IsAbsent() {
 		return mlrval.VOID
-	} else {
-		return acc.max.Copy()
 	}
+	return acc.max.Copy()
 }
 func (acc *Stats1MaxAccumulator) Reset() {
 	acc.max = mlrval.ABSENT
 }
 
-// ----------------------------------------------------------------
 type Stats1MinLenAccumulator struct {
 	minacc IStats1Accumulator
 }
@@ -618,7 +596,6 @@ func (acc *Stats1MinLenAccumulator) Reset() {
 	acc.minacc = NewStats1MinAccumulator()
 }
 
-// ----------------------------------------------------------------
 type Stats1MaxLenAccumulator struct {
 	maxacc IStats1Accumulator
 }
@@ -638,7 +615,6 @@ func (acc *Stats1MaxLenAccumulator) Reset() {
 	acc.maxacc = NewStats1MaxAccumulator()
 }
 
-// ----------------------------------------------------------------
 type Stats1VarAccumulator struct {
 	count int64
 	sum   *mlrval.Mlrval
@@ -669,7 +645,6 @@ func (acc *Stats1VarAccumulator) Reset() {
 	acc.sum2 = mlrval.FromInt(0)
 }
 
-// ----------------------------------------------------------------
 type Stats1StddevAccumulator struct {
 	count int64
 	sum   *mlrval.Mlrval
@@ -700,7 +675,6 @@ func (acc *Stats1StddevAccumulator) Reset() {
 	acc.sum2 = mlrval.FromInt(0)
 }
 
-// ----------------------------------------------------------------
 type Stats1MeanEBAccumulator struct {
 	count int64
 	sum   *mlrval.Mlrval
@@ -732,7 +706,6 @@ func (acc *Stats1MeanEBAccumulator) Reset() {
 	acc.sum2 = mlrval.FromInt(0)
 }
 
-// ----------------------------------------------------------------
 type Stats1SkewnessAccumulator struct {
 	count int64
 	sum   *mlrval.Mlrval
@@ -769,7 +742,6 @@ func (acc *Stats1SkewnessAccumulator) Reset() {
 	acc.sum3 = mlrval.FromInt(0)
 }
 
-// ----------------------------------------------------------------
 type Stats1KurtosisAccumulator struct {
 	count int64
 	sum   *mlrval.Mlrval
@@ -811,7 +783,6 @@ func (acc *Stats1KurtosisAccumulator) Reset() {
 	acc.sum4 = mlrval.FromInt(0)
 }
 
-// ----------------------------------------------------------------
 // To conserve memory, percentile-keeprs on the same value-field-name (and
 // grouping-key) are shared. For example, p25,p75 on field "x".  This means
 // though that each datapoint must be ingested only once (e.g.  by the p25

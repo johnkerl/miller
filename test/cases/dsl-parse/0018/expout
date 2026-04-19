@@ -3,19 +3,20 @@ $x = (NF + NR) * 7; $y = OFS . $y . "hello"
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "x"
-        * operator "*"
-            * operator "+"
-                * context variable "NF"
-                * context variable "NR"
-            * int literal "7"
-    * assignment "="
-        * direct field value "y"
-        * dot operator "."
-            * dot operator "."
-                * context variable "OFS"
-                * direct field value "y"
-            * string literal "hello"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$x" [tt:field_name] [nt:DirectFieldValue]
+        "*" [tt:op_star] [nt:Operator]
+            "+" [tt:op_plus] [nt:Parenthesized]
+                "+" [tt:op_plus] [nt:Operator]
+                    "NF" [tt:ctx_NF] [nt:ctx_NF]
+                    "NR" [tt:ctx_NR] [nt:ctx_NR]
+            "7" [tt:int_literal] [nt:int_literal]
+    "=" [tt:equals] [nt:Assignment]
+        "$y" [tt:field_name] [nt:DirectFieldValue]
+        "." [tt:op_dot] [nt:DotOperator]
+            "." [tt:op_dot] [nt:DotOperator]
+                "OFS" [tt:ctx_OFS] [nt:ctx_OFS]
+                "$y" [tt:field_name] [nt:DirectFieldValue]
+            ""hello"" [tt:string_literal] [nt:string_literal]
 

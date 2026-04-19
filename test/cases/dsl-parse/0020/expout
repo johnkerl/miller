@@ -3,10 +3,10 @@ $z=0x7fffffffffffffff  + 0x7fffffffffffffff
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "z"
-        * operator "+"
-            * int literal "0x7fffffffffffffff"
-            * int literal "0x7fffffffffffffff"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$z" [tt:field_name] [nt:DirectFieldValue]
+        "+" [tt:op_plus] [nt:Operator]
+            "0x7fffffffffffffff" [tt:int_literal] [nt:int_literal]
+            "0x7fffffffffffffff" [tt:int_literal] [nt:int_literal]
 

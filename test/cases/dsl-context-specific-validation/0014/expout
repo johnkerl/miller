@@ -2,9 +2,10 @@ DSL EXPRESSION:
 end{unset $*}
 
 AST:
-* statement block
-    * end block
-        * statement block
-            * unset "unset"
-                * full record "$*"
+"block" [tt:block] [nt:StatementBlock]
+    "end" [tt:kw_end] [nt:EndBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "unset" [tt:kw_unset] [nt:Unset]
+                    "$*" [tt:full_srec] [nt:FullSrec]
 

@@ -1,10 +1,7 @@
-// ================================================================
 // Handling single quotes and double quotes is different on Windows unless
 // particular care is taken, which is what this file does.
-// ================================================================
 
 //go:build windows
-// +build windows
 
 package platform
 
@@ -65,7 +62,7 @@ func GetArgs() []string {
 		)
 	}
 
-	retargs := make([]string, 0)
+	retargs := []string{}
 
 	// TODO err/stetret if lens uneq
 
@@ -78,7 +75,7 @@ func GetArgs() []string {
 	}
 	//printArgs(retargs, "NEW")
 
-	globbed := make([]string, 0)
+	globbed := []string{}
 	for i := range retargs {
 		// Expand things like *.csv
 		matches, err := filepath.Glob(retargs[i])
@@ -93,7 +90,6 @@ func GetArgs() []string {
 	return globbed
 }
 
-// ----------------------------------------------------------------
 func printArgs(args []string, description string) {
 	fmt.Printf("%s:\n", description)
 	for i, arg := range args {
@@ -102,7 +98,6 @@ func printArgs(args []string, description string) {
 	fmt.Println()
 }
 
-// ----------------------------------------------------------------
 func regroupForSingleQuote(inargs []string) ([]string, bool) {
 	outargs := make([]string, 0, len(inargs))
 	inside := false

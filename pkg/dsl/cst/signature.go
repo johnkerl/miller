@@ -1,7 +1,5 @@
-// ================================================================
 // Signatures for user-defined functions and user-defined subroutines
 // ("UDFs" and "UDSs").
-// ================================================================
 
 package cst
 
@@ -9,7 +7,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 type Signature struct {
 	funcOrSubrName          string
 	arity                   int // Computable from len(typeGatedParameterNames) at callee, not at caller

@@ -1,4 +1,3 @@
-// ================================================================
 // This file is adapted from
 // https://cs.opensource.google/go/go/+/refs/tags/go1.17.6:src/encoding/csv/writer.go
 // and used in accordance with its open-source license.
@@ -9,7 +8,6 @@
 // the CSV delimiter is ';', and likewise for other special characters in the
 // ANSI escape sequences.
 //
-// ================================================================
 // Copyright (c) 2009 The Go Authors. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -37,7 +35,6 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// ================================================================
 
 package output
 

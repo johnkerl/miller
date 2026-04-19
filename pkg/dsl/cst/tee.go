@@ -1,21 +1,18 @@
-// ================================================================
 // This handles tee statements.
-// ================================================================
 
 package cst
 
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/output"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 	"github.com/johnkerl/miller/v6/pkg/types"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
-// ----------------------------------------------------------------
 // Examples:
 //   tee > "foo.dat", $*
 //   tee > stderr, $*
@@ -54,9 +51,7 @@ import (
 //         * full record "$*"
 //         * redirect pipe "|"
 //             * string literal "jq ."
-// ----------------------------------------------------------------
 
-// ================================================================
 type tTeeToRedirectFunc func(
 	outrec *mlrval.Mlrmap,
 	state *runtime.State,
@@ -69,17 +64,17 @@ type TeeStatementNode struct {
 	outputHandlerManager      output.OutputHandlerManager // for file/pipe targets
 }
 
-// ----------------------------------------------------------------
-func (root *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeTeeStatement)
+func (root *RootNode) BuildTeeStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeTeeStatement))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
-	expressionNode := astNode.Children[0]
-	redirectorNode := astNode.Children[1]
+	// PGPG: kw_tee Redirector comma FullSrec -> children [1,3] = [Redirector, FullSrec]
+	redirectorNode := astNode.Children[0]
+	expressionNode := astNode.Children[1]
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Expression to be teed, which is $*.
 
-	lib.InternalCodingErrorIf(expressionNode.Type != dsl.NodeTypeFullSrec)
+	lib.InternalCodingErrorIf(expressionNode.Type != asts.NodeType(NodeTypeFullSrec))
 	expressionEvaluable := root.BuildFullSrecRvalueNode()
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -96,32 +91,36 @@ func (root *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 	lib.InternalCodingErrorIf(redirectorNode.Children == nil)
 	lib.InternalCodingErrorIf(len(redirectorNode.Children) != 1)
 	redirectorTargetNode := redirectorNode.Children[0]
-	var err error = nil
+	var err error
 
-	if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
+	if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetStdout) {
 		retval.teeToRedirectFunc = retval.teeToFileOrPipe
 		retval.outputHandlerManager = output.NewStdoutWriteHandlerManager(root.recordWriterOptions)
 		retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stdout)")
-	} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
+	} else if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetStderr) {
 		retval.teeToRedirectFunc = retval.teeToFileOrPipe
 		retval.outputHandlerManager = output.NewStderrWriteHandlerManager(root.recordWriterOptions)
 		retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stderr)")
 	} else {
 		retval.teeToRedirectFunc = retval.teeToFileOrPipe
-
-		retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(redirectorTargetNode)
+		targetNode := redirectorTargetNode
+		if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetRvalue) &&
+			redirectorTargetNode.Children != nil && len(redirectorTargetNode.Children) > 0 {
+			targetNode = redirectorTargetNode.Children[0]
+		}
+		retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(targetNode)
 		if err != nil {
 			return nil, err
 		}
 
-		if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
+		if redirectorNode.Type == asts.NodeType(NodeTypeRedirectWrite) {
 			retval.outputHandlerManager = output.NewFileWritetHandlerManager(root.recordWriterOptions)
-		} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
+		} else if redirectorNode.Type == asts.NodeType(NodeTypeRedirectAppend) {
 			retval.outputHandlerManager = output.NewFileAppendHandlerManager(root.recordWriterOptions)
-		} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
+		} else if redirectorNode.Type == asts.NodeType(NodeTypeRedirectPipe) {
 			retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 		} else {
-			return nil, fmt.Errorf("mlr: unhandled redirector node type %s", string(redirectorNode.Type))
+			return nil, fmt.Errorf("unhandled redirector node type %s", string(redirectorNode.Type))
 		}
 	}
 
@@ -134,24 +133,22 @@ func (root *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 	return retval, nil
 }
 
-// ----------------------------------------------------------------
 func (node *TeeStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	expression := node.expressionEvaluable.Evaluate(state)
 	if !expression.IsMap() {
-		return nil, fmt.Errorf("mlr: tee-evaluaiton yielded %s, not map", expression.GetTypeName())
+		return nil, fmt.Errorf("tee-evaluation yielded %s, not map", expression.GetTypeName())
 	}
 	err := node.teeToRedirectFunc(expression.GetMap(), state)
 	return nil, err
 }
 
-// ----------------------------------------------------------------
 func (node *TeeStatementNode) teeToFileOrPipe(
 	outrec *mlrval.Mlrmap,
 	state *runtime.State,
 ) error {
 	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
-		return fmt.Errorf("mlr: output redirection yielded %s, not string", redirectorTarget.GetTypeName())
+		return fmt.Errorf("output redirection yielded %s, not string", redirectorTarget.GetTypeName())
 	}
 	outputFileName := redirectorTarget.String()
 

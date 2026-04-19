@@ -37,6 +37,7 @@
 "--d2t"
 "--d2x"
 "--dkvp"
+"--dkvpx"
 "--fail-color"
 "--flatsep"
 "--from"

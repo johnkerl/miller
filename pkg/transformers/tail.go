@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameTail = "tail"
 
 var TailSetup = TransformerSetup{
@@ -38,7 +37,7 @@ func transformerTailParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -60,10 +59,14 @@ func transformerTailParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerTailUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-n" {
-			tailCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			n, err := cli.VerbGetIntArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			tailCount = n
 
 			// This is a bit of a hack. In our Getoptify routine we preprocess
 			// the command line sending '-xyz' to '-x -y -z', but leaving
@@ -76,17 +79,21 @@ func transformerTailParseCLI(
 			}
 
 		} else if opt == "-g" {
-			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			names, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			groupByFieldNames = names
 
 		} else {
 			transformerTailUsage(os.Stderr)
-			os.Exit(1)
+			return nil, fmt.Errorf("%s %s: option \"%s\" not recognized", "mlr", verb, opt)
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerTail(
@@ -94,14 +101,12 @@ func transformerTailParseCLI(
 		groupByFieldNames,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerTail struct {
 	// input
 	tailCount         int64
@@ -127,8 +132,6 @@ func NewTransformerTail(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerTail) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -146,7 +149,7 @@ func (tr *TransformerTail) Transform(
 
 		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
 		if recordListForGroup == nil { // first time
-			records := make([]*types.RecordAndContext, 0)
+			records := []*types.RecordAndContext{}
 			recordListForGroup = &records
 			tr.recordListsByGroup.Put(groupingKey, recordListForGroup)
 		}
@@ -158,10 +161,7 @@ func (tr *TransformerTail) Transform(
 
 	} else {
 		for outer := tr.recordListsByGroup.Head; outer != nil; outer = outer.Next {
-			recordListForGroup := outer.Value
-			for _, recordAndContext := range *recordListForGroup {
-				*outputRecordsAndContexts = append(*outputRecordsAndContexts, recordAndContext)
-			}
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, *outer.Value...)
 		}
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}

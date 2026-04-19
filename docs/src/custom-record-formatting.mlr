@@ -1,0 +1,8 @@
+if (NR > 1) { print }
+print "Shape is " . $shape;
+print "Color is " . $color;
+if ($w > 0.5) {
+  print "W HAS EXCEEDED THRESHOLD: " . $w
+} else {
+  print "W is within threshold: " . $w
+}

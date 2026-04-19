@@ -2,9 +2,10 @@ DSL EXPRESSION:
 begin{unset $x}
 
 AST:
-* statement block
-    * begin block
-        * statement block
-            * unset "unset"
-                * direct field value "x"
+"block" [tt:block] [nt:StatementBlock]
+    "begin" [tt:kw_begin] [nt:BeginBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "unset" [tt:kw_unset] [nt:Unset]
+                    "$x" [tt:field_name] [nt:DirectFieldValue]
 

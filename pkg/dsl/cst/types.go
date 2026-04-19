@@ -1,18 +1,15 @@
-// ================================================================
 // Main type definitions for CST build/execute
-// ================================================================
 
 package cst
 
 import (
 	"github.com/johnkerl/miller/v6/pkg/cli"
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/output"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
-// ----------------------------------------------------------------
 // DSLInstanceType is for minor differences in DSL handling between mlr put,
 // mlr filter, and mlr repl.
 //
@@ -31,9 +28,9 @@ const (
 	DSLInstanceTypePut = iota
 	DSLInstanceTypeFilter
 	DSLInstanceTypeREPL
+	DSLInstanceTypeScript
 )
 
-// ----------------------------------------------------------------
 // Please see root.go for context and comments.
 type RootNode struct {
 	beginBlocks                   []*StatementBlockNode
@@ -51,12 +48,10 @@ type RootNode struct {
 	strictMode                    bool
 }
 
-// ----------------------------------------------------------------
 // Many functions have this signature. This type-alias is for function-name
 // lookup tables.
-type NodeBuilder func(astNode *dsl.ASTNode) (IEvaluable, error)
+type NodeBuilder func(astNode *asts.ASTNode) (IEvaluable, error)
 
-// ----------------------------------------------------------------
 // This is for all statements and statement blocks within the CST.
 type IExecutable interface {
 	Execute(state *runtime.State) (*BlockExitPayload, error)
@@ -64,7 +59,6 @@ type IExecutable interface {
 
 type Executor func(state *runtime.State) (*BlockExitPayload, error)
 
-// ================================================================
 // This is for any left-hand side (LHS or Lvalue) of an assignment statement.
 type IAssignable interface {
 	Assign(rvalue *mlrval.Mlrval, state *runtime.State) error
@@ -79,7 +73,6 @@ type IAssignable interface {
 	UnassignIndexed(indices []*mlrval.Mlrval, state *runtime.State)
 }
 
-// ================================================================
 // This is for any right-hand side (RHS or Rvalue) of an assignment statement.
 // Also, for computed field names on the left-hand side, like '$a . $b' in mlr
 // put '$[$a . $b]' = $x + $y'.
@@ -87,17 +80,14 @@ type IEvaluable interface {
 	Evaluate(state *runtime.State) *mlrval.Mlrval
 }
 
-// ================================================================
 // For blocks of statements: the main put/filter block; begin/end blocks;
 // for/while-loop bodies; user-defined functions/subroutines.
 
-// ----------------------------------------------------------------
 // Also implements IExecutable
 type StatementBlockNode struct {
 	executables []IExecutable
 }
 
-// ----------------------------------------------------------------
 // Things a block of statements can do:
 // * execute all the way to the end without a return
 // * break

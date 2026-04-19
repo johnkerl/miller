@@ -3,10 +3,10 @@ $ENV["FOO"] = "bar"
 
 
 AST:
-* statement block
-    * assignment "="
-        * array or map index access "[]"
-            * direct field value "ENV"
-            * string literal "FOO"
-        * string literal "bar"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+            "$ENV" [tt:field_name] [nt:DirectFieldValue]
+            ""FOO"" [tt:string_literal] [nt:string_literal]
+        ""bar"" [tt:string_literal] [nt:string_literal]
 

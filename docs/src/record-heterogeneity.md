@@ -128,7 +128,7 @@ If you `mlr --csv cat` this, you'll get an error message:
 <pre class="pre-non-highlight-in-pair">
 a,b,c
 1,2,3
-mlr: mlr: CSV header/data length mismatch 3 != 2 at filename data/het/ragged.csv row 3.
+mlr: CSV header/data length mismatch 3 != 2 at filename data/het/ragged.csv row 3
 </pre>
 
 There are two kinds of raggedness here. Since CSVs form records by zipping the keys from the header line, together with the values from each data line, the second record has a missing value for key `c` (which ought to be fillable), while the third record has a value `10` with no key for it.
@@ -459,7 +459,7 @@ resource,loadsec,ok
 /path/to/second/file,0.32,true
 /some/other/path,0.97,false
 mlr: CSV schema change: first keys "resource,loadsec,ok"; current keys "record_count,resource"
-mlr: exiting due to data error.
+mlr: exiting due to data error
 </pre>
 
 Miller handles explicit header changes as shown. If your CSV input contains ragged data -- if there are implicit header changes (no intervening blank line and new header line) as seen above -- you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`).

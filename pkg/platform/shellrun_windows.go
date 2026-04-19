@@ -1,9 +1,6 @@
-// ================================================================
 // Wraps 'sh -c foo bar' or 'cmd /c foo bar', nominally for regression-testing.
-// ================================================================
 
 //go:build windows
-// +build windows
 
 package platform
 
@@ -41,11 +38,10 @@ func GetShellRunArray(command string) []string {
 	if os.Getenv("MSYSTEM") != "" {
 		// Running inside MSYS2; sufficiently Unix-like already.
 		return []string{"/bin/sh", "-c", command}
-	} else {
-		cmd := os.Getenv("COMSPEC")
-		if cmd == "" {
-			cmd = "C:\\Windows\\System32\\cmd.exe"
-		}
-		return []string{cmd, "/c", command}
 	}
+	cmd := os.Getenv("COMSPEC")
+	if cmd == "" {
+		cmd = "C:\\Windows\\System32\\cmd.exe"
+	}
+	return []string{cmd, "/c", command}
 }

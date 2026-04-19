@@ -2,14 +2,15 @@ DSL EXPRESSION:
 true {@x=1;@y=2}
 
 AST:
-* statement block
-    * cond block
-        * bool literal "true"
-        * statement block
-            * assignment "="
-                * direct oosvar value "x"
-                * int literal "1"
-            * assignment "="
-                * direct oosvar value "y"
-                * int literal "2"
+"block" [tt:block] [nt:StatementBlock]
+    "true" [tt:literal_true] [nt:CondBlock]
+        "true" [tt:literal_true] [nt:bool_literal]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "=" [tt:equals] [nt:Assignment]
+                    "@x" [tt:oosvar_name] [nt:DirectOosvarValue]
+                    "1" [tt:int_literal] [nt:int_literal]
+                "=" [tt:equals] [nt:Assignment]
+                    "@y" [tt:oosvar_name] [nt:DirectOosvarValue]
+                    "2" [tt:int_literal] [nt:int_literal]
 

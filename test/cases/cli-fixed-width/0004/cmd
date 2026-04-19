@@ -1,0 +1,1 @@
+mlr --p2p --skip-comments --p2j --ragged --fw cat test/cases/cli-fixed-width/0004/input

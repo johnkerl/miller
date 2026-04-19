@@ -3,10 +3,10 @@ $z = $a[1]
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "z"
-        * array or map index access "[]"
-            * direct field value "a"
-            * int literal "1"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$z" [tt:field_name] [nt:DirectFieldValue]
+        "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+            "$a" [tt:field_name] [nt:DirectFieldValue]
+            "1" [tt:int_literal] [nt:int_literal]
 

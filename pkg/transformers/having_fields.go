@@ -23,7 +23,6 @@ const (
 	havingNoFieldsMatching
 )
 
-// ----------------------------------------------------------------
 const verbNameHavingFields = "having-fields"
 
 var HavingFieldsSetup = TransformerSetup{
@@ -62,7 +61,7 @@ func transformerHavingFieldsParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	havingFieldsCriterion := havingFieldsCriterionUnspecified
 	var fieldNames []string = nil
@@ -73,6 +72,7 @@ func transformerHavingFieldsParseCLI(
 	verb := args[argi]
 	argi++
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -85,56 +85,71 @@ func transformerHavingFieldsParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerHavingFieldsUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "--at-least" {
 			havingFieldsCriterion = havingFieldsAtLeast
-			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			regexString = ""
 
 		} else if opt == "--which-are" {
 			havingFieldsCriterion = havingFieldsWhichAre
-			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			regexString = ""
 
 		} else if opt == "--at-most" {
 			havingFieldsCriterion = havingFieldsAtMost
-			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			regexString = ""
 
 		} else if opt == "--all-matching" {
 			havingFieldsCriterion = havingAllFieldsMatching
-			regexString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			regexString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			fieldNames = nil
 
 		} else if opt == "--any-matching" {
 			havingFieldsCriterion = havingAnyFieldsMatching
-			regexString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			regexString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			fieldNames = nil
 
 		} else if opt == "--none-matching" {
 			havingFieldsCriterion = havingNoFieldsMatching
-			regexString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			regexString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			fieldNames = nil
 
 		} else {
-			transformerHavingFieldsUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	if havingFieldsCriterion == havingFieldsCriterionUnspecified {
-		transformerHavingFieldsUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-a, -b, -n, or --any-matching/--all-matching/--none-matching is required")
 	}
 	if fieldNames == nil && regexString == "" {
-		transformerHavingFieldsUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "field names or regex required")
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerHavingFields(
@@ -143,14 +158,12 @@ func transformerHavingFieldsParseCLI(
 		regexString,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerHavingFields struct {
 	fieldNames    []string
 	numFieldNames int64
@@ -161,7 +174,6 @@ type TransformerHavingFields struct {
 	recordTransformerFunc RecordTransformerFunc
 }
 
-// ----------------------------------------------------------------
 func NewTransformerHavingFields(
 	havingFieldsCriterion tHavingFieldsCriterion,
 	fieldNames []string,
@@ -216,8 +228,6 @@ func NewTransformerHavingFields(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerHavingFields) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -228,7 +238,6 @@ func (tr *TransformerHavingFields) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerHavingFields) transformHavingFieldsAtLeast(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -294,7 +303,6 @@ func (tr *TransformerHavingFields) transformHavingFieldsAtMost(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerHavingFields) transformHavingAllFieldsMatching(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

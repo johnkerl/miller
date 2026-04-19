@@ -2,10 +2,11 @@ DSL EXPRESSION:
 begin {;@x=1}
 
 AST:
-* statement block
-    * begin block
-        * statement block
-            * assignment "="
-                * direct oosvar value "x"
-                * int literal "1"
+"block" [tt:block] [nt:StatementBlock]
+    "begin" [tt:kw_begin] [nt:BeginBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "=" [tt:equals] [nt:Assignment]
+                    "@x" [tt:oosvar_name] [nt:DirectOosvarValue]
+                    "1" [tt:int_literal] [nt:int_literal]
 

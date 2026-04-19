@@ -1,6 +1,4 @@
-// ================================================================
 // Go math-library functions
-// ================================================================
 
 package bifs
 
@@ -11,7 +9,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
-// ----------------------------------------------------------------
 // Return error (unary math-library func)
 func _math_unary_erro1(input1 *mlrval.Mlrval, f mathLibUnaryFunc, fname string) *mlrval.Mlrval {
 	return mlrval.FromTypeErrorUnary(fname, input1)
@@ -32,7 +29,6 @@ func _math_unary_void1(input1 *mlrval.Mlrval, f mathLibUnaryFunc, fname string) 
 	return mlrval.VOID
 }
 
-// ----------------------------------------------------------------
 func math_unary_f_i(input1 *mlrval.Mlrval, f mathLibUnaryFunc, fname string) *mlrval.Mlrval {
 	return mlrval.FromFloat(f(float64(input1.AcquireIntValue())))
 }
@@ -160,7 +156,6 @@ func BIF_sgn(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return imudispo[input1.Type()](input1, lib.Sgn, "sgn")
 } // xxx
 
-// ================================================================
 // Exponentiation: DSL operator '**'.  See also
 // https://johnkerl.org/miller6/reference-main-arithmetic.html
 
@@ -170,9 +165,8 @@ func pow_f_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	// Int raised to int power should be float if it can be (i.e. unless overflow)
 	if float64(ioutput) == foutput {
 		return mlrval.FromInt(ioutput)
-	} else {
-		return mlrval.FromFloat(foutput)
 	}
+	return mlrval.FromFloat(foutput)
 }
 func pow_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromFloat(math.Pow(float64(input1.AcquireIntValue()), input2.AcquireFloatValue()))
@@ -207,7 +201,6 @@ func BIF_pow(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return pow_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 func atan2_f_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromFloat(math.Atan2(float64(input1.AcquireIntValue()), float64(input2.AcquireIntValue())))
 }
@@ -244,7 +237,6 @@ func BIF_atan2(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return atan2_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 func mlr_roundm(x, m float64) float64 {
 	return math.Round(x/m) * m
 }
@@ -285,7 +277,6 @@ func BIF_roundm(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return roundm_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ================================================================
 func logifit_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromTypeErrorBinary("logifit", input1, input2)
 }

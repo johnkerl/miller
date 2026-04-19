@@ -3,11 +3,11 @@ DSL EXPRESSION:
 
 
 AST:
-* statement block
-    * bare boolean
-        * operator "||"
-            * int literal "1"
-            * operator "&&"
-                * int literal "2"
-                * int literal "3"
+"block" [tt:block] [nt:StatementBlock]
+    "||" [tt:op_logical_or] [nt:BareBoolean]
+        "||" [tt:op_logical_or] [nt:Operator]
+            "1" [tt:int_literal] [nt:int_literal]
+            "&&" [tt:op_logical_and] [nt:Operator]
+                "2" [tt:int_literal] [nt:int_literal]
+                "3" [tt:int_literal] [nt:int_literal]
 

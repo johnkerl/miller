@@ -13,7 +13,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameSub = "sub"
 const verbNameGsub = "gsub"
 const verbNameSsub = "ssub"
@@ -45,6 +44,8 @@ func transformerSubUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameSub)
 	fmt.Fprintf(o, "Replaces old string with new string in specified field(s), with regex support\n")
 	fmt.Fprintf(o, "for the old string and not handling multiple matches, like the `sub` DSL function.\n")
+	fmt.Fprintf(o, "The replacement string supports C-style backslash escapes such as \\n, \\t,\n")
+	fmt.Fprintf(o, "and \\x1f. Write \\\\ to get a literal backslash.\n")
 	fmt.Fprintf(o, "See also the `gsub` and `ssub` verbs.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c}  Field names to convert.\n")
@@ -59,6 +60,8 @@ func transformerGsubUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameGsub)
 	fmt.Fprintf(o, "Replaces old string with new string in specified field(s), with regex support\n")
 	fmt.Fprintf(o, "for the old string and handling multiple matches, like the `gsub` DSL function.\n")
+	fmt.Fprintf(o, "The replacement string supports C-style backslash escapes such as \\n, \\t,\n")
+	fmt.Fprintf(o, "and \\x1f. Write \\\\ to get a literal backslash.\n")
 	fmt.Fprintf(o, "See also the `sub` and `ssub` verbs.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c}  Field names to convert.\n")
@@ -72,7 +75,10 @@ func transformerSsubUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameSsub)
 	fmt.Fprintf(o, "Replaces old string with new string in specified field(s), without regex support for\n")
-	fmt.Fprintf(o, "the old string, like the `ssub` DSL function. See also the `gsub` and `sub` verbs.\n")
+	fmt.Fprintf(o, "the old string, like the `ssub` DSL function.\n")
+	fmt.Fprintf(o, "Both the search and replacement strings support C-style backslash escapes such\n")
+	fmt.Fprintf(o, "as \\n, \\t, and \\x1f. Write \\\\ to get a literal backslash.\n")
+	fmt.Fprintf(o, "See also the `gsub` and `sub` verbs.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c}  Field names to convert.\n")
 	fmt.Fprintf(o, "-r {regex}  Regular expression for field names to convert.\n")
@@ -86,7 +92,7 @@ type subConstructorFunc func(
 	doRegexes bool,
 	oldText string,
 	newText string,
-) (IRecordTransformer, error)
+) (RecordTransformer, error)
 
 type fieldAcceptorFunc func(
 	fieldName string,
@@ -98,8 +104,8 @@ func transformerSubParseCLI(
 	args []string,
 	opts *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
-	return transformerSubsParseCLI(pargi, argc, args, opts, doConstruct, transformerSubUsage, NewTransformerSub)
+) (RecordTransformer, error) {
+	return transformerSubsParseCLI(pargi, argc, args, opts, doConstruct, transformerSubUsage, NewTransformerSub, false)
 }
 
 func transformerGsubParseCLI(
@@ -108,8 +114,8 @@ func transformerGsubParseCLI(
 	args []string,
 	opts *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
-	return transformerSubsParseCLI(pargi, argc, args, opts, doConstruct, transformerGsubUsage, NewTransformerGsub)
+) (RecordTransformer, error) {
+	return transformerSubsParseCLI(pargi, argc, args, opts, doConstruct, transformerGsubUsage, NewTransformerGsub, false)
 }
 
 func transformerSsubParseCLI(
@@ -118,11 +124,13 @@ func transformerSsubParseCLI(
 	args []string,
 	opts *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
-	return transformerSubsParseCLI(pargi, argc, args, opts, doConstruct, transformerSsubUsage, NewTransformerSsub)
+) (RecordTransformer, error) {
+	return transformerSubsParseCLI(pargi, argc, args, opts, doConstruct, transformerSsubUsage, NewTransformerSsub, true)
 }
 
 // transformerSubsParseCLI is a shared CLI-parser for the sub, gsub, and ssub verbs.
+// When unbackslashOldText is true (ssub only), the search string is also unescaped;
+// for sub/gsub the search string is a regex and Go's regexp engine handles \n/\t/etc.
 func transformerSubsParseCLI(
 	pargi *int,
 	argc int,
@@ -131,7 +139,8 @@ func transformerSubsParseCLI(
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 	usageFunc TransformerUsageFunc,
 	constructorFunc subConstructorFunc,
-) IRecordTransformer {
+	unbackslashOldText bool,
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -145,6 +154,7 @@ func transformerSubsParseCLI(
 	var oldText string
 	var newText string
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -168,7 +178,10 @@ func transformerSubsParseCLI(
 			doRegexes = true
 
 		} else if opt == "-f" {
-			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			doAllFieldNames = false
 		} else {
 			usageFunc(os.Stderr)
@@ -189,11 +202,23 @@ func transformerSubsParseCLI(
 	oldText = args[argi]
 	newText = args[argi+1]
 
+	// Interpret C-style backslash escapes ("\n", "\t", "\x1f", etc.) in the
+	// replacement string the same way the DSL string-literal parser does, so
+	// that e.g. `mlr sub -a r "\n"` matches `sub($x, "r", "\n")` in the DSL.
+	// For sub/gsub the search string is a regex and Go's regexp engine already
+	// handles \n/\r/\t inside patterns; pre-unescaping would corrupt user-
+	// supplied regex metachars like \d or \s. For ssub the search string is a
+	// literal, so we unescape it too.
+	newText = lib.UnbackslashStringLiteral(newText)
+	if unbackslashOldText {
+		oldText = lib.UnbackslashStringLiteral(oldText)
+	}
+
 	argi += 2
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := constructorFunc(
@@ -204,11 +229,10 @@ func transformerSubsParseCLI(
 		newText,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
 type TransformerSubs struct {
@@ -226,7 +250,7 @@ func NewTransformerSub(
 	doRegexes bool,
 	oldText string,
 	newText string,
-) (IRecordTransformer, error) {
+) (RecordTransformer, error) {
 	return NewTransformerSubs(fieldNames, doAllFieldNames, doRegexes, oldText, newText, safe_sub)
 }
 
@@ -236,7 +260,7 @@ func NewTransformerGsub(
 	doRegexes bool,
 	oldText string,
 	newText string,
-) (IRecordTransformer, error) {
+) (RecordTransformer, error) {
 	return NewTransformerSubs(fieldNames, doAllFieldNames, doRegexes, oldText, newText, safe_gsub)
 }
 
@@ -246,7 +270,7 @@ func NewTransformerSsub(
 	doRegexes bool,
 	oldText string,
 	newText string,
-) (IRecordTransformer, error) {
+) (RecordTransformer, error) {
 	return NewTransformerSubs(fieldNames, doAllFieldNames, doRegexes, oldText, newText, safe_ssub)
 }
 
@@ -257,7 +281,7 @@ func NewTransformerSubs(
 	oldText string,
 	newText string,
 	subber bifs.TernaryFunc,
-) (IRecordTransformer, error) {
+) (RecordTransformer, error) {
 	tr := &TransformerSubs{
 		fieldNamesSet: lib.StringListToSet(fieldNames),
 		oldText:       mlrval.FromString(oldText),
@@ -274,8 +298,7 @@ func NewTransformerSubs(
 			// Handles "a.*b"i Miller case-insensitive-regex specification
 			regex, err := lib.CompileMillerRegex(regexString)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "%s %s: cannot compile regex [%s]\n", "mlr", verbNameCut, regexString)
-				os.Exit(1)
+				return nil, cli.VerbErrorf("sub", "invalid regex \"%s\": %w", regexString, err)
 			}
 			tr.regexes[i] = regex
 		}
@@ -336,25 +359,22 @@ func (tr *TransformerSubs) fieldAcceptorAll(
 func safe_sub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		return bifs.BIF_sub(input1, input2, input3)
-	} else {
-		return input1
 	}
+	return input1
 }
 
 // safe_gsub implements gsub, but doesn't produce error-type on non-string input.
 func safe_gsub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		return bifs.BIF_gsub(input1, input2, input3)
-	} else {
-		return input1
 	}
+	return input1
 }
 
 // safe_ssub implements ssub, but doesn't produce error-type on non-string input.
 func safe_ssub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
 		return bifs.BIF_ssub(input1, input2, input3)
-	} else {
-		return input1
 	}
+	return input1
 }

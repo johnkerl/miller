@@ -1,6 +1,6 @@
 # Introduction
 
-**Miller is a command-line tool for querying, shaping, and reformatting data files in various formats, including CSV, TSV, JSON, JSON Lines, and YAML.**
+**Miller is a command-line tool for querying, shaping, and reformatting data files in various formats, including CSV, TSV, JSON, JSON Lines, YAML, and DCF.**
 
 **The big picture:** Even well into the 21st century, our world is full of text-formatted data such as CSV. Google _CSV memes_, for example. We need tooling to _thrive in this world_, nimbly manipulating data which is in CSVs. And we need tooling to _move beyond CSV_, to be able to pull data out and into other storage and processing systems. Miller is designed for both of these goals.
 
@@ -23,7 +23,7 @@ GENMD-SHOW-COMMAND
 mlr --json head -n 1 myfile.json
 GENMD-EOF
 
-The `sort`, `head`, etc., are called *verbs*. They're analogs of familiar command-line tools like `sort`, `head`, and so on -- but they're aware of name-indexed, multi-line file formats like CSV, TSV, JSON, and YAML. In addition, though, using Miller's `put` verb, you can use programming-language statements for expressions like
+The `sort`, `head`, etc., are called *verbs*. They're analogs of familiar command-line tools like `sort`, `head`, and so on -- but they're aware of name-indexed, multi-line file formats like CSV, TSV, JSON, YAML, and DCF. In addition, though, using Miller's `put` verb, you can use programming-language statements for expressions like
 
 GENMD-SHOW-COMMAND
 mlr --csv put '$rate = $units / $seconds' input.csv

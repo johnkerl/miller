@@ -18,9 +18,9 @@ jobs:
     - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
 
     - name: Set up Go
-      uses: actions/setup-go@7a3fe6cf4cb3a834922a1244abfce67bcef6a0c5
+      uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c
       with:
-        go-version: 1.24
+        go-version: 1.25
 
     - name: Build
       run: make build
@@ -41,7 +41,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: mkdir -p bin/${{matrix.os}} && cp mlr.exe bin/${{matrix.os}}
 
-    - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+    - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
       with:
         name: mlr-${{matrix.os}}
         path: bin/${{matrix.os}}/*

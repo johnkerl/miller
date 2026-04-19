@@ -3,19 +3,19 @@ $["a"] = $["b"]; $["x"] = 10 * $["y"]
 
 
 AST:
-* statement block
-    * assignment "="
-        * indirect field value "$[]"
-            * string literal "a"
-        * indirect field value "$[]"
-            * string literal "b"
-    * assignment "="
-        * indirect field value "$[]"
-            * string literal "x"
-        * operator "*"
-            * int literal "10"
-            * indirect field value "$[]"
-                * string literal "y"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$[]" [tt:$[]] [nt:IndirectFieldValue]
+            ""a"" [tt:string_literal] [nt:string_literal]
+        "$[]" [tt:$[]] [nt:IndirectFieldValue]
+            ""b"" [tt:string_literal] [nt:string_literal]
+    "=" [tt:equals] [nt:Assignment]
+        "$[]" [tt:$[]] [nt:IndirectFieldValue]
+            ""x"" [tt:string_literal] [nt:string_literal]
+        "*" [tt:op_star] [nt:Operator]
+            "10" [tt:int_literal] [nt:int_literal]
+            "$[]" [tt:$[]] [nt:IndirectFieldValue]
+                ""y"" [tt:string_literal] [nt:string_literal]
 
 a=pan,b=pan,i=1,x=7.26802863,y=0.72680286
 a=pan,b=pan,i=2,x=5.22151108,y=0.52215111

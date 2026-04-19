@@ -3,11 +3,12 @@ if (1) {2}
 
 
 AST:
-* statement block
-    * if-chain
-        * if-item "if"
-            * int literal "1"
-            * statement block
-                * bare boolean
-                    * int literal "2"
+"block" [tt:block] [nt:StatementBlock]
+    "if_chain" [tt:if_chain] [nt:IfChain]
+        "if" [tt:kw_if] [nt:IfItem]
+            "1" [tt:int_literal] [nt:int_literal]
+            "block" [tt:block] [nt:StatementBlockInBraces]
+                "block" [tt:block] [nt:StatementBlock]
+                    "2" [tt:int_literal] [nt:BareBoolean]
+                        "2" [tt:int_literal] [nt:int_literal]
 

@@ -3,11 +3,11 @@ $z = ENV["HOME"][1]
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "z"
-        * array or map index access "[]"
-            * environment variable "ENV"
-                * string literal "HOME"
-            * int literal "1"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$z" [tt:field_name] [nt:DirectFieldValue]
+        "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+            "ENV" [tt:kw_env] [nt:EnvironmentVariable]
+                ""HOME"" [tt:string_literal] [nt:string_literal]
+            "1" [tt:int_literal] [nt:int_literal]
 

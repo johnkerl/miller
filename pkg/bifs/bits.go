@@ -4,7 +4,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
-// ================================================================
 // Bitwise NOT
 
 func bitwise_not_i_i(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -33,7 +32,6 @@ func BIF_bitwise_not(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return bitwise_not_dispositions[input1.Type()](input1)
 }
 
-// ================================================================
 // Bit-count
 // https://en.wikipedia.org/wiki/Hamming_weight
 
@@ -77,7 +75,6 @@ func BIF_bitcount(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return bitcount_dispositions[input1.Type()](input1)
 }
 
-// ================================================================
 // Bitwise AND
 
 func bitwise_and_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -107,7 +104,6 @@ func BIF_bitwise_and(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return bitwise_and_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 // Bitwise OR
 
 func bitwise_or_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -137,7 +133,6 @@ func BIF_bitwise_or(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return bitwise_or_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 // Bitwise XOR
 
 func bitwise_xor_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -167,7 +162,6 @@ func BIF_bitwise_xor(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return bitwise_xor_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 // Left shift
 
 func lsh_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -197,7 +191,6 @@ func BIF_left_shift(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return left_shift_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 // Signed right shift
 
 func srsh_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -227,7 +220,6 @@ func BIF_signed_right_shift(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return signed_right_shift_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 // Unsigned right shift
 
 func ursh_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {

@@ -3,10 +3,11 @@ func f(){return 1}
 
 
 AST:
-* statement block
-    * function definition "f"
-        * parameter list
-        * statement block
-            * return "return"
-                * int literal "1"
+"block" [tt:block] [nt:StatementBlock]
+    "f" [tt:non_sigil_name] [nt:NamedFunctionDefinition]
+        "params" [tt:params] [nt:ParameterList]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "return" [tt:kw_return] [nt:ReturnStatement]
+                    "1" [tt:int_literal] [nt:int_literal]
 

@@ -1,6 +1,4 @@
-// ================================================================
 // Tests for YAML decode/encode (MlrvalDecodeFromYAML, MlrmapToYAMLNative).
-// ================================================================
 
 package mlrval
 
@@ -177,6 +175,38 @@ func TestYAMLKeyStringNonStringKeys(t *testing.T) {
 	assert.Equal(t, "one", s)
 	v = rec.Get("two")
 	assert.True(t, v.IsInt())
+}
+
+func TestMlrmapToYAMLNativeKeyOrder(t *testing.T) {
+	rec := NewMlrmapAsRecord()
+	rec.PutReference("b", FromInt(22))
+	rec.PutReference("c", FromInt(33))
+	rec.PutReference("a", FromInt(11))
+
+	native, err := MlrmapToYAMLNative(rec)
+	assert.NoError(t, err)
+	out, err := yaml.Marshal(native)
+	assert.NoError(t, err)
+
+	var node yaml.Node
+	err = yaml.Unmarshal(out, &node)
+	assert.NoError(t, err)
+	if !assert.Len(t, node.Content, 1, "expected a single YAML document node") {
+		return
+	}
+
+	mapping := node.Content[0]
+	if !assert.Equal(t, yaml.MappingNode, mapping.Kind, "expected top-level YAML mapping") {
+		return
+	}
+
+	// Keys must appear in insertion order (b, c, a), not sorted (a, b, c).
+	if !assert.GreaterOrEqual(t, len(mapping.Content), 6, "expected at least three key/value pairs") {
+		return
+	}
+	assert.Equal(t, "b", mapping.Content[0].Value)
+	assert.Equal(t, "c", mapping.Content[2].Value)
+	assert.Equal(t, "a", mapping.Content[4].Value)
 }
 
 func TestMlrmapToYAMLNativeNested(t *testing.T) {

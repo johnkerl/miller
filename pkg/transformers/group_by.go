@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameGroupBy = "group-by"
 
 var GroupBySetup = TransformerSetup{
@@ -35,7 +34,7 @@ func transformerGroupByParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -53,39 +52,35 @@ func transformerGroupByParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerGroupByUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else {
-			transformerGroupByUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verbNameGroupBy, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	// Get the group-by field names from the command line
 	if argi >= argc {
-		transformerGroupByUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verbNameGroupBy, "group-by field names required")
 	}
 	groupByFieldNames := lib.SplitString(args[argi], ",")
 	argi++
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerGroupBy(
 		groupByFieldNames,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerGroupBy struct {
 	// input
 	groupByFieldNames []string
@@ -108,8 +103,6 @@ func NewTransformerGroupBy(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerGroupBy) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -127,7 +120,7 @@ func (tr *TransformerGroupBy) Transform(
 
 		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
 		if recordListForGroup == nil {
-			records := make([]*types.RecordAndContext, 0)
+			records := []*types.RecordAndContext{}
 			recordListForGroup = &records
 			tr.recordListsByGroup.Put(groupingKey, recordListForGroup)
 		}
@@ -136,10 +129,7 @@ func (tr *TransformerGroupBy) Transform(
 
 	} else {
 		for outer := tr.recordListsByGroup.Head; outer != nil; outer = outer.Next {
-			recordListForGroup := outer.Value
-			for _, recordAndContext := range *recordListForGroup {
-				*outputRecordsAndContexts = append(*outputRecordsAndContexts, recordAndContext)
-			}
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, *outer.Value...)
 		}
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}

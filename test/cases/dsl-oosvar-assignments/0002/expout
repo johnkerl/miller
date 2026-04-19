@@ -3,10 +3,10 @@ DSL EXPRESSION:
 
 
 AST:
-* statement block
-    * assignment "="
-        * array or map index access "[]"
-            * direct oosvar value "v"
-            * int literal "1"
-        * full record "$*"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+            "@v" [tt:oosvar_name] [nt:DirectOosvarValue]
+            "1" [tt:int_literal] [nt:int_literal]
+        "$*" [tt:full_srec] [nt:FullSrec]
 

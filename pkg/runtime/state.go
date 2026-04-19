@@ -1,12 +1,12 @@
-// ================================================================
 // Tracks everything needed for statement evaluation/assignment in the Miller
 // DSL runtimne: current record/context (the latter being NF, NR, etc);
 // out-of-stream variables; local-variable stack; etc.
-// ================================================================
 
 package runtime
 
 import (
+	"slices"
+
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
@@ -39,6 +39,17 @@ type State struct {
 
 	// StrictMode allows for runtime handling of absent-reads and untyped assignments.
 	StrictMode bool
+
+	// NoExitOnFunctionNotFound is used by the REPL: when true, a call to an
+	// undefined function returns an error mlrval instead of exiting the process.
+	NoExitOnFunctionNotFound bool
+
+	// NextRecordFunc is set by mlr script. When called, reads next record from input.
+	// Returns (record, context, hasMore). When hasMore is false, record and context are for end-of-stream.
+	NextRecordFunc func() (*mlrval.Mlrmap, *types.Context, bool)
+
+	// AtEndOfStream is set when next() returns false. Makes $* evaluate to boolean false.
+	AtEndOfStream bool
 }
 
 func NewEmptyState(options *cli.TOptions, strictMode bool) *State {
@@ -76,12 +87,11 @@ func (state *State) Update(
 func (state *State) SetRegexCaptures(
 	captures []string,
 ) {
-	state.regexCapturesByFrame[0] = lib.CopyStringArray(captures)
+	state.regexCapturesByFrame[0] = slices.Clone(captures)
 }
 
 func (state *State) GetRegexCaptures() []string {
-	regexCaptures := state.regexCapturesByFrame[0]
-	return lib.CopyStringArray(regexCaptures)
+	return slices.Clone(state.regexCapturesByFrame[0])
 }
 
 func (state *State) PushRegexCapturesFrame() {

@@ -77,7 +77,7 @@ fmt format:
 # Needs first: go install honnef.co/go/tools/cmd/staticcheck@latest
 # See also: https://staticcheck.io
 staticcheck:
-	staticcheck ./...
+	staticcheck ./pkg/... ./cmd/mlr/...
 
 # ----------------------------------------------------------------
 # For developers before pushing to GitHub.
@@ -120,7 +120,7 @@ mlr:
 # ----------------------------------------------------------------
 # Please see comments in ./create-release-tarball as well as
 # https://miller.readthedocs.io/en/latest/build/#creating-a-new-release-for-developers
-release_tarball: build check
+release_tarball release-tarball: build check
 	./create-release-tarball
 
 # ================================================================

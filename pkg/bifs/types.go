@@ -10,26 +10,23 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ================================================================
 func BIF_typeof(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromString(input1.GetTypeName())
 }
 
-// ----------------------------------------------------------------
 func string_to_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	i, ok := lib.TryIntFromString(input1.AcquireStringValue())
 	if ok {
 		return mlrval.FromInt(i)
-	} else {
-		return mlrval.FromError(
-			fmt.Errorf(
-				"%s: unacceptable value %s with type %s",
-				"int",
-				input1.StringMaybeQuoted(),
-				input1.GetTypeName(),
-			),
-		)
 	}
+	return mlrval.FromError(
+		fmt.Errorf(
+			"%s: unacceptable value %s with type %s",
+			"int",
+			input1.StringMaybeQuoted(),
+			input1.GetTypeName(),
+		),
+	)
 }
 
 func float_to_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -39,9 +36,8 @@ func float_to_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 func bool_to_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.AcquireBoolValue() {
 		return mlrval.FromInt(1)
-	} else {
-		return mlrval.FromInt(0)
 	}
+	return mlrval.FromInt(0)
 }
 
 func to_int_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -66,21 +62,19 @@ func BIF_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return to_int_dispositions[input1.Type()](input1)
 }
 
-// ----------------------------------------------------------------
 func string_to_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	i, ok := lib.TryIntFromStringWithBase(input1.AcquireStringValue(), input2.AcquireIntValue())
 	if ok {
 		return mlrval.FromInt(i)
-	} else {
-		return mlrval.FromError(
-			fmt.Errorf(
-				"%s: unacceptable value %s with type %s",
-				"int",
-				input1.StringMaybeQuoted(),
-				input1.GetTypeName(),
-			),
-		)
 	}
+	return mlrval.FromError(
+		fmt.Errorf(
+			"%s: unacceptable value %s with type %s",
+			"int",
+			input1.StringMaybeQuoted(),
+			input1.GetTypeName(),
+		),
+	)
 }
 
 func int_to_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -94,9 +88,8 @@ func float_to_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 func bool_to_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.AcquireBoolValue() {
 		return mlrval.FromInt(1)
-	} else {
-		return mlrval.FromInt(0)
 	}
+	return mlrval.FromInt(0)
 }
 
 func to_int_with_base_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -124,21 +117,19 @@ func BIF_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return to_int_with_base_dispositions[input1.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 func string_to_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	f, ok := lib.TryFloatFromString(input1.AcquireStringValue())
 	if ok {
 		return mlrval.FromFloat(f)
-	} else {
-		return mlrval.FromError(
-			fmt.Errorf(
-				"%s: unacceptable value %s with type %s",
-				"float",
-				input1.StringMaybeQuoted(),
-				input1.GetTypeName(),
-			),
-		)
 	}
+	return mlrval.FromError(
+		fmt.Errorf(
+			"%s: unacceptable value %s with type %s",
+			"float",
+			input1.StringMaybeQuoted(),
+			input1.GetTypeName(),
+		),
+	)
 }
 
 func int_to_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -148,9 +139,8 @@ func int_to_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 func bool_to_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.AcquireBoolValue() {
 		return mlrval.FromFloat(1.0)
-	} else {
-		return mlrval.FromFloat(0.0)
 	}
+	return mlrval.FromFloat(0.0)
 }
 
 func to_float_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -175,21 +165,19 @@ func BIF_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return to_float_dispositions[input1.Type()](input1)
 }
 
-// ----------------------------------------------------------------
 func string_to_boolean(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	b, ok := lib.TryBoolFromBoolString(input1.AcquireStringValue())
 	if ok {
 		return mlrval.FromBool(b)
-	} else {
-		return mlrval.FromError(
-			fmt.Errorf(
-				"%s: unacceptable value %s with type %s",
-				"boolean",
-				input1.StringMaybeQuoted(),
-				input1.GetTypeName(),
-			),
-		)
 	}
+	return mlrval.FromError(
+		fmt.Errorf(
+			"%s: unacceptable value %s with type %s",
+			"boolean",
+			input1.StringMaybeQuoted(),
+			input1.GetTypeName(),
+		),
+	)
 }
 
 func int_to_bool(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -222,7 +210,6 @@ func BIF_boolean(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return to_boolean_dispositions[input1.Type()](input1)
 }
 
-// ----------------------------------------------------------------
 func BIF_is_absent(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.IsAbsent())
 }
@@ -241,12 +228,10 @@ func BIF_is_empty(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	} else if input1.IsString() {
 		if input1.AcquireStringValue() == "" {
 			return mlrval.TRUE
-		} else {
-			return mlrval.FALSE
 		}
-	} else {
 		return mlrval.FALSE
 	}
+	return mlrval.FALSE
 }
 func BIF_is_emptymap(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.IsMap() && input1.AcquireMapValue().IsEmpty())
@@ -274,12 +259,10 @@ func BIF_is_notempty(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	} else if input1.IsString() {
 		if input1.AcquireStringValue() == "" {
 			return mlrval.FALSE
-		} else {
-			return mlrval.TRUE
 		}
-	} else {
 		return mlrval.TRUE
 	}
+	return mlrval.TRUE
 }
 func BIF_is_notmap(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(!input1.IsMap())
@@ -306,12 +289,10 @@ func BIF_is_nan(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	fval, ok := input1.GetFloatValue()
 	if ok {
 		return mlrval.FromBool(math.IsNaN(fval))
-	} else {
-		return mlrval.FALSE
 	}
+	return mlrval.FALSE
 }
 
-// ----------------------------------------------------------------
 func assertingCommon(input1, check *mlrval.Mlrval, description string, context *types.Context) *mlrval.Mlrval {
 	if check.IsFalse() {
 		// TODO: get context as in the C impl

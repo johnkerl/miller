@@ -7,8 +7,10 @@ import (
 	"runtime"
 )
 
-// InternalCodingErrorIf is a lookalike for C's __FILE__ and __LINE__ printing,
-// with exit 1 if the condition is true.
+// InternalCodingErrorIf reports an internal bug and exits. Use only for
+// "should never happen" conditions (assertions), not for user or I/O errors.
+// This is intentionally an exit helper: these indicate programmer error,
+// and the codebase prefers returning error for recoverable failures.
 func InternalCodingErrorIf(condition bool) {
 	if !condition {
 		return

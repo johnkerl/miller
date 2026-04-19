@@ -1,6 +1,4 @@
-// ================================================================
 // Constructors
-// ================================================================
 
 package mlrval
 
@@ -125,14 +123,14 @@ func FromNotCollectionError(funcname string, v *Mlrval) *Mlrval {
 	return FromNotNamedTypeError(funcname, v, "array or map")
 }
 
-func FromNotNamedTypeError(funcname string, v *Mlrval, expected_type_name string) *Mlrval {
+func FromNotNamedTypeError(funcname string, v *Mlrval, expectedTypeName string) *Mlrval {
 	return FromError(
 		fmt.Errorf(
 			"%s: unacceptable value %s with type %s; needed type %s",
 			funcname,
 			v.StringMaybeQuoted(),
 			v.GetTypeName(),
-			expected_type_name,
+			expectedTypeName,
 		),
 	)
 }
@@ -150,10 +148,9 @@ func FromInferredType(input string) *Mlrval {
 		return TRUE
 	} else if input == "false" {
 		return FALSE
-	} else {
-		packageLevelInferrer(mv)
-		return mv
 	}
+	packageLevelInferrer(mv)
+	return mv
 }
 
 func FromString(input string) *Mlrval {
@@ -211,9 +208,8 @@ func TryFromIntString(input string) *Mlrval {
 	intval, ok := lib.TryIntFromString(input)
 	if ok {
 		return FromPrevalidatedIntString(input, intval)
-	} else {
-		return FromString(input)
 	}
+	return FromString(input)
 }
 
 // TODO: comment
@@ -256,9 +252,8 @@ func TryFromFloatString(input string) *Mlrval {
 	floatval, ok := lib.TryFloatFromString(input)
 	if ok {
 		return FromPrevalidatedFloatString(input, floatval)
-	} else {
-		return FromString(input)
 	}
+	return FromString(input)
 }
 
 // TODO: comment
@@ -280,9 +275,8 @@ func FromPrevalidatedFloatString(input string, floatval float64) *Mlrval {
 func FromBool(input bool) *Mlrval {
 	if input {
 		return TRUE
-	} else {
-		return FALSE
 	}
+	return FALSE
 }
 
 func FromBoolString(input string) *Mlrval {
@@ -290,10 +284,9 @@ func FromBoolString(input string) *Mlrval {
 		return TRUE
 	} else if input == "false" {
 		return FALSE
-	} else {
-		lib.InternalCodingErrorIf(true)
-		return nil // not reached
 	}
+	lib.InternalCodingErrorIf(true)
+	return nil // not reached
 }
 
 // The user-defined function is of type 'interface{}' here to avoid what would
@@ -328,7 +321,7 @@ func FromSingletonArray(element *Mlrval) *Mlrval {
 }
 
 func FromEmptyArray() *Mlrval {
-	return FromArray(make([]*Mlrval, 0))
+	return FromArray([]*Mlrval{})
 }
 
 func FromMap(mapval *Mlrmap) *Mlrval {

@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 // Note: If OPS is single-character then we can do alignment of the form
 //
 //   ab  123
@@ -25,7 +24,6 @@ import (
 //   def: 4567
 //
 // then they can do that.
-// ----------------------------------------------------------------
 
 type RecordWriterXTAB struct {
 	writerOptions *cli.TWriterOptions

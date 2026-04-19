@@ -9,7 +9,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameDecimate = "decimate"
 
 var DecimateSetup = TransformerSetup{
@@ -38,13 +37,14 @@ func transformerDecimateParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
 
+	var err error
 	decimateCount := int64(10)
 	atStart := false
 	atEnd := false
@@ -62,13 +62,15 @@ func transformerDecimateParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerDecimateUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-n" {
-			decimateCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			decimateCount, err = cli.VerbGetIntArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			if decimateCount <= 0 {
-				transformerDecimateUsage(os.Stderr)
-				os.Exit(1)
+				return nil, cli.VerbErrorf(verb, "-n must be positive")
 			}
 
 		} else if opt == "-b" {
@@ -78,17 +80,19 @@ func transformerDecimateParseCLI(
 			atEnd = true
 
 		} else if opt == "-g" {
-			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else {
-			transformerDecimateUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerDecimate(
@@ -98,14 +102,12 @@ func transformerDecimateParseCLI(
 		groupByFieldNames,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerDecimate struct {
 	decimateCount     int64
 	remainderToKeep   int64
@@ -114,7 +116,6 @@ type TransformerDecimate struct {
 	countsByGroup map[string]int64
 }
 
-// ----------------------------------------------------------------
 func NewTransformerDecimate(
 	decimateCount int64,
 	atStart bool,
@@ -136,8 +137,6 @@ func NewTransformerDecimate(
 
 	return tr, nil
 }
-
-// ----------------------------------------------------------------
 
 func (tr *TransformerDecimate) Transform(
 	inrecAndContext *types.RecordAndContext,

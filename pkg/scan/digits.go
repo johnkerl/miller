@@ -60,31 +60,27 @@ var isFloatDigitTable = []bool{
 func isDecimalDigit(c byte) bool {
 	if c < 128 { // byte is unsigned in Go
 		return isDecimalDigitTable[c]
-	} else {
-		return false
 	}
+	return false
 }
 
 func isOctalDigit(c byte) bool {
 	if c < 128 { // byte is unsigned in Go
 		return isOctalDigitTable[c]
-	} else {
-		return false
 	}
+	return false
 }
 
 func isHexDigit(c byte) bool {
 	if c < 128 { // byte is unsigned in Go
 		return isHexDigitTable[c]
-	} else {
-		return false
 	}
+	return false
 }
 
 func isFloatDigit(c byte) bool {
 	if c < 128 { // byte is unsigned in Go
 		return isFloatDigitTable[c]
-	} else {
-		return false
 	}
+	return false
 }

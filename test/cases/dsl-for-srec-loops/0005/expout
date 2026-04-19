@@ -3,22 +3,23 @@ for(k,v in $*) {$[k."_orig"]=v; $[k] = "other"}
 
 
 AST:
-* statement block
-    * double-variable for-loop "for"
-        * local variable "k"
-        * local variable "v"
-        * full record "$*"
-        * statement block
-            * assignment "="
-                * indirect field value "$[]"
-                    * dot operator "."
-                        * local variable "k"
-                        * string literal "_orig"
-                * local variable "v"
-            * assignment "="
-                * indirect field value "$[]"
-                    * local variable "k"
-                * string literal "other"
+"block" [tt:block] [nt:StatementBlock]
+    "for" [tt:kw_for] [nt:ForLoopTwoVariable]
+        "k" [tt:non_sigil_name] [nt:LocalVariable]
+        "v" [tt:non_sigil_name] [nt:LocalVariable]
+        "$*" [tt:full_srec] [nt:FullSrec]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "=" [tt:equals] [nt:Assignment]
+                    "$[]" [tt:$[]] [nt:IndirectFieldValue]
+                        "." [tt:op_dot] [nt:DotOperator]
+                            "k" [tt:non_sigil_name] [nt:LocalVariable]
+                            ""_orig"" [tt:string_literal] [nt:string_literal]
+                    "v" [tt:non_sigil_name] [nt:LocalVariable]
+                "=" [tt:equals] [nt:Assignment]
+                    "$[]" [tt:$[]] [nt:IndirectFieldValue]
+                        "k" [tt:non_sigil_name] [nt:LocalVariable]
+                    ""other"" [tt:string_literal] [nt:string_literal]
 
 a     b     i     x     y     a_orig b_orig i_orig x_orig     y_orig
 other other other other other pan    pan    1      0.34679014 0.72680286

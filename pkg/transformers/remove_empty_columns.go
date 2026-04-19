@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameRemoveEmptyColumns = "remove-empty-columns"
 
 var RemoveEmptyColumnsSetup = TransformerSetup{
@@ -35,7 +34,7 @@ func transformerRemoveEmptyColumnsParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -53,29 +52,26 @@ func transformerRemoveEmptyColumnsParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerRemoveEmptyColumnsUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else {
-			transformerRemoveEmptyColumnsUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verbNameRemoveEmptyColumns, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerRemoveEmptyColumns()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerRemoveEmptyColumns struct {
 	recordsAndContexts      []*types.RecordAndContext
 	namesWithNonEmptyValues map[string]bool
@@ -83,13 +79,11 @@ type TransformerRemoveEmptyColumns struct {
 
 func NewTransformerRemoveEmptyColumns() (*TransformerRemoveEmptyColumns, error) {
 	tr := &TransformerRemoveEmptyColumns{
-		recordsAndContexts:      make([]*types.RecordAndContext, 0),
+		recordsAndContexts:      []*types.RecordAndContext{},
 		namesWithNonEmptyValues: make(map[string]bool),
 	}
 	return tr, nil
 }
-
-// ---------------------------------------------------------------
 
 func (tr *TransformerRemoveEmptyColumns) Transform(
 	inrecAndContext *types.RecordAndContext,

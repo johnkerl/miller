@@ -14,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameNest = "nest"
 
 var NestSetup = TransformerSetup{
@@ -95,7 +94,7 @@ func transformerNestParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -128,14 +127,22 @@ func transformerNestParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerNestUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-f" {
-			fieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			fieldName = s
 
 		} else if opt == "-r" {
 			doRegexes = true
-			fieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			fieldName = s
 
 		} else if opt == "--explode" || opt == "-e" {
 			doExplode = true
@@ -159,12 +166,24 @@ func transformerNestParseCLI(
 			doAcrossFieldsSpecified = true
 
 		} else if opt == "--nested-fs" || opt == "-S" {
-			nestedFS = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			nestedFS = s
 		} else if opt == "--nested-ps" || opt == "-P" {
-			nestedPS = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			nestedPS = s
 
 		} else if opt == "--evar" {
-			evfs = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			evfs = s
 			doExplode = true
 			doExplodeSpecified = true
 			doPairs = false
@@ -173,7 +192,11 @@ func transformerNestParseCLI(
 			doAcrossFieldsSpecified = true
 
 		} else if opt == "--ivar" {
-			ivfs = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			ivfs = s
 			doExplode = false
 			doExplodeSpecified = true
 			doPairs = false
@@ -183,7 +206,7 @@ func transformerNestParseCLI(
 
 		} else {
 			transformerNestUsage(os.Stderr)
-			os.Exit(1)
+			return nil, fmt.Errorf("%s %s: option \"%s\" not recognized", "mlr", verb, opt)
 		}
 	}
 
@@ -202,32 +225,31 @@ func transformerNestParseCLI(
 
 	if fieldName == "" {
 		transformerNestUsage(os.Stderr)
-		os.Exit(1)
+		return nil, fmt.Errorf("%s %s: -f or -r is required", "mlr", verb)
 	}
 	if !doExplodeSpecified {
 		transformerNestUsage(os.Stderr)
-		os.Exit(1)
+		return nil, fmt.Errorf("%s %s: --explode or --implode is required", "mlr", verb)
 	}
 	if !doPairsSpecified {
 		transformerNestUsage(os.Stderr)
-		os.Exit(1)
+		return nil, fmt.Errorf("%s %s: --values or --pairs is required", "mlr", verb)
 	}
 	if !doAcrossFieldsSpecified {
 		transformerNestUsage(os.Stderr)
-		os.Exit(1)
+		return nil, fmt.Errorf("%s %s: --across-records or --across-fields is required", "mlr", verb)
 	}
 	if doPairs && !doExplode {
 		transformerNestUsage(os.Stderr)
-		os.Exit(1)
+		return nil, fmt.Errorf("%s %s: --implode with --pairs doesn't make sense", "mlr", verb)
 	}
 	if doRegexes && !doExplode {
-		fmt.Fprintf(os.Stderr, "mlr nest: -r is only supported with --explode, not --implode.\n")
-		os.Exit(1)
+		return nil, fmt.Errorf("mlr nest: -r is only supported with --explode, not --implode")
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerNest(
@@ -240,14 +262,12 @@ func transformerNestParseCLI(
 		doAcrossFields,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerNest struct {
 	fieldName string
 	nestedFS  string
@@ -265,7 +285,6 @@ type TransformerNest struct {
 	recordTransformerFunc RecordTransformerFunc
 }
 
-// ----------------------------------------------------------------
 func NewTransformerNest(
 	fieldName string,
 	doRegexes bool,
@@ -344,8 +363,6 @@ func NewTransformerNest(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerNest) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -356,7 +373,6 @@ func (tr *TransformerNest) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 // getMatchingFieldNames returns field names matching tr.fieldRegex in record order.
 // When !tr.doRegexes, returns [tr.fieldName] if present, else [].
 func (tr *TransformerNest) getMatchingFieldNames(inrec *mlrval.Mlrmap) []string {
@@ -375,7 +391,6 @@ func (tr *TransformerNest) getMatchingFieldNames(inrec *mlrval.Mlrmap) []string 
 	return names
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerNest) explodeValuesAcrossFields(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -420,7 +435,6 @@ func (tr *TransformerNest) explodeValuesAcrossFields(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerNest) explodeValuesAcrossRecords(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -444,8 +458,8 @@ func (tr *TransformerNest) explodeValuesAcrossRecords(
 		svalue := mvalue.String()
 
 		// Not lib.SplitString so 'x=' will map to 'x=', rather than no field at all
-		pieces := strings.Split(svalue, tr.nestedFS)
-		for _, piece := range pieces {
+		pieces := strings.SplitSeq(svalue, tr.nestedFS)
+		for piece := range pieces {
 			outrec := inrec.Copy()
 			outrec.PutReference(fieldName, mlrval.FromString(piece))
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(outrec, &inrecAndContext.Context))
@@ -456,7 +470,6 @@ func (tr *TransformerNest) explodeValuesAcrossRecords(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerNest) explodePairsAcrossFields(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -509,7 +522,6 @@ func (tr *TransformerNest) explodePairsAcrossFields(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerNest) explodePairsAcrossRecords(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -556,7 +568,6 @@ func (tr *TransformerNest) explodePairsAcrossRecords(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerNest) implodeValuesAcrossFields(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -605,7 +616,6 @@ func (tr *TransformerNest) implodeValuesAcrossFields(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerNest) implodeValueAcrossRecords(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -683,6 +693,6 @@ type tNestBucket struct {
 func newNestBucket(representative *mlrval.Mlrmap) *tNestBucket {
 	return &tNestBucket{
 		representative: representative,
-		pairs:          make([]*mlrval.Mlrmap, 0),
+		pairs:          []*mlrval.Mlrmap{},
 	}
 }

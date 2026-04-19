@@ -1,4 +1,3 @@
-// ================================================================
 // This handles bare booleans and filter statements.
 //
 // Example of the former: 'NR > 10' or '$x =~ "(..)_(...)"' without if or '{...}' body.
@@ -14,17 +13,15 @@
 // e.g. if the user types '1+2' then the repl prints '3' and that expression is
 // stored as a bare-boolean evaluable. Which is a misnomer (sorry!) since 3 is
 // not a boolean.
-// ================================================================
 
 package cst
 
 import (
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
-// ----------------------------------------------------------------
 // BareBooleanStatementNode is for implicit filter statements such as mlr
 // filter 'NR < 10' -- "implicit" since the word "filter" doesn't appear within
 // the single quotes as part of the DSL expression per se. Or (as noted above)
@@ -34,9 +31,8 @@ type BareBooleanStatementNode struct {
 	writeToState         bool
 }
 
-// ----------------------------------------------------------------
-func (root *RootNode) BuildBareBooleanStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeBareBoolean)
+func (root *RootNode) BuildBareBooleanStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeBareBoolean))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 
 	bareBooleanEvaluable, err := root.BuildEvaluableNode(astNode.Children[0])
@@ -61,7 +57,6 @@ func (node *BareBooleanStatementNode) Execute(state *runtime.State) (*BlockExitP
 	return nil, nil
 }
 
-// ----------------------------------------------------------------
 // FilterStatementNode is for explicit filter statements such as mlr put
 // 'filter NR < 10', where the word "filter" appears within the single quotes
 // and is part of the DSL expression per se.
@@ -70,8 +65,8 @@ type FilterStatementNode struct {
 	filterEvaluable IEvaluable
 }
 
-func (root *RootNode) BuildFilterStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFilterStatement)
+func (root *RootNode) BuildFilterStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeFilterStatement))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 
 	filterEvaluable, err := root.BuildEvaluableNode(astNode.Children[0])

@@ -3,12 +3,13 @@ for ((a,b), b in @*) {}
 
 
 AST:
-* statement block
-    * multi-variable for-loop "for"
-        * parameter list
-            * local variable "a"
-            * local variable "b"
-        * local variable "b"
-        * full oosvar "@*"
-        * statement block
+"block" [tt:block] [nt:StatementBlock]
+    "for" [tt:kw_for] [nt:ForLoopMultivariable]
+        "multi_index" [tt:multi_index] [nt:MultiIndex]
+            "a" [tt:non_sigil_name] [nt:LocalVariable]
+            "b" [tt:non_sigil_name] [nt:LocalVariable]
+        "b" [tt:non_sigil_name] [nt:LocalVariable]
+        "@*" [tt:full_oosvar] [nt:FullOosvar]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
 

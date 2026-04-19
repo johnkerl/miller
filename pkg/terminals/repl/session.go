@@ -1,4 +1,3 @@
-// ================================================================
 // Top-level handler for a REPL session, including setup/construction, and
 // ingesting command-lines. Command-line strings are triaged and send off to
 // the appropriate handlers: DSL parse/execute if the command is a DSL statement
@@ -11,7 +10,6 @@
 //
 // is a delight. :)
 //
-// ================================================================
 
 package repl
 
@@ -35,7 +33,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 func NewRepl(
 	exeName string,
 	replName string,
@@ -65,6 +62,7 @@ func NewRepl(
 	context := types.NewContext()
 
 	runtimeState := runtime.NewEmptyState(options, strictMode)
+	runtimeState.NoExitOnFunctionNotFound = true
 	runtimeState.Update(inrec, context)
 	// The filter expression for the main Miller DSL is any non-assignment
 	// statement like 'true' or '$x > 0.5' etc. For the REPL, we re-use this for
@@ -87,7 +85,7 @@ func NewRepl(
 
 	// If there was a --load/--mload on the command line, load those DSL strings here (e.g.
 	// someone's local function library).
-	dslStrings := make([]string, 0)
+	dslStrings := []string{}
 	for _, filename := range options.DSLPreloadFileNames {
 		theseDSLStrings, err := lib.LoadStringsFromFileOrDir(filename, ".mlr")
 		if err != nil {
@@ -147,7 +145,6 @@ func controlCHandler(sysToSignalHandlerChannel chan os.Signal, appSignalNotifica
 	}
 }
 
-// ----------------------------------------------------------------
 func (repl *Repl) handleSession(istream *os.File) error {
 	if repl.showStartupBanner {
 		repl.printStartupBanner()
@@ -158,7 +155,27 @@ func (repl *Repl) handleSession(istream *os.File) error {
 	for {
 		repl.printPrompt1()
 
-		line, err := lineReader.ReadString('\n')
+		// Read in a goroutine so we can select on Control-C and exit cleanly at the prompt.
+		type readResult struct {
+			line string
+			err  error
+		}
+		readDone := make(chan readResult, 1)
+		go func() {
+			line, err := lineReader.ReadString('\n')
+			readDone <- readResult{line, err}
+		}()
+
+		var line string
+		var err error
+		select {
+		case <-repl.appSignalNotificationChannel:
+			// Control-C at prompt: exit cleanly (controlCHandler already printed ^C)
+			return nil
+		case result := <-readDone:
+			line, err = result.line, result.err
+		}
+
 		if err == io.EOF {
 			if repl.inputIsTerminal {
 				fmt.Println()
@@ -170,19 +187,15 @@ func (repl *Repl) handleSession(istream *os.File) error {
 			return err
 		}
 
-		// Acknowledge any control-C's, even if typed at a ready prompt. We
-		// need to drain them all out since they're in a channel from the
-		// signal-handler goroutine.
-		doneDraining := false
+		// Drain any additional control-C's that may have been typed (e.g. to cancel
+		// partial input). Ignore the line if so.
+	drainLoop:
 		for {
 			select {
 			case <-repl.appSignalNotificationChannel:
-				line = "" // Ignore any partially-entered line -- a ^C should do that
+				line = ""
 			default:
-				doneDraining = true
-			}
-			if doneDraining {
-				break
+				break drainLoop
 			}
 		}
 
@@ -207,14 +220,13 @@ func (repl *Repl) handleSession(istream *os.File) error {
 			// We need the non-trimmed line here since the DSL syntax for comments is '#.*\n'.
 			err = repl.handleDSLStringImmediate(line, repl.doWarnings)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			}
 		}
 	}
 	return nil
 }
 
-// ----------------------------------------------------------------
 // Context: the "<" or "<<" has already been seen. we read until ">" or ">>".
 
 func (repl *Repl) handleMultiLine(
@@ -242,14 +254,14 @@ func (repl *Repl) handleMultiLine(
 	}
 	dslString := buffer.String()
 
-	var err error = nil
+	var err error
 	if doImmediate {
 		err = repl.handleDSLStringImmediate(dslString, repl.doWarnings)
 	} else {
 		err = repl.handleDSLStringBulk(dslString, repl.doWarnings)
 	}
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 	}
 
 	return nil

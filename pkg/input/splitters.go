@@ -20,9 +20,8 @@ type iPairSplitter interface {
 func newPairSplitter(options *cli.TReaderOptions) iPairSplitter {
 	if options.IPSRegex == nil {
 		return &tIPSSplitter{ips: options.IPS}
-	} else {
-		return &tIPSRegexSplitter{ipsRegex: options.IPSRegex}
 	}
+	return &tIPSRegexSplitter{ipsRegex: options.IPSRegex}
 }
 
 type tIPSSplitter struct {
@@ -50,9 +49,8 @@ type iFieldSplitter interface {
 func newFieldSplitter(options *cli.TReaderOptions) iFieldSplitter {
 	if options.IFSRegex == nil {
 		return &tIFSSplitter{ifs: options.IFS, allowRepeatIFS: options.AllowRepeatIFS}
-	} else {
-		return &tIFSRegexSplitter{ifsRegex: options.IFSRegex}
 	}
+	return &tIFSRegexSplitter{ifsRegex: options.IFSRegex}
 }
 
 type tIFSSplitter struct {

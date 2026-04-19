@@ -1,6 +1,4 @@
-// ================================================================
 // Helper data structure for the join verb
-// ================================================================
 
 package utils
 
@@ -9,7 +7,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 type JoinBucket struct {
 	leftFieldValues    []*mlrval.Mlrval
 	RecordsAndContexts []*types.RecordAndContext
@@ -21,7 +18,7 @@ func NewJoinBucket(
 ) *JoinBucket {
 	return &JoinBucket{
 		leftFieldValues:    leftFieldValues,
-		RecordsAndContexts: make([]*types.RecordAndContext, 0),
+		RecordsAndContexts: []*types.RecordAndContext{},
 		WasPaired:          false,
 	}
 }

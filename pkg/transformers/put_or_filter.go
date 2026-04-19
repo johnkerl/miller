@@ -6,15 +6,14 @@ import (
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/dsl/cst"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 	"github.com/johnkerl/miller/v6/pkg/types"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
-// ----------------------------------------------------------------
 const verbNamePut = "put"
 
 var PutSetup = TransformerSetup{
@@ -33,7 +32,6 @@ var FilterSetup = TransformerSetup{
 	IgnoresInput: false,
 }
 
-// ----------------------------------------------------------------
 func transformerPutUsage(
 	o *os.File,
 ) {
@@ -180,21 +178,20 @@ More example filter expressions:
 	fmt.Fprintf(o, "See also %s/reference-dsl for more context.\n", lib.DOC_URL)
 }
 
-// ----------------------------------------------------------------
 func transformerPutOrFilterParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
 	mainOptions *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
 
-	var dslStrings []string = make([]string, 0)
+	var dslStrings []string = []string{}
 	haveDSLStringsHere := false
 	echoDSLString := false
 	printASTAsTree := false
@@ -206,7 +203,7 @@ func transformerPutOrFilterParseCLI(
 	strictMode := false
 	invertFilter := false
 	suppressOutputRecord := false
-	presets := make([]string, 0)
+	presets := []string{}
 
 	// TODO: make sure this is a full nested-struct copy.
 	var options *cli.TOptions = nil
@@ -220,10 +217,8 @@ func transformerPutOrFilterParseCLI(
 	for _, filename := range options.DSLPreloadFileNames {
 		theseDSLStrings, err := lib.LoadStringsFromFileOrDir(filename, ".mlr")
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression from \"%s\": ",
-				"mlr", verb, filename)
-			fmt.Println(err)
-			os.Exit(1)
+			return nil, fmt.Errorf("%s %s: cannot load DSL expression from \"%s\": %w",
+				"mlr", verb, filename, err)
 		}
 		dslStrings = append(dslStrings, theseDSLStrings...)
 	}
@@ -241,11 +236,14 @@ func transformerPutOrFilterParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerPutOrFilterUsage(os.Stdout, verb)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-f" {
 			// Get a DSL string from the user-specified filename
-			filename := cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			filename, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 			// Miller has a two-pass command-line parser. If the user does
 			//   `mlr put -f foo.mlr`
@@ -261,17 +259,18 @@ func transformerPutOrFilterParseCLI(
 			if doConstruct {
 				theseDSLStrings, err := lib.LoadStringsFromFileOrDir(filename, ".mlr")
 				if err != nil {
-					fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression from file \"%s\": ",
-						"mlr", verb, filename)
-					fmt.Println(err)
-					os.Exit(1)
+					return nil, fmt.Errorf("%s %s: cannot load DSL expression from file \"%s\": %w",
+						"mlr", verb, filename, err)
 				}
 				dslStrings = append(dslStrings, theseDSLStrings...)
 			}
 			haveDSLStringsHere = true
 
 		} else if opt == "-e" {
-			dslString := cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			dslString, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			dslStrings = append(dslStrings, dslString)
 			haveDSLStringsHere = true
 
@@ -280,7 +279,10 @@ func transformerPutOrFilterParseCLI(
 			//   mlr put -s sum=0
 			// is like
 			//   mlr put -s 'begin {@sum = 0}'
-			preset := cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			preset, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			presets = append(presets, preset)
 
 		} else if opt == "-x" {
@@ -331,8 +333,7 @@ func transformerPutOrFilterParseCLI(
 				// Nothing else to handle here.
 				argi = largi
 			} else {
-				transformerPutOrFilterUsage(os.Stderr, verb)
-				os.Exit(1)
+				return nil, cli.VerbErrorf(verb, "option not recognized")
 			}
 		}
 	}
@@ -345,8 +346,7 @@ func transformerPutOrFilterParseCLI(
 	if !haveDSLStringsHere {
 		// Get the DSL string from the command line, after the flags
 		if argi >= argc {
-			fmt.Fprintf(os.Stderr, "mlr %s: -f/-e requires a filename as argument.\n", verb)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "expression or -f/-e is required")
 		}
 		dslString := args[argi]
 		dslStrings = append(dslStrings, dslString)
@@ -355,7 +355,7 @@ func transformerPutOrFilterParseCLI(
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	var dslInstanceType cst.DSLInstanceType = cst.DSLInstanceTypePut
@@ -383,14 +383,12 @@ func transformerPutOrFilterParseCLI(
 		options,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerPut struct {
 	doFilter             bool // false for the put verb, true for the filter verb
 	cstRootNode          *cst.RootNode
@@ -427,7 +425,7 @@ func NewTransformerPut(
 		false, // isReplImmediate
 		doWarnings,
 
-		func(dslString string, astNode *dsl.AST) {
+		func(dslString string, astNode *asts.AST) {
 
 			if echoDSLString {
 				fmt.Println("DSL EXPRESSION:")
@@ -516,7 +514,7 @@ func (tr *TransformerPut) Transform(
 			tr.runtimeState.Update(nil, &context)
 			err := tr.cstRootNode.ExecuteBeginBlocks(tr.runtimeState)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				os.Exit(1)
 			}
 			tr.executedBeginBlocks = true
@@ -527,7 +525,7 @@ func (tr *TransformerPut) Transform(
 		// Execute the main block on the current input record
 		outrec, err := tr.cstRootNode.ExecuteMainBlock(tr.runtimeState)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 
@@ -577,7 +575,7 @@ func (tr *TransformerPut) Transform(
 		if !tr.executedBeginBlocks {
 			err := tr.cstRootNode.ExecuteBeginBlocks(tr.runtimeState)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 				os.Exit(1)
 			}
 		}
@@ -585,7 +583,7 @@ func (tr *TransformerPut) Transform(
 		// Execute the end { ... } after the last input record
 		err := tr.cstRootNode.ExecuteEndBlocks(tr.runtimeState)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 

@@ -1,4 +1,3 @@
-// ================================================================
 // This is the handler for taking DSL statements typed in interactively by the
 // user, parsing them to an AST, building a CST from the AST, and executing the
 // CST. It also handles DSL statements invoked using ':load' or multi-line '<<'
@@ -15,7 +14,6 @@
 //   blocks, the statement(s) is/are executed immediately for interactive mode,
 //   else populated into the CST's main-statements block for load-from-file
 //   multi-line mode.
-// ================================================================
 
 package repl
 
@@ -23,12 +21,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/dsl/cst"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
-// ----------------------------------------------------------------
 func (repl *Repl) handleDSLStringImmediate(dslString string, doWarnings bool) error {
 	return repl.handleDSLStringAux(dslString, true, doWarnings)
 }
@@ -54,7 +51,7 @@ func (repl *Repl) handleDSLStringAux(
 		cst.DSLInstanceTypeREPL,
 		isReplImmediate,
 		doWarnings,
-		func(dslString string, astNode *dsl.AST) {
+		func(dslString string, astNode *asts.AST) {
 			if repl.astPrintMode == ASTPrintParex {
 				astNode.PrintParex()
 			} else if repl.astPrintMode == ASTPrintParexOneLine {

@@ -1,0 +1,1 @@
+mlr --idcf --ojson cat test/input/test.dcf

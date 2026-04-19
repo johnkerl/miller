@@ -1,4 +1,3 @@
-// ================================================================
 // Options for the step verb are mostly simple operations involving the previous record and the
 // current record, optionally grouped by one or more group-by field names. For example, with input
 // data
@@ -63,7 +62,6 @@
 //   window object for their grouping key.  We don't know a priori when the end of the record stream
 //   is so we keep the last n records for each grouping key.  At end of the record stream we process
 //   these.
-// ================================================================
 
 package transformers
 
@@ -83,7 +81,6 @@ import (
 // For EWMA
 const DEFAULT_STRING_ALPHA = "0.5"
 
-// ----------------------------------------------------------------
 const verbNameStep = "step"
 
 var StepSetup = TransformerSetup{
@@ -146,7 +143,7 @@ func transformerStepParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -171,51 +168,67 @@ func transformerStepParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerStepUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-a" {
 			// Let them do '-a delta -a rsum' or '-a delta,rsum'
-			stepperNames := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			stepperNames, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 			for _, stepperName := range stepperNames {
 				stepperInput := stepperInputFromName(stepperName)
 				if stepperInput == nil {
-					fmt.Fprintf(os.Stderr, "mlr %s: stepper \"%s\" not found.\n",
-						verbNameStep, stepperName)
-					os.Exit(1)
+					return nil, cli.VerbErrorf(verb, "stepper \"%s\" not found", stepperName)
 				}
 				stepperInputs = append(stepperInputs, stepperInput)
 			}
 
 		} else if opt == "-f" {
 			// Let them do '-f x -f y' or '-f x,y'
-			valueFieldNames = append(valueFieldNames, cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)...)
+			arr, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			valueFieldNames = append(valueFieldNames, arr...)
 
 		} else if opt == "-g" {
 			// Let them do '-g a -g b' or '-g a,b'
-			groupByFieldNames = append(groupByFieldNames, cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)...)
+			arr, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			groupByFieldNames = append(groupByFieldNames, arr...)
 
 		} else if opt == "-d" {
 			// Let them do '-d 0.8 -d 0.9' or '-d 0.8,0.9'
-			stringAlphas = append(stringAlphas, cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)...)
+			arr, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			stringAlphas = append(stringAlphas, arr...)
 
 		} else if opt == "-o" {
 			// Let them do '-o fast -o slow' or '-o fast,slow'
-			ewmaSuffixes = append(ewmaSuffixes, cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)...)
+			arr, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			ewmaSuffixes = append(ewmaSuffixes, arr...)
 
 		} else if opt == "-F" {
 			// As of Miller 6 this happens automatically, but the flag is accepted
 			// as a no-op for backward compatibility with Miller 5 and below.
 
 		} else {
-			transformerStepUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerStep(
@@ -226,14 +239,12 @@ func transformerStepParseCLI(
 		ewmaSuffixes,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 // This is the "stepper log" referred to in comments at the top of this file.
 type tStepLogEntry struct {
 	recordAndContext *types.RecordAndContext
@@ -317,7 +328,6 @@ func NewTransformerStep(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 // Multilevel hashmap structure for the `groups` field example:
 //
 // * Group-by field names = ["a", "b"]
@@ -421,6 +431,17 @@ func (tr *TransformerStep) handleRecord(
 	for i, valueFieldName := range tr.valueFieldNames {
 		valueFieldValue := valueFieldValues[i]
 		if valueFieldValue == nil { // not present in the current record
+			// Notify any steppers that cache prev values so they don't carry stale state.
+			accFieldToAccState := groupToAccField[valueFieldName]
+			if accFieldToAccState != nil {
+				for _, stepperInput := range tr.stepperInputs {
+					if stepper, present := accFieldToAccState[stepperInput.name]; present {
+						if sc, ok := stepper.(tStepperPrevCacheClearer); ok {
+							sc.clearPrevValue()
+						}
+					}
+				}
+			}
 			continue
 		}
 
@@ -441,8 +462,7 @@ func (tr *TransformerStep) handleRecord(
 					tr.ewmaSuffixes,
 				)
 				if stepper == nil {
-					fmt.Fprintf(os.Stderr, "mlr %s: stepper \"%s\" not found.\n",
-						verbNameStep, stepperInput.name)
+					fmt.Fprintf(os.Stderr, "mlr step: stepper allocation failed\n")
 					os.Exit(1)
 				}
 				accFieldToAccState[stepperInput.name] = stepper
@@ -479,6 +499,17 @@ func (tr *TransformerStep) handleDrainRecord(
 	for i, valueFieldName := range tr.valueFieldNames {
 		valueFieldValue := valueFieldValues[i]
 		if valueFieldValue == nil { // not present in the current record
+			// Notify any steppers that cache prev values so they don't carry stale state.
+			accFieldToAccState := steppers[valueFieldName]
+			if accFieldToAccState != nil {
+				for _, stepperInput := range tr.stepperInputs {
+					if stepper, present := accFieldToAccState[stepperInput.name]; present {
+						if sc, ok := stepper.(tStepperPrevCacheClearer); ok {
+							sc.clearPrevValue()
+						}
+					}
+				}
+			}
 			continue
 		}
 
@@ -534,7 +565,6 @@ func (tr *TransformerStep) makeLogKey(
 	return fmt.Sprintf("%p", inrecAndContext)
 }
 
-// ================================================================
 // Lookups for individual steppers, like "delta" or "rsum"
 
 type tStepperInputFromName func(
@@ -560,6 +590,17 @@ type tStepperInput struct {
 
 type tStepper interface {
 	process(windowKeeper *utils.TWindowKeeper)
+}
+
+// tStepperPrevCacheClearer is an optional interface for steppers that cache the
+// previous record's field value. When a record does not contain the target field,
+// handleRecord calls clearPrevValue() so that the cached state reflects "no previous
+// value", preventing stale values from leaking across absent-field records. This
+// also allows these steppers to set numRecordsBackward=0, eliminating the race
+// condition that arises when a downstream transformer (running in a separate goroutine)
+// modifies a record that the upstream transformer's window keeper still references.
+type tStepperPrevCacheClearer interface {
+	clearPrevValue()
 }
 
 type tStepperLookup struct {
@@ -690,21 +731,24 @@ func allocateStepper(
 	return nil
 }
 
-// ================================================================
 // Implementations of individual steppers, like "delta" or "rsum"
 
-// ================================================================
 type tStepperDelta struct {
 	inputFieldName  string
 	outputFieldName string
+	prevValue       *mlrval.Mlrval
+	hasPrev         bool
 }
 
 func stepperDeltaInputFromName(
 	stepperName string,
 ) *tStepperInput {
 	return &tStepperInput{
-		name:               stepperName,
-		numRecordsBackward: 1,
+		name: stepperName,
+		// numRecordsBackward is 0: delta caches the previous value in its own struct
+		// rather than reading from the window keeper's stored (already-emitted) records,
+		// which avoids a race condition when downstream transformers run concurrently.
+		numRecordsBackward: 0,
 		numRecordsForward:  0,
 	}
 }
@@ -733,36 +777,44 @@ func (stepper *tStepperDelta) process(
 	currval := currec.Get(stepper.inputFieldName)
 
 	if currval.IsVoid() {
+		stepper.prevValue = nil
+		stepper.hasPrev = true
 		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 		return
 	}
 
 	delta := mlrval.FromInt(0)
-
-	iprev := windowKeeper.Get(-1)
-	if iprev != nil {
-		prevrec := iprev.(*types.RecordAndContext).Record
-		prevval := prevrec.Get(stepper.inputFieldName)
-		if prevval != nil {
-			delta = bifs.BIF_minus_binary(currval, prevval)
-		}
+	if stepper.hasPrev && stepper.prevValue != nil {
+		delta = bifs.BIF_minus_binary(currval, stepper.prevValue)
 	}
 	currec.PutCopy(stepper.outputFieldName, delta.Copy())
+
+	stepper.prevValue = currval.Copy()
+	stepper.hasPrev = true
 }
 
-// ================================================================
-// shift is an alias for shift
+func (stepper *tStepperDelta) clearPrevValue() {
+	stepper.prevValue = nil
+	stepper.hasPrev = true
+}
+
+// shift is an alias for shift_lag
 type tStepperShiftLag struct {
 	inputFieldName  string
 	outputFieldName string
+	prevValue       *mlrval.Mlrval
+	hasPrev         bool
 }
 
 func stepperShiftInputFromName(
 	stepperName string,
 ) *tStepperInput {
 	return &tStepperInput{
-		name:               stepperName,
-		numRecordsBackward: 1,
+		name: stepperName,
+		// numRecordsBackward is 0: shift caches the previous value in its own struct
+		// rather than reading from the window keeper's stored (already-emitted) records,
+		// which avoids a race condition when downstream transformers run concurrently.
+		numRecordsBackward: 0,
 		numRecordsForward:  0,
 	}
 }
@@ -771,8 +823,11 @@ func stepperShiftLagInputFromName(
 	stepperName string,
 ) *tStepperInput {
 	return &tStepperInput{
-		name:               stepperName,
-		numRecordsBackward: 1,
+		name: stepperName,
+		// numRecordsBackward is 0: shift_lag caches the previous value in its own struct
+		// rather than reading from the window keeper's stored (already-emitted) records,
+		// which avoids a race condition when downstream transformers run concurrently.
+		numRecordsBackward: 0,
 		numRecordsForward:  0,
 	}
 }
@@ -811,22 +866,27 @@ func (stepper *tStepperShiftLag) process(
 	currecAndContext := icur.(*types.RecordAndContext)
 	currec := currecAndContext.Record
 
-	iprev := windowKeeper.Get(-1)
-	if iprev == nil {
-		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
-		return
-	}
-	prevrec := iprev.(*types.RecordAndContext).Record
-	prevval := prevrec.Get(stepper.inputFieldName)
+	curval := currec.Get(stepper.inputFieldName)
 
-	if prevval == nil {
+	if !stepper.hasPrev || stepper.prevValue == nil {
 		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 	} else {
-		currec.PutCopy(stepper.outputFieldName, prevval.Copy())
+		currec.PutCopy(stepper.outputFieldName, stepper.prevValue.Copy())
 	}
+
+	if curval != nil {
+		stepper.prevValue = curval.Copy()
+	} else {
+		stepper.prevValue = nil
+	}
+	stepper.hasPrev = true
 }
 
-// ================================================================
+func (stepper *tStepperShiftLag) clearPrevValue() {
+	stepper.prevValue = nil
+	stepper.hasPrev = true
+}
+
 type tStepperShiftLead struct {
 	inputFieldName  string
 	outputFieldName string
@@ -877,7 +937,6 @@ func (stepper *tStepperShiftLead) process(
 	}
 }
 
-// ================================================================
 type tStepperFromFirst struct {
 	first           *mlrval.Mlrval
 	inputFieldName  string
@@ -927,18 +986,22 @@ func (stepper *tStepperFromFirst) process(
 	currec.PutCopy(stepper.outputFieldName, fromFirst)
 }
 
-// ================================================================
 type tStepperRatio struct {
 	inputFieldName  string
 	outputFieldName string
+	prevValue       *mlrval.Mlrval
+	hasPrev         bool
 }
 
 func stepperRatioInputFromName(
 	stepperName string,
 ) *tStepperInput {
 	return &tStepperInput{
-		name:               stepperName,
-		numRecordsBackward: 1,
+		name: stepperName,
+		// numRecordsBackward is 0: ratio caches the previous value in its own struct
+		// rather than reading from the window keeper's stored (already-emitted) records,
+		// which avoids a race condition when downstream transformers run concurrently.
+		numRecordsBackward: 0,
 		numRecordsForward:  0,
 	}
 }
@@ -967,24 +1030,27 @@ func (stepper *tStepperRatio) process(
 	currval := currec.Get(stepper.inputFieldName)
 
 	if currval.IsVoid() {
+		stepper.prevValue = nil
+		stepper.hasPrev = true
 		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 		return
 	}
 
 	ratio := mlrval.FromInt(1)
-
-	iprev := windowKeeper.Get(-1)
-	if iprev != nil {
-		prevrec := iprev.(*types.RecordAndContext).Record
-		prevval := prevrec.Get(stepper.inputFieldName)
-		if prevval != nil {
-			ratio = bifs.BIF_divide(currval, prevval)
-		}
+	if stepper.hasPrev && stepper.prevValue != nil {
+		ratio = bifs.BIF_divide(currval, stepper.prevValue)
 	}
 	currec.PutCopy(stepper.outputFieldName, ratio.Copy())
+
+	stepper.prevValue = currval.Copy()
+	stepper.hasPrev = true
 }
 
-// ================================================================
+func (stepper *tStepperRatio) clearPrevValue() {
+	stepper.prevValue = nil
+	stepper.hasPrev = true
+}
+
 type tStepperRprod struct {
 	rprod           *mlrval.Mlrval
 	inputFieldName  string
@@ -1033,7 +1099,6 @@ func (stepper *tStepperRprod) process(
 	}
 }
 
-// ================================================================
 type tStepperRsum struct {
 	rsum            *mlrval.Mlrval
 	inputFieldName  string
@@ -1082,7 +1147,6 @@ func (stepper *tStepperRsum) process(
 	}
 }
 
-// ================================================================
 type tStepperCounter struct {
 	counter         *mlrval.Mlrval
 	inputFieldName  string
@@ -1131,7 +1195,6 @@ func (stepper *tStepperCounter) process(
 	}
 }
 
-// ================================================================
 // https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
 
 type tStepperEWMA struct {
@@ -1232,7 +1295,6 @@ func (stepper *tStepperEWMA) process(
 	}
 }
 
-// ================================================================
 type tStepperSlwin struct {
 	inputFieldName     string
 	numRecordsBackward int

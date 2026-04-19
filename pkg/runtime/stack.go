@@ -1,4 +1,3 @@
-// ================================================================
 // Stack frames for begin/end/if/for/function blocks
 //
 // A Miller DSL stack has two levels of nesting:
@@ -21,7 +20,6 @@
 //     func f() {         <-- stack frame in a new frameset
 //       a = 2            <-- this should create new inner 'a', not update the outer 'a'
 //     }
-// ================================================================
 
 package runtime
 
@@ -33,7 +31,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ================================================================
 // STACK VARIABLE
 
 // StackVariable is an opaque handle which a callsite can hold onto, which
@@ -62,7 +59,6 @@ func (sv *StackVariable) GetName() string {
 	return sv.name
 }
 
-// ================================================================
 // STACK METHODS
 
 type Stack struct {
@@ -97,7 +93,6 @@ func (stack *Stack) PopStackFrameSet() {
 	stack.head = stack.stackFrameSets[0]
 }
 
-// ----------------------------------------------------------------
 // All of these are simply delegations to the head frameset
 
 // For when an if/for/etc block is being entered
@@ -178,7 +173,6 @@ func (stack *Stack) UnsetIndexed(
 	stack.head.unsetIndexed(stackVariable, indices)
 }
 
-// ================================================================
 // STACKFRAMESET METHODS
 
 const stackFrameSetInitCap = 6
@@ -306,7 +300,6 @@ func (frameset *StackFrameSet) unsetIndexed(
 	}
 }
 
-// ================================================================
 // STACKFRAME METHODS
 
 const stackFrameInitCap = 10
@@ -338,9 +331,8 @@ func (frame *StackFrame) get(
 	offset, ok := frame.namesToOffsets[stackVariable.name]
 	if ok {
 		return frame.vars[offset].GetValue()
-	} else {
-		return nil
 	}
+	return nil
 }
 
 func (frame *StackFrame) has(
@@ -365,9 +357,8 @@ func (frame *StackFrame) set(
 		offsetInFrame := len(frame.vars) - 1
 		frame.namesToOffsets[stackVariable.name] = offsetInFrame
 		return nil
-	} else {
-		return frame.vars[offset].Assign(mlrval)
 	}
+	return frame.vars[offset].Assign(mlrval)
 }
 
 // TODO: audit for honor of error-return at callsites
@@ -386,12 +377,11 @@ func (frame *StackFrame) defineTyped(
 		offsetInFrame := len(frame.vars) - 1
 		frame.namesToOffsets[stackVariable.name] = offsetInFrame
 		return nil
-	} else {
-		return fmt.Errorf(
-			"%s: variable %s has already been defined in the same scope",
-			"mlr", stackVariable.name,
-		)
 	}
+	return fmt.Errorf(
+		"%s: variable %s has already been defined in the same scope",
+		"mlr", stackVariable.name,
+	)
 }
 
 // TODO: audit for honor of error-return at callsites
@@ -408,12 +398,11 @@ func (frame *StackFrame) setIndexed(
 			newval := mlrval.FromMap(mlrval.NewMlrmap())
 			newval.PutIndexed(indices, mv)
 			return frame.set(stackVariable, newval)
-		} else {
-			return fmt.Errorf(
-				"%s: map indices must be int or string; got %s",
-				"mlr", leadingIndex.GetTypeName(),
-			)
 		}
+		return fmt.Errorf(
+			"%s: map indices must be int or string; got %s",
+			"mlr", leadingIndex.GetTypeName(),
+		)
 	} else {
 		// For example maybe the variable exists and is an array but the
 		// leading index is a string.

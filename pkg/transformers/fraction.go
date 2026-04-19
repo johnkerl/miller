@@ -13,7 +13,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameFraction = "fraction"
 
 var FractionSetup = TransformerSetup{
@@ -56,7 +55,7 @@ func transformerFractionParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -69,6 +68,7 @@ func transformerFractionParseCLI(
 	doPercents := false
 	doCumu := false
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -81,13 +81,19 @@ func transformerFractionParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerFractionUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-f" {
-			fractionFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fractionFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-g" {
-			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "-p" {
 			doPercents = true
@@ -96,19 +102,17 @@ func transformerFractionParseCLI(
 			doCumu = true
 
 		} else {
-			transformerFractionUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	if fractionFieldNames == nil {
-		transformerFractionUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-f field names required")
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerFraction(
@@ -118,14 +122,12 @@ func transformerFractionParseCLI(
 		doCumu,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerFraction struct {
 	fractionFieldNames []string
 	groupByFieldNames  []string
@@ -142,7 +144,6 @@ type TransformerFraction struct {
 	zero                  *mlrval.Mlrval
 }
 
-// ----------------------------------------------------------------
 func NewTransformerFraction(
 	fractionFieldNames []string,
 	groupByFieldNames []string,
@@ -150,7 +151,7 @@ func NewTransformerFraction(
 	doCumu bool,
 ) (*TransformerFraction, error) {
 
-	recordsAndContexts := make([]*types.RecordAndContext, 0)
+	recordsAndContexts := []*types.RecordAndContext{}
 	sums := make(map[string]map[string]*mlrval.Mlrval)
 	cumus := make(map[string]map[string]*mlrval.Mlrval)
 
@@ -186,8 +187,6 @@ func NewTransformerFraction(
 		zero:                  zero,
 	}, nil
 }
-
-// ----------------------------------------------------------------
 
 func (tr *TransformerFraction) Transform(
 	inrecAndContext *types.RecordAndContext,

@@ -12,7 +12,6 @@ import (
 	"github.com/kshedden/statmodel/statmodel"
 )
 
-// ----------------------------------------------------------------
 const verbNameSurv = "surv"
 
 // SurvSetup defines the surv verb: Kaplan-Meier survival curve.
@@ -40,7 +39,7 @@ func transformerSurvParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool,
-) IRecordTransformer {
+) (RecordTransformer, error) {
 	argi := *pargi
 	verb := args[argi]
 	argi++
@@ -54,19 +53,17 @@ func transformerSurvParseCLI(
 		}
 		if opt == "-h" || opt == "--help" {
 			transformerSurvUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 		} else if opt == "-d" {
 			if argi+1 >= argc {
-				fmt.Fprintf(os.Stderr, "mlr %s: %s requires an argument\n", verb, opt)
-				os.Exit(1)
+				return nil, cli.VerbErrorf(verb, "-d requires an argument")
 			}
 			argi++
 			durationField = args[argi]
 			argi++
 		} else if opt == "-s" {
 			if argi+1 >= argc {
-				fmt.Fprintf(os.Stderr, "mlr %s: %s requires an argument\n", verb, opt)
-				os.Exit(1)
+				return nil, cli.VerbErrorf(verb, "-s requires an argument")
 			}
 			argi++
 			statusField = args[argi]
@@ -77,17 +74,13 @@ func transformerSurvParseCLI(
 	}
 	*pargi = argi
 	if !doConstruct {
-		return nil
+		return nil, nil
 	}
 	if durationField == "" {
-		fmt.Fprintf(os.Stderr, "mlr %s: -d option is required.\n", verbNameSurv)
-		fmt.Fprintf(os.Stderr, "Please see 'mlr %s --help' for more information.\n", verbNameSurv)
-		os.Exit(1)
+		return nil, fmt.Errorf("mlr %s: -d option is required", verb)
 	}
 	if statusField == "" {
-		fmt.Fprintf(os.Stderr, "mlr %s: -s option is required.\n", verbNameSurv)
-		fmt.Fprintf(os.Stderr, "Please see 'mlr %s --help' for more information.\n", verbNameSurv)
-		os.Exit(1)
+		return nil, fmt.Errorf("mlr %s: -s option is required", verb)
 	}
 	return NewTransformerSurv(durationField, statusField)
 }
@@ -101,13 +94,13 @@ type TransformerSurv struct {
 }
 
 // NewTransformerSurv constructs a new surv transformer.
-func NewTransformerSurv(durationField, statusField string) IRecordTransformer {
+func NewTransformerSurv(durationField, statusField string) (*TransformerSurv, error) {
 	return &TransformerSurv{
 		durationField: durationField,
 		statusField:   statusField,
-		times:         make([]float64, 0),
-		events:        make([]bool, 0),
-	}
+		times:         []float64{},
+		events:        []bool{},
+	}, nil
 }
 
 // Transform processes each record or emits results at end-of-stream.
@@ -122,14 +115,14 @@ func (tr *TransformerSurv) Transform(
 		rec := inrecAndContext.Record
 		mvDur := rec.Get(tr.durationField)
 		if mvDur == nil {
-			fmt.Fprintf(os.Stderr, "mlr surv: duration field '%s' not found\n", tr.durationField)
-			os.Exit(1)
+			// Skip records missing the duration field
+			return
 		}
 		duration := mvDur.GetNumericToFloatValueOrDie()
 		mvStat := rec.Get(tr.statusField)
 		if mvStat == nil {
-			fmt.Fprintf(os.Stderr, "mlr surv: status field '%s' not found\n", tr.statusField)
-			os.Exit(1)
+			// Skip records missing the status field
+			return
 		}
 		status := mvStat.GetNumericToFloatValueOrDie() != 0
 		tr.times = append(tr.times, duration)

@@ -14,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 type RecordReaderCSV struct {
 	readerOptions       *cli.TReaderOptions
 	recordsPerBatch     int64 // distinct from readerOptions.RecordsPerBatch for join/repl
@@ -199,7 +198,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 	recordsAndContexts []*types.RecordAndContext,
 	eof bool,
 ) {
-	recordsAndContexts = make([]*types.RecordAndContext, 0)
+	recordsAndContexts = []*types.RecordAndContext{}
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	csvRecords, more := <-csvRecordsChannel
@@ -230,7 +229,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 		if reader.header == nil { // implicit CSV header
 			n := len(csvRecord)
 			reader.header = make([]string, n)
-			for i := 0; i < n; i++ {
+			for i := range n {
 				reader.header[i] = strconv.Itoa(i + 1)
 			}
 		}
@@ -241,7 +240,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 		nd := int64(len(csvRecord))
 
 		if nh == nd {
-			for i := int64(0); i < nh; i++ {
+			for i := range nh {
 				key := reader.header[i]
 				value := mlrval.FromDeferredType(csvRecord[i])
 				_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
@@ -254,7 +253,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				err := fmt.Errorf(
-					"mlr: CSV header/data length mismatch %d != %d at filename %s row %d",
+					"CSV header/data length mismatch %d != %d at filename %s row %d",
 					nh, nd, reader.filename, reader.rowNumber,
 				)
 				errorChannel <- err
@@ -339,7 +338,6 @@ func (reader *RecordReaderCSV) maybeConsumeComment(
 	return false
 }
 
-// ----------------------------------------------------------------
 // BOM-stripping
 //
 // Some CSVs start with a "byte-order mark" which is the 3-byte sequence

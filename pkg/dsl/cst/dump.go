@@ -1,4 +1,3 @@
-// ================================================================
 // This handles dump and edump statements.
 // See print.go for comments; this is similar.
 //
@@ -11,7 +10,6 @@
 //
 // * 'print $x,$y,$z' prints all items on one line; 'dump $x,$y,$z' prints each on
 //   its own line.
-// ================================================================
 
 package cst
 
@@ -21,14 +19,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/output"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
 	"github.com/johnkerl/miller/v6/pkg/types"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
-// ================================================================
 type tDumpToRedirectFunc func(
 	outputString string,
 	state *runtime.State,
@@ -41,45 +38,74 @@ type DumpStatementNode struct {
 	outputHandlerManager      output.OutputHandlerManager // for file/pipe targets
 }
 
-// ----------------------------------------------------------------
-func (root *RootNode) BuildDumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDumpStatement)
+func (root *RootNode) BuildDumpStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeDumpStatement))
 	return root.buildDumpxStatementNode(
 		astNode,
 		os.Stdout,
 	)
 }
 
-func (root *RootNode) BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEdumpStatement)
+func (root *RootNode) BuildEdumpStatementNode(astNode *asts.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeEdumpStatement))
 	return root.buildDumpxStatementNode(
 		astNode,
 		os.Stderr,
 	)
 }
 
-// ----------------------------------------------------------------
 // Common code for building dump/edump nodes
 
 func (root *RootNode) buildDumpxStatementNode(
-	astNode *dsl.ASTNode,
+	astNode *asts.ASTNode,
 	defaultOutputStream *os.File,
 ) (IExecutable, error) {
-	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
-	expressionsNode := astNode.Children[0]
-	redirectorNode := astNode.Children[1]
+	// Normalize PGPG AST to 2-child layout (expressions, redirector).
+	// PGPG produces: 0 children (dump), 1 child (dump s or dump > file), 2+ children (dump s,t or dump > file, s).
+	// With "dump Redirector comma FcnArgs", children are [Redirector, FcnArgs].
+	// With "dump FcnArgs" (with_adopted_grandchildren), children are the Rvalues directly.
+	var expressionsNode, redirectorNode *asts.ASTNode
+	isRedirector := func(n *asts.ASTNode) bool {
+		return n.Type == asts.NodeType(NodeTypeRedirectWrite) ||
+			n.Type == asts.NodeType(NodeTypeRedirectAppend) ||
+			n.Type == asts.NodeType(NodeTypeRedirectPipe)
+	}
+	switch len(astNode.Children) {
+	case 0:
+		expressionsNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+	case 1:
+		if isRedirector(astNode.Children[0]) {
+			expressionsNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+			redirectorNode = astNode.Children[0]
+		} else {
+			expressionsNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), astNode.Children)
+			redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		}
+	default:
+		if isRedirector(astNode.Children[0]) {
+			// dump Redirector comma FcnArgs -> [Redirector, FcnArgs]
+			expressionsNode = astNode.Children[1]
+			redirectorNode = astNode.Children[0]
+		} else {
+			// dump FcnArgs with_adopted_grandchildren -> [Rvalue, Rvalue, ...]
+			expressionsNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeFcnArgs), astNode.Children)
+			redirectorNode = asts.NewASTNode(nil, asts.NodeType(NodeTypeNoOp), nil)
+		}
+	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Things to be dumped, e.g. $a and $b in 'dump > "foo.dat", $a, $b'.
 
 	var expressionEvaluables []IEvaluable = nil
 
-	if expressionsNode.Type == dsl.NodeTypeNoOp {
+	if expressionsNode.Type == asts.NodeType(NodeTypeNoOp) {
 		// Just 'dump' without 'dump $something'
 		expressionEvaluables = make([]IEvaluable, 1)
 		expressionEvaluable := root.BuildFullOosvarRvalueNode()
 		expressionEvaluables[0] = expressionEvaluable
-	} else if expressionsNode.Type == dsl.NodeTypeFunctionCallsite {
+	} else if expressionsNode.Type == asts.NodeType(NodeTypeFunctionCallsite) ||
+		expressionsNode.Type == asts.NodeType(NodeTypeFcnArgs) {
 		expressionEvaluables = make([]IEvaluable, len(expressionsNode.Children))
 		for i, childNode := range expressionsNode.Children {
 			expressionEvaluable, err := root.BuildEvaluableNode(childNode)
@@ -102,7 +128,7 @@ func (root *RootNode) buildDumpxStatementNode(
 		outputHandlerManager:      nil,
 	}
 
-	if redirectorNode.Type == dsl.NodeTypeNoOp {
+	if redirectorNode.Type == asts.NodeType(NodeTypeNoOp) {
 		// No > >> or | was provided.
 		if defaultOutputStream == os.Stdout {
 			retval.dumpToRedirectFunc = retval.dumpToStdout
@@ -116,28 +142,32 @@ func (root *RootNode) buildDumpxStatementNode(
 		lib.InternalCodingErrorIf(redirectorNode.Children == nil)
 		lib.InternalCodingErrorIf(len(redirectorNode.Children) != 1)
 		redirectorTargetNode := redirectorNode.Children[0]
-		var err error = nil
+		var err error
 
-		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
+		if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetStdout) {
 			retval.dumpToRedirectFunc = retval.dumpToStdout
-		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
+		} else if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetStderr) {
 			retval.dumpToRedirectFunc = retval.dumpToStderr
 		} else {
 			retval.dumpToRedirectFunc = retval.dumpToFileOrPipe
-
-			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(redirectorTargetNode)
+			targetNode := redirectorTargetNode
+			if redirectorTargetNode.Type == asts.NodeType(NodeTypeRedirectTargetRvalue) &&
+				redirectorTargetNode.Children != nil && len(redirectorTargetNode.Children) > 0 {
+				targetNode = redirectorTargetNode.Children[0]
+			}
+			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(targetNode)
 			if err != nil {
 				return nil, err
 			}
 
-			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
+			if redirectorNode.Type == asts.NodeType(NodeTypeRedirectWrite) {
 				retval.outputHandlerManager = output.NewFileWritetHandlerManager(root.recordWriterOptions)
-			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
+			} else if redirectorNode.Type == asts.NodeType(NodeTypeRedirectAppend) {
 				retval.outputHandlerManager = output.NewFileAppendHandlerManager(root.recordWriterOptions)
-			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
+			} else if redirectorNode.Type == asts.NodeType(NodeTypeRedirectPipe) {
 				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
-				return nil, fmt.Errorf("mlr: unhandled redirector node type %s", string(redirectorNode.Type))
+				return nil, fmt.Errorf("unhandled redirector node type %s", string(redirectorNode.Type))
 			}
 		}
 	}
@@ -151,7 +181,6 @@ func (root *RootNode) buildDumpxStatementNode(
 	return retval, nil
 }
 
-// ----------------------------------------------------------------
 func (node *DumpStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	// 5x faster than fmt.Dump() separately: note that os.Stdout is
 	// non-buffered in Go whereas stdout is buffered in C.
@@ -176,7 +205,6 @@ func (node *DumpStatementNode) Execute(state *runtime.State) (*BlockExitPayload,
 	return nil, nil
 }
 
-// ----------------------------------------------------------------
 func (node *DumpStatementNode) dumpToStdout(
 	outputString string,
 	state *runtime.State,
@@ -194,7 +222,6 @@ func (node *DumpStatementNode) dumpToStdout(
 	return nil
 }
 
-// ----------------------------------------------------------------
 func (node *DumpStatementNode) dumpToStderr(
 	outputString string,
 	state *runtime.State,
@@ -203,7 +230,6 @@ func (node *DumpStatementNode) dumpToStderr(
 	return nil
 }
 
-// ----------------------------------------------------------------
 func (node *DumpStatementNode) dumpToFileOrPipe(
 	outputString string,
 	state *runtime.State,
@@ -211,7 +237,7 @@ func (node *DumpStatementNode) dumpToFileOrPipe(
 	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
 		return fmt.Errorf(
-			"mlr: output redirection yielded %s, not string",
+			"output redirection yielded %s, not string",
 			redirectorTarget.GetTypeName(),
 		)
 	}

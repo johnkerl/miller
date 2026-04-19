@@ -1,4 +1,3 @@
-// ================================================================
 // FLATTEN/UNFLATTEN
 //
 // These are used by the flatten/unflatten verbs and DSL functions.  They are
@@ -18,17 +17,22 @@
 //
 // The former are used implicitly (i.e. unless the user explicitly requests
 // otherwise) when we convert to/from JSON.
-// ================================================================
 
 package mlrval
 
 import (
+	"fmt"
+	"os"
 	"strings"
+	"sync"
 
 	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
-// ----------------------------------------------------------------
+// warnedUnflattenFieldNames tracks field names for which we've already emitted
+// an unflatten warning, to avoid flooding stderr on multi-record input.
+var warnedUnflattenFieldNames sync.Map
+
 // Flattens all field values in the record. This is a special case of
 // FlattenFields but it's worth its own special case (to avoid iffing on the
 // nullity of the fieldNameSet) since the flatten/unflatten check is done by
@@ -62,7 +66,6 @@ func (mlrmap *Mlrmap) Flatten(separator string) {
 	*mlrmap = *other
 }
 
-// ----------------------------------------------------------------
 // For mlr flatten -f.
 
 func (mlrmap *Mlrmap) FlattenFields(
@@ -89,7 +92,6 @@ func (mlrmap *Mlrmap) FlattenFields(
 	*mlrmap = *other
 }
 
-// ----------------------------------------------------------------
 // Optimization for Flatten, to avoid needless data motion in the case
 // where all field values are non-collections.
 
@@ -102,7 +104,6 @@ func (mlrmap *Mlrmap) isFlattenable() bool {
 	return false
 }
 
-// ----------------------------------------------------------------
 // For mlr unflatten without -f. This undoes Unflatten.  This is for conversion
 // from non-JSON to JSON.  If there are fields x.a, x.b, x.c, etc. they're put
 // into a single field x with map-valued value keyed by "a", "b", "c".
@@ -157,7 +158,7 @@ func (mlrmap *Mlrmap) CopyUnflattened(
 
 		// Check for "" in any of the split pieces; treat the field as terminal if so.
 		legitDots := true
-		for i, _ := range arrayval {
+		for i := range arrayval {
 			piece := arrayval[i].String()
 			if piece == "" {
 				legitDots = false
@@ -165,6 +166,11 @@ func (mlrmap *Mlrmap) CopyUnflattened(
 			}
 		}
 		if !legitDots {
+			if _, alreadyWarned := warnedUnflattenFieldNames.LoadOrStore(pe.Key, true); !alreadyWarned {
+				fmt.Fprintf(os.Stderr,
+					"mlr: field name %q contains separator %q but cannot be auto-unflattened; treating as a literal string. Use --no-auto-unflatten to suppress this warning.\n",
+					pe.Key, separator)
+			}
 			other.PutReference(pe.Key, unflattenTerminal(pe.Value))
 			continue
 		}
@@ -192,7 +198,6 @@ func (mlrmap *Mlrmap) CopyUnflattened(
 	return other
 }
 
-// ----------------------------------------------------------------
 // For mlr unflatten -f. See comments on Unflatten. Largely copypasta of
 // Unflatten, but split out separately since Flatten needn't check a
 // fieldNameSet.
@@ -247,7 +252,6 @@ func (mlrmap *Mlrmap) CopyUnflattenFields(
 	return other
 }
 
-// ----------------------------------------------------------------
 // Flatten of empty map and empty array produce "{}" and "[]" as special cases.
 // (Without this, key-spreading would cause such fields to disappear entirely:
 // the field "x" -> {"a": 1, "b": 2} would spread to the pair of fields "x:a"
@@ -263,7 +267,7 @@ func unflattenTerminal(input *Mlrval) *Mlrval {
 		return FromMap(NewMlrmap())
 	}
 	if input.printrep == "[]" {
-		return FromArray(make([]*Mlrval, 0))
+		return FromArray([]*Mlrval{})
 	}
 	return input
 }

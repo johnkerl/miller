@@ -3,10 +3,11 @@ end { @u    = @v }
 
 
 AST:
-* statement block
-    * end block
-        * statement block
-            * assignment "="
-                * direct oosvar value "u"
-                * direct oosvar value "v"
+"block" [tt:block] [nt:StatementBlock]
+    "end" [tt:kw_end] [nt:EndBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "=" [tt:equals] [nt:Assignment]
+                    "@u" [tt:oosvar_name] [nt:DirectOosvarValue]
+                    "@v" [tt:oosvar_name] [nt:DirectOosvarValue]
 

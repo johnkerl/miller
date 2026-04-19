@@ -3,11 +3,12 @@ $x =~ "bcd"i
 
 
 AST:
-* statement block
-    * bare boolean
-        * operator "=~"
-            * direct field value "x"
-            * case-insensitive regular expression ""bcd"i"
+"block" [tt:block] [nt:StatementBlock]
+    "=~" [tt:op_eqtilde] [nt:BareBoolean]
+        "=~" [tt:op_eqtilde] [nt:Operator]
+            "$x" [tt:field_name] [nt:DirectFieldValue]
+            ""bcd"" [tt:string_literal] [nt:RegexCaseInsensitive]
+                ""bcd"" [tt:string_literal] [nt:string_literal]
 
 x=abcd,y=ghi
 x=ABCD,y=GHI

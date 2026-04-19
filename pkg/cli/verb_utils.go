@@ -1,72 +1,83 @@
-// ================================================================
 // Utilities for Miller verbs to share for command-line parsing.
-// ================================================================
+// These return error instead of os.Exit, so callers (e.g. transformer ParseCLIFunc)
+// can propagate errors to the CLI entrypoint layer.
 
 package cli
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
-// For flags with values, e.g. ["-n" "10"], while we're looking at the "-n" this let us see if the "10" slot exists.
-// The verb is nominally something from a ways earlier in args[]; the opt is nominally what's at args[argi-1].
-// So this function should be called with args[argi] pointing to the "10" slot.
-func VerbCheckArgCount(verb string, opt string, args []string, argi int, argc int, n int) {
+// VerbCheckArgCount returns an error if there aren't enough args remaining.
+// For flags with values, e.g. ["-n" "10"], while we're looking at the "-n"
+// this lets us see if the "10" slot exists. The verb is nominally something
+// from a ways earlier in args[]; the opt is nominally what's at args[argi-1].
+// This function should be called with args[argi] pointing to the "10" slot.
+func VerbCheckArgCount(verb string, opt string, args []string, argi int, argc int, n int) error {
 	if (argc - argi) < n {
-		fmt.Fprintf(os.Stderr, "%s %s: option \"%s\" missing argument(s).\n",
-			"mlr", verb, opt,
-		)
-		os.Exit(1)
+		return fmt.Errorf("%s %s: option \"%s\" missing argument(s)", "mlr", verb, opt)
 	}
+	return nil
 }
 
-// E.g. with ["-f", "a,b,c"], makes sure there is something in the "a,b,c" position, and returns it.
-func VerbGetStringArgOrDie(verb string, opt string, args []string, pargi *int, argc int) string {
-	VerbCheckArgCount(verb, opt, args, *pargi, argc, 1)
+// VerbGetStringArg ensures there is something in the value position and returns it.
+// E.g. with ["-f", "a,b,c"], returns "a,b,c".
+func VerbGetStringArg(verb string, opt string, args []string, pargi *int, argc int) (string, error) {
+	if err := VerbCheckArgCount(verb, opt, args, *pargi, argc, 1); err != nil {
+		return "", err
+	}
 	retval := args[*pargi]
 	*pargi += 1
-	return retval
+	return retval, nil
 }
 
-// E.g. with ["-f", "a,b,c"], makes sure there is something in the "a,b,c" position,
-// splits it on commas, and returns it.
-func VerbGetStringArrayArgOrDie(verb string, opt string, args []string, pargi *int, argc int) []string {
-	stringArg := VerbGetStringArgOrDie(verb, opt, args, pargi, argc)
-	return lib.SplitString(stringArg, ",")
+// VerbGetStringArrayArg ensures there is something in the value position,
+// splits it on commas, and returns it. E.g. with ["-f", "a,b,c"], returns ["a","b","c"].
+func VerbGetStringArrayArg(verb string, opt string, args []string, pargi *int, argc int) ([]string, error) {
+	stringArg, err := VerbGetStringArg(verb, opt, args, pargi, argc)
+	if err != nil {
+		return nil, err
+	}
+	return lib.SplitString(stringArg, ","), nil
 }
 
-// E.g. with ["-n", "10"], makes sure there is something in the "10" position,
-// scans it as int, and returns it.
-func VerbGetIntArgOrDie(verb string, opt string, args []string, pargi *int, argc int) int64 {
+// VerbErrorf returns an error prefixed with "mlr {verb}: " so the entrypoint
+// can print it without double-prefixing.
+func VerbErrorf(verb, format string, args ...interface{}) error {
+	return fmt.Errorf("mlr "+verb+": "+format, args...)
+}
+
+// VerbGetIntArg ensures there is something in the value position and parses it as int64.
+// E.g. with ["-n", "10"], returns 10.
+func VerbGetIntArg(verb string, opt string, args []string, pargi *int, argc int) (int64, error) {
 	flag := args[*pargi]
-	stringArg := VerbGetStringArgOrDie(verb, opt, args, pargi, argc)
+	stringArg, err := VerbGetStringArg(verb, opt, args, pargi, argc)
+	if err != nil {
+		return 0, err
+	}
 	retval, err := strconv.ParseInt(stringArg, 10, 64)
 	if err != nil {
-		fmt.Fprintf(os.Stderr,
-			"%s %s: could not scan flag \"%s\" argument \"%s\" as int.\n",
-			"mlr", verb, flag, stringArg,
-		)
-		os.Exit(1)
+		return 0, fmt.Errorf("%s %s: could not scan flag \"%s\" argument \"%s\" as int",
+			"mlr", verb, flag, stringArg)
 	}
-	return retval
+	return retval, nil
 }
 
-// E.g. with ["-n", "10.3"], makes sure there is something in the "10.3"
-// position, scans it as float, and returns it.
-func VerbGetFloatArgOrDie(verb string, opt string, args []string, pargi *int, argc int) float64 {
+// VerbGetFloatArg ensures there is something in the value position and parses it as float64.
+// E.g. with ["-n", "10.3"], returns 10.3.
+func VerbGetFloatArg(verb string, opt string, args []string, pargi *int, argc int) (float64, error) {
 	flag := args[*pargi]
-	stringArg := VerbGetStringArgOrDie(verb, opt, args, pargi, argc)
+	stringArg, err := VerbGetStringArg(verb, opt, args, pargi, argc)
+	if err != nil {
+		return 0, err
+	}
 	retval, err := strconv.ParseFloat(stringArg, 64)
 	if err != nil {
-		fmt.Fprintf(os.Stderr,
-			"%s %s: could not scan flag \"%s\" argument \"%s\" as float.\n",
-			"mlr", verb, flag, stringArg,
-		)
-		os.Exit(1)
+		return 0, fmt.Errorf("%s %s: could not scan flag \"%s\" argument \"%s\" as float",
+			"mlr", verb, flag, stringArg)
 	}
-	return retval
+	return retval, nil
 }

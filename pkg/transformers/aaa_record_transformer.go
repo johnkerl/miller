@@ -7,10 +7,10 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// IRecordTransformer is the interface satisfied by all transformers, i.e.,
+// RecordTransformer is the interface satisfied by all transformers, i.e.,
 // Miller verbs. See stream.go for context on the channels, as well as for
 // context on end-of-record-stream signaling.
-type IRecordTransformer interface {
+type RecordTransformer interface {
 	Transform(
 		inrecAndContext *types.RecordAndContext,
 		outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -36,13 +36,18 @@ type TransformerUsageFunc func(
 	ostream *os.File,
 )
 
+// TransformerParseCLIFunc parses verb options from the CLI. Returns (nil, nil) on
+// success for pass one (doConstruct=false). Returns (transformer, nil) on success
+// for pass two (doConstruct=true). Returns (nil, cli.ErrHelpRequested) when -h/--help
+// was used (caller should exit 0; usage already printed). Returns (nil, err) on
+// parse or constructor failure (caller should print and exit 1).
 type TransformerParseCLIFunc func(
 	pargi *int,
 	argc int,
 	args []string,
 	mainOptions *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer
+) (RecordTransformer, error)
 
 type TransformerSetup struct {
 	Verb         string
@@ -66,8 +71,6 @@ func HandleDefaultDownstreamDone(
 	select {
 	case b := <-inputDownstreamDoneChannel:
 		outputDownstreamDoneChannel <- b
-		break
 	default:
-		break
 	}
 }

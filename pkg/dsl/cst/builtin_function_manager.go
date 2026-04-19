@@ -1,4 +1,3 @@
-// ================================================================
 // Adding a new builtin function:
 // * New entry in makeBuiltinFunctionLookupTable
 // * Implement the function in mlrval_functions.go
@@ -8,7 +7,6 @@
 // from Go naming conventions: it makes it easier to mentally pair up
 // Miller-DSL functions with their Go implementations. Please preserve this
 // naming convention.
-// ================================================================
 
 package cst
 
@@ -41,7 +39,6 @@ const (
 	FUNC_CLASS_TIME        TFunctionClass = "time"
 )
 
-// ================================================================
 type BuiltinFunctionInfo struct {
 	name  string
 	class TFunctionClass
@@ -61,12 +58,11 @@ type BuiltinFunctionInfo struct {
 	variadicFunc           bifs.VariadicFunc
 	unaryFuncWithContext   bifs.UnaryFuncWithContext   // asserting_{typename}
 	regexCaptureBinaryFunc bifs.RegexCaptureBinaryFunc // =~ and !=~
+	zaryFuncWithState      ZaryFuncWithState           // next
 	binaryFuncWithState    BinaryFuncWithState         // select, apply, reduce
 	ternaryFuncWithState   TernaryFuncWithState        // fold
 	variadicFuncWithState  VariadicFuncWithState       // sort
 }
-
-// ================================================================
 
 func isLetter(c byte) bool {
 	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z')
@@ -75,9 +71,8 @@ func isLetter(c byte) bool {
 func startsWithLetter(s string) bool {
 	if len(s) < 1 {
 		return false
-	} else {
-		return isLetter(s[0])
 	}
+	return isLetter(s[0])
 }
 
 func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
@@ -2256,6 +2251,14 @@ or true/false if array index is in bounds / out of bounds.  Error if 1st argumen
 		},
 
 		{
+			name:  "hasvalue",
+			class: FUNC_CLASS_COLLECTIONS,
+			help: `True/false if map/array has/hasn't value, e.g. 'hasvalue($*, "a")' or 'hasvalue(myarray, myvalue)',
+returns true if the value is present in the collection. Error if 1st argument is not a map or array.`,
+			binaryFunc: bifs.BIF_hasvalue,
+		},
+
+		{
 			name:      "json_parse",
 			class:     FUNC_CLASS_COLLECTIONS,
 			help:      `Converts value from JSON-formatted string.`,
@@ -2510,6 +2513,14 @@ Run a command via executable, path, args and environment, yielding its stdout mi
 			help:     `Returns the Miller version as a string.`,
 			zaryFunc: bifs.BIF_version,
 		},
+
+		// next() is for mlr script: reads next record from input, returns true/false.
+		{
+			name:              "next",
+			class:             FUNC_CLASS_SYSTEM,
+			help:              `In mlr script mode only: reads the next record from input. Returns true if a record was read (and sets $* to it), false at end of stream (and $* becomes false).`,
+			zaryFuncWithState: BIF_next,
+		},
 	}
 
 	// Sort the function table.  Useful for online help and autogenned docs / manpage.
@@ -2527,19 +2538,17 @@ Run a command via executable, path, args and environment, yielding its stdout mi
 			return true
 		} else if !si && sj {
 			return false
+		}
+		if namei < namej {
+			return true
 		} else {
-			if namei < namej {
-				return true
-			} else {
-				return false
-			}
+			return false
 		}
 	})
 
 	return lookupTable
 }
 
-// ================================================================
 type BuiltinFunctionManager struct {
 	// We need both the array and the hashmap since Go maps are not
 	// insertion-order-preserving: to produce a sensical help-all-functions
@@ -2557,8 +2566,8 @@ func NewBuiltinFunctionManager() *BuiltinFunctionManager {
 	}
 }
 
-func (manager *BuiltinFunctionManager) LookUp(functionName string) *BuiltinFunctionInfo {
-	return manager.hashTable[functionName]
+func (mgr *BuiltinFunctionManager) LookUp(functionName string) *BuiltinFunctionInfo {
+	return mgr.hashTable[functionName]
 }
 
 func hashifyLookupTable(lookupTable *[]BuiltinFunctionInfo) map[string]*BuiltinFunctionInfo {
@@ -2581,19 +2590,17 @@ func hashifyLookupTable(lookupTable *[]BuiltinFunctionInfo) map[string]*BuiltinF
 	return hashTable
 }
 
-// ----------------------------------------------------------------
-
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionClasses() {
-	classesList := manager.getBuiltinFunctionClasses()
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionClasses() {
+	classesList := mgr.getBuiltinFunctionClasses()
 	for _, class := range classesList {
 		fmt.Println(class)
 	}
 }
 
-func (manager *BuiltinFunctionManager) getBuiltinFunctionClasses() []string {
+func (mgr *BuiltinFunctionManager) getBuiltinFunctionClasses() []string {
 	classesSeen := make(map[string]bool)
-	classesList := make([]string, 0)
-	for _, builtinFunctionInfo := range *manager.lookupTable {
+	classesList := []string{}
+	for _, builtinFunctionInfo := range *mgr.lookupTable {
 		class := string(builtinFunctionInfo.class)
 		if !classesSeen[class] {
 			classesList = append(classesList, class)
@@ -2604,33 +2611,31 @@ func (manager *BuiltinFunctionManager) getBuiltinFunctionClasses() []string {
 	return classesList
 }
 
-// ----------------------------------------------------------------
-
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionsInClass(class string) {
-	for _, builtinFunctionInfo := range *manager.lookupTable {
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionsInClass(class string) {
+	for _, builtinFunctionInfo := range *mgr.lookupTable {
 		if string(builtinFunctionInfo.class) == class {
 			fmt.Println(builtinFunctionInfo.name)
 		}
 	}
 }
 
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesVertically() {
-	for _, builtinFunctionInfo := range *manager.lookupTable {
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionNamesVertically() {
+	for _, builtinFunctionInfo := range *mgr.lookupTable {
 		fmt.Println(builtinFunctionInfo.name)
 	}
 }
 
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesAsParagraph() {
-	functionNames := make([]string, len(*manager.lookupTable))
-	for i, builtinFunctionInfo := range *manager.lookupTable {
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionNamesAsParagraph() {
+	functionNames := make([]string, len(*mgr.lookupTable))
+	for i, builtinFunctionInfo := range *mgr.lookupTable {
 		functionNames[i] = builtinFunctionInfo.name
 	}
 	lib.PrintWordsAsParagraph(functionNames)
 }
 
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionsAsTable() {
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionsAsTable() {
 	fmt.Printf("%-30s %-12s %s\n", "Name", "Class", "Args")
-	for _, builtinFunctionInfo := range *manager.lookupTable {
+	for _, builtinFunctionInfo := range *mgr.lookupTable {
 		fmt.Printf("%-30s %-12s %s\n",
 			builtinFunctionInfo.name,
 			builtinFunctionInfo.class,
@@ -2639,69 +2644,68 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionsAsTable() {
 	}
 }
 
-// ----------------------------------------------------------------
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsages() {
-	for i, builtinFunctionInfo := range *manager.lookupTable {
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionUsages() {
+	for i, builtinFunctionInfo := range *mgr.lookupTable {
 		if i > 0 {
 			fmt.Println()
 		}
-		manager.showSingleUsage(&builtinFunctionInfo)
+		mgr.showSingleUsage(&builtinFunctionInfo)
 	}
 }
 
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsagesByClass() {
-	classesList := manager.getBuiltinFunctionClasses()
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionUsagesByClass() {
+	classesList := mgr.getBuiltinFunctionClasses()
 
 	for _, class := range classesList {
 		fmt.Println()
 		fmt.Println(colorizer.MaybeColorizeHelp(strings.ToUpper(class), true))
 		fmt.Println()
-		for _, builtinFunctionInfo := range *manager.lookupTable {
+		for _, builtinFunctionInfo := range *mgr.lookupTable {
 			if string(builtinFunctionInfo.class) != class {
 				continue
 			}
-			manager.showSingleUsage(&builtinFunctionInfo)
+			mgr.showSingleUsage(&builtinFunctionInfo)
 		}
 	}
 }
 
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsage(functionName string) {
-	if !manager.TryListBuiltinFunctionUsage(functionName) {
+func (mgr *BuiltinFunctionManager) ListBuiltinFunctionUsage(functionName string) {
+	if !mgr.TryListBuiltinFunctionUsage(functionName) {
 		fmt.Fprintf(os.Stderr, "Function \"%s\" not found.\n", functionName)
 	}
 }
 
-func (manager *BuiltinFunctionManager) TryListBuiltinFunctionUsage(
+func (mgr *BuiltinFunctionManager) TryListBuiltinFunctionUsage(
 	functionName string,
 ) bool {
-	builtinFunctionInfo := manager.LookUp(functionName)
+	builtinFunctionInfo := mgr.LookUp(functionName)
 	if builtinFunctionInfo == nil {
 		return false
 	}
-	manager.listBuiltinFunctionUsageExact(builtinFunctionInfo)
+	mgr.listBuiltinFunctionUsageExact(builtinFunctionInfo)
 	return true
 }
 
-func (manager *BuiltinFunctionManager) TryListBuiltinFunctionUsageApproximate(
+func (mgr *BuiltinFunctionManager) TryListBuiltinFunctionUsageApproximate(
 	searchString string,
 ) bool {
 	found := false
-	for _, builtinFunctionInfo := range *manager.lookupTable {
+	for _, builtinFunctionInfo := range *mgr.lookupTable {
 		if strings.Contains(builtinFunctionInfo.name, searchString) {
-			manager.showSingleUsage(&builtinFunctionInfo)
+			mgr.showSingleUsage(&builtinFunctionInfo)
 			found = true
 		}
 	}
 	return found
 }
 
-func (manager *BuiltinFunctionManager) listBuiltinFunctionUsageExact(
+func (mgr *BuiltinFunctionManager) listBuiltinFunctionUsageExact(
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) {
-	manager.showSingleUsage(builtinFunctionInfo)
+	mgr.showSingleUsage(builtinFunctionInfo)
 }
 
-func (manager *BuiltinFunctionManager) showSingleUsage(
+func (mgr *BuiltinFunctionManager) showSingleUsage(
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) {
 	lib.InternalCodingErrorIf(builtinFunctionInfo.help == "")
@@ -2725,7 +2729,7 @@ func (manager *BuiltinFunctionManager) showSingleUsage(
 
 func describeNargs(info *BuiltinFunctionInfo) string {
 	if info.hasMultipleArities {
-		pieces := make([]string, 0)
+		pieces := []string{}
 		if info.zaryFunc != nil {
 			pieces = append(pieces, "0")
 		}
@@ -2746,37 +2750,36 @@ func describeNargs(info *BuiltinFunctionInfo) string {
 		}
 		return strings.Join(pieces, ",")
 
-	} else {
-		if info.zaryFunc != nil {
-			return "0"
-		}
-		if info.unaryFunc != nil {
-			return "1"
-		}
-		if info.unaryFuncWithContext != nil {
-			return "1"
-		}
-		if info.binaryFunc != nil {
-			return "2"
-		}
-		if info.binaryFuncWithState != nil {
-			return "2"
-		}
-		if info.regexCaptureBinaryFunc != nil {
-			return "2"
-		}
-		if info.ternaryFunc != nil {
-			return "3"
-		}
-		if info.ternaryFuncWithState != nil {
-			return "3"
-		}
-		if info.variadicFunc != nil || info.variadicFuncWithState != nil {
-			if info.maximumVariadicArity != 0 {
-				return fmt.Sprintf("%d-%d", info.minimumVariadicArity, info.maximumVariadicArity)
-			} else {
-				return "variadic"
-			}
+	}
+	if info.zaryFunc != nil || info.zaryFuncWithState != nil {
+		return "0"
+	}
+	if info.unaryFunc != nil {
+		return "1"
+	}
+	if info.unaryFuncWithContext != nil {
+		return "1"
+	}
+	if info.binaryFunc != nil {
+		return "2"
+	}
+	if info.binaryFuncWithState != nil {
+		return "2"
+	}
+	if info.regexCaptureBinaryFunc != nil {
+		return "2"
+	}
+	if info.ternaryFunc != nil {
+		return "3"
+	}
+	if info.ternaryFuncWithState != nil {
+		return "3"
+	}
+	if info.variadicFunc != nil || info.variadicFuncWithState != nil {
+		if info.maximumVariadicArity != 0 {
+			return fmt.Sprintf("%d-%d", info.minimumVariadicArity, info.maximumVariadicArity)
+		} else {
+			return "variadic"
 		}
 	}
 	lib.InternalCodingErrorIf(true)
@@ -2795,7 +2798,6 @@ func (info *BuiltinFunctionInfo) JoinHelp() string {
 	return multiSpaceRegex.ReplaceAllString(strings.ReplaceAll(info.help, "\n", " "), " ")
 }
 
-// ================================================================
 // This is a singleton so the online-help functions can query it for listings,
 // online help, etc.
 var BuiltinFunctionManagerInstance *BuiltinFunctionManager = NewBuiltinFunctionManager()

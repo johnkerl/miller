@@ -3,9 +3,9 @@ $z = ENV["HOME"]
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "z"
-        * environment variable "ENV"
-            * string literal "HOME"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$z" [tt:field_name] [nt:DirectFieldValue]
+        "ENV" [tt:kw_env] [nt:EnvironmentVariable]
+            ""HOME"" [tt:string_literal] [nt:string_literal]
 

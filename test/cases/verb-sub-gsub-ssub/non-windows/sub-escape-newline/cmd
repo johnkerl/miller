@@ -1,0 +1,1 @@
+printf 'a=lorem\n' | mlr --ocsv sub -a 'r' '\n'

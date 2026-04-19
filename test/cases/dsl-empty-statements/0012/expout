@@ -2,8 +2,9 @@ DSL EXPRESSION:
 true {}
 
 AST:
-* statement block
-    * cond block
-        * bool literal "true"
-        * statement block
+"block" [tt:block] [nt:StatementBlock]
+    "true" [tt:literal_true] [nt:CondBlock]
+        "true" [tt:literal_true] [nt:bool_literal]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
 

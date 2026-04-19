@@ -10,7 +10,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameGrep = "grep"
 
 var GrepSetup = TransformerSetup{
@@ -52,7 +51,7 @@ func transformerGrepParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -75,7 +74,7 @@ func transformerGrepParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerGrepUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-i" {
 			ignoreCase = true
@@ -87,15 +86,13 @@ func transformerGrepParseCLI(
 			valuesOnly = true
 
 		} else {
-			transformerGrepUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	// Get the regex from the command line
 	if argi >= argc {
-		transformerGrepUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "pattern required")
 	}
 	pattern := args[argi]
 	argi++
@@ -107,14 +104,12 @@ func transformerGrepParseCLI(
 	// TODO: maybe CompilePOSIX
 	regexp, err := regexp.Compile(pattern)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s %s: couldn't compile regex \"%s\"\n",
-			"mlr", verb, pattern)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "invalid regex \"%s\": %w", pattern, err)
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerGrep(
@@ -123,14 +118,12 @@ func transformerGrepParseCLI(
 		valuesOnly,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerGrep struct {
 	regexp     *regexp.Regexp
 	invert     bool
@@ -149,8 +142,6 @@ func NewTransformerGrep(
 	}
 	return tr, nil
 }
-
-// ----------------------------------------------------------------
 
 func (tr *TransformerGrep) Transform(
 	inrecAndContext *types.RecordAndContext,

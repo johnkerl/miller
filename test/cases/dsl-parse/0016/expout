@@ -3,14 +3,14 @@ $x = 2 * $a + $b . $c
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "x"
-        * operator "+"
-            * operator "*"
-                * int literal "2"
-                * direct field value "a"
-            * dot operator "."
-                * direct field value "b"
-                * direct field value "c"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$x" [tt:field_name] [nt:DirectFieldValue]
+        "+" [tt:op_plus] [nt:Operator]
+            "*" [tt:op_star] [nt:Operator]
+                "2" [tt:int_literal] [nt:int_literal]
+                "$a" [tt:field_name] [nt:DirectFieldValue]
+            "." [tt:op_dot] [nt:DotOperator]
+                "$b" [tt:field_name] [nt:DirectFieldValue]
+                "$c" [tt:field_name] [nt:DirectFieldValue]
 

@@ -3,9 +3,9 @@ $x =~ "^bcd"
 
 
 AST:
-* statement block
-    * bare boolean
-        * operator "=~"
-            * direct field value "x"
-            * string literal "^bcd"
+"block" [tt:block] [nt:StatementBlock]
+    "=~" [tt:op_eqtilde] [nt:BareBoolean]
+        "=~" [tt:op_eqtilde] [nt:Operator]
+            "$x" [tt:field_name] [nt:DirectFieldValue]
+            ""^bcd"" [tt:string_literal] [nt:string_literal]
 

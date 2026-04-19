@@ -1,10 +1,8 @@
-// ================================================================
 // Output-coloring for Miller
 //
 // Please see mlr --usage-output-colorization for context.
 //
 // Note: code-share with github.com/johnkerl/lumin.
-// ================================================================
 
 package colorizer
 
@@ -15,7 +13,6 @@ import (
 	"github.com/mattn/go-isatty"
 )
 
-// ================================================================
 // External API
 
 // Enum-ish type for when to apply output-coloring
@@ -124,22 +121,19 @@ func ListColorNames() {
 	lumin.ListColorNames()
 }
 
-// ================================================================
 // Internal implementation
 
 func maybeColorize(text string, colorString string, outputIsStdout bool) string {
 	if outputIsStdout && stdoutIsATTY {
 		if colorization == ColorizeOutputNever {
 			return text
-		} else {
-			return colorize(text, colorString)
 		}
+		return colorize(text, colorString)
+	}
+	if colorization == ColorizeOutputAlways {
+		return colorize(text, colorString)
 	} else {
-		if colorization == ColorizeOutputAlways {
-			return colorize(text, colorString)
-		} else {
-			return text
-		}
+		return text
 	}
 }
 
@@ -152,27 +146,23 @@ func GetColorization(outputIsStdout bool, isKey bool) (string, string) {
 	if outputIsStdout && stdoutIsATTY {
 		if colorization == ColorizeOutputNever {
 			return "", ""
+		}
+		if isKey {
+			return keyColorString, defaultColorString
 		} else {
-			if isKey {
-				return keyColorString, defaultColorString
-			} else {
-				return valueColorString, defaultColorString
-			}
+			return valueColorString, defaultColorString
 		}
 	} else {
 		if colorization == ColorizeOutputAlways {
 			if isKey {
 				return keyColorString, defaultColorString
-			} else {
-				return valueColorString, defaultColorString
 			}
-		} else {
-			return "", ""
+			return valueColorString, defaultColorString
 		}
+		return "", ""
 	}
 }
 
-// ================================================================
 // Internal implementation
 
 // Default ANSI color codes

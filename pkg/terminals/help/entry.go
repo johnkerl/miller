@@ -1,6 +1,4 @@
-// ================================================================
 // Online help
-// ================================================================
 
 package help
 
@@ -20,7 +18,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/transformers"
 )
 
-// ================================================================
 type tZaryHandlerFunc func()
 type tVarArgHandlerFunc func(args []string)
 
@@ -187,7 +184,6 @@ func init() {
 	}
 }
 
-// ================================================================
 // For things like 'mlr help foo', invoked through the terminals framework which
 // goes through our HelpMain().  Here, the args are the terminal part of the full
 // Miller command line: if the latter was "mlr --some-flag help foo bar" then
@@ -208,10 +204,9 @@ func HelpMain(args []string) int {
 		if len(args) > 0 {
 			helpByApproximateSearch(args)
 			return 0
-		} else {
-			fmt.Printf("mlr help find: need one or more things to search for.\n")
-			return 1
 		}
+		fmt.Printf("mlr help find: need one or more things to search for.\n")
+		return 1
 	}
 
 	// "mlr help something" where we recognize the something
@@ -247,7 +242,6 @@ func HelpMain(args []string) int {
 	return 0
 }
 
-// ----------------------------------------------------------------
 func MainUsage(o *os.File) {
 	fmt.Fprintf(o,
 		`Usage: mlr [flags] {verb} [verb-dependent options ...] {zero or more file names}
@@ -263,7 +257,6 @@ Please see 'mlr help topics' for more information.
 	fmt.Fprintf(o, "Please also see %s\n", lib.DOC_URL)
 }
 
-// ----------------------------------------------------------------
 // For things like 'mlr -F', invoked through the CLI parser which does not
 // go through our HelpMain().
 func ParseTerminalUsage(arg string) bool {
@@ -287,12 +280,10 @@ func ParseTerminalUsage(arg string) bool {
 	return false
 }
 
-// ================================================================
 func handleDefault() {
 	MainUsage(os.Stdout)
 }
 
-// ----------------------------------------------------------------
 func listTopics() {
 	fmt.Println("Type 'mlr help {topic}' for any of the following:")
 	for _, section := range handlerLookupTable.sections {
@@ -313,7 +304,6 @@ func listTopics() {
 	fmt.Printf("for all things with \"map\" in their names.\n")
 }
 
-// ----------------------------------------------------------------
 func showFlagsHelp() {
 	cli.FLAG_TABLE.ShowHelp()
 }
@@ -351,7 +341,6 @@ func helpTerminals() {
 	// We can't invoke the terminal-lister since that would create a cyclic package reference.
 }
 
-// ----------------------------------------------------------------
 func helpBasicExamples() {
 	fmt.Print(
 		`mlr --icsv --opprint cat example.csv
@@ -364,7 +353,6 @@ mlr --icsv --opprint --from example.csv sort -nr index then cut -f shape,quantit
 `)
 }
 
-// ----------------------------------------------------------------
 func helpFileFormats() {
 	fmt.Printf(
 		`CSV/CSV-lite: comma-separated values with separate header line
@@ -442,15 +430,31 @@ DKVP: delimited key-value pairs (Miller default format)
 | dish=7,egg=8,flint  | Record 2: "dish":"7", "egg":"8", "3":"flint"
 +---------------------+
 
+DKVPX: delimited key-value pairs with CSV-style quoting
++----------------------------------+
+| apple=1,bat=2,cog=3              | Record 1: "apple":"1", "bat":"2", "cog":"3"
+| "x,y"="a,b,c",z=3                | Record 2: "x,y":"a,b,c", "z":"3"
++----------------------------------+
+
 NIDX: implicitly numerically indexed (Unix-toolkit style)
 +---------------------+
 | the quick brown     | Record 1: "1":"the", "2":"quick", "3":"brown"
 | fox jumped          | Record 2: "1":"fox", "2":"jumped"
 +---------------------+
+
+DCF: Debian control file format
++------------+
+| apple: 1   |
+| bat: 2     |
+| cog: 3     |
+|            |
+| dish: 7    |
+| egg: 8     |
+| 3: flint   |
++------------+
 `)
 }
 
-// ----------------------------------------------------------------
 func helpMlrrc() {
 	fmt.Print(
 		`You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.
@@ -488,12 +492,10 @@ https://miller.readthedocs.io/en/latest/customization.html
 `)
 }
 
-// ----------------------------------------------------------------
 func helpOutputColorization() {
 	cli.OutputColorizationPrintInfo()
 }
 
-// ----------------------------------------------------------------
 func helpTypeArithmeticInfo() {
 	helpTypeArithmeticInfoAux(false)
 }
@@ -611,7 +613,6 @@ func helpTypeArithmeticInfoAux(extended bool) {
 	}
 }
 
-// ----------------------------------------------------------------
 // listFlagSections et al. are for webdoc/manpage autogen in the miller/docs
 // and miller/man subdirectories. Unlike showFlagsHelp where all looping over
 // the flags table, its sections, and flags within each section is done within
@@ -683,7 +684,6 @@ func showHelpForFlag(flagNames []string) {
 	}
 }
 
-// ----------------------------------------------------------------
 func listVerbs() {
 	if isatty.IsTerminal(os.Stdout.Fd()) {
 		transformers.ListVerbNamesAsParagraph()
@@ -710,7 +710,6 @@ func usageVerbs() {
 	transformers.UsageVerbs()
 }
 
-// ----------------------------------------------------------------
 func listFunctions() {
 	if isatty.IsTerminal(os.Stdout.Fd()) {
 		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph()
@@ -832,7 +831,6 @@ func helpByApproximateSearchOne(thing string) bool {
 	return found
 }
 
-// ----------------------------------------------------------------
 func listKeywords() {
 	if isatty.IsTerminal(os.Stdout.Fd()) {
 		cst.ListKeywordsAsParagraph()
@@ -855,7 +853,6 @@ func helpForKeyword(args []string) {
 	}
 }
 
-// ----------------------------------------------------------------
 // flagTableNilCheckflagTableNilCheck is invoked by an internal-only
 // command-handler. It's intended to be invoked from a regression-test context.
 // It makes sure (at build time) that the flags-table isn't missing help strings

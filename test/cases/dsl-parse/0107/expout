@@ -3,7 +3,7 @@ unset $x
 
 
 AST:
-* statement block
-    * unset "unset"
-        * direct field value "x"
+"block" [tt:block] [nt:StatementBlock]
+    "unset" [tt:kw_unset] [nt:Unset]
+        "$x" [tt:field_name] [nt:DirectFieldValue]
 

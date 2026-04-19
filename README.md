@@ -26,6 +26,8 @@ key-value-pair data in a variety of data formats.
 
 # Getting started
 
+[![deepwiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/johnkerl/miller)
+
 * [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min)
 * [A Guide To Command-Line Data Manipulation](https://www.smashingmagazine.com/2022/12/guide-command-line-data-manipulation-cli-miller)
 * [A quick tutorial on Miller](https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html)

@@ -1,4 +1,3 @@
-// ================================================================
 // This is the shell command-line entry point to the Miller REPL command line.
 // E.g. at the shell prompt, you type 'mlr repl --json' -- this file will parse
 // that.  It will then hand off control to a REPL session which will handle all
@@ -17,7 +16,6 @@
 //   "pid": 12345
 // }
 // [mlr] :quit
-// ================================================================
 
 package repl
 
@@ -30,7 +28,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/cli"
 )
 
-// ================================================================
 func replUsage(verbName string, o *os.File, exitCode int) {
 	exeName := path.Base(os.Args[0])
 	fmt.Fprintf(o, "Usage: %s %s [options] {zero or more data-file names}\n", exeName, verbName)
@@ -174,7 +171,7 @@ func ReplMain(args []string) int {
 		recordOutputStream,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -185,14 +182,14 @@ func ReplMain(args []string) int {
 
 	err = repl.handleSession(os.Stdin)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr %s: %v", repl.replName, err)
+		fmt.Fprintf(os.Stderr, "mlr %s: %v\n", repl.replName, err)
 		os.Exit(1)
 	}
 
 	repl.bufferedRecordOutputStream.Flush()
 	err = repl.closeBufferedOutputStream()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr %s: %v", repl.replName, err)
+		fmt.Fprintf(os.Stderr, "mlr %s: %v\n", repl.replName, err)
 		os.Exit(1)
 	}
 	return 0

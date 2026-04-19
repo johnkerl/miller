@@ -17,3 +17,6 @@ data/nmc?.*
 
 docs/src/polyglot-dkvp-io/__pycache__
 docs/site/
+
+.cursor
+.claude

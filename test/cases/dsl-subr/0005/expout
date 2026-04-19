@@ -3,11 +3,12 @@ subr s() {x=1}
 
 
 AST:
-* statement block
-    * subroutine definition "s"
-        * parameter list
-        * statement block
-            * assignment "="
-                * local variable "x"
-                * int literal "1"
+"block" [tt:block] [nt:StatementBlock]
+    "s" [tt:non_sigil_name] [nt:SubroutineDefinition]
+        "params" [tt:params] [nt:ParameterList]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "=" [tt:equals] [nt:Assignment]
+                    "x" [tt:non_sigil_name] [nt:LocalVariable]
+                    "1" [tt:int_literal] [nt:int_literal]
 

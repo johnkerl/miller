@@ -3,12 +3,11 @@ $y += $x + 3
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "y"
-        * operator "+"
-            * direct field value "y"
-            * operator "+"
-                * direct field value "x"
-                * int literal "3"
+"block" [tt:block] [nt:StatementBlock]
+    "+=" [tt:op_plus_equals] [nt:CompoundAssignment]
+        "$y" [tt:field_name] [nt:DirectFieldValue]
+        "+=" [tt:op_plus_equals] [nt:op_plus_equals]
+        "+" [tt:op_plus] [nt:Operator]
+            "$x" [tt:field_name] [nt:DirectFieldValue]
+            "3" [tt:int_literal] [nt:int_literal]
 

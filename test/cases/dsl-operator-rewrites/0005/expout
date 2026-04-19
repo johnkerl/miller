@@ -3,17 +3,16 @@ $j = true; $j &&= $i < 2
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "j"
-        * bool literal "true"
-    * assignment "="
-        * direct field value "j"
-        * operator "&&"
-            * direct field value "j"
-            * operator "<"
-                * direct field value "i"
-                * int literal "2"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$j" [tt:field_name] [nt:DirectFieldValue]
+        "true" [tt:literal_true] [nt:bool_literal]
+    "&&=" [tt:op_and_equals] [nt:CompoundAssignment]
+        "$j" [tt:field_name] [nt:DirectFieldValue]
+        "&&=" [tt:op_and_equals] [nt:op_and_equals]
+        "<" [tt:op_lt] [nt:Operator]
+            "$i" [tt:field_name] [nt:DirectFieldValue]
+            "2" [tt:int_literal] [nt:int_literal]
 
 a   b   i x          y          j
 pan pan 1 0.34679014 0.72680286 true

@@ -80,6 +80,8 @@ Name=Xiao, Lin|Role=administrator
 Name=Khavari, Darius|Role=tester
 </pre>
 
+Alternatively, use DKVPX format with `--dkvpx`, which supports CSV-style quoting so keys and values may contain commas, equals, newlines, and quotes natively. Example: `echo '"a,b"="x,y",z=3' | mlr --dkvpx cat`
+
 To be extra-sure to avoid data/delimiter clashes, you can also use control
 characters as delimiters -- here, control-A:
 

@@ -16,21 +16,112 @@ Quick links:
 </div>
 # DSL output statements
 
-You can **output** variable-values or expressions in **five ways**:
+You can output variable values and expressions in several ways.
 
-* **Assign** them to stream-record fields. For example, `$cumulative_sum = @sum`. For another example, `$nr = NR` adds a field named `nr` to each output record, containing the value of the built-in variable `NR` as of when that record was ingested.
+<!--
+assignments
+templating
+emityx
+print tee dump
+-->
 
-* Use **emit1**/**emit**/**emitp**/**emitf** to send out-of-stream variables' current values to the output record stream, e.g.  `@sum += $x; emit1 @sum` which produces an extra record such as `sum=3.1648382`. These records, just like records from input file(s), participate in downstream [then-chaining](reference-main-then-chaining.md) to other verbs.
+**By modifying the current record:**
 
-* Use the **print** or **eprint** keywords which immediately print an expression *directly to standard output or standard error*, respectively. Note that `dump`, `edump`, `print`, and `eprint` don't output records that participate in `then`-chaining; rather, they're just immediate prints to stdout/stderr. The `printn` and `eprintn` keywords are the same except that they don't print final newlines. Additionally, you can print to a specified file instead of stdout/stderr.
+* The simplest: [assign values to stream-record fields](#modifying-the-current-record-by-assignment),
+  like `$z = $x + $y`.
+* Perhaps the most flexible: [record-templating](#record-templating), like `$* = {"xy":[$x $y], "z":$x+$y}`.
 
-* Use the **dump** or **edump** keywords, which *immediately print all out-of-stream variables as a JSON data structure to the standard output or standard error* (respectively).
+In these cases, you're populating the output-records stream which feeds into the next verb in a
+[`then`-chain](reference-main-then-chaining.md) (if any), or which otherwise is formatted for output
+using your choice of Miller's [output-format flags](reference-main-flag-list.md#file-format-flags).
 
-* Use **tee**, which formats the current stream record (not just an arbitrary string as with **print**) to a specific file.
+**By inserting new records in the output stream:**
 
-For the first two options, you are populating the output-records stream which feeds into the next verb in a `then`-chain (if any), or which otherwise is formatted for output using `--o...` flags.
+* Use **emit1**/**emit**/**emitp**/**emitf** to send out-of-stream variables' current values to the output record stream.
+* For example, if you update an [out-of-stream variable](reference-dsl-variables.md#out-of-stream-variables) and then emit it using `@sum += $x; emit1 @sum`, this will produce an extra record such as `sum=3.1648382`.
+* See below for more examples.
 
-For the last three options, you are sending output directly to standard output, standard error, or a file.
+These inserted records, just like records derived from input file(s) as shown above, participate in
+downstream [then-chaining](reference-main-then-chaining.md) to other verbs. They'll appear in
+whatever your Miller invocation's [output format](reference-main-flag-list.md#file-format-flags) is.
+For example, if you used `-o csv` then these new records will appear in CSV format.
+
+**By printing arbitrary statements:**
+
+* Use the **print** or **eprint** keywords which immediately print an expression *directly to standard output or standard error*, respectively.
+* Related: you can use **tee**, which formats the current stream record (not just an arbitrary string as with **print**) to a specific file.
+* Similarly, use the **dump** or **edump** keywords, which _immediately print all out-of-stream variables_ as a JSON data structure to the standard output or standard error (respectively). Here, the output format is always JSON.
+* See below for more examples.
+
+Note that `dump`, `edump`, `print`, and `eprint` don't output records that participate in
+`then`-chaining: rather, they're just immediate prints to stdout/stderr.
+
+You can use these to print arbitrary things, like `"Hello, world!"`, or, you can use them to format
+your data in [custom output format](#custom-output-formats-with-print-statements) of your choice. In
+particular, you can use this to implement an output format that Miller doesn't handle out of the
+box.
+
+## Modifying the current record by assignment
+
+The simplest: **assign** values to stream-record fields.
+
+* For example, assign `$z = $x + $y` which creates a new field/column as a function of two existing fields/columns.
+* For another example, update an [out-of-stream variable](reference-dsl-variables.md#out-of-stream-variables) `@sum += $somefield`, then assign `$cumulative_sum = @sum`.
+* For another example, `$nr = NR` adds a field named `nr` to each output record, containing the value of the built-in variable `NR` as of when that record was ingested.
+
+## Record-templating
+
+Here's a sample input:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv cat data/colored-shapes-2.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color,shape,flag,i,u,v,w,x
+yellow,triangle,1,56,0.632170,0.988721,0.436498,5.798188
+red,square,1,80,0.219668,0.001257,0.792778,2.944117
+</pre>
+
+Using the `$*` as the left-hand side assigns the entire record. This way, you get to specify what
+the entire output record will look like, all at once.
+
+<pre class="pre-highlight-in-pair">
+<b>cat record-templating-example.mlr</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+$* = {
+  "color_shape": $color . " " . $shape,
+  "flags": {
+    "iflag": $flag == 1,
+    "w_exceeded": $w > 0.5,
+  },
+  "uvwx": [$u, $v, $w, $x],
+}
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -i csv -o json --from data/colored-shapes-2.csv put -f record-templating-example.mlr</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "color_shape": "yellow triangle",
+  "flags": {
+    "iflag": true,
+    "w_exceeded": false
+  },
+  "uvwx": [0.632170, 0.988721, 0.436498, 5.798188]
+},
+{
+  "color_shape": "red square",
+  "flags": {
+    "iflag": true,
+    "w_exceeded": true
+  },
+  "uvwx": [0.219668, 0.001257, 0.792778, 2.944117]
+}
+]
+</pre>
 
 ## Print statements
 
@@ -55,6 +146,46 @@ The `print` statement is perhaps self-explanatory, but with a few light caveats:
 </pre>
 
 See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
+
+## Custom output formats with print statements
+
+Be sure to use `put -q` to silence the record stream, so that all output is controlled by your print statements:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/colored-shapes-2.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color,shape,flag,i,u,v,w,x
+yellow,triangle,1,56,0.632170,0.988721,0.436498,5.798188
+red,square,1,80,0.219668,0.001257,0.792778,2.944117
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>cat custom-record-formatting.mlr</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+if (NR > 1) { print }
+print "Shape is " . $shape;
+print "Color is " . $color;
+if ($w > 0.5) {
+  print "W HAS EXCEEDED THRESHOLD: " . $w
+} else {
+  print "W is within threshold: " . $w
+}
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -i csv --from data/colored-shapes-2.csv put -q -f custom-record-formatting.mlr</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Shape is triangle
+Color is yellow
+W is within threshold: 0.436498
+
+Shape is square
+Color is red
+W HAS EXCEEDED THRESHOLD: 0.792778
+</pre>
 
 ## Dump statements
 
@@ -326,7 +457,7 @@ to files.
 Keep in mind that out-of-stream variables are a nested, multi-level [map](reference-main-maps.md) (directly viewable as JSON using `dump`), while Miller record values are as well during processing -- but records may be flattened down for output to tabular formats. See the page [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md) for more information.
 
 * You can use `emit1` to emit any map-valued expression, including `$*`, map-valued out-of-stream variables, the entire out-of-stream-variable collection `@*`, map-valued local variables, map literals, or map-valued function return values.
-* For `emit`, `emitp`, and `emitf`, you can emit map-valued local variables, map-valued field attributes (with `$`), map-va out-of-stream variables (with `@`), `$*`, `@*`, or map literals (with outermost `{...}`) -- but not arbitrary expressions which evaluate to map (such as function return values).
+* For `emit`, `emitp`, and `emitf`, you can emit map-valued local variables, map-valued field attributes (with `$`), map-valued out-of-stream variables (with `@`), `$*`, `@*`, map literals (with outermost `{...}`), or map-valued function return values (e.g. `emit f($a, $b)`).
 
 The reason for this is partly historical and partly technical. As we'll see below, you can do lots of syntactical things with `emit`, `emitp`, and `emitf`, including printing them side-by-side, indexing them, redirecting the output to files, etc. What this means syntactically is that Miller's parser needs to handle all sorts of commas, parentheses, and so on:
 

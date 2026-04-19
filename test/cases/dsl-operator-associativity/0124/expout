@@ -3,9 +3,9 @@ DSL EXPRESSION:
 
 
 AST:
-* statement block
-    * bare boolean
-        * operator "~"
-            * operator "~"
-                * int literal "1"
+"block" [tt:block] [nt:StatementBlock]
+    "~" [tt:op_tilde] [nt:BareBoolean]
+        "~" [tt:op_tilde] [nt:Operator]
+            "~" [tt:op_tilde] [nt:Operator]
+                "1" [tt:int_literal] [nt:int_literal]
 

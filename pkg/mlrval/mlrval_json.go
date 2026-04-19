@@ -1,10 +1,8 @@
-// ================================================================
 // Mlrval implements the Unmarshaler and Marshaler interfaces needed for
 // marshaling/unmarshaling to/from JSON, via the UnmarshalJSON and MarshalJSON
 // methods.
 //
 // Please see also https://golang.org/pkg/encoding/json/
-// ================================================================
 
 package mlrval
 
@@ -29,9 +27,8 @@ const (
 	JSON_MULTILINE   = 2
 )
 
-var prematureEofError error = errors.New("mlr: JSON parser: unexpected premature EOF")
+var errPrematureEOF = errors.New("JSON parser: unexpected premature EOF")
 
-// ================================================================
 // The JSON decoder (https://golang.org/pkg/encoding/json/#Decoder) is quite
 // nice. What we can have is:
 //
@@ -63,7 +60,6 @@ var prematureEofError error = errors.New("mlr: JSON parser: unexpected premature
 // valid JSON items -- we can use decoder.Buffered() to continue stream
 // processing.
 //
-// ----------------------------------------------------------------
 // json.Token holds one of the following types:
 //
 // * Delim, for the four JSON delimiters [ ] { }
@@ -73,7 +69,6 @@ var prematureEofError error = errors.New("mlr: JSON parser: unexpected premature
 // * string, for JSON string literals
 // * nil, for JSON null
 //
-// ----------------------------------------------------------------
 // Note: we accept a sequence of valid JSON items, not just a JSON item.
 // E.g. either
 //
@@ -101,15 +96,13 @@ var prematureEofError error = errors.New("mlr: JSON parser: unexpected premature
 //
 // This is so the Miller JSON record-reader can be streaming, not needing to
 // ingest all records at once, and operable within a tail -f context.
-// ================================================================
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) UnmarshalJSON(inputBytes []byte) error {
 	*mv = *FromPending()
 	decoder := json.NewDecoder(bytes.NewReader(inputBytes))
 	pmv, eof, err := MlrvalDecodeFromJSON(decoder)
 	if eof {
-		return fmt.Errorf("mlr: JSON parser: unexpected premature EOF")
+		return fmt.Errorf("JSON parser: unexpected premature EOF")
 	}
 	if err != nil {
 		return err
@@ -118,17 +111,15 @@ func (mv *Mlrval) UnmarshalJSON(inputBytes []byte) error {
 	return nil
 }
 
-// ----------------------------------------------------------------
 func TryUnmarshalJSON(inputBytes []byte) (pmv *Mlrval, err error) {
 	decoder := json.NewDecoder(bytes.NewReader(inputBytes))
 	pmv, eof, err := MlrvalDecodeFromJSON(decoder)
 	if eof {
-		err = fmt.Errorf("mlr: JSON parser: unexpected premature EOF")
+		err = fmt.Errorf("JSON parser: unexpected premature EOF")
 	}
 	return pmv, err
 }
 
-// ----------------------------------------------------------------
 func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 	mlrval *Mlrval,
 	eof bool,
@@ -170,7 +161,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 		}
 
 		return nil, false, fmt.Errorf(
-			"mlr: JSON reader internal coding error: non-delimiter token unhandled",
+			"JSON reader internal coding error: non-delimiter token unhandled",
 		)
 
 	} else {
@@ -188,7 +179,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 			collectionType = "JSON object`"
 		} else {
 			return nil, false, fmt.Errorf(
-				"mlr: JSON reader: Unhandled opening delimiter \"%s\"", string(delimiter),
+				"JSON reader: Unhandled opening delimiter \"%s\"", string(delimiter),
 			)
 		}
 
@@ -201,7 +192,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 			for decoder.More() {
 				element, eof, err := MlrvalDecodeFromJSON(decoder)
 				if eof {
-					return nil, false, prematureEofError
+					return nil, false, errPrematureEOF
 				}
 				if err != nil {
 					return nil, false, err
@@ -214,7 +205,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 			for decoder.More() {
 				key, eof, err := MlrvalDecodeFromJSON(decoder)
 				if eof {
-					return nil, false, prematureEofError
+					return nil, false, errPrematureEOF
 				}
 				if err != nil {
 					return nil, false, err
@@ -228,7 +219,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 
 				value, eof, err := MlrvalDecodeFromJSON(decoder)
 				if eof {
-					return nil, false, prematureEofError
+					return nil, false, errPrematureEOF
 				}
 				if err != nil {
 					return nil, false, err
@@ -240,14 +231,14 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 		}
 
 		imbalanceError := fmt.Errorf(
-			"mlr: JSON reader: did not find closing token \"%s\" for %s",
+			"JSON reader: did not find closing token \"%s\" for %s",
 			string(expectedClosingDelimiter),
 			collectionType,
 		)
 
 		endToken, err := decoder.Token()
 		if err == io.EOF {
-			return nil, false, fmt.Errorf("mlr: JSON parser: unexpected premature EOF")
+			return nil, false, fmt.Errorf("JSON parser: unexpected premature EOF")
 		}
 		if err != nil {
 			return nil, false, err
@@ -267,7 +258,6 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 	}
 }
 
-// ================================================================
 func (mv *Mlrval) MarshalJSON(
 	jsonFormatting TJSONFormatting,
 	outputIsStdout bool,
@@ -304,49 +294,42 @@ func (mv *Mlrval) marshalJSONAux(
 	case MT_MAP:
 		return mv.marshalJSONMap(jsonFormatting, elementNestingDepth, outputIsStdout)
 	case MT_DIM: // MT_DIM is one past the last valid type
-		return "", fmt.Errorf("mlr: internal coding error detected")
+		return "", fmt.Errorf("internal coding error detected")
 	}
-	return "", fmt.Errorf("mlr: Internal coding error detected")
+	return "", fmt.Errorf("internal coding error detected")
 }
 
-// ================================================================
 // TYPE-SPECIFIC MARSHALERS
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONPending(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_PENDING)
 	return "", fmt.Errorf(
-		"mlr: internal coding error: pending-values should not have been produced",
+		"internal coding error: pending-values should not have been produced",
 	)
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONError(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_ERROR)
 	return colorizer.MaybeColorizeValue(mv.printrep, outputIsStdout), nil
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONAbsent(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_ABSENT)
 	return "", fmt.Errorf(
-		"mlr: internal coding error: absent-values should not have been assigned",
+		"internal coding error: absent-values should not have been assigned",
 	)
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONNull(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_NULL)
 	return colorizer.MaybeColorizeValue("null", outputIsStdout), nil
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONVoid(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_VOID)
 	return colorizer.MaybeColorizeValue("\"\"", outputIsStdout), nil
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONString(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_STRING)
 
@@ -404,7 +387,6 @@ func millerJSONEncodeString(input string) string {
 	return buffer.String()
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONInt(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_INT)
 	// Other formats would use mv.String(): for example, if the user used hex
@@ -419,19 +401,16 @@ func (mv *Mlrval) marshalJSONInt(outputIsStdout bool) (string, error) {
 	return colorizer.MaybeColorizeValue(s, outputIsStdout), nil
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONFloat(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_FLOAT)
 	return colorizer.MaybeColorizeValue(mv.String(), outputIsStdout), nil
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONBool(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_BOOL)
 	return colorizer.MaybeColorizeValue(mv.String(), outputIsStdout), nil
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONArray(
 	jsonFormatting TJSONFormatting,
 	elementNestingDepth int,
@@ -453,9 +432,8 @@ func (mv *Mlrval) marshalJSONArray(
 
 	if allTerminal || (jsonFormatting == JSON_SINGLE_LINE) {
 		return mv.marshalJSONArraySingleLine(elementNestingDepth, outputIsStdout)
-	} else {
-		return mv.marshalJSONArrayMultipleLines(jsonFormatting, elementNestingDepth, outputIsStdout)
 	}
+	return mv.marshalJSONArrayMultipleLines(jsonFormatting, elementNestingDepth, outputIsStdout)
 }
 
 func (mv *Mlrval) marshalJSONArraySingleLine(
@@ -513,7 +491,7 @@ func (mv *Mlrval) marshalJSONArrayMultipleLines(
 		if err != nil {
 			return "", err
 		}
-		for i := 0; i < elementNestingDepth; i++ {
+		for range elementNestingDepth {
 			buffer.WriteString(JSON_INDENT_STRING)
 		}
 		buffer.WriteString(elementString)
@@ -534,7 +512,6 @@ func (mv *Mlrval) marshalJSONArrayMultipleLines(
 	return buffer.String(), nil
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONMap(
 	jsonFormatting TJSONFormatting,
 	elementNestingDepth int,

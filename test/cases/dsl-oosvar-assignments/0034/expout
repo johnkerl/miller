@@ -3,12 +3,13 @@ end { @u[2] = @v }
 
 
 AST:
-* statement block
-    * end block
-        * statement block
-            * assignment "="
-                * array or map index access "[]"
-                    * direct oosvar value "u"
-                    * int literal "2"
-                * direct oosvar value "v"
+"block" [tt:block] [nt:StatementBlock]
+    "end" [tt:kw_end] [nt:EndBlock]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
+                "=" [tt:equals] [nt:Assignment]
+                    "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+                        "@u" [tt:oosvar_name] [nt:DirectOosvarValue]
+                        "2" [tt:int_literal] [nt:int_literal]
+                    "@v" [tt:oosvar_name] [nt:DirectOosvarValue]
 

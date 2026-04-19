@@ -1,31 +1,29 @@
-// ================================================================
 // This is for awkish pattern-action-blocks, like mlr put 'NR > 10 { ... }'.
 // Just shorthand for if-statements without elif/else.
-// ================================================================
 
 package cst
 
 import (
 	"fmt"
 
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
-	"github.com/johnkerl/miller/v6/pkg/parsing/token"
 	"github.com/johnkerl/miller/v6/pkg/runtime"
+
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
+	"github.com/johnkerl/pgpg/go/lib/pkg/tokens"
 )
 
 type CondBlockNode struct {
 	conditionNode      IEvaluable
-	conditionToken     *token.Token
+	conditionToken     *tokens.Token
 	statementBlockNode *StatementBlockNode
 }
 
-// ----------------------------------------------------------------
 // Sample AST:
 
-func (root *RootNode) BuildCondBlockNode(astNode *dsl.ASTNode) (*CondBlockNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeCondBlock)
+func (root *RootNode) BuildCondBlockNode(astNode *asts.ASTNode) (*CondBlockNode, error) {
+	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeCondBlock))
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 
 	conditionNode, err := root.BuildEvaluableNode(astNode.Children[0])
@@ -46,7 +44,6 @@ func (root *RootNode) BuildCondBlockNode(astNode *dsl.ASTNode) (*CondBlockNode, 
 	return condBlockNode, nil
 }
 
-// ----------------------------------------------------------------
 func (node *CondBlockNode) Execute(
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
@@ -61,8 +58,8 @@ func (node *CondBlockNode) Execute(
 		boolValue = false
 	} else if !isBool {
 		return nil, fmt.Errorf(
-			"mlr: conditional expression did not evaluate to boolean%s",
-			dsl.TokenToLocationInfo(node.conditionToken),
+			"conditional expression did not evaluate to boolean%s",
+			pgpgTokenToLocationInfo(node.conditionToken),
 		)
 	}
 

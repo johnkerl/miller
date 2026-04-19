@@ -7,7 +7,6 @@ import (
 	"os"
 )
 
-// ================================================================
 func lecatUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "Usage: mlr %s [options] {zero or more file names}\n", verbName)
 	fmt.Fprintf(o, "Simply echoes input, but flags CR characters in red and LF characters in green.\n")
@@ -49,7 +48,7 @@ func lecatMain(args []string) int {
 
 			istream, err := os.Open(filename)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, "mlr lecat:", err)
+				fmt.Fprintf(os.Stderr, "mlr lecat: %v\n", err)
 				os.Exit(1)
 			}
 

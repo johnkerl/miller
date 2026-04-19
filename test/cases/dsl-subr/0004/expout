@@ -3,8 +3,9 @@ subr s() {}
 
 
 AST:
-* statement block
-    * subroutine definition "s"
-        * parameter list
-        * statement block
+"block" [tt:block] [nt:StatementBlock]
+    "s" [tt:non_sigil_name] [nt:SubroutineDefinition]
+        "params" [tt:params] [nt:ParameterList]
+        "block" [tt:block] [nt:StatementBlockInBraces]
+            "block" [tt:block] [nt:StatementBlock]
 

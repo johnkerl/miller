@@ -1,0 +1,11 @@
+# This is a comment
+Name      Last Seen     Thing
+----      ---------     ----- 
+JohnDoe   two days ago  Bottle
+FooBar12  online        Pen
+Max       yesterday
+
+# New schema followed by empty line
+Name  Thing
+----  ----- 
+Doe   Bottle

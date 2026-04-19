@@ -3,15 +3,15 @@ $z = [5,6,7,8,9][1]
 
 
 AST:
-* statement block
-    * assignment "="
-        * direct field value "z"
-        * array or map index access "[]"
-            * array literal "[]"
-                * int literal "5"
-                * int literal "6"
-                * int literal "7"
-                * int literal "8"
-                * int literal "9"
-            * int literal "1"
+"block" [tt:block] [nt:StatementBlock]
+    "=" [tt:equals] [nt:Assignment]
+        "$z" [tt:field_name] [nt:DirectFieldValue]
+        "[]" [tt:[]] [nt:ArrayOrMapIndexAccess]
+            "[]" [tt:[]] [nt:ArrayLiteral]
+                "5" [tt:int_literal] [nt:int_literal]
+                "6" [tt:int_literal] [nt:int_literal]
+                "7" [tt:int_literal] [nt:int_literal]
+                "8" [tt:int_literal] [nt:int_literal]
+                "9" [tt:int_literal] [nt:int_literal]
+            "1" [tt:int_literal] [nt:int_literal]
 

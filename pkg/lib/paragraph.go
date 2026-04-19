@@ -37,7 +37,7 @@ func PrintWordsAsParagraph(words []string) {
 // For online help contexts like printing all the built-in DSL functions, or
 // the list of all verbs. Max width is nominally 80.
 func FormatAsParagraph(text string, maxWidth int) []string {
-	lines := make([]string, 0)
+	lines := []string{}
 	words := strings.Fields(text)
 
 	separator := " "

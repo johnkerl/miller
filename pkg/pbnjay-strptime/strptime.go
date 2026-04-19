@@ -34,7 +34,10 @@ THE SOFTWARE.
 //     %p  Locale’s equivalent of either AM or PM.
 //     %M  Minute as a zero-padded decimal number.
 //     %S  Second as a zero-padded decimal number.
-//     %f  Microsecond as a decimal number, zero-padded on the left.
+//     %f  Microsecond as a decimal number, zero-padded on the left. Supports mixed
+//         modes: when format has ".%f", the literal "." and fractional digits are
+//         optional (e.g. "2022-04-03 17:38:20 UTC", "2022-04-03 17:38:20. UTC", or
+//         "2022-04-03 17:38:20.123 UTC" all parse with "%Y-%m-%d %H:%M:%S.%f UTC").
 //     %z  UTC offset in the form +HHMM or -HHMM.
 //     %Z  Time zone name. UTC, EST, CST
 //     %%  A literal '%' character.
@@ -87,8 +90,8 @@ func ParseLocation(value, format string, location *time.Location) (time.Time, er
 func Check(format string) error {
 	format = expandShorthands(format)
 
-	parts := strings.Split(format, "%")
-	for _, ps := range parts {
+	parts := strings.SplitSeq(format, "%")
+	for ps := range parts {
 		// Since we split on '%', this is the format code
 
 		// This is for "%%"
@@ -109,19 +112,19 @@ func Check(format string) error {
 }
 
 func strptime_tz(
-	strptime_input, strptime_format string, ignoreUnsupported bool, useTZ bool, location *time.Location,
+	strptimeInput, strptimeFormat string, ignoreUnsupported bool, useTZ bool, location *time.Location,
 ) (time.Time, error) {
 	if _debug {
 		fmt.Printf("================================================================ STRPTIME ENTER\n")
-		fmt.Printf("strptime_input    \"%s\"\n", strptime_input)
-		fmt.Printf("strptime_format   \"%s\"\n", strptime_format)
+		fmt.Printf("strptimeInput    \"%s\"\n", strptimeInput)
+		fmt.Printf("strptimeFormat   \"%s\"\n", strptimeFormat)
 		defer fmt.Printf("================================================================ STRPTIME EXIT\n")
 	}
 
 	// E.g. re-write "%F" to "%Y-%m-%d".
-	strptime_format = expandShorthands(strptime_format)
+	strptimeFormat = expandShorthands(strptimeFormat)
 	if _debug {
-		fmt.Printf("strptime_input    \"%s\"\n", strptime_input)
+		fmt.Printf("strptimeInput    \"%s\"\n", strptimeInput)
 	}
 
 	// The job of strptime is to map "format strings" like "%Y-%m-%d %H:%M:%S" to
@@ -143,11 +146,11 @@ func strptime_tz(
 
 	goLibInput := ""
 	goLibTemplate := ""
-	// sii and sil are start index and length of components in the strptime-style input string,
-	// i.e.  the caller's original date/time string to be parsed.
-	sii := 0
+	// inputIdx: index into strptimeInput (the date string). Format is walked via partsIndex.
+	inputIdx := 0
+	firstComponent := true // no leading space before first component (avoids Go parse quirks)
 
-	partsBetweenPercentSigns := strings.Split(strptime_format, "%")
+	partsBetweenPercentSigns := strings.Split(strptimeFormat, "%")
 	nparts := len(partsBetweenPercentSigns)
 	for partsIndex := 0; partsIndex < nparts; /* increment in loop */ {
 		partBetweenPercentSigns := partsBetweenPercentSigns[partsIndex]
@@ -160,15 +163,15 @@ func strptime_tz(
 			// Check for prefix text. It must be an exact match, e.g. with input "foo 2021" and
 			// format "foo %Y", "foo " == "foo ". Or, if the format starts with a "%", we're
 			// checking "" == "".
-			if strptime_input[:len(partBetweenPercentSigns)] != partBetweenPercentSigns {
+			if strptimeInput[inputIdx:inputIdx+len(partBetweenPercentSigns)] != partBetweenPercentSigns {
 				if _debug {
 					fmt.Printf("\"%s\" != \"%s\"\n",
-						strptime_input[:len(partBetweenPercentSigns)], partBetweenPercentSigns,
+						strptimeInput[inputIdx:inputIdx+len(partBetweenPercentSigns)], partBetweenPercentSigns,
 					)
 				}
 				return time.Time{}, ErrFormatMismatch
 			}
-			sii += len(partBetweenPercentSigns)
+			inputIdx += len(partBetweenPercentSigns)
 			partsIndex++
 			continue
 		}
@@ -178,7 +181,7 @@ func strptime_tz(
 			if _debug {
 				fmt.Printf("formatCode        '%c'\n", '%')
 			}
-			if strptime_input[sii:sii+1] != "%" {
+			if strptimeInput[inputIdx:inputIdx+1] != "%" {
 				if _debug {
 					fmt.Println("did not match %%")
 				}
@@ -190,7 +193,7 @@ func strptime_tz(
 				fmt.Printf("inputComponent    \"%s\"\n", "%")
 			}
 
-			sii += 1
+			inputIdx += 1
 			partsIndex += 2 // TODO: TYPE ME UP
 			continue
 		}
@@ -219,9 +222,42 @@ func strptime_tz(
 		// Subtract 1 for the format code itself. E.g. with "%Y:%m", splitting on "%", one piece
 		// is "Y:". sil is the length of the ":" part.
 		sil := len(partBetweenPercentSigns) - 1
+		interveningLen := sil
 		// Now sil becomes the offset of this part within the strptime-style input.
 		if sil > 0 {
-			sil = strings.Index(strptime_input[sii:], partBetweenPercentSigns[1:])
+			// Optional ".%f" (mixed modes): when format has ".%f" and next format code is 'f',
+			// the literal "." may be absent (e.g. "2022-04-03 17:38:20 UTC" vs "2022-04-03 17:38:20.123 UTC").
+			dotOptional := false
+			if partsIndex+1 < nparts {
+				nextPart := partsBetweenPercentSigns[partsIndex+1]
+				if len(partBetweenPercentSigns) > 0 &&
+					partBetweenPercentSigns[len(partBetweenPercentSigns)-1] == '.' &&
+					len(nextPart) > 0 && nextPart[0] == 'f' {
+					dotOptional = true
+				}
+			}
+			if dotOptional {
+				dotSearch := partBetweenPercentSigns[1:]
+				sil = strings.Index(strptimeInput[inputIdx:], dotSearch)
+				if sil == -1 {
+					// Try without the dot: find the first char of the literal after %f
+					if partsIndex+1 < nparts {
+						nextPart := partsBetweenPercentSigns[partsIndex+1]
+						if len(nextPart) > 1 {
+							fallbackSearch := string(nextPart[1])
+							sil = strings.Index(strptimeInput[inputIdx:], fallbackSearch)
+							if sil != -1 {
+								interveningLen = 0
+							}
+						} else {
+							sil = len(strptimeInput) - inputIdx
+							interveningLen = 0
+						}
+					}
+				}
+			} else {
+				sil = strings.Index(strptimeInput[inputIdx:], partBetweenPercentSigns[1:])
+			}
 		}
 		if sil == -1 {
 			if _debug {
@@ -230,77 +266,152 @@ func strptime_tz(
 			return time.Time{}, ErrFormatMismatch
 		}
 		if _debug {
-			fmt.Printf("inputComponent    \"%s\"\n", strptime_input[sii:sii+sil])
+			fmt.Printf("inputComponent    \"%s\"\n", strptimeInput[inputIdx:inputIdx+sil])
 		}
 
+		fracHasDigits := true // for non-%f format codes, unused
 		if supported {
 			// Accumulate the go-lib style template and input strings.
 			if sil == 0 { // No intervening text, e.g. "%Y%m%d"
 				if formatCode == 'f' {
-					sil = len(strptime_input) - sii
+					// %f is optional decimal point + 0-6 digit runes (microseconds).
+					// Supports mixed modes: no fraction ("20 UTC"), dot only ("20. UTC"), or digits ("20.123 UTC").
+					// Do not consume the rest of the string so that %f%z works:
+					// e.g. ".160001+0100" -> %f takes ".160001", %z takes "+0100".
+					sil, fracHasDigits = parseFracLen(strptimeInput[inputIdx:])
 				} else {
-					sil = len(templateComponent)
-					if sil > len(strptime_input)-sii {
+					want := len(templateComponent)
+					remaining := len(strptimeInput) - inputIdx
+					if remaining == 0 {
 						if _debug {
 							fmt.Printf("format/template mismatch 2\n")
 						}
 						return time.Time{}, ErrFormatMismatch
 					}
+					// Allow single-digit at end of string (e.g. "1989-1-2" for %Y-%m-%d); we zero-pad when building.
+					sil = min(want, remaining)
 				}
 			}
 
+			// Use the format's literal as separator after each value (e.g. "/" for %m/%d/%Y) so Go parses unambiguously.
+			sep := partBetweenPercentSigns[1:]
+			if firstComponent {
+				sep = ""
+				firstComponent = false
+			}
 			if formatCode == 'f' {
-				goLibTemplate += "." + templateComponent
-				goLibInput += "." + strptime_input[sii:sii+sil]
+				if sil > 0 {
+					// Check fracHasDigits for intervening-text case (when parseFracLen wasn't called)
+					fracVal := strptimeInput[inputIdx : inputIdx+sil]
+					fracHasDigits = false
+					for _, c := range fracVal {
+						if c >= '0' && c <= '9' {
+							fracHasDigits = true
+							break
+						}
+					}
+				}
+				if sil > 0 {
+					fracVal := strptimeInput[inputIdx : inputIdx+sil]
+					goLibTemplate += "." + templateComponent
+					if fracHasDigits {
+						if fracVal[0] == '.' {
+							goLibInput += fracVal
+						} else {
+							goLibInput += "." + fracVal
+						}
+					} else {
+						goLibInput += ".0" // dot only: treat as zero fractional seconds
+					}
+				}
+				// sil==0: no fraction, add nothing
 			} else if formatCode == 'p' {
-				goLibTemplate += " " + templateComponent
-				goLibInput += " " + strings.ToUpper(strptime_input[sii:sii+sil])
+				goLibTemplate += templateComponent + sep
+				goLibInput += strings.ToUpper(strptimeInput[inputIdx:inputIdx+sil]) + sep
 			} else {
-				goLibTemplate += " " + templateComponent
-				goLibInput += " " + strptime_input[sii:sii+sil]
+				comp := strptimeInput[inputIdx : inputIdx+sil]
+				// Zero-pad numeric fields so single-digit input works (e.g. "1/07/2022" for %d/%m/%Y).
+				comp = zeroPadLeft(comp, len(templateComponent))
+				goLibTemplate += templateComponent + sep
+				goLibInput += comp + sep
 			}
 		}
 
 		if !supported && sil == 0 {
 			// Ignore to the end of the string
-			sii = len(strptime_input)
+			inputIdx = len(strptimeInput)
 		} else {
-			sii += (len(partBetweenPercentSigns) - 1) + sil
+			inputIdx += interveningLen + sil
 		}
 		partsIndex++
 	}
 
-	if sii < len(strptime_input) {
+	if inputIdx < len(strptimeInput) {
 		if _debug {
-			fmt.Printf("Extra text on end of strptime_input\n")
+			fmt.Printf("Extra text on end of strptimeInput\n")
 		}
 		return time.Time{}, ErrFormatMismatch
 	}
 
 	if _debug {
-		fmt.Printf("goLibInput        \"%s\"\n", strptime_input)
-		fmt.Printf("goLibTemplate     \"%s\"\n", strptime_format)
+		fmt.Printf("goLibInput        \"%s\"\n", goLibInput)
+		fmt.Printf("goLibTemplate     \"%s\"\n", goLibTemplate)
 	}
 
 	// Now call the Go time library with template and input formatted the way it wants.
 	if useTZ {
 		if location != nil {
 			return time.ParseInLocation(goLibTemplate, goLibInput, location)
+		}
+		tz := os.Getenv("TZ")
+		if tz == "" {
+			return time.Parse(goLibTemplate, goLibInput)
 		} else {
-			tz := os.Getenv("TZ")
-			if tz == "" {
-				return time.Parse(goLibTemplate, goLibInput)
-			} else {
-				location, err := time.LoadLocation(tz)
-				if err != nil {
-					return time.Time{}, err
-				}
-				return time.ParseInLocation(goLibTemplate, goLibInput, location)
+			location, err := time.LoadLocation(tz)
+			if err != nil {
+				return time.Time{}, err
 			}
+			return time.ParseInLocation(goLibTemplate, goLibInput, location)
 		}
 	} else {
-		return time.Parse(goLibTemplate, goLibInput)
+		// Parse in UTC so strptime (without _local) is deterministic and matches docs.
+		return time.ParseInLocation(goLibTemplate, goLibInput, time.UTC)
 	}
+}
+
+// zeroPadLeft pads s with leading zeros to length n. If s is already >= n chars or
+// contains non-digits, s is returned unchanged. Used so %d/%m etc. accept both
+// "1" and "01" (Go's time.Parse with "02"/"01" requires zero-padded).
+func zeroPadLeft(s string, n int) string {
+	if n <= 0 || len(s) >= n {
+		return s
+	}
+	for _, c := range s {
+		if c < '0' || c > '9' {
+			return s
+		}
+	}
+	return strings.Repeat("0", n-len(s)) + s
+}
+
+// parseFracLen returns the byte length of a strptime %f field in s: optional '.'
+// followed by 0-6 digit runes (microseconds). For mixed modes: no fraction (""),
+// dot only ("."), or digits (".1", ".123", etc.) are all valid.
+// Returns (length, hasDigits). When hasDigits is false, treat as zero fractional seconds.
+func parseFracLen(s string) (length int, hasDigits bool) {
+	if s == "" {
+		return 0, false
+	}
+	n := 0
+	if s[0] == '.' {
+		n = 1
+	}
+	digits := 0
+	for n < len(s) && digits < 6 && s[n] >= '0' && s[n] <= '9' {
+		n++
+		digits++
+	}
+	return n, digits > 0
 }
 
 // expandShorthands handles some shorthands that the C library uses, which we can easily

@@ -1,1 +1,1 @@
-mlr: '[[[...]]]' is allowed on assignment left-hand sides only when immediately preceded by '$'
+mlr: record/map indices must be string, int, or array thereof; got array

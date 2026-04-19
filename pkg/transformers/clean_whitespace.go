@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameCleanWhitespace = "clean-whitespace"
 
 var CleanWhitespaceSetup = TransformerSetup{
@@ -45,7 +44,7 @@ func transformerCleanWhitespaceParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	doKeys := true
 	doValues := true
@@ -66,7 +65,7 @@ func transformerCleanWhitespaceParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerCleanWhitespaceUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-k" || opt == "--keys-only" {
 			doKeys = true
@@ -76,19 +75,17 @@ func transformerCleanWhitespaceParseCLI(
 			doValues = true
 
 		} else {
-			transformerCleanWhitespaceUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verbNameCleanWhitespace, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	if !doKeys && !doValues {
-		transformerCleanWhitespaceUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verbNameCleanWhitespace, "-k or -v is required")
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerCleanWhitespace(
@@ -96,19 +93,16 @@ func transformerCleanWhitespaceParseCLI(
 		doValues,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 type TransformerCleanWhitespace struct {
 	recordTransformerFunc RecordTransformerFunc
 }
 
-// ----------------------------------------------------------------
 func NewTransformerCleanWhitespace(
 	doKeys bool,
 	doValues bool,
@@ -127,8 +121,6 @@ func NewTransformerCleanWhitespace(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerCleanWhitespace) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -139,7 +131,6 @@ func (tr *TransformerCleanWhitespace) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -163,7 +154,6 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeys(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -186,7 +176,6 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeys(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerCleanWhitespace) cleanWhitespaceInValues(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext

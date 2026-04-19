@@ -1,4 +1,3 @@
-// ================================================================
 // OVERVIEW
 //
 // * Suppose we are sorting records lexically ascending on field "a" and then
@@ -37,7 +36,6 @@
 // * Note in particular that string keys ["a":"red","x":"1"] and
 //   ["a":"red","x":"1.0"] map to different groups, but will sort equally.
 //
-// ================================================================
 
 package transformers
 
@@ -53,7 +51,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameSort = "sort"
 
 var SortSetup = TransformerSetup{
@@ -98,15 +95,15 @@ func transformerSortParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
 
-	groupByFieldNames := make([]string, 0)
-	comparatorFuncs := make([]mlrval.CmpFuncInt, 0)
+	groupByFieldNames := []string{}
+	comparatorFuncs := []mlrval.CmpFuncInt{}
 	doMoveToHead := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -121,10 +118,13 @@ func transformerSortParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerSortUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-f" {
-			subList := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			subList, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, mlrval.LexicalAscendingComparator)
@@ -134,16 +134,24 @@ func transformerSortParseCLI(
 			// See comments over "-n" -- similar hack.
 			if args[argi] == "-r" {
 				// Treat like "-cr"
-				cli.VerbCheckArgCount(verb, args[argi], args, argi, argc, 1)
+				if err := cli.VerbCheckArgCount(verb, args[argi], args, argi, argc, 1); err != nil {
+					return nil, err
+				}
 				argi++
-				subList := cli.VerbGetStringArrayArgOrDie(verb, "-nr", args, &argi, argc)
+				subList, err := cli.VerbGetStringArrayArg(verb, "-nr", args, &argi, argc)
+				if err != nil {
+					return nil, err
+				}
 				for _, item := range subList {
 					groupByFieldNames = append(groupByFieldNames, item)
 					comparatorFuncs = append(comparatorFuncs, mlrval.CaseFoldDescendingComparator)
 				}
 			} else {
 
-				subList := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+				subList, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+				if err != nil {
+					return nil, err
+				}
 				for _, item := range subList {
 					groupByFieldNames = append(groupByFieldNames, item)
 					comparatorFuncs = append(comparatorFuncs, mlrval.CaseFoldAscendingComparator)
@@ -152,18 +160,28 @@ func transformerSortParseCLI(
 
 		} else if opt == "-t" {
 			// See comments over "-n" -- similar hack.
-			cli.VerbCheckArgCount(verb, opt, args, argi, argc, 1)
+			if err := cli.VerbCheckArgCount(verb, opt, args, argi, argc, 1); err != nil {
+				return nil, err
+			}
 			if args[argi] == "-r" {
 				// Treat like "-tr"
-				cli.VerbCheckArgCount(verb, args[argi], args, argi, argc, 1)
+				if err := cli.VerbCheckArgCount(verb, args[argi], args, argi, argc, 1); err != nil {
+					return nil, err
+				}
 				argi++
-				subList := cli.VerbGetStringArrayArgOrDie(verb, "-tr", args, &argi, argc)
+				subList, err := cli.VerbGetStringArrayArg(verb, "-tr", args, &argi, argc)
+				if err != nil {
+					return nil, err
+				}
 				for _, item := range subList {
 					groupByFieldNames = append(groupByFieldNames, item)
 					comparatorFuncs = append(comparatorFuncs, mlrval.NaturalAscendingComparator)
 				}
 			} else {
-				subList := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+				subList, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+				if err != nil {
+					return nil, err
+				}
 				for _, item := range subList {
 					groupByFieldNames = append(groupByFieldNames, item)
 					comparatorFuncs = append(comparatorFuncs, mlrval.NaturalDescendingComparator)
@@ -172,18 +190,28 @@ func transformerSortParseCLI(
 
 		} else if opt == "-r" {
 			// See comments over "-n" -- similar hack.
-			cli.VerbCheckArgCount(verb, opt, args, argi, argc, 1)
+			if err := cli.VerbCheckArgCount(verb, opt, args, argi, argc, 1); err != nil {
+				return nil, err
+			}
 			if args[argi] == "-t" {
 				// Treat like "-rt" which is same as "-tr"
-				cli.VerbCheckArgCount(verb, args[argi], args, argi, argc, 1)
+				if err := cli.VerbCheckArgCount(verb, args[argi], args, argi, argc, 1); err != nil {
+					return nil, err
+				}
 				argi++
-				subList := cli.VerbGetStringArrayArgOrDie(verb, "-tr", args, &argi, argc)
+				subList, err := cli.VerbGetStringArrayArg(verb, "-tr", args, &argi, argc)
+				if err != nil {
+					return nil, err
+				}
 				for _, item := range subList {
 					groupByFieldNames = append(groupByFieldNames, item)
 					comparatorFuncs = append(comparatorFuncs, mlrval.NaturalAscendingComparator)
 				}
 			} else {
-				subList := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+				subList, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+				if err != nil {
+					return nil, err
+				}
 				for _, item := range subList {
 					groupByFieldNames = append(groupByFieldNames, item)
 					comparatorFuncs = append(comparatorFuncs, mlrval.LexicalDescendingComparator)
@@ -213,12 +241,17 @@ func transformerSortParseCLI(
 			// So here we special-case this: if "-n" is followed immediately by
 			// "-f", we treat it the same as "-nf". Likewise, "-n" followed by
 			// "-r" is treated like "-nr".
-			cli.VerbCheckArgCount(verb, opt, args, argi, argc, 1)
+			if err := cli.VerbCheckArgCount(verb, opt, args, argi, argc, 1); err != nil {
+				return nil, err
+			}
 
 			if args[argi] == "-f" {
 				// Treat like "-nf"
 				argi++
-				subList := cli.VerbGetStringArrayArgOrDie(verb, "-nf", args, &argi, argc)
+				subList, err := cli.VerbGetStringArrayArg(verb, "-nf", args, &argi, argc)
+				if err != nil {
+					return nil, err
+				}
 				for _, item := range subList {
 					groupByFieldNames = append(groupByFieldNames, item)
 					comparatorFuncs = append(comparatorFuncs, mlrval.NumericAscendingComparator)
@@ -227,7 +260,10 @@ func transformerSortParseCLI(
 			} else if args[argi] == "-r" {
 				// Treat like "-nr"
 				argi++
-				subList := cli.VerbGetStringArrayArgOrDie(verb, "-nr", args, &argi, argc)
+				subList, err := cli.VerbGetStringArrayArg(verb, "-nr", args, &argi, argc)
+				if err != nil {
+					return nil, err
+				}
 				for _, item := range subList {
 					groupByFieldNames = append(groupByFieldNames, item)
 					comparatorFuncs = append(comparatorFuncs, mlrval.NumericDescendingComparator)
@@ -235,7 +271,10 @@ func transformerSortParseCLI(
 
 			} else {
 				// Treat like "-n"
-				subList := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+				subList, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+				if err != nil {
+					return nil, err
+				}
 				for _, item := range subList {
 					groupByFieldNames = append(groupByFieldNames, item)
 					comparatorFuncs = append(comparatorFuncs, mlrval.NumericAscendingComparator)
@@ -243,14 +282,20 @@ func transformerSortParseCLI(
 			}
 
 		} else if opt == "-nf" {
-			subList := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			subList, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, mlrval.NumericAscendingComparator)
 			}
 
 		} else if opt == "-nr" {
-			subList := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			subList, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, mlrval.NumericDescendingComparator)
@@ -260,19 +305,17 @@ func transformerSortParseCLI(
 			doMoveToHead = true
 
 		} else {
-			transformerSortUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	if len(groupByFieldNames) == 0 {
-		transformerSortUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-f sort fields required")
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerSort(
@@ -281,14 +324,12 @@ func transformerSortParseCLI(
 		doMoveToHead,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 // Example:
 // * mlr sort -f a -n i
 // * group-by field-name list is "a,i"
@@ -332,13 +373,12 @@ func NewTransformerSort(
 
 		recordListsByGroup: lib.NewOrderedMap[*[]*types.RecordAndContext](),
 		groupHeads:         lib.NewOrderedMap[[]*mlrval.Mlrval](),
-		spillGroup:         make([]*types.RecordAndContext, 0),
+		spillGroup:         []*types.RecordAndContext{},
 	}
 
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
 type GroupingKeysAndMlrvals struct {
 	groupingKey string
 	mlrvals     []*mlrval.Mlrval
@@ -371,7 +411,7 @@ func (tr *TransformerSort) Transform(
 
 		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
 		if recordListForGroup == nil {
-			records := make([]*types.RecordAndContext, 0)
+			records := []*types.RecordAndContext{}
 			recordListForGroup = &records
 			tr.recordListsByGroup.Put(groupingKey, recordListForGroup)
 			tr.groupHeads.Put(groupingKey, selectedValues)
@@ -416,14 +456,10 @@ func (tr *TransformerSort) Transform(
 		// Now output the groups
 		for _, groupingKeyAndMlrvals := range groupingKeysAndMlrvals {
 			recordsInGroup := tr.recordListsByGroup.Get(groupingKeyAndMlrvals.groupingKey)
-			for _, recordAndContext := range *recordsInGroup {
-				*outputRecordsAndContexts = append(*outputRecordsAndContexts, recordAndContext)
-			}
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, *recordsInGroup...)
 		}
 
-		for _, recordAndContext := range tr.spillGroup {
-			*outputRecordsAndContexts = append(*outputRecordsAndContexts, recordAndContext)
-		}
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, tr.spillGroup...)
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}

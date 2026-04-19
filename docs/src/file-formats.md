@@ -17,7 +17,7 @@ Quick links:
 # File formats
 
 Miller handles name-indexed data using several formats: some you probably know
-by name, such as CSV, TSV, JSON, JSON Lines, and YAML -- and other formats you're likely already
+by name, such as CSV, TSV, JSON, JSON Lines, YAML, and DCF -- and other formats you're likely already
 seeing and using in your structured data.
 
 Additionally, Miller gives you the option to include comments within your data.
@@ -103,11 +103,28 @@ DKVP: delimited key-value pairs (Miller default format)
 | dish=7,egg=8,flint  | Record 2: "dish":"7", "egg":"8", "3":"flint"
 +---------------------+
 
+DKVPX: delimited key-value pairs with CSV-style quoting
++----------------------------------+
+| apple=1,bat=2,cog=3              | Record 1: "apple":"1", "bat":"2", "cog":"3"
+| "x,y"="a,b,c",z=3                | Record 2: "x,y":"a,b,c", "z":"3"
++----------------------------------+
+
 NIDX: implicitly numerically indexed (Unix-toolkit style)
 +---------------------+
 | the quick brown     | Record 1: "1":"the", "2":"quick", "3":"brown"
 | fox jumped          | Record 2: "1":"fox", "2":"jumped"
 +---------------------+
+
+DCF: Debian control file format
++------------+
+| apple: 1   |
+| bat: 2     |
+| cog: 3     |
+|            |
+| dish: 7    |
+| egg: 8     |
+| 3: flint   |
++------------+
 </pre>
 
 ## CSV/TSV/ASV/USV/etc.
@@ -211,7 +228,7 @@ a,b,c
 1,2,3
 4,5,6
 mlr: CSV schema change: first keys "a,b,c"; current keys "a,X,c"
-mlr: exiting due to data error.
+mlr: exiting due to data error
 </pre>
 
 * In short, use-cases for CSV-lite and TSV-lite are often found when dealing with CSV/TSV files which are formatted in some non-standard way -- you have a little more flexibility available to you. (As an example of this flexibility: ASV and USV are nothing more than CSV-lite with different values for FS and RS.)
@@ -650,6 +667,12 @@ etc., and I log them as needed. Then later, I can use `grep`, `mlr --opprint gro
 
 See the [separators page](reference-main-separators.md) regarding how to specify separators other than the default equals sign and comma.
 
+## DKVPX: Key-value pairs with CSV-style quoting
+
+DKVPX is like DKVP but with CSV-style double-quote handling. Keys and values that contain comma, equals, newline, or double-quote are quoted as needed; unquoted keys and values work as in DKVP. Examples: `x=1,y=2,z=3` and `"x,y"="a,b,c",z=3`. Use the `--dkvpx` flag for input and output. See the [separators page](reference-main-separators.md) for IFS/IPS. For simpler data without special characters, use [DKVP](#dkvp-key-value-pairs) instead.
+
+The default is DKVP, not DKVPX, since performance tests show DKVP is approximately 30% faster for cases when quoting is not necessary.
+
 ## NIDX: Index-numbered (toolkit style)
 
 With `--inidx --ifs ' ' --repifs`, Miller splits lines on spaces and assigns integer field names starting with 1.
@@ -720,6 +743,43 @@ the dawn's
 light
 </pre>
 
+## DCF (Debian control file)
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/sample.dcf</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Package: foo
+Version: 1.0
+Depends: libc6 (>= 2.0), libfoo (>= 1.2)
+Description: A test package.
+
+Package: bar
+Version: 2.0
+Recommends: foo
+Description: Another package.
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -i dcf -o json cat data/sample.dcf</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "Package": "foo",
+  "Version": "1.0",
+  "Depends": ["libc6 (>= 2.0)", "libfoo (>= 1.2)"],
+  "Description": "A test package."
+},
+{
+  "Package": "bar",
+  "Version": "2.0",
+  "Recommends": ["foo"],
+  "Description": "Another package."
+}
+]
+</pre>
+
 ## Data-conversion keystroke-savers
 
 While you can do format conversion using `mlr --icsv --ojson cat myfile.csv`, there are also keystroke-savers for this purpose, such as `mlr --c2j cat myfile.csv`.  For a complete list:
@@ -731,7 +791,7 @@ While you can do format conversion using `mlr --icsv --ojson cat myfile.csv`, th
 FORMAT-CONVERSION KEYSTROKE-SAVER FLAGS
 As keystroke-savers for format-conversion you may use the following.
 The letters c, t, j, l, d, n, x, p, m, and y refer to formats CSV, TSV, JSON, JSON Lines,
-DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively.
+DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively. DCF is also supported (use --dcf for DCF in and out).
 
 | In\out   | CSV      | TSV      | JSON     | JSONL | DKVP  | NIDX  | XTAB  | PPRINT | Markdown | YAML   |
 +----------+----------+----------+----------+-------+-------+-------+-------+--------+----------+--------+

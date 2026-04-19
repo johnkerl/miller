@@ -53,13 +53,11 @@
 //	{`Multi-line
 //	field`, `comma is ,`}
 
-// ================================================================
 // MILLER-SPECIFIC UPDATE:
 // This is a bugfix as sketched at
 // https://github.com/golang/go/issues/39119
 // -- sadly, this fix was _not_ accepted within the standard library,
 // so we are left to fork and patch.
-// ================================================================
 
 package csv
 
@@ -309,32 +307,31 @@ func (r *Reader) readRecord(dst []string) ([]string, error) {
 	// Read line (automatically skipping past empty lines and any comments).
 	var line []byte
 	var errRead error
-	for errRead == nil {
-		line, errRead = r.readLine()
 
-		// MILLER-SPECIFIC UPDATE: DO NOT DO THIS
-		// if r.Comment != 0 && nextRune(line) == r.Comment {
-		//   line = nil
-		//   continue // Skip comment lines
-		// }
+	line, errRead = r.readLine()
 
-		// MILLER-SPECIFIC UPDATE: DO NOT DO THIS
-		// if errRead == nil && len(line) == lengthNL(line) {
-		//   line = nil
-		//   continue // Skip empty lines
-		// }
+	// MILLER-SPECIFIC UPDATE: DO NOT DO THIS
+	// if r.Comment != 0 && nextRune(line) == r.Comment {
+	//   line = nil
+	//   continue // Skip comment lines
+	// }
 
-		// MILLER-SPECIFIC UPDATE: If the line starts with the comment character,
-		// don't attempt to CSV-parse it -- just hand it back as a single field.
-		// This allows two things:
-		// * User comments get passed through as intended, without being reformatted;
-		// * Users can do things like `# a"b` in their comments without getting an
-		//   imbalanced-double-quote error.
-		if r.Comment != 0 && nextRune(line) == r.Comment {
-			return []string{string(line)}, nil
-		}
-		break
+	// MILLER-SPECIFIC UPDATE: DO NOT DO THIS
+	// if errRead == nil && len(line) == lengthNL(line) {
+	//   line = nil
+	//   continue // Skip empty lines
+	// }
+
+	// MILLER-SPECIFIC UPDATE: If the line starts with the comment character,
+	// don't attempt to CSV-parse it -- just hand it back as a single field.
+	// This allows two things:
+	// * User comments get passed through as intended, without being reformatted;
+	// * Users can do things like `# a"b` in their comments without getting an
+	//   imbalanced-double-quote error.
+	if r.Comment != 0 && nextRune(line) == r.Comment {
+		return []string{string(line)}, nil
 	}
+
 	if errRead == io.EOF {
 		return nil, errRead
 	}

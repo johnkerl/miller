@@ -1,8 +1,6 @@
-// ================================================================
 // Items which might better belong in miller/cli, but which are placed in a
 // deeper package to avoid a package-dependency cycle between miller/cli and
 // miller/transforming.
-// ================================================================
 
 package cli
 
@@ -36,13 +34,25 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) error {
 	readerOptions.IPS = lib.UnhexStringLiteral(readerOptions.IPS)
 
 	if !readerOptions.ifsWasSpecified {
-		readerOptions.IFS = defaultFSes[readerOptions.InputFileFormat]
+		if fs, ok := defaultFSes[readerOptions.InputFileFormat]; ok {
+			readerOptions.IFS = fs
+		} else {
+			return fmt.Errorf("unrecognized input format %q", readerOptions.InputFileFormat)
+		}
 	}
 	if !readerOptions.ipsWasSpecified {
-		readerOptions.IPS = defaultPSes[readerOptions.InputFileFormat]
+		if ps, ok := defaultPSes[readerOptions.InputFileFormat]; ok {
+			readerOptions.IPS = ps
+		} else {
+			return fmt.Errorf("unrecognized input format %q", readerOptions.InputFileFormat)
+		}
 	}
 	if !readerOptions.irsWasSpecified {
-		readerOptions.IRS = defaultRSes[readerOptions.InputFileFormat]
+		if rs, ok := defaultRSes[readerOptions.InputFileFormat]; ok {
+			readerOptions.IRS = rs
+		} else {
+			return fmt.Errorf("unrecognized input format %q", readerOptions.InputFileFormat)
+		}
 	}
 	if !readerOptions.allowRepeatIFSWasSpecified {
 		// Special case for Miller 6 upgrade -- now that we have regexing for mixes of tabs
@@ -51,7 +61,11 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) error {
 		if readerOptions.InputFileFormat == "nidx" && !readerOptions.ifsWasSpecified {
 			readerOptions.IFSRegex = lib.CompileMillerRegexOrDie(WHITESPACE_REGEX)
 		} else {
-			readerOptions.AllowRepeatIFS = defaultAllowRepeatIFSes[readerOptions.InputFileFormat]
+			if allowRepeatIFS, ok := defaultAllowRepeatIFSes[readerOptions.InputFileFormat]; ok {
+				readerOptions.AllowRepeatIFS = allowRepeatIFS
+			} else {
+				return fmt.Errorf("unrecognized input format %q", readerOptions.InputFileFormat)
+			}
 		}
 	}
 
@@ -66,7 +80,7 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) error {
 }
 
 // FinalizeWriterOptions unbackslashes OPS, OFS, and ORS.  This is because
-// because the '\n' at the command line which is Go "\\n" (a backslash and an
+// the '\n' at the command line which is Go "\\n" (a backslash and an
 // n) needs to become the single newline character., and likewise for "\t", etc.
 func FinalizeWriterOptions(writerOptions *TWriterOptions) error {
 	if !writerOptions.ofsWasSpecified {
@@ -94,7 +108,6 @@ func FinalizeWriterOptions(writerOptions *TWriterOptions) error {
 	return nil
 }
 
-// ================================================================
 var FLAG_TABLE = FlagTable{
 	sections: []*FlagSection{
 		&LegacyFlagSection,
@@ -118,7 +131,6 @@ func init() {
 	FLAG_TABLE.Sort()
 }
 
-// ================================================================
 // SEPARATOR FLAGS
 
 func SeparatorPrintInfo() {
@@ -417,7 +429,6 @@ var SeparatorFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // JSON-ONLY FLAGS
 
 func JSONOnlyPrintInfo() {
@@ -497,7 +508,6 @@ var JSONOnlyFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // PPRINT-ONLY FLAGS
 
 func PPRINTOnlyPrintInfo() {
@@ -531,6 +541,16 @@ var PPRINTOnlyFlagSection = FlagSection{
 		},
 
 		{
+			name: "--barred-unicode",
+			help: "Uses unicode printing chars for barred output",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.BarredPprintOutput = true
+				options.WriterOptions.BarredUseUnicode = true
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--barred-input",
 			help: "When used in conjunction with --pprint, accepts barred input.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
@@ -539,10 +559,29 @@ var PPRINTOnlyFlagSection = FlagSection{
 				*pargi += 1
 			},
 		},
+
+		{
+			name: "--fixed",
+			arg:  "{string}",
+			help: "Fixed width specification. One of 'widths:<col1-width>,<col2-width>,...', left-align, left-align-multi-word, right-align, right-align-multi-word",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.FixedWidthSpec = args[*pargi+1]
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--fw",
+			arg:  "{string}",
+			help: "Shortcut for --fixed left-align-multi-word",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.FixedWidthSpec = "left-align-multi-word"
+				*pargi += 1
+			},
+		},
 	},
 }
 
-// ================================================================
 // DKVP-ONLY FLAGS
 
 func DKVPOnlyPrintInfo() {
@@ -567,7 +606,6 @@ var DKVPOnlyFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // LEGACY FLAGS
 
 func LegacyFlagInfoPrint() {
@@ -664,7 +702,6 @@ var LegacyFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // FILE-FORMAT FLAGS
 
 func FileFormatPrintInfo() {
@@ -783,6 +820,15 @@ var FileFormatFlagSection = FlagSection{
 			help: "Use YAML format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "yaml"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--idcf",
+			help: "Use Debian control file (DCF) format for input data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dcf"
 				*pargi += 1
 			},
 		},
@@ -1022,6 +1068,15 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name: "--odcf",
+			help: "Use Debian control file (DCF) format for output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "dcf"
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--onidx",
 			help: "Use NIDX format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
@@ -1165,6 +1220,16 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name: "--dkvpx",
+			help: "Use DKVPX format for input and output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dkvpx"
+				options.WriterOptions.OutputFileFormat = "dkvpx"
+				*pargi += 1
+			},
+		},
+
+		{
 			name:     "--json",
 			help:     "Use JSON format for input and output data.",
 			altNames: []string{"-j", "--j2j"},
@@ -1196,6 +1261,16 @@ var FileFormatFlagSection = FlagSection{
 				options.ReaderOptions.InputFileFormat = "yaml"
 				options.WriterOptions.OutputFileFormat = "yaml"
 				options.WriterOptions.WrapYAMLOutputInOuterList = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--dcf",
+			help: "Use Debian control file (DCF) format for input and output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dcf"
+				options.WriterOptions.OutputFileFormat = "dcf"
 				*pargi += 1
 			},
 		},
@@ -1246,13 +1321,12 @@ var FileFormatFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // FORMAT-CONVERSION KEYSTROKE-SAVER FLAGS
 
 func FormatConversionKeystrokeSaverPrintInfo() {
 	fmt.Println(`As keystroke-savers for format-conversion you may use the following.
 The letters c, t, j, l, d, n, x, p, m, and y refer to formats CSV, TSV, JSON, JSON Lines,
-DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively.
+DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively. DCF is also supported (use --dcf for DCF in and out).
 
 | In\out   | CSV      | TSV      | JSON     | JSONL | DKVP  | NIDX  | XTAB  | PPRINT | Markdown | YAML   |
 +----------+----------+----------+----------+-------+-------+-------+-------+--------+----------+--------+
@@ -2643,7 +2717,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // CSV/TSV FLAGS
 
 func CSVTSVOnlyPrintInfo() {
@@ -2745,7 +2818,6 @@ var CSVTSVOnlyFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // COMPRESSED-DATA FLAGS
 
 func CompressedDataPrintInfo() {
@@ -2889,7 +2961,6 @@ var CompressedDataFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // COMMENTS-IN-DATA FLAGS
 
 func CommentsInDataPrintInfo() {
@@ -2965,7 +3036,6 @@ var CommentsInDataFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // OUTPUT-COLORIZATION FLAGS
 
 func OutputColorizationPrintInfo() {
@@ -3156,7 +3226,6 @@ var OutputColorizationFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // FLATTEN/UNFLATTEN FLAGS
 
 func FlattenUnflattenPrintInfo() {
@@ -3204,7 +3273,6 @@ var FlattenUnflattenFlagSection = FlagSection{
 	},
 }
 
-// ================================================================
 // PROFILING FLAGS
 
 func ProfilingPrintInfo() {
@@ -3249,7 +3317,6 @@ This flag must be the very first thing after 'mlr' on the command line.`,
 	},
 }
 
-// ================================================================
 // MISC FLAGS
 
 func MiscPrintInfo() {
@@ -3333,7 +3400,7 @@ var MiscFlagSection = FlagSection{
 				handle, err := os.Open(fileName)
 				if err != nil {
 					/// XXXX return false
-					fmt.Fprintln(os.Stderr, "mlr", err)
+					fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 					os.Exit(1)
 				}
 				defer handle.Close()
@@ -3352,7 +3419,7 @@ var MiscFlagSection = FlagSection{
 					lineno++
 
 					if err != nil {
-						fmt.Fprintln(os.Stderr, "mlr", err)
+						fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 						os.Exit(1)
 					}
 

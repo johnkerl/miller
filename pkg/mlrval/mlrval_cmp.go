@@ -1,4 +1,3 @@
-// ================================================================
 // Boolean expressions for ==, !=, >, >=, <, <=, <=> on Mlrvals.
 //
 // Note that in bifs/boolean.go we have similar functions which take pairs of
@@ -7,7 +6,6 @@
 // is they don't allocate memory, and so are more efficient for sort we don't
 // want to trigger lots of allocations, nor garbage collection, if we can avoid
 // it.
-// ================================================================
 
 // TODO: comment about mvtype; deferral; copying of deferrence.
 
@@ -24,7 +22,6 @@ type CmpFuncBool func(input1, input2 *Mlrval) bool
 // ties on field 1 so we can know whether to compare on field 2 or not.
 type CmpFuncInt func(input1, input2 *Mlrval) int // -1, 0, 1 for <=>
 
-// ----------------------------------------------------------------
 // Exported methods
 
 func Equals(input1, input2 *Mlrval) bool {
@@ -49,7 +46,6 @@ func Cmp(input1, input2 *Mlrval) int {
 	return cmp_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
-// ----------------------------------------------------------------
 // Support routines for disposition-matrix entries
 
 // _same returns int 0 as a binary-input function
@@ -100,7 +96,6 @@ func string_cmp(a, b string) int {
 	return 0
 }
 
-// ----------------------------------------------------------------
 // Disposition-matrix entries
 
 func cmp_b_ss(input1, input2 *Mlrval) int {

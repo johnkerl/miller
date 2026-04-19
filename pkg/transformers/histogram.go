@@ -11,7 +11,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 const verbNameHistogram = "histogram"
 const histogramDefaultBinCount = int64(20)
 
@@ -45,7 +44,7 @@ func transformerHistogramParseCLI(
 	args []string,
 	_ *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
-) IRecordTransformer {
+) (RecordTransformer, error) {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -60,6 +59,7 @@ func transformerHistogramParseCLI(
 	doAuto := false
 	outputPrefix := ""
 
+	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -72,50 +72,61 @@ func transformerHistogramParseCLI(
 
 		if opt == "-h" || opt == "--help" {
 			transformerHistogramUsage(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-f" {
-			valueFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			valueFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "--lo" {
-			lo = cli.VerbGetFloatArgOrDie(verb, opt, args, &argi, argc)
+			lo, err = cli.VerbGetFloatArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "--nbins" {
-			nbins = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			nbins, err = cli.VerbGetIntArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "--hi" {
-			hi = cli.VerbGetFloatArgOrDie(verb, opt, args, &argi, argc)
+			hi, err = cli.VerbGetFloatArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else if opt == "--auto" {
 			doAuto = true
 
 		} else if opt == "-o" {
-			outputPrefix = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			outputPrefix, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
 
 		} else {
-			transformerHistogramUsage(os.Stderr)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
 
 	if valueFieldNames == nil {
-		transformerHistogramUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "-f field names required")
 	}
 
 	if nbins <= 0 {
-		transformerHistogramUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "number of bins must be positive")
 	}
 
 	if lo == hi && !doAuto {
-		transformerHistogramUsage(os.Stderr)
-		os.Exit(1)
+		return nil, cli.VerbErrorf(verb, "lo and hi must differ, or use --auto")
 	}
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing
-		return nil
+		return nil, nil
 	}
 
 	transformer, err := NewTransformerHistogram(
@@ -127,14 +138,12 @@ func transformerHistogramParseCLI(
 		outputPrefix,
 	)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return transformer
+	return transformer, nil
 }
 
-// ----------------------------------------------------------------
 const histogramVectorInitialSize = 1024
 
 type TransformerHistogram struct {
@@ -151,7 +160,6 @@ type TransformerHistogram struct {
 	recordTransformerFunc RecordTransformerFunc
 }
 
-// ----------------------------------------------------------------
 func NewTransformerHistogram(
 	valueFieldNames []string,
 	lo float64,
@@ -164,7 +172,7 @@ func NewTransformerHistogram(
 	countsByField := make(map[string][]int64)
 	for _, valueFieldName := range valueFieldNames {
 		countsByField[valueFieldName] = make([]int64, nbins)
-		for i := int64(0); i < nbins; i++ {
+		for i := range nbins {
 			countsByField[valueFieldName][i] = 0
 		}
 	}
@@ -193,8 +201,6 @@ func NewTransformerHistogram(
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerHistogram) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -205,7 +211,6 @@ func (tr *TransformerHistogram) Transform(
 	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerHistogram) transformNonAuto(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -278,7 +283,6 @@ func (tr *TransformerHistogram) emitNonAuto(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerHistogram) transformAuto(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -319,7 +323,7 @@ func (tr *TransformerHistogram) emitAuto(
 	for _, valueFieldName := range tr.valueFieldNames {
 		vector := tr.vectorsByFieldName[valueFieldName]
 		n := len(vector)
-		for i := 0; i < n; i++ {
+		for i := range n {
 			value := vector[i]
 			if haveLoHi {
 				if lo > value {
@@ -343,7 +347,7 @@ func (tr *TransformerHistogram) emitAuto(
 		counts := tr.countsByField[valueFieldName]
 		lib.InternalCodingErrorIf(counts == nil)
 		n := len(vector)
-		for i := 0; i < n; i++ {
+		for i := range n {
 			value := vector[i]
 			if (value >= lo) && (value < hi) {
 				idx := int(((value - lo) * mul))
@@ -361,7 +365,7 @@ func (tr *TransformerHistogram) emitAuto(
 		countFieldNames[valueFieldName] = tr.outputPrefix + valueFieldName + "_count"
 	}
 
-	for i := int64(0); i < nbins; i++ {
+	for i := range nbins {
 		outrec := mlrval.NewMlrmapAsRecord()
 
 		outrec.PutReference(

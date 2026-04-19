@@ -1,0 +1,1 @@
+mlr --p2j --fixed widths:10,14 cat test/cases/cli-fixed-width/0003/input

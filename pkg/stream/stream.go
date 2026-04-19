@@ -37,7 +37,7 @@ func Stream(
 	// which sends along only one file name per call to Stream():
 	fileNames []string,
 	options *cli.TOptions,
-	recordTransformers []transformers.IRecordTransformer,
+	recordTransformers []transformers.RecordTransformer,
 	outputStream io.WriteCloser,
 	outputIsStdout bool,
 ) error {

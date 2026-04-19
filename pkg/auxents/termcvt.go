@@ -8,7 +8,6 @@ import (
 	"strings"
 )
 
-// ================================================================
 func termcvtUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "Usage: mlr %s [option] {zero or more file names}\n", verbName)
 	fmt.Fprintf(o, "Option (exactly one is required):\n")
@@ -83,14 +82,14 @@ func termcvtMain(args []string) int {
 			istream, err := os.Open(filename)
 			if err != nil {
 				// TODO: "mlr"
-				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
+				fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
 				os.Exit(1)
 			}
 
 			ostream, err := os.Open(tempname)
 			if err != nil {
 				// TODO: "mlr"
-				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
+				fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
 				os.Exit(1)
 			}
 
@@ -103,7 +102,7 @@ func termcvtMain(args []string) int {
 			err = os.Rename(tempname, filename)
 			if err != nil {
 				// TODO: "mlr"
-				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
+				fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
 				os.Exit(1)
 			}
 		}
@@ -114,7 +113,7 @@ func termcvtMain(args []string) int {
 			istream, err := os.Open(filename)
 			if err != nil {
 				// TODO: "mlr"
-				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
+				fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
 				os.Exit(1)
 			}
 
@@ -138,7 +137,7 @@ func termcvtFile(istream *os.File, ostream *os.File, inputTerminator string, out
 
 		if err != nil {
 			// TODO: "mlr"
-			fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
+			fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
 			os.Exit(1)
 		}
 

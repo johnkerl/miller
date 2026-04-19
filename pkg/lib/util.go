@@ -3,6 +3,7 @@ package lib
 import (
 	"fmt"
 	"os"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -16,17 +17,15 @@ func BooleanXOR(a, b bool) bool {
 func BoolToInt(b bool) int64 {
 	if !b {
 		return 0
-	} else {
-		return 1
 	}
+	return 1
 }
 
 func Plural(n int) string {
 	if n == 1 {
 		return ""
-	} else {
-		return "s"
 	}
+	return "s"
 }
 
 // In Go as in all languages I'm aware of with a string-split, "a,b,c" splits
@@ -34,10 +33,9 @@ func Plural(n int) string {
 // but "" splits to [""] when I wish it were []. This function does the latter.
 func SplitString(input string, separator string) []string {
 	if input == "" {
-		return make([]string, 0)
-	} else {
-		return strings.Split(input, separator)
+		return []string{}
 	}
+	return strings.Split(input, separator)
 }
 
 func StringListToSet(stringList []string) map[string]bool {
@@ -52,44 +50,28 @@ func StringListToSet(stringList []string) map[string]bool {
 	return stringSet
 }
 
-func SortStrings(strings []string) {
-	// Go sort API: for ascending sort, return true if element i < element j.
-	sort.Slice(strings, func(i, j int) bool {
-		return strings[i] < strings[j]
-	})
+// ReverseStringList reverses strs in place.
+//
+// Deprecated: use slices.Reverse instead.
+//
+//go:fix inline
+func ReverseStringList(strs []string) {
+	slices.Reverse(strs)
 }
 
-func ReverseStringList(strings []string) {
-	n := len(strings)
-	i := 0
-	j := n - 1
-	for i < j {
-		temp := strings[i]
-		strings[i] = strings[j]
-		strings[j] = temp
-		i++
-		j--
-	}
-}
-
-func SortedStrings(strings []string) []string {
-	copy := make([]string, len(strings))
-	for i, s := range strings {
-		copy[i] = s
-	}
-	// Go sort API: for ascending sort, return true if element i < element j.
-	sort.Slice(copy, func(i, j int) bool {
-		return copy[i] < copy[j]
-	})
-	return copy
+// SortedStrings returns a new slice containing the strings in strs in ascending order.
+func SortedStrings(strs []string) []string {
+	result := make([]string, len(strs))
+	copy(result, strs)
+	slices.Sort(result)
+	return result
 }
 
 func IntMin2(a, b int64) int64 {
 	if a < b {
 		return a
-	} else {
-		return b
 	}
+	return b
 }
 
 // TryIntFromString tries decimal, hex, octal, and binary.
@@ -153,19 +135,18 @@ func TryFloatFromString(input string) (float64, bool) {
 	fval, err := strconv.ParseFloat(input, 64)
 	if err == nil {
 		return fval, true
-	} else {
-		return 0, false
 	}
+	return 0, false
 }
 
 func TryBoolFromBoolString(input string) (bool, bool) {
 	if input == "true" {
 		return true, true
-	} else if input == "false" {
-		return false, true
-	} else {
-		return false, false
 	}
+	if input == "false" {
+		return false, true
+	}
+	return false, false
 }
 
 // Go doesn't preserve insertion order in its arrays, so here we make an
@@ -207,13 +188,13 @@ func WriteTempFileOrDie(contents string) string {
 	return handle.Name()
 }
 
+// CopyStringArray returns a copy of input.
+//
+// Deprecated: use slices.Clone instead.
+//
+//go:fix inline
 func CopyStringArray(input []string) []string {
-	if input == nil {
-		return nil
-	}
-	output := make([]string, len(input))
-	copy(output, input)
-	return output
+	return slices.Clone(input)
 }
 
 func StripEmpties(input []string) []string {

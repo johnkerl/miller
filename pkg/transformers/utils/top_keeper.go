@@ -1,6 +1,4 @@
-// ================================================================
 // Data structure for mlr top: just a decorated array.
-// ================================================================
 
 package utils
 
@@ -9,7 +7,6 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
 
-// ----------------------------------------------------------------
 type TopKeeper struct {
 	TopValues             []*mlrval.Mlrval
 	TopRecordsAndContexts []*types.RecordAndContext
@@ -18,7 +15,6 @@ type TopKeeper struct {
 	bsearchFunc           mlrval.BsearchMlrvalArrayFunc
 }
 
-// ----------------------------------------------------------------
 func NewTopKeeper(capacity int64, doMax bool) *TopKeeper {
 	keeper := &TopKeeper{
 		TopValues:             make([]*mlrval.Mlrval, capacity),
@@ -38,7 +34,6 @@ func (keeper *TopKeeper) GetSize() int64 {
 	return keeper.size
 }
 
-// ----------------------------------------------------------------
 // Cases:
 // 1. array size <  capacity
 //    * find destidx

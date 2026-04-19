@@ -1,23 +1,21 @@
-// ================================================================
 // Handlers for non-DSL statements like ':open foo.dat' or ':help'.
-// ================================================================
 
 package repl
 
 import (
 	"fmt"
 	"os"
+	"slices"
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/colorizer"
-	"github.com/johnkerl/miller/v6/pkg/dsl"
 	"github.com/johnkerl/miller/v6/pkg/dsl/cst"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/types"
+	"github.com/johnkerl/pgpg/go/lib/pkg/asts"
 )
 
-// ----------------------------------------------------------------
 // Types for the lookup table.
 
 // Handlers should return false if they want their usage function to be called.
@@ -59,14 +57,11 @@ func init() {
 	}
 }
 
-// ----------------------------------------------------------------
 // No hash-table acceleration; things here are small, and the tool is interactive.
 func (repl *Repl) findHandler(verbName string) *handlerInfo {
 	for _, entry := range handlerLookupTable {
-		for _, entryVerbName := range entry.verbNames {
-			if entryVerbName == verbName {
-				return &entry
-			}
+		if slices.Contains(entry.verbNames, verbName) {
+			return &entry
 		}
 	}
 	return nil
@@ -78,9 +73,8 @@ func (repl *Repl) showUsageForHandler(verbName string) bool {
 		fmt.Println(colorizer.MaybeColorizeHelp(verbName, true))
 		nonDSLHandler.usageFunc(repl)
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
 func (repl *Repl) showUsageForHandlerApproximate(searchString string) bool {
@@ -97,7 +91,6 @@ func (repl *Repl) showUsageForHandlerApproximate(searchString string) bool {
 	return foundAny
 }
 
-// ----------------------------------------------------------------
 // Handles a single non-DSL statement like ':open foo.dat' or ':help'.
 func (repl *Repl) handleNonDSLLine(trimmedLine string) bool {
 	args := strings.Fields(trimmedLine)
@@ -140,7 +133,6 @@ func (repl *Repl) handleNonDSLLine(trimmedLine string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 func usageLoad(repl *Repl) {
 	fmt.Println(":load {one or more filenames containing Miller DSL statements}")
 	fmt.Println("If a filename is a directory, all \"*.mlr\" files will be loaded from within it.")
@@ -177,7 +169,6 @@ func handleLoad(repl *Repl, args []string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 func usageOpen(repl *Repl) {
 	fmt.Printf(
 		":open {one or more data-file names in the format specified by mlr %s}.\n",
@@ -248,7 +239,6 @@ func (repl *Repl) openFiles(filenames []string) {
 	)
 }
 
-// ----------------------------------------------------------------
 func usageReopen(repl *Repl) {
 	fmt.Println(":reopen with no arguments.")
 	fmt.Println("Like :open with the same filenames you provided at the time you typed :open.")
@@ -266,7 +256,6 @@ func handleReopen(repl *Repl, args []string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 func usageRead(repl *Repl) {
 	fmt.Println(":read with no arguments.")
 	fmt.Printf(
@@ -288,7 +277,7 @@ func handleRead(repl *Repl, args []string) bool {
 	}
 
 	var recordsAndContexts []*types.RecordAndContext // list of *types.RecordAndContext
-	var err error = nil
+	var err error
 
 	select {
 	case recordsAndContexts = <-repl.readerChannel:
@@ -320,7 +309,6 @@ func handleRead(repl *Repl, args []string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 func usageContext(repl *Repl) {
 	fmt.Println(":context with no arguments.")
 	fmt.Println("Displays the current context variables: NR, FNR, FILENUM, FILENAME.")
@@ -335,7 +323,6 @@ func handleContext(repl *Repl, args []string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 func usageSkip(repl *Repl) {
 	fmt.Println(":skip {n} to read n records without invoking :main statements or printing the records.")
 	fmt.Printf(
@@ -371,20 +358,18 @@ func handleSkip(repl *Repl, args []string) bool {
 		return true
 	} else if args[0] != "until" && args[0] != "u" {
 		return false
-	} else {
-		args := args[1:]
-		dslString := strings.Join(args, " ")
-		// If they say ':skip until intr' then we use a DSL string of 'false',
-		// i.e. skip until they type control-C.
-		if len(args) == 1 && args[0] == "intr" {
-			dslString = "false"
-		}
-		handleSkipOrProcessUntil(repl, dslString, false)
-		return true
 	}
+	args = args[1:]
+	dslString := strings.Join(args, " ")
+	// If they say ':skip until intr' then we use a DSL string of 'false',
+	// i.e. skip until they type control-C.
+	if len(args) == 1 && args[0] == "intr" {
+		dslString = "false"
+	}
+	handleSkipOrProcessUntil(repl, dslString, false)
+	return true
 }
 
-// ----------------------------------------------------------------
 func usageProcess(repl *Repl) {
 	fmt.Println(":process {n} to read n records, invoking :main statements on them, and printing the records.")
 	fmt.Printf(
@@ -420,23 +405,21 @@ func handleProcess(repl *Repl, args []string) bool {
 		return true
 	} else if args[0] != "until" && args[0] != "u" {
 		return false
-	} else {
-		args := args[1:]
-		dslString := strings.Join(args, " ")
-		// If they say ':process until intr' then we use a DSL string of 'false',
-		// i.e. skip until they type control-C.
-		if len(args) == 1 && args[0] == "intr" {
-			dslString = "false"
-		}
-		handleSkipOrProcessUntil(repl, dslString, true)
-		return true
 	}
+	args = args[1:]
+	dslString := strings.Join(args, " ")
+	// If they say ':process until intr' then we use a DSL string of 'false',
+	// i.e. skip until they type control-C.
+	if len(args) == 1 && args[0] == "intr" {
+		dslString = "false"
+	}
+	handleSkipOrProcessUntil(repl, dslString, true)
+	return true
 }
 
-// ----------------------------------------------------------------
 func handleSkipOrProcessN(repl *Repl, n int64, processingNotSkipping bool) {
 	var recordsAndContexts []*types.RecordAndContext // list of *types.RecordAndContext
-	var err error = nil
+	var err error
 
 	for i := int64(1); i <= n; i++ {
 		select {
@@ -479,7 +462,7 @@ func handleSkipOrProcessUntil(repl *Repl, dslString string, processingNotSkippin
 		cst.DSLInstanceTypeREPL,
 		true, // isReplImmediate
 		repl.doWarnings,
-		func(dslString string, astNode *dsl.AST) {
+		func(dslString string, astNode *asts.AST) {
 			if repl.astPrintMode == ASTPrintParex {
 				astNode.PrintParex()
 			} else if repl.astPrintMode == ASTPrintParexOneLine {
@@ -605,7 +588,6 @@ func skipOrProcessRecord(
 	return false
 }
 
-// ----------------------------------------------------------------
 func usageWrite(repl *Repl) {
 	fmt.Println(":write with no arguments.")
 	fmt.Println("Sends the current record (maybe modified by statements you enter)")
@@ -638,7 +620,6 @@ func writeRecord(repl *Repl, outrec *mlrval.Mlrmap) {
 	repl.bufferedRecordOutputStream.Flush()
 }
 
-// ----------------------------------------------------------------
 func usageReadWrite(repl *Repl) {
 	fmt.Println(":rw with no arguments.")
 	fmt.Println("Same as ':r' followed by ':w'.")
@@ -653,7 +634,6 @@ func handleReadWrite(repl *Repl, args []string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 func usageRedirectWrite(repl *Repl) {
 	fmt.Println(":> {filename} sends record-write output to the specified file.")
 	fmt.Println(":> with no arguments sends record-write output to stdout.")
@@ -690,7 +670,6 @@ func handleRedirectWrite(repl *Repl, args []string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 func usageRedirectAppend(repl *Repl) {
 	fmt.Println(":>> {filename}")
 	fmt.Println("Appends record-write output to the specified file.")
@@ -721,7 +700,6 @@ func handleRedirectAppend(repl *Repl, args []string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 func usageBegin(repl *Repl) {
 	fmt.Println(":begin with no arguments.")
 	fmt.Println("Executes any begin {...} blocks which have been entered.")
@@ -738,7 +716,6 @@ func handleBegin(repl *Repl, args []string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 func usageMain(repl *Repl) {
 	fmt.Println(":main with no arguments.")
 	fmt.Println("Executes any statements outside of begin/end/func/subr which have been entered")
@@ -756,7 +733,6 @@ func handleMain(repl *Repl, args []string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 func usageEnd(repl *Repl) {
 	fmt.Println(":end with no arguments.")
 	fmt.Println("Executes any end {...} blocks which have been entered.")
@@ -773,7 +749,6 @@ func handleEnd(repl *Repl, args []string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 func usageASTPrint(repl *Repl) {
 	fmt.Println(":astprint {format option}")
 	fmt.Println("Shows the AST (abstract syntax tree) associated with DSL statements entered in.")
@@ -803,7 +778,6 @@ func handleASTPrint(repl *Repl, args []string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 func usageBlocks(repl *Repl) {
 	fmt.Println(":blocks with no arguments.")
 	fmt.Println("Shows the number of begin{...} blocks that have been loaded, the number")
@@ -820,7 +794,6 @@ func handleBlocks(repl *Repl, args []string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 func usageResetBlocks(repl *Repl) {
 	fmt.Println(":resetblocks with no arguments clears out all begin, main, and end blocks that have been loaded.")
 	fmt.Println(":resetblocks begin clears out begin blocks.")
@@ -855,7 +828,6 @@ func handleResetBlocks(repl *Repl, args []string) bool {
 	return true
 }
 
-// ----------------------------------------------------------------
 func usageQuit(repl *Repl) {
 	fmt.Println(":quit with no arguments.")
 	fmt.Println("Ends the Miller REPL session.")
@@ -864,7 +836,6 @@ func usageQuit(repl *Repl) {
 // The :quit command is handled outside this file; we have a help function,
 // though, to expose it for online help.
 
-// ----------------------------------------------------------------
 func usageHelp(repl *Repl) {
 	fmt.Println("Options:")
 	fmt.Println(":help intro")
@@ -1081,7 +1052,6 @@ etc. depending on your platform.`)
 	fmt.Println("Type ':h' or ':help' to see more about your options. In particular, ':help examples'.")
 }
 
-// ----------------------------------------------------------------
 func showREPLExamples(repl *Repl) {
 	fmt.Println(colorizer.MaybeColorizeHelp("Immediately executed statements", true))
 	fmt.Println(

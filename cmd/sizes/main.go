@@ -1,6 +1,4 @@
-// ================================================================
 // Experiments for type-inference performance optimization
-// ================================================================
 
 /*
 go build github.com/johnkerl/miller/v6/cmd/sizes
