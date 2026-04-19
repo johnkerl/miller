@@ -1,0 +1,1 @@
+mlr --csv sort-within-records -r "[0-9]+" test/input/issue-1645.csv
