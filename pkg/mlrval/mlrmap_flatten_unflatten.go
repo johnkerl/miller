@@ -21,10 +21,17 @@
 package mlrval
 
 import (
+	"fmt"
+	"os"
 	"strings"
+	"sync"
 
 	"github.com/johnkerl/miller/v6/pkg/lib"
 )
+
+// warnedUnflattenFieldNames tracks field names for which we've already emitted
+// an unflatten warning, to avoid flooding stderr on multi-record input.
+var warnedUnflattenFieldNames sync.Map
 
 // Flattens all field values in the record. This is a special case of
 // FlattenFields but it's worth its own special case (to avoid iffing on the
@@ -159,6 +166,11 @@ func (mlrmap *Mlrmap) CopyUnflattened(
 			}
 		}
 		if !legitDots {
+			if _, alreadyWarned := warnedUnflattenFieldNames.LoadOrStore(pe.Key, true); !alreadyWarned {
+				fmt.Fprintf(os.Stderr,
+					"mlr: field name %q contains separator %q but cannot be auto-unflattened; treating as a literal string. Use --no-auto-unflatten to suppress this warning.\n",
+					pe.Key, separator)
+			}
 			other.PutReference(pe.Key, unflattenTerminal(pe.Value))
 			continue
 		}
