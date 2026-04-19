@@ -144,16 +144,22 @@ func NewTransformerSortWithinRecords(
 
 	if fieldNames != nil {
 		if doRegexes {
+			if len(fieldNames) > 1 {
+				return nil, cli.VerbErrorf(
+					verbNameSortWithinRecords,
+					"regex mode takes a single pattern; got %d names: %s. "+
+						"Use alternation in the regex (e.g. 'a|b') instead of a comma-list.",
+					len(fieldNames), strings.Join(fieldNames, ","),
+				)
+			}
 			// Handles "a.*b"i Miller case-insensitive-regex specification
 			regexString := fieldNames[0]
 			regex, err := lib.CompileMillerRegex(regexString)
 			if err != nil {
-				fmt.Fprintf(
-					os.Stderr,
-					"%s %s: cannot compile regex [%s]\n",
-					"mlr", verbNameSortWithinRecords, regexString,
+				return nil, cli.VerbErrorf(
+					verbNameSortWithinRecords,
+					"cannot compile regex [%s]", regexString,
 				)
-				os.Exit(1)
 			}
 			tr.regex = regex
 		} else {
