@@ -119,12 +119,12 @@ func transformerSortWithinRecordsParseCLI(
 }
 
 type TransformerSortWithinRecords struct {
-	doRecurse   bool
-	doNatural   bool
-	fieldNames  []string
-	fieldSet    map[string]bool
-	regex       *regexp.Regexp
-	doRegexes   bool
+	doRecurse             bool
+	doNatural             bool
+	fieldNames            []string
+	fieldSet              map[string]bool
+	regex                 *regexp.Regexp
+	doRegexes             bool
 	recordTransformerFunc RecordTransformerFunc
 }
 
@@ -136,10 +136,10 @@ func NewTransformerSortWithinRecords(
 ) (*TransformerSortWithinRecords, error) {
 
 	tr := &TransformerSortWithinRecords{
-		doRecurse: doRecurse,
-		doNatural: doNatural,
+		doRecurse:  doRecurse,
+		doNatural:  doNatural,
 		fieldNames: fieldNames,
-		doRegexes: doRegexes,
+		doRegexes:  doRegexes,
 	}
 
 	if fieldNames != nil {
