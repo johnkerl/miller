@@ -1,0 +1,1 @@
+mlr --idkvp --ojsonl --from test/input/natural-within-records.dkvp sort-within-records -n

@@ -5,8 +5,10 @@ import (
 	"os"
 	"regexp"
 	"slices"
+	"sort"
 	"strings"
 
+	"github.com/facette/natsort"
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
@@ -33,6 +35,7 @@ func transformerSortWithinRecordsUsage(
 	fmt.Fprintf(o, "             Example: -r '^[xy]' sorts keys starting with x or y.\n")
 	fmt.Fprintf(o, "             With no regex argument, -r recursively sorts subobjects/submaps\n")
 	fmt.Fprintf(o, "             (e.g. for JSON input), or combines with -f to treat names as regex.\n")
+	fmt.Fprintf(o, "-n           Sort field names naturally (e.g. 2 before 12). Combines with -f/-r.\n")
 	fmt.Fprintf(o, "-h|--help    Show this message.\n")
 }
 
@@ -51,6 +54,7 @@ func transformerSortWithinRecordsParseCLI(
 	doRecurse := false
 	var fieldNames []string = nil
 	doRegexes := false
+	doNatural := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
@@ -87,6 +91,9 @@ func transformerSortWithinRecordsParseCLI(
 			}
 			fieldNames = names
 
+		} else if opt == "-n" {
+			doNatural = true
+
 		} else {
 			return nil, cli.VerbErrorf(verbNameSortWithinRecords, "option \"%s\" not recognized", opt)
 		}
@@ -103,7 +110,7 @@ func transformerSortWithinRecordsParseCLI(
 		return nil, nil
 	}
 
-	transformer, err := NewTransformerSortWithinRecords(doRecurse, fieldNames, doRegexes)
+	transformer, err := NewTransformerSortWithinRecords(doRecurse, fieldNames, doRegexes, doNatural)
 	if err != nil {
 		return nil, err
 	}
@@ -113,6 +120,7 @@ func transformerSortWithinRecordsParseCLI(
 
 type TransformerSortWithinRecords struct {
 	doRecurse   bool
+	doNatural   bool
 	fieldNames  []string
 	fieldSet    map[string]bool
 	regex       *regexp.Regexp
@@ -124,10 +132,12 @@ func NewTransformerSortWithinRecords(
 	doRecurse bool,
 	fieldNames []string,
 	doRegexes bool,
+	doNatural bool,
 ) (*TransformerSortWithinRecords, error) {
 
 	tr := &TransformerSortWithinRecords{
 		doRecurse: doRecurse,
+		doNatural: doNatural,
 		fieldNames: fieldNames,
 		doRegexes: doRegexes,
 	}
@@ -184,6 +194,42 @@ func (tr *TransformerSortWithinRecords) keyMatches(key string) bool {
 	return tr.fieldSet[key]
 }
 
+func (tr *TransformerSortWithinRecords) sortKeys(keys []string) {
+	if tr.doNatural {
+		sort.SliceStable(keys, func(i, j int) bool {
+			return natsort.Compare(keys[i], keys[j])
+		})
+	} else {
+		slices.Sort(keys)
+	}
+}
+
+func (tr *TransformerSortWithinRecords) sortMapByKey(m *mlrval.Mlrmap) {
+	keys := m.GetKeys()
+	tr.sortKeys(keys)
+	other := mlrval.NewMlrmapAsRecord()
+	for _, key := range keys {
+		other.PutReference(key, m.Get(key))
+	}
+	*m = *other
+}
+
+func (tr *TransformerSortWithinRecords) sortMapByKeyRecursively(m *mlrval.Mlrmap) {
+	keys := m.GetKeys()
+	tr.sortKeys(keys)
+	other := mlrval.NewMlrmapAsRecord()
+	for _, key := range keys {
+		val := m.Get(key)
+		if val != nil {
+			if sub := val.GetMap(); sub != nil {
+				tr.sortMapByKeyRecursively(sub)
+			}
+		}
+		other.PutReference(key, val)
+	}
+	*m = *other
+}
+
 // ----------------------------------------------------------------
 func (tr *TransformerSortWithinRecords) transformSelective(
 	inrecAndContext *types.RecordAndContext,
@@ -202,7 +248,7 @@ func (tr *TransformerSortWithinRecords) transformSelective(
 				restEntries = append(restEntries, pe)
 			}
 		}
-		slices.Sort(matchingKeys)
+		tr.sortKeys(matchingKeys)
 		other := mlrval.NewMlrmapAsRecord()
 		for _, key := range matchingKeys {
 			other.PutReference(key, inrec.Get(key))
@@ -233,13 +279,13 @@ func (tr *TransformerSortWithinRecords) transformSelectiveRecursively(
 				restEntries = append(restEntries, pe)
 			}
 		}
-		slices.Sort(matchingKeys)
+		tr.sortKeys(matchingKeys)
 		other := mlrval.NewMlrmapAsRecord()
 		for _, key := range matchingKeys {
 			val := inrec.Get(key)
 			if val != nil {
 				if m := val.GetMap(); m != nil {
-					m.SortByKeyRecursively()
+					tr.sortMapByKeyRecursively(m)
 				}
 			}
 			other.PutReference(key, val)
@@ -247,7 +293,7 @@ func (tr *TransformerSortWithinRecords) transformSelectiveRecursively(
 		for _, pe := range restEntries {
 			if pe.Value != nil {
 				if m := pe.Value.GetMap(); m != nil {
-					m.SortByKeyRecursively()
+					tr.sortMapByKeyRecursively(m)
 				}
 			}
 			other.PutReference(pe.Key, pe.Value)
@@ -266,7 +312,11 @@ func (tr *TransformerSortWithinRecords) transformNonrecursively(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		inrec.SortByKey()
+		if tr.doNatural {
+			tr.sortMapByKey(inrec)
+		} else {
+			inrec.SortByKey()
+		}
 	}
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // including end-of-stream marker
 }
@@ -279,7 +329,11 @@ func (tr *TransformerSortWithinRecords) transformRecursively(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		inrec.SortByKeyRecursively()
+		if tr.doNatural {
+			tr.sortMapByKeyRecursively(inrec)
+		} else {
+			inrec.SortByKeyRecursively()
+		}
 	}
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // including end-of-stream marker
 }
