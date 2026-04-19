@@ -4,6 +4,18 @@ This is my checklist for making new releases.
 
 In this example I am using version 6.2.0 to 6.3.0; of course that will change for subsequent revisions.
 
+## Release script
+
+Much of the mechanical work below is automated by `tools/release.sh`, which has three subcommands mirroring the checklist:
+
+* `./tools/release.sh v6.3.0 pre-release --notes-file NOTES.md` -- version bumps, `make dev`, commit/push, release tarball, SRPM, and GitHub pre-release with assets uploaded.
+* `./tools/release.sh v6.3.0 docs` -- creates the `6.3.0` docs branch and edits `docs/mkdocs.yml`. Refuses to run while the GitHub release is still marked pre-release.
+* `./tools/release.sh v6.3.0 afterwork` -- flips `pkg/version/version.go` back to `6.3.0-dev`, commits/pushes, and prints the brew/macports/ReadTheDocs reminders with a pre-filled `brew bump-formula-pr` command.
+
+`rpmbuild` is mandatory for `pre-release` (the SRPM is a required release artifact); `rpmlint` is optional and is run only if installed. The ReadTheDocs admin steps and the flip from pre-release to public remain manual. Each subcommand is idempotent, so a partial run can be re-invoked safely.
+
+## Manual steps
+
 * Update version found in `mlr --version` and `man mlr`:
 
     * Edit `pkg/version/version.go` from `6.2.0-dev` to `6.3.0`.
