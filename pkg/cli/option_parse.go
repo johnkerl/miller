@@ -117,6 +117,7 @@ var FLAG_TABLE = FlagTable{
 		&CSVTSVOnlyFlagSection,
 		&JSONOnlyFlagSection,
 		&PPRINTOnlyFlagSection,
+		&MarkdownOnlyFlagSection,
 		&DKVPOnlyFlagSection,
 		&CompressedDataFlagSection,
 		&CommentsInDataFlagSection,
@@ -576,6 +577,35 @@ var PPRINTOnlyFlagSection = FlagSection{
 			help: "Shortcut for --fixed left-align-multi-word",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.FixedWidthSpec = "left-align-multi-word"
+				*pargi += 1
+			},
+		},
+	},
+}
+
+// MARKDOWN-ONLY FLAGS
+
+func MarkdownOnlyPrintInfo() {
+	fmt.Println("These are flags which are applicable to markdown-tabular format.")
+}
+
+func init() { MarkdownOnlyFlagSection.Sort() }
+
+var MarkdownOnlyFlagSection = FlagSection{
+	name:        "Markdown-only flags",
+	infoPrinter: MarkdownOnlyPrintInfo,
+	flags: []Flag{
+
+		{
+			name:     "--omd-aligned",
+			altNames: []string{"--omarkdown-aligned"},
+			help: "For markdown-tabular output, left-justify cells and pad each " +
+				"column to a uniform width, making the raw markdown source easier " +
+				"to read and maintain. (The rendered table is unaffected.) Implies " +
+				"--omd, so you do not need to also pass --omd.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "markdown"
+				options.WriterOptions.MarkdownAlignedOutput = true
 				*pargi += 1
 			},
 		},

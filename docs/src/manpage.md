@@ -178,6 +178,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
          mlr help format-conversion-keystroke-saver-flags
          mlr help json-only-flags
          mlr help legacy-flags
+         mlr help markdown-only-flags
          mlr help miscellaneous-flags
          mlr help output-colorization-flags
          mlr help pprint-only-flags
@@ -559,6 +560,16 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                                 through the processing flow now.
        --vflatsep               Ignored as of version 6. This functionality is
                                 subsumed into JSON formatting.
+
+1mMARKDOWN-ONLY FLAGS0m
+       These are flags which are applicable to markdown-tabular format.
+
+       --omd-aligned or --omarkdown-aligned
+                                For markdown-tabular output, left-justify cells and
+                                pad each column to a uniform width, making the raw
+                                markdown source easier to read and maintain. (The
+                                rendered table is unaffected.) Implies --omd, so you
+                                do not need to also pass --omd.
 
 1mMISCELLANEOUS FLAGS0m
        These are flags which don't fit into any other category.
@@ -3835,5 +3846,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-04-19                         4mMILLER24m(1)
+                                  2026-05-16                         4mMILLER24m(1)
 </pre>

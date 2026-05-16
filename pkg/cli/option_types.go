@@ -101,6 +101,7 @@ type TWriterOptions struct {
 	BarredUseUnicode         bool
 	RightAlignedPPRINTOutput bool
 	RightAlignedXTABOutput   bool
+	MarkdownAlignedOutput    bool
 
 	// JSON output: --jlistwrap on, --jvstack on
 	// JSON Lines output: --jlistwrap off, --jvstack off

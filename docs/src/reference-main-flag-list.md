@@ -282,6 +282,15 @@ They are accepted as no-op flags in order to keep old scripts from breaking.
 * `--quote-original`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
 * `--vflatsep`: Ignored as of version 6. This functionality is subsumed into JSON formatting.
 
+## Markdown-only flags
+
+These are flags which are applicable to markdown-tabular format.
+
+
+**Flags:**
+
+* `--omd-aligned or --omarkdown-aligned`: For markdown-tabular output, left-justify cells and pad each column to a uniform width, making the raw markdown source easier to read and maintain. (The rendered table is unaffected.) Implies --omd, so you do not need to also pass --omd.
+
 ## Miscellaneous flags
 
 These are flags which don't fit into any other category.
