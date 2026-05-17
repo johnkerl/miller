@@ -26,8 +26,12 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        as CSV and tabular JSON.
 
 1mSYNOPSIS0m
-       Usage: mlr [flags] {verb} [verb-dependent options ...] {zero or more
+       Usage: mlr [flags] [verb] [verb-dependent options ...] {zero or more
        file names}
+
+       If no verb is given, "cat" is used, which is handy for format
+       conversions, e.g.
+         mlr --c2j &lt; example.csv
 
        If zero file names are provided, standard input is read, e.g.
          mlr --csv sort -f shape example.csv
@@ -3846,5 +3850,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-05-16                         4mMILLER24m(1)
+                                  2026-05-17                         4mMILLER24m(1)
 </pre>

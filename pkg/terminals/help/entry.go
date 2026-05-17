@@ -244,7 +244,10 @@ func HelpMain(args []string) int {
 
 func MainUsage(o *os.File) {
 	fmt.Fprintf(o,
-		`Usage: mlr [flags] {verb} [verb-dependent options ...] {zero or more file names}
+		`Usage: mlr [flags] [verb] [verb-dependent options ...] {zero or more file names}
+
+If no verb is given, "cat" is used, which is handy for format conversions, e.g.
+  mlr --c2j < example.csv
 
 If zero file names are provided, standard input is read, e.g.
   mlr --csv sort -f shape example.csv

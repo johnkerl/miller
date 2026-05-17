@@ -66,6 +66,8 @@ See also the [Glossary](glossary.md) for more about terms such as
 
 When you type `mlr {something} myfile.dat`, the `{something}` part is called a **verb**. It specifies how you want to transform your data. Most of the verbs are counterparts of built-in system tools like `cut` and `sort` -- but with file-format awareness, and giving you the ability to refer to fields by name.
 
+The verb is optional: if you omit it, Miller behaves as if you had written [`cat`](reference-verbs.md#cat), which is handy for pure format conversions such as `mlr --c2j < input.csv`.
+
 The verbs `put` and `filter` are special in that they have a rich expression language (domain-specific language, or "DSL"). More information about them can be found on the [Intro to Miller's Programming Language page](miller-programming-language.md); see also the [DSL Reference](reference-dsl.md) for more details.
 
 Here's a comparison of verbs and `put`/`filter` DSL expressions:

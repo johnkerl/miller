@@ -245,9 +245,14 @@ func parseCommandLinePassOne(
 		}
 
 		if len(verbSequences) == 0 {
-			fmt.Fprintf(os.Stderr, "%s: no verb supplied.\n", "mlr")
-			help.MainUsage(os.Stderr)
-			os.Exit(1)
+			// Bare 'mlr' with no flags, no verb, and no files: keep the
+			// friendly usage banner. Anything else (e.g. 'mlr --c2j' on a
+			// piped stdin) defaults to 'cat'.
+			if argc == 1 {
+				help.MainUsage(os.Stderr)
+				os.Exit(1)
+			}
+			verbSequences = append(verbSequences, []string{"cat"})
 		}
 	}
 

@@ -155,7 +155,13 @@ GENMD-EOF
 
 ## cat
 
-Most useful for format conversions (see [File Formats](file-formats.md)) and concatenating multiple same-schema CSV files to have the same header:
+Most useful for format conversions (see [File Formats](file-formats.md)) and concatenating multiple same-schema CSV files to have the same header.
+
+`cat` is also the default verb: if you omit the verb entirely, Miller behaves as if you had written `cat`. This makes pure format conversions more concise:
+
+GENMD-RUN-COMMAND
+mlr --c2j < data/a.csv
+GENMD-EOF
 
 GENMD-RUN-COMMAND
 mlr cat -h

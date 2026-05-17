@@ -14,6 +14,20 @@ GENMD-EOF
 
 You can get the full list [here](file-formats.md#data-conversion-keystroke-savers).
 
+## Omitting the verb for format conversions
+
+The verb defaults to [`cat`](reference-verbs.md#cat), so for pure format conversions you can leave the verb off entirely:
+
+GENMD-RUN-COMMAND
+mlr --c2j cat example.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2j --from example.csv
+GENMD-EOF
+
+The second form is equivalent to `mlr --c2j cat example.csv`. Piped stdin works the same way: `cat example.csv | mlr --c2j`.
+
 ## File names up front, including --from
 
 Already, we saw that you can put the filename first using `--from`. When you're interacting with your data at the command line, this makes it easier to up-arrow and append to the previous command:

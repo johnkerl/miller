@@ -57,6 +57,208 @@ red    square   true 2 15    79.2778  0.0130
 
 You can get the full list [here](file-formats.md#data-conversion-keystroke-savers).
 
+## Omitting the verb for format conversions
+
+The verb defaults to [`cat`](reference-verbs.md#cat), so for pure format conversions you can leave the verb off entirely:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2j cat example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "color": "yellow",
+  "shape": "triangle",
+  "flag": "true",
+  "k": 1,
+  "index": 11,
+  "quantity": 43.6498,
+  "rate": 9.8870
+},
+{
+  "color": "red",
+  "shape": "square",
+  "flag": "true",
+  "k": 2,
+  "index": 15,
+  "quantity": 79.2778,
+  "rate": 0.0130
+},
+{
+  "color": "red",
+  "shape": "circle",
+  "flag": "true",
+  "k": 3,
+  "index": 16,
+  "quantity": 13.8103,
+  "rate": 2.9010
+},
+{
+  "color": "red",
+  "shape": "square",
+  "flag": "false",
+  "k": 4,
+  "index": 48,
+  "quantity": 77.5542,
+  "rate": 7.4670
+},
+{
+  "color": "purple",
+  "shape": "triangle",
+  "flag": "false",
+  "k": 5,
+  "index": 51,
+  "quantity": 81.2290,
+  "rate": 8.5910
+},
+{
+  "color": "red",
+  "shape": "square",
+  "flag": "false",
+  "k": 6,
+  "index": 64,
+  "quantity": 77.1991,
+  "rate": 9.5310
+},
+{
+  "color": "purple",
+  "shape": "triangle",
+  "flag": "false",
+  "k": 7,
+  "index": 65,
+  "quantity": 80.1405,
+  "rate": 5.8240
+},
+{
+  "color": "yellow",
+  "shape": "circle",
+  "flag": "true",
+  "k": 8,
+  "index": 73,
+  "quantity": 63.9785,
+  "rate": 4.2370
+},
+{
+  "color": "yellow",
+  "shape": "circle",
+  "flag": "true",
+  "k": 9,
+  "index": 87,
+  "quantity": 63.5058,
+  "rate": 8.3350
+},
+{
+  "color": "purple",
+  "shape": "square",
+  "flag": "false",
+  "k": 10,
+  "index": 91,
+  "quantity": 72.3735,
+  "rate": 8.2430
+}
+]
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2j --from example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "color": "yellow",
+  "shape": "triangle",
+  "flag": "true",
+  "k": 1,
+  "index": 11,
+  "quantity": 43.6498,
+  "rate": 9.8870
+},
+{
+  "color": "red",
+  "shape": "square",
+  "flag": "true",
+  "k": 2,
+  "index": 15,
+  "quantity": 79.2778,
+  "rate": 0.0130
+},
+{
+  "color": "red",
+  "shape": "circle",
+  "flag": "true",
+  "k": 3,
+  "index": 16,
+  "quantity": 13.8103,
+  "rate": 2.9010
+},
+{
+  "color": "red",
+  "shape": "square",
+  "flag": "false",
+  "k": 4,
+  "index": 48,
+  "quantity": 77.5542,
+  "rate": 7.4670
+},
+{
+  "color": "purple",
+  "shape": "triangle",
+  "flag": "false",
+  "k": 5,
+  "index": 51,
+  "quantity": 81.2290,
+  "rate": 8.5910
+},
+{
+  "color": "red",
+  "shape": "square",
+  "flag": "false",
+  "k": 6,
+  "index": 64,
+  "quantity": 77.1991,
+  "rate": 9.5310
+},
+{
+  "color": "purple",
+  "shape": "triangle",
+  "flag": "false",
+  "k": 7,
+  "index": 65,
+  "quantity": 80.1405,
+  "rate": 5.8240
+},
+{
+  "color": "yellow",
+  "shape": "circle",
+  "flag": "true",
+  "k": 8,
+  "index": 73,
+  "quantity": 63.9785,
+  "rate": 4.2370
+},
+{
+  "color": "yellow",
+  "shape": "circle",
+  "flag": "true",
+  "k": 9,
+  "index": 87,
+  "quantity": 63.5058,
+  "rate": 8.3350
+},
+{
+  "color": "purple",
+  "shape": "square",
+  "flag": "false",
+  "k": 10,
+  "index": 91,
+  "quantity": 72.3735,
+  "rate": 8.2430
+}
+]
+</pre>
+
+The second form is equivalent to `mlr --c2j cat example.csv`. Piped stdin works the same way: `cat example.csv | mlr --c2j`.
+
 ## File names up front, including --from
 
 Already, we saw that you can put the filename first using `--from`. When you're interacting with your data at the command line, this makes it easier to up-arrow and append to the previous command:

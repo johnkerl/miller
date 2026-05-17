@@ -274,7 +274,27 @@ Options:
 
 ## cat
 
-Most useful for format conversions (see [File Formats](file-formats.md)) and concatenating multiple same-schema CSV files to have the same header:
+Most useful for format conversions (see [File Formats](file-formats.md)) and concatenating multiple same-schema CSV files to have the same header.
+
+`cat` is also the default verb: if you omit the verb entirely, Miller behaves as if you had written `cat`. This makes pure format conversions more concise:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2j < data/a.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "a": 1,
+  "b": 2,
+  "c": 3
+},
+{
+  "a": 4,
+  "b": 5,
+  "c": 6
+}
+]
+</pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr cat -h</b>
@@ -1828,7 +1848,7 @@ Same, but showing only unpaired records:
 <b>  data/join-right-example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-status  idcode
+status  id
 missing 600
 
 id  name
