@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2026-05-16
+.\"      Date: 2026-05-17
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2026-05-16" "\ \&" "\ \&"
+.TH "MILLER" "1" "2026-05-17" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -29,7 +29,10 @@
 Miller \-\- like awk, sed, cut, join, and sort for name-indexed data such as CSV and tabular JSON.
 .SH "SYNOPSIS"
 .sp
-Usage: mlr [flags] {verb} [verb-dependent options ...] {zero or more file names}
+Usage: mlr [flags] [verb] [verb-dependent options ...] {zero or more file names}
+
+If no verb is given, "cat" is used, which is handy for format conversions, e.g.
+  mlr --c2j < example.csv
 
 If zero file names are provided, standard input is read, e.g.
   mlr --csv sort -f shape example.csv

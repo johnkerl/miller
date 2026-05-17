@@ -26,7 +26,10 @@ The front door is `mlr --help` or its synonym `mlr -h`. This leads you to `mlr h
 <b>mlr --help</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-Usage: mlr [flags] {verb} [verb-dependent options ...] {zero or more file names}
+Usage: mlr [flags] [verb] [verb-dependent options ...] {zero or more file names}
+
+If no verb is given, "cat" is used, which is handy for format conversions, e.g.
+  mlr --c2j < example.csv
 
 If zero file names are provided, standard input is read, e.g.
   mlr --csv sort -f shape example.csv
@@ -61,6 +64,7 @@ Flags:
   mlr help format-conversion-keystroke-saver-flags
   mlr help json-only-flags
   mlr help legacy-flags
+  mlr help markdown-only-flags
   mlr help miscellaneous-flags
   mlr help output-colorization-flags
   mlr help pprint-only-flags
