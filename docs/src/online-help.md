@@ -61,6 +61,7 @@ Flags:
   mlr help format-conversion-keystroke-saver-flags
   mlr help json-only-flags
   mlr help legacy-flags
+  mlr help markdown-only-flags
   mlr help miscellaneous-flags
   mlr help output-colorization-flags
   mlr help pprint-only-flags

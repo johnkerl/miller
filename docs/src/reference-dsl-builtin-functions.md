@@ -1217,12 +1217,13 @@ collapse_whitespace  (class=string #args=1) Strip repeated whitespace from strin
 
 ### contains
 <pre class="pre-non-highlight-non-pair">
-contains  (class=string #args=2) Returns true if the first argument contains the second as a substring. This is like saying `index(arg1, arg2) >= 0`but with less keystroking.
+contains  (class=string #args=2) Returns true if the first argument contains the second as a substring. This is like saying `index(arg1, arg2) >= 0` but with less keystroking. Stringifies non-string scalar inputs; raises an error if either argument is an array or map. To test for array membership, use `any`, e.g. `any([1,2,3], func(e) {return e == $foo})`.
 Examples:
 contains("abcde", "e") gives true
 contains("abcde", "x") gives false
 contains(12345, 34) gives true
 contains("forêt", "ê") gives true
+contains([1,2,3], 2) gives (error)
 </pre>
 
 
@@ -1258,12 +1259,13 @@ gsub("prefix4529:suffix8567", "(....ix)([0-9]+)", "[\1 : \2]") gives "[prefix : 
 
 ### index
 <pre class="pre-non-highlight-non-pair">
-index  (class=string #args=2) Returns the index (1-based) of the second argument within the first. Returns -1 if the second argument isn't a substring of the first. Stringifies non-string inputs. Uses UTF-8 encoding to count characters, not bytes.
+index  (class=string #args=2) Returns the index (1-based) of the second argument within the first. Returns -1 if the second argument isn't a substring of the first. Stringifies non-string scalar inputs; raises an error if either argument is an array or map. Uses UTF-8 encoding to count characters, not bytes.
 Examples:
 index("abcde", "e") gives 5
 index("abcde", "x") gives -1
 index(12345, 34) gives 3
 index("forêt", "t") gives 5
+index([1,2,3], 2) gives (error)
 </pre>
 
 

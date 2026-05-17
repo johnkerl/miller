@@ -1,0 +1,7 @@
+end {
+    print contains([1,2,3], 2);
+    print contains("abc", [1,2,3]);
+    print contains({"a":1}, "a");
+    print index([1,2,3], 2);
+    print index("abc", {"k":1});
+}
