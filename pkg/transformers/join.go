@@ -91,9 +91,9 @@ func transformerJoinUsage(
 	fmt.Fprintf(o, "               Tip: you can use --lk \"\": this means the left file becomes solely a row-selector\n")
 	fmt.Fprintf(o, "               for the input files.\n")
 	fmt.Fprintf(o, "  --lp {text}  Additional prefix for non-join output field names from\n")
-	fmt.Fprintf(o, "               the left file\n")
+	fmt.Fprintf(o, "               the left file. Applies to paired and unpaired output records.\n")
 	fmt.Fprintf(o, "  --rp {text}  Additional prefix for non-join output field names from\n")
-	fmt.Fprintf(o, "               the right file(s)\n")
+	fmt.Fprintf(o, "               the right file(s). Applies to paired and unpaired output records.\n")
 	fmt.Fprintf(o, "  --np         Do not emit paired records\n")
 	fmt.Fprintf(o, "  --ul         Emit unpaired records from the left file\n")
 	fmt.Fprintf(o, "  --ur         Emit unpaired records from the right file(s)\n")
@@ -401,7 +401,8 @@ func (tr *TransformerJoin) transformHalfStreaming(
 			leftBucket := tr.leftBucketsByJoinFieldValues.Get(groupingKey)
 			if leftBucket == nil {
 				if tr.opts.emitRightUnpairables {
-					*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+					*outputRecordsAndContexts = append(*outputRecordsAndContexts,
+						tr.transformRightUnpairedRecord(inrecAndContext))
 				}
 			} else {
 				leftBucket.WasPaired = true
@@ -414,7 +415,8 @@ func (tr *TransformerJoin) transformHalfStreaming(
 				}
 			}
 		} else if tr.opts.emitRightUnpairables {
-			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts,
+				tr.transformRightUnpairedRecord(inrecAndContext))
 		}
 
 	} else { // end of record stream
@@ -445,7 +447,7 @@ func (tr *TransformerJoin) transformDoublyStreaming(
 			isPaired = keeper.FindJoinBucket(rightFieldValues)
 		}
 		if tr.opts.emitLeftUnpairables {
-			keeper.OutputAndReleaseLeftUnpaireds(outputRecordsAndContexts)
+			tr.outputLeftUnpaireds(keeper, outputRecordsAndContexts)
 		} else {
 			keeper.ReleaseLeftUnpaireds(outputRecordsAndContexts)
 		}
@@ -453,7 +455,8 @@ func (tr *TransformerJoin) transformDoublyStreaming(
 		lefts := keeper.JoinBucket.RecordsAndContexts // keystroke-saver
 
 		if !isPaired && tr.opts.emitRightUnpairables {
-			*outputRecordsAndContexts = append(*outputRecordsAndContexts, rightRecAndContext)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts,
+				tr.transformRightUnpairedRecord(rightRecAndContext))
 		}
 
 		if isPaired && tr.opts.emitPairables && lefts != nil {
@@ -464,10 +467,21 @@ func (tr *TransformerJoin) transformDoublyStreaming(
 		keeper.FindJoinBucket(nil)
 
 		if tr.opts.emitLeftUnpairables {
-			keeper.OutputAndReleaseLeftUnpaireds(outputRecordsAndContexts)
+			tr.outputLeftUnpaireds(keeper, outputRecordsAndContexts)
 		}
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, rightRecAndContext) // emit end-of-stream marker
+	}
+}
+
+func (tr *TransformerJoin) outputLeftUnpaireds(
+	keeper *utils.JoinBucketKeeper,
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
+) {
+	startIdx := len(*outputRecordsAndContexts)
+	keeper.OutputAndReleaseLeftUnpaireds(outputRecordsAndContexts)
+	for i := startIdx; i < len(*outputRecordsAndContexts); i++ {
+		(*outputRecordsAndContexts)[i] = tr.transformLeftUnpairedRecord((*outputRecordsAndContexts)[i])
 	}
 }
 
@@ -625,7 +639,10 @@ func (tr *TransformerJoin) formAndEmitPairs(
 func (tr *TransformerJoin) emitLeftUnpairables(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
-	*outputRecordsAndContexts = append(*outputRecordsAndContexts, tr.leftUnpairableRecordsAndContexts...)
+	for _, recordAndContext := range tr.leftUnpairableRecordsAndContexts {
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts,
+			tr.transformLeftUnpairedRecord(recordAndContext))
+	}
 }
 
 func (tr *TransformerJoin) emitLeftUnpairedBuckets(
@@ -634,7 +651,70 @@ func (tr *TransformerJoin) emitLeftUnpairedBuckets(
 	for pe := tr.leftBucketsByJoinFieldValues.Head; pe != nil; pe = pe.Next {
 		bucket := pe.Value
 		if !bucket.WasPaired {
-			*outputRecordsAndContexts = append(*outputRecordsAndContexts, bucket.RecordsAndContexts...)
+			for _, recordAndContext := range bucket.RecordsAndContexts {
+				*outputRecordsAndContexts = append(*outputRecordsAndContexts,
+					tr.transformLeftUnpairedRecord(recordAndContext))
+			}
 		}
 	}
+}
+
+// transformLeftUnpairedRecord and transformRightUnpairedRecord rename the
+// join-field names to the output-join-field names and apply the side's prefix
+// to all non-join field names. This keeps unpaired-record column names
+// consistent with those produced by paired joins, so downstream operations
+// like `unsparsify` align columns across paired and unpaired output.
+func (tr *TransformerJoin) transformLeftUnpairedRecord(
+	inrecAndContext *types.RecordAndContext,
+) *types.RecordAndContext {
+	return tr.transformUnpairedRecord(
+		inrecAndContext, tr.opts.leftJoinFieldNames, tr.opts.leftPrefix,
+	)
+}
+
+func (tr *TransformerJoin) transformRightUnpairedRecord(
+	inrecAndContext *types.RecordAndContext,
+) *types.RecordAndContext {
+	return tr.transformUnpairedRecord(
+		inrecAndContext, tr.opts.rightJoinFieldNames, tr.opts.rightPrefix,
+	)
+}
+
+func (tr *TransformerJoin) transformUnpairedRecord(
+	inrecAndContext *types.RecordAndContext,
+	joinFieldNames []string,
+	prefix string,
+) *types.RecordAndContext {
+	inrec := inrecAndContext.Record
+	if inrec == nil {
+		return inrecAndContext
+	}
+
+	needsRename := false
+	for i, name := range joinFieldNames {
+		if name != tr.opts.outputJoinFieldNames[i] {
+			needsRename = true
+			break
+		}
+	}
+	if !needsRename && prefix == "" {
+		return inrecAndContext
+	}
+
+	renameMap := make(map[string]string, len(joinFieldNames))
+	for i, name := range joinFieldNames {
+		renameMap[name] = tr.opts.outputJoinFieldNames[i]
+	}
+
+	outrec := mlrval.NewMlrmapAsRecord()
+	for pe := inrec.Head; pe != nil; pe = pe.Next {
+		if outName, ok := renameMap[pe.Key]; ok {
+			outrec.PutCopy(outName, pe.Value)
+		} else {
+			outrec.PutCopy(prefix+pe.Key, pe.Value)
+		}
+	}
+
+	context := inrecAndContext.Context // struct copy
+	return types.NewRecordAndContext(outrec, &context)
 }

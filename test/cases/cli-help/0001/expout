@@ -478,9 +478,9 @@ Options:
                Tip: you can use --lk "": this means the left file becomes solely a row-selector
                for the input files.
   --lp {text}  Additional prefix for non-join output field names from
-               the left file
+               the left file. Applies to paired and unpaired output records.
   --rp {text}  Additional prefix for non-join output field names from
-               the right file(s)
+               the right file(s). Applies to paired and unpaired output records.
   --np         Do not emit paired records
   --ul         Emit unpaired records from the left file
   --ur         Emit unpaired records from the right file(s)
