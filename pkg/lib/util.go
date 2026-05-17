@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/rivo/uniseg"
 )
 
 func BooleanXOR(a, b bool) bool {
@@ -209,4 +211,13 @@ func StripEmpties(input []string) []string {
 
 func UTF8Strlen(s string) int64 {
 	return int64(utf8.RuneCountInString(s))
+}
+
+// DisplayWidth returns the number of terminal columns occupied by s, taking
+// into account East-Asian fullwidth characters (which occupy two columns) and
+// zero-width combining marks. Used for column alignment in pprint/markdown/xtab
+// output. Note: zero-width-joiner emoji sequences and ambiguous-width characters
+// remain terminal-dependent.
+func DisplayWidth(s string) int {
+	return uniseg.StringWidth(s)
 }

@@ -27,6 +27,7 @@ require (
 	github.com/mattn/go-isatty v0.0.22
 	github.com/nine-lives-later/go-windows-terminal-sequences v1.0.4
 	github.com/pkg/profile v1.7.0
+	github.com/rivo/uniseg v0.4.7
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/sys v0.44.0
 	golang.org/x/term v0.43.0

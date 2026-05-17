@@ -3,10 +3,10 @@ package output
 import (
 	"bufio"
 	"strings"
-	"unicode/utf8"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/colorizer"
+	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
@@ -141,12 +141,12 @@ func (writer *RecordWriterMarkdown) flushBatch(
 	// Floor of 3 so "---" never overflows the column.
 	maxWidths := make(map[string]int)
 	for pe := first.Head; pe != nil; pe = pe.Next {
-		maxWidths[pe.Key] = max(utf8.RuneCountInString(pe.Key), 3)
+		maxWidths[pe.Key] = max(lib.DisplayWidth(pe.Key), 3)
 	}
 	for _, rec := range writer.batch {
 		for pe := rec.Head; pe != nil; pe = pe.Next {
 			value := strings.ReplaceAll(pe.Value.String(), "|", "\\|")
-			width := utf8.RuneCountInString(value)
+			width := lib.DisplayWidth(value)
 			if width > maxWidths[pe.Key] {
 				maxWidths[pe.Key] = width
 			}
@@ -158,7 +158,7 @@ func (writer *RecordWriterMarkdown) flushBatch(
 	for pe := first.Head; pe != nil; pe = pe.Next {
 		bufferedOutputStream.WriteString(" ")
 		bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
-		writePadding(bufferedOutputStream, maxWidths[pe.Key]-utf8.RuneCountInString(pe.Key))
+		writePadding(bufferedOutputStream, maxWidths[pe.Key]-lib.DisplayWidth(pe.Key))
 		bufferedOutputStream.WriteString(" |")
 	}
 	bufferedOutputStream.WriteString(writer.writerOptions.ORS)
@@ -179,7 +179,7 @@ func (writer *RecordWriterMarkdown) flushBatch(
 			value := strings.ReplaceAll(pe.Value.String(), "|", "\\|")
 			bufferedOutputStream.WriteString(" ")
 			bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(value, outputIsStdout))
-			writePadding(bufferedOutputStream, maxWidths[pe.Key]-utf8.RuneCountInString(value))
+			writePadding(bufferedOutputStream, maxWidths[pe.Key]-lib.DisplayWidth(value))
 			bufferedOutputStream.WriteString(" |")
 		}
 		bufferedOutputStream.WriteString(writer.writerOptions.ORS)

@@ -4,10 +4,10 @@ import (
 	"bufio"
 	"fmt"
 	"strings"
-	"unicode/utf8"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/colorizer"
+	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
@@ -102,7 +102,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousList(
 			maxNR = nr
 		}
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
-			width := utf8.RuneCountInString(pe.Value.String())
+			width := lib.DisplayWidth(pe.Value.String())
 			if width == 0 {
 				width = 1 // We'll rewrite "" to "-" below
 			}
@@ -118,7 +118,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousList(
 	}
 	// Column name may be longer/shorter than all data values in the column
 	for key, oldMaxWidth := range maxWidths {
-		width := utf8.RuneCountInString(key)
+		width := lib.DisplayWidth(key)
 		if width > oldMaxWidth {
 			maxWidths[key] = width
 		}
@@ -383,7 +383,7 @@ func (writer *RecordWriterPPRINT) writePadding(
 	fieldWidth int,
 	bufferedOutputStream *bufio.Writer,
 ) {
-	textWidth := utf8.RuneCountInString(text)
+	textWidth := lib.DisplayWidth(text)
 	padWidth := fieldWidth - textWidth
 	ofs := writer.writerOptions.OFS
 	for range padWidth {

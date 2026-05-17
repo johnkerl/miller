@@ -2,11 +2,12 @@ package output
 
 import (
 	"bufio"
-	"fmt"
+	"strings"
 	"unicode/utf8"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/colorizer"
+	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/types"
 )
@@ -53,7 +54,7 @@ func (writer *RecordWriterXTAB) Write(
 
 	maxKeyLength := 1
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		keyLength := utf8.RuneCountInString(pe.Key)
+		keyLength := lib.DisplayWidth(pe.Key)
 		if keyLength > maxKeyLength {
 			maxKeyLength = keyLength
 		}
@@ -82,7 +83,7 @@ func (writer *RecordWriterXTAB) writeWithLeftAlignedValues(
 	}
 
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		keyLength := utf8.RuneCountInString(pe.Key)
+		keyLength := lib.DisplayWidth(pe.Key)
 		keyPadLength := maxKeyLength - keyLength
 
 		bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
@@ -115,7 +116,7 @@ func (writer *RecordWriterXTAB) writeWithRightAlignedValues(
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		value := pe.Value.String()
 		values[i] = value
-		valueLength := utf8.RuneCountInString(value)
+		valueLength := lib.DisplayWidth(value)
 		if valueLength > maxValueLength {
 			maxValueLength = valueLength
 		}
@@ -131,7 +132,7 @@ func (writer *RecordWriterXTAB) writeWithRightAlignedValues(
 
 	i = 0
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		keyLength := utf8.RuneCountInString(pe.Key)
+		keyLength := lib.DisplayWidth(pe.Key)
 		keyPadLength := maxKeyLength - keyLength
 
 		bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
@@ -145,8 +146,12 @@ func (writer *RecordWriterXTAB) writeWithRightAlignedValues(
 			bufferedOutputStream.WriteString(writer.writerOptions.OPS)
 		}
 
-		paddedValue := fmt.Sprintf("%*s", maxValueLength, values[i])
-		bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(paddedValue, outputIsStdout))
+		// %*s pads by rune count, which misaligns wide/combining chars; pad by display width.
+		valuePad := maxValueLength - lib.DisplayWidth(values[i])
+		if valuePad > 0 {
+			bufferedOutputStream.WriteString(strings.Repeat(" ", valuePad))
+		}
+		bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(values[i], outputIsStdout))
 		bufferedOutputStream.WriteString(writer.writerOptions.OFS)
 
 		i++
