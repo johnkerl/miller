@@ -338,13 +338,15 @@ func getRecordBatchImplicitTSVHeader(
 			}
 			if nh < nd {
 				// if header shorter than data: use 1-up itoa keys
-				key := strconv.FormatInt(i+1, 10)
-				field := lib.TSVDecodeField(fields[i])
-				value := mlrval.FromDeferredType(field)
-				_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
-				if err != nil {
-					errorChannel <- err
-					return
+				for i = nh; i < nd; i++ {
+					key := strconv.FormatInt(i+1, 10)
+					field := lib.TSVDecodeField(fields[i])
+					value := mlrval.FromDeferredType(field)
+					_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
+					if err != nil {
+						errorChannel <- err
+						return
+					}
 				}
 			}
 			if nh > nd {
