@@ -35,7 +35,7 @@ circle   3     0.3
 Typing this out can get a bit old, if the only thing that changes for you is the filename. Some options include:
 
 * On Linux/Mac/etc you can make a script with `#!/bin/sh` which invokes Miller as part of the shell-script body.
-* On Linux/Mac/etc you can make a script with `#!/usr/bin/env mlr -s` which invokes Miller.
+* On Linux/Mac/etc you can make a script with `#!/usr/bin/env -S mlr -s` which invokes Miller.
 * On any platform you can put the reusable part of your command line into a text file (say `myflags.txt`), then `mlr -s myflags-txt filename-which-varies.csv`.
 
 Let's look at examples of each.
@@ -135,7 +135,7 @@ Here instead of putting `#!/bin/bash` on the first line, we can put `mlr` direct
 <b>cat ./example-mlr-s-script</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-#!/usr/bin/env mlr -s
+#!/usr/bin/env -S mlr -s
 --c2p
 filter '$quantity != 20' # Here is a comment
 then count-distinct -f shape

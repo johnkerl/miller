@@ -134,6 +134,9 @@ func BIF_index(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsError() {
 		return mlrval.FromTypeErrorUnary("index", input1)
 	}
+	if input1.IsArrayOrMap() || input2.IsArrayOrMap() {
+		return mlrval.FromTypeErrorBinary("index", input1, input2)
+	}
 	sinput1 := input1.String()
 	sinput2 := input2.String()
 
@@ -155,6 +158,9 @@ func BIF_contains(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 	if input1.IsError() {
 		return input1
+	}
+	if input1.IsArrayOrMap() || input2.IsArrayOrMap() {
+		return mlrval.FromTypeErrorBinary("contains", input1, input2)
 	}
 
 	return mlrval.FromBool(strings.Contains(input1.String(), input2.String()))

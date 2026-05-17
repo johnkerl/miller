@@ -1,4 +1,4 @@
-#!/usr/bin/env mlr -s
+#!/usr/bin/env -S mlr -s
 --c2p
 filter '$quantity != 20' # Here is a comment
 then count-distinct -f shape
