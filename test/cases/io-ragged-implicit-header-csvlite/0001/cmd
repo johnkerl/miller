@@ -1,0 +1,1 @@
+mlr --icsvlite --oxtab --ragged --hi cat test/input/ragged-implicit-header.csvlite

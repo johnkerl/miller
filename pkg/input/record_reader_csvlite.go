@@ -378,12 +378,18 @@ func getRecordBatchImplicitCSVHeader(
 			}
 			if nh < nd {
 				// if header shorter than data: use 1-up itoa keys
-				key := strconv.FormatInt(i+1, 10)
-				value := mlrval.FromDeferredType(fields[i])
-				_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
-				if err != nil {
-					errorChannel <- err
-					return
+				for i = nh; i < nd; i++ {
+					field := fields[i]
+					if reader.useVoidRep && field == reader.voidRep {
+						field = ""
+					}
+					key := strconv.FormatInt(i+1, 10)
+					value := mlrval.FromDeferredType(field)
+					_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
+					if err != nil {
+						errorChannel <- err
+						return
+					}
 				}
 			}
 			if nh > nd {
