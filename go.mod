@@ -29,7 +29,7 @@ require (
 	github.com/pkg/profile v1.7.0
 	github.com/rivo/uniseg v0.4.7
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/sys v0.44.0
+	golang.org/x/sys v0.45.0
 	golang.org/x/term v0.43.0
 	golang.org/x/text v0.37.0
 	gopkg.in/yaml.v3 v3.0.1
