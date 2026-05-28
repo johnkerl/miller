@@ -187,7 +187,7 @@ func (mv *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
 		return
 	}
 
-	if key.IsString() {
+	if key.IsStringOrVoid() {
 		mv.intf.(*Mlrmap).PutCopy(key.printrep, value)
 	} else if key.IsInt() {
 		// $[3] acts as $["3"]

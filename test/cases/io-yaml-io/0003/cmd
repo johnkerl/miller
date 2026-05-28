@@ -1,0 +1,1 @@
+mlr --iyaml --oyaml --no-yarray cat ${CASEDIR}/input

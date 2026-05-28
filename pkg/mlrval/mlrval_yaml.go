@@ -178,8 +178,10 @@ func mlrvalToYAMLNode(mv *Mlrval) (*yaml.Node, error) {
 		return encodeScalarNode(nil)
 	}
 	switch mv.Type() {
-	case MT_ABSENT, MT_VOID, MT_NULL:
+	case MT_ABSENT, MT_NULL:
 		return encodeScalarNode(nil)
+	case MT_VOID:
+		return encodeScalarNode("")
 	case MT_STRING:
 		s, _ := mv.GetStringValue()
 		return encodeScalarNode(s)
