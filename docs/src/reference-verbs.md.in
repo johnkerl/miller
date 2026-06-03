@@ -543,6 +543,12 @@ GENMD-RUN-COMMAND
 mlr --opprint head -n 1 -g b data/medium
 GENMD-EOF
 
+A negative count passes through all but the last *n* records, like GNU `head -n -n`:
+
+GENMD-RUN-COMMAND
+mlr --c2p head -n -2 example.csv
+GENMD-EOF
+
 ## histogram
 
 GENMD-RUN-COMMAND
@@ -1211,6 +1217,12 @@ GENMD-EOF
 
 GENMD-RUN-COMMAND
 mlr --c2p tail -n 1 -g shape data/colored-shapes.csv
+GENMD-EOF
+
+As with GNU `tail`, a leading `+` starts at the *n*th record rather than printing the last *n* -- so `-n +3` passes through all but the first 2 records:
+
+GENMD-RUN-COMMAND
+mlr --c2p tail -n +3 example.csv
 GENMD-EOF
 
 ## tee

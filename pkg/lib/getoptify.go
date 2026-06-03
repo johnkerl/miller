@@ -26,8 +26,15 @@ func Getoptify(inargs []string) []string {
 				// Example: 'mlr unsparsify --fill-with -99999'.
 				outargs = append(outargs, inarg)
 			} else {
-				for _, c := range inarg[1:] {
-					outargs = append(outargs, "-"+string(c))
+				rest := inarg[1:]
+				for i := 0; i < len(rest); i++ {
+					// Pass integers without a leading dash, so that negative integers can be represented.
+					// Example: `head -n 4` and head -n4` can be differentiated from `head -n -4`.
+					if rest[i] >= '0' && rest[i] <= '9' {
+						outargs = append(outargs, rest[i:])
+						break
+					}
+					outargs = append(outargs, "-"+string(rest[i]))
 				}
 			}
 		} else if splitRegex.MatchString(inarg) {

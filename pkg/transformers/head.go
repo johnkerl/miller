@@ -28,6 +28,8 @@ func transformerHeadUsage(
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.\n")
 	fmt.Fprintf(o, "-n {n} Head-count to print. Default 10.\n")
+	fmt.Fprintf(o, "           A negative count, e.g. -n -2, passes through all but the last n records,\n")
+	fmt.Fprintf(o, "           optionally by category.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 }
 
@@ -68,16 +70,6 @@ func transformerHeadParseCLI(
 			}
 			headCount = n
 
-			// This is a bit of a hack. In our Getoptify routine we preprocess
-			// the command line sending '-xyz' to '-x -y -z', but leaving
-			// '--xyz' as-is. Also, Unix-like tools often support 'head -n4'
-			// and 'tail -n4' in addition to 'head -n 4' and 'tail -n 4'.  Our
-			// getoptify paradigm, combined with syntax familiar to users,
-			// means we get '-n -4' here. So, take the absolute value to handle this.
-			if headCount < 0 {
-				headCount = -headCount
-			}
-
 		} else if opt == "-g" {
 			names, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
@@ -116,6 +108,7 @@ type TransformerHead struct {
 	recordTransformerFunc RecordTransformerFunc
 	unkeyedRecordCount    int64
 	keyedRecordCounts     map[string]int64
+	recordListsByGroup    map[string]*[]*types.RecordAndContext
 
 	// See ChainTransformer
 	wroteDownstreamDone bool
@@ -126,15 +119,23 @@ func NewTransformerHead(
 	groupByFieldNames []string,
 ) (*TransformerHead, error) {
 
+	allButLast := headCount < 0
+	if allButLast {
+		headCount = -headCount
+	}
+
 	tr := &TransformerHead{
 		headCount:           headCount,
 		groupByFieldNames:   groupByFieldNames,
 		unkeyedRecordCount:  0,
 		keyedRecordCounts:   make(map[string]int64),
+		recordListsByGroup:  make(map[string]*[]*types.RecordAndContext),
 		wroteDownstreamDone: false,
 	}
 
-	if groupByFieldNames == nil {
+	if allButLast {
+		tr.recordTransformerFunc = tr.transformAllButLast
+	} else if groupByFieldNames == nil {
 		tr.recordTransformerFunc = tr.transformUnkeyed
 	} else {
 		tr.recordTransformerFunc = tr.transformKeyed
@@ -201,6 +202,39 @@ func (tr *TransformerHead) transformKeyed(
 
 		if count <= tr.headCount {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+		}
+
+	} else {
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+	}
+}
+
+func (tr *TransformerHead) transformAllButLast(
+	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
+) {
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
+
+		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
+		if !ok {
+			return
+		}
+
+		recordListForGroup := tr.recordListsByGroup[groupingKey]
+		if recordListForGroup == nil { // first time
+			recordListForGroup = &[]*types.RecordAndContext{}
+			tr.recordListsByGroup[groupingKey] = recordListForGroup
+		}
+
+		*recordListForGroup = append(*recordListForGroup, inrecAndContext)
+		for int64(len(*recordListForGroup)) > tr.headCount {
+			// Emit records that have fallen out of the window.
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, (*recordListForGroup)[0])
+			(*recordListForGroup)[0] = nil // release the backing-array slot's reference
+			*recordListForGroup = (*recordListForGroup)[1:]
 		}
 
 	} else {
