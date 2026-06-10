@@ -26,8 +26,11 @@ func transformerTailUsage(
 	fmt.Fprintln(o, "Passes through the last n records, optionally by category.")
 
 	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.\n")
-	fmt.Fprintf(o, "-n {n} Head-count to print. Default 10.\n")
+	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for tail counts, e.g. a,b,c.\n")
+	fmt.Fprintf(o, "-n {n} Tail-count to print. Default 10.\n")
+	fmt.Fprintf(o, "           A leading '+' means start at the nth record rather than print\n")
+	fmt.Fprintf(o, "           the last n: e.g. -n +3 passes through all but the first 2\n")
+	fmt.Fprintf(o, "           records, optionally by category.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 }
 
@@ -45,6 +48,7 @@ func transformerTailParseCLI(
 	argi++
 
 	tailCount := int64(10)
+	fromStart := false
 	var groupByFieldNames []string = nil
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -62,21 +66,14 @@ func transformerTailParseCLI(
 			return nil, cli.ErrHelpRequested
 
 		} else if opt == "-n" {
+			if argi < argc && strings.HasPrefix(args[argi], "+") {
+				fromStart = true
+			}
 			n, err := cli.VerbGetIntArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			tailCount = n
-
-			// This is a bit of a hack. In our Getoptify routine we preprocess
-			// the command line sending '-xyz' to '-x -y -z', but leaving
-			// '--xyz' as-is. Also, Unix-like tools often support 'head -n4'
-			// and 'tail -n4' in addition to 'head -n 4' and 'tail -n 4'.  Our
-			// getoptify paradigm, combined with syntax familiar to users,
-			// means we get '-n -4' here. So, take the absolute value to handle this.
-			if tailCount < 0 {
-				tailCount = -tailCount
-			}
 
 		} else if opt == "-g" {
 			names, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
@@ -98,6 +95,7 @@ func transformerTailParseCLI(
 
 	transformer, err := NewTransformerTail(
 		tailCount,
+		fromStart,
 		groupByFieldNames,
 	)
 	if err != nil {
@@ -109,24 +107,43 @@ func transformerTailParseCLI(
 
 type TransformerTail struct {
 	// input
-	tailCount         int64
+	count             int64 // last-n count, or skip-count in from-start mode
 	groupByFieldNames []string
 
 	// state
+	recordTransformerFunc RecordTransformerFunc
 	// map from string to record slices
 	recordListsByGroup *lib.OrderedMap[*[]*types.RecordAndContext]
+	// for the from-start mode: per-group counts of records seen so far
+	countsByGroup map[string]int64
 }
 
 func NewTransformerTail(
 	tailCount int64,
+	fromStart bool,
 	groupByFieldNames []string,
 ) (*TransformerTail, error) {
 
 	tr := &TransformerTail{
-		tailCount:         tailCount,
 		groupByFieldNames: groupByFieldNames,
 
 		recordListsByGroup: lib.NewOrderedMap[*[]*types.RecordAndContext](),
+		countsByGroup:      make(map[string]int64),
+	}
+
+	if fromStart {
+		// '-n +N' is a 1-based record index, i.e. skip the first n-1.
+		tr.count = tailCount - 1
+		if tr.count < 0 {
+			tr.count = 0
+		}
+		tr.recordTransformerFunc = tr.transformFromStart
+	} else {
+		if tailCount < 0 {
+			tailCount = -tailCount
+		}
+		tr.count = tailCount
+		tr.recordTransformerFunc = tr.transformLastN
 	}
 
 	return tr, nil
@@ -139,6 +156,15 @@ func (tr *TransformerTail) Transform(
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+}
+
+func (tr *TransformerTail) transformLastN(
+	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
+) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
@@ -155,7 +181,8 @@ func (tr *TransformerTail) Transform(
 		}
 
 		*recordListForGroup = append(*recordListForGroup, inrecAndContext)
-		for int64(len(*recordListForGroup)) > tr.tailCount {
+		for int64(len(*recordListForGroup)) > tr.count {
+			(*recordListForGroup)[0] = nil // release the backing-array slot's reference
 			*recordListForGroup = (*recordListForGroup)[1:]
 		}
 
@@ -163,6 +190,31 @@ func (tr *TransformerTail) Transform(
 		for outer := tr.recordListsByGroup.Head; outer != nil; outer = outer.Next {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, *outer.Value...)
 		}
+		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
+	}
+}
+
+func (tr *TransformerTail) transformFromStart(
+	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
+) {
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
+
+		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
+		if !ok {
+			return
+		}
+
+		tr.countsByGroup[groupingKey]++
+		if tr.countsByGroup[groupingKey] > tr.count {
+			// Emit records now that we skipped the requested number of them.
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+		}
+
+	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
 }
