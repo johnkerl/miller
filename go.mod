@@ -33,7 +33,7 @@ require (
 	golang.org/x/term v0.44.0
 	golang.org/x/text v0.38.0
 	gopkg.in/yaml.v3 v3.0.1
-	pault.ag/go/debian v0.19.0
+	pault.ag/go/debian v0.20.0
 )
 
 require (
