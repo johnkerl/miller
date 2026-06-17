@@ -1,6 +1,10 @@
+github.com/ProtonMail/go-crypto v1.4.1 h1:9RfcZHqEQUvP8RzecWEUafnZVtEvrBVL9BiF67IQOfM=
+github.com/ProtonMail/go-crypto v1.4.1/go.mod h1:e1OaTyu5SYVrO9gKOEhTc+5UcXtTUa+P3uLudwcgPqo=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=
+github.com/cloudflare/circl v1.6.2 h1:hL7VBpHHKzrV5WTfHCaBsgx/HGbBYlgrwvNXEVDYYsQ=
+github.com/cloudflare/circl v1.6.2/go.mod h1:2eXP6Qfat4O/Yhh8BznvKnJ+uzEoTQ6jVKJRn81BiS4=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -63,7 +67,7 @@ gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8
 gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
 gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
-pault.ag/go/debian v0.20.0 h1:e8gMKidwwnqfX/ghb97dEVJjsyjk+U5zMb0cvtal3K4=
-pault.ag/go/debian v0.20.0/go.mod h1:1LMojDAazlJ7cA5Ne6H2ZHD4hh3o8NRiW+MpvQRji2o=
+pault.ag/go/debian v0.21.0 h1:6Q+7oNe3HtNf28BVErD7Zic1XN74lJvjQqzDN7C9i5g=
+pault.ag/go/debian v0.21.0/go.mod h1:/SJrietiBUQJECZOzLMbMwz6eKkbvheD8Z3wN7wmzEA=
 pault.ag/go/topsort v0.1.1 h1:L0QnhUly6LmTv0e3DEzbN2q6/FGgAcQvaEw65S53Bg4=
 pault.ag/go/topsort v0.1.1/go.mod h1:r1kc/L0/FZ3HhjezBIPaNVhkqv8L0UJ9bxRuHRVZ0q4=
