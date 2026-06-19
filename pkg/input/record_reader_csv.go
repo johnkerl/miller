@@ -107,16 +107,31 @@ func (reader *RecordReaderCSV) processHandle(
 	reader.needHeader = !reader.readerOptions.UseImplicitHeader
 	reader.header = nil
 
-	csvReader := csv.NewReader(NewBOMStrippingReader(handle))
-	csvReader.Comma = rune(reader.ifs0)
-	csvReader.LazyQuotes = reader.csvLazyQuotes
-	csvReader.TrimLeadingSpace = reader.csvTrimLeadingSpace
-
+	var commentByte byte = 0
 	if reader.readerOptions.CommentHandling != cli.CommentsAreData {
 		if len(reader.readerOptions.CommentString) == 1 {
-			// Use our modified fork of the go-csv package
-			csvReader.Comment = rune(reader.readerOptions.CommentString[0])
+			commentByte = reader.readerOptions.CommentString[0]
 		}
+	}
+
+	var csvReader csvRecordReader
+	// PROTOTYPE: use the zero-copy reader for the common case. It avoids the
+	// per-record string copy in the stdlib-derived parser. LazyQuotes and
+	// TrimLeadingSpace fall back to the original reader.
+	if !reader.csvLazyQuotes && !reader.csvTrimLeadingSpace {
+		csvReader = NewZeroCopyCSVReader(
+			NewBOMStrippingReader(handle), reader.ifs0, commentByte,
+			reader.csvLazyQuotes, reader.csvTrimLeadingSpace,
+		)
+	} else {
+		goReader := csv.NewReader(NewBOMStrippingReader(handle))
+		goReader.Comma = rune(reader.ifs0)
+		goReader.LazyQuotes = reader.csvLazyQuotes
+		goReader.TrimLeadingSpace = reader.csvTrimLeadingSpace
+		if commentByte != 0 {
+			goReader.Comment = rune(commentByte)
+		}
+		csvReader = goReader
 	}
 
 	csvRecordsChannel := make(chan [][]string, recordsPerBatch)
@@ -134,9 +149,15 @@ func (reader *RecordReaderCSV) processHandle(
 	}
 }
 
+// csvRecordReader is the minimal interface the scanner needs: it is satisfied
+// by both the go-csv *Reader and the prototype *ZeroCopyCSVReader.
+type csvRecordReader interface {
+	Read() ([]string, error)
+}
+
 // TODO: comment
 func channelizedCSVRecordScanner(
-	csvReader *csv.Reader,
+	csvReader csvRecordReader,
 	csvRecordsChannel chan<- [][]string,
 	downstreamDoneChannel <-chan bool, // for mlr head
 	errorChannel chan error,
