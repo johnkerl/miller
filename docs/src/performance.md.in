@@ -47,6 +47,41 @@ Notes:
 * Even single-verb processing with `put` and `stats1` was significantly faster on both platforms.
 * Longer then-chains benefit even more from Miller 6's [multicore approach](cpu.md).
 
+## Allocation/GC optimizations: June 2026
+
+A series of changes in mid-2026 cut per-record and per-field memory allocation throughout Miller's read, write, and DSL paths. On these workloads the dominant controllable cost in the Go implementation is the sheer volume of heap allocations (and the garbage-collection work that follows), rather than GC tuning per se -- so the work focused on reducing allocation *count*: lazy per-record hashing, batch/slab allocation of record fields and per-record objects, reuse of writer buffers, and stack-frame pooling plus copy-elision in the DSL interpreter.
+
+The table below compares wall-clock time before and after these changes, using the same million-record files as above (CSV unless noted), as the best of five runs on an Apple M1 laptop. The `put` rows use a two-statement script (`chain-1`), a four-deep then-chain of it (`chain-4`), a local-variable expression, and user-defined-function-heavy scripts.
+
+| Workload | Before | After | Change |
+| --- | --- | --- | --- |
+| `cat` (CSV) | 0.62s | 0.22s | -65% |
+| `cat` (DKVP) | 0.90s | 0.44s | -51% |
+| `cat` (NIDX) | 2.02s | 1.56s | -23% |
+| `tac` (CSV) | 1.00s | 0.44s | -56% |
+| `sort -nf` (CSV) | 3.31s | 2.00s | -40% |
+| `stats1` (CSV) | 0.64s | 0.54s | -16% |
+| `put` chain-1 | 1.06s | 0.71s | -33% |
+| `put` chain-4 | 1.24s | 0.93s | -25% |
+| `put` local-variable | 0.71s | 0.51s | -28% |
+| `put` UDF-heavy | 2.81s | 1.71s | -39% |
+| `put` map-returning UDF | 2.72s | 1.92s | -29% |
+
+Peak resident set size (RSS) for representative workloads:
+
+| Workload | Before | After | Change |
+| --- | --- | --- | --- |
+| `cat` (CSV) | 379MB | 180MB | -53% |
+| `sort -nf` (CSV) | 1389MB | 1306MB | -6% |
+| `put` chain-1 | 414MB | 411MB | ~0% |
+
+Notes:
+
+* Streaming I/O verbs such as `cat` and `tac` improved the most; `mlr --csv cat` is now essentially I/O-bound (most of its time is spent in read/write system calls), so its memory use also dropped sharply.
+* `sort` got substantially faster in time but barely changed in memory: it intrinsically holds all records in memory at once, so the speedup comes from cheaper record construction, not from fewer live records.
+* DSL (`put`) speedups combine lazy record hashing with interpreter-level allocation reductions (stack-frame and frame-set pooling, eliding redundant value copies). Function-heavy scripts benefit most, since each call previously allocated and copied the most.
+* As always, results vary by platform, file format, and multi-core use.
+
 ## Decompression options
 
 This is some data from [https://community.opencellid.org](https://community.opencellid.org): approximately 40
