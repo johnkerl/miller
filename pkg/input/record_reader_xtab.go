@@ -275,7 +275,7 @@ func (reader *RecordReaderXTAB) getRecordBatch(
 func (reader *RecordReaderXTAB) recordFromXTABLines(
 	stanza []string,
 ) (*mlrval.Mlrmap, error) {
-	record := mlrval.NewMlrmapAsRecord()
+	record := reader.recordArena.NewRecord()
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	for _, line := range stanza {
