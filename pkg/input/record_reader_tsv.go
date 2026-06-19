@@ -158,6 +158,8 @@ func getRecordBatchExplicitTSVHeader(
 		return recordsAndContexts, true
 	}
 
+	arena := mlrval.NewRecordArena(len(lines) * 8)
+
 	for _, line := range lines {
 
 		reader.inputLineNumber++
@@ -195,12 +197,7 @@ func getRecordBatchExplicitTSVHeader(
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				for i, field := range fields {
 					field = lib.TSVDecodeField(field)
-					value := mlrval.FromDeferredType(field)
-					_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
-					if err != nil {
-						errorChannel <- err
-						return
-					}
+					arena.PutDeferred(record, reader.headerStrings[i], field, dedupeFieldNames)
 				}
 			} else {
 				nh := int64(len(reader.headerStrings))
@@ -209,24 +206,14 @@ func getRecordBatchExplicitTSVHeader(
 				var i int64
 				for i = 0; i < n; i++ {
 					field := lib.TSVDecodeField(fields[i])
-					value := mlrval.FromDeferredType(field)
-					_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
-					if err != nil {
-						errorChannel <- err
-						return
-					}
+					arena.PutDeferred(record, reader.headerStrings[i], field, dedupeFieldNames)
 				}
 				if nh < nd {
 					// if header shorter than data: use 1-up itoa keys
 					for i = nh; i < nd; i++ {
 						key := strconv.FormatInt(i+1, 10)
 						field := lib.TSVDecodeField(fields[i])
-						value := mlrval.FromDeferredType(field)
-						_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
-						if err != nil {
-							errorChannel <- err
-							return
-						}
+						arena.PutDeferred(record, key, field, dedupeFieldNames)
 					}
 				}
 				if nh > nd {
@@ -262,6 +249,8 @@ func getRecordBatchImplicitTSVHeader(
 	if !more {
 		return recordsAndContexts, true
 	}
+
+	arena := mlrval.NewRecordArena(len(lines) * 8)
 
 	for _, line := range lines {
 
@@ -315,12 +304,7 @@ func getRecordBatchImplicitTSVHeader(
 		if !reader.readerOptions.AllowRaggedCSVInput {
 			for i, field := range fields {
 				field = lib.TSVDecodeField(field)
-				value := mlrval.FromDeferredType(field)
-				_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
-				if err != nil {
-					errorChannel <- err
-					return
-				}
+				arena.PutDeferred(record, reader.headerStrings[i], field, dedupeFieldNames)
 			}
 		} else {
 			nh := int64(len(reader.headerStrings))
@@ -329,24 +313,14 @@ func getRecordBatchImplicitTSVHeader(
 			var i int64
 			for i = 0; i < n; i++ {
 				field := lib.TSVDecodeField(fields[i])
-				value := mlrval.FromDeferredType(field)
-				_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], value, dedupeFieldNames)
-				if err != nil {
-					errorChannel <- err
-					return
-				}
+				arena.PutDeferred(record, reader.headerStrings[i], field, dedupeFieldNames)
 			}
 			if nh < nd {
 				// if header shorter than data: use 1-up itoa keys
 				for i = nh; i < nd; i++ {
 					key := strconv.FormatInt(i+1, 10)
 					field := lib.TSVDecodeField(fields[i])
-					value := mlrval.FromDeferredType(field)
-					_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
-					if err != nil {
-						errorChannel <- err
-						return
-					}
+					arena.PutDeferred(record, key, field, dedupeFieldNames)
 				}
 			}
 			if nh > nd {
