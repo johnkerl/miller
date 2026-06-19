@@ -179,6 +179,12 @@ const stackFrameSetInitCap = 6
 
 type StackFrameSet struct {
 	stackFrames []*StackFrame
+	// pool retains popped frames for reuse. Push/pop is strictly LIFO and a
+	// StackFrameSet is reused across all records (it lives on the persistent
+	// runtime.State), so without pooling each record's block entry/exit would
+	// allocate and discard a StackFrame (a slice + a map). Pooling makes
+	// per-record block execution allocation-free after the first record.
+	pool []*StackFrame
 }
 
 func newStackFrameSet() *StackFrameSet {
@@ -190,11 +196,22 @@ func newStackFrameSet() *StackFrameSet {
 }
 
 func (frameset *StackFrameSet) pushStackFrame() {
-	frameset.stackFrames = append(frameset.stackFrames, newStackFrame())
+	n := len(frameset.pool)
+	if n > 0 {
+		frame := frameset.pool[n-1]
+		frameset.pool = frameset.pool[:n-1]
+		frame.clear()
+		frameset.stackFrames = append(frameset.stackFrames, frame)
+	} else {
+		frameset.stackFrames = append(frameset.stackFrames, newStackFrame())
+	}
 }
 
 func (frameset *StackFrameSet) popStackFrame() {
-	frameset.stackFrames = frameset.stackFrames[0 : len(frameset.stackFrames)-1]
+	n := len(frameset.stackFrames)
+	frame := frameset.stackFrames[n-1]
+	frameset.stackFrames = frameset.stackFrames[0 : n-1]
+	frameset.pool = append(frameset.pool, frame)
 }
 
 // Returns nil on no-such
@@ -322,6 +339,17 @@ func newStackFrame() *StackFrame {
 		vars:           vars,
 		namesToOffsets: namesToOffsets,
 	}
+}
+
+// clear resets a frame for reuse from the pool, retaining its backing slice and
+// map allocations. The vars elements are nilled so reuse does not pin the
+// previous scope's variable values.
+func (frame *StackFrame) clear() {
+	for i := range frame.vars {
+		frame.vars[i] = nil
+	}
+	frame.vars = frame.vars[:0]
+	clear(frame.namesToOffsets)
 }
 
 // Returns nil on no such
