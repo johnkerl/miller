@@ -62,19 +62,26 @@ func (sv *StackVariable) GetName() string {
 // STACK METHODS
 
 type Stack struct {
-	// list of *StackFrameSet
+	// Save/restore stack of framesets, one pushed per user-defined
+	// function/subroutine call. The CURRENT frameset is the tail element
+	// (stackFrameSets[len-1]); pushing appends and popping truncates, so neither
+	// allocates a new slice once capacity is established. (Order among the saved
+	// sets is irrelevant: all get/set go through the cached head.)
 	stackFrameSets []*StackFrameSet
 
-	// Invariant: equal to the head of the stackFrameSets list. This is cached
+	// Invariant: equal to the tail of the stackFrameSets list. This is cached
 	// since all sets/gets in between frameset-push and frameset-pop will all
 	// and only be operating on the head.
 	head *StackFrameSet
+
+	// pool retains popped framesets for reuse, so repeated function calls do not
+	// each allocate a fresh StackFrameSet (and its initial StackFrame).
+	pool []*StackFrameSet
 }
 
 func NewStack() *Stack {
-	stackFrameSets := make([]*StackFrameSet, 1)
 	head := newStackFrameSet()
-	stackFrameSets[0] = head
+	stackFrameSets := []*StackFrameSet{head}
 	return &Stack{
 		stackFrameSets: stackFrameSets,
 		head:           head,
@@ -83,14 +90,26 @@ func NewStack() *Stack {
 
 // For when a user-defined function/subroutine is being entered
 func (stack *Stack) PushStackFrameSet() {
-	stack.head = newStackFrameSet()
-	stack.stackFrameSets = append([]*StackFrameSet{stack.head}, stack.stackFrameSets...)
+	var frameset *StackFrameSet
+	n := len(stack.pool)
+	if n > 0 {
+		frameset = stack.pool[n-1]
+		stack.pool = stack.pool[:n-1]
+		frameset.reset()
+	} else {
+		frameset = newStackFrameSet()
+	}
+	stack.stackFrameSets = append(stack.stackFrameSets, frameset)
+	stack.head = frameset
 }
 
 // For when a user-defined function/subroutine is being exited
 func (stack *Stack) PopStackFrameSet() {
-	stack.stackFrameSets = stack.stackFrameSets[1:]
-	stack.head = stack.stackFrameSets[0]
+	n := len(stack.stackFrameSets)
+	popped := stack.stackFrameSets[n-1]
+	stack.stackFrameSets = stack.stackFrameSets[0 : n-1]
+	stack.pool = append(stack.pool, popped)
+	stack.head = stack.stackFrameSets[len(stack.stackFrameSets)-1]
 }
 
 // All of these are simply delegations to the head frameset
@@ -193,6 +212,17 @@ func newStackFrameSet() *StackFrameSet {
 	return &StackFrameSet{
 		stackFrames: stackFrames,
 	}
+}
+
+// reset returns a pooled frameset to its freshly-constructed state: exactly one
+// (cleared) base frame. Any extra frames are kept in the per-frameset frame
+// pool for reuse. At a balanced PopStackFrameSet the set is already at depth 1,
+// so this is normally just a clear of the base frame.
+func (frameset *StackFrameSet) reset() {
+	for len(frameset.stackFrames) > 1 {
+		frameset.popStackFrame()
+	}
+	frameset.stackFrames[0].clear()
 }
 
 func (frameset *StackFrameSet) pushStackFrame() {
