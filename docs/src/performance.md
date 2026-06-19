@@ -32,7 +32,7 @@ In a previous version of this page, I compared Miller to some items in the Unix 
 
 Miller can do many kinds of processing on key-value-pair data using elapsed time roughly of the same order of magnitude as items in the Unix toolkit can handle positionally indexed data. Specific results vary widely by platform, implementation details, and multi-core use (or not). Lastly, specific special-purpose non-record-aware processing will run far faster if implemented in `grep`, `sed`, etc.
 
-## Performance benchmarks
+## Performance benchmarks: early 2026
 
 For performance testing, the [example.csv](https://github.com/johnkerl/miller/blob/main/docs/src/example.csv) file
 [was expanded](https://github.com/johnkerl/miller/blob/main/scripts/perf/prep-perf-data.sh) into a million-line CSV file,
@@ -65,7 +65,7 @@ Notes:
 
 ## Allocation/GC optimizations: June 2026
 
-A series of changes in mid-2026 cut per-record and per-field memory allocation throughout Miller's read, write, and DSL paths. On these workloads the dominant controllable cost in the Go implementation is the sheer volume of heap allocations (and the garbage-collection work that follows), rather than GC tuning per se -- so the work focused on reducing allocation *count*: lazy per-record hashing, batch/slab allocation of record fields and per-record objects, reuse of writer buffers, and stack-frame pooling plus copy-elision in the DSL interpreter.
+A series of changes in mid-2026 cut per-record and per-field memory allocation throughout Miller's read, write, and DSL paths. On these workloads the dominant controllable cost in the Go implementation is the sheer volume of heap allocations (and the garbage-collection work that follows), rather than GC tuning per se -- so the work focused on reducing allocation *count*: lazy per-record hashing, batch/slab allocation of record fields and per-record objects, reuse of writer buffers, and stack-frame pooling plus copy-elision in the DSL runtime.
 
 The table below compares wall-clock time before and after these changes, using the same million-record files as above (CSV unless noted), as the best of five runs on an Apple M1 laptop. The `put` rows use a two-statement script (`chain-1`), a four-deep then-chain of it (`chain-4`), a local-variable expression, and user-defined-function-heavy scripts.
 
@@ -95,7 +95,7 @@ Notes:
 
 * Streaming I/O verbs such as `cat` and `tac` improved the most; `mlr --csv cat` is now essentially I/O-bound (most of its time is spent in read/write system calls), so its memory use also dropped sharply.
 * `sort` got substantially faster in time but barely changed in memory: it intrinsically holds all records in memory at once, so the speedup comes from cheaper record construction, not from fewer live records.
-* DSL (`put`) speedups combine lazy record hashing with interpreter-level allocation reductions (stack-frame and frame-set pooling, eliding redundant value copies). Function-heavy scripts benefit most, since each call previously allocated and copied the most.
+* DSL (`put`) speedups combine lazy record hashing with DSL-level allocation reductions (stack-frame and frame-set pooling, eliding redundant value copies). Function-heavy scripts benefit most, since each call previously allocated and copied the most.
 * As always, results vary by platform, file format, and multi-core use.
 
 ## Decompression options
