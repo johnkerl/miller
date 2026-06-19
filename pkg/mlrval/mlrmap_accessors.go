@@ -43,7 +43,13 @@ func (mlrmap *Mlrmap) PutReference(key string, value *Mlrval) {
 // and PutReferenceMaybeDedupe. It should not be invoked from anywhere else --
 // it doesn't do its own check if the key already exists in the record or not.
 func (mlrmap *Mlrmap) putReferenceNewAux(key string, value *Mlrval) {
-	pe := newMlrmapEntry(key, value)
+	mlrmap.linkNewEntry(newMlrmapEntry(key, value))
+}
+
+// linkNewEntry appends an already-constructed entry to the tail of the list and
+// updates the index if present. The entry must not already be in the map. It is
+// shared by the normal put path and by the batch-arena reader fast path.
+func (mlrmap *Mlrmap) linkNewEntry(pe *MlrmapEntry) {
 	if mlrmap.Head == nil {
 		mlrmap.Head = pe
 		mlrmap.Tail = pe
@@ -54,7 +60,7 @@ func (mlrmap *Mlrmap) putReferenceNewAux(key string, value *Mlrval) {
 		mlrmap.Tail = pe
 	}
 	if mlrmap.keysToEntries != nil {
-		mlrmap.keysToEntries[key] = pe
+		mlrmap.keysToEntries[pe.Key] = pe
 	}
 	mlrmap.FieldCount++
 }
