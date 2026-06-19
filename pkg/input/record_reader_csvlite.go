@@ -224,7 +224,7 @@ func getRecordBatchExplicitCSVHeader(
 				return
 			}
 
-			record := mlrval.NewMlrmapAsRecord()
+			record := arena.NewRecord()
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				for i, field := range fields {
 					if reader.useVoidRep && field == reader.voidRep {
@@ -335,7 +335,7 @@ func getRecordBatchImplicitCSVHeader(
 			}
 		}
 
-		record := mlrval.NewMlrmapAsRecord()
+		record := arena.NewRecord()
 		if !reader.readerOptions.AllowRaggedCSVInput {
 			for i, field := range fields {
 				if reader.useVoidRep && field == reader.voidRep {

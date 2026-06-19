@@ -239,7 +239,7 @@ func (reader *RecordReaderPprintFixedSplit) getRecords(
 			}
 		}
 
-		record := mlrval.NewMlrmapAsRecord()
+		record := arena.NewRecord()
 		if !reader.readerOptions.AllowRaggedCSVInput {
 			for i, field := range fields {
 				arena.PutDeferred(record, reader.headerStrings[i], field, dedupeFieldNames)
@@ -472,7 +472,7 @@ func getRecordBatchExplicitPprintHeader(
 				return
 			}
 
-			record := mlrval.NewMlrmapAsRecord()
+			record := arena.NewRecord()
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				for i, field := range fields {
 					arena.PutDeferred(record, reader.headerStrings[i], field, dedupeFieldNames)
@@ -596,7 +596,7 @@ func getRecordBatchImplicitPprintHeader(
 			}
 		}
 
-		record := mlrval.NewMlrmapAsRecord()
+		record := arena.NewRecord()
 		if !reader.readerOptions.AllowRaggedCSVInput {
 			for i, field := range fields {
 				arena.PutDeferred(record, reader.headerStrings[i], field, dedupeFieldNames)

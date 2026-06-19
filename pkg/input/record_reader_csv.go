@@ -214,6 +214,12 @@ func (reader *RecordReaderCSV) getRecordBatch(
 	}
 	arena := mlrval.NewRecordArena(nfields)
 
+	// Batch-allocate the RecordAndContext wrappers too: one slab for the whole
+	// batch instead of one heap object per record. Comment/output-string entries
+	// (rare) still allocate individually via maybeConsumeComment.
+	racSlab := make([]types.RecordAndContext, len(csvRecords))
+	racIndex := 0
+
 	for _, csvRecord := range csvRecords {
 
 		if reader.needHeader {
@@ -242,7 +248,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 			}
 		}
 
-		record := mlrval.NewMlrmapAsRecord()
+		record := arena.NewRecord()
 
 		nh := int64(len(reader.header))
 		nd := int64(len(csvRecord))
@@ -281,7 +287,11 @@ func (reader *RecordReaderCSV) getRecordBatch(
 
 		context.UpdateForInputRecord()
 
-		recordsAndContexts = append(recordsAndContexts, types.NewRecordAndContext(record, context))
+		rac := &racSlab[racIndex]
+		racIndex++
+		rac.Record = record
+		rac.Context = *context
+		recordsAndContexts = append(recordsAndContexts, rac)
 	}
 
 	return recordsAndContexts, false
