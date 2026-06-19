@@ -63,13 +63,34 @@ func HashRecords(onOff bool) {
 	hashRecords = onOff
 }
 
+// mlrmapHashThreshold is the field-count at or above which a lazily-hashable
+// record builds its key-to-entry index on first lookup. Below this, linear
+// search through the (short) linked list is cheaper than allocating and
+// populating a map -- and, crucially, records that are never looked up (e.g.
+// `mlr cat`) never pay for a map at all. Wide records that do get looked up
+// still get hash-accelerated access, preserving the fix for
+// https://github.com/johnkerl/miller/issues/1506.
+const mlrmapHashThreshold = 12
+
 type Mlrmap struct {
 	FieldCount int64
 	Head       *MlrmapEntry
 	Tail       *MlrmapEntry
 
-	// This can be nil if hashRecords is off.
+	// keysToEntries is the key-to-entry index for hash-accelerated lookups.
+	// It can be nil in three situations:
+	//   - hashing is disabled entirely (`mlr --no-hash-records`), in which
+	//     case autoHash is false and the index is never built;
+	//   - the map is lazily hashable (autoHash true) but no lookup has yet
+	//     triggered index construction, or the record is narrow enough that
+	//     linear search is preferred;
+	//   - the map is empty.
 	keysToEntries map[string]*MlrmapEntry
+
+	// autoHash, when true, lets findEntry lazily build keysToEntries on the
+	// first lookup of a sufficiently-wide record. It is false for explicitly
+	// unhashed maps (`--no-hash-records`).
+	autoHash bool
 }
 
 type MlrmapEntry struct {
@@ -94,12 +115,28 @@ type MlrmapPair struct {
 
 func NewMlrmapAsRecord() *Mlrmap {
 	if hashRecords {
-		return newMlrmapHashed()
+		return newMlrmapLazyHashed()
 	}
 	return newMlrmapUnhashed()
 }
 func NewMlrmap() *Mlrmap {
 	return newMlrmapHashed()
+}
+
+// newMlrmapLazyHashed is the default for record-stream data. It allocates no
+// key-to-entry index up front; findEntry builds one on demand only when a
+// lookup occurs on a wide record (see mlrmapHashThreshold). This avoids a map
+// allocation and N map-inserts per record for the common case of streaming
+// over many narrow records, while retaining hash-accelerated lookups for wide
+// records that are actually queried.
+func newMlrmapLazyHashed() *Mlrmap {
+	return &Mlrmap{
+		FieldCount:    0,
+		Head:          nil,
+		Tail:          nil,
+		keysToEntries: nil,
+		autoHash:      true,
+	}
 }
 
 // Faster on record-stream data as noted above.
