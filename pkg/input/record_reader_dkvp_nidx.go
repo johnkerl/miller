@@ -170,7 +170,7 @@ func (reader *RecordReaderDKVPNIDX) getRecordBatch(
 }
 
 func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrmap, error) {
-	record := mlrval.NewMlrmapAsRecord()
+	record := reader.recordArena.NewRecord()
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	pairs := reader.fieldSplitter.Split(line)
@@ -212,7 +212,7 @@ func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrm
 }
 
 func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrmap, error) {
-	record := mlrval.NewMlrmapAsRecord()
+	record := reader.recordArena.NewRecord()
 
 	values := reader.fieldSplitter.Split(line)
 

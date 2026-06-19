@@ -193,7 +193,7 @@ func getRecordBatchExplicitTSVHeader(
 				return
 			}
 
-			record := mlrval.NewMlrmapAsRecord()
+			record := arena.NewRecord()
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				for i, field := range fields {
 					field = lib.TSVDecodeField(field)
@@ -300,7 +300,7 @@ func getRecordBatchImplicitTSVHeader(
 			}
 		}
 
-		record := mlrval.NewMlrmapAsRecord()
+		record := arena.NewRecord()
 		if !reader.readerOptions.AllowRaggedCSVInput {
 			for i, field := range fields {
 				field = lib.TSVDecodeField(field)
