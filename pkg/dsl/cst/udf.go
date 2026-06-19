@@ -304,7 +304,12 @@ func (site *UDFCallsite) EvaluateWithArguments(
 		"function "+udf.signature.funcOrSubrName+" return value",
 	)
 
-	return blockExitPayload.blockReturnValue.Copy()
+	// blockReturnValue is already an independent deep copy: ReturnNode.Execute
+	// does returnValue.Copy() when building the payload, precisely so the value
+	// survives the callee frame being popped (and, with frame pooling, reused).
+	// A second copy here is redundant -- the caller copies again if it stores
+	// the value (field/oosvar/local assignment all PutCopy/Copy).
+	return blockExitPayload.blockReturnValue
 }
 
 // UDFManager tracks named UDFs like 'func f(a, b) { return b - a }'
