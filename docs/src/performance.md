@@ -83,9 +83,9 @@ The table below compares wall-clock time before and after these changes, using t
 | `put` UDF-heavy | 2.81s | 1.71s | -39% |
 | `put` map-returning UDF | 2.72s | 1.92s | -29% |
 
-![perf/2026-06-20-verbs.png](perf/2026-02-22-verbs.png)
-![perf/2026-06-20-cats.png](perf/2026-06-20-cats.png)
-![perf/2026-06-20-chains.png](perf/2026-06-20-chains.png)
+![perf/timings-2026-06-20-verbs.png](perf/timings-2026-02-22-verbs.png)
+![perf/timings-2026-06-20-cats.png](perf/timings-2026-06-20-cats.png)
+![perf/timings-2026-06-20-chains.png](perf/timings-2026-06-20-chains.png)
 
 Peak resident set size (RSS) for representative workloads:
 
