@@ -5,6 +5,9 @@ import sys
 import time
 import subprocess
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+chain_mlr  = os.path.join(script_dir, "chain-1.mlr")
+
 # ================================================================
 def main():
     mlrs       = [ "mlr" ]
@@ -28,10 +31,10 @@ def main():
         ["sort-n", f"--csv --from {in_csv} sort -n quantity"],
         ["stats1", f"--csv --from {in_csv} stats1 -a min,mean,max -f quantity,rate -g shape"],
         None,
-        ["chain-1", f"--csv --from {in_csv} put -f scripts/perf/chain-1.mlr"],
-        ["chain-2", f"--csv --from {in_csv} put -f scripts/perf/chain-1.mlr then put -f scripts/perf/chain-1.mlr"],
-        ["chain-3", f"--csv --from {in_csv} put -f scripts/perf/chain-1.mlr then put -f scripts/perf/chain-1.mlr then put -f scripts/perf/chain-1.mlr"],
-        ["chain-4", f"--csv --from {in_csv} put -f scripts/perf/chain-1.mlr then put -f scripts/perf/chain-1.mlr then put -f scripts/perf/chain-1.mlr then put -f scripts/perf/chain-1.mlr"],
+        ["chain-1", f"--csv --from {in_csv} put -f {chain_mlr}"],
+        ["chain-2", f"--csv --from {in_csv} put -f {chain_mlr} then put -f {chain_mlr}"],
+        ["chain-3", f"--csv --from {in_csv} put -f {chain_mlr} then put -f {chain_mlr} then put -f {chain_mlr}"],
+        ["chain-4", f"--csv --from {in_csv} put -f {chain_mlr} then put -f {chain_mlr} then put -f {chain_mlr} then put -f {chain_mlr}"],
         None,
         ["cat-csv",     f"--csv     --from {in_csv}  cat"],
         ["cat-csvlite", f"--csvlite --from {in_csvlite}  cat"],
