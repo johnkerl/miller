@@ -9,7 +9,8 @@ pressing <b>TAB</b> completes Miller's main flags, verb names, subcommands like
 ## Why this is more than the usual flag completion
 
 Most command-line tools have a single set of flags: `prog --flag1 --flag2 file`.
-Miller's command line is instead a sequence of contexts:
+
+Miller's command line, by contrast, is instead a [sequence of contexts](#reference-main-overview.md):
 
 GENMD-CARDIFY
 mlr {main flags} verb1 {verb1 flags} then verb2 {verb2 flags} {filenames}
