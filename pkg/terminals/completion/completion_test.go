@@ -1,0 +1,181 @@
+package completion
+
+import (
+	"slices"
+	"testing"
+)
+
+// split builds a words slice and cword from a command line plus the
+// already-typed current word. The cursor word is always the last element.
+func wordsAndCword(words ...string) ([]string, int) {
+	return words, len(words) - 1
+}
+
+func TestContextDirectives(t *testing.T) {
+	tests := []struct {
+		name      string
+		words     []string
+		wantDir   Directive
+		mustHave  []string // candidates that must be present
+		mustLack  []string // candidates that must be absent
+		emptyCand bool     // candidate list must be empty
+	}{
+		{
+			name:     "bare mlr offers verbs",
+			words:    []string{"mlr", ""},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"cat", "sort", "put"},
+			mustLack: []string{"--icsv"},
+		},
+		{
+			name:     "dash in main region offers main flags",
+			words:    []string{"mlr", "--ic"},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"--icsv"},
+			mustLack: []string{"cat"},
+		},
+		{
+			name:     "after format flag offers verbs",
+			words:    []string{"mlr", "--icsv", ""},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"cat", "head"},
+		},
+		{
+			name:      "main flag taking arg yields file completion",
+			words:     []string{"mlr", "--ifs", ""},
+			wantDir:   DirectiveFiles,
+			emptyCand: true,
+		},
+		{
+			name:     "inside verb, dash offers that verb's flags",
+			words:    []string{"mlr", "cat", "-"},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"-n", "-N", "-g", "--filename"},
+			mustLack: []string{"-f"}, // -f is not a cat flag
+		},
+		{
+			name:     "inside verb, non-flag offers then plus files",
+			words:    []string{"mlr", "cat", ""},
+			wantDir:  DirectiveDefault,
+			mustHave: []string{"then"},
+		},
+		{
+			name:     "after then offers verbs",
+			words:    []string{"mlr", "sort", "-f", "a,b", "then", ""},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"cat", "tac", "head"},
+		},
+		{
+			name:      "verb flag taking arg yields file completion",
+			words:     []string{"mlr", "sort", "-f", ""},
+			wantDir:   DirectiveFiles,
+			emptyCand: true,
+		},
+		{
+			name:      "trailing filename region",
+			words:     []string{"mlr", "cat", "data.csv", ""},
+			wantDir:   DirectiveFiles,
+			emptyCand: true,
+		},
+		{
+			name:     "double-dash separator returns to main flags",
+			words:    []string{"mlr", "cat", "--", "--oj"},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"--ojson"},
+		},
+		{
+			name:     "second verb in chain completes its own flags",
+			words:    []string{"mlr", "cat", "-n", "then", "head", "-"},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"-n", "-g"},
+		},
+		{
+			name:     "prefix filtering inside verb flags",
+			words:    []string{"mlr", "cut", "--comp"},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"--complement"},
+			mustLack: []string{"-f"},
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			words, cword := wordsAndCword(tc.words...)
+			got := Complete(words, cword)
+			if got.Directive != tc.wantDir {
+				t.Errorf("directive: got %q, want %q (candidates=%v)",
+					got.Directive, tc.wantDir, got.Candidates)
+			}
+			if tc.emptyCand && len(got.Candidates) != 0 {
+				t.Errorf("expected no candidates, got %v", got.Candidates)
+			}
+			for _, want := range tc.mustHave {
+				if !slices.Contains(got.Candidates, want) {
+					t.Errorf("missing expected candidate %q in %v", want, got.Candidates)
+				}
+			}
+			for _, lack := range tc.mustLack {
+				if slices.Contains(got.Candidates, lack) {
+					t.Errorf("unexpected candidate %q in %v", lack, got.Candidates)
+				}
+			}
+		})
+	}
+}
+
+// TestAdversarialFlagValue verifies that a verb flag's argument value which
+// happens to look like the chain keyword `then` is treated as a value, not as a
+// verb-chain separator. This requires correct per-verb arity.
+func TestAdversarialFlagValue(t *testing.T) {
+	// `mlr cut -f then -<cursor>`: `then` is the value of cut's -f, so the
+	// cursor is still inside cut's flag region.
+	words := []string{"mlr", "cut", "-f", "then", "-"}
+	got := Complete(words, len(words)-1)
+	if got.Directive != DirectiveCandidates {
+		t.Fatalf("directive: got %q, want %q", got.Directive, DirectiveCandidates)
+	}
+	if !slices.Contains(got.Candidates, "-o") {
+		t.Errorf("expected cut flag -o among candidates, got %v", got.Candidates)
+	}
+}
+
+// TestPutArityOverride verifies the override table: put's `-s` takes an
+// argument even though its usage text lacks the `{...}` convention.
+func TestPutArityOverride(t *testing.T) {
+	found, takesArg := verbFlagTakesArg("put", "-s")
+	if !found || !takesArg {
+		t.Errorf("put -s: got found=%v takesArg=%v, want true/true", found, takesArg)
+	}
+	// And it should be offered as a candidate.
+	if !slices.Contains(verbFlagNames("put"), "-s") {
+		t.Errorf("put -s missing from candidates %v", verbFlagNames("put"))
+	}
+}
+
+// TestVerbFlagScrape sanity-checks the usage-text scraper on representative
+// verbs.
+func TestVerbFlagScrape(t *testing.T) {
+	cases := []struct {
+		verb     string
+		flag     string
+		takesArg bool
+	}{
+		{"head", "-n", true},
+		{"head", "-g", true},
+		{"cat", "-n", false},
+		{"cat", "-N", true},
+		{"cut", "-f", true},
+		{"cut", "-o", false},
+		{"cut", "--complement", false},
+	}
+	for _, c := range cases {
+		found, takesArg := verbFlagTakesArg(c.verb, c.flag)
+		if !found {
+			t.Errorf("%s %s: not found", c.verb, c.flag)
+			continue
+		}
+		if takesArg != c.takesArg {
+			t.Errorf("%s %s: takesArg got %v want %v", c.verb, c.flag, takesArg, c.takesArg)
+		}
+	}
+}

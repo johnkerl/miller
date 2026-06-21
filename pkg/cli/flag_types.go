@@ -520,3 +520,52 @@ func (flag *Flag) NilCheck() {
 func NoOpParse1(args []string, argc int, pargi *int, options *TOptions) {
 	*pargi += 1
 }
+
+// Introspection accessors for shell-completion support
+// (pkg/terminals/completion). These expose flag names and arity without
+// invoking the parser functions, which is important since some flag parsers
+// os.Exit on missing arguments.
+
+// TakesArg reports whether the flag consumes a following argument value, e.g.
+// `--ifs {string}` takes an argument whereas `--repifs` does not.
+func (flag *Flag) TakesArg() bool {
+	return flag.arg != ""
+}
+
+// GetFlagNames returns every spelling of every main flag (primary names and
+// alternate names), de-duplicated, for use as shell-completion candidates.
+func (ft *FlagTable) GetFlagNames() []string {
+	names := make([]string, 0)
+	seen := make(map[string]bool)
+	add := func(name string) {
+		if name != "" && !seen[name] {
+			seen[name] = true
+			names = append(names, name)
+		}
+	}
+	for _, section := range ft.sections {
+		for _, flag := range section.flags {
+			add(flag.name)
+			for _, altName := range flag.altNames {
+				add(altName)
+			}
+		}
+	}
+	return names
+}
+
+// FlagTakesArg looks up a main flag by any of its spellings. The first return
+// value reports whether the flag is a recognized main flag; the second reports
+// whether it consumes a following argument value. This drives the
+// shell-completion command-line walk without calling the (possibly
+// os.Exit-ing) parser functions.
+func (ft *FlagTable) FlagTakesArg(name string) (found bool, takesArg bool) {
+	for _, section := range ft.sections {
+		for _, flag := range section.flags {
+			if flag.Owns(name) {
+				return true, flag.TakesArg()
+			}
+		}
+	}
+	return false, false
+}
