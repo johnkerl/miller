@@ -337,6 +337,13 @@ func TestFlagValueCompletion(t *testing.T) {
 			wantDir: DirectiveFiles,
 		},
 		{
+			// A verb flag spelled like a main value-flag must NOT inherit the
+			// main flag's value set: `uniq -o` takes a field name, not a format.
+			name:    "verb flag colliding with main format flag falls back to files",
+			words:   []string{"mlr", "uniq", "-o", ""},
+			wantDir: DirectiveFiles,
+		},
+		{
 			name:    "filename flag --from falls back to files",
 			words:   []string{"mlr", "--from", ""},
 			wantDir: DirectiveFiles,

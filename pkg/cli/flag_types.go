@@ -571,3 +571,47 @@ func (ft *FlagTable) FlagTakesArg(name string) (found bool, takesArg bool) {
 	}
 	return false, false
 }
+
+// Main flags whose argument is a known, enumerable set of values. These drive
+// shell-completion value completion (pkg/terminals/completion); they apply only
+// to main flags, not to identically-spelled verb flags (e.g. `mlr uniq -o`
+// takes a field name, unrelated to the main `-o` format flag).
+var (
+	formatValueFlags = map[string]bool{
+		"-i":   true,
+		"-o":   true,
+		"--io": true,
+	}
+	separatorValueFlags = map[string]bool{
+		"--fs":  true,
+		"--ifs": true,
+		"--ofs": true,
+		"--ps":  true,
+		"--ips": true,
+		"--ops": true,
+		"--rs":  true,
+		"--irs": true,
+		"--ors": true,
+	}
+	separatorRegexValueFlags = map[string]bool{
+		"--ifs-regex": true,
+		"--ips-regex": true,
+	}
+)
+
+// FlagValueCandidates returns the enumerated values that the given main flag's
+// argument may take -- file-format names for -i/-o/--io, separator aliases for
+// --ifs and friends, and regex-separator aliases for --ifs-regex/--ips-regex.
+// It returns nil if the flag's argument is not a known enumerable set (in which
+// case shell completion falls back to filenames).
+func FlagValueCandidates(flagName string) []string {
+	switch {
+	case formatValueFlags[flagName]:
+		return GetFileFormatNames()
+	case separatorValueFlags[flagName]:
+		return GetSeparatorAliasNames()
+	case separatorRegexValueFlags[flagName]:
+		return GetSeparatorRegexAliasNames()
+	}
+	return nil
+}
