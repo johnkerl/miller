@@ -29,14 +29,16 @@ require (
 	github.com/pkg/profile v1.7.0
 	github.com/rivo/uniseg v0.4.7
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/sys v0.45.0
-	golang.org/x/term v0.43.0
-	golang.org/x/text v0.37.0
+	golang.org/x/sys v0.46.0
+	golang.org/x/term v0.44.0
+	golang.org/x/text v0.38.0
 	gopkg.in/yaml.v3 v3.0.1
-	pault.ag/go/debian v0.19.0
+	pault.ag/go/debian v0.21.0
 )
 
 require (
+	github.com/ProtonMail/go-crypto v1.4.1 // indirect
+	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/felixge/fgprof v0.9.3 // indirect
 	github.com/golang/snappy v1.0.0 // indirect
@@ -44,7 +46,7 @@ require (
 	github.com/kshedden/dstream v0.0.0-20190512025041-c4c410631beb // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/crypto v0.45.0 // indirect
-	golang.org/x/tools v0.44.0 // indirect
+	golang.org/x/tools v0.45.0 // indirect
 	gonum.org/v1/gonum v0.16.0 // indirect
 	pault.ag/go/topsort v0.1.1 // indirect
 )

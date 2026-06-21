@@ -43,7 +43,13 @@ func (mlrmap *Mlrmap) PutReference(key string, value *Mlrval) {
 // and PutReferenceMaybeDedupe. It should not be invoked from anywhere else --
 // it doesn't do its own check if the key already exists in the record or not.
 func (mlrmap *Mlrmap) putReferenceNewAux(key string, value *Mlrval) {
-	pe := newMlrmapEntry(key, value)
+	mlrmap.linkNewEntry(newMlrmapEntry(key, value))
+}
+
+// linkNewEntry appends an already-constructed entry to the tail of the list and
+// updates the index if present. The entry must not already be in the map. It is
+// shared by the normal put path and by the batch-arena reader fast path.
+func (mlrmap *Mlrmap) linkNewEntry(pe *MlrmapEntry) {
 	if mlrmap.Head == nil {
 		mlrmap.Head = pe
 		mlrmap.Tail = pe
@@ -54,7 +60,7 @@ func (mlrmap *Mlrmap) putReferenceNewAux(key string, value *Mlrval) {
 		mlrmap.Tail = pe
 	}
 	if mlrmap.keysToEntries != nil {
-		mlrmap.keysToEntries[key] = pe
+		mlrmap.keysToEntries[pe.Key] = pe
 	}
 	mlrmap.FieldCount++
 }
@@ -194,12 +200,34 @@ func (mlrmap *Mlrmap) findEntry(key string) *MlrmapEntry {
 	if mlrmap.keysToEntries != nil {
 		return mlrmap.keysToEntries[key]
 	}
+	// Lazily build the key-to-entry index when a lookup happens on a record
+	// wide enough to benefit. Narrow records (the common case) and records
+	// that are never looked up stay on the linear-search path and never pay
+	// for a map. See mlrmapHashThreshold.
+	if mlrmap.autoHash && mlrmap.FieldCount >= mlrmapHashThreshold {
+		mlrmap.buildIndex()
+		return mlrmap.keysToEntries[key]
+	}
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		if pe.Key == key {
 			return pe
 		}
 	}
 	return nil
+}
+
+// buildIndex populates keysToEntries from the linked list. Once built, all
+// mutators keep it in sync (each guards on keysToEntries != nil). On duplicate
+// keys the last entry wins, matching the linear-search semantics of findEntry
+// (which returns the first match), since records are deduped on insert.
+func (mlrmap *Mlrmap) buildIndex() {
+	m := make(map[string]*MlrmapEntry, mlrmap.FieldCount)
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
+		if _, ok := m[pe.Key]; !ok {
+			m[pe.Key] = pe
+		}
+	}
+	mlrmap.keysToEntries = m
 }
 
 // findEntryByPositionalIndex is for '$[1]' etc. in the DSL.
@@ -459,7 +487,14 @@ func (mlrmap *Mlrmap) Clear() {
 }
 
 func (mlrmap *Mlrmap) Copy() *Mlrmap {
-	other := NewMlrmapMaybeHashed(mlrmap.isHashed())
+	var other *Mlrmap
+	if mlrmap.autoHash {
+		// Preserve lazy-hashing semantics: don't force an eager index on the
+		// copy just because the source happens to have built one.
+		other = newMlrmapLazyHashed()
+	} else {
+		other = NewMlrmapMaybeHashed(mlrmap.isHashed())
+	}
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		other.PutCopy(pe.Key, pe.Value)
 	}

@@ -21,6 +21,8 @@ type RecordReaderXTAB struct {
 	readerOptions   *cli.TReaderOptions
 	recordsPerBatch int64 // distinct from readerOptions.RecordsPerBatch for join/repl
 	pairSplitter    iXTABPairSplitter
+	// recordArena batch-allocates field entries/values; reset per getRecordBatch.
+	recordArena *mlrval.RecordArena
 
 	// Note: XTAB uses two consecutive IFS in place of an IRS; IRS is ignored
 }
@@ -51,6 +53,7 @@ func NewRecordReaderXTAB(
 		readerOptions:   readerOptions,
 		recordsPerBatch: recordsPerBatch,
 		pairSplitter:    newXTABPairSplitter(readerOptions),
+		recordArena:     mlrval.NewRecordArena(64),
 	}, nil
 }
 
@@ -245,6 +248,8 @@ func (reader *RecordReaderXTAB) getRecordBatch(
 		return recordsAndContexts, true
 	}
 
+	reader.recordArena = mlrval.NewRecordArena(len(stanzas) * 8)
+
 	for _, stanza := range stanzas {
 
 		if len(stanza.commentLines) > 0 {
@@ -270,7 +275,7 @@ func (reader *RecordReaderXTAB) getRecordBatch(
 func (reader *RecordReaderXTAB) recordFromXTABLines(
 	stanza []string,
 ) (*mlrval.Mlrmap, error) {
-	record := mlrval.NewMlrmapAsRecord()
+	record := reader.recordArena.NewRecord()
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	for _, line := range stanza {
@@ -280,10 +285,7 @@ func (reader *RecordReaderXTAB) recordFromXTABLines(
 			return nil, err
 		}
 
-		_, err = record.PutReferenceMaybeDedupe(key, mlrval.FromDeferredType(value), dedupeFieldNames)
-		if err != nil {
-			return nil, err
-		}
+		reader.recordArena.PutDeferred(record, key, value, dedupeFieldNames)
 	}
 
 	return record, nil

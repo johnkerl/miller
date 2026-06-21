@@ -183,6 +183,11 @@ func (tr *TransformerSeqgen) Transform(
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
+	if !inrecAndContext.EndOfStream {
+		// Discard upstream records; generate output only when upstream is done.
+		return
+	}
+
 	counter := tr.start
 	context := types.NewNilContext()
 	context.UpdateForStartOfFile("seqgen")

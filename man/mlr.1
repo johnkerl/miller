@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2026-05-17
+.\"      Date: 2026-06-19
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2026-05-17" "\ \&" "\ \&"
+.TH "MILLER" "1" "2026-06-19" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -50,7 +50,7 @@ on integer-indexed fields: if the natural data structure for the latter is the
 array, then Miller's natural data structure is the insertion-ordered hash map.
 This encompasses a variety of data formats, including but not limited to the
 familiar CSV, TSV, and JSON.  (Miller can handle positionally-indexed data as
-a special case.) This manpage documents mlr 6.18.1-dev.
+a special case.) This manpage documents mlr 6.19.0-dev.
 .SH "EXAMPLES"
 .sp
 
@@ -1772,9 +1772,9 @@ Options:
                Tip: you can use --lk "": this means the left file becomes solely a row-selector
                for the input files.
   --lp {text}  Additional prefix for non-join output field names from
-               the left file
+               the left file. Applies to paired and unpaired output records.
   --rp {text}  Additional prefix for non-join output field names from
-               the right file(s)
+               the right file(s). Applies to paired and unpaired output records.
   --np         Do not emit paired records
   --ul         Emit unpaired records from the left file
   --ur         Emit unpaired records from the right file(s)
@@ -3300,12 +3300,13 @@ concat([1,2],[3]) is [1,2,3]
 .RS 0
 .\}
 .nf
- (class=string #args=2) Returns true if the first argument contains the second as a substring. This is like saying `index(arg1, arg2) >= 0`but with less keystroking.
+ (class=string #args=2) Returns true if the first argument contains the second as a substring. This is like saying `index(arg1, arg2) >= 0` but with less keystroking. Stringifies non-string scalar inputs; raises an error if either argument is an array or map. To test for array membership, use `any`, e.g. `any([1,2,3], func(e) {return e == $foo})`.
 Examples:
 contains("abcde", "e") gives true
 contains("abcde", "x") gives false
 contains(12345, 34) gives true
 contains("forêt", "ê") gives true
+contains([1,2,3], 2) gives (error)
 .fi
 .if n \{\
 .RE
@@ -3678,12 +3679,13 @@ gsub("prefix4529:suffix8567", "(....ix)([0-9]+)", "[\e1 : \e2]") gives "[prefix 
 .RS 0
 .\}
 .nf
- (class=string #args=2) Returns the index (1-based) of the second argument within the first. Returns -1 if the second argument isn't a substring of the first. Stringifies non-string inputs. Uses UTF-8 encoding to count characters, not bytes.
+ (class=string #args=2) Returns the index (1-based) of the second argument within the first. Returns -1 if the second argument isn't a substring of the first. Stringifies non-string scalar inputs; raises an error if either argument is an array or map. Uses UTF-8 encoding to count characters, not bytes.
 Examples:
 index("abcde", "e") gives 5
 index("abcde", "x") gives -1
 index(12345, 34) gives 3
 index("forêt", "t") gives 5
+index([1,2,3], 2) gives (error)
 .fi
 .if n \{\
 .RE

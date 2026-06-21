@@ -52,7 +52,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        insertion-ordered hash map.  This encompasses a variety of data
        formats, including but not limited to the familiar CSV, TSV, and JSON.
        (Miller can handle positionally-indexed data as a special case.) This
-       manpage documents mlr 6.18.1-dev.
+       manpage documents mlr 6.19.0-dev.
 
 1mEXAMPLES0m
        mlr --icsv --opprint cat example.csv
@@ -1431,9 +1431,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                       Tip: you can use --lk "": this means the left file becomes solely a row-selector
                       for the input files.
          --lp {text}  Additional prefix for non-join output field names from
-                      the left file
+                      the left file. Applies to paired and unpaired output records.
          --rp {text}  Additional prefix for non-join output field names from
-                      the right file(s)
+                      the right file(s). Applies to paired and unpaired output records.
          --np         Do not emit paired records
          --ul         Emit unpaired records from the left file
          --ur         Emit unpaired records from the right file(s)
@@ -2465,12 +2465,13 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        concat([1,2],[3]) is [1,2,3]
 
    1mcontains0m
-        (class=string #args=2) Returns true if the first argument contains the second as a substring. This is like saying `index(arg1, arg2) &gt;= 0`but with less keystroking.
+        (class=string #args=2) Returns true if the first argument contains the second as a substring. This is like saying `index(arg1, arg2) &gt;= 0` but with less keystroking. Stringifies non-string scalar inputs; raises an error if either argument is an array or map. To test for array membership, use `any`, e.g. `any([1,2,3], func(e) {return e == $foo})`.
        Examples:
        contains("abcde", "e") gives true
        contains("abcde", "x") gives false
        contains(12345, 34) gives true
        contains("fort", "") gives true
+       contains([1,2,3], 2) gives (error)
 
    1mcos0m
         (class=math #args=1) Trigonometric cosine.
@@ -2627,12 +2628,13 @@ This is simply a copy of what you should see on running `man mlr` at a command p
         (class=system #args=0) Returns the hostname as a string.
 
    1mindex0m
-        (class=string #args=2) Returns the index (1-based) of the second argument within the first. Returns -1 if the second argument isn't a substring of the first. Stringifies non-string inputs. Uses UTF-8 encoding to count characters, not bytes.
+        (class=string #args=2) Returns the index (1-based) of the second argument within the first. Returns -1 if the second argument isn't a substring of the first. Stringifies non-string scalar inputs; raises an error if either argument is an array or map. Uses UTF-8 encoding to count characters, not bytes.
        Examples:
        index("abcde", "e") gives 5
        index("abcde", "x") gives -1
        index(12345, 34) gives 3
        index("fort", "t") gives 5
+       index([1,2,3], 2) gives (error)
 
    1mint0m
         (class=conversion #args=1,2) Convert int/float/bool/string to int. If the second argument is omitted and the first argument is a string, base is inferred from the first argument's prefix. If the second argument is provided and the first argument is a string, the second argument is used as the base. If the second argument is provided and the first argument is not a string, the second argument is ignored.
@@ -3850,5 +3852,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-05-17                         4mMILLER24m(1)
+                                  2026-06-19                         4mMILLER24m(1)
 </pre>

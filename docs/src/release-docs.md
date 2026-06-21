@@ -24,6 +24,8 @@ If your `mlr version` says something like `Miller v5.10.2` or `mlr 6.0.0`, witho
 | Release | Docs                                                                | Release notes |
 |---------|---------------------------------------------------------------------|---------------|
 main      | [main branch](https://miller.readthedocs.io/en/main)                | N/A |
+6.19.0     | [Miller 6.19.0](https://miller.readthedocs.io/en/6.19.0)           | [Miller 6.19.0: Performance improvements, `--omd-aligned` flag, bugfixes](https://github.com/johnkerl/miller/releases/tag/v6.19.0) |
+6.18.1     | [Miller 6.18.1](https://miller.readthedocs.io/en/6.18.1)           | [v6.18.1: DKVPX file format; misc. features and bugfixes](https://github.com/johnkerl/miller/releases/tag/v6.18.1) |
 6.17.0     | [Miller 6.17.0](https://miller.readthedocs.io/en/6.17.0)           | [Miller 6.17.0: YAML and DCF file formats; performance improvements; bugfixes](https://github.com/johnkerl/miller/releases/tag/v6.17.0) |
 6.16.0     | [Miller 6.16.0](https://miller.readthedocs.io/en/6.16.0)           | [Miller 6.16.0: Snap support via `snap install miller`](https://github.com/johnkerl/miller/releases/tag/v6.16.0) |
 6.15.0     | [Miller 6.15.0](https://miller.readthedocs.io/en/6.15.0)           | [Miller 6.15.0: Fix double quotes in CSV comments and `mlr -I` mode preservation; `sort -b`](https://github.com/johnkerl/miller/releases/tag/v6.15.0) |
