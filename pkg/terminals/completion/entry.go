@@ -74,13 +74,16 @@ Generates a shell tab-completion script for Miller.
 
 Bash:
   Add to your ~/.bashrc:
-    source <(mlr completion bash)
+    eval "$(mlr completion bash)"
   Or install system-wide:
     mlr completion bash > /etc/bash_completion.d/mlr
+  Note: prefer 'eval' over 'source <(mlr completion bash)'. The latter
+  silently fails on the bash 3.2 that ships with macOS, where sourcing from a
+  process-substitution FIFO can read nothing.
 
 Zsh:
   Add to your ~/.zshrc (with completion initialized via 'autoload -U compinit; compinit'):
-    source <(mlr completion zsh)
+    eval "$(mlr completion zsh)"
   Or place the output on your $fpath, e.g.:
     mlr completion zsh > "${fpath[1]}/_mlr"
 

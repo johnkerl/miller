@@ -27,6 +27,7 @@
 package completion
 
 import (
+	"sort"
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
@@ -87,20 +88,14 @@ func Complete(words []string, cword int) Result {
 
 	// Walk the words strictly before the cursor to classify the cursor's
 	// context.
-	end := cword
-	if end < 0 {
-		end = 0
-	}
-	if end > len(words) {
-		end = len(words)
-	}
+	end := min(max(cword, 0), len(words))
 	ctx := walk(words, end)
 
 	switch ctx.kind {
 
 	case ctxMainOrVerb:
 		if strings.HasPrefix(cur, "-") {
-			return Result{DirectiveCandidates, filterByPrefix(mainFlagNames(), cur)}
+			return Result{DirectiveCandidates, filterByPrefix(mainFlagNames(cur), cur)}
 		}
 		return Result{DirectiveCandidates, filterByPrefix(verbNames(), cur)}
 
@@ -231,12 +226,21 @@ func filterByPrefix(candidates []string, cur string) []string {
 	return out
 }
 
-// mainFlagNames returns all main-flag spellings.
-func mainFlagNames() []string {
-	return cli.FLAG_TABLE.GetFlagNames()
+// mainFlagNames returns main-flag spellings to offer for the current word,
+// sorted for a navigable display. The numerous format-conversion keystroke-saver
+// flags (--c2j, --x2y, ...) are included only once the user has typed a
+// disambiguating character beyond the leading dashes, so a bare "-"/"--" yields
+// a manageable list.
+func mainFlagNames(cur string) []string {
+	includeSuppressed := strings.TrimLeft(cur, "-") != ""
+	names := cli.FLAG_TABLE.GetFlagNames(includeSuppressed)
+	sort.Strings(names)
+	return names
 }
 
-// verbNames returns all verb names.
+// verbNames returns all verb names, sorted.
 func verbNames() []string {
-	return transformers.GetVerbNames()
+	names := transformers.GetVerbNames()
+	sort.Strings(names)
+	return names
 }
