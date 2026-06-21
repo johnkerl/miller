@@ -75,6 +75,7 @@ const (
 type context struct {
 	kind contextKind
 	verb string // set when kind == ctxVerbFlags
+	flag string // set when kind == ctxFlagValue: the arg-taking flag being valued
 }
 
 // Complete is the entry point for the engine. words is the full argv as the
@@ -111,8 +112,12 @@ func Complete(words []string, cword int) Result {
 		return Result{DirectiveDefault, filterByPrefix([]string{"then"}, cur)}
 
 	case ctxFlagValue:
-		// Best-effort: most arg-taking flags want a string or filename. Defer
-		// to the shell's filename completion.
+		// If the flag's argument is a known enumerated set (file formats,
+		// separator aliases), offer those values. Otherwise defer to the
+		// shell's filename completion.
+		if values := flagValueCandidates(ctx.flag); values != nil {
+			return Result{DirectiveCandidates, filterByPrefix(values, cur)}
+		}
 		return Result{DirectiveFiles, nil}
 
 	case ctxFiles:
@@ -145,7 +150,7 @@ func walk(words []string, end int) context {
 				if found && takesArg {
 					if i+1 >= end {
 						// The value is the cursor word.
-						return context{kind: ctxFlagValue}
+						return context{kind: ctxFlagValue, flag: tok}
 					}
 					i += 2
 					continue
@@ -191,7 +196,7 @@ func walk(words []string, end int) context {
 			found, takesArg := verbFlagTakesArg(curVerb, tok)
 			if found && takesArg {
 				if i+1 >= end {
-					return context{kind: ctxFlagValue}
+					return context{kind: ctxFlagValue, verb: curVerb, flag: tok}
 				}
 				i += 2
 				continue

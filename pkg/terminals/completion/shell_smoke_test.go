@@ -178,16 +178,24 @@ func TestBashShim(t *testing.T) {
 	})
 
 	// File-completion directives (the bash 3.2 'no compopt' path uses
-	// compgen -f). Run in a temp dir with known files for determinism.
-	t.Run("file completion after arg-taking flag", func(t *testing.T) {
+	// compgen -f). --from takes a filename argument, so it defers to file
+	// completion. Run in a temp dir with known files for determinism.
+	t.Run("file completion after filename flag", func(t *testing.T) {
 		dataDir := t.TempDir()
 		for _, name := range []string{"alpha.csv", "beta.csv"} {
 			if err := os.WriteFile(filepath.Join(dataDir, name), nil, 0o644); err != nil {
 				t.Fatal(err)
 			}
 		}
-		got := runBashCompletion(t, scriptPath, mlrBin, dataDir, []string{"mlr", "--ifs", ""}, 2)
+		got := runBashCompletion(t, scriptPath, mlrBin, dataDir, []string{"mlr", "--from", ""}, 2)
 		containsAll(t, got, []string{"alpha.csv", "beta.csv"})
+	})
+
+	// Enum-value completion: an arg-taking flag whose values are a known set
+	// (here file formats) offers those values rather than filenames.
+	t.Run("enum value completion for format flag", func(t *testing.T) {
+		got := runBashCompletion(t, scriptPath, mlrBin, "", []string{"mlr", "-i", ""}, 2)
+		containsAll(t, got, []string{"csv", "json", "tsv"})
 	})
 
 	t.Run("then plus files inside verb", func(t *testing.T) {

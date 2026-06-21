@@ -109,6 +109,22 @@ mlr --icsv cat -n then head -n 10 then <b>TAB</b>
 altkv      cat        count          cut        ...
 </pre>
 
+For flags whose argument is a known set of values, <b>TAB</b> offers those
+values. Format flags (`-i`, `-o`, `--io`) offer file-format names:
+
+<pre class="pre-non-highlight-non-pair">
+mlr -i <b>TAB</b>
+csv   csvlite   dcf   dkvp   dkvpx   gen   json   markdown   nidx   pprint   tsv   xtab   yaml
+</pre>
+
+and separator flags (`--ifs`, `--ofs`, `--ips`, and so on) offer the named
+separator aliases:
+
+<pre class="pre-non-highlight-non-pair">
+mlr --ifs <b>TAB</b>
+comma   pipe   semicolon   space   tab   ...
+</pre>
+
 ## Generating the scripts
 
 The `mlr completion` command prints the scripts, and `mlr completion --help`
@@ -150,9 +166,10 @@ verb names after 'then', and filenames where appropriate.
   This means completion stays in sync with Miller's flags and verbs
   automatically -- there is no separate list to maintain.
 
-* Value completion for arg-taking flags falls back to filename completion. For
-  example, after `mlr --ifs` the shell offers filenames; it does not yet offer,
-  say, the named separators like `pipe` or `tab`.
+* Value completion is offered for flags with a known set of values (file
+  formats for `-i`/`-o`/`--io`, separator aliases for `--ifs` and friends).
+  Other arg-taking flags fall back to filename completion; per-verb argument
+  values (such as field names) are not yet completed.
 
 * The `mlr completion complete ...` subcommand is an internal interface used by
   the generated scripts; it is not intended to be run directly.

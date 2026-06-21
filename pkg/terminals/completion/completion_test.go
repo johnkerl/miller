@@ -41,8 +41,8 @@ func TestContextDirectives(t *testing.T) {
 			mustHave: []string{"cat", "head"},
 		},
 		{
-			name:      "main flag taking arg yields file completion",
-			words:     []string{"mlr", "--ifs", ""},
+			name:      "main flag taking a filename arg yields file completion",
+			words:     []string{"mlr", "--from", ""},
 			wantDir:   DirectiveFiles,
 			emptyCand: true,
 		},
@@ -149,6 +149,83 @@ func TestPutArityOverride(t *testing.T) {
 	// And it should be offered as a candidate.
 	if !slices.Contains(verbFlagNames("put"), "-s") {
 		t.Errorf("put -s missing from candidates %v", verbFlagNames("put"))
+	}
+}
+
+// TestFlagValueCompletion verifies enum-value completion for arg-taking main
+// flags: file formats for -i/-o/--io and separator aliases for --ifs etc.,
+// with a fallback to filename completion for non-enum flags.
+func TestFlagValueCompletion(t *testing.T) {
+	tests := []struct {
+		name     string
+		words    []string
+		wantDir  Directive
+		mustHave []string
+		mustLack []string
+	}{
+		{
+			name:     "format flag -i offers file formats",
+			words:    []string{"mlr", "-i", ""},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"csv", "json", "tsv", "pprint"},
+			mustLack: []string{"comma"},
+		},
+		{
+			name:     "format flag --io offers file formats",
+			words:    []string{"mlr", "--io", "js"},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"json"},
+			mustLack: []string{"csv"},
+		},
+		{
+			name:     "separator flag --ifs offers aliases",
+			words:    []string{"mlr", "--ifs", ""},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"comma", "tab", "pipe", "semicolon"},
+		},
+		{
+			name:     "separator flag --ofs prefix-filters aliases",
+			words:    []string{"mlr", "--ofs", "co"},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"colon", "comma"},
+			mustLack: []string{"tab", "pipe"},
+		},
+		{
+			name:     "regex separator flag offers regex aliases",
+			words:    []string{"mlr", "--ifs-regex", ""},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"spaces", "tabs", "whitespace"},
+		},
+		{
+			name:    "non-enum flag --ofmt falls back to files",
+			words:   []string{"mlr", "--ofmt", ""},
+			wantDir: DirectiveFiles,
+		},
+		{
+			name:    "filename flag --from falls back to files",
+			words:   []string{"mlr", "--from", ""},
+			wantDir: DirectiveFiles,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := Complete(tc.words, len(tc.words)-1)
+			if got.Directive != tc.wantDir {
+				t.Errorf("directive: got %q, want %q (candidates=%v)",
+					got.Directive, tc.wantDir, got.Candidates)
+			}
+			for _, want := range tc.mustHave {
+				if !slices.Contains(got.Candidates, want) {
+					t.Errorf("missing expected value %q in %v", want, got.Candidates)
+				}
+			}
+			for _, lack := range tc.mustLack {
+				if slices.Contains(got.Candidates, lack) {
+					t.Errorf("unexpected value %q in %v", lack, got.Candidates)
+				}
+			}
+		})
 	}
 }
 
