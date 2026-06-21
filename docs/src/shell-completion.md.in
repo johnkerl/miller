@@ -68,16 +68,13 @@ mlr <b>TAB</b>
 altkv      cat        count          cut        ...
 GENMD-EOF
 
-A leading dash offers main flags:
+A leading dash offers main flags, including the format-conversion
+keystroke-savers (`--c2j`, `--x2y`, and so on):
 
 GENMD-CARDIFY
 mlr --c<b>TAB</b>
---c2c   --csv   --csvlite   ...
+--c2b   --c2c   --c2d   --c2j   --c2p   ...   --csv   --csvlite
 GENMD-EOF
-
-The numerous format-conversion keystroke-savers (`--c2j`, `--x2y`, and so on)
-are hidden when you complete a bare `-` or `--`, to keep the list manageable;
-they reappear as soon as you type a disambiguating character such as `--c2`.
 
 Inside a verb, <b>TAB</b> offers that verb's flags:
 

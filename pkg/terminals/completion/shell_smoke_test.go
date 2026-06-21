@@ -162,17 +162,14 @@ func TestBashShim(t *testing.T) {
 		containsAll(t, got, []string{"-n", "--filename"})
 	})
 
-	t.Run("main flags on bare dash exclude conversion matrix", func(t *testing.T) {
+	t.Run("main flags on bare dash include all flags", func(t *testing.T) {
 		got := runBashCompletion(t, scriptPath, mlrBin, "", []string{"mlr", "-"}, 1)
-		containsAll(t, got, []string{"--icsv", "--ojson"})
-		for _, c := range got {
-			if c == "--m2j" {
-				t.Errorf("suppressed conversion flag --m2j should not appear on bare '-'")
-			}
-		}
+		// Includes ordinary flags as well as the format-conversion
+		// keystroke-savers (--c2j, --m2j, ...).
+		containsAll(t, got, []string{"--icsv", "--ojson", "--m2j", "--c2p"})
 	})
 
-	t.Run("conversion matrix returns once disambiguated", func(t *testing.T) {
+	t.Run("conversion matrix narrows by prefix", func(t *testing.T) {
 		got := runBashCompletion(t, scriptPath, mlrBin, "", []string{"mlr", "--m2"}, 1)
 		containsAll(t, got, []string{"--m2j", "--m2p"})
 	})

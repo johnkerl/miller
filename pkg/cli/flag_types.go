@@ -534,13 +534,9 @@ func (flag *Flag) TakesArg() bool {
 
 // GetFlagNames returns every spelling of every main flag (primary names and
 // alternate names), de-duplicated, for use as shell-completion candidates.
-//
-// When includeSuppressed is false, flags marked suppressFlagEnumeration are
-// omitted. Those are the ~100 format-conversion keystroke-savers (e.g. --c2j,
-// --x2y) which are too numerous to enumerate usefully -- the same reason they
-// are hidden from `mlr help flags`. Completion hides them for a bare "-"/"--"
-// but includes them once the user has typed a disambiguating character.
-func (ft *FlagTable) GetFlagNames(includeSuppressed bool) []string {
+// This includes the format-conversion keystroke-savers (e.g. --c2j, --x2y)
+// even though they are suppressed from `mlr help flags` enumeration.
+func (ft *FlagTable) GetFlagNames() []string {
 	names := make([]string, 0)
 	seen := make(map[string]bool)
 	add := func(name string) {
@@ -551,9 +547,6 @@ func (ft *FlagTable) GetFlagNames(includeSuppressed bool) []string {
 	}
 	for _, section := range ft.sections {
 		for _, flag := range section.flags {
-			if flag.suppressFlagEnumeration && !includeSuppressed {
-				continue
-			}
 			add(flag.name)
 			for _, altName := range flag.altNames {
 				add(altName)
