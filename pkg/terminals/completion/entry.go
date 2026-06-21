@@ -82,10 +82,12 @@ Bash:
   process-substitution FIFO can read nothing.
 
 Zsh:
-  Add to your ~/.zshrc (with completion initialized via 'autoload -U compinit; compinit'):
+  Add to your ~/.zshrc:
     eval "$(mlr completion zsh)"
   Or place the output on your $fpath, e.g.:
     mlr completion zsh > "${fpath[1]}/_mlr"
+  The script initializes zsh's completion system (compinit) if your startup
+  files have not done so already.
 
 Completion is context-aware across Miller's then-chains: it offers main flags
 and verb names before the first verb, the current verb's flags inside a verb,
