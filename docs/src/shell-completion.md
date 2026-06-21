@@ -17,9 +17,10 @@ Quick links:
 # Shell completion
 
 Miller can generate tab-completion scripts for `bash` and `zsh`. Once installed,
-pressing <b>TAB</b> completes Miller's main flags, verb names, each verb's own
-flags, the `then` keyword, and filenames -- and it does so in a way that
-understands Miller's [then-chains](reference-main-then-chaining.md).
+pressing <b>TAB</b> completes Miller's main flags, verb names, subcommands like
+`help` and `version`, each verb's own flags, the `then` keyword, and filenames
+-- and it does so in a way that understands Miller's
+[then-chains](reference-main-then-chaining.md).
 
 ## Why this is more than the usual flag completion
 
@@ -34,10 +35,12 @@ So the same word can mean different things depending on where it sits. Miller's
 completion walks the command line left-to-right and offers candidates
 appropriate to the cursor's position:
 
-* Before the first verb: main flags (e.g. `--icsv`) and verb names (e.g. `cat`).
+* Before the first verb: main flags (e.g. `--icsv`), verb names (e.g. `cat`),
+  and subcommands (e.g. `help`, `version`, `repl`).
 * Inside a verb: that verb's own flags, plus `then` and filenames.
 * Right after `then`: verb names.
-* As the argument to a flag that takes one (e.g. `mlr --ifs`): filenames.
+* As the argument to a flag that takes one (e.g. `mlr --ifs`): the flag's
+  values where these are a known set, otherwise filenames.
 
 ## Installing for bash
 
@@ -77,11 +80,19 @@ startup files have not already done so, so it works even with a minimal
 
 ## What completion looks like
 
-Before the first verb, <b>TAB</b> offers verb names:
+Before the first verb, <b>TAB</b> offers verb names along with subcommands like
+`help` and `version`:
 
 <pre class="pre-non-highlight-non-pair">
 mlr <b>TAB</b>
-altkv      cat        count          cut        ...
+altkv      cat        completion     count      ...      help      version
+</pre>
+
+The top-level help and version flags are offered too:
+
+<pre class="pre-non-highlight-non-pair">
+mlr --v<b>TAB</b>
+--value-color   --version   --vflatsep
 </pre>
 
 A leading dash offers main flags, including the format-conversion

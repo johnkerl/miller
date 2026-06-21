@@ -157,6 +157,14 @@ func TestBashShim(t *testing.T) {
 		containsAll(t, got, []string{"cat", "sort", "put"})
 	})
 
+	t.Run("terminal subcommands and flags", func(t *testing.T) {
+		got := runBashCompletion(t, scriptPath, mlrBin, "", []string{"mlr", ""}, 1)
+		containsAll(t, got, []string{"help", "version", "repl"})
+
+		gotFlags := runBashCompletion(t, scriptPath, mlrBin, "", []string{"mlr", "-"}, 1)
+		containsAll(t, gotFlags, []string{"-h", "--help", "--version"})
+	})
+
 	t.Run("verb flags inside a verb", func(t *testing.T) {
 		got := runBashCompletion(t, scriptPath, mlrBin, "", []string{"mlr", "cat", "-"}, 2)
 		containsAll(t, got, []string{"-n", "--filename"})

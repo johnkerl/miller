@@ -123,6 +123,67 @@ func TestContextDirectives(t *testing.T) {
 	}
 }
 
+// TestTerminalCompletion verifies that terminal subcommands (mlr help, mlr
+// version, ...) and the top-level terminal flags (-h, --version, ...) are
+// offered as completions -- and only where they are valid.
+func TestTerminalCompletion(t *testing.T) {
+	tests := []struct {
+		name     string
+		words    []string
+		mustHave []string
+		mustLack []string
+	}{
+		{
+			name:     "first word offers terminals alongside verbs",
+			words:    []string{"mlr", ""},
+			mustHave: []string{"cat", "help", "version", "repl", "completion"},
+		},
+		{
+			name:     "first word prefix matches both verb and terminal",
+			words:    []string{"mlr", "he"},
+			mustHave: []string{"head", "help"},
+		},
+		{
+			name:     "leading dash offers terminal flags",
+			words:    []string{"mlr", "-"},
+			mustHave: []string{"-h", "--help", "--version", "--bare-version", "-L", "-F"},
+		},
+		{
+			name:     "version flag prefix",
+			words:    []string{"mlr", "--ve"},
+			mustHave: []string{"--version"},
+			mustLack: []string{"--bare-version"},
+		},
+		{
+			name:     "terminals not offered after then",
+			words:    []string{"mlr", "cat", "then", ""},
+			mustHave: []string{"head", "sort"},
+			mustLack: []string{"help", "version", "repl"},
+		},
+		{
+			name:     "terminals not offered in main region after a verb",
+			words:    []string{"mlr", "cat", "--", ""},
+			mustLack: []string{"help", "version"},
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := Complete(tc.words, len(tc.words)-1)
+			for _, want := range tc.mustHave {
+				if !slices.Contains(got.Candidates, want) {
+					t.Errorf("missing expected candidate %q in %v", want, got.Candidates)
+				}
+			}
+			for _, lack := range tc.mustLack {
+				if slices.Contains(got.Candidates, lack) {
+					t.Errorf("unexpected candidate %q in %v", lack, got.Candidates)
+				}
+			}
+		})
+	}
+}
+
 // TestAdversarialFlagValue verifies that a verb flag's argument value which
 // happens to look like the chain keyword `then` is treated as a value, not as a
 // verb-chain separator. This requires correct per-verb arity.

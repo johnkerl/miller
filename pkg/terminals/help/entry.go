@@ -184,6 +184,19 @@ func init() {
 	}
 }
 
+// GetTerminalFlagNames returns the top-level help flags that short-circuit
+// normal command-line processing: "-h"/"--help" and the shorthands such as
+// "-l" (for "help list-verbs") and "-F" (for "help usage-functions"). These
+// are exposed for shell-completion candidates (pkg/terminals/completion). The
+// shorthands are derived from shorthandLookupTable so the list can't drift.
+func GetTerminalFlagNames() []string {
+	names := []string{"-h", "--help"}
+	for _, sinfo := range shorthandLookupTable.shorthandInfos {
+		names = append(names, sinfo.shorthand)
+	}
+	return names
+}
+
 // For things like 'mlr help foo', invoked through the terminals framework which
 // goes through our HelpMain().  Here, the args are the terminal part of the full
 // Miller command line: if the latter was "mlr --some-flag help foo bar" then

@@ -31,6 +31,8 @@ import (
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/terminals/help"
+	"github.com/johnkerl/miller/v6/pkg/terminals/registry"
 	"github.com/johnkerl/miller/v6/pkg/transformers"
 )
 
@@ -73,9 +75,10 @@ const (
 )
 
 type context struct {
-	kind contextKind
-	verb string // set when kind == ctxVerbFlags
-	flag string // set when kind == ctxFlagValue: the arg-taking flag being valued
+	kind    contextKind
+	verb    string // set when kind == ctxVerbFlags
+	flag    string // set when kind == ctxFlagValue: the arg-taking flag being valued
+	sawVerb bool   // for kind == ctxMainOrVerb: whether a verb has appeared yet
 }
 
 // Complete is the entry point for the engine. words is the full argv as the
@@ -96,7 +99,17 @@ func Complete(words []string, cword int) Result {
 
 	case ctxMainOrVerb:
 		if strings.HasPrefix(cur, "-") {
-			return Result{DirectiveCandidates, filterByPrefix(mainFlagNames(), cur)}
+			// Main flags plus the top-level terminal flags (-h, --help,
+			// --version, the help shorthands, ...).
+			cands := sortedUnion(mainFlagNames(), terminalFlagNames())
+			return Result{DirectiveCandidates, filterByPrefix(cands, cur)}
+		}
+		// Verb names, plus terminal subcommand names (help, version, ...) when
+		// no verb has appeared yet -- terminals are valid only as the first
+		// non-flag token.
+		if !ctx.sawVerb {
+			cands := sortedUnion(verbNames(), terminalNames())
+			return Result{DirectiveCandidates, filterByPrefix(cands, cur)}
 		}
 		return Result{DirectiveCandidates, filterByPrefix(verbNames(), cur)}
 
@@ -134,6 +147,10 @@ func walk(words []string, end int) context {
 	i := 1
 	inVerb := false
 	curVerb := ""
+	// sawVerb records whether a verb has been seen yet. Terminal subcommands
+	// (mlr help, mlr version, ...) are valid only as the first non-flag token,
+	// i.e. before any verb, so they should be offered only while !sawVerb.
+	sawVerb := false
 
 	for i < end {
 		tok := words[i]
@@ -166,12 +183,14 @@ func walk(words []string, end int) context {
 				}
 				curVerb = words[i]
 				inVerb = true
+				sawVerb = true
 				i++
 				continue
 			}
 			// First verb.
 			curVerb = tok
 			inVerb = true
+			sawVerb = true
 			i++
 			continue
 		}
@@ -213,7 +232,7 @@ func walk(words []string, end int) context {
 	if inVerb {
 		return context{kind: ctxVerbFlags, verb: curVerb}
 	}
-	return context{kind: ctxMainOrVerb}
+	return context{kind: ctxMainOrVerb, sawVerb: sawVerb}
 }
 
 // filterByPrefix returns the candidates that have cur as a prefix, preserving
@@ -245,4 +264,31 @@ func verbNames() []string {
 	names := transformers.GetVerbNames()
 	sort.Strings(names)
 	return names
+}
+
+// terminalNames returns the terminal subcommand names (help, version, ...).
+func terminalNames() []string {
+	return registry.Names
+}
+
+// terminalFlagNames returns the top-level terminal flags: -h/--help and the
+// help shorthands, plus the version flags.
+func terminalFlagNames() []string {
+	return append(help.GetTerminalFlagNames(), registry.VersionFlagNames...)
+}
+
+// sortedUnion merges the given name lists, de-duplicates, and sorts the result.
+func sortedUnion(lists ...[]string) []string {
+	seen := make(map[string]bool)
+	out := make([]string, 0)
+	for _, list := range lists {
+		for _, name := range list {
+			if !seen[name] {
+				seen[name] = true
+				out = append(out, name)
+			}
+		}
+	}
+	sort.Strings(out)
+	return out
 }
