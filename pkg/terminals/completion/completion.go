@@ -72,13 +72,18 @@ const (
 	ctxFlagValue
 	// ctxFiles: in the trailing data-file-names region.
 	ctxFiles
+	// ctxTerminalArgs: after a terminal subcommand (mlr help, mlr completion,
+	// ...), which consumes the rest of the command line.
+	ctxTerminalArgs
 )
 
 type context struct {
-	kind    contextKind
-	verb    string // set when kind == ctxVerbFlags
-	flag    string // set when kind == ctxFlagValue: the arg-taking flag being valued
-	sawVerb bool   // for kind == ctxMainOrVerb: whether a verb has appeared yet
+	kind         contextKind
+	verb         string   // set when kind == ctxVerbFlags
+	flag         string   // set when kind == ctxFlagValue: the arg-taking flag being valued
+	sawVerb      bool     // for kind == ctxMainOrVerb: whether a verb has appeared yet
+	terminal     string   // set when kind == ctxTerminalArgs: the terminal name
+	terminalArgs []string // for kind == ctxTerminalArgs: words after the terminal, before the cursor
 }
 
 // Complete is the entry point for the engine. words is the full argv as the
@@ -135,6 +140,9 @@ func Complete(words []string, cword int) Result {
 
 	case ctxFiles:
 		return Result{DirectiveFiles, nil}
+
+	case ctxTerminalArgs:
+		return completeTerminalArgs(ctx.terminal, ctx.terminalArgs, cur)
 	}
 
 	return Result{DirectiveFiles, nil}
@@ -186,6 +194,12 @@ func walk(words []string, end int) context {
 				sawVerb = true
 				i++
 				continue
+			}
+			// First non-flag token. A terminal subcommand (mlr help, mlr
+			// version, ...) is valid only here; everything after it belongs to
+			// that terminal.
+			if !sawVerb && isTerminalName(tok) {
+				return context{kind: ctxTerminalArgs, terminal: tok, terminalArgs: words[i+1 : end]}
 			}
 			// First verb.
 			curVerb = tok

@@ -95,6 +95,20 @@ mlr --v<b>TAB</b>
 --value-color   --version   --vflatsep
 </pre>
 
+The `help` subcommand completes its topics, and topics that take a name
+argument complete that too:
+
+<pre class="pre-non-highlight-non-pair">
+mlr help <b>TAB</b>
+flags   list-verbs   verb   function   keyword   ...
+
+mlr help verb <b>TAB</b>
+altkv   bar   cat   count   cut   ...
+
+mlr help function strl<b>TAB</b>
+strlen
+</pre>
+
 A leading dash offers main flags, including the format-conversion
 keystroke-savers (`--c2j`, `--x2y`, and so on):
 

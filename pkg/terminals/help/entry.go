@@ -184,6 +184,34 @@ func init() {
 	}
 }
 
+// GetTopicNames returns the user-facing `mlr help {topic}` topic names (the
+// internal docgen-only topics are excluded). For shell-completion of
+// `mlr help <TAB>`.
+func GetTopicNames() []string {
+	names := []string{}
+	for _, section := range handlerLookupTable.sections {
+		if section.internal {
+			continue
+		}
+		for _, info := range section.handlerInfos {
+			names = append(names, info.name)
+		}
+	}
+	return names
+}
+
+// GetFunctionNames returns all DSL built-in function names, for shell-completion
+// of `mlr help function {name}`.
+func GetFunctionNames() []string {
+	return cst.BuiltinFunctionManagerInstance.GetBuiltinFunctionNames()
+}
+
+// GetKeywordNames returns all DSL keyword names, for shell-completion of
+// `mlr help keyword {name}`.
+func GetKeywordNames() []string {
+	return cst.GetKeywordNames()
+}
+
 // GetTerminalFlagNames returns the top-level help flags that short-circuit
 // normal command-line processing: "-h"/"--help" and the shorthands such as
 // "-l" (for "help list-verbs") and "-F" (for "help usage-functions"). These

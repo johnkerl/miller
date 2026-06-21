@@ -184,6 +184,80 @@ func TestTerminalCompletion(t *testing.T) {
 	}
 }
 
+// TestHelpTopicCompletion verifies completion of `mlr help` topics and their
+// name arguments, plus `mlr completion` subcommands.
+func TestHelpTopicCompletion(t *testing.T) {
+	tests := []struct {
+		name     string
+		words    []string
+		mustHave []string
+		mustLack []string
+	}{
+		{
+			name:     "help topics",
+			words:    []string{"mlr", "help", ""},
+			mustHave: []string{"flags", "verb", "function", "keyword", "list-verbs"},
+		},
+		{
+			name:     "help topic prefix",
+			words:    []string{"mlr", "help", "list-v"},
+			mustHave: []string{"list-verbs"},
+			mustLack: []string{"flags"},
+		},
+		{
+			name:     "help verb takes verb names",
+			words:    []string{"mlr", "help", "verb", ""},
+			mustHave: []string{"cat", "sort", "put"},
+		},
+		{
+			name:     "help function takes function names",
+			words:    []string{"mlr", "help", "function", "strl"},
+			mustHave: []string{"strlen"},
+		},
+		{
+			name:     "help keyword takes keyword names",
+			words:    []string{"mlr", "help", "keyword", ""},
+			mustHave: []string{"ENV", "FILENAME"},
+		},
+		{
+			name:     "help flag takes flag names",
+			words:    []string{"mlr", "help", "flag", "--ic"},
+			mustHave: []string{"--icsv"},
+		},
+		{
+			name:     "help works after a main flag",
+			words:    []string{"mlr", "--icsv", "help", ""},
+			mustHave: []string{"flags", "verb"},
+		},
+		{
+			name:     "completion subcommands",
+			words:    []string{"mlr", "completion", ""},
+			mustHave: []string{"bash", "zsh"},
+		},
+		{
+			name:     "help topic with no name-argument yields nothing",
+			words:    []string{"mlr", "help", "list-verbs", ""},
+			mustLack: []string{"cat", "flags"},
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := Complete(tc.words, len(tc.words)-1)
+			for _, want := range tc.mustHave {
+				if !slices.Contains(got.Candidates, want) {
+					t.Errorf("missing expected candidate %q in %v", want, got.Candidates)
+				}
+			}
+			for _, lack := range tc.mustLack {
+				if slices.Contains(got.Candidates, lack) {
+					t.Errorf("unexpected candidate %q in %v", lack, got.Candidates)
+				}
+			}
+		})
+	}
+}
+
 // TestAdversarialFlagValue verifies that a verb flag's argument value which
 // happens to look like the chain keyword `then` is treated as a value, not as a
 // verb-chain separator. This requires correct per-verb arity.
