@@ -77,7 +77,7 @@ They are memory-friendly, and they don't wait for end of input to produce their 
 * [gap](reference-verbs.md#gap)
 * [grep](reference-verbs.md#grep)
 * [having-fields](reference-verbs.md#having-fields)
-* [head](reference-verbs.md#head)
+* [head](reference-verbs.md#head) -- if -n is non-negative
 * [json-parse](reference-verbs.md#json-parse)
 * [json-stringify](reference-verbs.md#json-stringify)
 * [label](reference-verbs.md#label)
@@ -95,6 +95,7 @@ They are memory-friendly, and they don't wait for end of input to produce their 
 * [skip-trivial-records](reference-verbs.md#skip-trivial-records)
 * [sort-within-records](reference-verbs.md#sort-within-records)
 * [step](reference-verbs.md#step)
+* [tail](reference-verbs.md#tail) -- if invoked with -n +N (start-at-record-n form)
 * [tee](reference-verbs.md#tee)
 * [template](reference-verbs.md#template)
 * [unflatten](reference-verbs.md#unflatten)
@@ -128,7 +129,8 @@ They are memory-unfriendly, and they wait for end of input to produce their outp
 These retain a bounded number of records from one record to the next.
 They are memory-friendly, but they wait for end of input to produce their output.
 
-* [tail](reference-verbs.md#tail)
+* [head](reference-verbs.md#head) -- if -n is negative
+* [tail](reference-verbs.md#tail) -- if not invoked with -n +N
 * [top](reference-verbs.md#top)
 
 ## Non-streaming, retaining some state
