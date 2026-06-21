@@ -78,6 +78,7 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/terminals"
 	"github.com/johnkerl/miller/v6/pkg/terminals/help"
+	"github.com/johnkerl/miller/v6/pkg/terminals/registry"
 	"github.com/johnkerl/miller/v6/pkg/transformers"
 	"github.com/johnkerl/miller/v6/pkg/version"
 )
@@ -145,11 +146,11 @@ func parseCommandLinePassOne(
 		oargi := argi
 
 		if args[argi][0] == '-' {
-			if args[argi] == "--version" {
+			if args[argi] == registry.VersionFlag {
 				// Exiting flag: handle it immediately.
 				fmt.Printf("mlr %s\n", version.STRING)
 				os.Exit(0)
-			} else if args[argi] == "--bare-version" {
+			} else if args[argi] == registry.BareVersionFlag {
 				// Exiting flag: handle it immediately.
 				fmt.Printf("%s\n", version.STRING)
 				os.Exit(0)

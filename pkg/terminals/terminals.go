@@ -8,7 +8,9 @@ import (
 	"os"
 	"runtime"
 
+	"github.com/johnkerl/miller/v6/pkg/terminals/completion"
 	"github.com/johnkerl/miller/v6/pkg/terminals/help"
+	"github.com/johnkerl/miller/v6/pkg/terminals/registry"
 	"github.com/johnkerl/miller/v6/pkg/terminals/regtest"
 	"github.com/johnkerl/miller/v6/pkg/terminals/repl"
 	"github.com/johnkerl/miller/v6/pkg/terminals/script"
@@ -31,12 +33,13 @@ var _TERMINAL_LOOKUP_TABLE = []tTerminalLookupEntry{}
 
 func init() {
 	_TERMINAL_LOOKUP_TABLE = []tTerminalLookupEntry{
-		{"terminal-list", terminalListMain},
-		{"help", help.HelpMain},
-		{"regtest", regtest.RegTestMain},
-		{"repl", repl.ReplMain},
-		{"script", script.ScriptMain},
-		{"version", showVersion},
+		{registry.TerminalList, terminalListMain},
+		{registry.Completion, completion.CompletionMain},
+		{registry.Help, help.HelpMain},
+		{registry.Regtest, regtest.RegTestMain},
+		{registry.Repl, repl.ReplMain},
+		{registry.Script, script.ScriptMain},
+		{registry.Version, showVersion},
 	}
 }
 

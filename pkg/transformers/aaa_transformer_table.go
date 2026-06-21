@@ -113,6 +113,16 @@ func LookUp(verb string) *TransformerSetup {
 	return nil
 }
 
+// GetVerbNames returns all verb names, in table order, for use as
+// shell-completion candidates (pkg/terminals/completion).
+func GetVerbNames() []string {
+	verbNames := make([]string, len(TRANSFORMER_LOOKUP_TABLE))
+	for i, transformerSetup := range TRANSFORMER_LOOKUP_TABLE {
+		verbNames[i] = transformerSetup.Verb
+	}
+	return verbNames
+}
+
 func ListVerbNamesVertically() {
 	for _, transformerSetup := range TRANSFORMER_LOOKUP_TABLE {
 		fmt.Printf("%s\n", transformerSetup.Verb)

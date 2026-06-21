@@ -520,3 +520,98 @@ func (flag *Flag) NilCheck() {
 func NoOpParse1(args []string, argc int, pargi *int, options *TOptions) {
 	*pargi += 1
 }
+
+// Introspection accessors for shell-completion support
+// (pkg/terminals/completion). These expose flag names and arity without
+// invoking the parser functions, which is important since some flag parsers
+// os.Exit on missing arguments.
+
+// TakesArg reports whether the flag consumes a following argument value, e.g.
+// `--ifs {string}` takes an argument whereas `--repifs` does not.
+func (flag *Flag) TakesArg() bool {
+	return flag.arg != ""
+}
+
+// GetFlagNames returns every spelling of every main flag (primary names and
+// alternate names), de-duplicated, for use as shell-completion candidates.
+// This includes the format-conversion keystroke-savers (e.g. --c2j, --x2y)
+// even though they are suppressed from `mlr help flags` enumeration.
+func (ft *FlagTable) GetFlagNames() []string {
+	names := make([]string, 0)
+	seen := make(map[string]bool)
+	add := func(name string) {
+		if name != "" && !seen[name] {
+			seen[name] = true
+			names = append(names, name)
+		}
+	}
+	for _, section := range ft.sections {
+		for _, flag := range section.flags {
+			add(flag.name)
+			for _, altName := range flag.altNames {
+				add(altName)
+			}
+		}
+	}
+	return names
+}
+
+// FlagTakesArg looks up a main flag by any of its spellings. The first return
+// value reports whether the flag is a recognized main flag; the second reports
+// whether it consumes a following argument value. This drives the
+// shell-completion command-line walk without calling the (possibly
+// os.Exit-ing) parser functions.
+func (ft *FlagTable) FlagTakesArg(name string) (found bool, takesArg bool) {
+	for _, section := range ft.sections {
+		for _, flag := range section.flags {
+			if flag.Owns(name) {
+				return true, flag.TakesArg()
+			}
+		}
+	}
+	return false, false
+}
+
+// Main flags whose argument is a known, enumerable set of values. These drive
+// shell-completion value completion (pkg/terminals/completion); they apply only
+// to main flags, not to identically-spelled verb flags (e.g. `mlr uniq -o`
+// takes a field name, unrelated to the main `-o` format flag).
+var (
+	formatValueFlags = map[string]bool{
+		"-i":   true,
+		"-o":   true,
+		"--io": true,
+	}
+	separatorValueFlags = map[string]bool{
+		"--fs":  true,
+		"--ifs": true,
+		"--ofs": true,
+		"--ps":  true,
+		"--ips": true,
+		"--ops": true,
+		"--rs":  true,
+		"--irs": true,
+		"--ors": true,
+	}
+	separatorRegexValueFlags = map[string]bool{
+		"--ifs-regex": true,
+		"--ips-regex": true,
+	}
+)
+
+// FlagValueCandidates returns the enumerated values that the given main flag's
+// argument may take -- file-format names for -i/-o/--io, separator aliases for
+// --ifs and friends, and regex-separator aliases for --ifs-regex/--ips-regex.
+// It returns nil if the flag's argument is not a known enumerable set (in which
+// case shell completion falls back to filenames).
+func FlagValueCandidates(flagName string) []string {
+	switch {
+	case formatValueFlags[flagName]:
+		return GetFileFormatNames()
+	case separatorValueFlags[flagName]:
+		return GetSeparatorAliasNames()
+	case separatorRegexValueFlags[flagName]:
+		return GetSeparatorRegexAliasNames()
+	}
+	return nil
+}

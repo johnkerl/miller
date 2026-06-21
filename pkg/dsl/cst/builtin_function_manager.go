@@ -2628,11 +2628,17 @@ func (mgr *BuiltinFunctionManager) ListBuiltinFunctionNamesVertically() {
 }
 
 func (mgr *BuiltinFunctionManager) ListBuiltinFunctionNamesAsParagraph() {
+	lib.PrintWordsAsParagraph(mgr.GetBuiltinFunctionNames())
+}
+
+// GetBuiltinFunctionNames returns all built-in DSL function names, e.g. for
+// shell-completion of `mlr help function {name}`.
+func (mgr *BuiltinFunctionManager) GetBuiltinFunctionNames() []string {
 	functionNames := make([]string, len(*mgr.lookupTable))
 	for i, builtinFunctionInfo := range *mgr.lookupTable {
 		functionNames[i] = builtinFunctionInfo.name
 	}
-	lib.PrintWordsAsParagraph(functionNames)
+	return functionNames
 }
 
 func (mgr *BuiltinFunctionManager) ListBuiltinFunctionsAsTable() {
