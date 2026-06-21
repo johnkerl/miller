@@ -1,0 +1,158 @@
+<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flags</a>
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verbs</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Functions</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="../release-docs/index.html">Release docs</a>
+</span>
+</div>
+# Shell completion
+
+Miller can generate tab-completion scripts for `bash` and `zsh`. Once installed,
+pressing <b>TAB</b> completes Miller's main flags, verb names, each verb's own
+flags, the `then` keyword, and filenames -- and it does so in a way that
+understands Miller's [then-chains](reference-main-then-chaining.md).
+
+## Why this is more than the usual flag completion
+
+Most command-line tools have a single set of flags: `prog --flag1 --flag2 file`.
+Miller's command line is instead a sequence of contexts:
+
+<pre class="pre-non-highlight-non-pair">
+mlr {main flags} verb1 {verb1 flags} then verb2 {verb2 flags} {filenames}
+</pre>
+
+So the same word can mean different things depending on where it sits. Miller's
+completion walks the command line left-to-right and offers candidates
+appropriate to the cursor's position:
+
+* Before the first verb: main flags (e.g. `--icsv`) and verb names (e.g. `cat`).
+* Inside a verb: that verb's own flags, plus `then` and filenames.
+* Right after `then`: verb names.
+* As the argument to a flag that takes one (e.g. `mlr --ifs`): filenames.
+
+## Installing for bash
+
+Add this to your `~/.bashrc`:
+
+<pre class="pre-non-highlight-non-pair">
+eval "$(mlr completion bash)"
+</pre>
+
+Or install it system-wide (loaded by the `bash-completion` package):
+
+<pre class="pre-non-highlight-non-pair">
+mlr completion bash > /etc/bash_completion.d/mlr
+</pre>
+
+Prefer `eval "$(mlr completion bash)"` over `source <(mlr completion bash)`. The
+latter silently does nothing on the bash 3.2 that ships with macOS, where
+sourcing from a process-substitution file descriptor can read no data.
+
+## Installing for zsh
+
+Add this to your `~/.zshrc`:
+
+<pre class="pre-non-highlight-non-pair">
+eval "$(mlr completion zsh)"
+</pre>
+
+Or place the script on your `$fpath` so zsh autoloads it:
+
+<pre class="pre-non-highlight-non-pair">
+mlr completion zsh > "${fpath[1]}/_mlr"
+</pre>
+
+The generated script initializes zsh's completion system (`compinit`) if your
+startup files have not already done so, so it works even with a minimal
+`~/.zshrc`.
+
+## What completion looks like
+
+Before the first verb, <b>TAB</b> offers verb names:
+
+<pre class="pre-non-highlight-non-pair">
+mlr <b>TAB</b>
+altkv      cat        count          cut        ...
+</pre>
+
+A leading dash offers main flags:
+
+<pre class="pre-non-highlight-non-pair">
+mlr --c<b>TAB</b>
+--c2c   --csv   --csvlite   ...
+</pre>
+
+The numerous format-conversion keystroke-savers (`--c2j`, `--x2y`, and so on)
+are hidden when you complete a bare `-` or `--`, to keep the list manageable;
+they reappear as soon as you type a disambiguating character such as `--c2`.
+
+Inside a verb, <b>TAB</b> offers that verb's flags:
+
+<pre class="pre-non-highlight-non-pair">
+mlr cat -<b>TAB</b>
+-n   -N   -g   --filename   --filenum
+</pre>
+
+After `then`, <b>TAB</b> offers verb names again:
+
+<pre class="pre-non-highlight-non-pair">
+mlr --icsv cat -n then head -n 10 then <b>TAB</b>
+altkv      cat        count          cut        ...
+</pre>
+
+## Generating the scripts
+
+The `mlr completion` command prints the scripts, and `mlr completion --help`
+describes the options:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr completion --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr completion {bash|zsh}
+Generates a shell tab-completion script for Miller.
+
+Bash:
+  Add to your ~/.bashrc:
+    eval "$(mlr completion bash)"
+  Or install system-wide:
+    mlr completion bash > /etc/bash_completion.d/mlr
+  Note: prefer 'eval' over 'source <(mlr completion bash)'. The latter
+  silently fails on the bash 3.2 that ships with macOS, where sourcing from a
+  process-substitution FIFO can read nothing.
+
+Zsh:
+  Add to your ~/.zshrc:
+    eval "$(mlr completion zsh)"
+  Or place the output on your $fpath, e.g.:
+    mlr completion zsh > "${fpath[1]}/_mlr"
+  The script initializes zsh's completion system (compinit) if your startup
+  files have not done so already.
+
+Completion is context-aware across Miller's then-chains: it offers main flags
+and verb names before the first verb, the current verb's flags inside a verb,
+verb names after 'then', and filenames where appropriate.
+</pre>
+
+## Notes
+
+* Completion candidates are produced by Miller itself: the shell scripts simply
+  forward the current command-line words to `mlr` and render what it returns.
+  This means completion stays in sync with Miller's flags and verbs
+  automatically -- there is no separate list to maintain.
+
+* Value completion for arg-taking flags falls back to filename completion. For
+  example, after `mlr --ifs` the shell offers filenames; it does not yet offer,
+  say, the named separators like `pipe` or `tab`.
+
+* The `mlr completion complete ...` subcommand is an internal interface used by
+  the generated scripts; it is not intended to be run directly.
