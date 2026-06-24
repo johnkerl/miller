@@ -446,6 +446,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        --iyaml                  Use YAML format for input data.
        --json or -j or --j2j    Use JSON format for input and output data.
        --jsonl or --l2l         Use JSON Lines format for input and output data.
+       --md or --markdown       Use markdown-tabular format for input and output
+                                data.
        --nidx or --n2n          Use NIDX format for input and output data.
        --oasv or --oasvlite     Use ASV format for output data.
        --ocsv                   Use CSV format for output data.
@@ -568,6 +570,10 @@ This is simply a copy of what you should see on running `man mlr` at a command p
 1mMARKDOWN-ONLY FLAGS0m
        These are flags which are applicable to markdown-tabular format.
 
+       --md-aligned or --markdown-aligned
+                                Use markdown-tabular format for input and output
+                                data, with left-justified and padded columns. Implies
+                                --md, so you do not need to also pass --md.
        --omd-aligned or --omarkdown-aligned
                                 For markdown-tabular output, left-justify cells and
                                 pad each column to a uniform width, making the raw
@@ -1380,6 +1386,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Options:
        -g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
        -n {n} Head-count to print. Default 10.
+                  A negative count, e.g. -n -2, passes through all but the last n records,
+                  optionally by category.
        -h|--help Show this message.
 
    1mhistogram0m
@@ -2225,8 +2233,11 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Usage: mlr tail [options]
        Passes through the last n records, optionally by category.
        Options:
-       -g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
-       -n {n} Head-count to print. Default 10.
+       -g {a,b,c} Optional group-by-field names for tail counts, e.g. a,b,c.
+       -n {n} Tail-count to print. Default 10.
+                  A leading '+' means start at the nth record rather than print
+                  the last n: e.g. -n +3 passes through all but the first 2
+                  records, optionally by category.
        -h|--help Show this message.
 
    1mtee0m
@@ -3852,5 +3863,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-06-19                         4mMILLER24m(1)
+                                  2026-06-24                         4mMILLER24m(1)
 </pre>

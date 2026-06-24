@@ -549,7 +549,7 @@ which renders like this when dropped into various web tools (e.g. github.comment
 ![pix/omd.png](pix/omd.png)
 
 As of Miller 4.3.0, markdown format is supported only for output, not input; as of Miller 6.11.0, markdown format
-is supported for input as well.
+is supported for input as well. Use `--imd` for markdown input, `--omd` for markdown output, or `--md` for both.
 
 By default, markdown cells are not padded -- which renders identically in a Markdown viewer
 but can be awkward to read or maintain as raw text. Use `--omd-aligned` to pad each column
@@ -567,6 +567,13 @@ do not need to pass `--omd` in addition:
 | wye | wye | 3   | 0.204603 | 0.338318 |
 | eks | wye | 4   | 0.381399 | 0.134188 |
 | wye | pan | 5   | 0.573288 | 0.863624 |
+</pre>
+
+Use `--md-aligned` to set both input and output to markdown with aligned output. This implies `--md`, so you
+do not need to pass `--md` in addition:
+
+<pre class="pre-highlight-non-pair">
+<b>mlr --md-aligned cat data/small</b>
 </pre>
 
 ## XTAB: Vertical tabular
