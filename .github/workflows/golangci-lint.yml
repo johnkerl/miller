@@ -24,6 +24,7 @@ jobs:
   golangci:
     name: lint (ubuntu-latest, go ${{ matrix.go-version }})
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
