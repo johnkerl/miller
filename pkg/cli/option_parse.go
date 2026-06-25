@@ -609,6 +609,20 @@ var MarkdownOnlyFlagSection = FlagSection{
 				*pargi += 1
 			},
 		},
+
+		{
+			name:     "--md-aligned",
+			altNames: []string{"--markdown-aligned"},
+			help: "Use markdown-tabular format for input and output data, with " +
+				"left-justified and padded columns. Implies --md, so you do not " +
+				"need to also pass --md.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "markdown"
+				options.WriterOptions.OutputFileFormat = "markdown"
+				options.WriterOptions.MarkdownAlignedOutput = true
+				*pargi += 1
+			},
+		},
 	},
 }
 
@@ -1053,6 +1067,17 @@ var FileFormatFlagSection = FlagSection{
 			altNames: []string{"--omarkdown"},
 			help:     "Use markdown-tabular format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "markdown"
+				*pargi += 1
+			},
+		},
+
+		{
+			name:     "--md",
+			altNames: []string{"--markdown"},
+			help:     "Use markdown-tabular format for input and output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "markdown"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
 			},

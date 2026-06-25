@@ -1,0 +1,157 @@
+# Shell completion
+
+Miller can generate tab-completion scripts for `bash` and `zsh`. Once installed,
+pressing <b>TAB</b> completes Miller's main flags, verb names, subcommands like
+`help` and `version`, each verb's own flags, the `then` keyword, and filenames
+-- and it does so in a way that understands Miller's
+[then-chains](reference-main-then-chaining.md).
+
+## Why this is more than the usual flag completion
+
+Most command-line tools have a single set of flags: `prog --flag1 --flag2 file`.
+
+Miller's command line, by contrast, is instead a [sequence of contexts](#reference-main-overview.md):
+
+GENMD-CARDIFY
+mlr {main flags} verb1 {verb1 flags} then verb2 {verb2 flags} {filenames}
+GENMD-EOF
+
+So the same word can mean different things depending on where it sits. Miller's
+completion walks the command line left-to-right and offers candidates
+appropriate to the cursor's position:
+
+* Before the first verb: main flags (e.g. `--icsv`), verb names (e.g. `cat`),
+  and subcommands (e.g. `help`, `version`, `repl`).
+* Inside a verb: that verb's own flags, plus `then` and filenames.
+* Right after `then`: verb names.
+* As the argument to a flag that takes one (e.g. `mlr --ifs`): the flag's
+  values where these are a known set, otherwise filenames.
+
+## Installing for bash
+
+Add this to your `~/.bashrc`:
+
+GENMD-CARDIFY
+eval "$(mlr completion bash)"
+GENMD-EOF
+
+Or install it system-wide (loaded by the `bash-completion` package):
+
+GENMD-CARDIFY
+mlr completion bash > /etc/bash_completion.d/mlr
+GENMD-EOF
+
+Prefer `eval "$(mlr completion bash)"` over `source <(mlr completion bash)`. The
+latter silently does nothing on the bash 3.2 that ships with macOS, where
+sourcing from a process-substitution file descriptor can read no data.
+
+## Installing for zsh
+
+Add this to your `~/.zshrc`:
+
+GENMD-CARDIFY
+eval "$(mlr completion zsh)"
+GENMD-EOF
+
+Or place the script on your `$fpath` so zsh autoloads it:
+
+GENMD-CARDIFY
+mlr completion zsh > "${fpath[1]}/_mlr"
+GENMD-EOF
+
+The generated script initializes zsh's completion system (`compinit`) if your
+startup files have not already done so, so it works even with a minimal
+`~/.zshrc`.
+
+## What completion looks like
+
+Before the first verb, <b>TAB</b> offers verb names along with subcommands like
+`help` and `version`:
+
+GENMD-CARDIFY
+mlr <b>TAB</b>
+altkv      cat        completion     count      ...      help      version
+GENMD-EOF
+
+The top-level help and version flags are offered too:
+
+GENMD-CARDIFY
+mlr --v<b>TAB</b>
+--value-color   --version   --vflatsep
+GENMD-EOF
+
+The `help` subcommand completes its topics, and topics that take a name
+argument complete that too:
+
+GENMD-CARDIFY
+mlr help <b>TAB</b>
+flags   list-verbs   verb   function   keyword   ...
+
+mlr help verb <b>TAB</b>
+altkv   bar   cat   count   cut   ...
+
+mlr help function strl<b>TAB</b>
+strlen
+GENMD-EOF
+
+A leading dash offers main flags, including the format-conversion
+keystroke-savers (`--c2j`, `--x2y`, and so on):
+
+GENMD-CARDIFY
+mlr --c<b>TAB</b>
+--c2b   --c2c   --c2d   --c2j   --c2p   ...   --csv   --csvlite
+GENMD-EOF
+
+Inside a verb, <b>TAB</b> offers that verb's flags:
+
+GENMD-CARDIFY
+mlr cat -<b>TAB</b>
+-n   -N   -g   --filename   --filenum
+GENMD-EOF
+
+After `then`, <b>TAB</b> offers verb names again:
+
+GENMD-CARDIFY
+mlr --icsv cat -n then head -n 10 then <b>TAB</b>
+altkv      cat        count          cut        ...
+GENMD-EOF
+
+For flags whose argument is a known set of values, <b>TAB</b> offers those
+values. Format flags (`-i`, `-o`, `--io`) offer file-format names:
+
+GENMD-CARDIFY
+mlr -i <b>TAB</b>
+csv   csvlite   dcf   dkvp   dkvpx   gen   json   markdown   nidx   pprint   tsv   xtab   yaml
+GENMD-EOF
+
+and separator flags (`--ifs`, `--ofs`, `--ips`, and so on) offer the named
+separator aliases:
+
+GENMD-CARDIFY
+mlr --ifs <b>TAB</b>
+comma   pipe   semicolon   space   tab   ...
+GENMD-EOF
+
+## Generating the scripts
+
+The `mlr completion` command prints the scripts, and `mlr completion --help`
+describes the options:
+
+GENMD-RUN-COMMAND
+mlr completion --help
+GENMD-EOF
+
+## Notes
+
+* Completion candidates are produced by Miller itself: the shell scripts simply
+  forward the current command-line words to `mlr` and render what it returns.
+  This means completion stays in sync with Miller's flags and verbs
+  automatically -- there is no separate list to maintain.
+
+* Value completion is offered for flags with a known set of values (file
+  formats for `-i`/`-o`/`--io`, separator aliases for `--ifs` and friends).
+  Other arg-taking flags fall back to filename completion; per-verb argument
+  values (such as field names) are not yet completed.
+
+* The `mlr completion complete ...` subcommand is an internal interface used by
+  the generated scripts; it is not intended to be run directly.

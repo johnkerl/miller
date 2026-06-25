@@ -181,6 +181,7 @@ are overridden in all cases by setting output format to `format2`.
 * `--iyaml`: Use YAML format for input data.
 * `--json or -j or --j2j`: Use JSON format for input and output data.
 * `--jsonl or --l2l`: Use JSON Lines format for input and output data.
+* `--md or --markdown`: Use markdown-tabular format for input and output data.
 * `--nidx or --n2n`: Use NIDX format for input and output data.
 * `--oasv or --oasvlite`: Use ASV format for output data.
 * `--ocsv`: Use CSV format for output data.
@@ -289,6 +290,7 @@ These are flags which are applicable to markdown-tabular format.
 
 **Flags:**
 
+* `--md-aligned or --markdown-aligned`: Use markdown-tabular format for input and output data, with left-justified and padded columns. Implies --md, so you do not need to also pass --md.
 * `--omd-aligned or --omarkdown-aligned`: For markdown-tabular output, left-justify cells and pad each column to a uniform width, making the raw markdown source easier to read and maintain. (The rendered table is unaffected.) Implies --omd, so you do not need to also pass --omd.
 
 ## Miscellaneous flags
