@@ -79,6 +79,11 @@ fmt format:
 staticcheck:
 	staticcheck ./pkg/... ./cmd/mlr/...
 
+# golangci-lint -- must match the version pinned in .github/workflows/golangci-lint.yml.
+# Install: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.12.2
+lint:
+	golangci-lint run --timeout=5m ./cmd/mlr ./pkg/...
+
 # ----------------------------------------------------------------
 # For developers before pushing to GitHub.
 #
@@ -125,4 +130,4 @@ release_tarball release-tarball: build check
 
 # ================================================================
 # Go does its own dependency management, outside of make.
-.PHONY: build mlr check unit_test regression_test bench fmt staticcheck dev docs man
+.PHONY: build mlr check unit_test regression_test bench fmt staticcheck lint dev docs man

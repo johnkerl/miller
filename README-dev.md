@@ -14,6 +14,36 @@
 
 The Go implementation is auto-built using GitHub Actions: see [.github/workflows/go.yml](.github/workflows/go.yml). This works splendidly on Linux, MacOS, and Windows.
 
+## golangci-lint
+
+CI also runs `golangci-lint` on every push and PR: see [.github/workflows/golangci-lint.yml](.github/workflows/golangci-lint.yml).
+
+**Version pinning**: The workflow pins a specific `golangci-lint` version (currently `v2.12.2`). To avoid
+local/CI skew — where your machine passes but CI fails, or vice versa — always install the exact version
+from the workflow file before running lint locally.
+
+Install the pinned version (replace `v2.12.2` if the workflow has been updated):
+
+```bash
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.12.2
+```
+
+Verify:
+
+```bash
+golangci-lint --version
+# golangci-lint has version 2.12.2 ...
+```
+
+Run locally with the same flags CI uses:
+
+```bash
+make lint
+# equivalent: golangci-lint run --timeout=5m ./cmd/mlr ./pkg/...
+```
+
+When the workflow bumps the pinned version, re-run the install command with the new version before linting.
+
 # Benefits of porting to Go
 
 * The lack of a streaming (record-by-record) JSON reader in the C implementation ([issue 99](https://github.com/johnkerl/miller/issues/99)) is immediately solved in the Go implementation.

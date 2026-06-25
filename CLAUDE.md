@@ -6,6 +6,29 @@ Miller is a command-line data processing tool for working with CSV, TSV, JSON, a
 
 ## Initial Setup
 
+### Setting Up golangci-lint
+
+CI runs `golangci-lint` at a pinned version — see `.github/workflows/golangci-lint.yml` for the exact version
+(currently `v2.12.2`). **Always install that exact version locally** to avoid skew between local and CI results.
+
+```bash
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.12.2
+```
+
+Verify:
+```bash
+golangci-lint --version
+# golangci-lint has version 2.12.2 ...
+```
+
+Run locally (same flags as CI):
+```bash
+make lint
+# equivalent: golangci-lint run --timeout=5m ./cmd/mlr ./pkg/...
+```
+
+When the CI workflow pins a new version, update your local install to match before running `make lint`.
+
 ### Setting Up staticcheck
 
 The `make staticcheck` target requires the staticcheck tool. To set it up:
@@ -48,6 +71,7 @@ make bench          # Run benchmarks
 ```bash
 make fmt            # Format code with go fmt
 make staticcheck    # Run static analysis (see Initial Setup section above)
+make lint           # Run golangci-lint (see Initial Setup section above)
 ```
 
 ### Full Developer Workflow
