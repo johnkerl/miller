@@ -187,6 +187,12 @@ verbs upgrade independently.
   (e.g. `["csv","tsv","json","jsonl","pprint","markdown","dkvp","nidx","xtab"]`).
   Agents hallucinate *values*, not just flags — emitting the actual enum attacks
   value-hallucination at the source.
+- **Scope: static domains only.** `Values` here is @aborruso's *codelist* — the
+  set fixed by the binary (output formats, compression types). His *constraint*
+  case — values that are only valid given the current input (e.g. a field name
+  for `-g`) — is data-dependent and out of scope for the static catalog; that
+  belongs to `mlr describe` (PR6), which reads the input schema. Keep the line
+  clean: PR3 enums are binary-fixed, never data-derived.
 
 **Emitter.** Prefer `Options` when non-nil; otherwise fall back to `usage_text`.
 Agents always get *something*; no big-bang migration. Optionally render each
