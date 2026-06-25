@@ -1,0 +1,46 @@
+name: golangci-lint
+
+# Runs the Go linter on every push and pull request, in addition to the
+# existing build/test matrix in go.yml. The goal is to catch common style,
+# bug, and performance issues early without forcing developers to install
+# golangci-lint locally.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+# Cancel in-progress runs for the same branch / PR when new commits are
+# pushed; this saves CI minutes and keeps the checks queue short.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  golangci:
+    name: lint (ubuntu-latest, go ${{ matrix.go-version }})
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        go-version: [1.25]
+    steps:
+      - name: Check out source
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+
+      - name: Set up Go ${{ matrix.go-version }}
+        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c
+        with:
+          go-version: ${{ matrix.go-version }}
+          cache: true
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v9.2.1
+        with:
+          version: v2.12.2
+          args: --timeout=5m ./cmd/mlr ./pkg/...
