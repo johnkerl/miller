@@ -67,7 +67,8 @@ func lecatFile(istream *os.File, doColor bool) {
 		if err == io.EOF {
 			break
 		}
-		if c == '\r' {
+		switch c {
+		case '\r':
 			if doColor {
 				fmt.Printf("\033[31;01m") // xterm red
 			}
@@ -75,7 +76,7 @@ func lecatFile(istream *os.File, doColor bool) {
 			if doColor {
 				fmt.Printf("\033[0m")
 			}
-		} else if c == '\n' {
+		case '\n':
 			if doColor {
 				fmt.Printf("\033[32;01m") // xterm green
 			}
@@ -83,7 +84,7 @@ func lecatFile(istream *os.File, doColor bool) {
 			if doColor {
 				fmt.Printf("\033[0m")
 			}
-		} else {
+		default:
 			fmt.Printf("%c", c)
 		}
 	}

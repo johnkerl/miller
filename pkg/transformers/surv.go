@@ -46,30 +46,32 @@ func transformerSurvParseCLI(
 
 	var durationField, statusField string
 
+loop:
 	for argi < argc {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
 			break
 		}
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerSurvUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
-		} else if opt == "-d" {
+		case "-d":
 			if argi+1 >= argc {
 				return nil, cli.VerbErrorf(verb, "-d requires an argument")
 			}
 			argi++
 			durationField = args[argi]
 			argi++
-		} else if opt == "-s" {
+		case "-s":
 			if argi+1 >= argc {
 				return nil, cli.VerbErrorf(verb, "-s requires an argument")
 			}
 			argi++
 			statusField = args[argi]
 			argi++
-		} else {
-			break
+		default:
+			break loop
 		}
 	}
 	*pargi = argi

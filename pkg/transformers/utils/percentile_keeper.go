@@ -84,18 +84,19 @@ func (keeper *PercentileKeeper) EmitLinearlyInterpolated(percentile float64) *ml
 
 // TODO: COMMENT
 func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
-	if name == "min" {
+	switch name {
+	case "min":
 		return keeper.EmitNonInterpolated(0.0)
-	} else if name == "p25" {
+	case "p25":
 		return keeper.EmitNonInterpolated(25.0)
-	} else if name == "median" {
+	case "median":
 		return keeper.EmitNonInterpolated(50.0)
-	} else if name == "p75" {
+	case "p75":
 		return keeper.EmitNonInterpolated(75.0)
-	} else if name == "max" {
+	case "max":
 		return keeper.EmitNonInterpolated(100.0)
 
-	} else if name == "iqr" {
+	case "iqr":
 		p25 := keeper.EmitNonInterpolated(25.0)
 		p75 := keeper.EmitNonInterpolated(75.0)
 		if p25.IsNumeric() && p75.IsNumeric() {
@@ -103,7 +104,7 @@ func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
 		}
 		return mlrval.VOID
 
-	} else if name == "lof" {
+	case "lof":
 		p25 := keeper.EmitNonInterpolated(25.0)
 		iqr := keeper.EmitNamed("iqr")
 		if p25.IsNumeric() && iqr.IsNumeric() {
@@ -111,7 +112,7 @@ func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
 		}
 		return mlrval.VOID
 
-	} else if name == "lif" {
+	case "lif":
 		p25 := keeper.EmitNonInterpolated(25.0)
 		iqr := keeper.EmitNamed("iqr")
 		if p25.IsNumeric() && iqr.IsNumeric() {
@@ -119,7 +120,7 @@ func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
 		}
 		return mlrval.VOID
 
-	} else if name == "uif" {
+	case "uif":
 		p75 := keeper.EmitNonInterpolated(75.0)
 		iqr := keeper.EmitNamed("iqr")
 		if p75.IsNumeric() && iqr.IsNumeric() {
@@ -127,7 +128,7 @@ func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
 		}
 		return mlrval.VOID
 
-	} else if name == "uof" {
+	case "uof":
 		p75 := keeper.EmitNonInterpolated(75.0)
 		iqr := keeper.EmitNamed("iqr")
 		if p75.IsNumeric() && iqr.IsNumeric() {

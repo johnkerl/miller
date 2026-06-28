@@ -85,25 +85,26 @@ func transformerRepeatParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerRepeatUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-n" {
+		case "-n":
 			repeatCount, err = cli.VerbGetIntArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			repeatCountSource = repeatCountFromInt
 
-		} else if opt == "-f" {
+		case "-f":
 			repeatCountFieldName, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			repeatCountSource = repeatCountFromFieldName
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}

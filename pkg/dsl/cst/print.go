@@ -272,11 +272,12 @@ func (root *RootNode) buildPrintxStatementNode(
 
 	if redirectorNode.Type == asts.NodeType(NodeTypeNoOp) {
 		// No > >> or | was provided.
-		if defaultOutputStream == os.Stdout {
+		switch defaultOutputStream {
+		case os.Stdout:
 			retval.printToRedirectFunc = retval.printToStdout
-		} else if defaultOutputStream == os.Stderr {
+		case os.Stderr:
 			retval.printToRedirectFunc = retval.printToStderr
-		} else {
+		default:
 			lib.InternalCodingErrorIf(true)
 		}
 	} else {

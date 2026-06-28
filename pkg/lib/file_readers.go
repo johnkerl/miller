@@ -128,15 +128,16 @@ func escapeFileNameForPopen(filename string) string {
 	var buffer bytes.Buffer
 	foundQuoteOrSpace := false
 	for _, c := range filename {
-		if c == '\'' || c == '"' {
+		switch c {
+		case '\'', '"':
 			buffer.WriteRune('\'')
 			buffer.WriteRune(c)
 			buffer.WriteRune('\'')
 			foundQuoteOrSpace = true
-		} else if c == ' ' {
+		case ' ':
 			buffer.WriteRune(c)
 			foundQuoteOrSpace = true
-		} else {
+		default:
 			buffer.WriteRune(c)
 		}
 	}

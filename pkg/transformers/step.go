@@ -166,11 +166,12 @@ func transformerStepParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerStepUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-a" {
+		case "-a":
 			// Let them do '-a delta -a rsum' or '-a delta,rsum'
 			stepperNames, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
@@ -185,7 +186,7 @@ func transformerStepParseCLI(
 				stepperInputs = append(stepperInputs, stepperInput)
 			}
 
-		} else if opt == "-f" {
+		case "-f":
 			// Let them do '-f x -f y' or '-f x,y'
 			arr, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
@@ -193,7 +194,7 @@ func transformerStepParseCLI(
 			}
 			valueFieldNames = append(valueFieldNames, arr...)
 
-		} else if opt == "-g" {
+		case "-g":
 			// Let them do '-g a -g b' or '-g a,b'
 			arr, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
@@ -201,7 +202,7 @@ func transformerStepParseCLI(
 			}
 			groupByFieldNames = append(groupByFieldNames, arr...)
 
-		} else if opt == "-d" {
+		case "-d":
 			// Let them do '-d 0.8 -d 0.9' or '-d 0.8,0.9'
 			arr, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
@@ -209,7 +210,7 @@ func transformerStepParseCLI(
 			}
 			stringAlphas = append(stringAlphas, arr...)
 
-		} else if opt == "-o" {
+		case "-o":
 			// Let them do '-o fast -o slow' or '-o fast,slow'
 			arr, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
@@ -217,11 +218,11 @@ func transformerStepParseCLI(
 			}
 			ewmaSuffixes = append(ewmaSuffixes, arr...)
 
-		} else if opt == "-F" {
+		case "-F":
 			// As of Miller 6 this happens automatically, but the flag is accepted
 			// as a no-op for backward compatibility with Miller 5 and below.
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}

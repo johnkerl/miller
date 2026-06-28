@@ -70,19 +70,20 @@ func transformerTeeParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerTeeUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-a" {
+		case "-a":
 			appending = true
 			piping = false
 
-		} else if opt == "-p" {
+		case "-p":
 			appending = false
 			piping = true
 
-		} else {
+		default:
 			// This is inelegant. For error-proofing we advance argi already in our
 			// loop (so individual if-statements don't need to). However,
 			// ParseWriterOptions expects it unadvanced.

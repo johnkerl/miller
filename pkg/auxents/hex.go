@@ -40,10 +40,11 @@ func hexMain(args []string) int {
 	verb := args[1]
 	args = args[2:]
 	if len(args) >= 1 {
-		if args[0] == "-r" {
+		switch args[0] {
+		case "-r":
 			doRaw = true
 			args = args[1:]
-		} else if args[0] == "-h" || args[0] == "--help" {
+		case "-h", "--help":
 			hexUsage(verb, os.Stdout, 0)
 		}
 	}
