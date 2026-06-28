@@ -111,13 +111,13 @@ func buildIndex() []IndexEntryForJSON {
 		entries = append(entries, IndexEntryForJSON{Kind: "verb", Name: v.Name, Summary: v.Summary})
 	}
 	for _, f := range cst.BuiltinFunctionManagerInstance.GetFunctionInfosForJSON() {
-		entries = append(entries, IndexEntryForJSON{Kind: "function", Name: f.Name, Summary: indexFirstLine(f.Help)})
+		entries = append(entries, IndexEntryForJSON{Kind: "function", Name: f.Name, Summary: firstLine(f.Help)})
 	}
 	for _, fl := range cli.FLAG_TABLE.GetFlagInfosForJSON() {
-		entries = append(entries, IndexEntryForJSON{Kind: "flag", Name: fl.Name, Summary: indexFirstLine(fl.Help)})
+		entries = append(entries, IndexEntryForJSON{Kind: "flag", Name: fl.Name, Summary: firstLine(fl.Help)})
 	}
 	for _, kw := range cst.GetKeywordInfosForJSON() {
-		entries = append(entries, IndexEntryForJSON{Kind: "keyword", Name: kw.Name, Summary: indexFirstLine(kw.Help)})
+		entries = append(entries, IndexEntryForJSON{Kind: "keyword", Name: kw.Name, Summary: firstLine(kw.Help)})
 	}
 
 	kindOrder := map[string]int{"verb": 0, "function": 1, "flag": 2, "keyword": 3}
@@ -132,9 +132,9 @@ func buildIndex() []IndexEntryForJSON {
 	return entries
 }
 
-// indexFirstLine returns the first non-empty line of s, suitable as a
-// one-liner summary in the index.
-func indexFirstLine(s string) string {
+// firstLine returns the first non-empty line of s, suitable as a one-liner
+// summary in the index and which output.
+func firstLine(s string) string {
 	for _, line := range strings.Split(s, "\n") {
 		if t := strings.TrimSpace(line); t != "" {
 			return t
