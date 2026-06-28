@@ -579,15 +579,16 @@ func helpTypeArithmeticInfoAux(extended bool) {
 			fmt.Printf("%-10s |", mlrvals[i].String())
 		}
 		for j := 0; j < n; j++ {
-			if i == -2 {
+			switch i {
+			case -2:
 				if mlrvals[j].IsVoid() {
 					fmt.Printf("%-10s", "(empty)")
 				} else {
 					fmt.Printf(" %-10s", mlrvals[j].String())
 				}
-			} else if i == -1 {
+			case -1:
 				fmt.Printf(" %-10s", "------")
-			} else {
+			default:
 				sum := bifs.BIF_plus_binary(mlrvals[i], mlrvals[j])
 				if sum.IsVoid() {
 					fmt.Printf(" %-10s", "(empty)")
@@ -631,15 +632,16 @@ func helpTypeArithmeticInfoAux(extended bool) {
 				fmt.Printf("%-10s |", mlrvals[i].String())
 			}
 			for j := 0; j < n; j++ {
-				if i == -2 {
+				switch i {
+				case -2:
 					if mlrvals[j].IsVoid() {
 						fmt.Printf("%-10s", "(empty)")
 					} else {
 						fmt.Printf(" %-10s", mlrvals[j].String())
 					}
-				} else if i == -1 {
+				case -1:
 					fmt.Printf(" %-10s", "------")
-				} else {
+				default:
 
 					inode := cst.BuildMlrvalLiteralNode(mlrvals[i])
 					jnode := cst.BuildMlrvalLiteralNode(mlrvals[j])

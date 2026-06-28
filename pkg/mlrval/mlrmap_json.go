@@ -44,9 +44,10 @@ func (mlrmap *Mlrmap) marshalJSONAux(
 	elementNestingDepth int,
 	outputIsStdout bool,
 ) (string, error) {
-	if jsonFormatting == JSON_MULTILINE {
+	switch jsonFormatting {
+	case JSON_MULTILINE:
 		return mlrmap.marshalJSONAuxMultiline(jsonFormatting, elementNestingDepth, outputIsStdout)
-	} else if jsonFormatting == JSON_SINGLE_LINE {
+	case JSON_SINGLE_LINE:
 		return mlrmap.marshalJSONAuxSingleLine(jsonFormatting, elementNestingDepth, outputIsStdout)
 	}
 	lib.InternalCodingErrorIf(true)

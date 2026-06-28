@@ -59,23 +59,24 @@ func transformerCountSimilarParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerCountSimilarUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-g" {
+		case "-g":
 			groupByFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-o" {
+		case "-o":
 			counterFieldName, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}

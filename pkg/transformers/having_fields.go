@@ -83,11 +83,12 @@ func transformerHavingFieldsParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerHavingFieldsUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "--at-least" {
+		case "--at-least":
 			havingFieldsCriterion = havingFieldsAtLeast
 			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
@@ -95,7 +96,7 @@ func transformerHavingFieldsParseCLI(
 			}
 			regexString = ""
 
-		} else if opt == "--which-are" {
+		case "--which-are":
 			havingFieldsCriterion = havingFieldsWhichAre
 			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
@@ -103,7 +104,7 @@ func transformerHavingFieldsParseCLI(
 			}
 			regexString = ""
 
-		} else if opt == "--at-most" {
+		case "--at-most":
 			havingFieldsCriterion = havingFieldsAtMost
 			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
@@ -111,7 +112,7 @@ func transformerHavingFieldsParseCLI(
 			}
 			regexString = ""
 
-		} else if opt == "--all-matching" {
+		case "--all-matching":
 			havingFieldsCriterion = havingAllFieldsMatching
 			regexString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
@@ -119,7 +120,7 @@ func transformerHavingFieldsParseCLI(
 			}
 			fieldNames = nil
 
-		} else if opt == "--any-matching" {
+		case "--any-matching":
 			havingFieldsCriterion = havingAnyFieldsMatching
 			regexString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
@@ -127,7 +128,7 @@ func transformerHavingFieldsParseCLI(
 			}
 			fieldNames = nil
 
-		} else if opt == "--none-matching" {
+		case "--none-matching":
 			havingFieldsCriterion = havingNoFieldsMatching
 			regexString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
@@ -135,7 +136,7 @@ func transformerHavingFieldsParseCLI(
 			}
 			fieldNames = nil
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
@@ -187,13 +188,14 @@ func NewTransformerHavingFields(
 		tr.numFieldNames = int64(len(fieldNames))
 		tr.fieldNameSet = lib.StringListToSet(fieldNames)
 
-		if havingFieldsCriterion == havingFieldsAtLeast {
+		switch havingFieldsCriterion {
+		case havingFieldsAtLeast:
 			tr.recordTransformerFunc = tr.transformHavingFieldsAtLeast
-		} else if havingFieldsCriterion == havingFieldsWhichAre {
+		case havingFieldsWhichAre:
 			tr.recordTransformerFunc = tr.transformHavingFieldsWhichAre
-		} else if havingFieldsCriterion == havingFieldsAtMost {
+		case havingFieldsAtMost:
 			tr.recordTransformerFunc = tr.transformHavingFieldsAtMost
-		} else {
+		default:
 			lib.InternalCodingErrorIf(true)
 		}
 
@@ -214,13 +216,14 @@ func NewTransformerHavingFields(
 		}
 		tr.regex = regex
 
-		if havingFieldsCriterion == havingAllFieldsMatching {
+		switch havingFieldsCriterion {
+		case havingAllFieldsMatching:
 			tr.recordTransformerFunc = tr.transformHavingAllFieldsMatching
-		} else if havingFieldsCriterion == havingAnyFieldsMatching {
+		case havingAnyFieldsMatching:
 			tr.recordTransformerFunc = tr.transformHavingAnyFieldsMatching
-		} else if havingFieldsCriterion == havingNoFieldsMatching {
+		case havingNoFieldsMatching:
 			tr.recordTransformerFunc = tr.transformHavingNoFieldsMatching
-		} else {
+		default:
 			lib.InternalCodingErrorIf(true)
 		}
 	}

@@ -118,65 +118,66 @@ func transformerSplitParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerSplitUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-n" {
+		case "-n":
 			n, err = cli.VerbGetIntArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			doSize = true
 
-		} else if opt == "-m" {
+		case "-m":
 			n, err = cli.VerbGetIntArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			doMod = true
 
-		} else if opt == "-g" {
+		case "-g":
 			groupByFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "--prefix" {
+		case "--prefix":
 			outputFileNamePrefix, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "--suffix" {
+		case "--suffix":
 			outputFileNameSuffix, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			haveOutputFileNameSuffix = true
 
-		} else if opt == "--folder" {
+		case "--folder":
 			outputFolder, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-a" {
+		case "-a":
 			doAppend = true
 
-		} else if opt == "-v" {
+		case "-v":
 			emitDownstream = true
 
-		} else if opt == "-e" {
+		case "-e":
 			escapeFileNameCharacters = false
 
-		} else if opt == "-j" {
+		case "-j":
 			fileNamePartJoiner, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else {
+		default:
 			// This is inelegant. For error-proofing we advance argi already in our
 			// loop (so individual if-statements don't need to). However,
 			// ParseWriterOptions expects it unadvanced.

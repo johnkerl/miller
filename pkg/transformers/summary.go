@@ -146,14 +146,15 @@ func transformerSummaryParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerSummaryUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "--all" {
+		case "--all":
 			summarizerNames = allSummarizerNamesList
 
-		} else if opt == "-a" {
+		case "-a":
 			summarizerNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
@@ -164,7 +165,7 @@ func transformerSummaryParseCLI(
 				}
 			}
 
-		} else if opt == "-x" {
+		case "-x":
 			excludeSummarizerNames, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
@@ -187,10 +188,10 @@ func transformerSummaryParseCLI(
 				}
 			}
 
-		} else if opt == "--transpose" {
+		case "--transpose":
 			transposeOutput = true
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
@@ -363,11 +364,12 @@ func (tr *TransformerSummary) emit(
 		}
 
 		for _, info := range allSummarizerInfos {
-			if info.stype == stAccumulator {
+			switch info.stype {
+			case stAccumulator:
 				if tr.summarizerNames[info.name] {
 					newrec.PutCopy(info.name, fieldSummary.accumulators[info.name].Emit())
 				}
-			} else if info.stype == stPercentile {
+			case stPercentile:
 				if tr.summarizerNames[info.name] {
 					newrec.PutCopy(info.name, fieldSummary.percentileKeeper.EmitNamed(info.name))
 				}
@@ -405,9 +407,10 @@ func (tr *TransformerSummary) emitTransposed(
 	}
 
 	for _, info := range allSummarizerInfos {
-		if info.stype == stAccumulator {
+		switch info.stype {
+		case stAccumulator:
 			tr.maybeEmitAccumulatorTransposed(oracs, octx, info.name)
-		} else if info.stype == stPercentile {
+		case stPercentile:
 			tr.maybeEmitPercentileNameTransposed(oracs, octx, info.name)
 		}
 	}

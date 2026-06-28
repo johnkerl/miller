@@ -52,11 +52,12 @@ func (repl *Repl) handleDSLStringAux(
 		isReplImmediate,
 		doWarnings,
 		func(dslString string, astNode *asts.AST) {
-			if repl.astPrintMode == ASTPrintParex {
+			switch repl.astPrintMode {
+			case ASTPrintParex:
 				astNode.PrintParex()
-			} else if repl.astPrintMode == ASTPrintParexOneLine {
+			case ASTPrintParexOneLine:
 				astNode.PrintParexOneLine()
-			} else if repl.astPrintMode == ASTPrintIndent {
+			case ASTPrintIndent:
 				astNode.Print()
 			}
 		},

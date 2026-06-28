@@ -125,18 +125,19 @@ func transformerNestParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerNestUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-f" {
+		case "-f":
 			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			fieldName = s
 
-		} else if opt == "-r" {
+		case "-r":
 			doRegexes = true
 			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
@@ -144,41 +145,41 @@ func transformerNestParseCLI(
 			}
 			fieldName = s
 
-		} else if opt == "--explode" || opt == "-e" {
+		case "--explode", "-e":
 			doExplode = true
 			doExplodeSpecified = true
-		} else if opt == "--implode" || opt == "-i" {
+		case "--implode", "-i":
 			doExplode = false
 			doExplodeSpecified = true
 
-		} else if opt == "--values" || opt == "-v" {
+		case "--values", "-v":
 			doPairs = false
 			doPairsSpecified = true
-		} else if opt == "--pairs" || opt == "-p" {
+		case "--pairs", "-p":
 			doPairs = true
 			doPairsSpecified = true
 
-		} else if opt == "--across-fields" || opt == "-F" {
+		case "--across-fields", "-F":
 			doAcrossFields = true
 			doAcrossFieldsSpecified = true
-		} else if opt == "--across-records" || opt == "-R" {
+		case "--across-records", "-R":
 			doAcrossFields = false
 			doAcrossFieldsSpecified = true
 
-		} else if opt == "--nested-fs" || opt == "-S" {
+		case "--nested-fs", "-S":
 			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			nestedFS = s
-		} else if opt == "--nested-ps" || opt == "-P" {
+		case "--nested-ps", "-P":
 			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			nestedPS = s
 
-		} else if opt == "--evar" {
+		case "--evar":
 			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
@@ -191,7 +192,7 @@ func transformerNestParseCLI(
 			doAcrossFields = false
 			doAcrossFieldsSpecified = true
 
-		} else if opt == "--ivar" {
+		case "--ivar":
 			s, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
@@ -204,7 +205,7 @@ func transformerNestParseCLI(
 			doAcrossFields = false
 			doAcrossFieldsSpecified = true
 
-		} else {
+		default:
 			transformerNestUsage(os.Stderr)
 			return nil, fmt.Errorf("%s %s: option \"%s\" not recognized", "mlr", verb, opt)
 		}

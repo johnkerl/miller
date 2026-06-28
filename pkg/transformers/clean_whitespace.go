@@ -63,18 +63,19 @@ func transformerCleanWhitespaceParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerCleanWhitespaceUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-k" || opt == "--keys-only" {
+		case "-k", "--keys-only":
 			doKeys = true
 			doValues = false
-		} else if opt == "-v" || opt == "--values-only" {
+		case "-v", "--values-only":
 			doKeys = false
 			doValues = true
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verbNameCleanWhitespace, "option \"%s\" not recognized", opt)
 		}
 	}

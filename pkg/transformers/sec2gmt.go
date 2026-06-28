@@ -62,37 +62,38 @@ func transformerSec2GMTParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerSec2GMTUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-1" {
+		case "-1":
 			numDecimalPlaces = 1
-		} else if opt == "-2" {
+		case "-2":
 			numDecimalPlaces = 2
-		} else if opt == "-3" {
+		case "-3":
 			numDecimalPlaces = 3
-		} else if opt == "-4" {
+		case "-4":
 			numDecimalPlaces = 4
-		} else if opt == "-5" {
+		case "-5":
 			numDecimalPlaces = 5
-		} else if opt == "-6" {
+		case "-6":
 			numDecimalPlaces = 6
-		} else if opt == "-7" {
+		case "-7":
 			numDecimalPlaces = 7
-		} else if opt == "-8" {
+		case "-8":
 			numDecimalPlaces = 8
-		} else if opt == "-9" {
+		case "-9":
 			numDecimalPlaces = 9
 
-		} else if opt == "--millis" {
+		case "--millis":
 			preDivide = 1.0e3
-		} else if opt == "--micros" {
+		case "--micros":
 			preDivide = 1.0e6
-		} else if opt == "--nanos" {
+		case "--nanos":
 			preDivide = 1.0e9
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verbNameSec2GMT, "option \"%s\" not recognized", opt)
 		}
 	}

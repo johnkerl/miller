@@ -144,9 +144,10 @@ func FromInferredType(input string) *Mlrval {
 		printrepValid: true,
 	}
 	// TODO: comment re data files vs literals context -- this is for the latter
-	if input == "true" {
+	switch input {
+	case "true":
 		return TRUE
-	} else if input == "false" {
+	case "false":
 		return FALSE
 	}
 	packageLevelInferrer(mv)
@@ -280,9 +281,10 @@ func FromBool(input bool) *Mlrval {
 }
 
 func FromBoolString(input string) *Mlrval {
-	if input == "true" {
+	switch input {
+	case "true":
 		return TRUE
-	} else if input == "false" {
+	case "false":
 		return FALSE
 	}
 	lib.InternalCodingErrorIf(true)
