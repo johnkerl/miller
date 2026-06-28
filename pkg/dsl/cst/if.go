@@ -77,7 +77,8 @@ func (root *RootNode) BuildIfChainNode(astNode *asts.ASTNode) (*IfChainNode, err
 	for _, astChild := range astChildren {
 		lib.InternalCodingErrorIf(astChild.Type != asts.NodeType(NodeTypeIfItem))
 		token := tokenLit(astChild) // "if", "elif", "else"
-		if token == "if" || token == "elif" {
+		switch token {
+		case "if", "elif":
 			lib.InternalCodingErrorIf(len(astChild.Children) != 2)
 			conditionNode, err := root.BuildEvaluableNode(astChild.Children[0])
 			if err != nil {
@@ -94,9 +95,9 @@ func (root *RootNode) BuildIfChainNode(astNode *asts.ASTNode) (*IfChainNode, err
 			}
 			ifItems = append(ifItems, ifItem)
 
-		} else if token == "else" {
+		case "else":
 			lib.InternalCodingErrorIf(len(astChild.Children) != 1)
-			var conditionNode IEvaluable = nil
+			var conditionNode IEvaluable
 			statementBlockNode, err := root.BuildStatementBlockNode(astChild.Children[0])
 			if err != nil {
 				return nil, err
@@ -107,7 +108,7 @@ func (root *RootNode) BuildIfChainNode(astNode *asts.ASTNode) (*IfChainNode, err
 			}
 			ifItems = append(ifItems, ifItem)
 
-		} else {
+		default:
 			lib.InternalCodingErrorIf(true)
 		}
 	}

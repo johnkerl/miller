@@ -63,23 +63,24 @@ func transformerUnspaceParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerUnspaceUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-f" {
+		case "-f":
 			filler, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-k" {
+		case "-k":
 			which = "keys_only"
 
-		} else if opt == "-v" {
+		case "-v":
 			which = "values_only"
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
@@ -107,11 +108,12 @@ func NewTransformerUnspace(
 	which string,
 ) (*TransformerUnspace, error) {
 	tr := &TransformerUnspace{filler: filler}
-	if which == "keys_only" {
+	switch which {
+	case "keys_only":
 		tr.recordTransformerFunc = tr.transformKeysOnly
-	} else if which == "values_only" {
+	case "values_only":
 		tr.recordTransformerFunc = tr.transformValuesOnly
-	} else {
+	default:
 		tr.recordTransformerFunc = tr.transformKeysAndValues
 	}
 	return tr, nil

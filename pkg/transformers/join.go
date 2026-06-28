@@ -178,82 +178,83 @@ func transformerJoinParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerJoinUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "--prepipe" {
+		case "--prepipe":
 			opts.prepipe, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			opts.prepipeIsRaw = false
 
-		} else if opt == "--prepipex" {
+		case "--prepipex":
 			opts.prepipe, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			opts.prepipeIsRaw = true
 
-		} else if opt == "-f" {
+		case "-f":
 			opts.leftFileName, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-j" {
+		case "-j":
 			opts.outputJoinFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-l" {
+		case "-l":
 			opts.leftJoinFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "--lk" || opt == "--left-keep-field-names" {
+		case "--lk", "--left-keep-field-names":
 			opts.leftKeepFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-r" {
+		case "-r":
 			opts.rightJoinFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "--lp" {
+		case "--lp":
 			opts.leftPrefix, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "--rp" {
+		case "--rp":
 			opts.rightPrefix, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "--np" {
+		case "--np":
 			opts.emitPairables = false
 
-		} else if opt == "--ul" {
+		case "--ul":
 			opts.emitLeftUnpairables = true
 
-		} else if opt == "--ur" {
+		case "--ur":
 			opts.emitRightUnpairables = true
 
-		} else if opt == "-u" {
+		case "-u":
 			opts.allowUnsortedInput = true
 
-		} else if opt == "--sorted-input" || opt == "-s" {
+		case "--sorted-input", "-s":
 			opts.allowUnsortedInput = false
 
-		} else {
+		default:
 			// This is inelegant. For error-proofing we advance argi already in our
 			// loop (so individual if-statements don't need to). However,
 			// cli.Parse expects it unadvanced.

@@ -77,20 +77,21 @@ func transformerGrepParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerGrepUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-i" {
+		case "-i":
 			ignoreCase = true
 
-		} else if opt == "-v" {
+		case "-v":
 			invert = true
 
-		} else if opt == "-a" {
+		case "-a":
 			valuesOnly = true
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}

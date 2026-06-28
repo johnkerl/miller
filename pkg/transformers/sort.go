@@ -128,11 +128,12 @@ func transformerSortParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerSortUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-f" {
+		case "-f":
 			subList, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
@@ -142,7 +143,7 @@ func transformerSortParseCLI(
 				comparatorFuncs = append(comparatorFuncs, mlrval.LexicalAscendingComparator)
 			}
 
-		} else if opt == "-c" {
+		case "-c":
 			// See comments over "-n" -- similar hack.
 			if args[argi] == "-r" {
 				// Treat like "-cr"
@@ -170,7 +171,7 @@ func transformerSortParseCLI(
 				}
 			}
 
-		} else if opt == "-t" {
+		case "-t":
 			// See comments over "-n" -- similar hack.
 			if err := cli.VerbCheckArgCount(verb, opt, args, argi, argc, 1); err != nil {
 				return nil, err
@@ -200,7 +201,7 @@ func transformerSortParseCLI(
 				}
 			}
 
-		} else if opt == "-r" {
+		case "-r":
 			// See comments over "-n" -- similar hack.
 			if err := cli.VerbCheckArgCount(verb, opt, args, argi, argc, 1); err != nil {
 				return nil, err
@@ -230,7 +231,7 @@ func transformerSortParseCLI(
 				}
 			}
 
-		} else if opt == "-n" {
+		case "-n":
 			// This is a bit of a hack.
 			//
 			// As of Miller 6 we have a getoptish feature wherein "-xyz" is
@@ -257,7 +258,8 @@ func transformerSortParseCLI(
 				return nil, err
 			}
 
-			if args[argi] == "-f" {
+			switch args[argi] {
+			case "-f":
 				// Treat like "-nf"
 				argi++
 				subList, err := cli.VerbGetStringArrayArg(verb, "-nf", args, &argi, argc)
@@ -269,7 +271,7 @@ func transformerSortParseCLI(
 					comparatorFuncs = append(comparatorFuncs, mlrval.NumericAscendingComparator)
 				}
 
-			} else if args[argi] == "-r" {
+			case "-r":
 				// Treat like "-nr"
 				argi++
 				subList, err := cli.VerbGetStringArrayArg(verb, "-nr", args, &argi, argc)
@@ -281,7 +283,7 @@ func transformerSortParseCLI(
 					comparatorFuncs = append(comparatorFuncs, mlrval.NumericDescendingComparator)
 				}
 
-			} else {
+			default:
 				// Treat like "-n"
 				subList, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 				if err != nil {
@@ -293,7 +295,7 @@ func transformerSortParseCLI(
 				}
 			}
 
-		} else if opt == "-nf" {
+		case "-nf":
 			subList, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
@@ -303,7 +305,7 @@ func transformerSortParseCLI(
 				comparatorFuncs = append(comparatorFuncs, mlrval.NumericAscendingComparator)
 			}
 
-		} else if opt == "-nr" {
+		case "-nr":
 			subList, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
@@ -313,10 +315,10 @@ func transformerSortParseCLI(
 				comparatorFuncs = append(comparatorFuncs, mlrval.NumericDescendingComparator)
 			}
 
-		} else if opt == "-b" {
+		case "-b":
 			doMoveToHead = true
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}

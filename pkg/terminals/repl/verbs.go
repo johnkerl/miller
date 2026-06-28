@@ -463,11 +463,12 @@ func handleSkipOrProcessUntil(repl *Repl, dslString string, processingNotSkippin
 		true, // isReplImmediate
 		repl.doWarnings,
 		func(dslString string, astNode *asts.AST) {
-			if repl.astPrintMode == ASTPrintParex {
+			switch repl.astPrintMode {
+			case ASTPrintParex:
 				astNode.PrintParex()
-			} else if repl.astPrintMode == ASTPrintParexOneLine {
+			case ASTPrintParexOneLine:
 				astNode.PrintParexOneLine()
-			} else if repl.astPrintMode == ASTPrintIndent {
+			case ASTPrintIndent:
 				astNode.Print()
 			}
 		},
@@ -764,15 +765,16 @@ func handleASTPrint(repl *Repl, args []string) bool {
 		return false
 	}
 	style := args[0]
-	if style == "parex" {
+	switch style {
+	case "parex":
 		repl.astPrintMode = ASTPrintParex
-	} else if style == "parex1" {
+	case "parex1":
 		repl.astPrintMode = ASTPrintParexOneLine
-	} else if style == "indent" {
+	case "indent":
 		repl.astPrintMode = ASTPrintIndent
-	} else if style == "none" {
+	case "none":
 		repl.astPrintMode = ASTPrintNone
-	} else {
+	default:
 		fmt.Printf("Unrecognized style %s: see ':help :astprint'.\n", style)
 	}
 	return true

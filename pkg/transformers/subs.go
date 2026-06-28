@@ -180,25 +180,26 @@ func transformerSubsParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			usageFunc(os.Stdout)
 			os.Exit(0)
 
-		} else if opt == "-a" {
+		case "-a":
 			doAllFieldNames = true
 			doRegexes = false
 			fieldNames = nil
 
-		} else if opt == "-r" {
+		case "-r":
 			doRegexes = true
 
-		} else if opt == "-f" {
+		case "-f":
 			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			doAllFieldNames = false
-		} else {
+		default:
 			usageFunc(os.Stderr)
 			os.Exit(1)
 		}

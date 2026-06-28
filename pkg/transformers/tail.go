@@ -65,11 +65,12 @@ func transformerTailParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerTailUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-n" {
+		case "-n":
 			if argi < argc && strings.HasPrefix(args[argi], "+") {
 				fromStart = true
 			}
@@ -79,14 +80,14 @@ func transformerTailParseCLI(
 			}
 			tailCount = n
 
-		} else if opt == "-g" {
+		case "-g":
 			names, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			groupByFieldNames = names
 
-		} else {
+		default:
 			transformerTailUsage(os.Stderr)
 			return nil, fmt.Errorf("%s %s: option \"%s\" not recognized", "mlr", verb, opt)
 		}

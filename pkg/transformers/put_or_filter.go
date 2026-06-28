@@ -83,9 +83,10 @@ func transformerPutOrFilterUsage(
 	verb string,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {DSL expression}\n", "mlr", verb)
-	if verb == "put" {
+	switch verb {
+	case "put":
 		fmt.Fprintf(o, "Lets you use a domain-specific language to programmatically alter stream records.\n")
-	} else if verb == "filter" {
+	case "filter":
 		fmt.Fprintf(o, "Lets you use a domain-specific language to programmatically filter which\n")
 		fmt.Fprintf(o, "stream records will be output.\n")
 	}
@@ -268,11 +269,12 @@ func transformerPutOrFilterParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerPutOrFilterUsage(os.Stdout, verb)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-f" {
+		case "-f":
 			// Get a DSL string from the user-specified filename
 			filename, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
@@ -300,7 +302,7 @@ func transformerPutOrFilterParseCLI(
 			}
 			haveDSLStringsHere = true
 
-		} else if opt == "-e" {
+		case "-e":
 			dslString, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
@@ -308,7 +310,7 @@ func transformerPutOrFilterParseCLI(
 			dslStrings = append(dslStrings, dslString)
 			haveDSLStringsHere = true
 
-		} else if opt == "-s" {
+		case "-s":
 			// E.g.
 			//   mlr put -s sum=0
 			// is like
@@ -319,45 +321,45 @@ func transformerPutOrFilterParseCLI(
 			}
 			presets = append(presets, preset)
 
-		} else if opt == "-x" {
+		case "-x":
 			invertFilter = true
-		} else if opt == "-q" {
+		case "-q":
 			suppressOutputRecord = true
 
-		} else if opt == "-E" {
+		case "-E":
 			echoDSLString = true
-		} else if opt == "-p" {
+		case "-p":
 			printASTAsTree = true
-		} else if opt == "-v" {
+		case "-v":
 			echoDSLString = true
 			printASTAsTree = true
-		} else if opt == "-d" {
+		case "-d":
 			printASTMultiLine = true
-		} else if opt == "-D" {
+		case "-D":
 			printASTSingleLine = true
-		} else if opt == "-X" {
+		case "-X":
 			exitAfterParse = true
-		} else if opt == "-w" {
+		case "-w":
 			doWarnings = true
 			warningsAreFatal = false
-		} else if opt == "-z" {
+		case "-z":
 			// TODO: perhaps doWarnings and warningsAreFatal as well.
 			// But first I want to see what can be caught at runtime
 			// without static analysis.
 			strictMode = true
-		} else if opt == "-W" {
+		case "-W":
 			doWarnings = true
 			warningsAreFatal = true
 
-		} else if opt == "-S" {
+		case "-S":
 			// TODO: this is a no-op in Miller 6 and above.
 			// Comment this in more detail.
 
-		} else if opt == "-F" {
+		case "-F":
 			// TODO: this is a no-op in Miller 6 and above.
 			// Comment this in more detail.
 
-		} else {
+		default:
 			// This is inelegant. For error-proofing we advance argi already in our
 			// loop (so individual if-statements don't need to). However,
 			// ParseWriterOptions expects it unadvanced.

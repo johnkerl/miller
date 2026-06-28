@@ -75,23 +75,24 @@ func transformerUnsparsifyParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerUnsparsifyUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "--fill-with" {
+		case "--fill-with":
 			fillerString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-f" {
+		case "-f":
 			specifiedFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}

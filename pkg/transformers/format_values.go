@@ -92,29 +92,30 @@ func transformerFormatValuesParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerFormatValuesUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-s" {
+		case "-s":
 			stringFormat, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
-		} else if opt == "-i" {
+		case "-i":
 			intFormat, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
-		} else if opt == "-f" {
+		case "-f":
 			floatFormat, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
-		} else if opt == "-n" {
+		case "-n":
 			coerceIntToFloat = true
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}

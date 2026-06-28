@@ -111,56 +111,54 @@ func transformerMergeFieldsParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerMergeFieldsUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-a" {
+		case "-a":
 			accumulatorNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-f" {
+		case "-f":
 			valueFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			doWhich = e_MERGE_BY_NAME_LIST
 
-		} else if opt == "-r" {
+		case "-r":
 			valueFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			doWhich = e_MERGE_BY_NAME_REGEX
 
-		} else if opt == "-c" {
+		case "-c":
 			valueFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			doWhich = e_MERGE_BY_COLLAPSING
 
-		} else if opt == "-o" {
+		case "-o":
 			outputFieldBasename, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-k" {
+		case "-k":
 			keepInputFields = true
 
-		} else if opt == "-i" {
+		case "-i":
 			doInterpolatedPercentiles = true
 
-		} else if opt == "-S" {
+		case "-S", "-F":
 			// No-op pass-through for backward compatibility with Miller 5
 
-		} else if opt == "-F" {
-			// No-op pass-through for backward compatibility with Miller 5
-
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
@@ -312,13 +310,14 @@ func NewTransformerMergeFields(
 		tr.namedAccumulators.Put(accumulatorName, accumulator)
 	}
 
-	if doWhich == e_MERGE_BY_NAME_LIST {
+	switch doWhich {
+	case e_MERGE_BY_NAME_LIST:
 		tr.recordTransformerFunc = tr.transformByNameList
-	} else if doWhich == e_MERGE_BY_NAME_REGEX {
+	case e_MERGE_BY_NAME_REGEX:
 		tr.recordTransformerFunc = tr.transformByNameRegex
-	} else if doWhich == e_MERGE_BY_COLLAPSING {
+	case e_MERGE_BY_COLLAPSING:
 		tr.recordTransformerFunc = tr.transformByCollapsing
-	} else {
+	default:
 		lib.InternalCodingErrorIf(true)
 	}
 

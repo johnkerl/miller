@@ -132,13 +132,14 @@ func inferHexInt(mv *Mlrval) *Mlrval {
 	var input string
 	var negate bool
 	// Skip known leading 0x or -0x prefix
-	if mv.printrep[0] == '-' {
+	switch mv.printrep[0] {
+	case '-':
 		input = mv.printrep[3:]
 		negate = true
-	} else if mv.printrep[0] == '+' {
+	case '+':
 		input = mv.printrep[3:]
 		negate = false
-	} else {
+	default:
 		input = mv.printrep[2:]
 		negate = false
 	}
@@ -196,13 +197,14 @@ func inferBaseInt(mv *Mlrval, base int) *Mlrval {
 	var input string
 	var negate bool
 	// Skip known leading 0x or -0x prefix
-	if mv.printrep[0] == '-' {
+	switch mv.printrep[0] {
+	case '-':
 		input = mv.printrep[3:]
 		negate = true
-	} else if mv.printrep[0] == '+' {
+	case '+':
 		input = mv.printrep[3:]
 		negate = false
-	} else {
+	default:
 		input = mv.printrep[2:]
 		negate = false
 	}

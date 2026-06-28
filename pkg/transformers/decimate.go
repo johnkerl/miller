@@ -66,11 +66,12 @@ func transformerDecimateParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerDecimateUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-n" {
+		case "-n":
 			decimateCount, err = cli.VerbGetIntArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
@@ -79,19 +80,19 @@ func transformerDecimateParseCLI(
 				return nil, cli.VerbErrorf(verb, "-n must be positive")
 			}
 
-		} else if opt == "-b" {
+		case "-b":
 			atStart = true
 
-		} else if opt == "-e" {
+		case "-e":
 			atEnd = true
 
-		} else if opt == "-g" {
+		case "-g":
 			groupByFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}

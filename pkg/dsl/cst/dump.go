@@ -130,11 +130,12 @@ func (root *RootNode) buildDumpxStatementNode(
 
 	if redirectorNode.Type == asts.NodeType(NodeTypeNoOp) {
 		// No > >> or | was provided.
-		if defaultOutputStream == os.Stdout {
+		switch defaultOutputStream {
+		case os.Stdout:
 			retval.dumpToRedirectFunc = retval.dumpToStdout
-		} else if defaultOutputStream == os.Stderr {
+		case os.Stderr:
 			retval.dumpToRedirectFunc = retval.dumpToStderr
-		} else {
+		default:
 			lib.InternalCodingErrorIf(true)
 		}
 	} else {

@@ -561,7 +561,8 @@ func bif_percentiles_with_options_aux(
 			return type_error_named_argument(funcname, "map", "options", options)
 		}
 		for pe := om.Head; pe != nil; pe = pe.Next {
-			if pe.Key == "array_is_sorted" || pe.Key == "ais" {
+			switch pe.Key {
+			case "array_is_sorted", "ais":
 				if mlrval.Equals(pe.Value, mlrval.TRUE) {
 					arrayIsSorted = true
 				} else if mlrval.Equals(pe.Value, mlrval.FALSE) {
@@ -569,7 +570,7 @@ func bif_percentiles_with_options_aux(
 				} else {
 					return type_error_named_argument(funcname, "boolean", pe.Key, pe.Value)
 				}
-			} else if pe.Key == "interpolate_linearly" || pe.Key == "il" {
+			case "interpolate_linearly", "il":
 				if mlrval.Equals(pe.Value, mlrval.TRUE) {
 					interpolateLinearly = true
 				} else if mlrval.Equals(pe.Value, mlrval.FALSE) {
@@ -577,7 +578,7 @@ func bif_percentiles_with_options_aux(
 				} else {
 					return type_error_named_argument(funcname, "boolean", pe.Key, pe.Value)
 				}
-			} else if pe.Key == "output_array_not_map" || pe.Key == "oa" {
+			case "output_array_not_map", "oa":
 				if mlrval.Equals(pe.Value, mlrval.TRUE) {
 					outputArrayNotMap = true
 				} else if mlrval.Equals(pe.Value, mlrval.FALSE) {

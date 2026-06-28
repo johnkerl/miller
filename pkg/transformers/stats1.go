@@ -137,49 +137,50 @@ func transformerStats1ParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerStats1Usage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-a" {
+		case "-a":
 			accumulatorNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-f" {
+		case "-f":
 			valueFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-g" {
+		case "-g":
 			groupByFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "--fr" {
+		case "--fr":
 			valueFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			doRegexValueFieldNames = true
 
-		} else if opt == "--fx" {
+		case "--fx":
 			valueFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			doRegexValueFieldNames = true
 			invertRegexValueFieldNames = true
-		} else if opt == "--gr" {
+		case "--gr":
 			groupByFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			doRegexGroupByFieldNames = true
-		} else if opt == "--gx" {
+		case "--gx":
 			groupByFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
@@ -187,7 +188,7 @@ func transformerStats1ParseCLI(
 			doRegexGroupByFieldNames = true
 			invertRegexGroupByFieldNames = true
 
-		} else if opt == "--grfx" {
+		case "--grfx":
 			doRegexValueFieldNames = true
 			doRegexGroupByFieldNames = true
 			invertRegexValueFieldNames = true
@@ -197,19 +198,16 @@ func transformerStats1ParseCLI(
 			}
 			groupByFieldNameList = slices.Clone(valueFieldNameList)
 
-		} else if opt == "-i" {
+		case "-i":
 			doInterpolatedPercentiles = true
 
-		} else if opt == "-s" {
+		case "-s":
 			doIterativeStats = true
 
-		} else if opt == "-S" {
+		case "-S", "-F":
 			// No-op pass-through for backward compatibility with Miller 5
 
-		} else if opt == "-F" {
-			// No-op pass-through for backward compatibility with Miller 5
-
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verbNameStats1, "option \"%s\" not recognized", opt)
 		}
 	}

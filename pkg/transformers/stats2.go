@@ -97,47 +97,48 @@ func transformerStats2ParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerStats2Usage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-a" {
+		case "-a":
 			accumulatorNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-f" {
+		case "-f":
 			valueFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-g" {
+		case "-g":
 			groupByFieldNameList, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-v" {
+		case "-v":
 			doVerbose = true
 
-		} else if opt == "-s" {
+		case "-s":
 			doIterativeStats = true
 
-		} else if opt == "--fit" {
+		case "--fit":
 			doHoldAndFit = true
 
-		} else if opt == "-S" {
+		case "-S":
 			// No-op pass-through for backward compatibility with Miller 5
 
-		} else if opt == "-F" {
+		case "-F":
 			// The -F flag isn't used for stats2: all arithmetic here is
 			// floating-point. Yet it is supported for step and stats1 for all
 			// applicable stats1/step accumulators, so we accept here as well
 			// for all applicable stats2 accumulators (i.e. none of them).
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}

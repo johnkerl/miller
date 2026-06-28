@@ -53,17 +53,18 @@ func RegTestMain(args []string) int {
 		}
 		argi++
 
-		if arg == "-h" || arg == "--help" {
+		switch arg {
+		case "-h", "--help":
 			regTestUsage(verbName, os.Stdout, 0)
 
-		} else if arg == "-m" {
+		case "-m":
 			if argi >= argc {
 				regTestUsage(verbName, os.Stderr, 1)
 			}
 			exeName = args[argi]
 			argi++
 
-		} else if arg == "-s" {
+		case "-s":
 			if argi >= argc {
 				regTestUsage(verbName, os.Stderr, 1)
 			}
@@ -74,19 +75,19 @@ func RegTestMain(args []string) int {
 			firstNFailsToShow = temp
 			argi++
 
-		} else if arg == "-S" {
+		case "-S":
 			firstNFailsToShow = 1000000000
 
-		} else if arg == "-p" {
+		case "-p":
 			doPopulate = true
 
-		} else if arg == "-v" {
+		case "-v":
 			verbosityLevel++
 
-		} else if arg == "-j" {
+		case "-j":
 			plainMode = true
 
-		} else {
+		default:
 			regTestUsage(verbName, os.Stderr, 1)
 		}
 	}

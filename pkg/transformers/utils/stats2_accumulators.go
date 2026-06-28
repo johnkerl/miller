@@ -482,7 +482,8 @@ func (acc *Stats2CorrCovAccumulator) Populate(
 	outrec *mlrval.Mlrmap,
 ) {
 
-	if acc.doWhich == DO_COVX {
+	switch acc.doWhich {
+	case DO_COVX:
 		key00 := acc.covx00OutputFieldName
 		key01 := acc.covx01OutputFieldName
 		key10 := acc.covx10OutputFieldName
@@ -507,7 +508,7 @@ func (acc *Stats2CorrCovAccumulator) Populate(
 			outrec.PutReference(key11, mlrval.FromFloat(Q[1][1]))
 		}
 
-	} else if acc.doWhich == DO_LINREG_PCA {
+	case DO_LINREG_PCA:
 		keym := acc.pca_mOutputFieldName
 		keyb := acc.pca_bOutputFieldName
 		keyn := acc.pca_nOutputFieldName
@@ -565,7 +566,7 @@ func (acc *Stats2CorrCovAccumulator) Populate(
 				outrec.PutReference(keyv22, mlrval.FromFloat(v2[1]))
 			}
 		}
-	} else {
+	default:
 		key := acc.corrOutputFieldName
 		if acc.doWhich == DO_COV {
 			key = acc.covOutputFieldName
