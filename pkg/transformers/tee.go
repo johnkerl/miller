@@ -136,9 +136,9 @@ func NewTransformerTee(
 	filenameOrCommand string,
 	recordWriterOptions *cli.TWriterOptions,
 ) (*TransformerTee, error) {
-	var fileOutputHandler *output.FileOutputHandler = nil
+	var fileOutputHandler *output.FileOutputHandler
 	var err error
-	filenameOrCommandForDisplay := filenameOrCommand
+	var filenameOrCommandForDisplay string
 	if piping {
 		fileOutputHandler, err = output.NewPipeWriteOutputHandler(filenameOrCommand, recordWriterOptions)
 		filenameOrCommandForDisplay = "| " + filenameOrCommand

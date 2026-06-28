@@ -136,7 +136,6 @@ func (r *Reader) readRecord() (*lib.OrderedMap[string], error) {
 			}
 			line, errRead = r.readLine()
 			if errRead == io.EOF {
-				errRead = nil
 				finishRecord()
 				return result, nil
 			}

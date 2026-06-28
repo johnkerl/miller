@@ -166,8 +166,8 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 
 	} else {
 		isArray := false
-		var expectedClosingDelimiter = ' '
-		var collectionType = ""
+		var expectedClosingDelimiter rune
+		var collectionType string
 
 		if delimiter == '[' {
 			isArray = true

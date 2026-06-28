@@ -411,8 +411,7 @@ func (tr *TransformerReshape) longToWide(
 		}
 
 		otherValuesJoined := inrec.GetValuesJoined()
-		var bucket *tReshapeBucket = nil
-		bucket = otherValuesToBuckets.Get(otherValuesJoined)
+		bucket := otherValuesToBuckets.Get(otherValuesJoined)
 		if bucket == nil {
 			bucket = newReshapeBucket(inrec)
 			otherValuesToBuckets.Put(otherValuesJoined, bucket)

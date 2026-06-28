@@ -13,7 +13,7 @@ func (root *RootNode) BuildStatementNode(
 	astNode *asts.ASTNode,
 ) (IExecutable, error) {
 
-	var statement IExecutable = nil
+	var statement IExecutable
 	var err error
 	switch astNode.Type {
 

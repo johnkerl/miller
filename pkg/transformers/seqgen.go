@@ -138,7 +138,7 @@ func NewTransformerSeqgen(
 	start := mlrval.FromInferredType(startString)
 	stop := mlrval.FromInferredType(stopString)
 	step := mlrval.FromInferredType(stepString)
-	var doneComparator bifs.BinaryFunc = nil
+	var doneComparator bifs.BinaryFunc
 
 	fstart, startIsNumeric := start.GetNumericToFloatValue()
 	if !startIsNumeric {

@@ -246,9 +246,9 @@ func (tr *TransformerFraction) Transform(
 					if value != nil {
 						value.AssertNumeric() // may fatal the process
 
-						var numerator *mlrval.Mlrval = nil
-						var cumu *mlrval.Mlrval = nil
-						var outputValue *mlrval.Mlrval = nil
+						var numerator *mlrval.Mlrval
+						var cumu *mlrval.Mlrval
+						var outputValue *mlrval.Mlrval
 
 						if tr.doCumu {
 							cumu = cumusForGroup[fractionFieldName]

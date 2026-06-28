@@ -226,7 +226,7 @@ func (tr *TransformerCat) countersGrouped(
 		inrec := inrecAndContext.Record
 
 		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
-		var counter int64 = 0
+		var counter int64
 		if !ok {
 			// Treat as unkeyed
 			tr.counter++

@@ -82,7 +82,7 @@ func transformerJSONStringifyParseCLI(
 		}
 	}
 
-	var jsonFormatting mlrval.TJSONFormatting = mlrval.JSON_SINGLE_LINE
+	var jsonFormatting mlrval.TJSONFormatting
 	if jvStack {
 		jsonFormatting = mlrval.JSON_MULTILINE
 	} else {
