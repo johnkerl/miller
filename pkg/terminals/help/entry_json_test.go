@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// TestFullCatalogIsValidJSON guards the `mlr help --json` contract: the
+// TestFullCatalogIsValidJSON guards the `mlr help --as-json` contract: the
 // assembled catalog must round-trip through encoding/json and carry a non-empty
 // entry in each of the four sections.
 func TestFullCatalogIsValidJSON(t *testing.T) {
@@ -23,6 +23,9 @@ func TestFullCatalogIsValidJSON(t *testing.T) {
 
 	if catalog.MlrVersion == "" {
 		t.Error("catalog mlr_version is empty")
+	}
+	if catalog.CatalogSchemaVersion == 0 {
+		t.Error("catalog catalog_schema_version is zero")
 	}
 	if len(catalog.Verbs) == 0 {
 		t.Error("catalog has no verbs")

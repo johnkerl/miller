@@ -1,5 +1,5 @@
 // Machine-readable (JSON) accessors over the verb (transformer) catalog, for
-// `mlr help --json` and similar tooling.
+// `mlr help --as-json` and similar tooling.
 //
 // Tier-1 caveat: unlike functions and flags, verb options are not held in any
 // structured form -- each verb hand-writes a UsageFunc that prints prose. So
