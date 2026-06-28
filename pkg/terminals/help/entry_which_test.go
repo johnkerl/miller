@@ -30,17 +30,41 @@ func TestWhichTokenize(t *testing.T) {
 	}
 }
 
-// TestWhichScoreNameMatch verifies that a token found in the name scores higher
-// than one found only in the body.
+// TestWhichScoreNameMatch verifies that a name hit scores higher than a body-only
+// hit and that nameHit is set correctly.
 func TestWhichScoreNameMatch(t *testing.T) {
 	tokens := []string{"join"}
-	nameScore := whichScore(tokens, "join", "combine two streams")
-	bodyOnlyScore := whichScore(tokens, "combine", "join two records")
-	if nameScore <= bodyOnlyScore {
-		t.Errorf("name match (%d) should outscore body-only match (%d)", nameScore, bodyOnlyScore)
+	nameScore, nameHit := whichScore(tokens, "join", "combine two streams")
+	bodyScore, bodyHit := whichScore(tokens, "combine", "join two records")
+	if nameScore <= bodyScore {
+		t.Errorf("name match (%d) should outscore body-only match (%d)", nameScore, bodyScore)
 	}
 	if nameScore != whichNameMatchScore {
 		t.Errorf("single-token name match: got %d, want %d", nameScore, whichNameMatchScore)
+	}
+	if !nameHit {
+		t.Error("nameHit should be true when token matches name")
+	}
+	if bodyHit {
+		t.Error("nameHit should be false when token matches only body")
+	}
+}
+
+// TestWhichExitCodeRequiresNameHit verifies that body-only matches (however
+// many) do not trigger the confident-match exit code. This guards against the
+// failure mode where 4 body-only token hits (4×5=20) equal whichNameMatchScore
+// and would incorrectly signal a confident match.
+func TestWhichExitCodeRequiresNameHit(t *testing.T) {
+	// Tokens that appear in the body but not in the name.
+	tokens := []string{"statistics", "aggregate", "compute", "average"}
+	name := "xyz-verb"
+	body := "statistics aggregate compute average"
+	score, nameHit := whichScore(tokens, name, body)
+	if nameHit {
+		t.Error("body-only hits should not set nameHit")
+	}
+	if score < whichNameMatchScore {
+		t.Errorf("expected body score >= %d to demonstrate the false-positive risk, got %d", whichNameMatchScore, score)
 	}
 }
 

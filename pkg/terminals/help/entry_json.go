@@ -63,14 +63,14 @@ func isTruthyEnv(v string) bool {
 	return false
 }
 
-// extractAsJSONFlag removes any "--as-json" token from args, returning whether
+// extractFlag removes every occurrence of flag from args, returning whether
 // one was present along with the remaining args. The flag may appear anywhere
-// (e.g. `mlr help --as-json` or `mlr help verb cat --as-json`).
-func extractAsJSONFlag(args []string) (bool, []string) {
+// on the command line.
+func extractFlag(args []string, flag string) (bool, []string) {
 	found := false
 	kept := make([]string, 0, len(args))
 	for _, arg := range args {
-		if arg == "--as-json" {
+		if arg == flag {
 			found = true
 		} else {
 			kept = append(kept, arg)
@@ -78,6 +78,12 @@ func extractAsJSONFlag(args []string) (bool, []string) {
 	}
 	return found, kept
 }
+
+// extractAsJSONFlag removes any "--as-json" token from args.
+func extractAsJSONFlag(args []string) (bool, []string) { return extractFlag(args, "--as-json") }
+
+// extractIndexFlag removes any "--index" token from args.
+func extractIndexFlag(args []string) (bool, []string) { return extractFlag(args, "--index") }
 
 // printAsJSON marshals v as indented JSON to stdout. Returns a process exit
 // code.
@@ -120,9 +126,8 @@ func buildIndex() []IndexEntryForJSON {
 		entries = append(entries, IndexEntryForJSON{Kind: "keyword", Name: kw.Name, Summary: firstLine(kw.Help)})
 	}
 
-	kindOrder := map[string]int{"verb": 0, "function": 1, "flag": 2, "keyword": 3}
 	sort.Slice(entries, func(i, j int) bool {
-		ri, rj := kindOrder[entries[i].Kind], kindOrder[entries[j].Kind]
+		ri, rj := kindRank(entries[i].Kind), kindRank(entries[j].Kind)
 		if ri != rj {
 			return ri < rj
 		}
@@ -143,19 +148,21 @@ func firstLine(s string) string {
 	return s
 }
 
-// extractIndexFlag removes any "--index" token from args, returning whether
-// one was present along with the remaining args.
-func extractIndexFlag(args []string) (bool, []string) {
-	found := false
-	kept := make([]string, 0, len(args))
-	for _, arg := range args {
-		if arg == "--index" {
-			found = true
-		} else {
-			kept = append(kept, arg)
-		}
+// kindRank returns the display rank for a catalog kind. Kinds are ordered
+// verb < function < flag < keyword; anything else sorts last. Used by both
+// buildIndex and whichSearch so the two sort orders stay in sync.
+func kindRank(kind string) int {
+	switch kind {
+	case "verb":
+		return 0
+	case "function":
+		return 1
+	case "flag":
+		return 2
+	case "keyword":
+		return 3
 	}
-	return found, kept
+	return 4
 }
 
 // helpJSON dispatches `mlr help --as-json [--index] [topic [names...]]`. With

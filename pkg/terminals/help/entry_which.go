@@ -16,7 +16,7 @@
 //
 // Lives here (alongside the other --as-json help machinery) rather than in its
 // own package because it imports the same four catalog registries and shares
-// the firstLine helper with entry_json.go.
+// the firstLine and kindRank helpers with entry_json.go.
 
 package help
 
@@ -33,11 +33,14 @@ import (
 )
 
 // WhichResultEntry is one ranked match returned by `mlr which`.
+// nameHit is unexported (not in JSON) and records whether any query token
+// matched the item's name; it drives the exit-code decision in WhichMain.
 type WhichResultEntry struct {
 	Kind    string `json:"kind"`
 	Name    string `json:"name"`
 	Score   int    `json:"score"`
 	Summary string `json:"summary"`
+	nameHit bool
 }
 
 // WhichMain is the entrypoint called by the terminals dispatcher for `mlr which`.
@@ -61,21 +64,20 @@ func WhichMain(args []string) int {
 
 	results := whichSearch(tokens)
 
-	bytes, err := json.MarshalIndent(results, "", "  ")
+	b, err := json.MarshalIndent(results, "", "  ")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "mlr which: could not render JSON: %v\n", err)
 		return 1
 	}
-	fmt.Println(string(bytes))
+	fmt.Println(string(b))
 
-	if len(results) > 0 && results[0].Score >= whichNameMatchScore {
+	if len(results) > 0 && results[0].nameHit {
 		return 0
 	}
 	return 2
 }
 
-// whichNameMatchScore is the per-token weight for a name match; used as the
-// confidence threshold for exit-code 0.
+// whichNameMatchScore is the per-token weight for a name match.
 const whichNameMatchScore = 20
 
 // whichSearch scores every catalog item against tokens and returns matches in
@@ -84,34 +86,34 @@ func whichSearch(tokens []string) []WhichResultEntry {
 	results := make([]WhichResultEntry, 0)
 
 	for _, v := range transformers.GetVerbInfosForJSON() {
-		if s := whichScore(tokens, v.Name, v.Summary+" "+v.UsageText); s > 0 {
+		if s, hit := whichScore(tokens, v.Name, v.Summary+" "+v.UsageText); s > 0 {
 			results = append(results, WhichResultEntry{
-				Kind: "verb", Name: v.Name, Score: s, Summary: v.Summary,
+				Kind: "verb", Name: v.Name, Score: s, Summary: v.Summary, nameHit: hit,
 			})
 		}
 	}
 
 	for _, f := range cst.BuiltinFunctionManagerInstance.GetFunctionInfosForJSON() {
-		if s := whichScore(tokens, f.Name, f.Help); s > 0 {
+		if s, hit := whichScore(tokens, f.Name, f.Help); s > 0 {
 			results = append(results, WhichResultEntry{
-				Kind: "function", Name: f.Name, Score: s, Summary: firstLine(f.Help),
+				Kind: "function", Name: f.Name, Score: s, Summary: firstLine(f.Help), nameHit: hit,
 			})
 		}
 	}
 
 	for _, fl := range cli.FLAG_TABLE.GetFlagInfosForJSON() {
 		nameText := fl.Name + " " + strings.Join(fl.AltNames, " ")
-		if s := whichScore(tokens, nameText, fl.Help); s > 0 {
+		if s, hit := whichScore(tokens, nameText, fl.Help); s > 0 {
 			results = append(results, WhichResultEntry{
-				Kind: "flag", Name: fl.Name, Score: s, Summary: fl.Help,
+				Kind: "flag", Name: fl.Name, Score: s, Summary: firstLine(fl.Help), nameHit: hit,
 			})
 		}
 	}
 
 	for _, kw := range cst.GetKeywordInfosForJSON() {
-		if s := whichScore(tokens, kw.Name, kw.Help); s > 0 {
+		if s, hit := whichScore(tokens, kw.Name, kw.Help); s > 0 {
 			results = append(results, WhichResultEntry{
-				Kind: "keyword", Name: kw.Name, Score: s, Summary: firstLine(kw.Help),
+				Kind: "keyword", Name: kw.Name, Score: s, Summary: firstLine(kw.Help), nameHit: hit,
 			})
 		}
 	}
@@ -120,8 +122,8 @@ func whichSearch(tokens []string) []WhichResultEntry {
 		if results[i].Score != results[j].Score {
 			return results[i].Score > results[j].Score
 		}
-		// Stable tiebreak: verbs first (most useful for agents), then alphabetical name.
-		ki, kj := whichKindRank(results[i].Kind), whichKindRank(results[j].Kind)
+		// Tiebreak: verbs first (most useful for agents), then alphabetical name.
+		ki, kj := kindRank(results[i].Kind), kindRank(results[j].Kind)
 		if ki != kj {
 			return ki < kj
 		}
@@ -133,56 +135,45 @@ func whichSearch(tokens []string) []WhichResultEntry {
 
 // whichScore sums per-token weights: whichNameMatchScore per token found in
 // name, 5 per token found in body. Matching is case-insensitive substring.
-func whichScore(tokens []string, name, body string) int {
+// Returns the total score and whether any token hit the name.
+func whichScore(tokens []string, name, body string) (score int, nameHit bool) {
 	lname := strings.ToLower(name)
 	lbody := strings.ToLower(body)
-	total := 0
 	for _, tok := range tokens {
 		if strings.Contains(lname, tok) {
-			total += whichNameMatchScore
+			score += whichNameMatchScore
+			nameHit = true
 		} else if strings.Contains(lbody, tok) {
-			total += 5
+			score += 5
 		}
 	}
-	return total
+	return
+}
+
+// whichStopwords is the set of words that carry no discriminating signal
+// against Miller's catalog and are dropped during query tokenization.
+var whichStopwords = map[string]bool{
+	"a": true, "an": true, "the": true, "to": true, "of": true,
+	"in": true, "on": true, "at": true, "by": true, "for": true,
+	"and": true, "or": true, "is": true, "it": true, "do": true,
+	"with": true, "from": true, "into": true, "how": true,
+	"get": true, "use": true, "two": true, "my": true,
 }
 
 // whichTokenize lowercases and splits a query into non-trivial words, dropping
-// single-character tokens and common stopwords that carry no discriminating
-// signal against Miller's catalog.
+// single-character tokens and stopwords.
 func whichTokenize(query string) []string {
-	stopwords := map[string]bool{
-		"a": true, "an": true, "the": true, "to": true, "of": true,
-		"in": true, "on": true, "at": true, "by": true, "for": true,
-		"and": true, "or": true, "is": true, "it": true, "do": true,
-		"with": true, "from": true, "into": true, "how": true,
-		"get": true, "use": true, "two": true, "my": true,
-	}
 	words := strings.FieldsFunc(strings.ToLower(query), func(r rune) bool {
 		return !('a' <= r && r <= 'z') && !('0' <= r && r <= '9') && r != '-' && r != '_'
 	})
 	var tokens []string
 	seen := map[string]bool{}
 	for _, w := range words {
-		if len(w) <= 1 || stopwords[w] || seen[w] {
+		if len(w) <= 1 || whichStopwords[w] || seen[w] {
 			continue
 		}
 		seen[w] = true
 		tokens = append(tokens, w)
 	}
 	return tokens
-}
-
-func whichKindRank(kind string) int {
-	switch kind {
-	case "verb":
-		return 0
-	case "function":
-		return 1
-	case "flag":
-		return 2
-	case "keyword":
-		return 3
-	}
-	return 4
 }
