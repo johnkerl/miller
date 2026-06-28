@@ -232,10 +232,11 @@ func GetTerminalFlagNames() []string {
 func HelpMain(args []string) int {
 	args = args[1:]
 
-	// Machine-readable help: `mlr help --json [topic [names...]]`. The --json
-	// token may appear anywhere; if present we emit structured JSON and the
-	// plain-text handlers below are bypassed.
-	if jsonMode, rest := extractJSONFlag(args); jsonMode {
+	// Machine-readable help: `mlr help --as-json [topic [names...]]`. The
+	// --as-json token (or a truthy MLR_HELP_JSON env var) may appear anywhere;
+	// if either is set we emit structured JSON and the plain-text handlers
+	// below are bypassed.
+	if jsonMode, rest := wantJSONOutput(args); jsonMode {
 		return helpJSON(rest)
 	}
 

@@ -1,16 +1,21 @@
-// Machine-readable (JSON) help, for `mlr help --json` and friends.
+// Machine-readable (JSON) help, for `mlr help --as-json` and friends.
 //
 // This assembles the structured catalogs exposed by the verb, function, flag,
 // and keyword registries into a single document, so AI agents and other tooling
 // can model Miller's surface without scraping the human-readable prose. The
-// plain (non-`--json`) help behavior is unchanged; `--json` only switches the
-// rendering.
+// plain (non-`--as-json`) help behavior is unchanged; `--as-json` only switches
+// the rendering.
+//
+// Two equivalent ways to opt in:
+//   - Per-call flag `--as-json` anywhere on a `mlr help ...` command line.
+//   - Env var MLR_HELP_JSON set to a truthy value (1, true, yes).
 
 package help
 
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/dsl/cst"
@@ -18,30 +23,58 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/version"
 )
 
-// CatalogForJSON is the top-level document emitted by `mlr help --json` with no
-// further topic: the entire help catalog in one machine-readable object.
+// catalogSchemaVersion is bumped whenever the shape of the JSON catalog
+// changes. Agents and tools can use this (together with mlr_version) as a
+// cache key: re-fetch only when either value changes.
+const catalogSchemaVersion = 1
+
+// CatalogForJSON is the top-level document emitted by `mlr help --as-json`
+// with no further topic: the entire help catalog in one machine-readable
+// object.
 type CatalogForJSON struct {
-	MlrVersion string                          `json:"mlr_version"`
-	Verbs      []*transformers.VerbInfoForJSON `json:"verbs"`
-	Functions  []*cst.FunctionInfoForJSON      `json:"functions"`
-	Flags      []*cli.FlagInfoForJSON          `json:"flags"`
-	Keywords   []*cst.KeywordInfoForJSON       `json:"keywords"`
+	MlrVersion           string                          `json:"mlr_version"`
+	CatalogSchemaVersion int                             `json:"catalog_schema_version"`
+	Verbs                []*transformers.VerbInfoForJSON `json:"verbs"`
+	Functions            []*cst.FunctionInfoForJSON      `json:"functions"`
+	Flags                []*cli.FlagInfoForJSON          `json:"flags"`
+	Keywords             []*cst.KeywordInfoForJSON       `json:"keywords"`
 }
 
-// extractJSONFlag removes any "--json" token from args, returning whether one
-// was present along with the remaining args. The flag may appear anywhere
-// (e.g. `mlr help --json` or `mlr help verb cat --json`).
-func extractJSONFlag(args []string) (bool, []string) {
-	jsonMode := false
+// wantJSONOutput returns true when the caller has opted in to JSON output via
+// either the --as-json flag or a truthy MLR_HELP_JSON env var.
+func wantJSONOutput(args []string) (bool, []string) {
+	if isTruthyEnv(os.Getenv("MLR_HELP_JSON")) {
+		// Env var wins; still strip any --as-json tokens so dispatch is clean.
+		_, rest := extractAsJSONFlag(args)
+		return true, rest
+	}
+	return extractAsJSONFlag(args)
+}
+
+// isTruthyEnv returns true for non-empty strings commonly used as boolean
+// env-var truthy values: "1", "true", "yes" (case-insensitive).
+func isTruthyEnv(v string) bool {
+	switch v {
+	case "1", "true", "True", "TRUE", "yes", "Yes", "YES":
+		return true
+	}
+	return false
+}
+
+// extractAsJSONFlag removes any "--as-json" token from args, returning whether
+// one was present along with the remaining args. The flag may appear anywhere
+// (e.g. `mlr help --as-json` or `mlr help verb cat --as-json`).
+func extractAsJSONFlag(args []string) (bool, []string) {
+	found := false
 	kept := make([]string, 0, len(args))
 	for _, arg := range args {
-		if arg == "--json" {
-			jsonMode = true
+		if arg == "--as-json" {
+			found = true
 		} else {
 			kept = append(kept, arg)
 		}
 	}
-	return jsonMode, kept
+	return found, kept
 }
 
 // printAsJSON marshals v as indented JSON to stdout. Returns a process exit
@@ -56,9 +89,10 @@ func printAsJSON(v any) int {
 	return 0
 }
 
-// helpJSON dispatches `mlr help --json [topic [names...]]`. With no topic it
-// emits the full catalog; with a topic (verb/function/flag/keyword) it emits
-// just those entries -- all of them if no names are given, or the named ones.
+// helpJSON dispatches `mlr help --as-json [topic [names...]]`. With no topic
+// it emits the full catalog; with a topic (verb/function/flag/keyword) it
+// emits just those entries -- all of them if no names are given, or the named
+// ones.
 func helpJSON(args []string) int {
 	if len(args) == 0 {
 		return printAsJSON(buildFullCatalog())
@@ -77,7 +111,7 @@ func helpJSON(args []string) int {
 	case "keyword", "keywords":
 		return printAsJSON(collectKeywords(names))
 	default:
-		fmt.Printf("mlr help --json: unsupported topic \"%s\".\n", topic)
+		fmt.Printf("mlr help --as-json: unsupported topic \"%s\".\n", topic)
 		fmt.Printf("Supported: (no topic) for the full catalog, or one of: verb, function, flag, keyword.\n")
 		return 1
 	}
@@ -85,11 +119,12 @@ func helpJSON(args []string) int {
 
 func buildFullCatalog() *CatalogForJSON {
 	return &CatalogForJSON{
-		MlrVersion: version.STRING,
-		Verbs:      transformers.GetVerbInfosForJSON(),
-		Functions:  cst.BuiltinFunctionManagerInstance.GetFunctionInfosForJSON(),
-		Flags:      cli.FLAG_TABLE.GetFlagInfosForJSON(),
-		Keywords:   cst.GetKeywordInfosForJSON(),
+		MlrVersion:           version.STRING,
+		CatalogSchemaVersion: catalogSchemaVersion,
+		Verbs:                transformers.GetVerbInfosForJSON(),
+		Functions:            cst.BuiltinFunctionManagerInstance.GetFunctionInfosForJSON(),
+		Flags:                cli.FLAG_TABLE.GetFlagInfosForJSON(),
+		Keywords:             cst.GetKeywordInfosForJSON(),
 	}
 }
 

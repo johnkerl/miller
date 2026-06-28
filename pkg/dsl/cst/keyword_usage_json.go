@@ -1,5 +1,5 @@
 // Machine-readable (JSON) accessors over the keyword catalog, for
-// `mlr help --json` and similar tooling. The per-keyword usage functions print
+// `mlr help --as-json` and similar tooling. The per-keyword usage functions print
 // their bodies directly to stdout (they predate any structured-help need), so
 // here we capture that output by temporarily redirecting os.Stdout.
 

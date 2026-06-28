@@ -1,5 +1,5 @@
 // Machine-readable (JSON) accessors over the command-line flag table, for
-// `mlr help --json` and similar tooling. Unlike verb options (which are
+// `mlr help --as-json` and similar tooling. Unlike verb options (which are
 // prose-only), the flag table is already fully structured since it drives the
 // actual command-line parser -- so this is a thin serialization layer.
 

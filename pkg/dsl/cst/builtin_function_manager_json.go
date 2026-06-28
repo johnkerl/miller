@@ -1,6 +1,6 @@
 // Machine-readable (JSON) accessors over the built-in-function catalog. These
 // mirror the human-readable listings elsewhere in this file's neighbors (e.g.
-// ListBuiltinFunctionUsages) but return structured data for `mlr help --json`
+// ListBuiltinFunctionUsages) but return structured data for `mlr help --as-json`
 // and any other tooling -- AI agents in particular -- which needs to model
 // Miller's function surface without scraping prose.
 
