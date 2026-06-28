@@ -89,6 +89,89 @@ func TestCatalogEntriesArePopulated(t *testing.T) {
 	}
 }
 
+// TestIndexIsComplete verifies that `mlr help --as-json --index` covers every
+// catalog item (verb, function, flag, keyword) with non-empty name and summary.
+func TestIndexIsComplete(t *testing.T) {
+	full := buildFullCatalog()
+	index := buildIndex()
+
+	// Build sets from the full catalog for comparison.
+	verbSet := make(map[string]bool, len(full.Verbs))
+	for _, v := range full.Verbs {
+		verbSet[v.Name] = true
+	}
+	funcSet := make(map[string]bool, len(full.Functions))
+	for _, f := range full.Functions {
+		funcSet[f.Name] = true
+	}
+	flagSet := make(map[string]bool, len(full.Flags))
+	for _, fl := range full.Flags {
+		flagSet[fl.Name] = true
+	}
+	kwSet := make(map[string]bool, len(full.Keywords))
+	for _, kw := range full.Keywords {
+		kwSet[kw.Name] = true
+	}
+
+	for _, entry := range index {
+		if entry.Name == "" {
+			t.Errorf("index entry has empty name (kind=%s)", entry.Kind)
+		}
+		if entry.Summary == "" {
+			t.Errorf("index entry %q (kind=%s) has empty summary", entry.Name, entry.Kind)
+		}
+		switch entry.Kind {
+		case "verb":
+			delete(verbSet, entry.Name)
+		case "function":
+			delete(funcSet, entry.Name)
+		case "flag":
+			delete(flagSet, entry.Name)
+		case "keyword":
+			delete(kwSet, entry.Name)
+		default:
+			t.Errorf("index entry %q has unexpected kind %q", entry.Name, entry.Kind)
+		}
+	}
+
+	for name := range verbSet {
+		t.Errorf("verb %q present in full catalog but missing from index", name)
+	}
+	for name := range funcSet {
+		t.Errorf("function %q present in full catalog but missing from index", name)
+	}
+	for name := range flagSet {
+		t.Errorf("flag %q present in full catalog but missing from index", name)
+	}
+	for name := range kwSet {
+		t.Errorf("keyword %q present in full catalog but missing from index", name)
+	}
+}
+
+// TestIndexExtractFlag verifies that --index is extracted correctly.
+func TestIndexExtractFlag(t *testing.T) {
+	got, rest := extractIndexFlag([]string{"--index"})
+	if !got {
+		t.Error("expected --index to be found")
+	}
+	if len(rest) != 0 {
+		t.Errorf("unexpected rest: %v", rest)
+	}
+
+	got, rest = extractIndexFlag([]string{"verb", "--index", "cat"})
+	if !got {
+		t.Error("expected --index to be found in middle position")
+	}
+	if len(rest) != 2 || rest[0] != "verb" || rest[1] != "cat" {
+		t.Errorf("unexpected rest: %v", rest)
+	}
+
+	got, _ = extractIndexFlag([]string{"verb", "cat"})
+	if got {
+		t.Error("expected --index not to be found")
+	}
+}
+
 // TestPerTopicLookups exercises the single-entry lookups used by
 // `mlr help <topic> <name> --json`, including the not-found path.
 func TestPerTopicLookups(t *testing.T) {

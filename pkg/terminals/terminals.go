@@ -40,6 +40,7 @@ func init() {
 		{registry.Repl, repl.ReplMain},
 		{registry.Script, script.ScriptMain},
 		{registry.Version, showVersion},
+		{registry.Which, help.WhichMain},
 	}
 }
 
