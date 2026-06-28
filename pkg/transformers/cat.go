@@ -17,6 +17,13 @@ var CatSetup = TransformerSetup{
 	UsageFunc:    transformerCatUsage,
 	ParseCLIFunc: transformerCatParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-n", Type: "bool", Desc: "Prepend field \"n\" to each record with record-counter starting at 1."},
+		{Flag: "-N", Arg: "{name}", Type: "string", Desc: "Prepend field {name} to each record with record-counter starting at 1."},
+		{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Optional group-by-field names for counters, e.g. a,b,c."},
+		{Flag: "--filename", Type: "bool", Desc: "Prepend current filename to each record."},
+		{Flag: "--filenum", Type: "bool", Desc: "Prepend current filenum (1-up) to each record."},
+	},
 }
 
 func transformerCatUsage(

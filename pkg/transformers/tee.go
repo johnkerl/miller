@@ -17,6 +17,10 @@ var TeeSetup = TransformerSetup{
 	UsageFunc:    transformerTeeUsage,
 	ParseCLIFunc: transformerTeeParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-a", Type: "bool", Desc: "Append to existing file, if any, rather than overwriting."},
+		{Flag: "-p", Type: "bool", Desc: "Treat filename as a pipe-to command."},
+	},
 }
 
 func transformerTeeUsage(

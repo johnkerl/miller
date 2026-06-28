@@ -16,6 +16,10 @@ var HeadSetup = TransformerSetup{
 	UsageFunc:    transformerHeadUsage,
 	ParseCLIFunc: transformerHeadParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Optional group-by-field names for head counts, e.g. a,b,c."},
+		{Flag: "-n", Arg: "{n}", Type: "int", Desc: "Head-count to print. Default 10. A negative value, e.g. -n -2, passes through all but the last n records, optionally by category."},
+	},
 }
 
 func transformerHeadUsage(

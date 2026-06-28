@@ -17,6 +17,10 @@ var TailSetup = TransformerSetup{
 	UsageFunc:    transformerTailUsage,
 	ParseCLIFunc: transformerTailParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Optional group-by-field names for tail counts, e.g. a,b,c."},
+		{Flag: "-n", Arg: "{n}", Type: "int", Desc: "Tail-count to print. Default 10. A leading '+', e.g. -n +3, passes through all but the first 2 records, optionally by category."},
+	},
 }
 
 func transformerTailUsage(
