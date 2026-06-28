@@ -17,6 +17,7 @@ var Sec2GMTDateSetup = TransformerSetup{
 	UsageFunc:    transformerSec2GMTDateUsage,
 	ParseCLIFunc: transformerSec2GMTDateParseCLI,
 	IgnoresInput: false,
+	Options:      []OptionSpec{},
 }
 
 func transformerSec2GMTDateUsage(

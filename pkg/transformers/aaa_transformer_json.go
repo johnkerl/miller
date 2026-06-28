@@ -23,7 +23,7 @@ type VerbInfoForJSON struct {
 	Name         string       `json:"name"`
 	Summary      string       `json:"summary"`
 	IgnoresInput bool         `json:"ignores_input"`
-	Options      []OptionSpec `json:"options,omitempty"`
+	Options      []OptionSpec `json:"options"`
 	UsageText    string       `json:"usage_text"`
 }
 

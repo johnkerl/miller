@@ -21,6 +21,15 @@ var CaseSetup = TransformerSetup{
 	UsageFunc:    transformerCaseUsage,
 	ParseCLIFunc: transformerCaseParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-k", Type: "bool", Desc: "Case only keys, not keys and values."},
+		{Flag: "-v", Type: "bool", Desc: "Case only values, not keys and values."},
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Specify which field names to case (default: all)."},
+		{Flag: "-u", Type: "bool", Desc: "Convert to uppercase."},
+		{Flag: "-l", Type: "bool", Desc: "Convert to lowercase."},
+		{Flag: "-s", Type: "bool", Desc: "Convert to sentence case (capitalize first letter)."},
+		{Flag: "-t", Type: "bool", Desc: "Convert to title case (capitalize words)."},
+	},
 }
 
 const (

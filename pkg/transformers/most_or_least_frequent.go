@@ -23,6 +23,12 @@ var MostFrequentSetup = TransformerSetup{
 	UsageFunc:    transformerMostFrequentUsage,
 	ParseCLIFunc: transformerMostFrequentParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to group by. Required."},
+		{Flag: "-n", Arg: "{count}", Type: "int", Desc: "Maximum number of results to output. Default 10."},
+		{Flag: "-b", Type: "bool", Desc: "Suppress counts; show only field values."},
+		{Flag: "-o", Arg: "{name}", Type: "string", Desc: "Field name for output count. Default \"count\"."},
+	},
 }
 
 var LeastFrequentSetup = TransformerSetup{
@@ -30,6 +36,12 @@ var LeastFrequentSetup = TransformerSetup{
 	UsageFunc:    transformerLeastFrequentUsage,
 	ParseCLIFunc: transformerLeastFrequentParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to group by. Required."},
+		{Flag: "-n", Arg: "{count}", Type: "int", Desc: "Maximum number of results to output. Default 10."},
+		{Flag: "-b", Type: "bool", Desc: "Suppress counts; show only field values."},
+		{Flag: "-o", Arg: "{name}", Type: "string", Desc: "Field name for output count. Default \"count\"."},
+	},
 }
 
 func transformerMostFrequentUsage(

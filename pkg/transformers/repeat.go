@@ -23,8 +23,21 @@ var RepeatSetup = TransformerSetup{
 	Verb:         verbNameRepeat,
 	UsageFunc:    transformerRepeatUsage,
 	ParseCLIFunc: transformerRepeatParseCLI,
-
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{
+			Flag: "-n",
+			Arg:  "{repeat count}",
+			Type: "int",
+			Desc: "Repeat each input record this many times.",
+		},
+		{
+			Flag: "-f",
+			Arg:  "{field name}",
+			Type: "string",
+			Desc: "Same as -n, but take the repeat count from the specified field name of each input record.",
+		},
+	},
 }
 
 func transformerRepeatUsage(

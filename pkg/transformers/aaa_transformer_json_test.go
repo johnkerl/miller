@@ -37,19 +37,24 @@ func TestMigratedVerbsHaveOptions(t *testing.T) {
 	}
 }
 
-// TestUnmigratedVerbHasNoOptions checks that an unmigrated verb still emits
-// nil Options (omitted from JSON) so agents fall back to usage_text.
-func TestUnmigratedVerbHasNoOptions(t *testing.T) {
-	// stats1 is intentionally not migrated in this PR.
-	info := GetVerbInfoForJSON("stats1")
-	if info == nil {
-		t.Fatal("stats1 not found in catalog")
-	}
-	if info.Options != nil {
-		t.Errorf("stats1: Options should be nil for unmigrated verb, got %v", info.Options)
-	}
-	if info.UsageText == "" {
-		t.Error("stats1: UsageText should be non-empty for unmigrated verb")
+// TestAllVerbsFullyMigrated asserts the full-migration invariant: every verb
+// in the catalog has a non-nil Options slice and a non-empty UsageText.
+// This is the Tier-2 completion check; it fails if a new verb is added without
+// populating Options.
+func TestAllVerbsFullyMigrated(t *testing.T) {
+	for i := range TRANSFORMER_LOOKUP_TABLE {
+		setup := &TRANSFORMER_LOOKUP_TABLE[i]
+		if setup.Options == nil {
+			t.Errorf("verb %q has nil Options (not yet migrated to Tier-2)", setup.Verb)
+		}
+		info := GetVerbInfoForJSON(setup.Verb)
+		if info == nil {
+			t.Errorf("verb %q: GetVerbInfoForJSON returned nil", setup.Verb)
+			continue
+		}
+		if info.UsageText == "" {
+			t.Errorf("verb %q: UsageText is empty", setup.Verb)
+		}
 	}
 }
 
@@ -102,25 +107,33 @@ func TestOptionsRoundTripJSON(t *testing.T) {
 	}
 }
 
-// TestUnmigratedVerbHasNilOptionsInJSON verifies that nil Options are omitted
-// from JSON (not serialized as null), so agents can use key presence to test
-// Tier-2 availability.
-func TestUnmigratedVerbHasNilOptionsInJSON(t *testing.T) {
-	info := GetVerbInfoForJSON("stats1")
-	if info == nil {
-		t.Fatal("stats1 not found")
-	}
-	b, err := json.Marshal(info)
-	if err != nil {
-		t.Fatalf("marshal: %v", err)
-	}
-	// The JSON must not contain an "options" key for an unmigrated verb.
-	var raw map[string]any
-	if err := json.Unmarshal(b, &raw); err != nil {
-		t.Fatalf("unmarshal to map: %v", err)
-	}
-	if _, ok := raw["options"]; ok {
-		t.Error("unmigrated verb stats1 should not have \"options\" key in JSON")
+// TestAllVerbsHaveOptionsKeyInJSON verifies that every fully-migrated verb
+// emits an "options" key in its JSON output (even when the list is empty),
+// so agents can rely on key presence as the Tier-2 signal.
+func TestAllVerbsHaveOptionsKeyInJSON(t *testing.T) {
+	for i := range TRANSFORMER_LOOKUP_TABLE {
+		setup := &TRANSFORMER_LOOKUP_TABLE[i]
+		if setup.Options == nil {
+			continue // not yet migrated; skip rather than double-fail
+		}
+		info := GetVerbInfoForJSON(setup.Verb)
+		if info == nil {
+			t.Errorf("verb %q: GetVerbInfoForJSON returned nil", setup.Verb)
+			continue
+		}
+		b, err := json.Marshal(info)
+		if err != nil {
+			t.Errorf("verb %q: marshal error: %v", setup.Verb, err)
+			continue
+		}
+		var raw map[string]any
+		if err := json.Unmarshal(b, &raw); err != nil {
+			t.Errorf("verb %q: unmarshal error: %v", setup.Verb, err)
+			continue
+		}
+		if _, ok := raw["options"]; !ok {
+			t.Errorf("verb %q: missing \"options\" key in JSON", setup.Verb)
+		}
 	}
 }
 

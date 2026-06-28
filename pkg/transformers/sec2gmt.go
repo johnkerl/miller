@@ -17,6 +17,20 @@ var Sec2GMTSetup = TransformerSetup{
 	UsageFunc:    transformerSec2GMTUsage,
 	ParseCLIFunc: transformerSec2GMTParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-1", Type: "bool", Desc: "Format seconds with 1 decimal place."},
+		{Flag: "-2", Type: "bool", Desc: "Format seconds with 2 decimal places."},
+		{Flag: "-3", Type: "bool", Desc: "Format seconds with 3 decimal places."},
+		{Flag: "-4", Type: "bool", Desc: "Format seconds with 4 decimal places."},
+		{Flag: "-5", Type: "bool", Desc: "Format seconds with 5 decimal places."},
+		{Flag: "-6", Type: "bool", Desc: "Format seconds with 6 decimal places."},
+		{Flag: "-7", Type: "bool", Desc: "Format seconds with 7 decimal places."},
+		{Flag: "-8", Type: "bool", Desc: "Format seconds with 8 decimal places."},
+		{Flag: "-9", Type: "bool", Desc: "Format seconds with 9 decimal places."},
+		{Flag: "--millis", Type: "bool", Desc: "Input numbers are treated as milliseconds since the epoch."},
+		{Flag: "--micros", Type: "bool", Desc: "Input numbers are treated as microseconds since the epoch."},
+		{Flag: "--nanos", Type: "bool", Desc: "Input numbers are treated as nanoseconds since the epoch."},
+	},
 }
 
 func transformerSec2GMTUsage(

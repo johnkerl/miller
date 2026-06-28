@@ -22,6 +22,20 @@ var Stats1Setup = TransformerSetup{
 	UsageFunc:    transformerStats1Usage,
 	ParseCLIFunc: transformerStats1ParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-a", Arg: "{sum,count,...}", Type: "enum", Desc: "Names of accumulators: one or more of the listed values. Also accepts percentile p{n} for n in 0..100.", Values: []string{"count", "null_count", "distinct_count", "mode", "antimode", "sum", "mean", "mad", "var", "stddev", "meaneb", "skewness", "kurtosis", "min", "max", "minlen", "maxlen"}},
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Value-field names on which to compute statistics."},
+		{Flag: "--fr", Arg: "{regex}", Type: "regex", Desc: "Regex for value-field names on which to compute statistics."},
+		{Flag: "--fx", Arg: "{regex}", Type: "regex", Desc: "Inverted regex for value-field names on which to compute statistics."},
+		{Flag: "-g", Arg: "{d,e,f}", Type: "csv-list", Desc: "Optional group-by-field names."},
+		{Flag: "--gr", Arg: "{regex}", Type: "regex", Desc: "Regex for optional group-by-field names."},
+		{Flag: "--gx", Arg: "{regex}", Type: "regex", Desc: "Inverted regex for optional group-by-field names."},
+		{Flag: "--grfx", Arg: "{regex}", Type: "regex", Desc: "Shorthand for --gr {regex} --fx {that same regex}."},
+		{Flag: "-i", Type: "bool", Desc: "Use interpolated percentiles, like R's type=7; default like type=1."},
+		{Flag: "-s", Type: "bool", Desc: "Print iterative stats. Useful in tail -f contexts."},
+		{Flag: "-S", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
+		{Flag: "-F", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
+	},
 }
 
 func transformerStats1Usage(

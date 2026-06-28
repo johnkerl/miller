@@ -29,8 +29,15 @@ var HavingFieldsSetup = TransformerSetup{
 	Verb:         verbNameHavingFields,
 	UsageFunc:    transformerHavingFieldsUsage,
 	ParseCLIFunc: transformerHavingFieldsParseCLI,
-
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "--at-least", Arg: "{a,b,c}", Type: "csv-list", Desc: "Pass records that have at least these field names."},
+		{Flag: "--which-are", Arg: "{a,b,c}", Type: "csv-list", Desc: "Pass records whose field names are exactly these."},
+		{Flag: "--at-most", Arg: "{a,b,c}", Type: "csv-list", Desc: "Pass records that have at most these field names."},
+		{Flag: "--all-matching", Arg: "{regex}", Type: "regex", Desc: "Pass records where all field names match the regex."},
+		{Flag: "--any-matching", Arg: "{regex}", Type: "regex", Desc: "Pass records where any field name matches the regex."},
+		{Flag: "--none-matching", Arg: "{regex}", Type: "regex", Desc: "Pass records where no field name matches the regex."},
+	},
 }
 
 func transformerHavingFieldsUsage(

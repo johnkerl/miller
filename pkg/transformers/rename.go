@@ -18,6 +18,18 @@ var RenameSetup = TransformerSetup{
 	UsageFunc:    transformerRenameUsage,
 	ParseCLIFunc: transformerRenameParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{
+			Flag: "-r",
+			Type: "bool",
+			Desc: "Treat old field names as regular expressions. New field names may contain capture groups of the form \"\\1\" through \"\\9\".",
+		},
+		{
+			Flag: "-g",
+			Type: "bool",
+			Desc: "Do global replacement within each field name rather than first-match replacement.",
+		},
+	},
 }
 
 func transformerRenameUsage(

@@ -18,6 +18,11 @@ var TemplateSetup = TransformerSetup{
 	UsageFunc:    transformerTemplateUsage,
 	ParseCLIFunc: transformerTemplateParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Comma-separated field names for template, e.g. a,b,c."},
+		{Flag: "-t", Arg: "{filename}", Type: "filename", Desc: "CSV file whose header line will be used for template."},
+		{Flag: "--fill-with", Arg: "{filler string}", Type: "string", Desc: "What to fill absent fields with. Defaults to the empty string."},
+	},
 }
 
 func transformerTemplateUsage(

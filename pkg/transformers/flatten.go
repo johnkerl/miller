@@ -17,6 +17,10 @@ var FlattenSetup = TransformerSetup{
 	UsageFunc:    transformerFlattenUsage,
 	ParseCLIFunc: transformerFlattenParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Type: "csv-list", Desc: "Comma-separated list of field names to flatten (default all)."},
+		{Flag: "-s", Arg: "{string}", Type: "string", Desc: "Separator, defaulting to mlr --flatsep value."},
+	},
 }
 
 func transformerFlattenUsage(

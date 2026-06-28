@@ -22,6 +22,18 @@ var SplitSetup = TransformerSetup{
 	UsageFunc:    transformerSplitUsage,
 	ParseCLIFunc: transformerSplitParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-n", Arg: "{n}", Type: "int", Desc: "Cap output file sizes at N records."},
+		{Flag: "-m", Arg: "{m}", Type: "int", Desc: "Produce M files, round-robining records among them."},
+		{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Write separate files with records having distinct values for the specified field names."},
+		{Flag: "--prefix", Arg: "{p}", Type: "string", Desc: "Output filename prefix. Default \"split\"."},
+		{Flag: "--suffix", Arg: "{s}", Type: "string", Desc: "Output filename suffix. Default is from the output format, e.g. \"csv\"."},
+		{Flag: "--folder", Arg: "{f}", Type: "filename", Desc: "Output directory. Default is current directory."},
+		{Flag: "-a", Type: "bool", Desc: "Append to existing files rather than overwriting."},
+		{Flag: "-v", Type: "bool", Desc: "Send records downstream as well as splitting to files."},
+		{Flag: "-e", Type: "bool", Desc: "Do NOT URL-escape names of output files."},
+		{Flag: "-j", Arg: "{J}", Type: "string", Desc: "String used to join filename parts. Default \"_\"."},
+	},
 }
 
 func transformerSplitUsage(

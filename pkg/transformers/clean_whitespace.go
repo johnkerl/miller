@@ -18,6 +18,12 @@ var CleanWhitespaceSetup = TransformerSetup{
 	UsageFunc:    transformerCleanWhitespaceUsage,
 	ParseCLIFunc: transformerCleanWhitespaceParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-k", Type: "bool", Desc: "Do not touch values."},
+		{Flag: "--keys-only", Type: "bool", Desc: "Do not touch values."},
+		{Flag: "-v", Type: "bool", Desc: "Do not touch keys."},
+		{Flag: "--values-only", Type: "bool", Desc: "Do not touch keys."},
+	},
 }
 
 func transformerCleanWhitespaceUsage(

@@ -21,6 +21,12 @@ var FormatValuesSetup = TransformerSetup{
 	UsageFunc:    transformerFormatValuesUsage,
 	ParseCLIFunc: transformerFormatValuesParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-i", Arg: "{integer format}", Type: "string", Desc: "Integer format string, e.g. \"%06lld\". Defaults to \"%d\". Must use ll-qualified format."},
+		{Flag: "-f", Arg: "{float format}", Type: "string", Desc: "Float format string, e.g. \"%8.3lf\". Defaults to \"%f\". Must use l[efg]-qualified format."},
+		{Flag: "-s", Arg: "{string format}", Type: "string", Desc: "String format string, e.g. \"_%s\". Defaults to \"%s\". Must use s-qualified format."},
+		{Flag: "-n", Type: "bool", Desc: "Coerce field values autodetected as int to float, then apply the float format."},
+	},
 }
 
 func transformerFormatValuesUsage(

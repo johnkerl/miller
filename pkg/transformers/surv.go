@@ -20,6 +20,10 @@ var SurvSetup = TransformerSetup{
 	UsageFunc:    transformerSurvUsage,
 	ParseCLIFunc: transformerSurvParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-d", Arg: "{field}", Type: "string", Desc: "Name of duration field (time-to-event or censoring)."},
+		{Flag: "-s", Arg: "{field}", Type: "string", Desc: "Name of status field (0=censored, 1=event)."},
+	},
 }
 
 func transformerSurvUsage(o *os.File) {

@@ -20,6 +20,14 @@ var CountDistinctSetup = TransformerSetup{
 	UsageFunc:    transformerCountDistinctUsage,
 	ParseCLIFunc: transformerCountDistinctParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names for distinct count (synonym for -g)."},
+		{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names for distinct count."},
+		{Flag: "-x", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to exclude for distinct count; use each record's other fields instead."},
+		{Flag: "-n", Type: "bool", Desc: "Show only the number of distinct values. Not compatible with -u."},
+		{Flag: "-o", Arg: "{name}", Type: "string", Desc: "Field name for output count. Default \"count\"."},
+		{Flag: "-u", Type: "bool", Desc: "Do unlashed counts for multiple field names."},
+	},
 }
 
 var UniqSetup = TransformerSetup{
@@ -27,6 +35,15 @@ var UniqSetup = TransformerSetup{
 	UsageFunc:    transformerUniqUsage,
 	ParseCLIFunc: transformerUniqParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-g", Arg: "{d,e,f}", Type: "csv-list", Desc: "Group-by field names for uniq counts."},
+		{Flag: "-f", Arg: "{d,e,f}", Type: "csv-list", Desc: "Synonym for -g."},
+		{Flag: "-x", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to exclude for uniq; use each record's other fields instead."},
+		{Flag: "-c", Type: "bool", Desc: "Show repeat counts in addition to unique values."},
+		{Flag: "-n", Type: "bool", Desc: "Show only the number of distinct values."},
+		{Flag: "-o", Arg: "{name}", Type: "string", Desc: "Field name for output count. Default \"count\"."},
+		{Flag: "-a", Type: "bool", Desc: "Output each unique record only once. Incompatible with -g."},
+	},
 }
 
 func transformerCountDistinctUsage(

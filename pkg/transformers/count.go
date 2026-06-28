@@ -18,6 +18,11 @@ var CountSetup = TransformerSetup{
 	UsageFunc:    transformerCountUsage,
 	ParseCLIFunc: transformerCountParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Optional group-by-field names for counts, e.g. a,b,c"},
+		{Flag: "-n", Type: "bool", Desc: "Show only the number of distinct values. Not interesting without -g."},
+		{Flag: "-o", Arg: "{name}", Type: "string", Desc: "Field name for output-count. Default \"count\"."},
+	},
 }
 
 func transformerCountUsage(

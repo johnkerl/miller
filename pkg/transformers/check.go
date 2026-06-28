@@ -16,6 +16,7 @@ var CheckSetup = TransformerSetup{
 	UsageFunc:    transformerCheckUsage,
 	ParseCLIFunc: transformerCheckParseCLI,
 	IgnoresInput: false,
+	Options:      []OptionSpec{},
 }
 
 func transformerCheckUsage(

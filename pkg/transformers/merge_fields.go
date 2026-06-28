@@ -19,6 +19,17 @@ var MergeFieldsSetup = TransformerSetup{
 	UsageFunc:    transformerMergeFieldsUsage,
 	ParseCLIFunc: transformerMergeFieldsParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-a", Arg: "{sum,count,...}", Type: "enum", Desc: "Names of accumulators: one or more of the listed values.", Values: []string{"count", "null_count", "distinct_count", "mode", "antimode", "sum", "mean", "mad", "var", "stddev", "meaneb", "skewness", "kurtosis", "min", "max", "minlen", "maxlen"}},
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Value-field names on which to compute statistics. Requires -o."},
+		{Flag: "-r", Arg: "{a,b,c}", Type: "csv-list", Desc: "Regular expressions for value-field names on which to compute statistics. Requires -o."},
+		{Flag: "-c", Arg: "{a,b,c}", Type: "csv-list", Desc: "Substrings for collapse mode: all fields with the same names after removing substrings are accumulated together."},
+		{Flag: "-i", Type: "bool", Desc: "Use interpolated percentiles, like R's type=7; default like type=1."},
+		{Flag: "-o", Arg: "{name}", Type: "string", Desc: "Output field basename for -f/-r."},
+		{Flag: "-k", Type: "bool", Desc: "Keep the input fields which contributed to the output statistics; the default is to omit them."},
+		{Flag: "-S", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
+		{Flag: "-F", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
+	},
 }
 
 type mergeByType int

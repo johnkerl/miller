@@ -58,6 +58,18 @@ var SortSetup = TransformerSetup{
 	UsageFunc:    transformerSortUsage,
 	ParseCLIFunc: transformerSortParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Lexical ascending sort on the specified field names.", Repeatable: true},
+		{Flag: "-r", Arg: "{a,b,c}", Type: "csv-list", Desc: "Lexical descending sort on the specified field names.", Repeatable: true},
+		{Flag: "-c", Arg: "{a,b,c}", Type: "csv-list", Desc: "Case-folded lexical ascending sort on the specified field names.", Repeatable: true},
+		{Flag: "-cr", Arg: "{a,b,c}", Type: "csv-list", Desc: "Case-folded lexical descending sort on the specified field names.", Repeatable: true},
+		{Flag: "-n", Arg: "{a,b,c}", Type: "csv-list", Desc: "Numerical ascending sort on the specified field names; nulls sort last.", Repeatable: true},
+		{Flag: "-nf", Arg: "{a,b,c}", Type: "csv-list", Desc: "Same as -n.", Repeatable: true},
+		{Flag: "-nr", Arg: "{a,b,c}", Type: "csv-list", Desc: "Numerical descending sort on the specified field names; nulls sort first.", Repeatable: true},
+		{Flag: "-t", Arg: "{a,b,c}", Type: "csv-list", Desc: "Natural ascending sort on the specified field names.", Repeatable: true},
+		{Flag: "-tr", Arg: "{a,b,c}", Type: "csv-list", Desc: "Natural descending sort on the specified field names.", Repeatable: true},
+		{Flag: "-b", Type: "bool", Desc: "Move sort fields to start of record, as in reorder -b."},
+	},
 }
 
 func transformerSortUsage(

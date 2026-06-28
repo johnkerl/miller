@@ -18,6 +18,10 @@ var UnsparsifySetup = TransformerSetup{
 	UsageFunc:    transformerUnsparsifyUsage,
 	ParseCLIFunc: transformerUnsparsifyParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "--fill-with", Arg: "{filler string}", Type: "string", Desc: "What to fill absent fields with. Defaults to the empty string."},
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Specify field names to be operated on; others are not modified and operation is streaming."},
+	},
 }
 
 func transformerUnsparsifyUsage(

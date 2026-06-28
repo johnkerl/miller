@@ -21,6 +21,13 @@ var CutSetup = TransformerSetup{
 	UsageFunc:    transformerCutUsage,
 	ParseCLIFunc: transformerCutParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Comma-separated field names to include or exclude."},
+		{Flag: "-o", Type: "bool", Desc: "Retain fields in the order specified by -f rather than in input-record order."},
+		{Flag: "-x", Type: "bool", Desc: "Exclude, rather than include, the field names specified by -f."},
+		{Flag: "--complement", Type: "bool", Desc: "Synonym for -x."},
+		{Flag: "-r", Type: "bool", Desc: "Treat field names as regular expressions."},
+	},
 }
 
 func transformerCutUsage(

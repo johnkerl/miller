@@ -18,6 +18,7 @@ var Latin1ToUTF8Setup = TransformerSetup{
 	UsageFunc:    transformerLatin1ToUTF8Usage,
 	ParseCLIFunc: transformerLatin1ToUTF8ParseCLI,
 	IgnoresInput: false,
+	Options:      []OptionSpec{},
 }
 
 func transformerLatin1ToUTF8Usage(

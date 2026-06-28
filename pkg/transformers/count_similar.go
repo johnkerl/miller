@@ -18,6 +18,10 @@ var CountSimilarSetup = TransformerSetup{
 	UsageFunc:    transformerCountSimilarUsage,
 	ParseCLIFunc: transformerCountSimilarParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Group-by-field names for counts, e.g. a,b,c"},
+		{Flag: "-o", Arg: "{name}", Type: "string", Desc: "Field name for output-counts. Defaults to \"count\"."},
+	},
 }
 
 func transformerCountSimilarUsage(

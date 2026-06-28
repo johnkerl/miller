@@ -17,6 +17,20 @@ var SampleSetup = TransformerSetup{
 	UsageFunc:    transformerSampleUsage,
 	ParseCLIFunc: transformerSampleParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{
+			Flag: "-g",
+			Arg:  "{a,b,c}",
+			Type: "csv-list",
+			Desc: "Optional: group-by-field names for samples, e.g. a,b,c.",
+		},
+		{
+			Flag: "-k",
+			Arg:  "{k}",
+			Type: "int",
+			Desc: "Required: number of records to output in total, or by group if using -g.",
+		},
+	},
 }
 
 func transformerSampleUsage(

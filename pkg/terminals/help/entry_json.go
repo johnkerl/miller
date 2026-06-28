@@ -28,7 +28,7 @@ import (
 // catalogSchemaVersion is bumped whenever the shape of the JSON catalog
 // changes. Agents and tools can use this (together with mlr_version) as a
 // cache key: re-fetch only when either value changes.
-const catalogSchemaVersion = 1
+const catalogSchemaVersion = 2
 
 // CatalogForJSON is the top-level document emitted by `mlr help --as-json`
 // with no further topic: the entire help catalog in one machine-readable

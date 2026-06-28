@@ -22,6 +22,11 @@ var SubSetup = TransformerSetup{
 	UsageFunc:    transformerSubUsage,
 	ParseCLIFunc: transformerSubParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to apply substitution to."},
+		{Flag: "-r", Arg: "{regex}", Type: "regex", Desc: "Regular expression for field names to apply substitution to."},
+		{Flag: "-a", Type: "bool", Desc: "Apply substitution to all fields."},
+	},
 }
 
 var GsubSetup = TransformerSetup{
@@ -29,6 +34,11 @@ var GsubSetup = TransformerSetup{
 	UsageFunc:    transformerGsubUsage,
 	ParseCLIFunc: transformerGsubParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to apply substitution to."},
+		{Flag: "-r", Arg: "{regex}", Type: "regex", Desc: "Regular expression for field names to apply substitution to."},
+		{Flag: "-a", Type: "bool", Desc: "Apply substitution to all fields."},
+	},
 }
 
 var SsubSetup = TransformerSetup{
@@ -36,6 +46,11 @@ var SsubSetup = TransformerSetup{
 	UsageFunc:    transformerSsubUsage,
 	ParseCLIFunc: transformerSsubParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to apply substitution to."},
+		{Flag: "-r", Arg: "{regex}", Type: "regex", Desc: "Regular expression for field names to apply substitution to."},
+		{Flag: "-a", Type: "bool", Desc: "Apply substitution to all fields."},
+	},
 }
 
 func transformerSubUsage(

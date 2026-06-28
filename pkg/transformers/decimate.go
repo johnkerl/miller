@@ -16,6 +16,12 @@ var DecimateSetup = TransformerSetup{
 	UsageFunc:    transformerDecimateUsage,
 	ParseCLIFunc: transformerDecimateParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-b", Type: "bool", Desc: "Decimate by printing first of every n."},
+		{Flag: "-e", Type: "bool", Desc: "Decimate by printing last of every n (default)."},
+		{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Optional group-by-field names for decimate counts, e.g. a,b,c."},
+		{Flag: "-n", Arg: "{n}", Type: "int", Desc: "Decimation factor (default 10)."},
+	},
 }
 
 func transformerDecimateUsage(
