@@ -50,7 +50,6 @@ func transformerUTF8ToLatin1ParseCLI(
 		if args[argi] == "--" {
 			break // All transformers must do this so main-flags can follow verb-flags
 		}
-		argi++
 
 		if opt == "-h" || opt == "--help" {
 			transformerUTF8ToLatin1Usage(os.Stdout)

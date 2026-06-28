@@ -645,8 +645,7 @@ func (tr *TransformerNest) implodeValueAcrossRecords(
 		}
 
 		otherValuesJoined := inrec.GetValuesJoinedExcept(originalEntry)
-		var bucket *tNestBucket = nil
-		bucket = otherValuesToBuckets.Get(otherValuesJoined)
+		bucket := otherValuesToBuckets.Get(otherValuesJoined)
 		if bucket == nil {
 			bucket = newNestBucket(inrec)
 			otherValuesToBuckets.Put(otherValuesJoined, bucket)

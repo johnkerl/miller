@@ -195,7 +195,7 @@ func NewTransformerBar(
 
 	tr.bars = make([]string, width+1)
 	for i := 0; i <= tr.width; i++ {
-		var bar = ""
+		var bar string
 		if i == 0 {
 			bar = tr.oobString + strings.Repeat(tr.blankString, width-1)
 		} else if i < width {

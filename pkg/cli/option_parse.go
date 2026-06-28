@@ -3467,8 +3467,6 @@ var MiscFlagSection = FlagSection{
 				for !eof {
 					line, err := lineReader.ReadString('\n')
 					if err == io.EOF {
-						err = nil
-						eof = true
 						break
 					}
 					lineno++

@@ -52,7 +52,6 @@ func transformerLabelParseCLI(
 		if args[argi] == "--" {
 			break // All transformers must do this so main-flags can follow verb-flags
 		}
-		argi++
 
 		if opt == "-h" || opt == "--help" {
 			transformerLabelUsage(os.Stdout)

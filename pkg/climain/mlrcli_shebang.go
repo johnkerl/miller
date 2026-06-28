@@ -26,7 +26,7 @@ import (
 // * This is how shebang lines work
 // * There are Miller verbs with -s flags and we don't want to disrupt their behavior.
 func maybeInterpolateDashS(args []string) ([]string, error) {
-	stripComments := true
+	var stripComments bool
 
 	if len(args) < 2 {
 		return args, nil
