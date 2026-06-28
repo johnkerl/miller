@@ -16,6 +16,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"sort"
+	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/dsl/cst"
@@ -89,11 +91,83 @@ func printAsJSON(v any) int {
 	return 0
 }
 
-// helpJSON dispatches `mlr help --as-json [topic [names...]]`. With no topic
-// it emits the full catalog; with a topic (verb/function/flag/keyword) it
-// emits just those entries -- all of them if no names are given, or the named
-// ones.
+// IndexEntryForJSON is one entry in the lightweight capability index emitted
+// by `mlr help --as-json --index`. It carries only the name and a one-line
+// summary -- no bodies, examples, or usage_text -- so an agent can quickly
+// scan the full surface before drilling into individual entries.
+type IndexEntryForJSON struct {
+	Kind    string `json:"kind"`
+	Name    string `json:"name"`
+	Summary string `json:"summary"`
+}
+
+// buildIndex assembles the lightweight index over all four catalogs. Entries
+// are sorted by kind (verb, function, flag, keyword) then by name within each
+// kind, giving a deterministic, diffable output.
+func buildIndex() []IndexEntryForJSON {
+	entries := make([]IndexEntryForJSON, 0)
+
+	for _, v := range transformers.GetVerbInfosForJSON() {
+		entries = append(entries, IndexEntryForJSON{Kind: "verb", Name: v.Name, Summary: v.Summary})
+	}
+	for _, f := range cst.BuiltinFunctionManagerInstance.GetFunctionInfosForJSON() {
+		entries = append(entries, IndexEntryForJSON{Kind: "function", Name: f.Name, Summary: indexFirstLine(f.Help)})
+	}
+	for _, fl := range cli.FLAG_TABLE.GetFlagInfosForJSON() {
+		entries = append(entries, IndexEntryForJSON{Kind: "flag", Name: fl.Name, Summary: indexFirstLine(fl.Help)})
+	}
+	for _, kw := range cst.GetKeywordInfosForJSON() {
+		entries = append(entries, IndexEntryForJSON{Kind: "keyword", Name: kw.Name, Summary: indexFirstLine(kw.Help)})
+	}
+
+	kindOrder := map[string]int{"verb": 0, "function": 1, "flag": 2, "keyword": 3}
+	sort.Slice(entries, func(i, j int) bool {
+		ri, rj := kindOrder[entries[i].Kind], kindOrder[entries[j].Kind]
+		if ri != rj {
+			return ri < rj
+		}
+		return entries[i].Name < entries[j].Name
+	})
+
+	return entries
+}
+
+// indexFirstLine returns the first non-empty line of s, suitable as a
+// one-liner summary in the index.
+func indexFirstLine(s string) string {
+	for _, line := range strings.Split(s, "\n") {
+		if t := strings.TrimSpace(line); t != "" {
+			return t
+		}
+	}
+	return s
+}
+
+// extractIndexFlag removes any "--index" token from args, returning whether
+// one was present along with the remaining args.
+func extractIndexFlag(args []string) (bool, []string) {
+	found := false
+	kept := make([]string, 0, len(args))
+	for _, arg := range args {
+		if arg == "--index" {
+			found = true
+		} else {
+			kept = append(kept, arg)
+		}
+	}
+	return found, kept
+}
+
+// helpJSON dispatches `mlr help --as-json [--index] [topic [names...]]`. With
+// no topic it emits the full catalog; with --index it emits the lightweight
+// summary index; with a topic (verb/function/flag/keyword) it emits just those
+// entries -- all of them if no names are given, or the named ones.
 func helpJSON(args []string) int {
+	wantIndex, args := extractIndexFlag(args)
+	if wantIndex {
+		return printAsJSON(buildIndex())
+	}
+
 	if len(args) == 0 {
 		return printAsJSON(buildFullCatalog())
 	}
@@ -113,6 +187,7 @@ func helpJSON(args []string) int {
 	default:
 		fmt.Printf("mlr help --as-json: unsupported topic \"%s\".\n", topic)
 		fmt.Printf("Supported: (no topic) for the full catalog, or one of: verb, function, flag, keyword.\n")
+		fmt.Printf("With --index: lightweight name+summary list across all catalog items.\n")
 		return 1
 	}
 }

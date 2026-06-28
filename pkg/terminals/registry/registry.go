@@ -19,6 +19,7 @@ const (
 	Repl         = "repl"
 	Script       = "script"
 	Version      = "version"
+	Which        = "which"
 )
 
 // Names is the ordered list of all terminal subcommand names.
@@ -30,6 +31,7 @@ var Names = []string{
 	Repl,
 	Script,
 	Version,
+	Which,
 }
 
 // Top-level version flags, handled in pkg/climain before normal command-line

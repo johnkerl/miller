@@ -14,6 +14,7 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/terminals/regtest"
 	"github.com/johnkerl/miller/v6/pkg/terminals/repl"
 	"github.com/johnkerl/miller/v6/pkg/terminals/script"
+	"github.com/johnkerl/miller/v6/pkg/terminals/which"
 	"github.com/johnkerl/miller/v6/pkg/version"
 )
 
@@ -40,6 +41,7 @@ func init() {
 		{registry.Repl, repl.ReplMain},
 		{registry.Script, script.ScriptMain},
 		{registry.Version, showVersion},
+		{registry.Which, which.WhichMain},
 	}
 }
 
