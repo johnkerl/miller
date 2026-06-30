@@ -13,6 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.0
 
+      # Context for pin: https://github.com/johnkerl/miller/pull/2119
       - uses: snapcore/action-build@edf78ca622b1eb99b69f09420bb19f77e4f84ac1
         id: build
         
