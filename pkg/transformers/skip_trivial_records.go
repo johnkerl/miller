@@ -16,6 +16,7 @@ var SkipTrivialRecordsSetup = TransformerSetup{
 	UsageFunc:    transformerSkipTrivialRecordsUsage,
 	ParseCLIFunc: transformerSkipTrivialRecordsParseCLI,
 	IgnoresInput: false,
+	Options:      []OptionSpec{},
 }
 
 func transformerSkipTrivialRecordsUsage(

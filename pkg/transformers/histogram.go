@@ -19,6 +19,14 @@ var HistogramSetup = TransformerSetup{
 	UsageFunc:    transformerHistogramUsage,
 	ParseCLIFunc: transformerHistogramParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Value-field names for histogram counts."},
+		{Flag: "--lo", Arg: "{lo}", Type: "float", Desc: "Histogram low value."},
+		{Flag: "--hi", Arg: "{hi}", Type: "float", Desc: "Histogram high value."},
+		{Flag: "--nbins", Arg: "{n}", Type: "int", Desc: "Number of histogram bins. Defaults to 20."},
+		{Flag: "--auto", Type: "bool", Desc: "Automatically computes limits, ignoring --lo and --hi. Holds all values in memory before producing any output."},
+		{Flag: "-o", Arg: "{prefix}", Type: "string", Desc: "Prefix for output field name. Default: no prefix."},
+	},
 }
 
 func transformerHistogramUsage(

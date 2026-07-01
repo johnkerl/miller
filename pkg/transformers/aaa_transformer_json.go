@@ -1,12 +1,10 @@
 // Machine-readable (JSON) accessors over the verb (transformer) catalog, for
 // `mlr help --as-json` and similar tooling.
 //
-// Tier-1 caveat: unlike functions and flags, verb options are not held in any
-// structured form -- each verb hand-writes a UsageFunc that prints prose. So
-// here we expose the verb name, a one-line summary, and the captured raw usage
-// text. Structured per-verb options (flag/arg/type) are a planned follow-on
-// (an optional Options field on TransformerSetup); when present they can be
-// emitted alongside UsageText.
+// Tier-1: every verb exposes Summary and UsageText (prose fallback).
+// Tier-2: verbs that have been migrated populate Options on their
+// TransformerSetup; those entries appear as a structured option list in the
+// JSON and agents no longer need to scrape the prose.
 
 package transformers
 
@@ -17,14 +15,16 @@ import (
 	"strings"
 )
 
-// VerbInfoForJSON is the structured view of a single verb. Summary is the first
-// non-"Usage:" line of the usage text; UsageText is the verb's full usage
-// output verbatim (the Tier-1 fallback for not-yet-structured options).
+// VerbInfoForJSON is the structured view of a single verb.
+//   - Options is non-nil for Tier-2 verbs that have been migrated; agents
+//     should prefer it when available.
+//   - UsageText is always present as the Tier-1 prose fallback.
 type VerbInfoForJSON struct {
-	Name         string `json:"name"`
-	Summary      string `json:"summary"`
-	IgnoresInput bool   `json:"ignores_input"`
-	UsageText    string `json:"usage_text"`
+	Name         string       `json:"name"`
+	Summary      string       `json:"summary"`
+	IgnoresInput bool         `json:"ignores_input"`
+	Options      []OptionSpec `json:"options"`
+	UsageText    string       `json:"usage_text"`
 }
 
 // captureUsageFunc runs a verb's UsageFunc against a pipe and returns what it
@@ -70,6 +70,7 @@ func makeVerbInfoForJSON(setup *TransformerSetup) *VerbInfoForJSON {
 		Name:         setup.Verb,
 		Summary:      summarizeUsageText(usageText),
 		IgnoresInput: setup.IgnoresInput,
+		Options:      setup.Options, // nil for unmigrated verbs; omitted from JSON via omitempty
 		UsageText:    strings.TrimRight(usageText, "\n"),
 	}
 }

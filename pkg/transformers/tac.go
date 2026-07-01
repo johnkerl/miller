@@ -16,6 +16,7 @@ var TacSetup = TransformerSetup{
 	UsageFunc:    transformerTacUsage,
 	ParseCLIFunc: transformerTacParseCLI,
 	IgnoresInput: false,
+	Options:      []OptionSpec{},
 }
 
 func transformerTacUsage(

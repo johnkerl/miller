@@ -22,6 +22,11 @@ var SortWithinRecordsSetup = TransformerSetup{
 	UsageFunc:    transformerSortWithinRecordsUsage,
 	ParseCLIFunc: transformerSortWithinRecordsParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{names}", Type: "csv-list", Desc: "Sort only these keys; others preserve record order."},
+		{Flag: "-r", Arg: "{regex}", Type: "regex", Desc: "Sort only keys matching this regex. Without argument, recursively sorts subobjects or (with -f) treats names as regexes."},
+		{Flag: "-n", Type: "bool", Desc: "Sort field names naturally (e.g. 2 before 12). Combines with -f/-r."},
+	},
 }
 
 func transformerSortWithinRecordsUsage(

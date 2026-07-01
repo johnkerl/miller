@@ -20,6 +20,13 @@ var ReorderSetup = TransformerSetup{
 	UsageFunc:    transformerReorderUsage,
 	ParseCLIFunc: transformerReorderParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to reorder."},
+		{Flag: "-e", Type: "bool", Desc: "Put specified field names at record end: default is to put them at record start."},
+		{Flag: "-r", Arg: "{a,b,c}", Type: "csv-list", Desc: "Treat field names as regular expressions. Matched fields are moved to start or end in record order."},
+		{Flag: "-b", Arg: "{x}", Type: "string", Desc: "Put field names specified with -f before field name specified by {x}, if any."},
+		{Flag: "-a", Arg: "{x}", Type: "string", Desc: "Put field names specified with -f after field name specified by {x}, if any."},
+	},
 }
 
 func transformerReorderUsage(

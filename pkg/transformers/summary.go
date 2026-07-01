@@ -72,6 +72,12 @@ var SummarySetup = TransformerSetup{
 	UsageFunc:    transformerSummaryUsage,
 	ParseCLIFunc: transformerSummaryParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-a", Arg: "{mean,sum,etc.}", Type: "enum", Desc: "Use only the specified summarizers.", Values: []string{"field_type", "count", "null_count", "distinct_count", "mode", "sum", "mean", "stddev", "var", "skewness", "minlen", "maxlen", "min", "p25", "median", "p75", "max", "iqr", "lof", "lif", "uif", "uof"}},
+		{Flag: "-x", Arg: "{mean,sum,etc.}", Type: "enum", Desc: "Use all summarizers except the specified ones.", Values: []string{"field_type", "count", "null_count", "distinct_count", "mode", "sum", "mean", "stddev", "var", "skewness", "minlen", "maxlen", "min", "p25", "median", "p75", "max", "iqr", "lof", "lif", "uif", "uof"}},
+		{Flag: "--all", Type: "bool", Desc: "Use all available summarizers."},
+		{Flag: "--transpose", Type: "bool", Desc: "Show output with field names as column names."},
+	},
 }
 
 func transformerSummaryUsage(

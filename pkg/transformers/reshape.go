@@ -45,6 +45,12 @@ var ReshapeSetup = TransformerSetup{
 	UsageFunc:    transformerReshapeUsage,
 	ParseCLIFunc: transformerReshapeParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-i", Arg: "{input field names}", Type: "csv-list", Desc: "Input field names for wide-to-long reshape. Use with -o."},
+		{Flag: "-r", Arg: "{input field regex}", Type: "regex", Desc: "Input field regex for wide-to-long reshape. May be repeated. Use with -o.", Repeatable: true},
+		{Flag: "-o", Arg: "{key-field name,value-field name}", Type: "csv-list", Desc: "Output key-field and value-field names for wide-to-long reshape. Requires -i or -r."},
+		{Flag: "-s", Arg: "{key-field name,value-field name}", Type: "csv-list", Desc: "Key-field and value-field names for long-to-wide reshape."},
+	},
 }
 
 func transformerReshapeUsage(

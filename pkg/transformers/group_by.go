@@ -17,6 +17,7 @@ var GroupBySetup = TransformerSetup{
 	UsageFunc:    transformerGroupByUsage,
 	ParseCLIFunc: transformerGroupByParseCLI,
 	IgnoresInput: false,
+	Options:      []OptionSpec{},
 }
 
 func transformerGroupByUsage(

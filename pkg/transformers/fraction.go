@@ -20,6 +20,12 @@ var FractionSetup = TransformerSetup{
 	UsageFunc:    transformerFractionUsage,
 	ParseCLIFunc: transformerFractionParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field name(s) for fraction calculation"},
+		{Flag: "-g", Arg: "{d,e,f}", Type: "csv-list", Desc: "Optional group-by-field name(s) for fraction counts"},
+		{Flag: "-p", Type: "bool", Desc: "Produce percents [0..100], not fractions [0..1]. Output field names end with \"_percent\" rather than \"_fraction\""},
+		{Flag: "-c", Type: "bool", Desc: "Produce cumulative distributions, i.e. running sums: each output value folds in the sum of the previous for the specified group"},
+	},
 }
 
 func transformerFractionUsage(

@@ -18,6 +18,7 @@ var RegularizeSetup = TransformerSetup{
 	UsageFunc:    transformerRegularizeUsage,
 	ParseCLIFunc: transformerRegularizeParseCLI,
 	IgnoresInput: false,
+	Options:      []OptionSpec{},
 }
 
 func transformerRegularizeUsage(

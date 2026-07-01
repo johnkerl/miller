@@ -17,6 +17,11 @@ var UnspaceSetup = TransformerSetup{
 	UsageFunc:    transformerUnspaceUsage,
 	ParseCLIFunc: transformerUnspaceParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{x}", Type: "string", Desc: "Replace spaces with specified filler character. Default \"_\"."},
+		{Flag: "-k", Type: "bool", Desc: "Unspace only keys, not keys and values."},
+		{Flag: "-v", Type: "bool", Desc: "Unspace only values, not keys and values."},
+	},
 }
 
 func transformerUnspaceUsage(

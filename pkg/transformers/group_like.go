@@ -17,6 +17,7 @@ var GroupLikeSetup = TransformerSetup{
 	UsageFunc:    transformerGroupLikeUsage,
 	ParseCLIFunc: transformerGroupLikeParseCLI,
 	IgnoresInput: false,
+	Options:      []OptionSpec{},
 }
 
 func transformerGroupLikeUsage(

@@ -17,6 +17,7 @@ var RemoveEmptyColumnsSetup = TransformerSetup{
 	UsageFunc:    transformerRemoveEmptyColumnsUsage,
 	ParseCLIFunc: transformerRemoveEmptyColumnsParseCLI,
 	IgnoresInput: false,
+	Options:      []OptionSpec{},
 }
 
 func transformerRemoveEmptyColumnsUsage(

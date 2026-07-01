@@ -21,6 +21,20 @@ var NestSetup = TransformerSetup{
 	UsageFunc:    transformerNestUsage,
 	ParseCLIFunc: transformerNestParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "--explode", Type: "bool", Desc: "Explode field values into separate fields/records. One of --explode or --implode is required."},
+		{Flag: "--implode", Type: "bool", Desc: "Reverse of --explode. One of --explode or --implode is required."},
+		{Flag: "--values", Type: "bool", Desc: "Operate on field values. One of --values or --pairs is required."},
+		{Flag: "--pairs", Type: "bool", Desc: "Operate on field key-value pairs. One of --values or --pairs is required."},
+		{Flag: "--across-records", Type: "bool", Desc: "Explode/implode across records. One of --across-records or --across-fields is required."},
+		{Flag: "--across-fields", Type: "bool", Desc: "Explode/implode across fields. One of --across-records or --across-fields is required."},
+		{Flag: "-f", Arg: "{field name}", Type: "string", Desc: "Required field name to operate on."},
+		{Flag: "-r", Arg: "{field names}", Type: "regex", Desc: "Like -f but treat arguments as a regular expression matching field names."},
+		{Flag: "--nested-fs", Arg: "{string}", Type: "string", Desc: "Field separator for nested values. Defaults to \";\"."},
+		{Flag: "--nested-ps", Arg: "{string}", Type: "string", Desc: "Pair separator for nested key-value pairs. Defaults to \":\"."},
+		{Flag: "--evar", Arg: "{string}", Type: "string", Desc: "Shorthand for --explode --values --across-records --nested-fs {string}."},
+		{Flag: "--ivar", Arg: "{string}", Type: "string", Desc: "Shorthand for --implode --values --across-records --nested-fs {string}."},
+	},
 }
 
 func transformerNestUsage(

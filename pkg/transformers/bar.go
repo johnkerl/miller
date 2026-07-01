@@ -25,6 +25,16 @@ var BarSetup = TransformerSetup{
 	UsageFunc:    transformerBarUsage,
 	ParseCLIFunc: transformerBarParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to convert to bars."},
+		{Flag: "--lo", Arg: "{lo}", Type: "float", Desc: "Lower-limit value for min-width bar: default '0.000000'."},
+		{Flag: "--hi", Arg: "{hi}", Type: "float", Desc: "Upper-limit value for max-width bar: default '100.000000'."},
+		{Flag: "-w", Arg: "{n}", Type: "int", Desc: "Bar-field width: default '40'."},
+		{Flag: "--auto", Type: "bool", Desc: "Automatically computes limits, ignoring --lo and --hi. Holds all records in memory before producing any output."},
+		{Flag: "-c", Arg: "{character}", Type: "string", Desc: "Fill character: default '*'."},
+		{Flag: "-x", Arg: "{character}", Type: "string", Desc: "Out-of-bounds character: default '#'."},
+		{Flag: "-b", Arg: "{character}", Type: "string", Desc: "Blank character: default '.'."},
+	},
 }
 
 func transformerBarUsage(

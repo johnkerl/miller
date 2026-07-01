@@ -18,6 +18,10 @@ var FillEmptySetup = TransformerSetup{
 	UsageFunc:    transformerFillEmptyUsage,
 	ParseCLIFunc: transformerFillEmptyParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-v", Arg: "{string}", Type: "string", Desc: "Fill-value: defaults to \"N/A\""},
+		{Flag: "-S", Type: "bool", Desc: "Don't infer type -- so '-v 0' would fill string 0 not int 0."},
+	},
 }
 
 func transformerFillEmptyUsage(

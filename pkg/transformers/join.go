@@ -20,6 +20,22 @@ var JoinSetup = TransformerSetup{
 	UsageFunc:    transformerJoinUsage,
 	ParseCLIFunc: transformerJoinParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{left file name}", Type: "filename", Desc: "Left file name for join."},
+		{Flag: "-j", Arg: "{a,b,c}", Type: "csv-list", Desc: "Comma-separated join-field names for output."},
+		{Flag: "-l", Arg: "{a,b,c}", Type: "csv-list", Desc: "Comma-separated join-field names for left input file; defaults to -j values if omitted."},
+		{Flag: "-r", Arg: "{a,b,c}", Type: "csv-list", Desc: "Comma-separated join-field names for right input file(s); defaults to -j values if omitted."},
+		{Flag: "--lk", Arg: "{a,b,c}", Type: "csv-list", Desc: "Keep only the specified field names from the left file. Automatically includes the join-field name(s)."},
+		{Flag: "--lp", Arg: "{text}", Type: "string", Desc: "Additional prefix for non-join output field names from the left file."},
+		{Flag: "--rp", Arg: "{text}", Type: "string", Desc: "Additional prefix for non-join output field names from the right file(s)."},
+		{Flag: "--np", Type: "bool", Desc: "Do not emit paired records."},
+		{Flag: "--ul", Type: "bool", Desc: "Emit unpaired records from the left file."},
+		{Flag: "--ur", Type: "bool", Desc: "Emit unpaired records from the right file(s)."},
+		{Flag: "-s", Type: "bool", Desc: "Require sorted input: records must be sorted lexically by their join-field names."},
+		{Flag: "-u", Type: "bool", Desc: "Enable unsorted input (this is the default)."},
+		{Flag: "--prepipe", Arg: "{command}", Type: "string", Desc: "Shell command to prepipe the left-file input through."},
+		{Flag: "--prepipex", Arg: "{command}", Type: "string", Desc: "Shell command to prepipe the left-file input through (no shell quoting)."},
+	},
 }
 
 // Most transformers have option-variables as individual locals within the

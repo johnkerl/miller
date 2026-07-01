@@ -17,6 +17,11 @@ var GrepSetup = TransformerSetup{
 	UsageFunc:    transformerGrepUsage,
 	ParseCLIFunc: transformerGrepParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-i", Type: "bool", Desc: "Use case-insensitive search."},
+		{Flag: "-v", Type: "bool", Desc: "Invert: pass through records which do not match the regex."},
+		{Flag: "-a", Type: "bool", Desc: "Only grep for values, not keys and values."},
+	},
 }
 
 func transformerGrepUsage(

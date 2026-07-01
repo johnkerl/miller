@@ -17,6 +17,9 @@ var BootstrapSetup = TransformerSetup{
 	UsageFunc:    transformerBootstrapUsage,
 	ParseCLIFunc: transformerBootstrapParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-n", Arg: "{n}", Type: "int", Desc: "Number of samples to output. Defaults to number of input records. Must be non-negative."},
+	},
 }
 
 func transformerBootstrapUsage(

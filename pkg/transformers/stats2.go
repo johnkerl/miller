@@ -23,6 +23,16 @@ var Stats2Setup = TransformerSetup{
 	UsageFunc:    transformerStats2Usage,
 	ParseCLIFunc: transformerStats2ParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-a", Arg: "{linreg-ols,corr,...}", Type: "enum", Desc: "Names of accumulators: one or more of the listed values.", Values: []string{"linreg-ols", "r2", "logireg", "corr", "cov"}},
+		{Flag: "-f", Arg: "{a,b,c,d}", Type: "csv-list", Desc: "Value-field name-pairs on which to compute statistics. There must be an even number of names."},
+		{Flag: "-g", Arg: "{e,f,g}", Type: "csv-list", Desc: "Optional group-by-field names."},
+		{Flag: "-v", Type: "bool", Desc: "Print additional output for linreg-pca."},
+		{Flag: "-s", Type: "bool", Desc: "Print iterative stats. Useful in tail -f contexts."},
+		{Flag: "--fit", Type: "bool", Desc: "Rather than printing regression parameters, applies them to the input data to compute new fit fields."},
+		{Flag: "-S", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
+		{Flag: "-F", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
+	},
 }
 
 func transformerStats2Usage(

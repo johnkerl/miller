@@ -21,6 +21,23 @@ var PutSetup = TransformerSetup{
 	UsageFunc:    transformerPutUsage,
 	ParseCLIFunc: transformerPutOrFilterParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{file name}", Type: "filename", Desc: "File containing a DSL expression. If the filename is a directory, all *.mlr files in that directory are loaded.", Repeatable: true},
+		{Flag: "-e", Arg: "{expression}", Type: "string", Desc: "DSL expression to evaluate. May be used after -f to add an expression.", Repeatable: true},
+		{Flag: "-s", Arg: "{name=value}", Type: "string", Desc: "Predefines out-of-stream variable @name to have the given value. May be specified more than once.", Repeatable: true},
+		{Flag: "-x", Type: "bool", Desc: "Prints records for which the expression evaluates to false, not true (invert the sense of the filter expression)."},
+		{Flag: "-q", Type: "bool", Desc: "Does not include the modified record in the output stream. Useful for when all desired output is in begin and/or end blocks."},
+		{Flag: "-S", Type: "bool", Desc: "No-op in Miller 6 and above; supported for backward compatibility."},
+		{Flag: "-F", Type: "bool", Desc: "No-op in Miller 6 and above; supported for backward compatibility."},
+		{Flag: "-w", Type: "bool", Desc: "Print warnings about things like uninitialized variables."},
+		{Flag: "-W", Type: "bool", Desc: "Same as -w, but exit the process if there are any warnings."},
+		{Flag: "-p", Type: "bool", Desc: "Print the expression's AST (abstract syntax tree) to stdout."},
+		{Flag: "-d", Type: "bool", Desc: "Like -p but uses a parenthesized-expression format for the AST."},
+		{Flag: "-D", Type: "bool", Desc: "Like -d but with output all on one line."},
+		{Flag: "-E", Type: "bool", Desc: "Echo DSL expression before printing parse-tree."},
+		{Flag: "-v", Type: "bool", Desc: "Same as -E -p."},
+		{Flag: "-X", Type: "bool", Desc: "Exit after parsing but before stream-processing."},
+	},
 }
 
 const verbNameFilter = "filter"
@@ -30,6 +47,23 @@ var FilterSetup = TransformerSetup{
 	UsageFunc:    transformerFilterUsage,
 	ParseCLIFunc: transformerPutOrFilterParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{file name}", Type: "filename", Desc: "File containing a DSL expression. If the filename is a directory, all *.mlr files in that directory are loaded.", Repeatable: true},
+		{Flag: "-e", Arg: "{expression}", Type: "string", Desc: "DSL expression to evaluate. May be used after -f to add an expression.", Repeatable: true},
+		{Flag: "-s", Arg: "{name=value}", Type: "string", Desc: "Predefines out-of-stream variable @name to have the given value. May be specified more than once.", Repeatable: true},
+		{Flag: "-x", Type: "bool", Desc: "Prints records for which the expression evaluates to false, not true (invert the sense of the filter expression)."},
+		{Flag: "-q", Type: "bool", Desc: "Does not include the modified record in the output stream. Useful for when all desired output is in begin and/or end blocks."},
+		{Flag: "-S", Type: "bool", Desc: "No-op in Miller 6 and above; supported for backward compatibility."},
+		{Flag: "-F", Type: "bool", Desc: "No-op in Miller 6 and above; supported for backward compatibility."},
+		{Flag: "-w", Type: "bool", Desc: "Print warnings about things like uninitialized variables."},
+		{Flag: "-W", Type: "bool", Desc: "Same as -w, but exit the process if there are any warnings."},
+		{Flag: "-p", Type: "bool", Desc: "Print the expression's AST (abstract syntax tree) to stdout."},
+		{Flag: "-d", Type: "bool", Desc: "Like -p but uses a parenthesized-expression format for the AST."},
+		{Flag: "-D", Type: "bool", Desc: "Like -d but with output all on one line."},
+		{Flag: "-E", Type: "bool", Desc: "Echo DSL expression before printing parse-tree."},
+		{Flag: "-v", Type: "bool", Desc: "Same as -E -p."},
+		{Flag: "-X", Type: "bool", Desc: "Exit after parsing but before stream-processing."},
+	},
 }
 
 func transformerPutUsage(

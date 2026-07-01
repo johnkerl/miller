@@ -17,6 +17,7 @@ var LabelSetup = TransformerSetup{
 	UsageFunc:    transformerLabelUsage,
 	ParseCLIFunc: transformerLabelParseCLI,
 	IgnoresInput: false,
+	Options:      []OptionSpec{},
 }
 
 func transformerLabelUsage(

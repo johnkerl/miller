@@ -88,6 +88,14 @@ var StepSetup = TransformerSetup{
 	UsageFunc:    transformerStepUsage,
 	ParseCLIFunc: transformerStepParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-a", Arg: "{delta,rsum,...}", Type: "enum", Desc: "Names of steppers: one or more of the listed values.", Values: []string{"counter", "delta", "ewma", "from-first", "ratio", "rprod", "rsum", "shift", "shift_lag", "shift_lead", "slwin"}},
+		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Value-field names on which to compute statistics."},
+		{Flag: "-g", Arg: "{d,e,f}", Type: "csv-list", Desc: "Optional group-by-field names."},
+		{Flag: "-d", Arg: "{x,y,z}", Type: "csv-list", Desc: "Weights for EWMA. Multiple weights may be specified. Default is 0.5."},
+		{Flag: "-o", Arg: "{a,b,c}", Type: "csv-list", Desc: "Custom suffixes for EWMA output fields. If supplied, the number of -o values must match -d values."},
+		{Flag: "-F", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
+	},
 }
 
 func transformerStepUsage(

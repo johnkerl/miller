@@ -17,6 +17,10 @@ var GapSetup = TransformerSetup{
 	UsageFunc:    transformerGapUsage,
 	ParseCLIFunc: transformerGapParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Print a gap whenever values of these fields (e.g. a,b,c) changes."},
+		{Flag: "-n", Arg: "{n}", Type: "int", Desc: "Print a gap every n records."},
+	},
 }
 
 func transformerGapUsage(

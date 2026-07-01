@@ -17,6 +17,19 @@ var JSONParseSetup = TransformerSetup{
 	UsageFunc:    transformerJSONParseUsage,
 	ParseCLIFunc: transformerJSONParseParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{
+			Flag: "-f",
+			Arg:  "{a,b,c}",
+			Type: "csv-list",
+			Desc: "Comma-separated list of field names to json-parse (default all).",
+		},
+		{
+			Flag: "-k",
+			Type: "bool",
+			Desc: "If supplied, then on parse fail for any cell, keep the (unparsable) input value for the cell.",
+		},
+	},
 }
 
 func transformerJSONParseUsage(

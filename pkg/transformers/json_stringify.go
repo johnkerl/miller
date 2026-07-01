@@ -18,6 +18,24 @@ var JSONStringifySetup = TransformerSetup{
 	UsageFunc:    transformerJSONStringifyUsage,
 	ParseCLIFunc: transformerJSONStringifyParseCLI,
 	IgnoresInput: false,
+	Options: []OptionSpec{
+		{
+			Flag: "-f",
+			Arg:  "{a,b,c}",
+			Type: "csv-list",
+			Desc: "Comma-separated list of field names to json-stringify (default all).",
+		},
+		{
+			Flag: "--jvstack",
+			Type: "bool",
+			Desc: "Produce multi-line JSON output.",
+		},
+		{
+			Flag: "--no-jvstack",
+			Type: "bool",
+			Desc: "Produce single-line JSON output per record (default).",
+		},
+	},
 }
 
 func transformerJSONStringifyUsage(

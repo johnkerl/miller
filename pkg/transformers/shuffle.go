@@ -17,6 +17,7 @@ var ShuffleSetup = TransformerSetup{
 	UsageFunc:    transformerShuffleUsage,
 	ParseCLIFunc: transformerShuffleParseCLI,
 	IgnoresInput: false,
+	Options:      []OptionSpec{},
 }
 
 func transformerShuffleUsage(

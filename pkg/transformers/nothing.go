@@ -16,6 +16,7 @@ var NothingSetup = TransformerSetup{
 	ParseCLIFunc: transformerNothingParseCLI,
 	UsageFunc:    transformerNothingUsage,
 	IgnoresInput: false,
+	Options:      []OptionSpec{}, // no verb-specific options
 }
 
 func transformerNothingUsage(

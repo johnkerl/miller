@@ -18,6 +18,12 @@ var SeqgenSetup = TransformerSetup{
 	UsageFunc:    transformerSeqgenUsage,
 	ParseCLIFunc: transformerSeqgenParseCLI,
 	IgnoresInput: true,
+	Options: []OptionSpec{
+		{Flag: "-f", Arg: "{name}", Type: "string", Desc: "Field name for counters. Default \"i\"."},
+		{Flag: "--start", Arg: "{value}", Type: "float", Desc: "Inclusive start value. Default 1."},
+		{Flag: "--stop", Arg: "{value}", Type: "float", Desc: "Inclusive stop value. Default 100."},
+		{Flag: "--step", Arg: "{value}", Type: "float", Desc: "Step value. Default 1. May be negative but not zero (unless start == stop)."},
+	},
 }
 
 func transformerSeqgenUsage(

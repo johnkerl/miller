@@ -18,6 +18,7 @@ var AltkvSetup = TransformerSetup{
 	UsageFunc:    transformerAltkvUsage,
 	ParseCLIFunc: transformerAltkvParseCLI,
 	IgnoresInput: false,
+	Options:      []OptionSpec{},
 }
 
 func transformerAltkvUsage(
