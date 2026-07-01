@@ -130,12 +130,18 @@ const (
 	// Key not present in input record, e.g. 'foo = $nosuchkey'
 	MT_ABSENT MVType = 10
 
+	// intf is []byte. Bytes values are immutable once constructed; Copy()
+	// clones the slice defensively. Placed after MT_ABSENT to keep the
+	// existing disposition-matrix indices stable; mixed-type sort order is
+	// determined by the cmp disposition matrix, not by this enum value.
+	MT_BYTES MVType = 11
+
 	// Not a type -- this is a dimension for disposition vectors and
 	// disposition matrices. For example, when we want to add two mlrvals,
 	// instead of if/elsing or switching on the types of both operands, we
 	// instead jump directly to a type-specific function in a matrix of
 	// function pointers which is MT_DIM x MT_DIM.
-	MT_DIM MVType = 11
+	MT_DIM MVType = 12
 )
 
 var TYPE_NAMES = [MT_DIM]string{
@@ -150,6 +156,7 @@ var TYPE_NAMES = [MT_DIM]string{
 	"error",
 	"null",
 	"absent",
+	"bytes",
 }
 
 // For typed assignments in the DSL
@@ -162,6 +169,7 @@ const MT_TYPE_MASK_BOOL = 1 << MT_BOOL
 const MT_TYPE_MASK_STRING = (1 << MT_STRING) | (1 << MT_VOID)
 const MT_TYPE_MASK_ARRAY = 1 << MT_ARRAY
 const MT_TYPE_MASK_MAP = 1 << MT_MAP
+const MT_TYPE_MASK_BYTES = 1 << MT_BYTES
 const MT_TYPE_MASK_VAR = (1 << MT_INT) |
 	(1 << MT_FLOAT) |
 	(1 << MT_BOOL) |
@@ -169,7 +177,8 @@ const MT_TYPE_MASK_VAR = (1 << MT_INT) |
 	(1 << MT_NULL) |
 	(1 << MT_STRING) |
 	(1 << MT_ARRAY) |
-	(1 << MT_MAP)
+	(1 << MT_MAP) |
+	(1 << MT_BYTES)
 const MT_TYPE_MASK_FUNC = 1 << MT_FUNC
 
 // Not exposed in userspace
@@ -184,6 +193,7 @@ var typeNameToMaskMap = map[string]int{
 	"str":   MT_TYPE_MASK_STRING,
 	"arr":   MT_TYPE_MASK_ARRAY,
 	"map":   MT_TYPE_MASK_MAP,
+	"bytes": MT_TYPE_MASK_BYTES,
 	"funct": MT_TYPE_MASK_FUNC,
 	"var":   MT_TYPE_MASK_VAR,
 	"any":   MT_TYPE_MASK_ANY,

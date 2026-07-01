@@ -176,6 +176,14 @@ func (mv *Mlrval) SetFromString(input string) *Mlrval {
 	return mv
 }
 
+func FromBytes(input []byte) *Mlrval {
+	return &Mlrval{
+		mvtype:        MT_BYTES,
+		printrepValid: false,
+		intf:          input,
+	}
+}
+
 func FromInt(input int64) *Mlrval {
 	return &Mlrval{
 		mvtype:        MT_INT,

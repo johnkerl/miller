@@ -284,6 +284,8 @@ func (mv *Mlrval) marshalJSONAux(
 		return mv.marshalJSONVoid(outputIsStdout)
 	case MT_STRING:
 		return mv.marshalJSONString(outputIsStdout)
+	case MT_BYTES:
+		return mv.marshalJSONBytes(outputIsStdout)
 	case MT_INT:
 		return mv.marshalJSONInt(outputIsStdout)
 	case MT_FLOAT:
@@ -335,6 +337,13 @@ func (mv *Mlrval) marshalJSONString(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_STRING)
 
 	return colorizer.MaybeColorizeValue(millerJSONEncodeString(mv.printrep), outputIsStdout), nil
+}
+
+// Bytes are JSON-encoded as their hex representation, quoted as a JSON
+// string. Hex is quote-safe ASCII so no further escaping is needed.
+func (mv *Mlrval) marshalJSONBytes(outputIsStdout bool) (string, error) {
+	lib.InternalCodingErrorIf(mv.mvtype != MT_BYTES)
+	return colorizer.MaybeColorizeValue(`"`+mv.String()+`"`, outputIsStdout), nil
 }
 
 // Wraps with double-quotes and escape-encoded JSON-special characters.

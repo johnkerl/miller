@@ -80,6 +80,7 @@ func init() {
 		/*ERROR  */ depth_te,
 		/*NULL   */ _zero1,
 		/*ABSENT */ _absn1,
+		/*BYTES  */ depth_te,
 	}
 }
 
@@ -151,6 +152,7 @@ var leafcount_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*ERROR  */ leafcount_te,
 	/*NULL   */ _zero1,
 	/*ABSENT */ _absn1,
+	/*BYTES  */ leafcount_te,
 }
 
 func BIF_leafcount(input1 *mlrval.Mlrval) *mlrval.Mlrval {

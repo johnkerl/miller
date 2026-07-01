@@ -56,6 +56,7 @@ var to_int_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*ERROR  */ to_int_te,
 	/*NULL   */ _null1,
 	/*ABSENT */ _absn1,
+	/*BYTES  */ to_int_te,
 }
 
 func BIF_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -108,6 +109,7 @@ var to_int_with_base_dispositions = [mlrval.MT_DIM]BinaryFunc{
 	/*ERROR  */ to_int_with_base_te,
 	/*NULL   */ _null,
 	/*ABSENT */ _absn,
+	/*BYTES  */ to_int_with_base_te,
 }
 
 func BIF_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -159,6 +161,7 @@ var to_float_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*ERROR  */ to_float_te,
 	/*NULL   */ _null1,
 	/*ABSENT */ _absn1,
+	/*BYTES  */ to_float_te,
 }
 
 func BIF_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -204,6 +207,7 @@ var to_boolean_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*ERROR  */ to_boolean_te,
 	/*NULL   */ _null1,
 	/*ABSENT */ _absn1,
+	/*BYTES  */ to_boolean_te,
 }
 
 func BIF_boolean(input1 *mlrval.Mlrval) *mlrval.Mlrval {

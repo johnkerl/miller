@@ -210,6 +210,8 @@ func mlrvalToYAMLNode(mv *Mlrval) (*yaml.Node, error) {
 	case MT_MAP:
 		m := mv.GetMap()
 		return MlrmapToYAMLNative(m)
+	case MT_BYTES:
+		return encodeScalarNode(mv.String())
 	case MT_ERROR, MT_PENDING:
 		return encodeScalarNode(mv.String())
 	default:

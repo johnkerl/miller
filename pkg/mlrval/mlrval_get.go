@@ -149,6 +149,11 @@ func (mv *Mlrval) AcquireBoolValue() bool {
 	return mv.intf.(bool)
 }
 
+func (mv *Mlrval) AcquireBytesValue() []byte {
+	lib.InternalCodingErrorIf(mv.mvtype != MT_BYTES)
+	return mv.intf.([]byte)
+}
+
 func (mv *Mlrval) AcquireArrayValue() []*Mlrval {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_ARRAY)
 	return mv.intf.([]*Mlrval)
