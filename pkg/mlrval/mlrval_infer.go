@@ -24,11 +24,6 @@ type tInferrer func(mv *Mlrval) *Mlrval
 
 var packageLevelInferrer tInferrer = inferNormally
 
-// SetInferNormally is the default behavior.
-func SetInferNormally() {
-	packageLevelInferrer = inferNormally
-}
-
 // SetInferrerOctalAsInt is for mlr -O.
 func SetInferrerOctalAsInt() {
 	packageLevelInferrer = inferWithOctalAsInt

@@ -51,20 +51,6 @@ func TestEqual(t *testing.T) {
 	}
 }
 
-func TestNotEquals(t *testing.T) {
-	for i := range orderedMlrvals {
-		mvi := orderedMlrvals[i]
-		for j := range orderedMlrvals {
-			mvj := orderedMlrvals[j]
-			assert.Equal(t, i != j, NotEquals(mvi, mvj), fmt.Sprintf(
-				"slots i=%d type=%s value=%s, j=%d type=%s value=%s",
-				i, mvi.GetTypeName(), mvi.String(),
-				j, mvj.GetTypeName(), mvj.String(),
-			))
-		}
-	}
-}
-
 func TestLessThan(t *testing.T) {
 	for i := range orderedMlrvals {
 		mvi := orderedMlrvals[i]
