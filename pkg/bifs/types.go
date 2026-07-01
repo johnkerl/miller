@@ -214,6 +214,33 @@ func BIF_boolean(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return to_boolean_dispositions[input1.Type()](input1)
 }
 
+func string_to_bytes(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBytes([]byte(input1.AcquireStringValue()))
+}
+
+func to_bytes_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromTypeErrorUnary("bytes", input1)
+}
+
+var to_bytes_dispositions = [mlrval.MT_DIM]UnaryFunc{
+	/*INT    */ to_bytes_te,
+	/*FLOAT  */ to_bytes_te,
+	/*BOOL   */ to_bytes_te,
+	/*VOID   */ string_to_bytes,
+	/*STRING */ string_to_bytes,
+	/*ARRAY  */ to_bytes_te,
+	/*MAP    */ to_bytes_te,
+	/*FUNC   */ to_bytes_te,
+	/*ERROR  */ to_bytes_te,
+	/*NULL   */ _null1,
+	/*ABSENT */ _absn1,
+	/*BYTES  */ _1u___,
+}
+
+func BIF_bytes(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return to_bytes_dispositions[input1.Type()](input1)
+}
+
 func BIF_is_absent(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.IsAbsent())
 }
@@ -239,6 +266,9 @@ func BIF_is_empty(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 func BIF_is_emptymap(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.IsMap() && input1.AcquireMapValue().IsEmpty())
+}
+func BIF_is_bytes(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.IsBytes())
 }
 func BIF_is_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.IsFloat())
@@ -327,6 +357,9 @@ func BIF_asserting_bool(input1 *mlrval.Mlrval, context *types.Context) *mlrval.M
 }
 func BIF_asserting_boolean(input1 *mlrval.Mlrval, context *types.Context) *mlrval.Mlrval {
 	return assertingCommon(input1, BIF_is_boolean(input1), "is_boolean", context)
+}
+func BIF_asserting_bytes(input1 *mlrval.Mlrval, context *types.Context) *mlrval.Mlrval {
+	return assertingCommon(input1, BIF_is_bytes(input1), "is_bytes", context)
 }
 func BIF_asserting_empty(input1 *mlrval.Mlrval, context *types.Context) *mlrval.Mlrval {
 	return assertingCommon(input1, BIF_is_empty(input1), "is_empty", context)

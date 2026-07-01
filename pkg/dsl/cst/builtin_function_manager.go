@@ -432,21 +432,43 @@ used within subsequent DSL statements. See also "Regular expressions" at ` + lib
 		{
 			name:      "base64_decode",
 			class:     FUNC_CLASS_STRING,
-			help:      `Decodes a base64-encoded string. If the decoded bytes are valid UTF-8, they are returned as a string; otherwise, a hex-encoded string of the decoded bytes is returned. Returns error if the input is not valid base64.`,
+			help:      `Decodes a base64-encoded string to a bytes value; use string() to interpret the result as UTF-8 text. Returns error if the input is not valid base64.`,
 			unaryFunc: bifs.BIF_base64_decode,
 			examples: []string{
-				`base64_decode("aGVsbG8=") gives "hello"`,
-				`base64_decode("/w==") gives "ff" since the decoded byte 0xff is not valid UTF-8`,
+				`base64_decode("aGVsbG8=") gives the bytes 68656c6c6f`,
+				`string(base64_decode("aGVsbG8=")) gives "hello"`,
 			},
 		},
 
 		{
 			name:      "base64_encode",
 			class:     FUNC_CLASS_STRING,
-			help:      `Encodes a string using standard base64 encoding.`,
+			help:      `Encodes a string or bytes value using standard base64 encoding.`,
 			unaryFunc: bifs.BIF_base64_encode,
 			examples: []string{
 				`base64_encode("hello") gives "aGVsbG8="`,
+				`base64_encode(b"\xff") gives "/w=="`,
+			},
+		},
+
+		{
+			name:      "hex_decode",
+			class:     FUNC_CLASS_STRING,
+			help:      `Decodes a hex-encoded string to a bytes value; use string() to interpret the result as UTF-8 text. Returns error if the input is not valid hex.`,
+			unaryFunc: bifs.BIF_hex_decode,
+			examples: []string{
+				`hex_decode("6869") gives the bytes 6869`,
+				`string(hex_decode("6869")) gives "hi"`,
+			},
+		},
+
+		{
+			name:      "hex_encode",
+			class:     FUNC_CLASS_STRING,
+			help:      `Encodes a string or bytes value as lowercase hex.`,
+			unaryFunc: bifs.BIF_hex_encode,
+			examples: []string{
+				`hex_encode("hi") gives "6869"`,
 			},
 		},
 
@@ -519,7 +541,7 @@ argument) doesn't match the pattern (second argument).`,
 		{
 			name:      "strlen",
 			class:     FUNC_CLASS_STRING,
-			help:      "String length.",
+			help:      "String length in UTF-8 characters, or bytes-value length in bytes.",
 			unaryFunc: bifs.BIF_strlen,
 		},
 
@@ -738,25 +760,25 @@ If argument is array or map, recurses into it.`,
 		{
 			name:      "md5",
 			class:     FUNC_CLASS_HASHING,
-			help:      `MD5 hash.`,
+			help:      `MD5 hash of a string or bytes value.`,
 			unaryFunc: bifs.BIF_md5,
 		},
 		{
 			name:      "sha1",
 			class:     FUNC_CLASS_HASHING,
-			help:      `SHA1 hash.`,
+			help:      `SHA1 hash of a string or bytes value.`,
 			unaryFunc: bifs.BIF_sha1,
 		},
 		{
 			name:      "sha256",
 			class:     FUNC_CLASS_HASHING,
-			help:      `SHA256 hash.`,
+			help:      `SHA256 hash of a string or bytes value.`,
 			unaryFunc: bifs.BIF_sha256,
 		},
 		{
 			name:      "sha512",
 			class:     FUNC_CLASS_HASHING,
-			help:      `SHA512 hash.`,
+			help:      `SHA512 hash of a string or bytes value.`,
 			unaryFunc: bifs.BIF_sha512,
 		},
 
@@ -1745,6 +1767,13 @@ See also strftime_local.`,
 		},
 
 		{
+			name:      "is_bytes",
+			class:     FUNC_CLASS_TYPING,
+			help:      "True if field is present with bytes value.",
+			unaryFunc: bifs.BIF_is_bytes,
+		},
+
+		{
 			name:      "is_empty",
 			class:     FUNC_CLASS_TYPING,
 			help:      "True if field is present in input with empty string value, false otherwise.",
@@ -1886,6 +1915,13 @@ Note that NaN has the property that NaN != NaN, so you need 'is_nan(x)' rather t
 		},
 
 		{
+			name:                 "asserting_bytes",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_bytes on the argument returns false, else returns its argument.`,
+			unaryFuncWithContext: bifs.BIF_asserting_bytes,
+		},
+
+		{
 			name:                 "asserting_error",
 			class:                FUNC_CLASS_TYPING,
 			help:                 `Aborts with an error if is_error on the argument returns false, else returns its argument.`,
@@ -2005,6 +2041,17 @@ Note that NaN has the property that NaN != NaN, so you need 'is_nan(x)' rather t
 			class:     FUNC_CLASS_CONVERSION,
 			help:      "Convert int/float/bool/string to boolean.",
 			unaryFunc: bifs.BIF_boolean,
+		},
+
+		{
+			name:      "bytes",
+			class:     FUNC_CLASS_CONVERSION,
+			help:      "Convert string to bytes; bytes values pass through as-is. See string() for the reverse.",
+			unaryFunc: bifs.BIF_bytes,
+			examples: []string{
+				`bytes("hi") gives the bytes 6869`,
+				`string(bytes("hi")) gives "hi"`,
+			},
 		},
 
 		{
@@ -2176,7 +2223,7 @@ argument is separator to split on.`,
 		{
 			name:      "string",
 			class:     FUNC_CLASS_CONVERSION,
-			help:      "Convert int/float/bool/string/array/map to string.",
+			help:      "Convert int/float/bool/string/array/map to string. For bytes values, reinterprets the raw bytes as a (UTF-8) string -- the reverse of bytes().",
 			unaryFunc: bifs.BIF_string,
 		},
 

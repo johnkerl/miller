@@ -12,6 +12,10 @@ import (
 )
 
 func BIF_strlen(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	// Strings have UTF-8 rune-count length; bytes have byte-count length.
+	if input1.IsBytes() {
+		return mlrval.FromInt(int64(len(input1.AcquireBytesValue())))
+	}
 	if !input1.IsStringOrVoid() {
 		return mlrval.FromTypeErrorUnary("strlen", input1)
 	}
@@ -19,6 +23,12 @@ func BIF_strlen(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_string(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	// For bytes, reinterpret the raw bytes as a string -- the inverse of
+	// bytes(s) -- rather than using the hex String() rendering. This is what
+	// makes string(base64_decode("aGVsbG8=")) yield "hello".
+	if input1.IsBytes() {
+		return mlrval.FromString(string(input1.AcquireBytesValue()))
+	}
 	return mlrval.FromString(input1.String())
 }
 
@@ -85,6 +95,9 @@ func BIF_substr_1_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsError() {
 		return mlrval.FromTypeErrorUnary("substr1", input1)
 	}
+	if input1.IsBytes() {
+		return bytes_substr(input1, input2, input3, false)
+	}
 	sinput := input1.String()
 
 	// Handle UTF-8 correctly: len(input1.AcquireStringValue()) will count bytes, not runes.
@@ -116,6 +129,9 @@ func BIF_substr_0_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsError() {
 		return mlrval.FromTypeErrorUnary("substr0", input1)
 	}
+	if input1.IsBytes() {
+		return bytes_substr(input1, input2, input3, true)
+	}
 	sinput := input1.String()
 
 	// Handle UTF-8 correctly: len(input1.AcquireStringValue()) will count bytes, not runes.
@@ -135,6 +151,23 @@ func BIF_substr_0_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	// while the 2nd is exclusive. For Miller, indices are 1-up and both
 	// are inclusive.
 	return mlrval.FromString(string(runes[lowerZindex : upperZindex+1]))
+}
+
+// bytes_substr slices bytes by byte position, not rune position. An empty
+// slice yields empty bytes rather than VOID, preserving the type.
+func bytes_substr(input1, input2, input3 *mlrval.Mlrval, zeroUp bool) *mlrval.Mlrval {
+	b := input1.AcquireBytesValue()
+
+	sliceIsEmpty, absentOrError, lowerZindex, upperZindex := MillerSliceAccess(input2, input3, len(b), zeroUp)
+
+	if sliceIsEmpty {
+		return mlrval.FromBytes([]byte{})
+	}
+	if absentOrError != nil {
+		return absentOrError
+	}
+
+	return mlrval.FromBytes(append([]byte(nil), b[lowerZindex:upperZindex+1]...))
 }
 
 // index(string, substring) returns the index of substring within string (if found), or -1 if not
