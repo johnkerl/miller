@@ -78,7 +78,6 @@ func TestBIF_plus_binary_overflow(t *testing.T) {
 //func BIF_dot_minus(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval
 //func BIF_dot_times(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval
 //func BIF_dot_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval
-//func BIF_dot_int_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval
 //func BIF_modulus(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval
 //func BIF_mod_add(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval
 //func BIF_mod_sub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval
