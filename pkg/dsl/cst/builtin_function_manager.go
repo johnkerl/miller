@@ -430,6 +430,27 @@ used within subsequent DSL statements. See also "Regular expressions" at ` + lib
 		},
 
 		{
+			name:      "base64_decode",
+			class:     FUNC_CLASS_STRING,
+			help:      `Decodes a base64-encoded string. If the decoded bytes are valid UTF-8, they are returned as a string; otherwise, a hex-encoded string of the decoded bytes is returned. Returns error if the input is not valid base64.`,
+			unaryFunc: bifs.BIF_base64_decode,
+			examples: []string{
+				`base64_decode("aGVsbG8=") gives "hello"`,
+				`base64_decode("/w==") gives "ff" since the decoded byte 0xff is not valid UTF-8`,
+			},
+		},
+
+		{
+			name:      "base64_encode",
+			class:     FUNC_CLASS_STRING,
+			help:      `Encodes a string using standard base64 encoding.`,
+			unaryFunc: bifs.BIF_base64_encode,
+			examples: []string{
+				`base64_encode("hello") gives "aGVsbG8="`,
+			},
+		},
+
+		{
 			name:      "capitalize",
 			class:     FUNC_CLASS_STRING,
 			help:      "Convert string's first character to uppercase.",
