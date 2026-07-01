@@ -184,12 +184,61 @@ func init() {
 	}
 }
 
+// GetTopicNames returns the user-facing `mlr help {topic}` topic names (the
+// internal docgen-only topics are excluded). For shell-completion of
+// `mlr help <TAB>`.
+func GetTopicNames() []string {
+	names := []string{}
+	for _, section := range handlerLookupTable.sections {
+		if section.internal {
+			continue
+		}
+		for _, info := range section.handlerInfos {
+			names = append(names, info.name)
+		}
+	}
+	return names
+}
+
+// GetFunctionNames returns all DSL built-in function names, for shell-completion
+// of `mlr help function {name}`.
+func GetFunctionNames() []string {
+	return cst.BuiltinFunctionManagerInstance.GetBuiltinFunctionNames()
+}
+
+// GetKeywordNames returns all DSL keyword names, for shell-completion of
+// `mlr help keyword {name}`.
+func GetKeywordNames() []string {
+	return cst.GetKeywordNames()
+}
+
+// GetTerminalFlagNames returns the top-level help flags that short-circuit
+// normal command-line processing: "-h"/"--help" and the shorthands such as
+// "-l" (for "help list-verbs") and "-F" (for "help usage-functions"). These
+// are exposed for shell-completion candidates (pkg/terminals/completion). The
+// shorthands are derived from shorthandLookupTable so the list can't drift.
+func GetTerminalFlagNames() []string {
+	names := []string{"-h", "--help"}
+	for _, sinfo := range shorthandLookupTable.shorthandInfos {
+		names = append(names, sinfo.shorthand)
+	}
+	return names
+}
+
 // For things like 'mlr help foo', invoked through the terminals framework which
 // goes through our HelpMain().  Here, the args are the terminal part of the full
 // Miller command line: if the latter was "mlr --some-flag help foo bar" then
 // the former is "help foo bar".
 func HelpMain(args []string) int {
 	args = args[1:]
+
+	// Machine-readable help: `mlr help --as-json [topic [names...]]`. The
+	// --as-json token (or a truthy MLR_HELP_JSON env var) may appear anywhere;
+	// if either is set we emit structured JSON and the plain-text handlers
+	// below are bypassed.
+	if jsonMode, rest := wantJSONOutput(args); jsonMode {
+		return helpJSON(rest)
+	}
 
 	// "mlr help" and nothing else
 	if len(args) == 0 {
@@ -530,15 +579,16 @@ func helpTypeArithmeticInfoAux(extended bool) {
 			fmt.Printf("%-10s |", mlrvals[i].String())
 		}
 		for j := 0; j < n; j++ {
-			if i == -2 {
+			switch i {
+			case -2:
 				if mlrvals[j].IsVoid() {
 					fmt.Printf("%-10s", "(empty)")
 				} else {
 					fmt.Printf(" %-10s", mlrvals[j].String())
 				}
-			} else if i == -1 {
+			case -1:
 				fmt.Printf(" %-10s", "------")
-			} else {
+			default:
 				sum := bifs.BIF_plus_binary(mlrvals[i], mlrvals[j])
 				if sum.IsVoid() {
 					fmt.Printf(" %-10s", "(empty)")
@@ -582,15 +632,16 @@ func helpTypeArithmeticInfoAux(extended bool) {
 				fmt.Printf("%-10s |", mlrvals[i].String())
 			}
 			for j := 0; j < n; j++ {
-				if i == -2 {
+				switch i {
+				case -2:
 					if mlrvals[j].IsVoid() {
 						fmt.Printf("%-10s", "(empty)")
 					} else {
 						fmt.Printf(" %-10s", mlrvals[j].String())
 					}
-				} else if i == -1 {
+				case -1:
 					fmt.Printf(" %-10s", "------")
-				} else {
+				default:
 
 					inode := cst.BuildMlrvalLiteralNode(mlrvals[i])
 					jnode := cst.BuildMlrvalLiteralNode(mlrvals[j])

@@ -166,18 +166,19 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 
 	} else {
 		isArray := false
-		var expectedClosingDelimiter = ' '
-		var collectionType = ""
+		var expectedClosingDelimiter rune
+		var collectionType string
 
-		if delimiter == '[' {
+		switch delimiter {
+		case '[':
 			isArray = true
 			expectedClosingDelimiter = ']'
 			collectionType = "JSON array"
-		} else if delimiter == '{' {
+		case '{':
 			isArray = false
 			expectedClosingDelimiter = '}'
 			collectionType = "JSON object`"
-		} else {
+		default:
 			return nil, false, fmt.Errorf(
 				"JSON reader: Unhandled opening delimiter \"%s\"", string(delimiter),
 			)

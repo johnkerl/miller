@@ -19,19 +19,20 @@ func TSVDecodeField(input string) string {
 		c := input[i]
 		if c == '\\' && i < n-1 {
 			d := input[i+1]
-			if d == '\\' {
+			switch d {
+			case '\\':
 				buffer.WriteByte('\\')
 				i += 2
-			} else if d == 'n' {
+			case 'n':
 				buffer.WriteByte('\n')
 				i += 2
-			} else if d == 'r' {
+			case 'r':
 				buffer.WriteByte('\r')
 				i += 2
-			} else if d == 't' {
+			case 't':
 				buffer.WriteByte('\t')
 				i += 2
-			} else {
+			default:
 				buffer.WriteByte(c)
 				i++
 			}
@@ -47,19 +48,20 @@ func TSVDecodeField(input string) string {
 func TSVEncodeField(input string) string {
 	var buffer bytes.Buffer
 	for _, r := range input {
-		if r == '\\' {
+		switch r {
+		case '\\':
 			buffer.WriteByte('\\')
 			buffer.WriteByte('\\')
-		} else if r == '\n' {
+		case '\n':
 			buffer.WriteByte('\\')
 			buffer.WriteByte('n')
-		} else if r == '\r' {
+		case '\r':
 			buffer.WriteByte('\\')
 			buffer.WriteByte('r')
-		} else if r == '\t' {
+		case '\t':
 			buffer.WriteByte('\\')
 			buffer.WriteByte('t')
-		} else {
+		default:
 			buffer.WriteRune(r)
 		}
 	}

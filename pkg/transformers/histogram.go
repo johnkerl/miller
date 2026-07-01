@@ -70,44 +70,45 @@ func transformerHistogramParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerHistogramUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-f" {
+		case "-f":
 			valueFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "--lo" {
+		case "--lo":
 			lo, err = cli.VerbGetFloatArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "--nbins" {
+		case "--nbins":
 			nbins, err = cli.VerbGetIntArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "--hi" {
+		case "--hi":
 			hi, err = cli.VerbGetFloatArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "--auto" {
+		case "--auto":
 			doAuto = true
 
-		} else if opt == "-o" {
+		case "-o":
 			outputPrefix, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}

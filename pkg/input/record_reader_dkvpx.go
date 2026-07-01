@@ -164,16 +164,17 @@ func (reader *RecordReaderDKVPX) getRecordBatch(
 		return recordsAndContexts, true
 	}
 
+	nfields := 0
 	for _, omap := range dkvpxRecords {
-		record := mlrval.NewMlrmapAsRecord()
+		nfields += int(omap.FieldCount)
+	}
+	arena := mlrval.NewRecordArena(nfields)
+
+	for _, omap := range dkvpxRecords {
+		record := arena.NewRecord()
 
 		for pe := omap.Head; pe != nil; pe = pe.Next {
-			value := mlrval.FromDeferredType(pe.Value)
-			_, err := record.PutReferenceMaybeDedupe(pe.Key, value, dedupeFieldNames)
-			if err != nil {
-				errorChannel <- err
-				return nil, false
-			}
+			arena.PutDeferred(record, pe.Key, pe.Value, dedupeFieldNames)
 		}
 
 		context.UpdateForInputRecord()

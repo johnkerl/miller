@@ -48,7 +48,6 @@ func transformerGroupByParseCLI(
 		if args[argi] == "--" {
 			break // All transformers must do this so main-flags can follow verb-flags
 		}
-		argi++
 
 		if opt == "-h" || opt == "--help" {
 			transformerGroupByUsage(os.Stdout)

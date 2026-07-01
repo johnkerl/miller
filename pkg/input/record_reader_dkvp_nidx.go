@@ -23,6 +23,8 @@ type RecordReaderDKVPNIDX struct {
 	lineSplitter    line_splitter_DKVP_NIDX
 	fieldSplitter   iFieldSplitter
 	pairSplitter    iPairSplitter
+	// recordArena batch-allocates field entries/values; reset per getRecordBatch.
+	recordArena *mlrval.RecordArena
 }
 
 func NewRecordReaderDKVP(
@@ -35,6 +37,7 @@ func NewRecordReaderDKVP(
 		lineSplitter:    recordFromDKVPLine,
 		fieldSplitter:   newFieldSplitter(readerOptions),
 		pairSplitter:    newPairSplitter(readerOptions),
+		recordArena:     mlrval.NewRecordArena(64),
 	}, nil
 }
 
@@ -48,6 +51,7 @@ func NewRecordReaderNIDX(
 		lineSplitter:    recordFromNIDXLine,
 		fieldSplitter:   newFieldSplitter(readerOptions),
 		pairSplitter:    newPairSplitter(readerOptions),
+		recordArena:     mlrval.NewRecordArena(64),
 	}, nil
 }
 
@@ -132,6 +136,10 @@ func (reader *RecordReaderDKVPNIDX) getRecordBatch(
 		return recordsAndContexts, true
 	}
 
+	// Batch-allocate field entries/values from slabs. The hint over-estimates a
+	// little; the arena grows on demand if a batch is wider.
+	reader.recordArena = mlrval.NewRecordArena(len(lines) * 8)
+
 	for _, line := range lines {
 
 		// Check for comments-in-data feature
@@ -162,7 +170,7 @@ func (reader *RecordReaderDKVPNIDX) getRecordBatch(
 }
 
 func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrmap, error) {
-	record := mlrval.NewMlrmapAsRecord()
+	record := reader.recordArena.NewRecord()
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	pairs := reader.fieldSplitter.Split(line)
@@ -194,25 +202,17 @@ func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrm
 			}
 			str_key := strconv.Itoa(int_key + 1)
 			incr_key++
-			value := mlrval.FromDeferredType(kv[0])
-			_, err := record.PutReferenceMaybeDedupe(str_key, value, dedupeFieldNames)
-			if err != nil {
-				return nil, err
-			}
+			reader.recordArena.PutDeferred(record, str_key, kv[0], dedupeFieldNames)
 		} else {
 			str_key := kv[0]
-			value := mlrval.FromDeferredType(kv[1])
-			_, err := record.PutReferenceMaybeDedupe(str_key, value, dedupeFieldNames)
-			if err != nil {
-				return nil, err
-			}
+			reader.recordArena.PutDeferred(record, str_key, kv[1], dedupeFieldNames)
 		}
 	}
 	return record, nil
 }
 
 func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrmap, error) {
-	record := mlrval.NewMlrmapAsRecord()
+	record := reader.recordArena.NewRecord()
 
 	values := reader.fieldSplitter.Split(line)
 
@@ -220,8 +220,7 @@ func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrm
 	for _, value := range values {
 		i++
 		str_key := strconv.Itoa(i)
-		mval := mlrval.FromDeferredType(value)
-		record.PutReference(str_key, mval)
+		reader.recordArena.PutDeferred(record, str_key, value, false)
 	}
 	return record, nil
 }

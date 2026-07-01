@@ -74,17 +74,18 @@ func transformerRenameParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerRenameUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-r" {
+		case "-r":
 			doRegexes = true
 
-		} else if opt == "-g" {
+		case "-g":
 			doGsub = true
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verbNameRename, "option \"%s\" not recognized", opt)
 		}
 	}

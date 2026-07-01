@@ -144,16 +144,17 @@ func transformerReshapeParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerReshapeUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-i" {
+		case "-i":
 			inputFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
-		} else if opt == "-r" {
+		case "-r":
 			inputFieldRegexString, err := cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
@@ -162,18 +163,18 @@ func transformerReshapeParseCLI(
 				inputFieldRegexStrings = []string{}
 			}
 			inputFieldRegexStrings = append(inputFieldRegexStrings, inputFieldRegexString)
-		} else if opt == "-o" {
+		case "-o":
 			outputFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
-		} else if opt == "-s" {
+		case "-s":
 			splitOutFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
@@ -411,8 +412,7 @@ func (tr *TransformerReshape) longToWide(
 		}
 
 		otherValuesJoined := inrec.GetValuesJoined()
-		var bucket *tReshapeBucket = nil
-		bucket = otherValuesToBuckets.Get(otherValuesJoined)
+		bucket := otherValuesToBuckets.Get(otherValuesJoined)
 		if bucket == nil {
 			bucket = newReshapeBucket(inrec)
 			otherValuesToBuckets.Put(otherValuesJoined, bucket)

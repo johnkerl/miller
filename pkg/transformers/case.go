@@ -75,32 +75,33 @@ func transformerCaseParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerCaseUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-k" {
+		case "-k":
 			which = "keys_only"
 
-		} else if opt == "-v" {
+		case "-v":
 			which = "values_only"
 
-		} else if opt == "-f" {
+		case "-f":
 			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-u" {
+		case "-u":
 			style = e_UPPER_CASE
-		} else if opt == "-l" {
+		case "-l":
 			style = e_LOWER_CASE
-		} else if opt == "-s" {
+		case "-s":
 			style = e_SENTENCE_CASE
-		} else if opt == "-t" {
+		case "-t":
 			style = e_TITLE_CASE
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
@@ -133,11 +134,12 @@ func NewTransformerCase(
 ) (*TransformerCase, error) {
 	tr := &TransformerCase{}
 
-	if which == "keys_only" {
+	switch which {
+	case "keys_only":
 		tr.recordTransformerFunc = tr.transformKeysOnly
-	} else if which == "values_only" {
+	case "values_only":
 		tr.recordTransformerFunc = tr.transformValuesOnly
-	} else {
+	default:
 		tr.recordTransformerFunc = tr.transformKeysAndValues
 	}
 

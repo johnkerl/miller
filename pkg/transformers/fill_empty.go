@@ -57,20 +57,21 @@ func transformerFillEmptyParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerFillEmptyUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-v" {
+		case "-v":
 			fillString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-S" {
+		case "-S":
 			inferType = false
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}

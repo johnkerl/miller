@@ -52,7 +52,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        insertion-ordered hash map.  This encompasses a variety of data
        formats, including but not limited to the familiar CSV, TSV, and JSON.
        (Miller can handle positionally-indexed data as a special case.) This
-       manpage documents mlr 6.18.1-dev.
+       manpage documents mlr 6.19.0-dev.
 
 1mEXAMPLES0m
        mlr --icsv --opprint cat example.csv
@@ -446,6 +446,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        --iyaml                  Use YAML format for input data.
        --json or -j or --j2j    Use JSON format for input and output data.
        --jsonl or --l2l         Use JSON Lines format for input and output data.
+       --md or --markdown       Use markdown-tabular format for input and output
+                                data.
        --nidx or --n2n          Use NIDX format for input and output data.
        --oasv or --oasvlite     Use ASV format for output data.
        --ocsv                   Use CSV format for output data.
@@ -568,6 +570,10 @@ This is simply a copy of what you should see on running `man mlr` at a command p
 1mMARKDOWN-ONLY FLAGS0m
        These are flags which are applicable to markdown-tabular format.
 
+       --md-aligned or --markdown-aligned
+                                Use markdown-tabular format for input and output
+                                data, with left-justified and padded columns. Implies
+                                --md, so you do not need to also pass --md.
        --omd-aligned or --omarkdown-aligned
                                 For markdown-tabular output, left-justify cells and
                                 pad each column to a uniform width, making the raw
@@ -1380,6 +1386,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Options:
        -g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
        -n {n} Head-count to print. Default 10.
+                  A negative count, e.g. -n -2, passes through all but the last n records,
+                  optionally by category.
        -h|--help Show this message.
 
    1mhistogram0m
@@ -1431,9 +1439,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                       Tip: you can use --lk "": this means the left file becomes solely a row-selector
                       for the input files.
          --lp {text}  Additional prefix for non-join output field names from
-                      the left file
+                      the left file. Applies to paired and unpaired output records.
          --rp {text}  Additional prefix for non-join output field names from
-                      the right file(s)
+                      the right file(s). Applies to paired and unpaired output records.
          --np         Do not emit paired records
          --ul         Emit unpaired records from the left file
          --ur         Emit unpaired records from the right file(s)
@@ -2225,8 +2233,11 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Usage: mlr tail [options]
        Passes through the last n records, optionally by category.
        Options:
-       -g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
-       -n {n} Head-count to print. Default 10.
+       -g {a,b,c} Optional group-by-field names for tail counts, e.g. a,b,c.
+       -n {n} Tail-count to print. Default 10.
+                  A leading '+' means start at the nth record rather than print
+                  the last n: e.g. -n +3 passes through all but the first 2
+                  records, optionally by category.
        -h|--help Show this message.
 
    1mtee0m
@@ -2465,12 +2476,13 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        concat([1,2],[3]) is [1,2,3]
 
    1mcontains0m
-        (class=string #args=2) Returns true if the first argument contains the second as a substring. This is like saying `index(arg1, arg2) &gt;= 0`but with less keystroking.
+        (class=string #args=2) Returns true if the first argument contains the second as a substring. This is like saying `index(arg1, arg2) &gt;= 0` but with less keystroking. Stringifies non-string scalar inputs; raises an error if either argument is an array or map. To test for array membership, use `any`, e.g. `any([1,2,3], func(e) {return e == $foo})`.
        Examples:
        contains("abcde", "e") gives true
        contains("abcde", "x") gives false
        contains(12345, 34) gives true
        contains("fort", "") gives true
+       contains([1,2,3], 2) gives (error)
 
    1mcos0m
         (class=math #args=1) Trigonometric cosine.
@@ -2627,12 +2639,13 @@ This is simply a copy of what you should see on running `man mlr` at a command p
         (class=system #args=0) Returns the hostname as a string.
 
    1mindex0m
-        (class=string #args=2) Returns the index (1-based) of the second argument within the first. Returns -1 if the second argument isn't a substring of the first. Stringifies non-string inputs. Uses UTF-8 encoding to count characters, not bytes.
+        (class=string #args=2) Returns the index (1-based) of the second argument within the first. Returns -1 if the second argument isn't a substring of the first. Stringifies non-string scalar inputs; raises an error if either argument is an array or map. Uses UTF-8 encoding to count characters, not bytes.
        Examples:
        index("abcde", "e") gives 5
        index("abcde", "x") gives -1
        index(12345, 34) gives 3
        index("fort", "t") gives 5
+       index([1,2,3], 2) gives (error)
 
    1mint0m
         (class=conversion #args=1,2) Convert int/float/bool/string to int. If the second argument is omitted and the first argument is a string, base is inferred from the first argument's prefix. If the second argument is provided and the first argument is a string, the second argument is used as the base. If the second argument is provided and the first argument is not a string, the second argument is ignored.
@@ -3850,5 +3863,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-05-17                         4mMILLER24m(1)
+                                  2026-06-28                         4mMILLER24m(1)
 </pre>

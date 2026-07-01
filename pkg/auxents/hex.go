@@ -40,10 +40,11 @@ func hexMain(args []string) int {
 	verb := args[1]
 	args = args[2:]
 	if len(args) >= 1 {
-		if args[0] == "-r" {
+		switch args[0] {
+		case "-r":
 			doRaw = true
 			args = args[1:]
-		} else if args[0] == "-h" || args[0] == "--help" {
+		case "-h", "--help":
 			hexUsage(verb, os.Stdout, 0)
 		}
 	}
@@ -89,8 +90,6 @@ func hexDumpFile(istream *os.File, doRaw bool) {
 	for !eof {
 		numBytesRead, err := io.ReadFull(istream, buffer)
 		if err == io.EOF {
-			err = nil
-			eof = true
 			break
 		}
 
@@ -144,7 +143,6 @@ func hexDumpFile(istream *os.File, doRaw bool) {
 		// the input is at the terminal, the user will have to control-D twice
 		// which will be unsettling.
 		if numBytesRead < bufferSize {
-			eof = true
 			break
 		}
 

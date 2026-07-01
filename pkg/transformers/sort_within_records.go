@@ -66,11 +66,12 @@ func transformerSortWithinRecordsParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerSortWithinRecordsUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-r" {
+		case "-r":
 			// If the next token exists and isn't another flag, consume it as
 			// the regex pattern. Otherwise -r is arity-0: combined with a
 			// preceding -f it means regex mode; standalone it means recursive.
@@ -84,17 +85,17 @@ func transformerSortWithinRecordsParseCLI(
 				doRecurse = true
 			}
 
-		} else if opt == "-f" {
+		case "-f":
 			names, err := cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			fieldNames = names
 
-		} else if opt == "-n" {
+		case "-n":
 			doNatural = true
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verbNameSortWithinRecords, "option \"%s\" not recognized", opt)
 		}
 	}

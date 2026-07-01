@@ -51,7 +51,6 @@ func transformerSec2GMTDateParseCLI(
 		if args[argi] == "--" {
 			break // All transformers must do this so main-flags can follow verb-flags
 		}
-		argi++
 
 		if opt == "-h" || opt == "--help" {
 			transformerSec2GMTDateUsage(os.Stdout)

@@ -1592,6 +1592,8 @@ Without -g, ceases consuming more input (i.e. is fast) when n records have been 
 Options:
 -g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
 -n {n} Head-count to print. Default 10.
+           A negative count, e.g. -n -2, passes through all but the last n records,
+           optionally by category.
 -h|--help Show this message.
 </pre>
 
@@ -1618,6 +1620,23 @@ wye wye 3  0.20460330576630303 0.33831852551664776
 eks zee 7  0.6117840605678454  0.1878849191181694
 zee eks 17 0.29081949506712723 0.054478717073354166
 wye hat 24 0.7286126830627567  0.19441962592638418
+</pre>
+
+A negative count passes through all but the last *n* records, like GNU `head -n -n`:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p head -n -2 example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k index quantity rate
+yellow triangle true  1 11    43.6498  9.8870
+red    square   true  2 15    79.2778  0.0130
+red    circle   true  3 16    13.8103  2.9010
+red    square   false 4 48    77.5542  7.4670
+purple triangle false 5 51    81.2290  8.5910
+red    square   false 6 64    77.1991  9.5310
+purple triangle false 7 65    80.1405  5.8240
+yellow circle   true  8 73    63.9785  4.2370
 </pre>
 
 ## histogram
@@ -3974,8 +3993,11 @@ a b c filename
 Usage: mlr tail [options]
 Passes through the last n records, optionally by category.
 Options:
--g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
--n {n} Head-count to print. Default 10.
+-g {a,b,c} Optional group-by-field names for tail counts, e.g. a,b,c.
+-n {n} Tail-count to print. Default 10.
+           A leading '+' means start at the nth record rather than print
+           the last n: e.g. -n +3 passes through all but the first 2
+           records, optionally by category.
 -h|--help Show this message.
 </pre>
 
@@ -4000,6 +4022,23 @@ color  shape    flag i      u        v        w        x
 yellow triangle 0    499955 0.383942 0.559529 0.511376 4.307974
 blue   square   1    499872 0.618906 0.263796 0.531147 6.210738
 yellow circle   1    499974 0.764951 0.252842 0.499699 5.013810
+</pre>
+
+As with GNU `tail`, a leading `+` starts at the *n*th record rather than printing the last *n* -- so `-n +3` passes through all but the first 2 records:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p tail -n +3 example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k  index quantity rate
+red    circle   true  3  16    13.8103  2.9010
+red    square   false 4  48    77.5542  7.4670
+purple triangle false 5  51    81.2290  8.5910
+red    square   false 6  64    77.1991  9.5310
+purple triangle false 7  65    80.1405  5.8240
+yellow circle   true  8  73    63.9785  4.2370
+yellow circle   true  9  87    63.5058  8.3350
+purple square   false 10 91    72.3735  8.2430
 </pre>
 
 ## tee

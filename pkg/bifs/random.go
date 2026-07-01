@@ -39,8 +39,7 @@ func BIF_urandint(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	a := input1.AcquireIntValue()
 	b := input2.AcquireIntValue()
 
-	var lo int64 = 0
-	var hi int64 = 0
+	var lo, hi int64
 	if a <= b {
 		lo = a
 		hi = b + 1

@@ -75,29 +75,27 @@ func transformerCutParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerCutUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-f" {
+		case "-f":
 			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-o" {
+		case "-o":
 			doArgOrder = true
 
-		} else if opt == "-x" {
+		case "-x", "--complement":
 			doComplement = true
 
-		} else if opt == "--complement" {
-			doComplement = true
-
-		} else if opt == "-r" {
+		case "-r":
 			doRegexes = true
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}

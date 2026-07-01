@@ -120,11 +120,17 @@ func ListKeywordsVertically() {
 }
 
 func ListKeywordsAsParagraph() {
+	lib.PrintWordsAsParagraph(GetKeywordNames())
+}
+
+// GetKeywordNames returns all DSL keyword names, e.g. for shell-completion of
+// `mlr help keyword {name}`.
+func GetKeywordNames() []string {
 	keywords := make([]string, len(KEYWORD_USAGE_TABLE))
 	for i, entry := range KEYWORD_USAGE_TABLE {
 		keywords[i] = entry.name
 	}
-	lib.PrintWordsAsParagraph(keywords)
+	return keywords
 }
 
 func allKeywordUsage() {

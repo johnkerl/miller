@@ -71,8 +71,8 @@ func validateASTAux(
 	nextLevelInBeginOrEnd := inBeginOrEnd
 	nextLevelInUDF := inUDF
 	nextLevelInUDS := inUDS
-	nextLevelIsAssignmentLHS := isAssignmentLHS
-	nextLevelIsUnset := isUnset
+	var nextLevelIsAssignmentLHS bool
+	var nextLevelIsUnset bool
 
 	if astNode.Type == asts.NodeType(NodeTypeFilterStatement) {
 		if dslInstanceType == DSLInstanceTypeFilter {

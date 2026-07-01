@@ -206,6 +206,20 @@ func (reader *RecordReaderCSV) getRecordBatch(
 		return recordsAndContexts, true
 	}
 
+	// Batch-arena: draw all field entries/values for this batch of records from
+	// two slabs instead of allocating each field individually. See RecordArena.
+	nfields := 0
+	for _, csvRecord := range csvRecords {
+		nfields += len(csvRecord)
+	}
+	arena := mlrval.NewRecordArena(nfields)
+
+	// Batch-allocate the RecordAndContext wrappers too: one slab for the whole
+	// batch instead of one heap object per record. Comment/output-string entries
+	// (rare) still allocate individually via maybeConsumeComment.
+	racSlab := make([]types.RecordAndContext, len(csvRecords))
+	racIndex := 0
+
 	for _, csvRecord := range csvRecords {
 
 		if reader.needHeader {
@@ -234,7 +248,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 			}
 		}
 
-		record := mlrval.NewMlrmapAsRecord()
+		record := arena.NewRecord()
 
 		nh := int64(len(reader.header))
 		nd := int64(len(csvRecord))
@@ -242,12 +256,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 		if nh == nd {
 			for i := range nh {
 				key := reader.header[i]
-				value := mlrval.FromDeferredType(csvRecord[i])
-				_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
-				if err != nil {
-					errorChannel <- err
-					return
-				}
+				arena.PutDeferred(record, key, csvRecord[i], dedupeFieldNames)
 			}
 
 		} else {
@@ -264,23 +273,13 @@ func (reader *RecordReaderCSV) getRecordBatch(
 			n := lib.IntMin2(nh, nd)
 			for i = 0; i < n; i++ {
 				key := reader.header[i]
-				value := mlrval.FromDeferredType(csvRecord[i])
-				_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
-				if err != nil {
-					errorChannel <- err
-					return
-				}
+				arena.PutDeferred(record, key, csvRecord[i], dedupeFieldNames)
 			}
 			if nh < nd {
 				// if header shorter than data: use 1-up itoa keys
 				for i = nh; i < nd; i++ {
 					key := strconv.FormatInt(i+1, 10)
-					value := mlrval.FromDeferredType(csvRecord[i])
-					_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
-					if err != nil {
-						errorChannel <- err
-						return
-					}
+					arena.PutDeferred(record, key, csvRecord[i], dedupeFieldNames)
 				}
 			}
 			// if nh > nd: leave it short. This is a job for unsparsify.
@@ -288,7 +287,11 @@ func (reader *RecordReaderCSV) getRecordBatch(
 
 		context.UpdateForInputRecord()
 
-		recordsAndContexts = append(recordsAndContexts, types.NewRecordAndContext(record, context))
+		rac := &racSlab[racIndex]
+		racIndex++
+		rac.Record = record
+		rac.Context = *context
+		recordsAndContexts = append(recordsAndContexts, rac)
 	}
 
 	return recordsAndContexts, false

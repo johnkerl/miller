@@ -1,5 +1,7 @@
 package cli
 
+import "github.com/johnkerl/miller/v6/pkg/lib"
+
 const COLON = ":"
 const COMMA = ","
 const CR = "\\r"
@@ -95,6 +97,27 @@ var defaultFSes = map[string]string{
 	"pprint":   " ",
 	"tsv":      "\t",
 	"xtab":     "\n", // todo: windows-dependent ...
+}
+
+// GetFileFormatNames returns the canonical file-format names (csv, json, tsv,
+// ...), sorted, for shell-completion of the -i/-o/--io flags. These are the
+// keys of defaultFSes, which is the same set the reader/writer factories
+// dispatch on.
+func GetFileFormatNames() []string {
+	return lib.GetArrayKeysSorted(defaultFSes)
+}
+
+// GetSeparatorAliasNames returns the named separator aliases (comma, tab,
+// pipe, ...), sorted, for shell-completion of separator flags like --ifs.
+func GetSeparatorAliasNames() []string {
+	return lib.GetArrayKeysSorted(SEPARATOR_NAMES_TO_VALUES)
+}
+
+// GetSeparatorRegexAliasNames returns the named regex separator aliases
+// (spaces, tabs, whitespace), sorted, for shell-completion of the
+// --ifs-regex/--ips-regex flags.
+func GetSeparatorRegexAliasNames() []string {
+	return lib.GetArrayKeysSorted(SEPARATOR_REGEX_NAMES_TO_VALUES)
 }
 
 var defaultPSes = map[string]string{

@@ -82,36 +82,37 @@ func transformerCountDistinctParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerCountDistinctUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-g" || opt == "-f" {
+		case "-g", "-f":
 			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-x" {
+		case "-x":
 			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			invertFieldNames = true
 
-		} else if opt == "-n" {
+		case "-n":
 			showNumDistinctOnly = true
 
-		} else if opt == "-o" {
+		case "-o":
 			outputFieldName, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-u" {
+		case "-u":
 			doLashed = false
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
@@ -200,39 +201,40 @@ func transformerUniqParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerUniqUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-g" || opt == "-f" {
+		case "-g", "-f":
 			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-x" {
+		case "-x":
 			fieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 			invertFieldNames = true
 
-		} else if opt == "-c" {
+		case "-c":
 			showCounts = true
 
-		} else if opt == "-n" {
+		case "-n":
 			showNumDistinctOnly = true
 
-		} else if opt == "-o" {
+		case "-o":
 			outputFieldName, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-a" {
+		case "-a":
 			uniqifyEntireRecords = true
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}

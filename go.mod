@@ -21,7 +21,7 @@ require (
 	github.com/johnkerl/lumin v1.0.0
 	github.com/johnkerl/pgpg/go v1.0.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
-	github.com/klauspost/compress v1.18.6
+	github.com/klauspost/compress v1.19.0
 	github.com/kshedden/statmodel v0.0.0-20210519035403-ee97d3e48df1
 	github.com/lestrrat-go/strftime v1.2.0
 	github.com/mattn/go-isatty v0.0.22
@@ -33,10 +33,12 @@ require (
 	golang.org/x/term v0.44.0
 	golang.org/x/text v0.38.0
 	gopkg.in/yaml.v3 v3.0.1
-	pault.ag/go/debian v0.19.0
+	pault.ag/go/debian v0.21.0
 )
 
 require (
+	github.com/ProtonMail/go-crypto v1.4.1 // indirect
+	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/felixge/fgprof v0.9.3 // indirect
 	github.com/golang/snappy v1.0.0 // indirect

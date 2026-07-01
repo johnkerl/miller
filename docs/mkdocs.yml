@@ -37,6 +37,7 @@ nav:
     - "Internationalization": "internationalization.md"
     - "Output colorization": "output-colorization.md"
     - "Customization: .mlrrc": "customization.md"
+    - "Shell completion": "shell-completion.md"
     - "Syntax highlighting: vimrc": "vimrc.md"
     - "The REPL": "repl.md"
     - "Online help": "online-help.md"

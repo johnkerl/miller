@@ -46,6 +46,22 @@ type TypeGatedMlrvalVariable struct {
 	value               *mlrval.Mlrval
 }
 
+// copyForBind returns the value to store when binding a local variable or
+// function parameter. Scalars are stored by reference (no copy, no allocation):
+// assignment everywhere replaces pointers rather than mutating Mlrvals in place
+// (Mlrmap.PutCopy reassigns pe.Value; Assign reassigns tvar.value), and the
+// only in-place mutation a scalar undergoes is idempotent type-inference
+// caching -- so an aliased scalar can never be observed to change underneath
+// its source. Maps and arrays, however, ARE mutated in place by indexed
+// assignment (m[k]=v), so they must be deep-copied to keep the binding
+// independent of its source.
+func copyForBind(value *mlrval.Mlrval) *mlrval.Mlrval {
+	if value.IsArrayOrMap() {
+		return value.Copy()
+	}
+	return value
+}
+
 func NewTypeGatedMlrvalVariable(
 	name string, // e.g. "x"
 	typeName string, // e.g. "num"
@@ -63,7 +79,7 @@ func NewTypeGatedMlrvalVariable(
 
 	return &TypeGatedMlrvalVariable{
 		typeGatedMlrvalName,
-		value.Copy(),
+		copyForBind(value),
 	}, nil
 }
 
@@ -77,8 +93,7 @@ func (tvar *TypeGatedMlrvalVariable) Assign(value *mlrval.Mlrval) error {
 		return err
 	}
 
-	// TODO: revisit copy-reduction
-	tvar.value = value.Copy()
+	tvar.value = copyForBind(value)
 	return nil
 }
 

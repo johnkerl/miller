@@ -78,40 +78,41 @@ func transformerTopParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerTopUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-n" {
+		case "-n":
 			topCount, err = cli.VerbGetIntArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
-		} else if opt == "-f" {
+		case "-f":
 			valueFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
-		} else if opt == "-g" {
+		case "-g":
 			groupByFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
-		} else if opt == "-a" {
+		case "-a":
 			showFullRecords = true
-		} else if opt == "--max" {
+		case "--max":
 			doMax = true
-		} else if opt == "--min" {
+		case "--min":
 			doMax = false
-		} else if opt == "-F" {
+		case "-F":
 			// Ignored in Miller 6; allowed for command-line backward compatibility
-		} else if opt == "-o" {
+		case "-o":
 			outputFieldName, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}

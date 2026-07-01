@@ -69,35 +69,36 @@ func transformerSeqgenParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerSeqgenUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-f" {
+		case "-f":
 			fieldName, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "--start" {
+		case "--start":
 			startString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "--stop" {
+		case "--stop":
 			stopString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "--step" {
+		case "--step":
 			stepString, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
@@ -138,7 +139,7 @@ func NewTransformerSeqgen(
 	start := mlrval.FromInferredType(startString)
 	stop := mlrval.FromInferredType(stopString)
 	step := mlrval.FromInferredType(stepString)
-	var doneComparator bifs.BinaryFunc = nil
+	var doneComparator bifs.BinaryFunc
 
 	fstart, startIsNumeric := start.GetNumericToFloatValue()
 	if !startIsNumeric {
@@ -183,6 +184,11 @@ func (tr *TransformerSeqgen) Transform(
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 ) {
+	if !inrecAndContext.EndOfStream {
+		// Discard upstream records; generate output only when upstream is done.
+		return
+	}
+
 	counter := tr.start
 	context := types.NewNilContext()
 	context.UpdateForStartOfFile("seqgen")

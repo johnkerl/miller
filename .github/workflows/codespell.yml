@@ -21,7 +21,7 @@ jobs:
     steps:
       # Check out the code base
       - name: Check out code
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           # Full git history is needed to get a proper list of changed files within `super-linter`
           fetch-depth: 0

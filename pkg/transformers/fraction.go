@@ -79,29 +79,30 @@ func transformerFractionParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerFractionUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-f" {
+		case "-f":
 			fractionFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-g" {
+		case "-g":
 			groupByFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-p" {
+		case "-p":
 			doPercents = true
 
-		} else if opt == "-c" {
+		case "-c":
 			doCumu = true
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
@@ -246,9 +247,9 @@ func (tr *TransformerFraction) Transform(
 					if value != nil {
 						value.AssertNumeric() // may fatal the process
 
-						var numerator *mlrval.Mlrval = nil
-						var cumu *mlrval.Mlrval = nil
-						var outputValue *mlrval.Mlrval = nil
+						var numerator *mlrval.Mlrval
+						var cumu *mlrval.Mlrval
+						var outputValue *mlrval.Mlrval
 
 						if tr.doCumu {
 							cumu = cumusForGroup[fractionFieldName]

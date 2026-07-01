@@ -423,6 +423,8 @@ Without -g, ceases consuming more input (i.e. is fast) when n records have been 
 Options:
 -g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
 -n {n} Head-count to print. Default 10.
+           A negative count, e.g. -n -2, passes through all but the last n records,
+           optionally by category.
 -h|--help Show this message.
 
 ================================================================
@@ -1305,8 +1307,11 @@ tail
 Usage: mlr tail [options]
 Passes through the last n records, optionally by category.
 Options:
--g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
--n {n} Head-count to print. Default 10.
+-g {a,b,c} Optional group-by-field names for tail counts, e.g. a,b,c.
+-n {n} Tail-count to print. Default 10.
+           A leading '+' means start at the nth record rather than print
+           the last n: e.g. -n +3 passes through all but the first 2
+           records, optionally by category.
 -h|--help Show this message.
 
 ================================================================

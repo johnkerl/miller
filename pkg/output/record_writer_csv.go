@@ -19,6 +19,12 @@ type RecordWriterCSV struct {
 	firstRecordKeys   []string
 	firstRecordNF     int64
 	quoteAll          bool // For double-quote around all fields
+	// fieldsBuffer is a reusable scratch slice for the stringified field values
+	// of the record currently being written. WriteCSVRecordMaybeColorized
+	// consumes it synchronously and does not retain it, and the writer processes
+	// one record at a time, so a single buffer can be shared across records to
+	// avoid a per-record allocation.
+	fieldsBuffer []string
 }
 
 func NewRecordWriterCSV(writerOptions *cli.TWriterOptions) (*RecordWriterCSV, error) {
@@ -76,7 +82,10 @@ func (writer *RecordWriterCSV) Write(
 		outputNF = writer.firstRecordNF
 	}
 
-	fields := make([]string, outputNF)
+	if int64(cap(writer.fieldsBuffer)) < outputNF {
+		writer.fieldsBuffer = make([]string, outputNF)
+	}
+	fields := writer.fieldsBuffer[:outputNF]
 	var i int64 = 0
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		if i < writer.firstRecordNF && pe.Key != writer.firstRecordKeys[i] {

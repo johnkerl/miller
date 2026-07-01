@@ -64,32 +64,33 @@ func transformerCatParseCLI(
 		}
 		argi++
 
-		if opt == "-h" || opt == "--help" {
+		switch opt {
+		case "-h", "--help":
 			transformerCatUsage(os.Stdout)
 			return nil, cli.ErrHelpRequested
 
-		} else if opt == "-n" {
+		case "-n":
 			counterFieldName = "n"
 
-		} else if opt == "-N" {
+		case "-N":
 			counterFieldName, err = cli.VerbGetStringArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "-g" {
+		case "-g":
 			groupByFieldNames, err = cli.VerbGetStringArrayArg(verb, opt, args, &argi, argc)
 			if err != nil {
 				return nil, err
 			}
 
-		} else if opt == "--filename" {
+		case "--filename":
 			doFileName = true
 
-		} else if opt == "--filenum" {
+		case "--filenum":
 			doFileNum = true
 
-		} else {
+		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
 	}
@@ -226,7 +227,7 @@ func (tr *TransformerCat) countersGrouped(
 		inrec := inrecAndContext.Record
 
 		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
-		var counter int64 = 0
+		var counter int64
 		if !ok {
 			// Treat as unkeyed
 			tr.counter++
