@@ -146,21 +146,18 @@ func cmp_b_yy(input1, input2 *Mlrval) int {
 //	return input1.mapval.Equals(input2.mapval)
 //}
 
-// Note the BYTES row/column is positionally last (MT_BYTES is one past
-// MT_ABSENT, for disposition-matrix index stability) but its cells place
-// bytes between string and array in the mixed-type sort order.
 var cmp_dispositions = [MT_DIM][MT_DIM]CmpFuncInt{
-	//       .  INT        FLOAT     BOOL      VOID      STRING    ARRAY  MAP    FUNC   ERROR  NULL   ABSENT BYTES
+	// . INT FLOAT BOOL VOID STRING BYTES ARRAY MAP FUNC ERROR NULL ABSENT
 	/*INT    */ {cmp_b_ii, cmp_b_if, _less, _less, _less, _less, _less, _less, _less, _less, _less, _less},
 	/*FLOAT  */ {cmp_b_fi, cmp_b_ff, _less, _less, _less, _less, _less, _less, _less, _less, _less, _less},
 	/*BOOL   */ {_more, _more, cmp_b_bb, _less, _less, _less, _less, _less, _less, _less, _less, _less},
 	/*VOID   */ {_more, _more, _more, cmp_b_ss, cmp_b_ss, _less, _less, _less, _less, _less, _less, _less},
 	/*STRING */ {_more, _more, _more, cmp_b_ss, cmp_b_ss, _less, _less, _less, _less, _less, _less, _less},
-	/*ARRAY  */ {_more, _more, _more, _more, _more, _same, _less, _less, _less, _less, _less, _more},
-	/*MAP    */ {_more, _more, _more, _more, _more, _more, _same, _less, _less, _less, _less, _more},
-	/*func   */ {_more, _more, _more, _more, _more, _more, _more, _same, _less, _less, _less, _more},
-	/*ERROR  */ {_more, _more, _more, _more, _more, _more, _more, _more, _same, _less, _less, _more},
-	/*NULL   */ {_more, _more, _more, _more, _more, _more, _more, _more, _more, _same, _less, _more},
-	/*ABSENT */ {_more, _more, _more, _more, _more, _more, _more, _more, _more, _more, _same, _more},
-	/*BYTES  */ {_more, _more, _more, _more, _more, _less, _less, _less, _less, _less, _less, cmp_b_yy},
+	/*BYTES  */ {_more, _more, _more, _more, _more, cmp_b_yy, _less, _less, _less, _less, _less, _less},
+	/*ARRAY  */ {_more, _more, _more, _more, _more, _more, _same, _less, _less, _less, _less, _less},
+	/*MAP    */ {_more, _more, _more, _more, _more, _more, _more, _same, _less, _less, _less, _less},
+	/*func   */ {_more, _more, _more, _more, _more, _more, _more, _more, _same, _less, _less, _less},
+	/*ERROR  */ {_more, _more, _more, _more, _more, _more, _more, _more, _more, _same, _less, _less},
+	/*NULL   */ {_more, _more, _more, _more, _more, _more, _more, _more, _more, _more, _same, _less},
+	/*ABSENT */ {_more, _more, _more, _more, _more, _more, _more, _more, _more, _more, _more, _same},
 }

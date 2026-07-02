@@ -50,13 +50,13 @@ var to_int_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*BOOL   */ bool_to_int,
 	/*VOID   */ _void1,
 	/*STRING */ string_to_int,
+	/*BYTES  */ to_int_te,
 	/*ARRAY  */ to_int_te,
 	/*MAP    */ to_int_te,
 	/*FUNC   */ to_int_te,
 	/*ERROR  */ to_int_te,
 	/*NULL   */ _null1,
 	/*ABSENT */ _absn1,
-	/*BYTES  */ to_int_te,
 }
 
 func BIF_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -103,13 +103,13 @@ var to_int_with_base_dispositions = [mlrval.MT_DIM]BinaryFunc{
 	/*BOOL   */ bool_to_int_with_base,
 	/*VOID   */ _void,
 	/*STRING */ string_to_int_with_base,
+	/*BYTES  */ to_int_with_base_te,
 	/*ARRAY  */ to_int_with_base_te,
 	/*MAP    */ to_int_with_base_te,
 	/*FUNC   */ to_int_with_base_te,
 	/*ERROR  */ to_int_with_base_te,
 	/*NULL   */ _null,
 	/*ABSENT */ _absn,
-	/*BYTES  */ to_int_with_base_te,
 }
 
 func BIF_int_with_base(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -155,13 +155,13 @@ var to_float_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*BOOL   */ bool_to_float,
 	/*VOID   */ _void1,
 	/*STRING */ string_to_float,
+	/*BYTES  */ to_float_te,
 	/*ARRAY  */ to_float_te,
 	/*MAP    */ to_float_te,
 	/*FUNC   */ to_float_te,
 	/*ERROR  */ to_float_te,
 	/*NULL   */ _null1,
 	/*ABSENT */ _absn1,
-	/*BYTES  */ to_float_te,
 }
 
 func BIF_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -201,13 +201,13 @@ var to_boolean_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*BOOL   */ _1u___,
 	/*VOID   */ _void1,
 	/*STRING */ string_to_boolean,
+	/*BYTES  */ to_boolean_te,
 	/*ARRAY  */ to_boolean_te,
 	/*MAP    */ to_boolean_te,
 	/*FUNC   */ to_boolean_te,
 	/*ERROR  */ to_boolean_te,
 	/*NULL   */ _null1,
 	/*ABSENT */ _absn1,
-	/*BYTES  */ to_boolean_te,
 }
 
 func BIF_boolean(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -228,13 +228,13 @@ var to_bytes_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*BOOL   */ to_bytes_te,
 	/*VOID   */ string_to_bytes,
 	/*STRING */ string_to_bytes,
+	/*BYTES  */ _1u___,
 	/*ARRAY  */ to_bytes_te,
 	/*MAP    */ to_bytes_te,
 	/*FUNC   */ to_bytes_te,
 	/*ERROR  */ to_bytes_te,
 	/*NULL   */ _null1,
 	/*ABSENT */ _absn1,
-	/*BYTES  */ _1u___,
 }
 
 func BIF_bytes(input1 *mlrval.Mlrval) *mlrval.Mlrval {
