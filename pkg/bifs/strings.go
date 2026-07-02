@@ -12,6 +12,10 @@ import (
 )
 
 func BIF_strlen(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	// Strings have UTF-8 rune-count length; bytes have byte-count length.
+	if input1.IsBytes() {
+		return mlrval.FromInt(int64(len(input1.AcquireBytesValue())))
+	}
 	if !input1.IsStringOrVoid() {
 		return mlrval.FromTypeErrorUnary("strlen", input1)
 	}
@@ -19,6 +23,12 @@ func BIF_strlen(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_string(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	// For bytes, reinterpret the raw bytes as a string -- the inverse of
+	// bytes(s) -- rather than using the hex String() rendering. This is what
+	// makes string(base64_decode("aGVsbG8=")) yield "hello".
+	if input1.IsBytes() {
+		return mlrval.FromString(string(input1.AcquireBytesValue()))
+	}
 	return mlrval.FromString(input1.String())
 }
 
@@ -43,19 +53,32 @@ func dot_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromTypeErrorBinary(".", input1, input2)
 }
 
+// Concatenation of two bytes values is a bytes value; dotting bytes with
+// anything else is a type error, since silently reinterpreting binary data as
+// text (or vice versa) is exactly what the bytes type exists to prevent.
+func dot_y_yy(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	a := input1.AcquireBytesValue()
+	b := input2.AcquireBytesValue()
+	c := make([]byte, 0, len(a)+len(b))
+	c = append(c, a...)
+	c = append(c, b...)
+	return mlrval.FromBytes(c)
+}
+
 var dot_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
-	//       .  INT       FLOAT     BOOL      VOID   STRING    ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
-	/*INT    */ {dot_s_xx, dot_s_xx, dot_s_xx, _s1__, dot_s_xx, dot_te, dot_te, dot_te, dot_te, _1___, _s1__},
-	/*FLOAT  */ {dot_s_xx, dot_s_xx, dot_s_xx, _s1__, dot_s_xx, dot_te, dot_te, dot_te, dot_te, _1___, _s1__},
-	/*BOOL   */ {dot_s_xx, dot_s_xx, dot_s_xx, _s1__, dot_s_xx, dot_te, dot_te, dot_te, dot_te, _1___, _s1__},
-	/*VOID   */ {_s2__, _s2__, _s2__, _void, _2___, _absn, _absn, dot_te, dot_te, _void, _void},
-	/*STRING */ {dot_s_xx, dot_s_xx, dot_s_xx, _1___, dot_s_xx, dot_te, dot_te, dot_te, dot_te, _1___, _1___},
-	/*ARRAY  */ {dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te},
-	/*MAP    */ {dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te},
-	/*FUNC   */ {dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te},
-	/*ERROR  */ {dot_te, dot_te, dot_te, dot_te, dot_te, _absn, _absn, dot_te, dot_te, dot_te, dot_te},
-	/*NULL   */ {_s2__, _s2__, _s2__, _void, _2___, _absn, _absn, dot_te, dot_te, _null, _null},
-	/*ABSENT */ {_s2__, _s2__, _s2__, _void, _2___, _absn, _absn, dot_te, dot_te, _null, _absn},
+	// . INT FLOAT BOOL VOID STRING BYTES ARRAY MAP FUNC ERROR NULL ABSENT
+	/*INT    */ {dot_s_xx, dot_s_xx, dot_s_xx, _s1__, dot_s_xx, dot_te, dot_te, dot_te, dot_te, dot_te, _1___, _s1__},
+	/*FLOAT  */ {dot_s_xx, dot_s_xx, dot_s_xx, _s1__, dot_s_xx, dot_te, dot_te, dot_te, dot_te, dot_te, _1___, _s1__},
+	/*BOOL   */ {dot_s_xx, dot_s_xx, dot_s_xx, _s1__, dot_s_xx, dot_te, dot_te, dot_te, dot_te, dot_te, _1___, _s1__},
+	/*VOID   */ {_s2__, _s2__, _s2__, _void, _2___, _2___, _absn, _absn, dot_te, dot_te, _void, _void},
+	/*STRING */ {dot_s_xx, dot_s_xx, dot_s_xx, _1___, dot_s_xx, dot_te, dot_te, dot_te, dot_te, dot_te, _1___, _1___},
+	/*BYTES  */ {dot_te, dot_te, dot_te, _1___, dot_te, dot_y_yy, dot_te, dot_te, dot_te, dot_te, _1___, _1___},
+	/*ARRAY  */ {dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te},
+	/*MAP    */ {dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te},
+	/*FUNC   */ {dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, dot_te},
+	/*ERROR  */ {dot_te, dot_te, dot_te, dot_te, dot_te, dot_te, _absn, _absn, dot_te, dot_te, dot_te, dot_te},
+	/*NULL   */ {_s2__, _s2__, _s2__, _void, _2___, _2___, _absn, _absn, dot_te, dot_te, _null, _null},
+	/*ABSENT */ {_s2__, _s2__, _s2__, _void, _2___, _2___, _absn, _absn, dot_te, dot_te, _null, _absn},
 }
 
 func BIF_dot(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -71,6 +94,9 @@ func BIF_substr_1_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 	if input1.IsError() {
 		return mlrval.FromTypeErrorUnary("substr1", input1)
+	}
+	if input1.IsBytes() {
+		return bytes_substr(input1, input2, input3, false)
 	}
 	sinput := input1.String()
 
@@ -103,6 +129,9 @@ func BIF_substr_0_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsError() {
 		return mlrval.FromTypeErrorUnary("substr0", input1)
 	}
+	if input1.IsBytes() {
+		return bytes_substr(input1, input2, input3, true)
+	}
 	sinput := input1.String()
 
 	// Handle UTF-8 correctly: len(input1.AcquireStringValue()) will count bytes, not runes.
@@ -122,6 +151,23 @@ func BIF_substr_0_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	// while the 2nd is exclusive. For Miller, indices are 1-up and both
 	// are inclusive.
 	return mlrval.FromString(string(runes[lowerZindex : upperZindex+1]))
+}
+
+// bytes_substr slices bytes by byte position, not rune position. An empty
+// slice yields empty bytes rather than VOID, preserving the type.
+func bytes_substr(input1, input2, input3 *mlrval.Mlrval, zeroUp bool) *mlrval.Mlrval {
+	b := input1.AcquireBytesValue()
+
+	sliceIsEmpty, absentOrError, lowerZindex, upperZindex := MillerSliceAccess(input2, input3, len(b), zeroUp)
+
+	if sliceIsEmpty {
+		return mlrval.FromBytes([]byte{})
+	}
+	if absentOrError != nil {
+		return absentOrError
+	}
+
+	return mlrval.FromBytes(append([]byte(nil), b[lowerZindex:upperZindex+1]...))
 }
 
 // index(string, substring) returns the index of substring within string (if found), or -1 if not
@@ -511,18 +557,19 @@ func fmtnum_te(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 var fmtnum_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
-	//       .  INT    FLOAT  BOOL   VOID   STRING     ARRAY  MAP    FUNC    ERROR   NULL   ABSENT
-	/*INT    */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_is, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
-	/*FLOAT  */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_fs, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
-	/*BOOL   */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_bs, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
-	/*VOID   */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
-	/*STRING */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
-	/*ARRAY  */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
-	/*MAP    */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
-	/*FUNC   */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te},
-	/*ERROR  */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te},
-	/*NULL   */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
-	/*ABSENT */ {_absn, _absn, fmtnum_te, _absn, _absn, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn, _absn},
+	// . INT FLOAT BOOL VOID STRING BYTES ARRAY MAP FUNC ERROR NULL ABSENT
+	/*INT    */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_is, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*FLOAT  */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_fs, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*BOOL   */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_bs, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*VOID   */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*STRING */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*BYTES  */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*ARRAY  */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*MAP    */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*FUNC   */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te},
+	/*ERROR  */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te},
+	/*NULL   */ {fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn},
+	/*ABSENT */ {_absn, _absn, fmtnum_te, _absn, _absn, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, fmtnum_te, _absn, _absn},
 }
 
 func BIF_fmtnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {

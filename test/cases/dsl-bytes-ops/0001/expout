@@ -1,0 +1,18 @@
+0102
+
+true
+false
+true
+true
+false
+-1
+false
+0102
+0102
+0001
+"bytes"
+[3, "zz", "01", "02"]
++: unacceptable types bytes, int with values 01, 1
+&: unacceptable types bytes, bytes with values 01, 02
+fmtnum: unacceptable types bytes, string with values 01, "%d"
+.: unacceptable types bytes, string with values 01, "abc"

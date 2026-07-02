@@ -79,7 +79,8 @@ func (root *RootNode) BuildEvaluableNode(astNode *asts.ASTNode) (IEvaluable, err
 		asts.NodeType(NodeTypeBracedOosvarValue), asts.NodeType(NodeTypeFullOosvar),
 		asts.NodeType(NodeTypeLocalVariable),
 		asts.NodeType(NodeTypeIntLiteral), asts.NodeType(NodeTypeFloatLiteral),
-		asts.NodeType(NodeTypeStringLiteral), asts.NodeType(NodeTypeBoolLiteral),
+		asts.NodeType(NodeTypeStringLiteral), asts.NodeType(NodeTypeBytesLiteral),
+		asts.NodeType(NodeTypeBoolLiteral),
 		asts.NodeType(NodeTypeNullLiteral), asts.NodeType(NodeTypeRegex):
 		return root.BuildLeafNode(astNode)
 	}

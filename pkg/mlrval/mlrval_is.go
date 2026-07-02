@@ -89,6 +89,11 @@ func (mv *Mlrval) IsStringOrInt() bool {
 	return t == MT_STRING || t == MT_VOID || t == MT_INT
 }
 
+func (mv *Mlrval) IsBytes() bool {
+	// Bytes are never from deferred type, so no JIT-infer is needed.
+	return mv.mvtype == MT_BYTES
+}
+
 func (mv *Mlrval) IsInt() bool {
 	return mv.Type() == MT_INT
 }
