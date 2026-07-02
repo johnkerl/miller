@@ -73,7 +73,6 @@ func TestNoNilCellsInBinaryDispositionMatrices(t *testing.T) {
 		"dotminus_dispositions":             dotminus_dispositions,
 		"dottimes_dispositions":             dottimes_dispositions,
 		"dotdivide_dispositions":            dotdivide_dispositions,
-		"dotidivide_dispositions":           dotidivide_dispositions,
 		"modulus_dispositions":              modulus_dispositions,
 		"min_dispositions":                  min_dispositions,
 		"max_dispositions":                  max_dispositions,

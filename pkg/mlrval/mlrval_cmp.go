@@ -29,9 +29,6 @@ type CmpFuncInt func(input1, input2 *Mlrval) int // -1, 0, 1 for <=>
 func Equals(input1, input2 *Mlrval) bool {
 	return cmp_dispositions[input1.Type()][input2.Type()](input1, input2) == 0
 }
-func NotEquals(input1, input2 *Mlrval) bool {
-	return cmp_dispositions[input1.Type()][input2.Type()](input1, input2) != 0
-}
 func GreaterThan(input1, input2 *Mlrval) bool {
 	return cmp_dispositions[input1.Type()][input2.Type()](input1, input2) > 0
 }

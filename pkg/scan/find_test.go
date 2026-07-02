@@ -6,6 +6,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// Convenience function for unit test
+func findScanTypeName(sinput string) string {
+	return TypeNames[FindScanType(sinput)]
+}
+
 func TestFindScanTypeNameStrings(t *testing.T) {
 	assert.Equal(t, typeNameString, findScanTypeName(""))
 	assert.Equal(t, typeNameString, findScanTypeName("-"))
