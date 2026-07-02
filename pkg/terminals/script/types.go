@@ -15,8 +15,7 @@ import (
 )
 
 type Script struct {
-	exeName string
-	name    string
+	name string
 
 	doWarnings  bool
 	cstRootNode *cst.RootNode
