@@ -58,20 +58,6 @@ func SetFailColor(name string) bool {
 	}
 	return ok
 }
-func SetREPLPS1Color(name string) bool {
-	escape, ok := lumin.MakeANSIEscapesFromName(name)
-	if ok {
-		replPS1ColorString = escape
-	}
-	return ok
-}
-func SetREPLPS2Color(name string) bool {
-	escape, ok := lumin.MakeANSIEscapesFromName(name)
-	if ok {
-		replPS2ColorString = escape
-	}
-	return ok
-}
 func SetHelpColor(name string) bool {
 	escape, ok := lumin.MakeANSIEscapesFromName(name)
 	if ok {

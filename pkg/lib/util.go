@@ -52,15 +52,6 @@ func StringListToSet(stringList []string) map[string]bool {
 	return stringSet
 }
 
-// ReverseStringList reverses strs in place.
-//
-// Deprecated: use slices.Reverse instead.
-//
-//go:fix inline
-func ReverseStringList(strs []string) {
-	slices.Reverse(strs)
-}
-
 // SortedStrings returns a new slice containing the strings in strs in ascending order.
 func SortedStrings(strs []string) []string {
 	result := make([]string, len(strs))
@@ -188,15 +179,6 @@ func WriteTempFileOrDie(contents string) string {
 		os.Exit(1)
 	}
 	return handle.Name()
-}
-
-// CopyStringArray returns a copy of input.
-//
-// Deprecated: use slices.Clone instead.
-//
-//go:fix inline
-func CopyStringArray(input []string) []string {
-	return slices.Clone(input)
 }
 
 func StripEmpties(input []string) []string {

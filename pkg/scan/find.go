@@ -1,7 +1,5 @@
 package scan
 
-import ()
-
 // TODO: comment re context
 
 //  o grammar for numbers & case-through
@@ -51,11 +49,6 @@ func FindScanType(sinput string) ScanType {
 	}
 
 	return scanTypeString
-}
-
-// Convenience function for unit test
-func findScanTypeName(sinput string) string {
-	return TypeNames[FindScanType(sinput)]
 }
 
 func findScanTypePositiveNumberOrString(input []byte) ScanType {
