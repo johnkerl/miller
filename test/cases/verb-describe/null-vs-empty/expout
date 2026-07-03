@@ -1,0 +1,41 @@
+[
+{
+  "field_name": "x",
+  "types": {
+    "int": 2,
+    "empty": 1
+  },
+  "count": 3,
+  "null_count": 1,
+  "distinct_count": 2,
+  "min": 1,
+  "max": "",
+  "values": [1, ""]
+},
+{
+  "field_name": "y",
+  "types": {
+    "int": 1,
+    "empty": 2
+  },
+  "count": 3,
+  "null_count": 2,
+  "distinct_count": 2,
+  "min": 2,
+  "max": "",
+  "values": [2, ""]
+},
+{
+  "field_name": "s",
+  "types": {
+    "string": 2,
+    "empty": 1
+  },
+  "count": 3,
+  "null_count": 1,
+  "distinct_count": 3,
+  "min": "",
+  "max": "hurrah",
+  "values": ["hello", "", "hurrah"]
+}
+]

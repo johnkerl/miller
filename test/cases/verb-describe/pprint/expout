@@ -1,0 +1,12 @@
+field_name types.string count null_count distinct_count min max values.1 values.2 values.3 values.4 values.5
+a          10           10    0          5              eks zee pan      eks      wye      zee      hat
+
+field_name types.string count null_count distinct_count min max values.1 values.2 values.3
+b          10           10    0          3              pan zee pan      wye      zee
+
+field_name types.int count null_count distinct_count min max values.1 values.2 values.3 values.4 values.5 values.6 values.7 values.8 values.9 values.10
+i          10        10    0          10             1   10  1        2        3        4        5        6        7        8        9        10
+
+field_name types.float count null_count distinct_count min        max        values.1   values.2   values.3   values.4   values.5   values.6   values.7   values.8   values.9   values.10
+x          10          10    0          10             0.03144188 0.75867996 0.34679014 0.75867996 0.20460331 0.38139939 0.57328892 0.52712616 0.61178406 0.59855401 0.03144188 0.50262601
+y          10          10    0          10             0.13418874 0.97618139 0.72680286 0.52215111 0.33831853 0.13418874 0.86362447 0.49322129 0.18788492 0.97618139 0.74955076 0.95261836

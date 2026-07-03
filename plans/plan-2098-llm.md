@@ -251,7 +251,7 @@ validation path.
 
 ---
 
-## PR 6 — `mlr describe` schema/shape introspection
+## PR 6 — `mlr describe` schema/shape introspection  *(landed)*
 
 **Goal.** Let an agent learn the *data's* shape, complementing the catalog's
 *tool* shape.
@@ -260,6 +260,25 @@ validation path.
   cardinality over the input stream, with an `--as-json` form.
 - Leverage Miller's existing type-inference (`pkg/mlrval`) and field-collection
   machinery; likely a new verb in `pkg/transformers/`.
+
+**Landed.** New verb `describe` (`pkg/transformers/describe.go`), registered in
+`TRANSFORMER_LOOKUP_TABLE` with Tier-2 `Options` so it appears structured in
+the PR1 catalog and PR2 index automatically. One output record per input
+field: `field_name`, `types` (type-name → occurrence-count map, via
+`GetTypeName` type inference), `count`, `null_count`, `distinct_count`,
+`min`/`max`, and — for fields whose cardinality is within `-n`/`--max-values`
+(default 20; 0 suppresses) — a `values` array listing every distinct value in
+first-seen order. The `values` list is the data-derived *constraint* domain
+deferred out of PR3: an agent copies real values for `-g`, DSL comparisons,
+etc. instead of guessing. The JSON form is Miller-native — `mlr --ojson
+describe` — with `types`/`values` nesting in JSON and auto-flattening in
+tabular formats, so no verb-level `--as-json` flag was needed; `describe` is
+positioned relative to `summary` as schema-shape vs. summary-statistics.
+Distinctness is on string representations, matching `summary`'s
+`distinct_count`; null semantics (empty or JSON null) match `summary`'s
+`null_count`. Tests: `test/cases/verb-describe/` (JSON, pprint-flattened,
+heterogeneous input, `-n` cap, `-n 0`, null-vs-empty, bad-option); docs:
+`## describe` in `reference-verbs.md.in`.
 
 ---
 

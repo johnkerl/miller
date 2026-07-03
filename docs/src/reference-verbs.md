@@ -890,6 +890,132 @@ Options:
 -h|--help  Show this message.
 </pre>
 
+## describe
+
+<pre class="pre-highlight-in-pair">
+<b>mlr describe --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr describe [options]
+Shows a compact schema for the input data: field names, types, and value shape.
+Emits one output record per input field, with types seen, counts, cardinality,
+min/max, and (for low-cardinality fields) the complete set of distinct values.
+
+Output fields, one record per input field:
+  field_name      name of the input field
+  types           map from type name (int, string, etc.) to occurrence count
+  count           number of records in which the field appears
+  null_count      count of field values either empty string or JSON null
+  distinct_count  count of distinct values for the field
+  min, max        minimum/maximum field value (works for strings as well as numbers)
+  values          all distinct values, in order first seen -- only for fields
+                  whose distinct_count is within the -n limit
+
+Notes:
+* Distinctness is computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
+* Use `mlr --ojson describe` for a machine-readable JSON document; in tabular
+  output formats the types map and values array are flattened.
+* See also the summary verb, which reports summary statistics (mean, percentiles, etc.).
+
+Options:
+-n|--max-values {n} List a field's distinct values only if it has at most {n} of
+                    them; 0 suppresses the values array entirely. Defaults to
+                    20.
+-h|--help           Show this message.
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ojson describe example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "field_name": "color",
+  "types": {
+    "string": 10
+  },
+  "count": 10,
+  "null_count": 0,
+  "distinct_count": 3,
+  "min": "purple",
+  "max": "yellow",
+  "values": ["yellow", "red", "purple"]
+},
+{
+  "field_name": "shape",
+  "types": {
+    "string": 10
+  },
+  "count": 10,
+  "null_count": 0,
+  "distinct_count": 3,
+  "min": "circle",
+  "max": "triangle",
+  "values": ["triangle", "square", "circle"]
+},
+{
+  "field_name": "flag",
+  "types": {
+    "string": 10
+  },
+  "count": 10,
+  "null_count": 0,
+  "distinct_count": 2,
+  "min": "false",
+  "max": "true",
+  "values": ["true", "false"]
+},
+{
+  "field_name": "k",
+  "types": {
+    "int": 10
+  },
+  "count": 10,
+  "null_count": 0,
+  "distinct_count": 10,
+  "min": 1,
+  "max": 10,
+  "values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+},
+{
+  "field_name": "index",
+  "types": {
+    "int": 10
+  },
+  "count": 10,
+  "null_count": 0,
+  "distinct_count": 10,
+  "min": 11,
+  "max": 91,
+  "values": [11, 15, 16, 48, 51, 64, 65, 73, 87, 91]
+},
+{
+  "field_name": "quantity",
+  "types": {
+    "float": 10
+  },
+  "count": 10,
+  "null_count": 0,
+  "distinct_count": 10,
+  "min": 13.8103,
+  "max": 81.229,
+  "values": [43.6498, 79.2778, 13.8103, 77.5542, 81.2290, 77.1991, 80.1405, 63.9785, 63.5058, 72.3735]
+},
+{
+  "field_name": "rate",
+  "types": {
+    "float": 10
+  },
+  "count": 10,
+  "null_count": 0,
+  "distinct_count": 10,
+  "min": 0.013,
+  "max": 9.887,
+  "values": [9.8870, 0.0130, 2.9010, 7.4670, 8.5910, 9.5310, 5.8240, 4.2370, 8.3350, 8.2430]
+}
+]
+</pre>
+
 ## fill-down
 
 <pre class="pre-highlight-in-pair">
