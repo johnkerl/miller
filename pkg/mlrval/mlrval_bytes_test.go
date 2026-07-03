@@ -30,7 +30,7 @@ func TestBytesStringIsHex(t *testing.T) {
 
 func TestBytesJSON(t *testing.T) {
 	mv := FromBytes([]byte{0xff, 0x01})
-	s, err := mv.MarshalJSON(JSON_SINGLE_LINE, false)
+	s, err := mv.FormatAsJSON(JSON_SINGLE_LINE, false)
 	assert.Nil(t, err)
 	assert.Equal(t, `"ff01"`, s)
 }
