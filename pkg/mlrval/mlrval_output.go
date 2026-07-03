@@ -92,7 +92,7 @@ func (mv *Mlrval) setPrintRep() {
 			}
 
 		case MT_ARRAY:
-			bytes, err := mv.MarshalJSON(JSON_MULTILINE, false)
+			bytes, err := mv.FormatAsJSON(JSON_MULTILINE, false)
 			// maybe just InternalCodingErrorIf(err != nil)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
@@ -101,7 +101,7 @@ func (mv *Mlrval) setPrintRep() {
 			mv.printrep = string(bytes)
 
 		case MT_MAP:
-			bytes, err := mv.MarshalJSON(JSON_MULTILINE, false)
+			bytes, err := mv.FormatAsJSON(JSON_MULTILINE, false)
 			// maybe just InternalCodingErrorIf(err != nil)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
