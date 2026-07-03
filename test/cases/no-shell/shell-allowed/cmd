@@ -1,1 +1,1 @@
-mlr -n put 'end{print system("echo hi")}'
+mlr -n put -f ${CASEDIR}/mlr

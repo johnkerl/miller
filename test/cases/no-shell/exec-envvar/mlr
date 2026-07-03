@@ -1,0 +1,1 @@
+end{print exec("echo",["hi"])}
