@@ -110,7 +110,10 @@ func ParseCommandLine(
 	args = lib.Getoptify(args)
 
 	// Pass one as described at the top of this file.
-	flagSequences, terminalSequence, verbSequences, dataFileNames := parseCommandLinePassOne(args)
+	flagSequences, terminalSequence, verbSequences, dataFileNames, passOneErr := parseCommandLinePassOne(args)
+	if passOneErr != nil {
+		return nil, nil, passOneErr
+	}
 
 	// Pass two as described at the top of this file.
 	return parseCommandLinePassTwo(flagSequences, terminalSequence, verbSequences, dataFileNames)
@@ -124,6 +127,7 @@ func parseCommandLinePassOne(
 	terminalSequence []string,
 	verbSequences [][]string,
 	dataFileNames []string,
+	parseErr error,
 ) {
 	flagSequences = [][]string{}
 	terminalSequence = nil
@@ -172,10 +176,14 @@ func parseCommandLinePassOne(
 				argi += 1
 
 			} else {
-				// Unrecognized main-flag. Fatal it here, and don't send it to pass two.
-				fmt.Fprintf(os.Stderr, "%s: option \"%s\" not recognized.\n", "mlr", args[argi])
-				fmt.Fprintf(os.Stderr, "Please run \"%s --help\" for usage information.\n", "mlr")
-				os.Exit(1)
+				// Unrecognized main-flag: return a structured error so the
+				// caller can emit JSON or prose depending on --errors-json.
+				parseErr = &CLIError{
+					Kind:  "unknown-flag",
+					Token: args[argi],
+					Msg:   fmt.Sprintf("mlr: option \"%s\" not recognized. Please run \"mlr --help\" for usage information.", args[argi]),
+				}
+				return
 			}
 
 		} else if onFirst && terminals.Dispatchable(args[argi]) {
@@ -201,10 +209,12 @@ func parseCommandLinePassOne(
 
 			transformerSetup := transformers.LookUp(verb)
 			if transformerSetup == nil {
-				fmt.Fprintf(os.Stderr,
-					"mlr: verb \"%s\" not found. Please use \"mlr -l\" for a list.\n",
-					verb)
-				os.Exit(1)
+				parseErr = &CLIError{
+					Kind:  "unknown-verb",
+					Token: verb,
+					Msg:   fmt.Sprintf("mlr: verb \"%s\" not found. Please use \"mlr -l\" for a list.", verb),
+				}
+				return
 			}
 
 			// ParseCLIFunc returns (nil, nil) on pass-one success, (nil, err) on failure.
@@ -222,8 +232,15 @@ func parseCommandLinePassOne(
 				if errors.Is(err, cli.ErrUsagePrinted) {
 					os.Exit(1)
 				}
-				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-				os.Exit(1)
+				// Return a structured error so the caller can emit JSON or
+				// prose depending on --errors-json.
+				parseErr = &CLIError{
+					Kind:  "verb-option-error",
+					Token: extractTokenFromVerbError(err.Error()),
+					Verb:  verb,
+					Msg:   err.Error(), // already "mlr {verb}: ..."
+				}
+				return
 			}
 			// For pass one we want the verbs to identify the arg-sequences
 			// they own within the command line, but not construct
@@ -257,7 +274,7 @@ func parseCommandLinePassOne(
 		}
 	}
 
-	return flagSequences, terminalSequence, verbSequences, dataFileNames
+	return flagSequences, terminalSequence, verbSequences, dataFileNames, nil
 }
 
 // parseCommandLinePassTwo is as described at the top of this file.

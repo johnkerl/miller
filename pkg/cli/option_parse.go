@@ -3386,6 +3386,17 @@ var MiscFlagSection = FlagSection{
 	flags: []Flag{
 
 		{
+			name: "--errors-json",
+			help: "Emit parse errors as a JSON object to stderr instead of a plain text message. Intended for AI agents and scripts that branch on error kind rather than regex-matching prose. Equivalent to setting the `MLR_ERRORS_JSON` environment variable to a truthy value.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				// The actual effect is handled by pre-scan in pkg/entrypoint.
+				// Registration here ensures the flag is recognized (not an
+				// error) during pass-one flag parsing, and appears in --help.
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "-x",
 			help: "If any record has an error value in it, report it and stop the process. The default is to print the field value as `(error)` and continue.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {

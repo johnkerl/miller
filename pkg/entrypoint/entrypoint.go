@@ -40,9 +40,15 @@ func Main() MainReturn {
 	// found then this function will not return.
 	auxents.Dispatch(os.Args)
 
+	wantJSON := climain.WantErrorsJSON(os.Args)
+
 	options, recordTransformers, err := climain.ParseCommandLine(os.Args)
 	if err != nil {
-		printError(err)
+		if wantJSON {
+			climain.EmitStructuredError(err)
+		} else {
+			printError(err)
+		}
 		os.Exit(1)
 	}
 
@@ -61,13 +67,15 @@ func Main() MainReturn {
 	}
 }
 
-// printError prints err to stderr. Errors that already start with "mlr " (e.g.
-// "mlr stats1: ...") are printed as-is to avoid double-prefixing.
+// printError prints err to stderr. Errors that already carry an "mlr" prefix
+// (e.g. "mlr stats1: ..." or "mlr: verb not found") are printed as-is to
+// avoid double-prefixing.
 func printError(err error) {
-	if strings.HasPrefix(err.Error(), "mlr ") {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
+	msg := err.Error()
+	if strings.HasPrefix(msg, "mlr") {
+		fmt.Fprintf(os.Stderr, "%v\n", msg)
 	} else {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", msg)
 	}
 }
 
