@@ -15,6 +15,7 @@ const (
 	TerminalList = "terminal-list"
 	Completion   = "completion"
 	Help         = "help"
+	Mcp          = "mcp"
 	Regtest      = "regtest"
 	Repl         = "repl"
 	Script       = "script"
@@ -27,6 +28,7 @@ var Names = []string{
 	TerminalList,
 	Completion,
 	Help,
+	Mcp,
 	Regtest,
 	Repl,
 	Script,

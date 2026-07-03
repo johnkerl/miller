@@ -631,6 +631,16 @@
                                 since direct-to-screen output for large files has its
                                 own overhead.
        --no-hash-records        See --hash-records.
+       --no-shell               Disable Miller's ability to run external commands:
+                                the DSL `system` and `exec` functions, piped
+                                redirects such as `tee | "command"`, and
+                                `--prepipe`/`--prepipex` all fail cleanly instead of
+                                executing. Equivalent to setting the `MLR_NO_SHELL`
+                                environment variable to a truthy value. Intended for
+                                running agent-constructed command lines (e.g. via
+                                `mlr mcp`) without also granting arbitrary command
+                                execution. Once disabled, shell-outs cannot be
+                                re-enabled for the rest of the process.
        --norc                   Do not load a .mlrrc file.
        --nr-progress-mod {m}    With m a positive integer: print filename and record
                                 count to os.Stderr every m input records.

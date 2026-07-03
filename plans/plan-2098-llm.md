@@ -282,7 +282,7 @@ heterogeneous input, `-n` cap, `-n 0`, null-vs-empty, bad-option); docs:
 
 ---
 
-## PR 7 — MCP server + Agent Skill (the loop)
+## PR 7 — MCP server + Agent Skill (the loop)  *(landed)*
 
 **Goal.** Package the above so an agent gets both the *surface* and the *loop*.
 
@@ -345,6 +345,38 @@ heterogeneous input, `-n` cap, `-n 0`, null-vs-empty, bad-option); docs:
   handlers. The `MLR_AGENT` open question below lands here: the server makes
   it mostly moot (it sets flags explicitly), but it's worth resolving for the
   skill-without-server case.
+
+**Landed.** As designed above, with these notes:
+- Dependency call resolved: the official `modelcontextprotocol/go-sdk` (v1.6).
+- `--no-shell` / `MLR_NO_SHELL` prerequisite landed as a one-way gate in
+  `pkg/lib/shell_gate.go` (can be disabled at startup, never re-enabled, so
+  agent argv cannot override an env-level opt-out), enforced at all three
+  data-path shell-out sites: `BIF_system`/`BIF_exec` (clean error values),
+  `lib.Open{Outbound,Inbound}HalfPipe` (piped redirects, `--prepipe`).
+  Regression cases in `test/cases/no-shell/`.
+- Server is `pkg/terminals/mcp/`, registered as terminal `mcp`. Subprocess
+  tools inject `MLR_ERRORS_JSON=1` always and `MLR_NO_SHELL=1` unless
+  `--allow-shell`; per-run wall-clock timeout (`--timeout`, default 60s,
+  per-call overridable) and stdout/stderr byte cap (`--max-output-bytes`,
+  default 1 MiB) with explicit `*_truncated`/`timed_out` flags in the output.
+  Subprocess stdin is always redirected (inline `stdin_text` or empty), never
+  inherited -- the server's own stdin carries the MCP transport.
+- The help package grew an exported API (`pkg/terminals/help/api.go`) so the
+  server serves catalog/index/which in-process from the same registries; the
+  structured-error DTO is mirrored (not imported) in the mcp package since
+  climain→terminals→mcp would cycle.
+- Playbook is `pkg/terminals/mcp/SKILL.md` (Agent Skill frontmatter),
+  go:embed-ed and exposed as prompt `miller-playbook` + resource
+  `miller://playbook`.
+- Tests are SDK in-memory-transport unit tests (`server_test.go`) covering
+  every tool plus annotations, output-cap, timeout, allow-shell, and
+  no-shell-blocks-system paths; subprocess-backed cases skip when the
+  repo-root binary is absent. Regtest golden: `mlr mcp --help`
+  (`test/cases/mcp/`). Docs: `docs/src/mcp-server.md.in`, in the mkdocs nav
+  under "Miller in more detail".
+- `MLR_AGENT` open question: resolved as not-needed for the server (it sets
+  env explicitly); skill-without-server users set `MLR_HELP_JSON` /
+  `MLR_ERRORS_JSON` / `MLR_NO_SHELL` individually.
 
 ---
 

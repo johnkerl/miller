@@ -1,0 +1,31 @@
+Usage: mlr mcp [options]
+Runs a Model Context Protocol (MCP) server exposing Miller to AI agents.
+
+The server speaks JSON-RPC over stdin/stdout (MCP "stdio" transport); it is
+meant to be spawned by an MCP client rather than run interactively. Example
+registration, for Claude Code:
+
+  claude mcp add miller -- mlr mcp
+
+Tools exposed:
+  list_capabilities  the mlr help --as-json catalog/index, filterable
+  which              intent -> ranked matching verbs/functions/flags/keywords
+  validate_dsl       parse/type-check a put/filter expression without running it
+  describe_data      field names/types/cardinality/values of input data
+  run                run an mlr command line
+
+Also exposed: an agent playbook, as MCP prompt "miller-playbook" and MCP
+resource "miller://playbook", encoding the discover -> constrain -> validate
+-> run loop.
+
+Commands started by the run/validate_dsl/describe_data tools are run with
+MLR_NO_SHELL=1 -- the DSL system/exec functions, piped redirects, and
+--prepipe/--prepipex fail cleanly -- and with MLR_ERRORS_JSON=1 so errors
+come back structured.
+
+Options:
+ --allow-shell           Do not set MLR_NO_SHELL=1 on subprocesses, re-enabling
+                         the DSL system/exec functions for agent-run commands.
+ --timeout {seconds}     Default wall-clock limit for the run tool (default 60).
+ --max-output-bytes {n}  Cap captured stdout/stderr per command (default 1048576).
+ -h or --help            Show this message.

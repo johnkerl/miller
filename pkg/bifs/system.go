@@ -6,6 +6,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 	"github.com/johnkerl/miller/v6/pkg/platform"
 	"github.com/johnkerl/miller/v6/pkg/version"
@@ -28,6 +29,9 @@ func BIF_hostname() *mlrval.Mlrval {
 }
 
 func BIF_system(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	if !lib.ShellOutEnabled() {
+		return mlrval.FromErrorString("system: disabled by --no-shell / MLR_NO_SHELL")
+	}
 	if !input1.IsStringOrVoid() {
 		return mlrval.FromNotStringError("system", input1)
 	}
@@ -45,6 +49,9 @@ func BIF_system(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_exec(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
+	if !lib.ShellOutEnabled() {
+		return mlrval.FromErrorString("exec: disabled by --no-shell / MLR_NO_SHELL")
+	}
 
 	if len(mlrvals) == 0 {
 		return mlrval.FromErrorString("exec: zero-length input given")

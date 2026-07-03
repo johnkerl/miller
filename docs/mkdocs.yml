@@ -40,6 +40,7 @@ nav:
     - "Shell completion": "shell-completion.md"
     - "Syntax highlighting: vimrc": "vimrc.md"
     - "The REPL": "repl.md"
+    - "AI agents and the MCP server": "mcp-server.md"
     - "Online help": "online-help.md"
     - "How to contribute": "contributing.md"
   - 'FAQs and examples':

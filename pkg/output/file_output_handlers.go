@@ -393,7 +393,7 @@ func NewPipeWriteOutputHandler(
 ) (*FileOutputHandler, error) {
 	writePipe, err := lib.OpenOutboundHalfPipe(commandString)
 	if err != nil {
-		return nil, fmt.Errorf(`could not launch command "%s" for pipe-to`, commandString)
+		return nil, fmt.Errorf(`could not launch command "%s" for pipe-to: %w`, commandString, err)
 	}
 
 	return newOutputHandlerCommon(

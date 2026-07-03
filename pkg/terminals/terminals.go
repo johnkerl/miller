@@ -10,6 +10,7 @@ import (
 
 	"github.com/johnkerl/miller/v6/pkg/terminals/completion"
 	"github.com/johnkerl/miller/v6/pkg/terminals/help"
+	"github.com/johnkerl/miller/v6/pkg/terminals/mcp"
 	"github.com/johnkerl/miller/v6/pkg/terminals/registry"
 	"github.com/johnkerl/miller/v6/pkg/terminals/regtest"
 	"github.com/johnkerl/miller/v6/pkg/terminals/repl"
@@ -36,6 +37,7 @@ func init() {
 		{registry.TerminalList, terminalListMain},
 		{registry.Completion, completion.CompletionMain},
 		{registry.Help, help.HelpMain},
+		{registry.Mcp, mcp.McpMain},
 		{registry.Regtest, regtest.RegTestMain},
 		{registry.Repl, repl.ReplMain},
 		{registry.Script, script.ScriptMain},

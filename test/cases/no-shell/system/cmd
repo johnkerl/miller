@@ -1,0 +1,1 @@
+mlr -n --no-shell put 'end{print system("echo hi")}'
