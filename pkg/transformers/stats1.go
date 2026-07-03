@@ -67,7 +67,7 @@ the input record stream.
 	fmt.Fprintln(o,
 		`        This computes count and mode statistics on all field names beginning
          with a through h, grouped by all field names starting with k.`)
-	fmt.Println()
+	fmt.Fprintln(o)
 	fmt.Fprint(o,
 		`Notes:
 * p50 and median are synonymous.
