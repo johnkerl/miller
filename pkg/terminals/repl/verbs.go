@@ -200,9 +200,7 @@ func handleOpen(repl *Repl, args []string) bool {
 // something instead of waiting to show them an error only when they type
 // ':read'.
 func openFilesPreCheck(repl *Repl, args []string) bool {
-	if len(args) == 0 {
-		// Zero file names is stdin, which is readable
-	}
+	// Zero file names is stdin, which is readable.
 	for _, arg := range args {
 		fileInfo, err := os.Stat(arg)
 		if err != nil {
@@ -874,11 +872,7 @@ func handleHelp(repl *Repl, args []string) bool {
 }
 
 func handleHelpFindSingle(repl *Repl, arg string) {
-	foundAny := false
-
-	if cst.TryUsageForKeywordApproximate(arg) {
-		foundAny = true
-	}
+	foundAny := cst.TryUsageForKeywordApproximate(arg)
 
 	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsageApproximate(arg) {
 		foundAny = true

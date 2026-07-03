@@ -63,7 +63,7 @@ func (root *RootNode) BuildStatementBlockNodeFromBeginOrEnd(
 	// With "parent":1,"children":[1], StatementBlockInBraces.Children[0] is the StatementBlock.
 	// Unwrap so we pass StatementBlock to BuildStatementBlockNode.
 	if astStatementBlockNode.Type == asts.NodeType(NodeTypeStatementBlockInBraces) {
-		lib.InternalCodingErrorIf(astStatementBlockNode.Children == nil || len(astStatementBlockNode.Children) < 1)
+		lib.InternalCodingErrorIf(len(astStatementBlockNode.Children) < 1)
 		astStatementBlockNode = astStatementBlockNode.Children[0]
 	}
 	statementBlockNode, err := root.BuildStatementBlockNode(astStatementBlockNode)

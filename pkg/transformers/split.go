@@ -88,17 +88,17 @@ func transformerSplitParseCLI(
 	argi++
 
 	var n int64 = 0
-	var doMod bool = false
-	var doSize bool = false
+	doMod := false
+	doSize := false
 	var groupByFieldNames []string = nil
-	var emitDownstream bool = false
-	var escapeFileNameCharacters bool = true
-	var fileNamePartJoiner string = splitDefaultFileNamePartJoiner
-	var doAppend bool = false
-	var outputFileNamePrefix string = splitDefaultOutputFileNamePrefix
-	var outputFileNameSuffix string = "uninit"
+	emitDownstream := false
+	escapeFileNameCharacters := true
+	fileNamePartJoiner := splitDefaultFileNamePartJoiner
+	doAppend := false
+	outputFileNamePrefix := splitDefaultOutputFileNamePrefix
+	outputFileNameSuffix := "uninit"
 	haveOutputFileNameSuffix := false
-	var outputFolder string = ""
+	outputFolder := ""
 
 	var localOptions *cli.TOptions = nil
 	if mainOptions != nil {

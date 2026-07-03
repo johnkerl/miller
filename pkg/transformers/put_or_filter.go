@@ -192,7 +192,7 @@ func transformerPutOrFilterParseCLI(
 	verb := args[argi]
 	argi++
 
-	var dslStrings []string = []string{}
+	dslStrings := []string{}
 	haveDSLStringsHere := false
 	echoDSLString := false
 	printASTAsTree := false

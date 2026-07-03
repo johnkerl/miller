@@ -223,8 +223,8 @@ func BIF_signed_right_shift(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // Unsigned right shift
 
 func ursh_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	var ua uint64 = uint64(input1.AcquireIntValue())
-	var ub uint64 = uint64(input2.AcquireIntValue())
+	ua := uint64(input1.AcquireIntValue())
+	ub := uint64(input2.AcquireIntValue())
 	var uc = ua >> ub
 	return mlrval.FromInt(int64(uc))
 }

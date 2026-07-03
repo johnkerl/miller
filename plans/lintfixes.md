@@ -87,109 +87,105 @@ nil check before len), 3 QF1007 (merge conditional assignment), 3 QF1006 (lift i
    - `os.Setenv`/`os.Unsetenv` — low-risk but cheap to fix
 2. `staticcheck` style — 34 findings, mostly mechanical (type inference, nil-check cleanup, etc.)
 
-## Proposed round 5 (branch `johnkerl/lint5`, 2026-07-03): staticcheck batch
+## IMPORTANT: issue counts before round 5 were capped
 
-Recommendation: do all 34 staticcheck findings as one mechanical PR, and defer errcheck to
-rounds 6+. This inverts the priority order above, deliberately: the staticcheck fixes are
-low-risk and retire an entire linter, while the errcheck sites need per-site judgment and a
-few of them (see rounds 6+ below) may be real user-facing bugs deserving focused PRs.
+All counts above (the "134 baseline", the "84 remaining") were taken with golangci-lint's
+**default `max-same-issues=3`**, which reports at most 3 findings per identical message text.
+Running with `--max-same-issues=0 --max-issues-per-linter=0` on the same tree shows the true
+backlog before round 5 was **1271 issues: 1202 errcheck, 69 staticcheck** (not 84/50/34).
+CI shares this cap, so fixing the visible 3 of a kind just surfaces the next 3 — whack-a-mole.
+All counts from here on are uncapped.
 
-### 1. ST1023 + QF1011 — omit explicit type (18 findings, mechanical)
+## Round 5 (branch `johnkerl/lint5`, 2026-07-03): staticcheck batch — DONE
 
-Drop the redundant type from `var x T = <expr-of-type-T>` declarations:
+Fixed all 69 staticcheck findings; **staticcheck is now at zero** (uncapped). `make check`
+passes (4676 regression cases). Defers errcheck to rounds 6+; this inverts the priority order
+above, deliberately: the staticcheck fixes are low-risk and retire an entire linter, while the
+errcheck sites need per-site judgment and a few of them (see rounds 6+ below) may be real
+user-facing bugs deserving focused PRs.
 
-- `pkg/bifs/arithmetic.go:721,722,727,739,740,904` — RHS is already `float64(...)`/`int64(...)` conversions
-- `pkg/bifs/bits.go:226,227`
-- `pkg/dsl/cst/udf.go:566`
-- `pkg/input/record_reader_dkvp_nidx.go:219`
-- `pkg/transformers/put_or_filter.go:195`
-- `pkg/transformers/split.go:91,92,94,96,98,99,101` — cluster of `var x bool = false` / `var x string = "..."`
+What was fixed (uncapped counts):
 
-### 2. S1009 + S1031 — redundant nil checks (4 findings, mechanical)
+1. **ST1023 + QF1011 — omit explicit type (37):** `pkg/bifs/arithmetic.go` (20: all min/max
+   helpers), `pkg/bifs/bits.go` (2), `pkg/dsl/cst/udf.go`, `pkg/dsl/cst/uds.go`,
+   `pkg/input/record_reader_dkvp_nidx.go`, `pkg/output/record_writer_csv.go`,
+   `pkg/output/record_writer_tsv.go`, `pkg/transformers/put_or_filter.go`,
+   `pkg/transformers/split.go` (9, whole option-declaration block for consistency).
+2. **S1009 + S1031 — redundant nil checks (14+1):** `pkg/dsl/cst/{blocks,evaluable,leaves,lvalues,udf,uds}.go`,
+   `pkg/mlrval/mlrval_yaml.go`. Also fixed two unflagged-but-identical adjacent patterns
+   (`udf.go`/`uds.go` inner `typeNode.Children` check, `leaves.go:23`) for consistency.
+3. **QF1007 — merge conditional assignment into declaration (3):**
+   `found := false; if cond { found = true }` → `found := cond` in
+   `pkg/terminals/help/entry.go` (×2) and `pkg/terminals/repl/verbs.go`. Only the first
+   conditional merges; the subsequent `if ... { found = true }` blocks must stay as-is since
+   each callee is invoked for its help-printing side effect (no `||` short-circuiting).
+4. **QF1006 — lift break into loop condition (3):** `pkg/bifs/relative_time.go` (×2) →
+   `for remainingInput != "" {`; `pkg/mlrval/mlrmap_accessors.go` (`Mlrmap.Label`) →
+   `for i < numNewNames {` (interior `pe == nil` break stays).
+5. **QF1001 — De Morgan (3):** `pkg/dsl/cst/builtin_functions.go:878,960` →
+   `btype != mlrval.MT_ABSENT && btype != mlrval.MT_BOOL`.
+   `pkg/terminals/help/entry_which.go:167`: mechanical De Morgan reads worse, and staticcheck
+   also flags a merely-outermost negation `!((...) || (...))`; settled on naming the predicate
+   (`isWordRune := ...; return !isWordRune`), which staticcheck accepts and reads best.
+6. **SA9003 — empty branches (9):** all were no-op branches existing only to hold a comment;
+   deleted the branch, kept the comment adjacent. `pkg/dsl/cst/for.go` (×4 data-heterogeneity
+   no-ops), `pkg/dsl/cst/lvalues.go` (×2 TODO-comment else branches), `pkg/dsl/cst/root.go`
+   (nil-udf explainer), `pkg/input/record_reader_csv.go` (SkipComments else),
+   `pkg/terminals/repl/verbs.go` (zero-filenames-is-stdin).
 
-- `pkg/dsl/cst/blocks.go:66`, `pkg/dsl/cst/evaluable.go:20,100` — drop `x != nil &&` before `len(x)`
-- `pkg/mlrval/mlrval_yaml.go:200` — drop nil check before `range`
+After this round: **1202 issues remain, all errcheck** (uncapped).
 
-### 3. QF1007 — merge conditional assignment into declaration (3 findings, mechanical)
+## Proposed rounds 6+ : errcheck (1202 findings uncapped, grouped by treatment)
 
-All three are the `found := false; if cond { found = true }` pattern → `found := cond`:
+True breakdown by callee: 893 `Fprintf` + 31 `Fprintln` + 25 `Fprint` (= 949 `fmt.Fprint*`,
+of which ~894 are in `pkg/transformers` — usage printers), 140 `WriteString`, 28 `Close`,
+12 `Set`, 10 `Remove`, 10 `Flush`, 9 `RemoveIndexed`, 8 `Setenv`, 5 `Write`,
+5 `FinalizeWriterOptions`, 4 `FinalizeReaderOptions`, 3 `PutIndexed`, plus a small tail
+(emit/execute funcs, `io.Copy`, `Unsetenv`, `Wait`, `closeBufferedOutputStream`, generic).
 
-- `pkg/terminals/help/entry.go:824` (`helpByExactSearchOne`), `:860` (`helpByApproximateSearchOne`)
-- `pkg/terminals/repl/verbs.go:877` (`handleHelpFindSingle`)
+### Round 6a — config first: `.golangci.yml` with errcheck exclusions (~1100 findings)
 
-### 4. QF1006 — lift break condition into loop condition (3 findings, mechanical)
+At this scale per-site `_ =` churn is off the table for the bulk categories. Add a
+`.golangci.yml` (repo has none — CI runs defaults) with `errcheck.exclude-functions` for at
+least `fmt.Fprint`, `fmt.Fprintf`, `fmt.Fprintln` (949), and decide whether to also exclude
+`(*bufio.Writer).WriteString`/`Write` (most of the 140+5 — buffered writes whose errors
+surface at `Flush`). While in there, consider pinning `max-same-issues: 0` so CI reports the
+true count going forward. This collapses the backlog to a reviewable residue (~100–250).
 
-- `pkg/bifs/relative_time.go:31,93` — `for { if remainingInput == "" { break } ... }` →
-  `for remainingInput != "" { ... }`
-- `pkg/mlrval/mlrmap_accessors.go:759` (`Mlrmap.Label`) — `for { if i >= numNewNames { break } ... }` →
-  `for i < numNewNames { ... }` (the interior `pe == nil` break stays)
+### Round 6b — propagate: likely real bugs (10 findings)
 
-### 5. QF1001 — De Morgan (3 findings, small judgment calls)
-
-- `pkg/dsl/cst/builtin_functions.go:878,960` — `!(btype == MT_ABSENT || btype == MT_BOOL)` →
-  `btype != mlrval.MT_ABSENT && btype != mlrval.MT_BOOL`. Equally readable; apply.
-- `pkg/terminals/help/entry_which.go:167` — the tokenizer's rune predicate. Mechanical De Morgan
-  gives `(r < 'a' || r > 'z') && ...` which is arguably worse; prefer rewriting positively:
-  `return !isWordRune(r)` with a small helper (or inline
-  `!(('a' <= r && r <= 'z') || ('0' <= r && r <= '9') || r == '-' || r == '_')` restructured
-  so the negation is outermost, which is what staticcheck accepts).
-
-### 6. SA9003 — empty branches (3 findings, comment-carrying branches)
-
-All three are deliberate no-op branches that exist only to hold an explanatory comment.
-Delete the empty branch and keep the comment adjacent — no behavior change:
-
-- `pkg/dsl/cst/for.go:185,375` — `} else if indexMlrval.IsAbsent() { // data-heterogeneity no-op }` →
-  drop the branch, keep a `// else if absent: data-heterogeneity no-op` comment after the closing brace
-- `pkg/terminals/repl/verbs.go:203` — `if len(args) == 0 { // zero file names is stdin, which is readable }` →
-  drop the block, keep the comment above the following loop
-
-After this round: **50 issues remain, all errcheck.**
-
-## Proposed rounds 6+ : errcheck (50 findings, grouped by treatment)
-
-### Round 6a — propagate: likely real bugs (7 findings)
-
-- `cli.FinalizeReaderOptions` / `cli.FinalizeWriterOptions` (6): `pkg/terminals/repl/entry.go:150,151`,
+- `cli.FinalizeReaderOptions` / `cli.FinalizeWriterOptions` (9): `pkg/terminals/repl/entry.go:150,151`,
   `pkg/terminals/script/entry.go:126,127`, `pkg/transformers/join.go:256`,
-  `pkg/transformers/put_or_filter.go:343`. `FinalizeReaderOptions` returns
-  `unrecognized input format %q` — ignoring it means e.g. `mlr join -i badformat` silently
-  proceeds with wrong separators instead of erroring. `join.go`/`put_or_filter.go` are inside
-  verb constructors that already return `(transformer, error)`, so propagation is easy; the
-  repl/script entry points should print and exit.
+  `pkg/transformers/put_or_filter.go:343`, plus the sites the cap was hiding (re-enumerate).
+  `FinalizeReaderOptions` returns `unrecognized input format %q` — ignoring it means e.g.
+  `mlr join -i badformat` silently proceeds with wrong separators instead of erroring.
+  `join.go`/`put_or_filter.go` are inside verb constructors that already return
+  `(transformer, error)`, so propagation is easy; the repl/script entry points should print
+  and exit.
 - `pkg/stream/stream.go:104` — final `bufferedOutputStream.Flush()` of the main output stream.
   A failure here (full disk, closed pipe) currently loses output silently while exiting 0.
   Propagate into `retval`.
 
-### Round 6b — inspect individually: post-#2129 meaningful errors (4 findings)
+### Round 6c — inspect individually: post-#2129 meaningful errors (12 findings)
 
-`PutIndexed`/`RemoveIndexed` at `pkg/mlrval/mlrmap_flatten_unflatten.go:182,229` and
-`pkg/runtime/stack.go:457,488`. Now that #2129 fixed the masked error path, these returns are
-meaningful. Decide per site whether to propagate or `_ =` with a comment saying why ignoring
-is correct (e.g. index provably in bounds at the call site).
+`PutIndexed` (3) / `RemoveIndexed` (9), including `pkg/mlrval/mlrmap_flatten_unflatten.go:182,229`
+and `pkg/runtime/stack.go:457,488`. Now that #2129 fixed the masked error path, these returns
+are meaningful. Decide per site whether to propagate or `_ =` with a comment saying why
+ignoring is correct (e.g. index provably in bounds at the call site).
 
-### Round 7 — explicit ignores / config (39 findings)
+### Round 7 — explicit ignores for the residue (~80 findings, re-enumerate after 6a)
 
-- **Usage printers, `fmt.Fprint*` (9):** `pkg/terminals/repl/entry.go:33,44`,
-  `pkg/terminals/script/entry.go:24,25`, `pkg/transformers/altkv.go:26`,
-  `pkg/transformers/count.go:27`, `pkg/transformers/fill_down.go:26,27,28`.
-  Decision point: add a `.golangci.yml` (repo currently has none — CI runs defaults) with
-  `errcheck.exclude-functions` for `fmt.Fprint/Fprintf/Fprintln`, which also future-proofs
-  against new usage functions; or `_ =` each site. Config is less churn.
-- **REPL/script interactive write/flush paths (11):** `pkg/terminals/repl/entry.go:189`,
-  `pkg/terminals/repl/verbs.go:557,558,620,621,645,668,698`, `pkg/terminals/script/entry.go:146`,
-  `pkg/terminals/script/runner.go:130,131`. Interactive-session output; on failure (EPIPE etc.)
-  there is nothing useful to do. `_ =` with a brief comment.
-- **Cleanup/teardown (14):** `cmd/mlr/main.go:58`, `pkg/cli/option_parse.go:3461`,
-  `pkg/lib/readfiles.go:54,83`, `pkg/lib/halfpipe.go:43,90`,
-  `pkg/terminals/regtest/invoker.go:75,76`, `pkg/terminals/regtest/regtester.go:152,155,161,331,464,545`.
-  Read-side `Close()`, `os.Remove` of temp files, `os.Setenv` in the regtest harness — `_ =` throughout.
-- **In-memory pipe for usage capture (3):** `pkg/transformers/aaa_transformer_json.go:43,48,50` —
-  `io.Copy`/`Close` on an `os.Pipe` used to capture usage text into a buffer; cannot meaningfully
-  fail. `_ =`.
-- **`pkg/dsl/cst/dump.go:205,247` (2):** DSL `dump`-to-file output handlers. Check whether the
-  surrounding output-handler code path has an error convention to join (it returns error in
-  places); otherwise `_ =`.
+- **Cleanup/teardown:** `Close` (28), `os.Remove` (10), `os.Setenv`/`Unsetenv` (10),
+  `process.Wait` — read-side closes, temp-file removal, regtest-harness env vars. `_ =` throughout.
+- **REPL/script interactive write/flush paths:** `Flush` (10), `closeBufferedOutputStream` (3) —
+  interactive-session output; on failure (EPIPE etc.) there is nothing useful to do. `_ =` with
+  a brief comment.
+- **In-memory pipe for usage capture:** `pkg/transformers/aaa_transformer_json.go:43,48,50` —
+  `io.Copy`/`Close` on an `os.Pipe` used to capture usage text into a buffer; cannot
+  meaningfully fail. `_ =`.
+- **DSL emit/execute/redirect funcs and `pkg/dsl/cst/dump.go`:** check whether the surrounding
+  output-handler code path has an error convention to join (it returns error in places);
+  otherwise `_ =`.
 
 ## Bug noticed in passing (fixed on `johnkerl/lint4`)
 

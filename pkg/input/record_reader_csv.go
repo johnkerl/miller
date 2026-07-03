@@ -335,9 +335,8 @@ func (reader *RecordReaderCSV) maybeConsumeComment(
 		lib.InternalCodingErrorIf(len(csvRecord) != 1)
 		*recordsAndContexts = append(*recordsAndContexts, types.NewOutputString(csvRecord[0], context))
 
-	} else /* reader.readerOptions.CommentHandling == cli.SkipComments */ {
-		// discard entirely
 	}
+	// else, reader.readerOptions.CommentHandling == cli.SkipComments: discard entirely
 	return false
 }
 

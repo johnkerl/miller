@@ -357,9 +357,8 @@ func (node *PositionalFieldNameLvalueNode) UnassignIndexed(
 		index, ok := lhsFieldIndex.GetIntValue()
 		if ok {
 			state.Inrec.RemoveWithPositionalIndex(index)
-		} else {
-			// TODO: incorporate error-return into this API
 		}
+		// TODO: incorporate error-return into this API for the non-int case
 	} else {
 		// xxx positional
 		state.Inrec.RemoveIndexed(
@@ -475,9 +474,8 @@ func (node *PositionalFieldValueLvalueNode) UnassignIndexed(
 		index, ok := lhsFieldIndex.GetIntValue()
 		if ok {
 			state.Inrec.RemoveWithPositionalIndex(index)
-		} else {
-			// TODO: incorporate error-return into this API
 		}
+		// TODO: incorporate error-return into this API for the non-int case
 	} else {
 		// xxx positional
 		state.Inrec.RemoveIndexed(
@@ -493,7 +491,7 @@ func (root *RootNode) BuildFullSrecLvalueNode(astNode *asts.ASTNode) (IAssignabl
 	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeFullSrec))
 	lib.InternalCodingErrorIf(astNode == nil)
 	// PGPG FullSrec has empty list as children
-	lib.InternalCodingErrorIf(astNode.Children != nil && len(astNode.Children) > 0)
+	lib.InternalCodingErrorIf(len(astNode.Children) > 0)
 	return NewFullSrecLvalueNode(), nil
 }
 
@@ -717,7 +715,7 @@ type FullOosvarLvalueNode struct {
 func (root *RootNode) BuildFullOosvarLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeFullOosvar))
 	lib.InternalCodingErrorIf(astNode == nil)
-	lib.InternalCodingErrorIf(astNode.Children != nil && len(astNode.Children) > 0)
+	lib.InternalCodingErrorIf(len(astNode.Children) > 0)
 	return NewFullOosvarLvalueNode(), nil
 }
 
@@ -780,7 +778,7 @@ type LocalVariableLvalueNode struct {
 }
 
 func (root *RootNode) BuildTypedeclLocalVariableLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Children == nil || len(astNode.Children) < 2)
+	lib.InternalCodingErrorIf(len(astNode.Children) < 2)
 	typeNode := astNode.Children[0]
 	varNode := astNode.Children[1]
 	// PGPG Typedecl produces kw_int, kw_bool, etc. (no Typedecl wrapper node)
@@ -803,7 +801,7 @@ func (root *RootNode) BuildLocalVariableLvalueNode(astNode *asts.ASTNode) (IAssi
 	typeName := "any"
 	defineTypedAtScope := false
 	// PGPG: LocalVariable is terminal (children nil or empty). Miller had typed params with Children[0]=Typedecl.
-	if astNode.Children != nil && len(astNode.Children) > 0 { // typed, like 'num x = 3'
+	if len(astNode.Children) > 0 { // typed, like 'num x = 3'
 		typeNode := astNode.Children[0]
 		lib.InternalCodingErrorIf(typeNode.Type != asts.NodeType(NodeTypeTypedecl))
 		typeName = tokenLit(typeNode)

@@ -755,10 +755,7 @@ func (mlrmap *Mlrmap) Label(newNames []string) {
 
 	i := 0
 	numNewNames := len(newNames)
-	for {
-		if i >= numNewNames {
-			break
-		}
+	for i < numNewNames {
 		pe := mlrmap.pop()
 		if pe == nil {
 			break
