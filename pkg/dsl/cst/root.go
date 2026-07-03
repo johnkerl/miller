@@ -368,12 +368,9 @@ func (root *RootNode) resolveFunctionCallsites() error {
 		if err != nil {
 			return err
 		}
-		if udf == nil {
-			// Unresolvable at CST-build time but perhaps a local variable. For example,
-			// the UDF callsite '$z = f($x, $y)', and supposing
-			// there will be 'f = func(a, b) { return a*b }' in scope at runtime.
-		}
-
+		// A nil udf here is unresolvable at CST-build time but perhaps a local
+		// variable. For example, the UDF callsite '$z = f($x, $y)', and supposing
+		// there will be 'f = func(a, b) { return a*b }' in scope at runtime.
 		unresolvedFunctionCallsite.udf = udf
 	}
 	return nil

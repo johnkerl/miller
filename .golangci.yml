@@ -1,0 +1,28 @@
+# Configuration for golangci-lint, used by .github/workflows/golangci-lint.yml
+# and available locally via `golangci-lint run ./cmd/mlr ./pkg/...`.
+# Tracking issue for lint cleanup: https://github.com/johnkerl/miller/issues/2109
+
+version: "2"
+
+linters:
+  settings:
+    errcheck:
+      exclude-functions:
+        # Writes to stdout/stderr for usage and error messages; there is
+        # nothing useful to do if these fail.
+        - fmt.Fprint
+        - fmt.Fprintf
+        - fmt.Fprintln
+        # bufio.Writer errors are sticky: once a write fails, all subsequent
+        # writes and the next Flush report the same error. Record-writer
+        # output goes through a final checked Flush in pkg/stream.
+        - (*bufio.Writer).Write
+        - (*bufio.Writer).WriteString
+        # Documented to always return a nil error.
+        - (*strings.Builder).WriteString
+
+issues:
+  # Report all findings: the defaults (50/3) hide large categories and make
+  # fix progress impossible to track. See plans/lintfixes.md.
+  max-issues-per-linter: 0
+  max-same-issues: 0

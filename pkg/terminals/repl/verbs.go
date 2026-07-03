@@ -200,9 +200,7 @@ func handleOpen(repl *Repl, args []string) bool {
 // something instead of waiting to show them an error only when they type
 // ':read'.
 func openFilesPreCheck(repl *Repl, args []string) bool {
-	if len(args) == 0 {
-		// Zero file names is stdin, which is readable
-	}
+	// Zero file names is stdin, which is readable.
 	for _, arg := range args {
 		fileInfo, err := os.Stat(arg)
 		if err != nil {
@@ -554,8 +552,9 @@ func skipOrProcessRecord(
 	// Strings to be printed from put/filter DSL print/dump/etc statements.
 	if recordAndContext.Record == nil {
 		if processingNotSkipping {
-			repl.bufferedRecordOutputStream.WriteString(recordAndContext.OutputString)
-			repl.bufferedRecordOutputStream.Flush()
+			// Interactive terminal output: nothing useful to do on write failure
+			_, _ = repl.bufferedRecordOutputStream.WriteString(recordAndContext.OutputString)
+			_ = repl.bufferedRecordOutputStream.Flush()
 		}
 		return false
 	}
@@ -617,8 +616,12 @@ func writeRecord(repl *Repl, outrec *mlrval.Mlrmap) {
 		}
 	}
 	// Write and flush immediately for REPL output.
-	repl.recordWriter.Write(outrec, nil, repl.bufferedRecordOutputStream, true /*outputIsStdout*/)
-	repl.bufferedRecordOutputStream.Flush()
+	err := repl.recordWriter.Write(outrec, nil, repl.bufferedRecordOutputStream, true /*outputIsStdout*/)
+	if err != nil {
+		fmt.Printf("mlr %s: %v\n", repl.replName, err)
+		return
+	}
+	_ = repl.bufferedRecordOutputStream.Flush()
 }
 
 func usageReadWrite(repl *Repl) {
@@ -642,7 +645,9 @@ func usageRedirectWrite(repl *Repl) {
 func handleRedirectWrite(repl *Repl, args []string) bool {
 	args = args[1:] // strip off verb
 	if len(args) == 0 {
-		repl.closeBufferedOutputStream()
+		if err := repl.closeBufferedOutputStream(); err != nil {
+			fmt.Printf("mlr %s: %v\n", repl.replName, err)
+		}
 		repl.setBufferedOutputStream("(stdout)", os.Stdout)
 		return true
 	}
@@ -665,7 +670,9 @@ func handleRedirectWrite(repl *Repl, args []string) bool {
 	}
 	fmt.Printf("Redirecting record output to \"%s\"\n", filename)
 
-	repl.closeBufferedOutputStream()
+	if err := repl.closeBufferedOutputStream(); err != nil {
+		fmt.Printf("mlr %s: %v\n", repl.replName, err)
+	}
 	repl.setBufferedOutputStream(filename, handle)
 
 	return true
@@ -695,7 +702,9 @@ func handleRedirectAppend(repl *Repl, args []string) bool {
 	}
 	fmt.Printf("Redirecting record output to \"%s\"\n", filename)
 
-	repl.closeBufferedOutputStream()
+	if err := repl.closeBufferedOutputStream(); err != nil {
+		fmt.Printf("mlr %s: %v\n", repl.replName, err)
+	}
 	repl.setBufferedOutputStream(filename, handle)
 
 	return true
@@ -874,11 +883,7 @@ func handleHelp(repl *Repl, args []string) bool {
 }
 
 func handleHelpFindSingle(repl *Repl, arg string) {
-	foundAny := false
-
-	if cst.TryUsageForKeywordApproximate(arg) {
-		foundAny = true
-	}
+	foundAny := cst.TryUsageForKeywordApproximate(arg)
 
 	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsageApproximate(arg) {
 		foundAny = true

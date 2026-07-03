@@ -105,7 +105,8 @@ func channelWriterHandleBatch(
 			}
 
 			if writerOptions.FlushOnEveryRecord {
-				bufferedOutputStream.Flush()
+				// bufio.Writer errors are sticky; the final Flush in pkg/stream is checked
+				_ = bufferedOutputStream.Flush()
 			}
 
 		} else {

@@ -17,7 +17,7 @@ import (
 
 func (root *RootNode) BuildEvaluableNode(astNode *asts.ASTNode) (IEvaluable, error) {
 	// Try BuildLeafNode first for terminals
-	if astNode.Children == nil || len(astNode.Children) == 0 {
+	if len(astNode.Children) == 0 {
 		if leaf, err := root.BuildLeafNode(astNode); err == nil {
 			return leaf, nil
 		}
@@ -97,7 +97,7 @@ func (root *RootNode) BuildEvaluableNode(astNode *asts.ASTNode) (IEvaluable, err
 
 	// Fallback: try BuildLeafNode for unhandled types (e.g. DirectFieldValue, IntLiteral).
 	// Only for leaf-like nodes (0 or 1 child); nodes with 2+ children are not leaves.
-	if astNode.Children == nil || len(astNode.Children) <= 1 {
+	if len(astNode.Children) <= 1 {
 		if leaf, err := root.BuildLeafNode(astNode); err == nil {
 			return leaf, nil
 		}

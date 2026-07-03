@@ -179,7 +179,8 @@ func (mlrmap *Mlrmap) CopyUnflattened(
 		baseIndex := arrayval[0].String()
 		affectedBaseIndices[baseIndex] = true
 		// Use PutIndexed to assign $x["a"] = 7, or $x["b"] = 8, etc.
-		other.PutIndexed(
+		// Unflattening is best-effort: this API has no error return.
+		_ = other.PutIndexed(
 			CopyMlrvalArray(arrayval),
 			unflattenTerminal(pe.Value).Copy(),
 		)
@@ -226,7 +227,8 @@ func (mlrmap *Mlrmap) CopyUnflattenFields(
 			baseIndex := arrayval[0].String()
 			if fieldNameSet[baseIndex] {
 				// Use PutIndexed to assign $x["a"] = 7, or $x["b"] = 8, etc.
-				other.PutIndexed(
+				// Unflattening is best-effort: this API has no error return.
+				_ = other.PutIndexed(
 					CopyMlrvalArray(arrayval),
 					unflattenTerminal(pe.Value).Copy(),
 				)

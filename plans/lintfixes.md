@@ -87,6 +87,118 @@ nil check before len), 3 QF1007 (merge conditional assignment), 3 QF1006 (lift i
    - `os.Setenv`/`os.Unsetenv` — low-risk but cheap to fix
 2. `staticcheck` style — 34 findings, mostly mechanical (type inference, nil-check cleanup, etc.)
 
+## IMPORTANT: issue counts before round 5 were capped
+
+All counts above (the "134 baseline", the "84 remaining") were taken with golangci-lint's
+**default `max-same-issues=3`**, which reports at most 3 findings per identical message text.
+Running with `--max-same-issues=0 --max-issues-per-linter=0` on the same tree shows the true
+backlog before round 5 was **1271 issues: 1202 errcheck, 69 staticcheck** (not 84/50/34).
+CI shares this cap, so fixing the visible 3 of a kind just surfaces the next 3 — whack-a-mole.
+All counts from here on are uncapped.
+
+## Round 5 (branch `johnkerl/lint5`, 2026-07-03): staticcheck batch — DONE
+
+Fixed all 69 staticcheck findings; **staticcheck is now at zero** (uncapped). `make check`
+passes (4676 regression cases). Defers errcheck to rounds 6+; this inverts the priority order
+above, deliberately: the staticcheck fixes are low-risk and retire an entire linter, while the
+errcheck sites need per-site judgment and a few of them (see rounds 6+ below) may be real
+user-facing bugs deserving focused PRs.
+
+What was fixed (uncapped counts):
+
+1. **ST1023 + QF1011 — omit explicit type (37):** `pkg/bifs/arithmetic.go` (20: all min/max
+   helpers), `pkg/bifs/bits.go` (2), `pkg/dsl/cst/udf.go`, `pkg/dsl/cst/uds.go`,
+   `pkg/input/record_reader_dkvp_nidx.go`, `pkg/output/record_writer_csv.go`,
+   `pkg/output/record_writer_tsv.go`, `pkg/transformers/put_or_filter.go`,
+   `pkg/transformers/split.go` (9, whole option-declaration block for consistency).
+2. **S1009 + S1031 — redundant nil checks (14+1):** `pkg/dsl/cst/{blocks,evaluable,leaves,lvalues,udf,uds}.go`,
+   `pkg/mlrval/mlrval_yaml.go`. Also fixed two unflagged-but-identical adjacent patterns
+   (`udf.go`/`uds.go` inner `typeNode.Children` check, `leaves.go:23`) for consistency.
+3. **QF1007 — merge conditional assignment into declaration (3):**
+   `found := false; if cond { found = true }` → `found := cond` in
+   `pkg/terminals/help/entry.go` (×2) and `pkg/terminals/repl/verbs.go`. Only the first
+   conditional merges; the subsequent `if ... { found = true }` blocks must stay as-is since
+   each callee is invoked for its help-printing side effect (no `||` short-circuiting).
+4. **QF1006 — lift break into loop condition (3):** `pkg/bifs/relative_time.go` (×2) →
+   `for remainingInput != "" {`; `pkg/mlrval/mlrmap_accessors.go` (`Mlrmap.Label`) →
+   `for i < numNewNames {` (interior `pe == nil` break stays).
+5. **QF1001 — De Morgan (3):** `pkg/dsl/cst/builtin_functions.go:878,960` →
+   `btype != mlrval.MT_ABSENT && btype != mlrval.MT_BOOL`.
+   `pkg/terminals/help/entry_which.go:167`: mechanical De Morgan reads worse, and staticcheck
+   also flags a merely-outermost negation `!((...) || (...))`; settled on naming the predicate
+   (`isWordRune := ...; return !isWordRune`), which staticcheck accepts and reads best.
+6. **SA9003 — empty branches (9):** all were no-op branches existing only to hold a comment;
+   deleted the branch, kept the comment adjacent. `pkg/dsl/cst/for.go` (×4 data-heterogeneity
+   no-ops), `pkg/dsl/cst/lvalues.go` (×2 TODO-comment else branches), `pkg/dsl/cst/root.go`
+   (nil-udf explainer), `pkg/input/record_reader_csv.go` (SkipComments else),
+   `pkg/terminals/repl/verbs.go` (zero-filenames-is-stdin).
+
+After this round: **1202 issues remain, all errcheck** (uncapped).
+
+## Round 6 (branch `johnkerl/lint5`, 2026-07-03): errcheck — DONE
+
+**golangci-lint now reports 0 issues** (uncapped) on `./cmd/mlr ./pkg/...`. `make check` passes.
+Done in the same PR as round 5. True pre-round breakdown by callee: 893 `Fprintf` + 31
+`Fprintln` + 25 `Fprint` (= 949 `fmt.Fprint*`, of which ~894 were `pkg/transformers` usage
+printers), 140 `WriteString`, 28 `Close`, 12 `Set`, 10 `Remove`, 10 `Flush`, 9 `RemoveIndexed`,
+8 `Setenv`, 5 `Write`, 9 `Finalize{Reader,Writer}Options`, 3 `PutIndexed`, plus a small tail.
+
+### 6a — `.golangci.yml` with errcheck exclusions (~1090 findings)
+
+Added `.golangci.yml` (picked up automatically by the CI action) with
+`errcheck.exclude-functions` for `fmt.Fprint/Fprintf/Fprintln` (usage/error printers),
+`(*bufio.Writer).Write/WriteString` (sticky errors, surface at the now-checked final Flush),
+and `(*strings.Builder).WriteString` (documented never to fail). Also pinned
+`max-issues-per-linter: 0` and `max-same-issues: 0` so CI reports true counts from now on.
+Caveat found: the bufio exclusion doesn't match calls through struct fields
+(e.g. `repl.bufferedRecordOutputStream.WriteString`) — those got explicit `_ =` instead.
+
+### 6b — propagated: real error paths (~30 findings)
+
+- `cli.Finalize{Reader,Writer}Options` (9): join/put-or-filter/split/tee verb constructors now
+  return the error (`mlr join -i badformat` now exits 1 with "unrecognized input format"
+  instead of silently proceeding with wrong separators — verified end-to-end); repl/script
+  entry points print to stderr and exit; the unit-test site asserts nil.
+- `pkg/stream/stream.go` final `Flush` → propagated into `retval` (full disk / closed pipe no
+  longer exits 0 silently).
+- DSL `emit`/`print`/`dump` redirect writes (11): recursive emit calls, `printToRedirectFunc`,
+  `dumpToRedirectFunc`, and both `outputHandlerManager.WriteString` sites now propagate through
+  `Execute`, matching their sibling branches which already did.
+- `pkg/output/record_writer_csv.go` `WriteCSVRecordMaybeColorized` (2) → propagated through
+  `IRecordWriter.Write`, whose error the channel writer already reports.
+- `pkg/output/file_output_handlers.go` close-time `Flush` → propagated.
+- `pkg/runtime/stack.go` `PutIndexed` on fresh map → propagated (setIndexed returns error).
+- `ENV[...]` assignment `os.Setenv` → propagated through `Assign`.
+- REPL `writeRecord`: `recordWriter.Write` error now printed to the terminal (e.g. CSV
+  schema-change errors were silently swallowed in the REPL); `closeBufferedOutputStream` on
+  `:>` / `:>>` redirect switches now prints on error. Flush-before-close at repl/script exit
+  now checked like the close next to it.
+- `pkg/auxents/termcvt.go`: write-side `ostream.Close()` before the rename-over-original now
+  checked (had a `TODO: check return status`); `ostream.Write` in termcvt/unhex now exits on
+  error like the surrounding error handling.
+
+### 6c — explicit `_ =` ignores (~65 findings)
+
+- Unset-style DSL/runtime paths (9 `RemoveIndexed`, 1 `Unsetenv`, in `lvalues.go`/`stack.go`):
+  unset of a non-existent path is a no-op by design; the enclosing `Unassign` API has no error
+  return. Commented at each site.
+- `Mlrmap` unflatten `PutIndexed` (2): best-effort API with no error return; commented.
+- Mid-stream `FlushOnEveryRecord` flushes (pprint, channel writer): bufio errors are sticky and
+  the final Flush in `pkg/stream` is checked; commented.
+- Read-side `Close` (input readers ×10, auxents ×4, readfiles ×2, halfpipe, mlrrc, option_parse
+  `--load`, CPU-profile handle), `go process.Wait()` in halfpipe.
+- Init-time strftime `ss.Set` registrations (12) in `pkg/bifs/datetime.go` (constant specs).
+- In-memory usage-capture pipes (`io.Copy`/`Close`) in `keyword_usage_json.go` and
+  `aaa_transformer_json.go`.
+- regtest harness `os.Setenv`/`Unsetenv`/`Remove` (14) and `entrypoint.go` temp-file `os.Remove`
+  on error paths (5).
+- REPL/script terminal `WriteString`/`Flush` where the config exclusion can't reach (field
+  access); commented.
+
+Also fixed in passing: staticcheck QF1012 in `record_writer_pprint.go` (surfaced once the
+errcheck finding on the same line was excluded): `WriteString(fmt.Sprint(x))` where `x` is
+already a string → `WriteString(x)`; dropped the then-unused `fmt` import.
+
 ## Bug noticed in passing (fixed on `johnkerl/lint4`)
 
 In `pkg/mlrval/mlrval_collections.go`, `removeIndexedOnArray` with a single in-bounds index removed

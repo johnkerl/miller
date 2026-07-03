@@ -68,7 +68,7 @@ func hexMain(args []string) int {
 
 			hexDumpFile(istream, doRaw)
 
-			istream.Close()
+			_ = istream.Close()
 			if !doRaw && len(args) > 1 {
 				fmt.Println()
 			}
