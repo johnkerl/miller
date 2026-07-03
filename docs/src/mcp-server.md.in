@@ -3,7 +3,8 @@
 Miller ships with a built-in [Model Context Protocol](https://modelcontextprotocol.io)
 server, so AI agents (Claude Code, Claude Desktop, Cursor, and other MCP
 clients) can discover and drive Miller without scraping help text or guessing
-at flags.
+at flags. (For the quick-start overview of Miller's whole AI-agent feature
+set -- with or without MCP -- see [Miller and AI agents](ai-agents.md).)
 
 The server speaks JSON-RPC over stdin/stdout (MCP's "stdio" transport): the
 MCP client spawns `mlr mcp` as a subprocess. No network port is opened, and

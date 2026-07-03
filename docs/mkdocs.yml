@@ -24,6 +24,7 @@ nav:
   - 'Getting started':
     - "Installing Miller": "installing-miller.md"
     - "Miller in 10 minutes": "10min.md"
+    - "Miller and AI agents": "ai-agents.md"
     - "Keystroke-savers": "keystroke-savers.md"
     - "Intro to Miller's programming language": "miller-programming-language.md"
     - "Miller on Windows": "miller-on-windows.md"
