@@ -2,7 +2,6 @@ package output
 
 import (
 	"bufio"
-	"fmt"
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
@@ -211,7 +210,8 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 		}
 
 		if writer.writerOptions.FlushOnEveryRecord {
-			bufferedOutputStream.Flush()
+			// bufio.Writer errors are sticky; the final Flush in pkg/stream is checked
+			_ = bufferedOutputStream.Flush()
 		}
 	}
 }
@@ -351,7 +351,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 				bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
 			}
 			if pe.Next != nil {
-				bufferedOutputStream.WriteString(fmt.Sprint(bc.verticalMiddle))
+				bufferedOutputStream.WriteString(bc.verticalMiddle)
 			} else {
 				bufferedOutputStream.WriteString(bc.verticalEnd)
 				bufferedOutputStream.WriteString(writer.writerOptions.ORS)
@@ -373,7 +373,8 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 		}
 
 		if writer.writerOptions.FlushOnEveryRecord {
-			bufferedOutputStream.Flush()
+			// bufio.Writer errors are sticky; the final Flush in pkg/stream is checked
+			_ = bufferedOutputStream.Flush()
 		}
 	}
 }

@@ -200,7 +200,9 @@ func transformerSplitParseCLI(
 		return nil, cli.VerbErrorf(verb, "-n, -g, and -s are mutually exclusive")
 	}
 
-	cli.FinalizeWriterOptions(&localOptions.WriterOptions)
+	if err := cli.FinalizeWriterOptions(&localOptions.WriterOptions); err != nil {
+		return nil, cli.VerbErrorf(verb, "%v", err)
+	}
 	if !haveOutputFileNameSuffix {
 		outputFileNameSuffix = localOptions.WriterOptions.OutputFileFormat
 	}

@@ -122,7 +122,7 @@ func (reader *RecordReaderPprintFixedSplit) Read(
 						errorChannel,
 						downstreamDoneChannel,
 					)
-					handle.Close()
+					_ = handle.Close()
 				}
 			}
 		}
@@ -351,7 +351,7 @@ func (reader *RecordReaderPprintBarredOrMarkdown) Read(
 						errorChannel,
 						downstreamDoneChannel,
 					)
-					handle.Close()
+					_ = handle.Close()
 				}
 			}
 		}

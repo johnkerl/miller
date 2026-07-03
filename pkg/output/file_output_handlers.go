@@ -500,7 +500,9 @@ func (handler *FileOutputHandler) Close() (retval error) {
 		return retval
 	}
 
-	handler.bufferedOutputStream.Flush()
+	if err := handler.bufferedOutputStream.Flush(); err != nil {
+		return err
+	}
 	if handler.closeable {
 		return handler.handle.Close()
 	} // e.g. stdout

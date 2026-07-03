@@ -135,57 +135,69 @@ What was fixed (uncapped counts):
 
 After this round: **1202 issues remain, all errcheck** (uncapped).
 
-## Proposed rounds 6+ : errcheck (1202 findings uncapped, grouped by treatment)
+## Round 6 (branch `johnkerl/lint5`, 2026-07-03): errcheck — DONE
 
-True breakdown by callee: 893 `Fprintf` + 31 `Fprintln` + 25 `Fprint` (= 949 `fmt.Fprint*`,
-of which ~894 are in `pkg/transformers` — usage printers), 140 `WriteString`, 28 `Close`,
-12 `Set`, 10 `Remove`, 10 `Flush`, 9 `RemoveIndexed`, 8 `Setenv`, 5 `Write`,
-5 `FinalizeWriterOptions`, 4 `FinalizeReaderOptions`, 3 `PutIndexed`, plus a small tail
-(emit/execute funcs, `io.Copy`, `Unsetenv`, `Wait`, `closeBufferedOutputStream`, generic).
+**golangci-lint now reports 0 issues** (uncapped) on `./cmd/mlr ./pkg/...`. `make check` passes.
+Done in the same PR as round 5. True pre-round breakdown by callee: 893 `Fprintf` + 31
+`Fprintln` + 25 `Fprint` (= 949 `fmt.Fprint*`, of which ~894 were `pkg/transformers` usage
+printers), 140 `WriteString`, 28 `Close`, 12 `Set`, 10 `Remove`, 10 `Flush`, 9 `RemoveIndexed`,
+8 `Setenv`, 5 `Write`, 9 `Finalize{Reader,Writer}Options`, 3 `PutIndexed`, plus a small tail.
 
-### Round 6a — config first: `.golangci.yml` with errcheck exclusions (~1100 findings)
+### 6a — `.golangci.yml` with errcheck exclusions (~1090 findings)
 
-At this scale per-site `_ =` churn is off the table for the bulk categories. Add a
-`.golangci.yml` (repo has none — CI runs defaults) with `errcheck.exclude-functions` for at
-least `fmt.Fprint`, `fmt.Fprintf`, `fmt.Fprintln` (949), and decide whether to also exclude
-`(*bufio.Writer).WriteString`/`Write` (most of the 140+5 — buffered writes whose errors
-surface at `Flush`). While in there, consider pinning `max-same-issues: 0` so CI reports the
-true count going forward. This collapses the backlog to a reviewable residue (~100–250).
+Added `.golangci.yml` (picked up automatically by the CI action) with
+`errcheck.exclude-functions` for `fmt.Fprint/Fprintf/Fprintln` (usage/error printers),
+`(*bufio.Writer).Write/WriteString` (sticky errors, surface at the now-checked final Flush),
+and `(*strings.Builder).WriteString` (documented never to fail). Also pinned
+`max-issues-per-linter: 0` and `max-same-issues: 0` so CI reports true counts from now on.
+Caveat found: the bufio exclusion doesn't match calls through struct fields
+(e.g. `repl.bufferedRecordOutputStream.WriteString`) — those got explicit `_ =` instead.
 
-### Round 6b — propagate: likely real bugs (10 findings)
+### 6b — propagated: real error paths (~30 findings)
 
-- `cli.FinalizeReaderOptions` / `cli.FinalizeWriterOptions` (9): `pkg/terminals/repl/entry.go:150,151`,
-  `pkg/terminals/script/entry.go:126,127`, `pkg/transformers/join.go:256`,
-  `pkg/transformers/put_or_filter.go:343`, plus the sites the cap was hiding (re-enumerate).
-  `FinalizeReaderOptions` returns `unrecognized input format %q` — ignoring it means e.g.
-  `mlr join -i badformat` silently proceeds with wrong separators instead of erroring.
-  `join.go`/`put_or_filter.go` are inside verb constructors that already return
-  `(transformer, error)`, so propagation is easy; the repl/script entry points should print
-  and exit.
-- `pkg/stream/stream.go:104` — final `bufferedOutputStream.Flush()` of the main output stream.
-  A failure here (full disk, closed pipe) currently loses output silently while exiting 0.
-  Propagate into `retval`.
+- `cli.Finalize{Reader,Writer}Options` (9): join/put-or-filter/split/tee verb constructors now
+  return the error (`mlr join -i badformat` now exits 1 with "unrecognized input format"
+  instead of silently proceeding with wrong separators — verified end-to-end); repl/script
+  entry points print to stderr and exit; the unit-test site asserts nil.
+- `pkg/stream/stream.go` final `Flush` → propagated into `retval` (full disk / closed pipe no
+  longer exits 0 silently).
+- DSL `emit`/`print`/`dump` redirect writes (11): recursive emit calls, `printToRedirectFunc`,
+  `dumpToRedirectFunc`, and both `outputHandlerManager.WriteString` sites now propagate through
+  `Execute`, matching their sibling branches which already did.
+- `pkg/output/record_writer_csv.go` `WriteCSVRecordMaybeColorized` (2) → propagated through
+  `IRecordWriter.Write`, whose error the channel writer already reports.
+- `pkg/output/file_output_handlers.go` close-time `Flush` → propagated.
+- `pkg/runtime/stack.go` `PutIndexed` on fresh map → propagated (setIndexed returns error).
+- `ENV[...]` assignment `os.Setenv` → propagated through `Assign`.
+- REPL `writeRecord`: `recordWriter.Write` error now printed to the terminal (e.g. CSV
+  schema-change errors were silently swallowed in the REPL); `closeBufferedOutputStream` on
+  `:>` / `:>>` redirect switches now prints on error. Flush-before-close at repl/script exit
+  now checked like the close next to it.
+- `pkg/auxents/termcvt.go`: write-side `ostream.Close()` before the rename-over-original now
+  checked (had a `TODO: check return status`); `ostream.Write` in termcvt/unhex now exits on
+  error like the surrounding error handling.
 
-### Round 6c — inspect individually: post-#2129 meaningful errors (12 findings)
+### 6c — explicit `_ =` ignores (~65 findings)
 
-`PutIndexed` (3) / `RemoveIndexed` (9), including `pkg/mlrval/mlrmap_flatten_unflatten.go:182,229`
-and `pkg/runtime/stack.go:457,488`. Now that #2129 fixed the masked error path, these returns
-are meaningful. Decide per site whether to propagate or `_ =` with a comment saying why
-ignoring is correct (e.g. index provably in bounds at the call site).
+- Unset-style DSL/runtime paths (9 `RemoveIndexed`, 1 `Unsetenv`, in `lvalues.go`/`stack.go`):
+  unset of a non-existent path is a no-op by design; the enclosing `Unassign` API has no error
+  return. Commented at each site.
+- `Mlrmap` unflatten `PutIndexed` (2): best-effort API with no error return; commented.
+- Mid-stream `FlushOnEveryRecord` flushes (pprint, channel writer): bufio errors are sticky and
+  the final Flush in `pkg/stream` is checked; commented.
+- Read-side `Close` (input readers ×10, auxents ×4, readfiles ×2, halfpipe, mlrrc, option_parse
+  `--load`, CPU-profile handle), `go process.Wait()` in halfpipe.
+- Init-time strftime `ss.Set` registrations (12) in `pkg/bifs/datetime.go` (constant specs).
+- In-memory usage-capture pipes (`io.Copy`/`Close`) in `keyword_usage_json.go` and
+  `aaa_transformer_json.go`.
+- regtest harness `os.Setenv`/`Unsetenv`/`Remove` (14) and `entrypoint.go` temp-file `os.Remove`
+  on error paths (5).
+- REPL/script terminal `WriteString`/`Flush` where the config exclusion can't reach (field
+  access); commented.
 
-### Round 7 — explicit ignores for the residue (~80 findings, re-enumerate after 6a)
-
-- **Cleanup/teardown:** `Close` (28), `os.Remove` (10), `os.Setenv`/`Unsetenv` (10),
-  `process.Wait` — read-side closes, temp-file removal, regtest-harness env vars. `_ =` throughout.
-- **REPL/script interactive write/flush paths:** `Flush` (10), `closeBufferedOutputStream` (3) —
-  interactive-session output; on failure (EPIPE etc.) there is nothing useful to do. `_ =` with
-  a brief comment.
-- **In-memory pipe for usage capture:** `pkg/transformers/aaa_transformer_json.go:43,48,50` —
-  `io.Copy`/`Close` on an `os.Pipe` used to capture usage text into a buffer; cannot
-  meaningfully fail. `_ =`.
-- **DSL emit/execute/redirect funcs and `pkg/dsl/cst/dump.go`:** check whether the surrounding
-  output-handler code path has an error convention to join (it returns error in places);
-  otherwise `_ =`.
+Also fixed in passing: staticcheck QF1012 in `record_writer_pprint.go` (surfaced once the
+errcheck finding on the same line was excluded): `WriteString(fmt.Sprint(x))` where `x` is
+already a string → `WriteString(x)`; dropped the then-unused `fmt` import.
 
 ## Bug noticed in passing (fixed on `johnkerl/lint4`)
 

@@ -122,7 +122,7 @@ func (reader *RecordReaderCSVLite) Read(
 						errorChannel,
 						downstreamDoneChannel,
 					)
-					handle.Close()
+					_ = handle.Close()
 				}
 			}
 		}

@@ -10,7 +10,8 @@ import (
 
 func TestRecordFromDKVPLine(t *testing.T) {
 	readerOptions := cli.DefaultReaderOptions()
-	cli.FinalizeReaderOptions(&readerOptions) // compute IPS, IFS -> IPSRegex, IFSRegex
+	err := cli.FinalizeReaderOptions(&readerOptions) // compute IPS, IFS -> IPSRegex, IFSRegex
+	assert.Nil(t, err)
 	reader, err := NewRecordReaderDKVP(&readerOptions, 1)
 	assert.NotNil(t, reader)
 	assert.Nil(t, err)

@@ -126,9 +126,10 @@ func (scr *Script) run() error {
 			}
 
 			if rac.Record == nil {
-				// Output string from print/dump etc
-				bufferedOutput.WriteString(rac.OutputString)
-				bufferedOutput.Flush()
+				// Output string from print/dump etc; terminal output, nothing
+				// useful to do on write failure
+				_, _ = bufferedOutput.WriteString(rac.OutputString)
+				_ = bufferedOutput.Flush()
 				continue
 			}
 

@@ -143,7 +143,8 @@ func (node *DirectFieldValueLvalueNode) UnassignIndexed(
 		name := node.lhsFieldName.String()
 		state.Inrec.Remove(name)
 	} else {
-		state.Inrec.RemoveIndexed(
+		// unset of a non-existent path is a no-op
+		_ = state.Inrec.RemoveIndexed(
 			append([]*mlrval.Mlrval{node.lhsFieldName}, indices...),
 		)
 	}
@@ -254,7 +255,8 @@ func (node *IndirectFieldValueLvalueNode) UnassignIndexed(
 		name := lhsFieldName.String()
 		state.Inrec.Remove(name)
 	} else {
-		state.Inrec.RemoveIndexed(
+		// unset of a non-existent path is a no-op
+		_ = state.Inrec.RemoveIndexed(
 			append([]*mlrval.Mlrval{lhsFieldName.Copy()}, indices...),
 		)
 	}
@@ -361,7 +363,8 @@ func (node *PositionalFieldNameLvalueNode) UnassignIndexed(
 		// TODO: incorporate error-return into this API for the non-int case
 	} else {
 		// xxx positional
-		state.Inrec.RemoveIndexed(
+		// unset of a non-existent path is a no-op
+		_ = state.Inrec.RemoveIndexed(
 			append([]*mlrval.Mlrval{lhsFieldIndex}, indices...),
 		)
 	}
@@ -478,7 +481,8 @@ func (node *PositionalFieldValueLvalueNode) UnassignIndexed(
 		// TODO: incorporate error-return into this API for the non-int case
 	} else {
 		// xxx positional
-		state.Inrec.RemoveIndexed(
+		// unset of a non-existent path is a no-op
+		_ = state.Inrec.RemoveIndexed(
 			append([]*mlrval.Mlrval{lhsFieldIndex}, indices...),
 		)
 	}
@@ -554,7 +558,8 @@ func (node *FullSrecLvalueNode) UnassignIndexed(
 	if indices == nil {
 		state.Inrec.Clear()
 	} else {
-		state.Inrec.RemoveIndexed(indices)
+		// unset of a non-existent path is a no-op
+		_ = state.Inrec.RemoveIndexed(indices)
 	}
 }
 
@@ -623,7 +628,8 @@ func (node *DirectOosvarValueLvalueNode) UnassignIndexed(
 		name := node.lhsOosvarName.String()
 		state.Oosvars.Remove(name)
 	} else {
-		state.Oosvars.RemoveIndexed(
+		// unset of a non-existent path is a no-op
+		_ = state.Oosvars.RemoveIndexed(
 			append([]*mlrval.Mlrval{node.lhsOosvarName}, indices...),
 		)
 	}
@@ -703,7 +709,8 @@ func (node *IndirectOosvarValueLvalueNode) UnassignIndexed(
 		sname := lhsOosvarName.String()
 		state.Oosvars.Remove(sname)
 	} else {
-		state.Oosvars.RemoveIndexed(
+		// unset of a non-existent path is a no-op
+		_ = state.Oosvars.RemoveIndexed(
 			append([]*mlrval.Mlrval{lhsOosvarName}, indices...),
 		)
 	}
@@ -760,7 +767,8 @@ func (node *FullOosvarLvalueNode) UnassignIndexed(
 	if indices == nil {
 		state.Oosvars.Clear()
 	} else {
-		state.Oosvars.RemoveIndexed(indices)
+		// unset of a non-existent path is a no-op
+		_ = state.Oosvars.RemoveIndexed(indices)
 	}
 }
 
@@ -1060,7 +1068,9 @@ func (node *EnvironmentVariableLvalueNode) Assign(
 
 	sname := name.String()
 	svalue := rvalue.String()
-	os.Setenv(sname, svalue)
+	if err := os.Setenv(sname, svalue); err != nil {
+		return err
+	}
 	if sname == "TZ" {
 		err := lib.SetTZFromEnv() // affects the time library; notify it
 		if err != nil {
@@ -1091,7 +1101,7 @@ func (node *EnvironmentVariableLvalueNode) Unassign(
 		return
 	}
 
-	os.Unsetenv(name.String())
+	_ = os.Unsetenv(name.String())
 }
 
 func (node *EnvironmentVariableLvalueNode) UnassignIndexed(

@@ -51,7 +51,7 @@ func LoadStringsFromDir(dirname string, extension string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	names, err := f.Readdirnames(-1)
 	if err != nil {
@@ -80,7 +80,7 @@ func ReadCSVHeader(filename string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer handle.Close()
+	defer func() { _ = handle.Close() }()
 	csvReader := csv.NewReader(handle)
 	header, err := csvReader.Read()
 	if err != nil {

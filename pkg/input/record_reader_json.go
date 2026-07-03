@@ -60,7 +60,7 @@ func (reader *RecordReaderJSON) Read(
 					errorChannel <- err
 				} else {
 					reader.processHandle(handle, filename, &context, readerChannel, errorChannel, downstreamDoneChannel)
-					handle.Close()
+					_ = handle.Close()
 				}
 			}
 		}
