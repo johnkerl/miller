@@ -730,26 +730,26 @@ func BIF_mod_exp(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 // * empty-null always loses against numbers
 
 func min_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	var a float64 = input1.AcquireFloatValue()
-	var b float64 = input2.AcquireFloatValue()
+	a := input1.AcquireFloatValue()
+	b := input2.AcquireFloatValue()
 	return mlrval.FromFloat(math.Min(a, b))
 }
 
 func min_f_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	var a float64 = input1.AcquireFloatValue()
-	var b float64 = float64(input2.AcquireIntValue())
+	a := input1.AcquireFloatValue()
+	b := float64(input2.AcquireIntValue())
 	return mlrval.FromFloat(math.Min(a, b))
 }
 
 func min_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	var a float64 = float64(input1.AcquireIntValue())
-	var b float64 = input2.AcquireFloatValue()
+	a := float64(input1.AcquireIntValue())
+	b := input2.AcquireFloatValue()
 	return mlrval.FromFloat(math.Min(a, b))
 }
 
 func min_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	var a int64 = input1.AcquireIntValue()
-	var b int64 = input2.AcquireIntValue()
+	a := input1.AcquireIntValue()
+	b := input2.AcquireIntValue()
 	if a < b {
 		return input1
 	}
@@ -768,8 +768,8 @@ func min_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func min_s_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	var a string = input1.AcquireStringValue()
-	var b string = input2.AcquireStringValue()
+	a := input1.AcquireStringValue()
+	b := input2.AcquireStringValue()
 	if a < b {
 		return input1
 	}
@@ -897,26 +897,26 @@ func BIF_minlen_within_map_values(m *mlrval.Mlrmap) *mlrval.Mlrval {
 }
 
 func max_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	var a float64 = input1.AcquireFloatValue()
-	var b float64 = input2.AcquireFloatValue()
+	a := input1.AcquireFloatValue()
+	b := input2.AcquireFloatValue()
 	return mlrval.FromFloat(math.Max(a, b))
 }
 
 func max_f_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	var a float64 = input1.AcquireFloatValue()
-	var b float64 = float64(input2.AcquireIntValue())
+	a := input1.AcquireFloatValue()
+	b := float64(input2.AcquireIntValue())
 	return mlrval.FromFloat(math.Max(a, b))
 }
 
 func max_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	var a float64 = float64(input1.AcquireIntValue())
-	var b float64 = input2.AcquireFloatValue()
+	a := float64(input1.AcquireIntValue())
+	b := input2.AcquireFloatValue()
 	return mlrval.FromFloat(math.Max(a, b))
 }
 
 func max_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	var a int64 = input1.AcquireIntValue()
-	var b int64 = input2.AcquireIntValue()
+	a := input1.AcquireIntValue()
+	b := input2.AcquireIntValue()
 	if a > b {
 		return input1
 	}
@@ -935,8 +935,8 @@ func max_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func max_s_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	var a string = input1.AcquireStringValue()
-	var b string = input2.AcquireStringValue()
+	a := input1.AcquireStringValue()
+	b := input2.AcquireStringValue()
 	if a > b {
 		return input1
 	}

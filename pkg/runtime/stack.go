@@ -454,7 +454,9 @@ func (frame *StackFrame) setIndexed(
 		leadingIndex := indices[0]
 		if leadingIndex.IsString() || leadingIndex.IsInt() {
 			newval := mlrval.FromMap(mlrval.NewMlrmap())
-			newval.PutIndexed(indices, mv)
+			if err := newval.PutIndexed(indices, mv); err != nil {
+				return err
+			}
 			return frame.set(stackVariable, newval)
 		}
 		return fmt.Errorf(
@@ -485,5 +487,6 @@ func (frame *StackFrame) unsetIndexed(
 	if value == nil {
 		return
 	}
-	value.RemoveIndexed(indices)
+	// unset of a non-existent path is a no-op
+	_ = value.RemoveIndexed(indices)
 }

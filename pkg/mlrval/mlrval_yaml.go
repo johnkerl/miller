@@ -197,14 +197,12 @@ func mlrvalToYAMLNode(mv *Mlrval) (*yaml.Node, error) {
 	case MT_ARRAY:
 		arr := mv.GetArray()
 		seqNode := &yaml.Node{Kind: yaml.SequenceNode, Tag: "!!seq"}
-		if arr != nil {
-			for _, elem := range arr {
-				v, err := mlrvalToYAMLNode(elem)
-				if err != nil {
-					return nil, err
-				}
-				seqNode.Content = append(seqNode.Content, v)
+		for _, elem := range arr {
+			v, err := mlrvalToYAMLNode(elem)
+			if err != nil {
+				return nil, err
 			}
+			seqNode.Content = append(seqNode.Content, v)
 		}
 		return seqNode, nil
 	case MT_MAP:

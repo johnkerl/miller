@@ -9,7 +9,7 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
-func (mlrmap *Mlrmap) MarshalJSON(
+func (mlrmap *Mlrmap) FormatAsJSON(
 	jsonFormatting TJSONFormatting,
 	outputIsStdout bool,
 ) (string, error) {
@@ -147,7 +147,7 @@ func (mlrmap *Mlrmap) marshalJSONAuxSingleLine(
 func (entry *MlrmapEntry) JSONStringifyInPlace(
 	jsonFormatting TJSONFormatting,
 ) {
-	outputBytes, err := entry.Value.MarshalJSON(jsonFormatting, false)
+	outputBytes, err := entry.Value.FormatAsJSON(jsonFormatting, false)
 	if err != nil {
 		entry.Value = FromError(err)
 	} else {

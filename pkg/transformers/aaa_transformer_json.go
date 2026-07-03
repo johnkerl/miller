@@ -40,14 +40,14 @@ func captureUsageFunc(usageFunc TransformerUsageFunc) string {
 	done := make(chan string)
 	go func() {
 		var buf bytes.Buffer
-		io.Copy(&buf, r)
+		_, _ = io.Copy(&buf, r)
 		done <- buf.String()
 	}()
 
 	usageFunc(w)
-	w.Close()
+	_ = w.Close()
 	s := <-done
-	r.Close()
+	_ = r.Close()
 	return s
 }
 

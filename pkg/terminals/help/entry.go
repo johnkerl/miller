@@ -821,12 +821,8 @@ func helpByExactSearch(things []string) bool {
 // We need to look various places, e.g. "sec2gmt" is the name of a verb as well
 // as a DSL function.
 func helpByExactSearchOne(thing string) bool {
-	found := false
-
 	// flag
-	if cli.FLAG_TABLE.ShowHelpForFlagWithName(thing) {
-		found = true
-	}
+	found := cli.FLAG_TABLE.ShowHelpForFlagWithName(thing)
 
 	// verb
 	if transformers.ShowHelpForTransformer(thing) {
@@ -857,12 +853,8 @@ func helpByApproximateSearch(things []string) bool {
 }
 
 func helpByApproximateSearchOne(thing string) bool {
-	found := false
-
 	// flag
-	if cli.FLAG_TABLE.ShowHelpForFlagApproximateWithName(thing) {
-		found = true
-	}
+	found := cli.FLAG_TABLE.ShowHelpForFlagApproximateWithName(thing)
 
 	// verb
 	if transformers.ShowHelpForTransformerApproximate(thing) {

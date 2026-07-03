@@ -1,5 +1,5 @@
 // Mlrval implements the Unmarshaler and Marshaler interfaces needed for
-// marshaling/unmarshaling to/from JSON, via the UnmarshalJSON and MarshalJSON
+// marshaling/unmarshaling to/from JSON, via the UnmarshalJSON and FormatAsJSON
 // methods.
 //
 // Please see also https://golang.org/pkg/encoding/json/
@@ -259,7 +259,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 	}
 }
 
-func (mv *Mlrval) MarshalJSON(
+func (mv *Mlrval) FormatAsJSON(
 	jsonFormatting TJSONFormatting,
 	outputIsStdout bool,
 ) (string, error) {

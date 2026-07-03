@@ -86,7 +86,7 @@ func (reader *RecordReaderDKVPNIDX) Read(
 					errorChannel <- err
 				} else {
 					reader.processHandle(handle, filename, &context, readerChannel, errorChannel, downstreamDoneChannel)
-					handle.Close()
+					_ = handle.Close()
 				}
 			}
 		}
@@ -216,7 +216,7 @@ func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrm
 
 	values := reader.fieldSplitter.Split(line)
 
-	var i int = 0
+	i := 0
 	for _, value := range values {
 		i++
 		str_key := strconv.Itoa(i)

@@ -101,7 +101,9 @@ func Stream(
 		}
 	}
 
-	bufferedOutputStream.Flush()
+	if err := bufferedOutputStream.Flush(); err != nil && retval == nil {
+		retval = err
+	}
 
 	return retval
 }

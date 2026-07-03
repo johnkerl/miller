@@ -192,7 +192,7 @@ func transformerPutOrFilterParseCLI(
 	verb := args[argi]
 	argi++
 
-	var dslStrings []string = []string{}
+	dslStrings := []string{}
 	haveDSLStringsHere := false
 	echoDSLString := false
 	printASTAsTree := false
@@ -340,7 +340,9 @@ func transformerPutOrFilterParseCLI(
 		}
 	}
 
-	cli.FinalizeWriterOptions(&options.WriterOptions)
+	if err := cli.FinalizeWriterOptions(&options.WriterOptions); err != nil {
+		return nil, cli.VerbErrorf(verb, "%v", err)
+	}
 
 	// If they've used either of 'mlr put -f {filename}' or 'mlr put -e
 	// {expression}' then that specifies their DSL expression. But if they've

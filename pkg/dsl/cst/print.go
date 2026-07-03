@@ -327,7 +327,9 @@ func (root *RootNode) buildPrintxStatementNode(
 
 func (node *PrintStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	if len(node.expressionEvaluables) == 0 {
-		node.printToRedirectFunc(node.terminator, state)
+		if err := node.printToRedirectFunc(node.terminator, state); err != nil {
+			return nil, err
+		}
 	} else {
 		// 5x faster than fmt.Print() separately: note that os.Stdout is
 		// non-buffered in Go whereas stdout is buffered in C.
@@ -347,7 +349,9 @@ func (node *PrintStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 			}
 		}
 		buffer.WriteString(node.terminator)
-		node.printToRedirectFunc(buffer.String(), state)
+		if err := node.printToRedirectFunc(buffer.String(), state); err != nil {
+			return nil, err
+		}
 	}
 	return nil, nil
 }
@@ -387,6 +391,5 @@ func (node *PrintStatementNode) printToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	node.outputHandlerManager.WriteString(outputString, outputFileName)
-	return nil
+	return node.outputHandlerManager.WriteString(outputString, outputFileName)
 }

@@ -55,7 +55,7 @@ func main() {
 			fmt.Fprintln(os.Stderr, os.Args[0], ": ", "Could not start CPU profile: ", err)
 			return
 		}
-		defer handle.Close()
+		defer func() { _ = handle.Close() }()
 
 		if err := pprof.StartCPUProfile(handle); err != nil {
 			fmt.Fprintln(os.Stderr, os.Args[0], ": ", "Could not start CPU profile: ", err)

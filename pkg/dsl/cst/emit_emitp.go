@@ -537,7 +537,10 @@ func (node *EmitXStatementNode) executeNonIndexedNonLashedEmit(
 					nextLevelNames = append(nextLevelNames, pe.Key)
 					nextLevelValues = append(nextLevelValues, pe.Value.Copy())
 				}
-				node.executeNonIndexedNonLashedEmit(nextLevelNames, nextLevelValues, state)
+				err := node.executeNonIndexedNonLashedEmit(nextLevelNames, nextLevelValues, state)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}
@@ -625,7 +628,10 @@ func (node *EmitXStatementNode) executeNonIndexedLashedEmit(
 					nextLevelNames = append(nextLevelNames, pe.Key)
 					nextLevelValues = append(nextLevelValues, pe.Value.Copy())
 				}
-				node.executeNonIndexedNonLashedEmit(nextLevelNames, nextLevelValues, state)
+				err := node.executeNonIndexedNonLashedEmit(nextLevelNames, nextLevelValues, state)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}
@@ -821,13 +827,16 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitAux(
 						return err
 					}
 				} else {
-					node.executeIndexedNonLashedEmitPAux(
+					err := node.executeIndexedNonLashedEmitPAux(
 						newrec,
 						[]string{names[i]},
 						[]*mlrval.Mlrmap{valueAsMap},
 						indices[1:],
 						state,
 					)
+					if err != nil {
+						return err
+					}
 				}
 			}
 		}
@@ -966,13 +975,16 @@ func (node *EmitXStatementNode) executeIndexedLashedEmitAux(
 		if len(indices) > 1 && nextLevelMaps[0] != nil {
 			// Recurse.  The leading map drives the iteration; we don't
 			// continue even if other maps aren't empty
-			node.executeIndexedLashedEmitAux(
+			err := node.executeIndexedLashedEmitAux(
 				newrec,
 				names,
 				nextLevelMaps,
 				indices[1:],
 				state,
 			)
+			if err != nil {
+				return err
+			}
 		} else { // end of recursion
 			for i, nextLevelValue := range nextLevelValues {
 				if nextLevelValue != nil {
@@ -1027,13 +1039,16 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitPAux(
 						return err
 					}
 				} else {
-					node.executeIndexedNonLashedEmitPAux(
+					err := node.executeIndexedNonLashedEmitPAux(
 						newrec,
 						[]string{names[i]},
 						[]*mlrval.Mlrmap{valueAsMap},
 						indices[1:],
 						state,
 					)
+					if err != nil {
+						return err
+					}
 				}
 			}
 		}
@@ -1083,13 +1098,16 @@ func (node *EmitXStatementNode) executeIndexedLashedEmitPAux(
 
 		if nextLevelMaps[0] != nil && len(indices) >= 2 {
 			// recurse
-			node.executeIndexedLashedEmitPAux(
+			err := node.executeIndexedLashedEmitPAux(
 				newrec,
 				names,
 				nextLevelMaps,
 				indices[1:],
 				state,
 			)
+			if err != nil {
+				return err
+			}
 		} else {
 			// end of recursion
 			for i, nextLevel := range nextLevels {
