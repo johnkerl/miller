@@ -40,6 +40,10 @@ func Main() MainReturn {
 	// found then this function will not return.
 	auxents.Dispatch(os.Args)
 
+	if lib.IsTruthyEnvValue(os.Getenv("MLR_NO_SHELL")) {
+		lib.DisableShellOut()
+	}
+
 	wantJSON := climain.WantErrorsJSON(os.Args)
 
 	options, recordTransformers, err := climain.ParseCommandLine(os.Args)

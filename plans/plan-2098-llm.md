@@ -282,7 +282,7 @@ heterogeneous input, `-n` cap, `-n 0`, null-vs-empty, bad-option); docs:
 
 ---
 
-## PR 7 — MCP server + Agent Skill (the loop)
+## PR 7 — MCP server + Agent Skill (the loop)  *(landed)*
 
 **Goal.** Package the above so an agent gets both the *surface* and the *loop*.
 
@@ -292,6 +292,91 @@ heterogeneous input, `-n` cap, `-n 0`, null-vs-empty, bad-option); docs:
 - **Ship an Agent Skill / playbook** encoding the discover → constrain →
   validate → run loop — the recipe is what makes a CLI "shine when driven by an
   agent," beyond the raw tool surface.
+
+**Design (worked out; ready to build against).**
+
+- **Transport: stdio, not HTTP.** MCP's standard transport for local tools is
+  JSON-RPC 2.0 over stdin/stdout: the client (Claude Code, Claude Desktop,
+  Cursor, …) spawns the server as a subprocess. No localhost port, no auth
+  story, no firewall prompts, works offline, dies with the client. MCP's
+  streamable-HTTP transport exists for *remote* servers only; if ever wanted it
+  could be a later opt-in flag, but nothing here needs it.
+- **Entry point: a new terminal in the existing binary — `mlr mcp`** — not a
+  separate executable. Registration is `claude mcp add miller -- mlr mcp`
+  (or the equivalent JSON config). Shipping inside `mlr` means zero extra
+  install and the server is version-locked to the binary, which is exactly
+  what the `mlr_version` + `catalog_schema_version` cache keying assumes.
+- **Dependency decision (the main open call before starting):** official
+  `modelcontextprotocol/go-sdk`, vs. hand-rolling the small protocol subset
+  needed (`initialize`, `tools/list`, `tools/call`, `ping`) over
+  `encoding/json` — a few hundred lines, stable wire format. SDK leans toward
+  spec conformance as MCP evolves; hand-rolling fits Miller's
+  near-stdlib-only ethos.
+- **Tools** — thin wrappers over PR1–PR6, nothing new underneath:
+  - `list_capabilities` — PR1 catalog / PR2 index, with kind/name filters so
+    an agent fetches one verb entry cheaply.
+  - `which` — intent → ranked verbs (PR2).
+  - `validate_dsl` — the PR5 `--explain` path; failures return the PR4
+    structured-error document.
+  - `describe_data` — the PR6 verb with `--ojson`.
+  - `run` — execute an mlr command line; returns stdout (size-capped, with a
+    truncation note), stderr, exit code, and the parsed `--errors-json`
+    document when one fired.
+- **Execution model: in-process for pure lookups, subprocess for execution.**
+  Catalog and `which` are pure functions over compiled-in registries — serve
+  in-process. `validate_dsl`, `describe_data`, and `run` shell out to the same
+  binary via `os.Executable()`: the CLI paths call `os.Exit`, mutate global
+  option state, and can panic, so subprocess isolation is simpler and
+  guarantees the agent sees byte-identical behavior to a terminal.
+- **Safety wrinkle — `run` is arbitrary-code-execution by design.** The DSL
+  has `system()` and `exec()`, and verbs like `tee`/`split` write files. MCP
+  clients prompt per tool call, but the server should still enforce: a
+  timeout, an output cap, and — as a small prerequisite piece of this PR — a
+  new `--no-shell`-style flag in Miller itself that the server sets by default
+  (with explicit opt-out), so `system`/`exec` fail cleanly unless the user
+  asks. The `run` tool carries the MCP `destructiveHint` annotation.
+- **Skill half, single-sourced twice.** A playbook encoding *describe →
+  index/which → fetch entry → validate → run*, branching on structured error
+  `kind` and `did_you_mean`. Ship the same content as an in-repo Agent Skill
+  (SKILL.md) and as an MCP prompt/resource exposed by the server itself, so
+  agents that only see the server still get the loop.
+- **Tests.** Golden-transcript tests that spawn `mlr mcp` and drive it over
+  stdio (initialize → tools/list → each tool), plus unit tests on the tool
+  handlers. The `MLR_AGENT` open question below lands here: the server makes
+  it mostly moot (it sets flags explicitly), but it's worth resolving for the
+  skill-without-server case.
+
+**Landed.** As designed above, with these notes:
+- Dependency call resolved: the official `modelcontextprotocol/go-sdk` (v1.6).
+- `--no-shell` / `MLR_NO_SHELL` prerequisite landed as a one-way gate in
+  `pkg/lib/shell_gate.go` (can be disabled at startup, never re-enabled, so
+  agent argv cannot override an env-level opt-out), enforced at all three
+  data-path shell-out sites: `BIF_system`/`BIF_exec` (clean error values),
+  `lib.Open{Outbound,Inbound}HalfPipe` (piped redirects, `--prepipe`).
+  Regression cases in `test/cases/no-shell/`.
+- Server is `pkg/terminals/mcp/`, registered as terminal `mcp`. Subprocess
+  tools inject `MLR_ERRORS_JSON=1` always and `MLR_NO_SHELL=1` unless
+  `--allow-shell`; per-run wall-clock timeout (`--timeout`, default 60s,
+  per-call overridable) and stdout/stderr byte cap (`--max-output-bytes`,
+  default 1 MiB) with explicit `*_truncated`/`timed_out` flags in the output.
+  Subprocess stdin is always redirected (inline `stdin_text` or empty), never
+  inherited -- the server's own stdin carries the MCP transport.
+- The help package grew an exported API (`pkg/terminals/help/api.go`) so the
+  server serves catalog/index/which in-process from the same registries; the
+  structured-error DTO is mirrored (not imported) in the mcp package since
+  climain→terminals→mcp would cycle.
+- Playbook is `pkg/terminals/mcp/SKILL.md` (Agent Skill frontmatter),
+  go:embed-ed and exposed as prompt `miller-playbook` + resource
+  `miller://playbook`.
+- Tests are SDK in-memory-transport unit tests (`server_test.go`) covering
+  every tool plus annotations, output-cap, timeout, allow-shell, and
+  no-shell-blocks-system paths; subprocess-backed cases skip when the
+  repo-root binary is absent. Regtest golden: `mlr mcp --help`
+  (`test/cases/mcp/`). Docs: `docs/src/mcp-server.md.in`, in the mkdocs nav
+  under "Miller in more detail".
+- `MLR_AGENT` open question: resolved as not-needed for the server (it sets
+  env explicitly); skill-without-server users set `MLR_HELP_JSON` /
+  `MLR_ERRORS_JSON` / `MLR_NO_SHELL` individually.
 
 ---
 

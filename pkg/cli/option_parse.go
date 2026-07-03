@@ -3397,6 +3397,15 @@ var MiscFlagSection = FlagSection{
 		},
 
 		{
+			name: "--no-shell",
+			help: "Disable Miller's ability to run external commands: the DSL `system` and `exec` functions, piped redirects such as `tee | \"command\"`, and `--prepipe`/`--prepipex` all fail cleanly instead of executing. Equivalent to setting the `MLR_NO_SHELL` environment variable to a truthy value. Intended for running agent-constructed command lines (e.g. via `mlr mcp`) without also granting arbitrary command execution. Once disabled, shell-outs cannot be re-enabled for the rest of the process.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				lib.DisableShellOut()
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "-x",
 			help: "If any record has an error value in it, report it and stop the process. The default is to print the field value as `(error)` and continue.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
