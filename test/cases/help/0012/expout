@@ -12,22 +12,21 @@ Note: this verb lets you apply arbitrary format strings, which can produce
 undefined behavior and/or program crashes.  See your system's "man printf".
 
 Options:
--i {integer format} Defaults to "%d".
-                    Examples: "%06lld", "%08llx".
-                    Note that Miller integers are long long so you must use
-                    formats which apply to long long, e.g. with ll in them.
-                    Undefined behavior results otherwise.
--f {float format}   Defaults to "%f".
-                    Examples: "%8.3lf", "%.6le".
-                    Note that Miller floats are double-precision so you must
-                    use formats which apply to double, e.g. with l[efg] in them.
-                    Undefined behavior results otherwise.
--s {string format}  Defaults to "%s".
-                    Examples: "_%s", "%08s".
-                    Note that you must use formats which apply to string, e.g.
-                    with s in them. Undefined behavior results otherwise.
+-i {integer format} Integer format string; defaults to "%d". Examples: "%06lld",
+                    "%08llx". Note that Miller integers are long long so you
+                    must use formats which apply to long long, e.g. with ll in
+                    them. Undefined behavior results otherwise.
+-f {float format}   Float format string; defaults to "%f". Examples: "%8.3lf",
+                    "%.6le". Note that Miller floats are double-precision so you
+                    must use formats which apply to double, e.g. with l[efg] in
+                    them. Undefined behavior results otherwise.
+-s {string format}  String format string; defaults to "%s". Examples: "_%s",
+                    "%08s". Note that you must use formats which apply to
+                    string, e.g. with s in them. Undefined behavior results
+                    otherwise.
 -n                  Coerce field values autodetected as int to float, and then
                     apply the float format.
+-h|--help           Show this message.
 format  (class=string #args=variadic) Using first argument as format string, interpolate remaining arguments in place of each "{}" in the format string. Too-few arguments are treated as the empty string; too-many arguments are discarded.
 Examples:
 format("{}:{}:{}", 1,2)     gives "1:2:".

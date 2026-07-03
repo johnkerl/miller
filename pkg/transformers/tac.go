@@ -11,12 +11,14 @@ import (
 
 const verbNameTac = "tac"
 
+var tacOptions = []OptionSpec{}
+
 var TacSetup = TransformerSetup{
 	Verb:         verbNameTac,
 	UsageFunc:    transformerTacUsage,
 	ParseCLIFunc: transformerTacParseCLI,
 	IgnoresInput: false,
-	Options:      []OptionSpec{},
+	Options:      tacOptions,
 }
 
 func transformerTacUsage(
@@ -24,8 +26,7 @@ func transformerTacUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameTac)
 	fmt.Fprintf(o, "Prints records in reverse order from the order in which they were encountered.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, tacOptions)
 }
 
 func transformerTacParseCLI(

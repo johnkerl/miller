@@ -13,15 +13,17 @@ import (
 
 const verbNameSparsify = "sparsify"
 
+var sparsifyOptions = []OptionSpec{
+	{Flag: "-s", Arg: "{filler string}", Type: "string", Desc: "What values to remove. Defaults to the empty string."},
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Specify field names to be operated on; any other fields won't be modified. The default is to modify all fields."},
+}
+
 var SparsifySetup = TransformerSetup{
 	Verb:         verbNameSparsify,
 	UsageFunc:    transformerSparsifyUsage,
 	ParseCLIFunc: transformerSparsifyParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-s", Arg: "{filler string}", Type: "string", Desc: "What values to remove. Defaults to the empty string."},
-		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Specify field names to be operated on; any other fields won't be modified. The default is to modify all fields."},
-	},
+	Options:      sparsifyOptions,
 }
 
 func transformerSparsifyUsage(
@@ -33,11 +35,7 @@ func transformerSparsifyUsage(
 specified value). Only makes sense with output format not being CSV or TSV.
 `)
 
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-s {filler string} What values to remove. Defaults to the empty string.\n")
-	fmt.Fprintf(o, "-f {a,b,c} Specify field names to be operated on; any other fields won't be\n")
-	fmt.Fprintf(o, "           modified. The default is to modify all fields.\n")
-	fmt.Fprintf(o, "-h|--help  Show this message.\n")
+	WriteVerbOptions(o, sparsifyOptions)
 
 	fmt.Fprint(o,
 		`Example: if input is a=1,b=,c=3 then output is a=1,c=3.

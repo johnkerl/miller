@@ -12,17 +12,18 @@ import (
 
 const verbNameFillDown = "fill-down"
 
+var fillDownOptions = []OptionSpec{
+	{Flag: "--all", Type: "bool", Desc: "Operate on all fields in the input."},
+	{Flag: "-a", Aliases: []string{"--only-if-absent"}, Type: "bool", Desc: "If a given record has a missing value for a given field, fill that from the corresponding value from a previous record, if any. By default, a 'missing' field either is absent, or has the empty-string value. With -a, a field is 'missing' only if it is absent."},
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names for fill-down."},
+}
+
 var FillDownSetup = TransformerSetup{
 	Verb:         verbNameFillDown,
 	UsageFunc:    transformerFillDownUsage,
 	ParseCLIFunc: transformerFillDownParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "--all", Type: "bool", Desc: "Operate on all fields in the input."},
-		{Flag: "-a", Type: "bool", Desc: "If a given record has a missing value for a given field, fill that from the corresponding value from a previous record, if any. By default, a 'missing' field either is absent, or has the empty-string value. With -a, a field is 'missing' only if it is absent."},
-		{Flag: "--only-if-absent", Type: "bool", Desc: "If a given record has a missing value for a given field, fill that from the corresponding value from a previous record, if any. By default, a 'missing' field either is absent, or has the empty-string value. With -a, a field is 'missing' only if it is absent."},
-		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names for fill-down."},
-	},
+	Options:      fillDownOptions,
 }
 
 func transformerFillDownUsage(
@@ -34,14 +35,7 @@ func transformerFillDownUsage(
 	fmt.Fprintln(o, "By default, a 'missing' field either is absent, or has the empty-string value.")
 	fmt.Fprintln(o, "With -a, a field is 'missing' only if it is absent.")
 	fmt.Fprintln(o, "")
-	fmt.Fprintln(o, "Options:")
-	fmt.Fprintln(o, " --all Operate on all fields in the input.")
-	fmt.Fprintln(o, " -a|--only-if-absent If a given record has a missing value for a given field,")
-	fmt.Fprintln(o, "     fill that from the corresponding value from a previous record, if any.")
-	fmt.Fprintln(o, "     By default, a 'missing' field either is absent, or has the empty-string value.")
-	fmt.Fprintln(o, "     With -a, a field is 'missing' only if it is absent.")
-	fmt.Fprintln(o, " -f  Field names for fill-down.")
-	fmt.Fprintln(o, " -h|--help Show this message.")
+	WriteVerbOptions(o, fillDownOptions)
 }
 
 func transformerFillDownParseCLI(

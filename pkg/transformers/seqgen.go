@@ -13,17 +13,19 @@ import (
 
 const verbNameSeqgen = "seqgen"
 
+var seqgenOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{name}", Type: "string", Desc: "Field name for counters. Default \"i\"."},
+	{Flag: "--start", Arg: "{value}", Type: "float", Desc: "Inclusive start value. Default 1."},
+	{Flag: "--step", Arg: "{value}", Type: "float", Desc: "Step value. Default 1. May be negative but not zero (unless start == stop)."},
+	{Flag: "--stop", Arg: "{value}", Type: "float", Desc: "Inclusive stop value. Default 100."},
+}
+
 var SeqgenSetup = TransformerSetup{
 	Verb:         verbNameSeqgen,
 	UsageFunc:    transformerSeqgenUsage,
 	ParseCLIFunc: transformerSeqgenParseCLI,
 	IgnoresInput: true,
-	Options: []OptionSpec{
-		{Flag: "-f", Arg: "{name}", Type: "string", Desc: "Field name for counters. Default \"i\"."},
-		{Flag: "--start", Arg: "{value}", Type: "float", Desc: "Inclusive start value. Default 1."},
-		{Flag: "--stop", Arg: "{value}", Type: "float", Desc: "Inclusive stop value. Default 100."},
-		{Flag: "--step", Arg: "{value}", Type: "float", Desc: "Step value. Default 1. May be negative but not zero (unless start == stop)."},
-	},
+	Options:      seqgenOptions,
 }
 
 func transformerSeqgenUsage(
@@ -34,12 +36,7 @@ func transformerSeqgenUsage(
 	fmt.Fprintf(o, "Produces a sequence of counters.  Discards the input record stream. Produces\n")
 	fmt.Fprintf(o, "output as specified by the options\n")
 	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f {name} (default \"i\") Field name for counters.\n")
-	fmt.Fprintf(o, "--start {value} (default 1) Inclusive start value.\n")
-	fmt.Fprintf(o, "--step {value} (default 1) Step value.\n")
-	fmt.Fprintf(o, "--stop {value} (default 100) Inclusive stop value.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, seqgenOptions)
 
 	fmt.Fprintf(o, "Start, stop, and/or step may be floating-point. Output is integer if start,\n")
 	fmt.Fprintf(o, "stop, and step are all integers. Step may be negative. It may not be zero\n")

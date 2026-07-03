@@ -197,6 +197,8 @@ verbs upgrade independently.
 **Emitter.** Prefer `Options` when non-nil; otherwise fall back to `usage_text`.
 Agents always get *something*; no big-bang migration. Optionally render each
 verb's `UsageFunc` *from* `Options` so prose and JSON stay in sync.
+(Done post-migration: `WriteVerbOptions` in `aaa_verb_usage.go` renders each
+usage message's "Options:" block from the specs; all 70 verbs migrated.)
 
 **Migration tracking.** Add a `VerbOptionsNilCheck` mirroring
 `FLAG_TABLE.NilCheck()` (`flag_types.go:310`) wired through a `mlr help`

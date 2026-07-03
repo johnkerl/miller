@@ -131,6 +131,8 @@ This is nothing more than a keystroke-saver for the sec2gmtdate function:
   ../c/mlr sec2gmtdate time1,time2
 is the same as
   ../c/mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+Options:
+-h|--help Show this message.
 sec2gmt
 Usage: mlr sec2gmt [options] {comma-separated list of field names}
 Replaces a numeric field representing seconds since the epoch with the
@@ -140,10 +142,18 @@ more than a keystroke-saver for the sec2gmt function:
 is the same as
   mlr put '$time1 = sec2gmt($time1); $time2 = sec2gmt($time2)'
 Options:
--1 through -9: format the seconds using 1..9 decimal places, respectively.
---millis Input numbers are treated as milliseconds since the epoch.
---micros Input numbers are treated as microseconds since the epoch.
---nanos  Input numbers are treated as nanoseconds since the epoch.
+-1        Format seconds with 1 decimal place.
+-2        Format seconds with 2 decimal places.
+-3        Format seconds with 3 decimal places.
+-4        Format seconds with 4 decimal places.
+-5        Format seconds with 5 decimal places.
+-6        Format seconds with 6 decimal places.
+-7        Format seconds with 7 decimal places.
+-8        Format seconds with 8 decimal places.
+-9        Format seconds with 9 decimal places.
+--millis  Input numbers are treated as milliseconds since the epoch.
+--micros  Input numbers are treated as microseconds since the epoch.
+--nanos   Input numbers are treated as nanoseconds since the epoch.
 -h|--help Show this message.
 gmt2localtime  (class=time #args=1,2) Convert from a GMT-time string to a local-time string. Consulting $TZ unless second argument is supplied.
 Examples:
@@ -197,11 +207,12 @@ Usage: mlr cat [options]
 Passes input records directly to output. Most useful for format conversion.
 Options:
 -n         Prepend field "n" to each record with record-counter starting at 1.
--N {name}  Prepend field {name} to each record with record-counter starting at 1.
--g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c
+-N {name}  Prepend field {name} to each record with record-counter starting at
+           1.
+-g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c.
 --filename Prepend current filename to each record.
 --filenum  Prepend current filenum (1-up) to each record.
--h|--help Show this message.
+-h|--help  Show this message.
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -227,17 +238,20 @@ specified sort order.) The sort is stable: records that compare equal will sort
 in the order they were encountered in the input record stream.
 
 Options:
--f  {comma-separated field names}  Lexical ascending
--r  {comma-separated field names}  Lexical descending
--c  {comma-separated field names}  Case-folded lexical ascending
--cr {comma-separated field names}  Case-folded lexical descending
--n  {comma-separated field names}  Numerical ascending; nulls sort last
--nf {comma-separated field names}  Same as -n
--nr {comma-separated field names}  Numerical descending; nulls sort first
--t  {comma-separated field names}  Natural ascending
--b                                 Move sort fields to start of record, as in reorder -b
--tr|-rt {comma-separated field names}  Natural descending
--h|--help Show this message.
+-f {a,b,c}      Lexical ascending sort on the specified field names.
+-r {a,b,c}      Lexical descending sort on the specified field names.
+-c {a,b,c}      Case-folded lexical ascending sort on the specified field names.
+-cr {a,b,c}     Case-folded lexical descending sort on the specified field
+                names.
+-n {a,b,c}      Numerical ascending sort on the specified field names; nulls
+                sort last.
+-nf {a,b,c}     Same as -n.
+-nr {a,b,c}     Numerical descending sort on the specified field names; nulls
+                sort first.
+-t {a,b,c}      Natural ascending sort on the specified field names.
+-b              Move sort fields to start of record, as in reorder -b.
+-tr|-rt {a,b,c} Natural descending sort on the specified field names.
+-h|--help       Show this message.
 
 Example:
   mlr sort -f a,b -nr x,y,z

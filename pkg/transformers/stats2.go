@@ -18,21 +18,23 @@ const verbNameStats2 = "stats2"
 // if we were ever asked to process field names with commas in them.
 const stats2KeySeparator = "\001"
 
+var stats2Options = []OptionSpec{
+	{Flag: "-a", Arg: "{linreg-ols,corr,...}", Type: "enum", Desc: "Names of accumulators: one or more of the listed values.", Values: []string{"linreg-ols", "r2", "logireg", "corr", "cov"}},
+	{Flag: "-f", Arg: "{a,b,c,d}", Type: "csv-list", Desc: "Value-field name-pairs on which to compute statistics. There must be an even number of names."},
+	{Flag: "-g", Arg: "{e,f,g}", Type: "csv-list", Desc: "Optional group-by-field names."},
+	{Flag: "-v", Type: "bool", Desc: "Print additional output for linreg-pca."},
+	{Flag: "-s", Type: "bool", Desc: "Print iterative stats. Useful in tail -f contexts, in which case please avoid pprint-format output since end of input stream will never be seen. Likewise, if input is coming from `tail -f`, be sure to use `--records-per-batch 1`."},
+	{Flag: "--fit", Type: "bool", Desc: "Rather than printing regression parameters, applies them to the input data to compute new fit fields. All input records are held in memory until end of input stream. Has effect only for linreg-ols, linreg-pca, and logireg."},
+	{Flag: "-S", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
+	{Flag: "-F", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
+}
+
 var Stats2Setup = TransformerSetup{
 	Verb:         verbNameStats2,
 	UsageFunc:    transformerStats2Usage,
 	ParseCLIFunc: transformerStats2ParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-a", Arg: "{linreg-ols,corr,...}", Type: "enum", Desc: "Names of accumulators: one or more of the listed values.", Values: []string{"linreg-ols", "r2", "logireg", "corr", "cov"}},
-		{Flag: "-f", Arg: "{a,b,c,d}", Type: "csv-list", Desc: "Value-field name-pairs on which to compute statistics. There must be an even number of names."},
-		{Flag: "-g", Arg: "{e,f,g}", Type: "csv-list", Desc: "Optional group-by-field names."},
-		{Flag: "-v", Type: "bool", Desc: "Print additional output for linreg-pca."},
-		{Flag: "-s", Type: "bool", Desc: "Print iterative stats. Useful in tail -f contexts."},
-		{Flag: "--fit", Type: "bool", Desc: "Rather than printing regression parameters, applies them to the input data to compute new fit fields."},
-		{Flag: "-S", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
-		{Flag: "-F", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
-	},
+	Options:      stats2Options,
 }
 
 func transformerStats2Usage(
@@ -44,22 +46,11 @@ func transformerStats2Usage(
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprintf(o, "Computes bivariate statistics for one or more given field-name pairs,\n")
 	fmt.Fprintf(o, "accumulated across the input record stream.\n")
-	fmt.Fprintf(o, "-a {linreg-ols,corr,...}  Names of accumulators: one or more of:\n")
+	WriteVerbOptions(o, stats2Options)
+	fmt.Fprintf(o, "Names of accumulators for -a, one or more of:\n")
 
 	utils.ListStats2Accumulators(o)
 
-	fmt.Fprintf(o, "-f {a,b,c,d}   Value-field name-pairs on which to compute statistics.\n")
-	fmt.Fprintf(o, "               There must be an even number of names.\n")
-	fmt.Fprintf(o, "-g {e,f,g}     Optional group-by-field names.\n")
-	fmt.Fprintf(o, "-v             Print additional output for linreg-pca.\n")
-	fmt.Fprintf(o, "-s             Print iterative stats. Useful in tail -f contexts, in which\n")
-	fmt.Fprintf(o, "               case please avoid pprint-format output since end of input\n")
-	fmt.Fprintf(o, "               stream will never be seen. Likewise, if input is coming from\n")
-	fmt.Fprintf(o, "               `tail -f`, be sure to use `--records-per-batch 1`.\n")
-	fmt.Fprintf(o, "--fit          Rather than printing regression parameters, applies them to\n")
-	fmt.Fprintf(o, "               the input data to compute new fit fields. All input records are\n")
-	fmt.Fprintf(o, "               held in memory until end of input stream. Has effect only for\n")
-	fmt.Fprintf(o, "               linreg-ols, linreg-pca, and logireg.\n")
 	fmt.Fprintf(o, "Only one of -s or --fit may be used.\n")
 	fmt.Fprintf(o, "Example: %s %s -a linreg-pca -f x,y\n", argv0, verb)
 	fmt.Fprintf(o, "Example: %s %s -a linreg-ols,r2 -f x,y -g size,shape\n", argv0, verb)

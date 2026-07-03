@@ -12,21 +12,22 @@ import (
 
 const verbNameGroupBy = "group-by"
 
+var groupByOptions = []OptionSpec{}
+
 var GroupBySetup = TransformerSetup{
 	Verb:         verbNameGroupBy,
 	UsageFunc:    transformerGroupByUsage,
 	ParseCLIFunc: transformerGroupByParseCLI,
 	IgnoresInput: false,
-	Options:      []OptionSpec{},
+	Options:      groupByOptions,
 }
 
 func transformerGroupByUsage(
 	o *os.File,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {comma-separated field names}\n", "mlr", verbNameGroupBy)
-	fmt.Fprint(o, "Outputs records in batches having identical values at specified field names.")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	fmt.Fprintln(o, "Outputs records in batches having identical values at specified field names.")
+	WriteVerbOptions(o, groupByOptions)
 }
 
 func transformerGroupByParseCLI(

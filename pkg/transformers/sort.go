@@ -53,23 +53,25 @@ import (
 
 const verbNameSort = "sort"
 
+var sortOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Lexical ascending sort on the specified field names.", Repeatable: true},
+	{Flag: "-r", Arg: "{a,b,c}", Type: "csv-list", Desc: "Lexical descending sort on the specified field names.", Repeatable: true},
+	{Flag: "-c", Arg: "{a,b,c}", Type: "csv-list", Desc: "Case-folded lexical ascending sort on the specified field names.", Repeatable: true},
+	{Flag: "-cr", Arg: "{a,b,c}", Type: "csv-list", Desc: "Case-folded lexical descending sort on the specified field names.", Repeatable: true},
+	{Flag: "-n", Arg: "{a,b,c}", Type: "csv-list", Desc: "Numerical ascending sort on the specified field names; nulls sort last.", Repeatable: true},
+	{Flag: "-nf", Arg: "{a,b,c}", Type: "csv-list", Desc: "Same as -n.", Repeatable: true},
+	{Flag: "-nr", Arg: "{a,b,c}", Type: "csv-list", Desc: "Numerical descending sort on the specified field names; nulls sort first.", Repeatable: true},
+	{Flag: "-t", Arg: "{a,b,c}", Type: "csv-list", Desc: "Natural ascending sort on the specified field names.", Repeatable: true},
+	{Flag: "-b", Type: "bool", Desc: "Move sort fields to start of record, as in reorder -b."},
+	{Flag: "-tr", Aliases: []string{"-rt"}, Arg: "{a,b,c}", Type: "csv-list", Desc: "Natural descending sort on the specified field names.", Repeatable: true},
+}
+
 var SortSetup = TransformerSetup{
 	Verb:         verbNameSort,
 	UsageFunc:    transformerSortUsage,
 	ParseCLIFunc: transformerSortParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Lexical ascending sort on the specified field names.", Repeatable: true},
-		{Flag: "-r", Arg: "{a,b,c}", Type: "csv-list", Desc: "Lexical descending sort on the specified field names.", Repeatable: true},
-		{Flag: "-c", Arg: "{a,b,c}", Type: "csv-list", Desc: "Case-folded lexical ascending sort on the specified field names.", Repeatable: true},
-		{Flag: "-cr", Arg: "{a,b,c}", Type: "csv-list", Desc: "Case-folded lexical descending sort on the specified field names.", Repeatable: true},
-		{Flag: "-n", Arg: "{a,b,c}", Type: "csv-list", Desc: "Numerical ascending sort on the specified field names; nulls sort last.", Repeatable: true},
-		{Flag: "-nf", Arg: "{a,b,c}", Type: "csv-list", Desc: "Same as -n.", Repeatable: true},
-		{Flag: "-nr", Arg: "{a,b,c}", Type: "csv-list", Desc: "Numerical descending sort on the specified field names; nulls sort first.", Repeatable: true},
-		{Flag: "-t", Arg: "{a,b,c}", Type: "csv-list", Desc: "Natural ascending sort on the specified field names.", Repeatable: true},
-		{Flag: "-tr", Arg: "{a,b,c}", Type: "csv-list", Desc: "Natural descending sort on the specified field names.", Repeatable: true},
-		{Flag: "-b", Type: "bool", Desc: "Move sort fields to start of record, as in reorder -b."},
-	},
+	Options:      sortOptions,
 }
 
 func transformerSortUsage(
@@ -82,18 +84,7 @@ func transformerSortUsage(
 	fmt.Fprintf(o, "specified sort order.) The sort is stable: records that compare equal will sort\n")
 	fmt.Fprintf(o, "in the order they were encountered in the input record stream.\n")
 	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f  {comma-separated field names}  Lexical ascending\n")
-	fmt.Fprintf(o, "-r  {comma-separated field names}  Lexical descending\n")
-	fmt.Fprintf(o, "-c  {comma-separated field names}  Case-folded lexical ascending\n")
-	fmt.Fprintf(o, "-cr {comma-separated field names}  Case-folded lexical descending\n")
-	fmt.Fprintf(o, "-n  {comma-separated field names}  Numerical ascending; nulls sort last\n")
-	fmt.Fprintf(o, "-nf {comma-separated field names}  Same as -n\n")
-	fmt.Fprintf(o, "-nr {comma-separated field names}  Numerical descending; nulls sort first\n")
-	fmt.Fprintf(o, "-t  {comma-separated field names}  Natural ascending\n")
-	fmt.Fprintf(o, "-b                                 Move sort fields to start of record, as in reorder -b\n")
-	fmt.Fprintf(o, "-tr|-rt {comma-separated field names}  Natural descending\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, sortOptions)
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Example:\n")
 	fmt.Fprintf(o, "  %s %s -f a,b -nr x,y,z\n", "mlr", verbNameSort)

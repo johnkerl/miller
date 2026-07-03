@@ -12,15 +12,17 @@ import (
 
 const verbNameGap = "gap"
 
+var gapOptions = []OptionSpec{
+	{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Print a gap whenever values of these fields (e.g. a,b,c) changes."},
+	{Flag: "-n", Arg: "{n}", Type: "int", Desc: "Print a gap every n records. Ignored if -g is present."},
+}
+
 var GapSetup = TransformerSetup{
 	Verb:         verbNameGap,
 	UsageFunc:    transformerGapUsage,
 	ParseCLIFunc: transformerGapParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Print a gap whenever values of these fields (e.g. a,b,c) changes."},
-		{Flag: "-n", Arg: "{n}", Type: "int", Desc: "Print a gap every n records."},
-	},
+	Options:      gapOptions,
 }
 
 func transformerGapUsage(
@@ -28,14 +30,8 @@ func transformerGapUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameGap)
 	fmt.Fprint(o, "Emits an empty record every n records, or when certain values change.\n")
-	fmt.Fprintf(o, "Options:\n")
-
-	fmt.Fprintf(o, "Emits an empty record every n records, or when certain values change.\n")
-	fmt.Fprintf(o, "-g {a,b,c} Print a gap whenever values of these fields (e.g. a,b,c) changes.\n")
-	fmt.Fprintf(o, "-n {n} Print a gap every n records.\n")
 	fmt.Fprintf(o, "One of -f or -g is required.\n")
-	fmt.Fprintf(o, "-n is ignored if -g is present.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, gapOptions)
 }
 
 func transformerGapParseCLI(

@@ -13,16 +13,18 @@ import (
 
 const verbNameTemplate = "template"
 
+var templateOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Comma-separated field names for template, e.g. a,b,c."},
+	{Flag: "-t", Arg: "{filename}", Type: "filename", Desc: "CSV file whose header line will be used for template."},
+	{Flag: "--fill-with", Arg: "{filler string}", Type: "string", Desc: "What to fill absent fields with. Defaults to the empty string."},
+}
+
 var TemplateSetup = TransformerSetup{
 	Verb:         verbNameTemplate,
 	UsageFunc:    transformerTemplateUsage,
 	ParseCLIFunc: transformerTemplateParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Comma-separated field names for template, e.g. a,b,c."},
-		{Flag: "-t", Arg: "{filename}", Type: "filename", Desc: "CSV file whose header line will be used for template."},
-		{Flag: "--fill-with", Arg: "{filler string}", Type: "string", Desc: "What to fill absent fields with. Defaults to the empty string."},
-	},
+	Options:      templateOptions,
 }
 
 func transformerTemplateUsage(
@@ -32,11 +34,7 @@ func transformerTemplateUsage(
 	fmt.Fprintf(o, "Places input-record fields in the order specified by list of column names.\n")
 	fmt.Fprintf(o, "If the input record is missing a specified field, it will be filled with the fill-with.\n")
 	fmt.Fprintf(o, "If the input record possesses an unspecified field, it will be discarded.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, " -f {a,b,c} Comma-separated field names for template, e.g. a,b,c.\n")
-	fmt.Fprintf(o, " -t {filename} CSV file whose header line will be used for template.\n")
-	fmt.Fprintf(o, "--fill-with {filler string}  What to fill absent fields with. Defaults to the empty string.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, templateOptions)
 	fmt.Fprintf(o, "Example:\n")
 	fmt.Fprintf(o, "* Specified fields are a,b,c.\n")
 	fmt.Fprintf(o, "* Input record is c=3,a=1,f=6.\n")

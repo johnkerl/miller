@@ -14,27 +14,24 @@ import (
 
 const verbNameSurv = "surv"
 
+var survOptions = []OptionSpec{
+	{Flag: "-d", Arg: "{field}", Type: "string", Desc: "Name of duration field (time-to-event or censoring)."},
+	{Flag: "-s", Arg: "{field}", Type: "string", Desc: "Name of status field (0=censored, 1=event)."},
+}
+
 // SurvSetup defines the surv verb: Kaplan-Meier survival curve.
 var SurvSetup = TransformerSetup{
 	Verb:         verbNameSurv,
 	UsageFunc:    transformerSurvUsage,
 	ParseCLIFunc: transformerSurvParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-d", Arg: "{field}", Type: "string", Desc: "Name of duration field (time-to-event or censoring)."},
-		{Flag: "-s", Arg: "{field}", Type: "string", Desc: "Name of status field (0=censored, 1=event)."},
-	},
+	Options:      survOptions,
 }
 
 func transformerSurvUsage(o *os.File) {
 	fmt.Fprintf(o, "Usage: %s %s -d {duration-field} -s {status-field}\n", "mlr", verbNameSurv)
-	fmt.Fprint(o, `
-Estimate Kaplan-Meier survival curve (right-censored).
-Options:
-  -d {field}   Name of duration field (time-to-event or censoring).
-  -s {field}   Name of status field (0=censored, 1=event).
-  -h, --help   Show this message.
-`)
+	fmt.Fprint(o, "\nEstimate Kaplan-Meier survival curve (right-censored).\n")
+	WriteVerbOptions(o, survOptions)
 }
 
 func transformerSurvParseCLI(

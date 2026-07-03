@@ -15,18 +15,20 @@ import (
 
 const verbNameReorder = "reorder"
 
+var reorderOptions = []OptionSpec{
+	{Flag: "-e", Type: "bool", Desc: "Put specified field names at record end: default is to put them at record start."},
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to reorder."},
+	{Flag: "-r", Arg: "{a,b,c}", Type: "csv-list", Desc: "Treat field names as regular expressions. Matched fields are moved to start or end in record order. Example: -r '^YYY,^XXX' puts all YYY- and XXX-prefixed fields first (in record order), then the rest."},
+	{Flag: "-b", Arg: "{x}", Type: "string", Desc: "Put field names specified with -f before field name specified by {x}, if any. If {x} isn't present in a given record, the specified fields will not be moved."},
+	{Flag: "-a", Arg: "{x}", Type: "string", Desc: "Put field names specified with -f after field name specified by {x}, if any. If {x} isn't present in a given record, the specified fields will not be moved."},
+}
+
 var ReorderSetup = TransformerSetup{
 	Verb:         verbNameReorder,
 	UsageFunc:    transformerReorderUsage,
 	ParseCLIFunc: transformerReorderParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to reorder."},
-		{Flag: "-e", Type: "bool", Desc: "Put specified field names at record end: default is to put them at record start."},
-		{Flag: "-r", Arg: "{a,b,c}", Type: "csv-list", Desc: "Treat field names as regular expressions. Matched fields are moved to start or end in record order."},
-		{Flag: "-b", Arg: "{x}", Type: "string", Desc: "Put field names specified with -f before field name specified by {x}, if any."},
-		{Flag: "-a", Arg: "{x}", Type: "string", Desc: "Put field names specified with -f after field name specified by {x}, if any."},
-	},
+	Options:      reorderOptions,
 }
 
 func transformerReorderUsage(
@@ -38,19 +40,7 @@ func transformerReorderUsage(
 	fmt.Fprint(o,
 		`Moves specified names to start of record, or end of record.
 `)
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-e Put specified field names at record end: default is to put them at record start.\n")
-	fmt.Fprintf(o, "-f {a,b,c} Field names to reorder.\n")
-	fmt.Fprintf(o, "-r        Treat field names as regular expressions. Matched fields are moved\n")
-	fmt.Fprintf(o, "          to start or end in record order. Example: -r '^YYY,^XXX' puts all\n")
-	fmt.Fprintf(o, "          YYY- and XXX-prefixed fields first (in record order), then the rest.\n")
-	fmt.Fprintf(o, "-b {x}     Put field names specified with -f before field name specified by {x},\n")
-	fmt.Fprintf(o, "           if any. If {x} isn't present in a given record, the specified fields\n")
-	fmt.Fprintf(o, "           will not be moved.\n")
-	fmt.Fprintf(o, "-a {x}     Put field names specified with -f after field name specified by {x},\n")
-	fmt.Fprintf(o, "           if any. If {x} isn't present in a given record, the specified fields\n")
-	fmt.Fprintf(o, "           will not be moved.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, reorderOptions)
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Examples:\n")
 	fmt.Fprintf(o, "%s %s    -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"a=1,b=2,d=4,c=3\".\n", argv0, verb)

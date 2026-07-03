@@ -12,12 +12,14 @@ import (
 
 const verbNameSec2GMTDate = "sec2gmtdate"
 
+var sec2GMTDateOptions = []OptionSpec{}
+
 var Sec2GMTDateSetup = TransformerSetup{
 	Verb:         verbNameSec2GMTDate,
 	UsageFunc:    transformerSec2GMTDateUsage,
 	ParseCLIFunc: transformerSec2GMTDateParseCLI,
 	IgnoresInput: false,
-	Options:      []OptionSpec{},
+	Options:      sec2GMTDateOptions,
 }
 
 func transformerSec2GMTDateUsage(
@@ -30,6 +32,7 @@ func transformerSec2GMTDateUsage(
 	fmt.Fprintf(o, "  ../c/mlr sec2gmtdate time1,time2\n")
 	fmt.Fprintf(o, "is the same as\n")
 	fmt.Fprintf(o, "  ../c/mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'\n")
+	WriteVerbOptions(o, sec2GMTDateOptions)
 }
 
 func transformerSec2GMTDateParseCLI(

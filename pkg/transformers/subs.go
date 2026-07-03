@@ -17,16 +17,24 @@ const verbNameSub = "sub"
 const verbNameGsub = "gsub"
 const verbNameSsub = "ssub"
 
+var subOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to apply substitution to."},
+	{Flag: "-r", Arg: "{regex}", Type: "regex", Desc: "Regular expression for field names to apply substitution to."},
+	{Flag: "-a", Type: "bool", Desc: "Apply substitution to all fields."},
+}
+
 var SubSetup = TransformerSetup{
 	Verb:         verbNameSub,
 	UsageFunc:    transformerSubUsage,
 	ParseCLIFunc: transformerSubParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to apply substitution to."},
-		{Flag: "-r", Arg: "{regex}", Type: "regex", Desc: "Regular expression for field names to apply substitution to."},
-		{Flag: "-a", Type: "bool", Desc: "Apply substitution to all fields."},
-	},
+	Options:      subOptions,
+}
+
+var gsubOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to apply substitution to."},
+	{Flag: "-r", Arg: "{regex}", Type: "regex", Desc: "Regular expression for field names to apply substitution to."},
+	{Flag: "-a", Type: "bool", Desc: "Apply substitution to all fields."},
 }
 
 var GsubSetup = TransformerSetup{
@@ -34,11 +42,13 @@ var GsubSetup = TransformerSetup{
 	UsageFunc:    transformerGsubUsage,
 	ParseCLIFunc: transformerGsubParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to apply substitution to."},
-		{Flag: "-r", Arg: "{regex}", Type: "regex", Desc: "Regular expression for field names to apply substitution to."},
-		{Flag: "-a", Type: "bool", Desc: "Apply substitution to all fields."},
-	},
+	Options:      gsubOptions,
+}
+
+var ssubOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to apply substitution to."},
+	{Flag: "-r", Arg: "{regex}", Type: "regex", Desc: "Regular expression for field names to apply substitution to."},
+	{Flag: "-a", Type: "bool", Desc: "Apply substitution to all fields."},
 }
 
 var SsubSetup = TransformerSetup{
@@ -46,11 +56,7 @@ var SsubSetup = TransformerSetup{
 	UsageFunc:    transformerSsubUsage,
 	ParseCLIFunc: transformerSsubParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to apply substitution to."},
-		{Flag: "-r", Arg: "{regex}", Type: "regex", Desc: "Regular expression for field names to apply substitution to."},
-		{Flag: "-a", Type: "bool", Desc: "Apply substitution to all fields."},
-	},
+	Options:      ssubOptions,
 }
 
 func transformerSubUsage(
@@ -62,11 +68,7 @@ func transformerSubUsage(
 	fmt.Fprintf(o, "The replacement string supports C-style backslash escapes such as \\n, \\t,\n")
 	fmt.Fprintf(o, "and \\x1f. Write \\\\ to get a literal backslash.\n")
 	fmt.Fprintf(o, "See also the `gsub` and `ssub` verbs.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f {a,b,c}  Field names to convert.\n")
-	fmt.Fprintf(o, "-r {regex}  Regular expression for field names to convert.\n")
-	fmt.Fprintf(o, "-a          Convert all fields.\n")
-	fmt.Fprintf(o, "-h|--help   Show this message.\n")
+	WriteVerbOptions(o, subOptions)
 }
 
 func transformerGsubUsage(
@@ -78,11 +80,7 @@ func transformerGsubUsage(
 	fmt.Fprintf(o, "The replacement string supports C-style backslash escapes such as \\n, \\t,\n")
 	fmt.Fprintf(o, "and \\x1f. Write \\\\ to get a literal backslash.\n")
 	fmt.Fprintf(o, "See also the `sub` and `ssub` verbs.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f {a,b,c}  Field names to convert.\n")
-	fmt.Fprintf(o, "-r {regex}  Regular expression for field names to convert.\n")
-	fmt.Fprintf(o, "-a          Convert all fields.\n")
-	fmt.Fprintf(o, "-h|--help   Show this message.\n")
+	WriteVerbOptions(o, gsubOptions)
 }
 
 func transformerSsubUsage(
@@ -94,11 +92,7 @@ func transformerSsubUsage(
 	fmt.Fprintf(o, "Both the search and replacement strings support C-style backslash escapes such\n")
 	fmt.Fprintf(o, "as \\n, \\t, and \\x1f. Write \\\\ to get a literal backslash.\n")
 	fmt.Fprintf(o, "See also the `gsub` and `sub` verbs.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f {a,b,c}  Field names to convert.\n")
-	fmt.Fprintf(o, "-r {regex}  Regular expression for field names to convert.\n")
-	fmt.Fprintf(o, "-a          Convert all fields.\n")
-	fmt.Fprintf(o, "-h|--help   Show this message.\n")
+	WriteVerbOptions(o, ssubOptions)
 }
 
 type subConstructorFunc func(

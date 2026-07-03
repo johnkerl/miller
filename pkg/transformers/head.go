@@ -11,15 +11,17 @@ import (
 
 const verbNameHead = "head"
 
+var headOptions = []OptionSpec{
+	{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Optional group-by-field names for head counts, e.g. a,b,c."},
+	{Flag: "-n", Arg: "{n}", Type: "int", Desc: "Head-count to print. Default 10. A negative count, e.g. -n -2, passes through all but the last n records, optionally by category."},
+}
+
 var HeadSetup = TransformerSetup{
 	Verb:         verbNameHead,
 	UsageFunc:    transformerHeadUsage,
 	ParseCLIFunc: transformerHeadParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Optional group-by-field names for head counts, e.g. a,b,c."},
-		{Flag: "-n", Arg: "{n}", Type: "int", Desc: "Head-count to print. Default 10. A negative value, e.g. -n -2, passes through all but the last n records, optionally by category."},
-	},
+	Options:      headOptions,
 }
 
 func transformerHeadUsage(
@@ -28,13 +30,7 @@ func transformerHeadUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameHead)
 	fmt.Fprintf(o, "Passes through the first n records, optionally by category.\n")
 	fmt.Fprintf(o, "Without -g, ceases consuming more input (i.e. is fast) when n records have been read.\n")
-
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.\n")
-	fmt.Fprintf(o, "-n {n} Head-count to print. Default 10.\n")
-	fmt.Fprintf(o, "           A negative count, e.g. -n -2, passes through all but the last n records,\n")
-	fmt.Fprintf(o, "           optionally by category.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, headOptions)
 }
 
 func transformerHeadParseCLI(
