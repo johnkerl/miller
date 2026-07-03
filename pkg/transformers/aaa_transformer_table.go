@@ -22,6 +22,7 @@ var TRANSFORMER_LOOKUP_TABLE = []TransformerSetup{
 	CountSimilarSetup,
 	CutSetup,
 	DecimateSetup,
+	DescribeSetup,
 	FillDownSetup,
 	FillEmptySetup,
 	FilterSetup,

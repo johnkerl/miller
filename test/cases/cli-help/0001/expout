@@ -161,6 +161,35 @@ Options:
 -h|--help  Show this message.
 
 ================================================================
+describe
+Usage: mlr describe [options]
+Shows a compact schema for the input data: field names, types, and value shape.
+Emits one output record per input field, with types seen, counts, cardinality,
+min/max, and (for low-cardinality fields) the complete set of distinct values.
+
+Output fields, one record per input field:
+  field_name      name of the input field
+  types           map from type name (int, string, etc.) to occurrence count
+  count           number of records in which the field appears
+  null_count      count of field values either empty string or JSON null
+  distinct_count  count of distinct values for the field
+  min, max        minimum/maximum field value (works for strings as well as numbers)
+  values          all distinct values, in order first seen -- only for fields
+                  whose distinct_count is within the -n limit
+
+Notes:
+* Distinctness is computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
+* Use `mlr --ojson describe` for a machine-readable JSON document; in tabular
+  output formats the types map and values array are flattened.
+* See also the summary verb, which reports summary statistics (mean, percentiles, etc.).
+
+Options:
+-n|--max-values {n} List a field's distinct values only if it has at most {n} of
+                    them; 0 suppresses the values array entirely. Defaults to
+                    20.
+-h|--help           Show this message.
+
+================================================================
 fill-down
 Usage: mlr fill-down [options]
 If a given record has a missing value for a given field, fill that from

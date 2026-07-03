@@ -1,0 +1,57 @@
+[
+{
+  "field_name": "a",
+  "types": {
+    "string": 10
+  },
+  "count": 10,
+  "null_count": 0,
+  "distinct_count": 5,
+  "min": "eks",
+  "max": "zee"
+},
+{
+  "field_name": "b",
+  "types": {
+    "string": 10
+  },
+  "count": 10,
+  "null_count": 0,
+  "distinct_count": 3,
+  "min": "pan",
+  "max": "zee"
+},
+{
+  "field_name": "i",
+  "types": {
+    "int": 10
+  },
+  "count": 10,
+  "null_count": 0,
+  "distinct_count": 10,
+  "min": 1,
+  "max": 10
+},
+{
+  "field_name": "x",
+  "types": {
+    "float": 10
+  },
+  "count": 10,
+  "null_count": 0,
+  "distinct_count": 10,
+  "min": 0.03144188,
+  "max": 0.75867996
+},
+{
+  "field_name": "y",
+  "types": {
+    "float": 10
+  },
+  "count": 10,
+  "null_count": 0,
+  "distinct_count": 10,
+  "min": 0.13418874,
+  "max": 0.97618139
+}
+]

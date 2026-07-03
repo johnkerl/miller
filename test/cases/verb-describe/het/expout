@@ -1,0 +1,122 @@
+[
+{
+  "field_name": "a",
+  "types": {
+    "string": 8
+  },
+  "count": 8,
+  "null_count": 0,
+  "distinct_count": 4,
+  "min": "eks",
+  "max": "zee",
+  "values": ["pan", "eks", "wye", "zee"]
+},
+{
+  "field_name": "b",
+  "types": {
+    "string": 8
+  },
+  "count": 8,
+  "null_count": 0,
+  "distinct_count": 3,
+  "min": "pan",
+  "max": "zee",
+  "values": ["pan", "wye", "zee"]
+},
+{
+  "field_name": "i",
+  "types": {
+    "int": 9
+  },
+  "count": 9,
+  "null_count": 0,
+  "distinct_count": 9,
+  "min": 1,
+  "max": 10,
+  "values": [1, 2, 3, 4, 5, 6, 8, 9, 10]
+},
+{
+  "field_name": "x",
+  "types": {
+    "float": 9
+  },
+  "count": 9,
+  "null_count": 0,
+  "distinct_count": 9,
+  "min": 0.03144188,
+  "max": 0.75867996,
+  "values": [0.34679014, 0.75867996, 0.20460331, 0.38139939, 0.52712616, 0.61178406, 0.59855401, 0.03144188, 0.50262601]
+},
+{
+  "field_name": "y",
+  "types": {
+    "float": 9
+  },
+  "count": 9,
+  "null_count": 0,
+  "distinct_count": 9,
+  "min": 0.13418874,
+  "max": 0.95261836,
+  "values": [0.72680286, 0.52215111, 0.33831853, 0.13418874, 0.86362447, 0.49322129, 0.18788492, 0.74955076, 0.95261836]
+},
+{
+  "field_name": "aaa",
+  "types": {
+    "string": 2
+  },
+  "count": 2,
+  "null_count": 0,
+  "distinct_count": 2,
+  "min": "hat",
+  "max": "wye",
+  "values": ["wye", "hat"]
+},
+{
+  "field_name": "bbb",
+  "types": {
+    "string": 2
+  },
+  "count": 2,
+  "null_count": 0,
+  "distinct_count": 1,
+  "min": "wye",
+  "max": "wye",
+  "values": ["wye"]
+},
+{
+  "field_name": "xxx",
+  "types": {
+    "float": 1
+  },
+  "count": 1,
+  "null_count": 0,
+  "distinct_count": 1,
+  "min": 0.57328892,
+  "max": 0.57328892,
+  "values": [0.57328892]
+},
+{
+  "field_name": "iii",
+  "types": {
+    "int": 1
+  },
+  "count": 1,
+  "null_count": 0,
+  "distinct_count": 1,
+  "min": 7,
+  "max": 7,
+  "values": [7]
+},
+{
+  "field_name": "yyy",
+  "types": {
+    "float": 1
+  },
+  "count": 1,
+  "null_count": 0,
+  "distinct_count": 1,
+  "min": 0.97618139,
+  "max": 0.97618139,
+  "values": [0.97618139]
+}
+]

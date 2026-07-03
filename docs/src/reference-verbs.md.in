@@ -329,6 +329,16 @@ GENMD-RUN-COMMAND
 mlr decimate --help
 GENMD-EOF
 
+## describe
+
+GENMD-RUN-COMMAND
+mlr describe --help
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson describe example.csv
+GENMD-EOF
+
 ## fill-down
 
 GENMD-RUN-COMMAND

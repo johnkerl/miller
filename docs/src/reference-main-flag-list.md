@@ -299,6 +299,7 @@ These are flags which don't fit into any other category.
 
 **Flags:**
 
+* `--errors-json`: Emit parse errors as a JSON object to stderr instead of a plain text message. Intended for AI agents and scripts that branch on error kind rather than regex-matching prose. Equivalent to setting the `MLR_ERRORS_JSON` environment variable to a truthy value.
 * `--fflush`: Force buffered output to be written after every output record. The default is flush output after every record if the output is to the terminal, or less often if the output is to a file or a pipe. The default is a significant performance optimization for large files.  Use this flag to force frequent updates even when output is to a pipe or file, at a performance cost.
 * `--files {filename}`: Use this to specify a file which itself contains, one per line, names of input files. May be used more than once.
 * `--from {filename}`: Use this to specify an input file before the verb(s), rather than after. May be used more than once. Example: `mlr --from a.dat --from b.dat cat` is the same as `mlr cat a.dat b.dat`.
