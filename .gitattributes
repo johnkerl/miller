@@ -25,3 +25,7 @@ out binary
 *.pprint-crlf binary
 *.dkvp-crlf binary
 *.bin binary
+
+# Embedded into the mlr binary via go:embed: bytes must be identical on all
+# platforms, in particular not CRLF on Windows checkouts.
+pkg/terminals/mcp/SKILL.md text eol=lf
