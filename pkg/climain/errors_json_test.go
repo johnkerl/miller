@@ -175,3 +175,27 @@ func TestCategorizeGenericFallback(t *testing.T) {
 		t.Errorf("kind: got %q, want generic", se.Kind)
 	}
 }
+
+func TestCategorizeDSLParseError(t *testing.T) {
+	// The DSL parser (pkg/parsing/parser) emits bare "parse error: ..."
+	// messages; these should categorize as dsl-parse-error, e.g. for
+	// `mlr put --explain` with --errors-json.
+	err := fmt.Errorf("parse error: unexpected equals (\"=\")")
+	se := categorize(err)
+	if se.Kind != "dsl-parse-error" {
+		t.Errorf("kind: got %q, want dsl-parse-error", se.Kind)
+	}
+	if se.Hint == "" {
+		t.Error("hint should be non-empty for dsl-parse-error")
+	}
+}
+
+func TestCategorizeDSLParseErrorNotCSV(t *testing.T) {
+	// The CSV reader's "parse error on line ..." is a stream-time error and
+	// should not be mistaken for a DSL parse error by the substring match.
+	err := fmt.Errorf("parse error on line 3, column 5: bare \" in non-quoted-field")
+	se := categorize(err)
+	if se.Kind == "dsl-parse-error" {
+		t.Errorf("kind: got dsl-parse-error, want non-DSL categorization for a CSV parse error")
+	}
+}

@@ -584,6 +584,12 @@ This is simply a copy of what you should see on running `man mlr` at a command p
 
 1mMISCELLANEOUS FLAGS0m
        These are flags which don't fit into any other category.
+       --errors-json            Emit parse errors as a JSON object to stderr instead
+                                of a plain text message. Intended for AI agents and
+                                scripts that branch on error kind rather than
+                                regex-matching prose. Equivalent to setting the
+                                `MLR_ERRORS_JSON` environment variable to a truthy
+                                value.
        --fflush                 Force buffered output to be written after every
                                 output record. The default is flush output after
                                 every record if the output is to the terminal, or
@@ -998,57 +1004,58 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Replaces a numeric field with a number of asterisks, allowing for cheesy
        bar plots. These align best with --opprint or --oxtab output format.
        Options:
-       -f   {a,b,c}      Field names to convert to bars.
-       --lo {lo}         Lower-limit value for min-width bar: default '0.000000'.
-       --hi {hi}         Upper-limit value for max-width bar: default '100.000000'.
-       -w   {n}          Bar-field width: default '40'.
-       --auto            Automatically computes limits, ignoring --lo and --hi.
-                         Holds all records in memory before producing any output.
-       -c   {character}  Fill character: default '*'.
-       -x   {character}  Out-of-bounds character: default '#'.
-       -b   {character}  Blank character: default '.'.
+       -f {a,b,c}     Field names to convert to bars.
+       --lo {lo}      Lower-limit value for min-width bar: default '0.000000'.
+       --hi {hi}      Upper-limit value for max-width bar: default '100.000000'.
+       -w {n}         Bar-field width: default '40'.
+       --auto         Automatically computes limits, ignoring --lo and --hi. Holds all
+                      records in memory before producing any output.
+       -c {character} Fill character: default '*'.
+       -x {character} Out-of-bounds character: default '#'.
+       -b {character} Blank character: default '.'.
+       -h|--help      Show this message.
        Nominally the fill, out-of-bounds, and blank characters will be strings of length 1.
        However you can make them all longer if you so desire.
-       -h|--help Show this message.
 
    1mbootstrap0m
        Usage: mlr bootstrap [options]
        Emits an n-sample, with replacement, of the input records.
        See also mlr sample and mlr shuffle.
        Options:
-        -n Number of samples to output. Defaults to number of input records.
-           Must be non-negative.
+       -n {n}    Number of samples to output. Defaults to number of input records. Must
+                 be non-negative.
        -h|--help Show this message.
 
    1mcase0m
        Usage: mlr case [options]
        Uppercases strings in record keys and/or values.
        Options:
-       -k  Case only keys, not keys and values.
-       -v  Case only values, not keys and values.
-       -f  {a,b,c} Specify which field names to case (default: all)
-       -u  Convert to uppercase
-       -l  Convert to lowercase
-       -s  Convert to sentence case (capitalize first letter)
-       -t  Convert to title case (capitalize words)
-       -h|--help Show this message.
+       -k         Case only keys, not keys and values.
+       -v         Case only values, not keys and values.
+       -f {a,b,c} Specify which field names to case (default: all).
+       -u         Convert to uppercase.
+       -l         Convert to lowercase.
+       -s         Convert to sentence case (capitalize first letter).
+       -t         Convert to title case (capitalize words).
+       -h|--help  Show this message.
 
    1mcat0m
        Usage: mlr cat [options]
        Passes input records directly to output. Most useful for format conversion.
        Options:
        -n         Prepend field "n" to each record with record-counter starting at 1.
-       -N {name}  Prepend field {name} to each record with record-counter starting at 1.
-       -g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c
+       -N {name}  Prepend field {name} to each record with record-counter starting at
+                  1.
+       -g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c.
        --filename Prepend current filename to each record.
        --filenum  Prepend current filenum (1-up) to each record.
-       -h|--help Show this message.
+       -h|--help  Show this message.
 
    1mcheck0m
        Usage: mlr check [options]
        Consumes records without printing any output,
-       Useful for doing a well-formatted check on input data.
        with the exception that warnings are printed to stderr.
+       Useful for doing a well-formatted check on input data.
        Current checks are:
        * Data are parseable
        * If any key is the empty string
@@ -1064,11 +1071,11 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        and clean_whitespace.
 
        Options:
-       -k|--keys-only    Do not touch values.
-       -v|--values-only  Do not touch keys.
+       -k|--keys-only   Do not touch values.
+       -v|--values-only Do not touch keys.
+       -h|--help        Show this message.
        It is an error to specify -k as well as -v -- to clean keys and values,
        leave off -k as well as -v.
-       -h|--help Show this message.
 
    1mcount-distinct0m
        Usage: mlr count-distinct [options]
@@ -1076,25 +1083,26 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Same as uniq -c.
 
        Options:
-       -f {a,b,c}    Field names for distinct count.
-       -x {a,b,c}    Field names to exclude for distinct count: use each record's others instead.
-       -n            Show only the number of distinct values. Not compatible with -u.
-       -o {name}     Field name for output count. Default "count".
-                     Ignored with -u.
-       -u            Do unlashed counts for multiple field names. With -f a,b and
-                     without -u, computes counts for distinct combinations of a
-                     and b field values. With -f a,b and with -u, computes counts
-                     for distinct a field values and counts for distinct b field
-                     values separately.
+       -f {a,b,c} Field names for distinct count (synonym for -g).
+       -g {a,b,c} Field names for distinct count.
+       -x {a,b,c} Field names to exclude for distinct count; use each record's other
+                  fields instead.
+       -n         Show only the number of distinct values. Not compatible with -u.
+       -o {name}  Field name for output count. Default "count". Ignored with -u.
+       -u         Do unlashed counts for multiple field names. With -f a,b and without
+                  -u, computes counts for distinct combinations of a and b field
+                  values. With -f a,b and with -u, computes counts for distinct a field
+                  values and counts for distinct b field values separately.
+       -h|--help  Show this message.
 
    1mcount0m
        Usage: mlr count [options]
        Prints number of records, optionally grouped by distinct values for specified field names.
        Options:
        -g {a,b,c} Optional group-by-field names for counts, e.g. a,b,c
-       -n {n} Show only the number of distinct values. Not interesting without -g.
-       -o {name} Field name for output-count. Default "count".
-       -h|--help Show this message.
+       -n         Show only the number of distinct values. Not interesting without -g.
+       -o {name}  Field name for output-count. Default "count".
+       -h|--help  Show this message.
 
    1mcount-similar0m
        Usage: mlr count-similar [options]
@@ -1102,22 +1110,22 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        the number of other records having the same group-by field values.
        Options:
        -g {a,b,c} Group-by-field names for counts, e.g. a,b,c
-       -o {name} Field name for output-counts. Defaults to "count".
-       -h|--help Show this message.
+       -o {name}  Field name for output-counts. Defaults to "count".
+       -h|--help  Show this message.
 
    1mcut0m
        Usage: mlr cut [options]
        Passes through input records with specified fields included/excluded.
        Options:
-        -f {a,b,c} Comma-separated field names for cut, e.g. a,b,c.
-        -o Retain fields in the order specified here in the argument list.
-           Default is to retain them in the order found in the input data.
-        -x|--complement  Exclude, rather than include, field names specified by -f.
-        -r Treat field names as regular expressions. "ab", "a.*b" will
-          match any field name containing the substring "ab" or matching
-          "a.*b", respectively; anchors of the form "^ab$", "^a.*b$" may
-          be used.
-       -h|--help Show this message.
+       -f {a,b,c}      Comma-separated field names to include or exclude, e.g. a,b,c.
+       -o              Retain fields in the order specified by -f rather than in
+                       input-record order.
+       -x|--complement Exclude, rather than include, the field names specified by -f.
+       -r              Treat field names as regular expressions. "ab", "a.*b" will
+                       match any field name containing the substring "ab" or matching
+                       "a.*b", respectively; anchors of the form "^ab$", "^a.*b$" may
+                       be used.
+       -h|--help       Show this message.
        Examples:
          mlr cut -f hostname,status
          mlr cut -x -f hostname,status
@@ -1129,11 +1137,11 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Usage: mlr decimate [options]
        Passes through one of every n records, optionally by category.
        Options:
-        -b Decimate by printing first of every n.
-        -e Decimate by printing last of every n (default).
-        -g {a,b,c} Optional group-by-field names for decimate counts, e.g. a,b,c.
-        -n {n} Decimation factor (default 10).
-       -h|--help Show this message.
+       -b         Decimate by printing first of every n.
+       -e         Decimate by printing last of every n (default).
+       -g {a,b,c} Optional group-by-field names for decimate counts, e.g. a,b,c.
+       -n {n}     Decimation factor (default 10).
+       -h|--help  Show this message.
 
    1mfill-down0m
        Usage: mlr fill-down [options]
@@ -1143,13 +1151,14 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        With -a, a field is 'missing' only if it is absent.
 
        Options:
-        --all Operate on all fields in the input.
-        -a|--only-if-absent If a given record has a missing value for a given field,
-            fill that from the corresponding value from a previous record, if any.
-            By default, a 'missing' field either is absent, or has the empty-string value.
-            With -a, a field is 'missing' only if it is absent.
-        -f  Field names for fill-down.
-        -h|--help Show this message.
+       --all               Operate on all fields in the input.
+       -a|--only-if-absent If a given record has a missing value for a given field,
+                           fill that from the corresponding value from a previous
+                           record, if any. By default, a 'missing' field either is
+                           absent, or has the empty-string value. With -a, a field is
+                           'missing' only if it is absent.
+       -f {a,b,c}          Field names for fill-down.
+       -h|--help           Show this message.
 
    1mfill-empty0m
        Usage: mlr fill-empty [options]
@@ -1157,6 +1166,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Options:
        -v {string} Fill-value: defaults to "N/A"
        -S          Don't infer type -- so '-v 0' would fill string 0 not int 0.
+       -h|--help   Show this message.
 
    1mfilter0m
        Usage: mlr filter [options] {DSL expression}
@@ -1165,56 +1175,53 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        See also: https://miller.readthedocs.io/en/latest/reference-verbs
 
        Options:
-       -f {file name} File containing a DSL expression (see examples below). If the filename
-          is a directory, all *.mlr files in that directory are loaded.
+       -f {file name}  File containing a DSL expression (see examples below). If the
+                       filename is a directory, all *.mlr files in that directory are
+                       loaded.
+       -e {expression} DSL expression to evaluate. You can use this after -f to add an
+                       expression. Example use case: define functions/subroutines in a
+                       file you specify with -f, then call them with an expression you
+                       specify with -e.
+       -s {name=value} Predefines out-of-stream variable @name to have the given value.
+                       Thus mlr put -s foo=97 '$column += @foo' is like mlr put 'begin
+                       {@foo = 97} $column += @foo'. The value part is subject to
+                       type-inferencing. May be specified more than once, e.g. -s
+                       name1=value1 -s name2=value2. Note: the value may be an
+                       environment variable, e.g. -s sequence=$SEQUENCE.
+       -x              Prints records for which {expression} evaluates to false, not
+                       true, i.e. invert the sense of the filter expression. Default
+                       false.
+       -q              Does not include the modified record in the output stream.
+                       Useful for when all desired output is in begin and/or end
+                       blocks.
+       -S              No-op in Miller 6 and above, since type-inferencing is now done
+                       by the record-readers before filter/put is executed. Supported
+                       as a no-op pass-through flag for backward compatibility.
+       -F              No-op in Miller 6 and above, since type-inferencing is now done
+                       by the record-readers before filter/put is executed. Supported
+                       as a no-op pass-through flag for backward compatibility.
+       -w              Print warnings about things like uninitialized variables.
+       -W              Same as -w, but exit the process if there are any warnings.
+       -p              Prints the expression's AST (abstract syntax tree), which gives
+                       full transparency on the precedence and associativity rules of
+                       Miller's grammar, to stdout.
+       -d              Like -p but uses a parenthesized-expression format for the AST.
+       -D              Like -d but with output all on one line.
+       -E              Echo DSL expression before printing parse-tree.
+       -v              Same as -E -p.
+       -X              Exit after parsing but before stream-processing. Useful with
+                       -v/-d/-D, if you only want to look at parser information.
+       --explain       Parse and type-check the DSL expression, report whether it is
+                       valid, and exit without reading the input stream. Exit status is
+                       0 if the expression is valid and non-zero otherwise; combine
+                       with --errors-json for a machine-readable error.
+       -h|--help       Show this message.
 
-       -e {expression} You can use this after -f to add an expression. Example use
-          case: define functions/subroutines in a file you specify with -f, then call
-          them with an expression you specify with -e.
-
-       (If you mix -e and -f then the expressions are evaluated in the order encountered.
+       If you mix -e and -f then the expressions are evaluated in the order encountered.
        Since the expression pieces are simply concatenated, please be sure to use intervening
-       semicolons to separate expressions.)
+       semicolons to separate expressions.
 
-       -s name=value: Predefines out-of-stream variable @name to have
-           Thus mlr put -s foo=97 '$column += @foo' is like
-           mlr put 'begin {@foo = 97} $column += @foo'.
-           The value part is subject to type-inferencing.
-           May be specified more than once, e.g. -s name1=value1 -s name2=value2.
-           Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
-
-       -x (default false) Prints records for which {expression} evaluates to false, not true,
-          i.e. invert the sense of the filter expression.
-
-       -q Does not include the modified record in the output stream.
-          Useful for when all desired output is in begin and/or end blocks.
-
-       -S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
-          by the record-readers before filter/put is executed. Supported as no-op pass-through
-          flags for backward compatibility.
-
-       -h|--help Show this message.
-
-       Parser-info options:
-
-       -w Print warnings about things like uninitialized variables.
-
-       -W Same as -w, but exit the process if there are any warnings.
-
-       -p Prints the expressions's AST (abstract syntax tree), which gives full
-         transparency on the precedence and associativity rules of Miller's grammar,
-         to stdout.
-
-       -d Like -p but uses a parenthesized-expression format for the AST.
-
-       -D Like -d but with output all on one line.
-
-       -E Echo DSL expression before printing parse-tree
-
-       -v Same as -E -p.
-
-       -X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
-          only want to look at parser information.
+       Parser-info options are -w, -W, -p, -d, -D, -E, -v, and -X.
 
        Records will pass the filter depending on the last bare-boolean statement in
        the DSL expression. That can be the result of &lt;, ==, &gt;, etc., the return value of a function call
@@ -1252,9 +1259,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Flattens multi-level maps to single-level ones. Example: field with name 'a'
        and value '{"b": { "c": 4 }}' becomes name 'a.b.c' and value 4.
        Options:
-       -f Comma-separated list of field names to flatten (default all).
-       -s Separator, defaulting to mlr --flatsep value.
-       -h|--help Show this message.
+       -f          Comma-separated list of field names to flatten (default all).
+       -s {string} Separator, defaulting to mlr --flatsep value.
+       -h|--help   Show this message.
 
    1mformat-values0m
        Usage: mlr format-values [options]
@@ -1270,22 +1277,21 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        undefined behavior and/or program crashes.  See your system's "man printf".
 
        Options:
-       -i {integer format} Defaults to "%d".
-                           Examples: "%06lld", "%08llx".
-                           Note that Miller integers are long long so you must use
-                           formats which apply to long long, e.g. with ll in them.
-                           Undefined behavior results otherwise.
-       -f {float format}   Defaults to "%f".
-                           Examples: "%8.3lf", "%.6le".
-                           Note that Miller floats are double-precision so you must
-                           use formats which apply to double, e.g. with l[efg] in them.
-                           Undefined behavior results otherwise.
-       -s {string format}  Defaults to "%s".
-                           Examples: "_%s", "%08s".
-                           Note that you must use formats which apply to string, e.g.
-                           with s in them. Undefined behavior results otherwise.
+       -i {integer format} Integer format string; defaults to "%d". Examples: "%06lld",
+                           "%08llx". Note that Miller integers are long long so you
+                           must use formats which apply to long long, e.g. with ll in
+                           them. Undefined behavior results otherwise.
+       -f {float format}   Float format string; defaults to "%f". Examples: "%8.3lf",
+                           "%.6le". Note that Miller floats are double-precision so you
+                           must use formats which apply to double, e.g. with l[efg] in
+                           them. Undefined behavior results otherwise.
+       -s {string format}  String format string; defaults to "%s". Examples: "_%s",
+                           "%08s". Note that you must use formats which apply to
+                           string, e.g. with s in them. Undefined behavior results
+                           otherwise.
        -n                  Coerce field values autodetected as int to float, and then
                            apply the float format.
+       -h|--help           Show this message.
 
    1mfraction0m
        Usage: mlr fraction [options]
@@ -1299,34 +1305,33 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        and emits output records. This means it produces no output until all input is read.
 
        Options:
-       -f {a,b,c}    Field name(s) for fraction calculation
-       -g {d,e,f}    Optional group-by-field name(s) for fraction counts
-       -p            Produce percents [0..100], not fractions [0..1]. Output field names
-                     end with "_percent" rather than "_fraction"
-       -c            Produce cumulative distributions, i.e. running sums: each output
-                     value folds in the sum of the previous for the specified group
-                     E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records
-                     x=1,x_cumulative_fraction=0.1  x=2,x_cumulative_fraction=0.3
-                     x=3,x_cumulative_fraction=0.6  and  x=4,x_cumulative_fraction=1.0
+       -f {a,b,c} Field name(s) for fraction calculation
+       -g {d,e,f} Optional group-by-field name(s) for fraction counts
+       -p         Produce percents [0..100], not fractions [0..1]. Output field names
+                  end with "_percent" rather than "_fraction"
+       -c         Produce cumulative distributions, i.e. running sums: each output
+                  value folds in the sum of the previous for the specified group. E.g.
+                  with input records x=1 x=2 x=3 and x=4, emits output records
+                  x=1,x_cumulative_fraction=0.1 x=2,x_cumulative_fraction=0.3
+                  x=3,x_cumulative_fraction=0.6 and x=4,x_cumulative_fraction=1.0
+       -h|--help  Show this message.
 
    1mgap0m
        Usage: mlr gap [options]
        Emits an empty record every n records, or when certain values change.
+       One of -n or -g is required.
        Options:
-       Emits an empty record every n records, or when certain values change.
        -g {a,b,c} Print a gap whenever values of these fields (e.g. a,b,c) changes.
-       -n {n} Print a gap every n records.
-       One of -f or -g is required.
-       -n is ignored if -g is present.
-       -h|--help Show this message.
+       -n {n}     Print a gap every n records. Ignored if -g is present.
+       -h|--help  Show this message.
 
    1mgrep0m
        Usage: mlr grep [options] {regular expression}
        Passes through records which match the regular expression.
        Options:
-       -i  Use case-insensitive search.
-       -v  Invert: pass through records which do not match the regex.
-       -a  Only grep for values, not keys and values.
+       -i        Use case-insensitive search.
+       -v        Invert: pass through records which do not match the regex.
+       -a        Only grep for values, not keys and values.
        -h|--help Show this message.
        Note that "mlr filter" is more powerful, but requires you to know field names.
        By contrast, "mlr grep" allows you to regex-match the entire record. It does this
@@ -1342,7 +1347,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
 
    1mgroup-by0m
        Usage: mlr group-by [options] {comma-separated field names}
-       Outputs records in batches having identical values at specified field names.Options:
+       Outputs records in batches having identical values at specified field names.
+       Options:
        -h|--help Show this message.
 
    1mgroup-like0m
@@ -1359,21 +1365,28 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        and \x1f. Write \\ to get a literal backslash.
        See also the `sub` and `ssub` verbs.
        Options:
-       -f {a,b,c}  Field names to convert.
-       -r {regex}  Regular expression for field names to convert.
-       -a          Convert all fields.
-       -h|--help   Show this message.
+       -f {a,b,c} Field names to apply substitution to.
+       -r {regex} Regular expression for field names to apply substitution to.
+       -a         Apply substitution to all fields.
+       -h|--help  Show this message.
 
    1mhaving-fields0m
        Usage: mlr having-fields [options]
        Conditionally passes through records depending on each record's field names.
        Options:
-         --at-least      {comma-separated names}
-         --which-are     {comma-separated names}
-         --at-most       {comma-separated names}
-         --all-matching  {regular expression}
-         --any-matching  {regular expression}
-         --none-matching {regular expression}
+       --at-least {comma-separated names}   Pass records that have at least these field
+                                            names.
+       --which-are {comma-separated names}  Pass records whose field names are exactly
+                                            these.
+       --at-most {comma-separated names}    Pass records that have at most these field
+                                            names.
+       --all-matching {regular expression}  Pass records where all field names match
+                                            the regex.
+       --any-matching {regular expression}  Pass records where any field name matches
+                                            the regex.
+       --none-matching {regular expression} Pass records where no field name matches
+                                            the regex.
+       -h|--help                            Show this message.
        Examples:
          mlr having-fields --which-are amount,status,owner
          mlr having-fields --any-matching 'sda[0-9]'
@@ -1386,40 +1399,41 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Without -g, ceases consuming more input (i.e. is fast) when n records have been read.
        Options:
        -g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
-       -n {n} Head-count to print. Default 10.
-                  A negative count, e.g. -n -2, passes through all but the last n records,
-                  optionally by category.
-       -h|--help Show this message.
+       -n {n}     Head-count to print. Default 10. A negative count, e.g. -n -2, passes
+                  through all but the last n records, optionally by category.
+       -h|--help  Show this message.
 
    1mhistogram0m
        Just a histogram. Input values &lt; lo or &gt; hi are not counted.
        Usage: mlr histogram [options]
-       -f {a,b,c}    Value-field names for histogram counts
-       --lo {lo}     Histogram low value
-       --hi {hi}     Histogram high value
-       --nbins {n}   Number of histogram bins. Defaults to 20.
-       --auto        Automatically computes limits, ignoring --lo and --hi.
-                     Holds all values in memory before producing any output.
-       -o {prefix}   Prefix for output field name. Default: no prefix.
-       -h|--help Show this message.
+       Options:
+       -f {a,b,c}  Value-field names for histogram counts.
+       --lo {lo}   Histogram low value.
+       --hi {hi}   Histogram high value.
+       --nbins {n} Number of histogram bins. Defaults to 20.
+       --auto      Automatically computes limits, ignoring --lo and --hi. Holds all
+                   values in memory before producing any output.
+       -o {prefix} Prefix for output field name. Default: no prefix.
+       -h|--help   Show this message.
 
    1mjson-parse0m
        Usage: mlr json-parse [options]
        Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -&gt; [1,2,3].
        Options:
-       -f {...} Comma-separated list of field names to json-parse (default all).
-       -k       If supplied, then on parse fail for any cell, keep the (unparsable)
-                input value for the cell.
-       -h|--help Show this message.
+       -f {a,b,c} Comma-separated list of field names to json-parse (default all).
+       -k         If supplied, then on parse fail for any cell, keep the (unparsable)
+                  input value for the cell.
+       -h|--help  Show this message.
 
    1mjson-stringify0m
        Usage: mlr json-stringify [options]
        Produces string field values from field-value data, e.g. [1,2,3] -&gt; "[1,2,3]".
        Options:
-       -f {...} Comma-separated list of field names to json-parse (default all).
-       --jvstack Produce multi-line JSON output.
+       -f {a,b,c}   Comma-separated list of field names to json-stringify (default
+                    all).
+       --jvstack    Produce multi-line JSON output.
        --no-jvstack Produce single-line JSON output per record (default).
-       -h|--help Show this message.
+       -h|--help    Show this message.
 
    1mjoin0m
        Usage: mlr join [options]
@@ -1428,34 +1442,53 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Functionality is essentially the same as the system "join" command, but for
        record streams.
        Options:
-         -f {left file name}
-         -j {a,b,c}   Comma-separated join-field names for output
-         -l {a,b,c}   Comma-separated join-field names for left input file;
-                      defaults to -j values if omitted.
-         -r {a,b,c}   Comma-separated join-field names for right input file(s);
-                      defaults to -j values if omitted.
-         --lk|--left-keep-field-names {a,b,c} If supplied, this means keep only the specified field
-                      names from the left file. Automatically includes the join-field name(s). Helpful
-                      for when you only want a limited subset of information from the left file.
-                      Tip: you can use --lk "": this means the left file becomes solely a row-selector
-                      for the input files.
-         --lp {text}  Additional prefix for non-join output field names from
-                      the left file. Applies to paired and unpaired output records.
-         --rp {text}  Additional prefix for non-join output field names from
-                      the right file(s). Applies to paired and unpaired output records.
-         --np         Do not emit paired records
-         --ul         Emit unpaired records from the left file
-         --ur         Emit unpaired records from the right file(s)
-         -s|--sorted-input  Require sorted input: records must be sorted
-                      lexically by their join-field names, else not all records will
-                      be paired. The only likely use case for this is with a left
-                      file which is too big to fit into system memory otherwise.
-         -u           Enable unsorted input. (This is the default even without -u.)
-                      In this case, the entire left file will be loaded into memory.
-         --prepipe {command} As in main input options; see mlr --help for details.
-                      If you wish to use a prepipe command for the main input as well
-                      as here, it must be specified there as well as here.
-         --prepipex {command} Likewise.
+       -f {left file name}                  Left file name for join.
+       -j {a,b,c}                           Comma-separated join-field names for
+                                            output.
+       -l {a,b,c}                           Comma-separated join-field names for left
+                                            input file; defaults to -j values if
+                                            omitted.
+       -r {a,b,c}                           Comma-separated join-field names for right
+                                            input file(s); defaults to -j values if
+                                            omitted.
+       --lk|--left-keep-field-names {a,b,c} If supplied, this means keep only the
+                                            specified field names from the left file.
+                                            Automatically includes the join-field
+                                            name(s). Helpful for when you only want a
+                                            limited subset of information from the left
+                                            file. Tip: you can use --lk "": this means
+                                            the left file becomes solely a row-selector
+                                            for the input files.
+       --lp {text}                          Additional prefix for non-join output field
+                                            names from the left file. Applies to paired
+                                            and unpaired output records.
+       --rp {text}                          Additional prefix for non-join output field
+                                            names from the right file(s). Applies to
+                                            paired and unpaired output records.
+       --np                                 Do not emit paired records.
+       --ul                                 Emit unpaired records from the left file.
+       --ur                                 Emit unpaired records from the right
+                                            file(s).
+       -s|--sorted-input                    Require sorted input: records must be
+                                            sorted lexically by their join-field names,
+                                            else not all records will be paired. The
+                                            only likely use case for this is with a
+                                            left file which is too big to fit into
+                                            system memory otherwise.
+       -u                                   Enable unsorted input. (This is the default
+                                            even without -u.) In this case, the entire
+                                            left file will be loaded into memory.
+       --prepipe {command}                  Shell command to prepipe the left-file
+                                            input through. As in main input options;
+                                            see mlr --help for details. If you wish to
+                                            use a prepipe command for the main input as
+                                            well as here, it must be specified there as
+                                            well as here.
+       --prepipex {command}                 Shell command to prepipe the left-file
+                                            input through (no shell quoting). As in
+                                            main input options; see mlr --help for
+                                            details.
+       -h|--help                            Show this message.
        File-format options default to those for the right file names on the Miller
        argument list, but may be overridden for the left file as follows. Please see
        the main "mlr --help" for more information on syntax for these arguments:
@@ -1498,10 +1531,11 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Shows the least frequently occurring distinct values for specified field names.
        The first entry is the statistical anti-mode; the remaining are runners-up.
        Options:
-       -f {one or more comma-separated field names}. Required flag.
-       -n {count}. Optional flag defaulting to 10.
-       -b          Suppress counts; show only field values.
-       -o {name}   Field name for output count. Default "count".
+       -f {a,b,c} One or more comma-separated field names to group by. Required flag.
+       -n {count} Maximum number of results to output. Optional flag defaulting to 10.
+       -b         Suppress counts; show only field values.
+       -o {name}  Field name for output count. Default "count".
+       -h|--help  Show this message.
        See also "mlr most-frequent".
 
    1mmerge-fields0m
@@ -1509,7 +1543,25 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Computes univariate statistics for each input record, accumulated across
        specified fields.
        Options:
-       -a {sum,count,...}  Names of accumulators. One or more of:
+       -a {sum,count,...} Names of accumulators: one or more of the accumulators listed
+                          below.
+       -f {a,b,c}         Value-field names on which to compute statistics. Requires
+                          -o.
+       -r {a,b,c}         Regular expressions for value-field names on which to compute
+                          statistics. Requires -o.
+       -c {a,b,c}         Substrings for collapse mode: all fields which have the same
+                          names after removing substrings will be accumulated together.
+                          Please see examples below.
+       -i                 Use interpolated percentiles, like R's type=7; default like
+                          type=1. Not sensical for string-valued fields.
+       -o {name}          Output field basename for -f/-r.
+       -k                 Keep the input fields which contributed to the output
+                          statistics; the default is to omit them.
+       -S                 No-op flag for backward compatibility with Miller 5.
+       -F                 No-op flag for backward compatibility with Miller 5.
+       -h|--help          Show this message.
+
+       Accumulators for -a:
          count    Count instances of fields
          null_count Count number of empty-string/JSON-null instances per field
          distinct_count Count number of distinct values per field
@@ -1527,17 +1579,6 @@ This is simply a copy of what you should see on running `man mlr` at a command p
          max      Compute maximum values of specified fields
          minlen   Compute minimum string-lengths of specified fields
          maxlen   Compute maximum string-lengths of specified fields
-       -f {a,b,c}  Value-field names on which to compute statistics. Requires -o.
-       -r {a,b,c}  Regular expressions for value-field names on which to compute
-                   statistics. Requires -o.
-       -c {a,b,c}  Substrings for collapse mode. All fields which have the same names
-                   after removing substrings will be accumulated together. Please see
-                   examples below.
-       -i          Use interpolated percentiles, like R's type=7; default like type=1.
-                   Not sensical for string-valued fields.
-       -o {name}   Output field basename for -f/-r.
-       -k          Keep the input fields which contributed to the output statistics;
-                   the default is to omit them.
 
        String-valued data make sense unless arithmetic on them is required,
        e.g. for sum, mean, interpolated percentiles, etc. In case of mixed data,
@@ -1559,26 +1600,40 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Shows the most frequently occurring distinct values for specified field names.
        The first entry is the statistical mode; the remaining are runners-up.
        Options:
-       -f {one or more comma-separated field names}. Required flag.
-       -n {count}. Optional flag defaulting to 10.
-       -b          Suppress counts; show only field values.
-       -o {name}   Field name for output count. Default "count".
+       -f {a,b,c} One or more comma-separated field names to group by. Required flag.
+       -n {count} Maximum number of results to output. Optional flag defaulting to 10.
+       -b         Suppress counts; show only field values.
+       -o {name}  Field name for output count. Default "count".
+       -h|--help  Show this message.
        See also "mlr least-frequent".
 
    1mnest0m
        Usage: mlr nest [options]
        Explodes specified field values into separate fields/records, or reverses this.
        Options:
-         --explode,--implode   One is required.
-         --values,--pairs      One is required.
-         --across-records,--across-fields One is required.
-         -f {field name}       Required.
-         -r {field names}      Like -f but treat arguments as a regular expression. Match all
-                               field names and operate on each in record order. Example: `-r '^[xy]$`'.
-         --nested-fs {string}  Defaults to ";". Field separator for nested values.
-         --nested-ps {string}  Defaults to ":". Pair separator for nested key-value pairs.
-         --evar {string}       Shorthand for --explode --values --across-records --nested-fs {string}
-         --ivar {string}       Shorthand for --implode --values --across-records --nested-fs {string}
+       --explode            Explode field values into separate fields/records. One of
+                            --explode or --implode is required.
+       --implode            Reverse of --explode. One of --explode or --implode is
+                            required.
+       --values             Operate on field values. One of --values or --pairs is
+                            required.
+       --pairs              Operate on field key-value pairs. One of --values or
+                            --pairs is required.
+       --across-records     Explode/implode across records. One of --across-records or
+                            --across-fields is required.
+       --across-fields      Explode/implode across fields. One of --across-records or
+                            --across-fields is required.
+       -f {field name}      Required field name to operate on.
+       -r {field names}     Like -f but treat arguments as a regular expression. Match
+                            all field names and operate on each in record order.
+                            Example: -r '^[xy]$'.
+       --nested-fs {string} Field separator for nested values. Defaults to ";".
+       --nested-ps {string} Pair separator for nested key-value pairs. Defaults to ":".
+       --evar {string}      Shorthand for --explode --values --across-records
+                            --nested-fs {string}.
+       --ivar {string}      Shorthand for --implode --values --across-records
+                            --nested-fs {string}.
+       -h|--help            Show this message.
        Please use "mlr --usage-separator-options" for information on specifying separators.
 
        Examples:
@@ -1630,56 +1685,53 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        See also: https://miller.readthedocs.io/en/latest/reference-verbs
 
        Options:
-       -f {file name} File containing a DSL expression (see examples below). If the filename
-          is a directory, all *.mlr files in that directory are loaded.
+       -f {file name}  File containing a DSL expression (see examples below). If the
+                       filename is a directory, all *.mlr files in that directory are
+                       loaded.
+       -e {expression} DSL expression to evaluate. You can use this after -f to add an
+                       expression. Example use case: define functions/subroutines in a
+                       file you specify with -f, then call them with an expression you
+                       specify with -e.
+       -s {name=value} Predefines out-of-stream variable @name to have the given value.
+                       Thus mlr put -s foo=97 '$column += @foo' is like mlr put 'begin
+                       {@foo = 97} $column += @foo'. The value part is subject to
+                       type-inferencing. May be specified more than once, e.g. -s
+                       name1=value1 -s name2=value2. Note: the value may be an
+                       environment variable, e.g. -s sequence=$SEQUENCE.
+       -x              Prints records for which {expression} evaluates to false, not
+                       true, i.e. invert the sense of the filter expression. Default
+                       false.
+       -q              Does not include the modified record in the output stream.
+                       Useful for when all desired output is in begin and/or end
+                       blocks.
+       -S              No-op in Miller 6 and above, since type-inferencing is now done
+                       by the record-readers before filter/put is executed. Supported
+                       as a no-op pass-through flag for backward compatibility.
+       -F              No-op in Miller 6 and above, since type-inferencing is now done
+                       by the record-readers before filter/put is executed. Supported
+                       as a no-op pass-through flag for backward compatibility.
+       -w              Print warnings about things like uninitialized variables.
+       -W              Same as -w, but exit the process if there are any warnings.
+       -p              Prints the expression's AST (abstract syntax tree), which gives
+                       full transparency on the precedence and associativity rules of
+                       Miller's grammar, to stdout.
+       -d              Like -p but uses a parenthesized-expression format for the AST.
+       -D              Like -d but with output all on one line.
+       -E              Echo DSL expression before printing parse-tree.
+       -v              Same as -E -p.
+       -X              Exit after parsing but before stream-processing. Useful with
+                       -v/-d/-D, if you only want to look at parser information.
+       --explain       Parse and type-check the DSL expression, report whether it is
+                       valid, and exit without reading the input stream. Exit status is
+                       0 if the expression is valid and non-zero otherwise; combine
+                       with --errors-json for a machine-readable error.
+       -h|--help       Show this message.
 
-       -e {expression} You can use this after -f to add an expression. Example use
-          case: define functions/subroutines in a file you specify with -f, then call
-          them with an expression you specify with -e.
-
-       (If you mix -e and -f then the expressions are evaluated in the order encountered.
+       If you mix -e and -f then the expressions are evaluated in the order encountered.
        Since the expression pieces are simply concatenated, please be sure to use intervening
-       semicolons to separate expressions.)
+       semicolons to separate expressions.
 
-       -s name=value: Predefines out-of-stream variable @name to have
-           Thus mlr put -s foo=97 '$column += @foo' is like
-           mlr put 'begin {@foo = 97} $column += @foo'.
-           The value part is subject to type-inferencing.
-           May be specified more than once, e.g. -s name1=value1 -s name2=value2.
-           Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
-
-       -x (default false) Prints records for which {expression} evaluates to false, not true,
-          i.e. invert the sense of the filter expression.
-
-       -q Does not include the modified record in the output stream.
-          Useful for when all desired output is in begin and/or end blocks.
-
-       -S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
-          by the record-readers before filter/put is executed. Supported as no-op pass-through
-          flags for backward compatibility.
-
-       -h|--help Show this message.
-
-       Parser-info options:
-
-       -w Print warnings about things like uninitialized variables.
-
-       -W Same as -w, but exit the process if there are any warnings.
-
-       -p Prints the expressions's AST (abstract syntax tree), which gives full
-         transparency on the precedence and associativity rules of Miller's grammar,
-         to stdout.
-
-       -d Like -p but uses a parenthesized-expression format for the AST.
-
-       -D Like -d but with output all on one line.
-
-       -E Echo DSL expression before printing parse-tree
-
-       -v Same as -E -p.
-
-       -X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
-          only want to look at parser information.
+       Parser-info options are -w, -W, -p, -d, -D, -E, -v, and -X.
 
        Examples:
          mlr --from example.csv put '$qr = $quantity * $rate'
@@ -1723,16 +1775,15 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Usage: mlr rename [options] {old1,new1,old2,new2,...}
        Renames specified fields.
        Options:
-       -r         Treat old field  names as regular expressions. "ab", "a.*b"
-                  will match any field name containing the substring "ab" or
-                  matching "a.*b", respectively; anchors of the form "^ab$",
-                  "^a.*b$" may be used. New field names may be plain strings,
-                  or may contain capture groups of the form "\1" through
-                  "\9". Wrapping the regex in double quotes is optional, but
-                  is required if you wish to follow it with 'i' to indicate
-                  case-insensitivity.
-       -g         Do global replacement within each field name rather than
-                  first-match replacement.
+       -r        Treat old field names as regular expressions. "ab", "a.*b" will match
+                 any field name containing the substring "ab" or matching "a.*b",
+                 respectively; anchors of the form "^ab$", "^a.*b$" may be used. New
+                 field names may be plain strings, or may contain capture groups of the
+                 form "\1" through "\9". Wrapping the regex in double quotes is
+                 optional, but is required if you wish to follow it with 'i' to
+                 indicate case-insensitivity.
+       -g        Do global replacement within each field name rather than first-match
+                 replacement.
        -h|--help Show this message.
        Examples:
        mlr rename old_name,new_name
@@ -1746,18 +1797,19 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Usage: mlr reorder [options]
        Moves specified names to start of record, or end of record.
        Options:
-       -e Put specified field names at record end: default is to put them at record start.
+       -e         Put specified field names at record end: default is to put them at
+                  record start.
        -f {a,b,c} Field names to reorder.
-       -r        Treat field names as regular expressions. Matched fields are moved
-                 to start or end in record order. Example: -r '^YYY,^XXX' puts all
-                 YYY- and XXX-prefixed fields first (in record order), then the rest.
+       -r {a,b,c} Treat field names as regular expressions. Matched fields are moved to
+                  start or end in record order. Example: -r '^YYY,^XXX' puts all YYY-
+                  and XXX-prefixed fields first (in record order), then the rest.
        -b {x}     Put field names specified with -f before field name specified by {x},
                   if any. If {x} isn't present in a given record, the specified fields
                   will not be moved.
        -a {x}     Put field names specified with -f after field name specified by {x},
                   if any. If {x} isn't present in a given record, the specified fields
                   will not be moved.
-       -h|--help Show this message.
+       -h|--help  Show this message.
 
        Examples:
        mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
@@ -1767,11 +1819,12 @@ This is simply a copy of what you should see on running `man mlr` at a command p
    1mrepeat0m
        Usage: mlr repeat [options]
        Copies input records to output records multiple times.
-       Options must be exactly one of the following:
-       -n {repeat count}  Repeat each input record this many times.
-       -f {field name}    Same, but take the repeat count from the specified
-                          field name of each input record.
-       -h|--help Show this message.
+       Options must be exactly one of -n or -f.
+       Options:
+       -n {repeat count} Repeat each input record this many times.
+       -f {field name}   Same as -n, but take the repeat count from the specified field
+                         name of each input record.
+       -h|--help         Show this message.
        Example:
          echo x=0 | mlr repeat -n 4 then put '$x=urand()'
        produces:
@@ -1808,6 +1861,19 @@ This is simply a copy of what you should see on running `man mlr` at a command p
          These pivot/reshape the input data to undo the wide-to-long operation.
          Note: this does not work with tail -f; it produces output records only after
          all input records have been read.
+       Options:
+       -i {input field names}               Input field names for wide-to-long reshape.
+                                            Use with -o.
+       -r {input field regex}               Input field regex for wide-to-long reshape.
+                                            May be repeated. Use with -o. If you have
+                                            multiple regexes, please specify them using
+                                            multiple -r, since regexes can contain
+                                            commas within them.
+       -o {key-field name,value-field name} Output key-field and value-field names for
+                                            wide-to-long reshape. Requires -i or -r.
+       -s {key-field name,value-field name} Key-field and value-field names for
+                                            long-to-wide reshape.
+       -h|--help                            Show this message.
 
        Examples:
 
@@ -1857,17 +1923,20 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        See also mlr bootstrap and mlr shuffle.
        Options:
        -g {a,b,c} Optional: group-by-field names for samples, e.g. a,b,c.
-       -k {k} Required: number of records to output in total, or by group if using -g.
-       -h|--help Show this message.
+       -k {k}     Required: number of records to output in total, or by group if using
+                  -g.
+       -h|--help  Show this message.
 
    1msec2gmtdate0m
-       Usage: ../c/mlr sec2gmtdate {comma-separated list of field names}
+       Usage: mlr sec2gmtdate {comma-separated list of field names}
        Replaces a numeric field representing seconds since the epoch with the
        corresponding GMT year-month-day timestamp; leaves non-numbers as-is.
        This is nothing more than a keystroke-saver for the sec2gmtdate function:
-         ../c/mlr sec2gmtdate time1,time2
+         mlr sec2gmtdate time1,time2
        is the same as
-         ../c/mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+         mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+       Options:
+       -h|--help Show this message.
 
    1msec2gmt0m
        Usage: mlr sec2gmt [options] {comma-separated list of field names}
@@ -1878,24 +1947,32 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        is the same as
          mlr put '$time1 = sec2gmt($time1); $time2 = sec2gmt($time2)'
        Options:
-       -1 through -9: format the seconds using 1..9 decimal places, respectively.
-       --millis Input numbers are treated as milliseconds since the epoch.
-       --micros Input numbers are treated as microseconds since the epoch.
-       --nanos  Input numbers are treated as nanoseconds since the epoch.
+       -1        Format seconds with 1 decimal place.
+       -2        Format seconds with 2 decimal places.
+       -3        Format seconds with 3 decimal places.
+       -4        Format seconds with 4 decimal places.
+       -5        Format seconds with 5 decimal places.
+       -6        Format seconds with 6 decimal places.
+       -7        Format seconds with 7 decimal places.
+       -8        Format seconds with 8 decimal places.
+       -9        Format seconds with 9 decimal places.
+       --millis  Input numbers are treated as milliseconds since the epoch.
+       --micros  Input numbers are treated as microseconds since the epoch.
+       --nanos   Input numbers are treated as nanoseconds since the epoch.
        -h|--help Show this message.
 
    1mseqgen0m
        Usage: mlr seqgen [options]
-       Passes input records directly to output. Most useful for format conversion.
        Produces a sequence of counters.  Discards the input record stream. Produces
-       output as specified by the options
+       output as specified by the options.
 
        Options:
-       -f {name} (default "i") Field name for counters.
-       --start {value} (default 1) Inclusive start value.
-       --step {value} (default 1) Step value.
-       --stop {value} (default 100) Inclusive stop value.
-       -h|--help Show this message.
+       -f {name}       Field name for counters. Default "i".
+       --start {value} Inclusive start value. Default 1.
+       --step {value}  Step value. Default 1. May be negative but not zero (unless
+                       start == stop).
+       --stop {value}  Inclusive stop value. Default 100.
+       -h|--help       Show this message.
        Start, stop, and/or step may be floating-point. Output is integer if start,
        stop, and step are all integers. Step may be negative. It may not be zero
        unless start == stop.
@@ -1923,17 +2000,20 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        in the order they were encountered in the input record stream.
 
        Options:
-       -f  {comma-separated field names}  Lexical ascending
-       -r  {comma-separated field names}  Lexical descending
-       -c  {comma-separated field names}  Case-folded lexical ascending
-       -cr {comma-separated field names}  Case-folded lexical descending
-       -n  {comma-separated field names}  Numerical ascending; nulls sort last
-       -nf {comma-separated field names}  Same as -n
-       -nr {comma-separated field names}  Numerical descending; nulls sort first
-       -t  {comma-separated field names}  Natural ascending
-       -b                                 Move sort fields to start of record, as in reorder -b
-       -tr|-rt {comma-separated field names}  Natural descending
-       -h|--help Show this message.
+       -f {a,b,c}      Lexical ascending sort on the specified field names.
+       -r {a,b,c}      Lexical descending sort on the specified field names.
+       -c {a,b,c}      Case-folded lexical ascending sort on the specified field names.
+       -cr {a,b,c}     Case-folded lexical descending sort on the specified field
+                       names.
+       -n {a,b,c}      Numerical ascending sort on the specified field names; nulls
+                       sort last.
+       -nf {a,b,c}     Same as -n.
+       -nr {a,b,c}     Numerical descending sort on the specified field names; nulls
+                       sort first.
+       -t {a,b,c}      Natural ascending sort on the specified field names.
+       -b              Move sort fields to start of record, as in reorder -b.
+       -tr|-rt {a,b,c} Natural descending sort on the specified field names.
+       -h|--help       Show this message.
 
        Example:
          mlr sort -f a,b -nr x,y,z
@@ -1944,13 +2024,13 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Usage: mlr sort-within-records [options]
        Outputs records sorted lexically ascending by keys.
        Options:
-       -f {names}   Sort only these keys; others preserve record order.
-       -r {regex}   Sort only keys matching this regex; others preserve record order.
-                    Example: -r '^[xy]' sorts keys starting with x or y.
-                    With no regex argument, -r recursively sorts subobjects/submaps
-                    (e.g. for JSON input), or combines with -f to treat names as regex.
-       -n           Sort field names naturally (e.g. 2 before 12). Combines with -f/-r.
-       -h|--help    Show this message.
+       -f {names} Sort only these keys; others preserve record order.
+       -r {regex} Sort only keys matching this regex; others preserve record order.
+                  Example: -r '^[xy]' sorts keys starting with x or y. With no regex
+                  argument, -r recursively sorts subobjects/submaps (e.g. for JSON
+                  input), or combines with -f to treat names as regexes.
+       -n         Sort field names naturally (e.g. 2 before 12). Combines with -f/-r.
+       -h|--help  Show this message.
 
    1msparsify0m
        Usage: mlr sparsify [options]
@@ -1958,26 +2038,28 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        specified value). Only makes sense with output format not being CSV or TSV.
        Options:
        -s {filler string} What values to remove. Defaults to the empty string.
-       -f {a,b,c} Specify field names to be operated on; any other fields won't be
-                  modified. The default is to modify all fields.
-       -h|--help  Show this message.
+       -f {a,b,c}         Specify field names to be operated on; any other fields won't
+                          be modified. The default is to modify all fields.
+       -h|--help          Show this message.
        Example: if input is a=1,b=,c=3 then output is a=1,c=3.
 
    1msplit0m
        Usage: mlr split [options] {filename}
        Options:
-       -n {n}:      Cap file sizes at N records.
-       -m {m}:      Produce M files, round-robining records among them.
-       -g {a,b,c}:  Write separate files with records having distinct values for fields named a,b,c.
-       Exactly one  of -m, -n, or -g must be supplied.
-       --prefix {p} Specify filename prefix; default "split".
-       --suffix {s} Specify filename suffix; default is from mlr output format, e.g. "csv".
-       --folder {f} Specify output directory; default is current directory.
-       -a           Append to existing file(s), if any, rather than overwriting.
-       -v           Send records along to downstream verbs as well as splitting to files.
+       -n {n}       Cap output file sizes at N records.
+       -m {m}       Produce M files, round-robining records among them.
+       -g {a,b,c}   Write separate files with records having distinct values for the
+                    specified field names.
+       --prefix {p} Output filename prefix. Default "split".
+       --suffix {s} Output filename suffix. Default is from the output format, e.g.
+                    "csv".
+       --folder {f} Output directory. Default is current directory.
+       -a           Append to existing files rather than overwriting.
+       -v           Send records downstream as well as splitting to files.
        -e           Do NOT URL-escape names of output files.
-       -j {J}       Use string J to join filename parts; default "_".
+       -j {J}       String used to join filename parts. Default "_".
        -h|--help    Show this message.
+       Exactly one of -m, -n, or -g must be supplied.
        Any of the output-format command-line flags (see mlr -h). For example, using
          mlr --icsv --from myfile.csv split --ojson -n 1000
        the input is CSV, but the output files are JSON.
@@ -2016,17 +2098,42 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        as \n, \t, and \x1f. Write \\ to get a literal backslash.
        See also the `gsub` and `sub` verbs.
        Options:
-       -f {a,b,c}  Field names to convert.
-       -r {regex}  Regular expression for field names to convert.
-       -a          Convert all fields.
-       -h|--help   Show this message.
+       -f {a,b,c} Field names to apply substitution to.
+       -r {regex} Regular expression for field names to apply substitution to.
+       -a         Apply substitution to all fields.
+       -h|--help  Show this message.
 
    1mstats10m
        Usage: mlr stats1 [options]
        Computes univariate statistics for one or more given fields, accumulated across
        the input record stream.
        Options:
-       -a {sum,count,...} Names of accumulators: one or more of:
+       -a {sum,count,...} Names of accumulators: one or more of the listed values. Also
+                          accepts median (same as p50) and percentiles p{n} for n in
+                          0..100, e.g. p10 p25.2 p50 p98 p100.
+       -f {a,b,c}         Value-field names on which to compute statistics.
+       --fr {regex}       Regex for value-field names on which to compute statistics
+                          (compute statistics on values in all field names matching the
+                          regex).
+       --fx {regex}       Inverted regex for value-field names on which to compute
+                          statistics (compute statistics on values in all field names
+                          not matching the regex).
+       -g {d,e,f}         Optional group-by-field names.
+       --gr {regex}       Regex for optional group-by-field names (group by values in
+                          field names matching the regex).
+       --gx {regex}       Inverted regex for optional group-by-field names (group by
+                          values in field names not matching the regex).
+       --grfx {regex}     Shorthand for --gr {regex} --fx {that same regex}.
+       -i                 Use interpolated percentiles, like R's type=7; default like
+                          type=1. Not sensical for string-valued fields.
+       -s                 Print iterative stats. Useful in tail -f contexts, in which
+                          case please avoid pprint-format output since end of input
+                          stream will never be seen. Likewise, if input is coming from
+                          `tail -f` be sure to use `--records-per-batch 1`.
+       -S                 No-op flag for backward compatibility with Miller 5.
+       -F                 No-op flag for backward compatibility with Miller 5.
+       -h|--help          Show this message.
+       Names of accumulators for -a, one or more of:
          median   This is the same as p50
          p10 p25.2 p50 p98 p100 etc.
          count    Count instances of fields
@@ -2046,28 +2153,6 @@ This is simply a copy of what you should see on running `man mlr` at a command p
          max      Compute maximum values of specified fields
          minlen   Compute minimum string-lengths of specified fields
          maxlen   Compute maximum string-lengths of specified fields
-
-       -f {a,b,c}     Value-field names on which to compute statistics
-       --fr {regex}   Regex for value-field names on which to compute statistics
-                      (compute statistics on values in all field names matching regex
-       --fx {regex}   Inverted regex for value-field names on which to compute statistics
-                      (compute statistics on values in all field names not matching regex)
-
-       -g {d,e,f}     Optional group-by-field names
-       --gr {regex}   Regex for optional group-by-field names
-                      (group by values in field names matching regex)
-       --gx {regex}   Inverted regex for optional group-by-field names
-                      (group by values in field names not matching regex)
-
-       --grfx {regex} Shorthand for --gr {regex} --fx {that same regex}
-
-       -i             Use interpolated percentiles, like R's type=7; default like type=1.
-                      Not sensical for string-valued fields.\n");
-       -s             Print iterative stats. Useful in tail -f contexts, in which
-                      case please avoid pprint-format output since end of input
-                      stream will never be seen. Likewise, if input is coming from `tail -f`
-                      be sure to use `--records-per-batch 1`.
-       -h|--help      Show this message.
        Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
        Example: mlr stats1 -a count,mode -f size
        Example: mlr stats1 -a count,mode -f size -g shape
@@ -2090,7 +2175,27 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Usage: mlr stats2 [options]
        Computes bivariate statistics for one or more given field-name pairs,
        accumulated across the input record stream.
-       -a {linreg-ols,corr,...}  Names of accumulators: one or more of:
+       Options:
+       -a {linreg-ols,corr,...} Names of accumulators: one or more of the listed
+                                values.
+       -f {a,b,c,d}             Value-field name-pairs on which to compute statistics.
+                                There must be an even number of names.
+       -g {e,f,g}               Optional group-by-field names.
+       -v                       Print additional output for linreg-pca.
+       -s                       Print iterative stats. Useful in tail -f contexts, in
+                                which case please avoid pprint-format output since end
+                                of input stream will never be seen. Likewise, if input
+                                is coming from `tail -f`, be sure to use
+                                `--records-per-batch 1`.
+       --fit                    Rather than printing regression parameters, applies
+                                them to the input data to compute new fit fields. All
+                                input records are held in memory until end of input
+                                stream. Has effect only for linreg-ols, linreg-pca, and
+                                logireg.
+       -S                       No-op flag for backward compatibility with Miller 5.
+       -F                       No-op flag for backward compatibility with Miller 5.
+       -h|--help                Show this message.
+       Names of accumulators for -a, one or more of:
          linreg-ols Linear regression using ordinary least squares
          linreg-pca Linear regression using principal component analysis
          r2       Quality metric for linreg-ols (linreg-pca emits its own)
@@ -2098,18 +2203,6 @@ This is simply a copy of what you should see on running `man mlr` at a command p
          corr     Sample correlation
          cov      Sample covariance
          covx     Sample-covariance matrix
-       -f {a,b,c,d}   Value-field name-pairs on which to compute statistics.
-                      There must be an even number of names.
-       -g {e,f,g}     Optional group-by-field names.
-       -v             Print additional output for linreg-pca.
-       -s             Print iterative stats. Useful in tail -f contexts, in which
-                      case please avoid pprint-format output since end of input
-                      stream will never be seen. Likewise, if input is coming from
-                      `tail -f`, be sure to use `--records-per-batch 1`.
-       --fit          Rather than printing regression parameters, applies them to
-                      the input data to compute new fit fields. All input records are
-                      held in memory until end of input stream. Has effect only for
-                      linreg-ols, linreg-pca, and logireg.
        Only one of -s or --fit may be used.
        Example: mlr stats2 -a linreg-pca -f x,y
        Example: mlr stats2 -a linreg-ols,r2 -f x,y -g size,shape
@@ -2119,7 +2212,25 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Usage: mlr step [options]
        Computes values dependent on earlier/later records, optionally grouped by category.
        Options:
-       -a {delta,rsum,...} Names of steppers: comma-separated, one or more of:
+       -a {delta,rsum,...} Names of steppers: comma-separated, one or more of the
+                           listed values.
+       -f {a,b,c}          Value-field names on which to compute statistics.
+       -g {d,e,f}          Optional group-by-field names.
+       -F                  Computes integerable things (e.g. counter) in floating
+                           point. As of Miller 6 this happens automatically, but the
+                           flag is accepted as a no-op for backward compatibility with
+                           Miller 5 and below.
+       -d {x,y,z}          Weights for EWMA. 1 means current sample gets all weight (no
+                           smoothing), near under 1 is light smoothing, near over 0 is
+                           heavy smoothing. Multiple weights may be specified, e.g.
+                           "mlr step -a ewma -f sys_load -d 0.01,0.1,0.9". Default if
+                           omitted is "-d 0.5".
+       -o {a,b,c}          Custom suffixes for EWMA output fields. If omitted, these
+                           default to the -d values. If supplied, the number of -o
+                           values must be the same as the number of -d values.
+       -h|--help           Show this message.
+
+       Names of steppers for -a, comma-separated, one or more of:
          counter    Count instances of field(s) between successive records
          delta      Compute differences in field(s) between successive records
          ewma       Exponentially weighted moving average over successive records
@@ -2131,21 +2242,6 @@ This is simply a copy of what you should see on running `man mlr` at a command p
          shift_lag  Include value(s) in field(s) from the previous record, if any
          shift_lead Include value(s) in field(s) from the next record, if any
          slwin      Sliding-window averages over m records back and n forward. E.g. slwin_7_2 for 7 back and 2 forward.
-
-       -f {a,b,c}   Value-field names on which to compute statistics
-       -g {d,e,f}   Optional group-by-field names
-       -F           Computes integerable things (e.g. counter) in floating point.
-                    As of Miller 6 this happens automatically, but the flag is accepted
-                    as a no-op for backward compatibility with Miller 5 and below.
-       -d {x,y,z}   Weights for EWMA. 1 means current sample gets all weight (no
-                    smoothing), near under 1 is light smoothing, near over 0 is
-                    heavy smoothing. Multiple weights may be specified, e.g.
-                    "mlr step -a ewma -f sys_load -d 0.01,0.1,0.9". Default if omitted
-                    is "-d 0.5".
-       -o {a,b,c}   Custom suffixes for EWMA output fields. If omitted, these default to
-                    the -d values. If supplied, the number of -o values must be the same
-                    as the number of -d values.
-       -h|--help   Show this message.
 
        Examples:
          mlr step -a rsum -f request_size
@@ -2167,10 +2263,10 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        and \x1f. Write \\ to get a literal backslash.
        See also the `gsub` and `ssub` verbs.
        Options:
-       -f {a,b,c}  Field names to convert.
-       -r {regex}  Regular expression for field names to convert.
-       -a          Convert all fields.
-       -h|--help   Show this message.
+       -f {a,b,c} Field names to apply substitution to.
+       -r {regex} Regular expression for field names to apply substitution to.
+       -a         Apply substitution to all fields.
+       -h|--help  Show this message.
 
    1msummary0m
        Usage: mlr summary [options]
@@ -2210,19 +2306,19 @@ This is simply a copy of what you should see on running `man mlr` at a command p
 
        Options:
        -a {mean,sum,etc.} Use only the specified summarizers.
-       -x {mean,sum,etc.} Use all summarizers, except the specified ones.
+       -x {mean,sum,etc.} Use all summarizers except the specified ones.
        --all              Use all available summarizers.
-       --transpose        Show output with field names as column names..
-       -h|--help Show this message.
+       --transpose        Show output with field names as column names.
+       -h|--help          Show this message.
 
    1msurv0m
        Usage: mlr surv -d {duration-field} -s {status-field}
 
        Estimate Kaplan-Meier survival curve (right-censored).
        Options:
-         -d {field}   Name of duration field (time-to-event or censoring).
-         -s {field}   Name of status field (0=censored, 1=event).
-         -h, --help   Show this message.
+       -d {field} Name of duration field (time-to-event or censoring).
+       -s {field} Name of status field (0=censored, 1=event).
+       -h|--help  Show this message.
 
    1mtac0m
        Usage: mlr tac [options]
@@ -2235,23 +2331,21 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Passes through the last n records, optionally by category.
        Options:
        -g {a,b,c} Optional group-by-field names for tail counts, e.g. a,b,c.
-       -n {n} Tail-count to print. Default 10.
-                  A leading '+' means start at the nth record rather than print
-                  the last n: e.g. -n +3 passes through all but the first 2
-                  records, optionally by category.
-       -h|--help Show this message.
+       -n {n}     Tail-count to print. Default 10. A leading '+' means start at the nth
+                  record rather than print the last n: e.g. -n +3 passes through all
+                  but the first 2 records, optionally by category.
+       -h|--help  Show this message.
 
    1mtee0m
        Usage: mlr tee [options] {filename}
        Options:
-       -a    Append to existing file, if any, rather than overwriting.
-       -p    Treat filename as a pipe-to command.
+       -a        Append to existing file, if any, rather than overwriting.
+       -p        Treat filename as a pipe-to command.
+       -h|--help Show this message.
        Any of the output-format command-line flags (see mlr -h). Example: using
          mlr --icsv --opprint put '...' then tee --ojson ./mytap.dat then stats1 ...
        the input is CSV, the output is pretty-print tabular, but the tee-file output
        is written in JSON format.
-
-       -h|--help Show this message.
 
    1mtemplate0m
        Usage: mlr template [options]
@@ -2259,10 +2353,13 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        If the input record is missing a specified field, it will be filled with the fill-with.
        If the input record possesses an unspecified field, it will be discarded.
        Options:
-        -f {a,b,c} Comma-separated field names for template, e.g. a,b,c.
-        -t {filename} CSV file whose header line will be used for template.
-       --fill-with {filler string}  What to fill absent fields with. Defaults to the empty string.
-       -h|--help Show this message.
+       -f {a,b,c}                  Comma-separated field names for template, e.g.
+                                   a,b,c.
+       -t {filename}               CSV file whose header line will be used for
+                                   template.
+       --fill-with {filler string} What to fill absent fields with. Defaults to the
+                                   empty string.
+       -h|--help                   Show this message.
        Example:
        * Specified fields are a,b,c.
        * Input record is c=3,a=1,f=6.
@@ -2270,16 +2367,19 @@ This is simply a copy of what you should see on running `man mlr` at a command p
 
    1mtop0m
        Usage: mlr top [options]
-       -f {a,b,c}    Value-field names for top counts.
-       -g {d,e,f}    Optional group-by-field names for top counts.
-       -n {count}    How many records to print per category; default 1.
-       -a            Print all fields for top-value records; default is
-                     to print only value and group-by fields. Requires a single
-                     value-field name only.
-       --min         Print top smallest values; default is top largest values.
-       -F            Keep top values as floats even if they look like integers.
-       -o {name}     Field name for output indices. Default "top_idx".
-                     This is ignored if -a is used.
+       Options:
+       -f {a,b,c} Value-field names for top counts.
+       -g {d,e,f} Optional group-by-field names for top counts.
+       -n {count} How many records to print per category; default 1.
+       -a         Print all fields for top-value records; default is to print only
+                  value and group-by fields. Requires a single value-field name only.
+       --max      Print top largest values. This is the default.
+       --min      Print top smallest values; default is top largest values.
+       -F         Keep top values as floats even if they look like integers (ignored in
+                  Miller 6, kept for backward compatibility).
+       -o {name}  Field name for output indices. Default "top_idx". Ignored if -a is
+                  used.
+       -h|--help  Show this message.
        Prints the n records with smallest/largest values at specified fields,
        optionally by category. If -a is given, then the top records are emitted
        with the same fields as they appeared in the input. Without -a, only fields
@@ -2288,7 +2388,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
 
    1mutf8-to-latin10m
        Usage: mlr utf8-to-latin1, with no options.
-       Recursively converts record strings from Latin-1 to UTF-8.
+       Recursively converts record strings from UTF-8 to Latin-1.
        For field-level control, please see the utf8_to_latin1 DSL function.
        Options:
        -h|--help Show this message.
@@ -2298,9 +2398,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Reverses flatten. Example: field with name 'a.b.c' and value 4
        becomes name 'a' and value '{"b": { "c": 4 }}'.
        Options:
-       -f {a,b,c} Comma-separated list of field names to unflatten (default all).
+       -f {a,b,c}  Comma-separated list of field names to unflatten (default all).
        -s {string} Separator, defaulting to mlr --flatsep value.
-       -h|--help Show this message.
+       -h|--help   Show this message.
 
    1muniq0m
        Usage: mlr uniq [options]
@@ -2308,21 +2408,24 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        count-distinct. For uniq, -f is a synonym for -g.
 
        Options:
-       -g {d,e,f}    Group-by-field names for uniq counts.
-       -x {a,b,c}    Field names to exclude for uniq: use each record's others instead.
-       -c            Show repeat counts in addition to unique values.
-       -n            Show only the number of distinct values.
-       -o {name}     Field name for output count. Default "count".
-       -a            Output each unique record only once. Incompatible with -g.
-                     With -c, produces unique records, with repeat counts for each.
-                     With -n, produces only one record which is the unique-record count.
-                     With neither -c nor -n, produces unique records.
+       -g {d,e,f} Group-by field names for uniq counts.
+       -f {d,e,f} Synonym for -g.
+       -x {a,b,c} Field names to exclude for uniq; use each record's other fields
+                  instead.
+       -c         Show repeat counts in addition to unique values.
+       -n         Show only the number of distinct values.
+       -o {name}  Field name for output count. Default "count".
+       -a         Output each unique record only once. Incompatible with -g. With -c,
+                  produces unique records, with repeat counts for each. With -n,
+                  produces only one record which is the unique-record count. With
+                  neither -c nor -n, produces unique records.
+       -h|--help  Show this message.
 
    1munspace0m
        Usage: mlr unspace [options]
        Replaces spaces in record keys and/or values with _. This is helpful for PPRINT output.
        Options:
-       -f {x}    Replace spaces with specified filler character.
+       -f {x}    Replace spaces with specified filler character. Default "_".
        -k        Unspace only keys, not keys and values.
        -v        Unspace only values, not keys and values.
        -h|--help Show this message.
@@ -2333,11 +2436,11 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        For field names absent in a given record but present in others, fills in
        a value. This verb retains all input before producing any output.
        Options:
-       --fill-with {filler string}  What to fill absent fields with. Defaults to
-                                    the empty string.
-       -f {a,b,c} Specify field names to be operated on. Any other fields won't be
-                  modified, and operation will be streaming.
-       -h|--help  Show this message.
+       --fill-with {filler string} What to fill absent fields with. Defaults to the
+                                   empty string.
+       -f {a,b,c}                  Specify field names to be operated on; others are
+                                   not modified and operation is streaming.
+       -h|--help                   Show this message.
        Example: if the input is two records, one being 'a=1,b=2' and the other
        being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
        'a=,b=3,c=4'.
@@ -3899,5 +4002,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-07-01                         4mMILLER24m(1)
+                                  2026-07-03                         4mMILLER24m(1)
 </pre>
