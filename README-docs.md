@@ -24,7 +24,7 @@
   * Run `genmds` to re-create all the `*.md` files, or `genmds foo.md.in` to just re-create the `foo.md.in` file you just edited, or (simplest) just `make` within the `docs/src` subdirectory.
   * In your browser, visit http://127.0.0.1:8000
   * This doesn't write HTML in `docs/site`; HTML is served up directly in the browser -- this is nice for previewing interactive edits.
-* For-publish editing loop:
+* For-publication editing loop:
   * cd to the `src` subdirectory of `docs` and edit `*.md.in`.
   * `make -C ..`
   * This does write HTML in `docs/site`.
@@ -33,7 +33,7 @@
     * `sudo pip3 install git+https://github.com/linkchecker/linkchecker.git`
     * `cd site` and `linkchecker .`
 * Submitting:
-  * Do the for-publish editing steps -- in particular, `docs/src/*.md.in` and `docs/src/*.md` are both checked in to source control.
+  * Do the for-publication editing steps -- in particular, `docs/src/*.md.in` and `docs/src/*.md` are both checked in to source control.
     * TL;DR edit `docs/src/foo.md.in` and run `make docs`
     * If you don't want to do `pip install mkdocs` then feel free to put up a PR which edits a `foo.md.in` as well as its `foo.md`.
   * `git add` your modified files (`*.md.in` as well as `*.md), `git commit`, `git push`, and submit a PR at https://github.com/johnkerl/miller.
