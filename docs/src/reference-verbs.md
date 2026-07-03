@@ -1035,6 +1035,10 @@ Options:
 -v              Same as -E -p.
 -X              Exit after parsing but before stream-processing. Useful with
                 -v/-d/-D, if you only want to look at parser information.
+--explain       Parse and type-check the DSL expression, report whether it is
+                valid, and exit without reading the input stream. Exit status is
+                0 if the expression is valid and non-zero otherwise; combine
+                with --errors-json for a machine-readable error.
 -h|--help       Show this message.
 
 If you mix -e and -f then the expressions are evaluated in the order encountered.
@@ -2436,6 +2440,10 @@ Options:
 -v              Same as -E -p.
 -X              Exit after parsing but before stream-processing. Useful with
                 -v/-d/-D, if you only want to look at parser information.
+--explain       Parse and type-check the DSL expression, report whether it is
+                valid, and exit without reading the input stream. Exit status is
+                0 if the expression is valid and non-zero otherwise; combine
+                with --errors-json for a machine-readable error.
 -h|--help       Show this message.
 
 If you mix -e and -f then the expressions are evaluated in the order encountered.

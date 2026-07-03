@@ -1,0 +1,6 @@
+mlr: cannot parse DSL expression.
+{
+  "error": "parse error: unexpected equals (\"=\")",
+  "kind": "dsl-parse-error",
+  "hint": "Run 'mlr put --help' for DSL syntax reference."
+}

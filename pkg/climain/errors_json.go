@@ -142,8 +142,13 @@ func categorize(err error) StructuredError {
 		}
 	}
 
-	// DSL parse errors
-	if strings.Contains(msg, "cannot parse DSL") || strings.Contains(msg, "DSL expression") {
+	// DSL parse errors. The "parse error:" prefix comes from the DSL parser
+	// (pkg/parsing/parser); "cannot parse DSL"/"DSL expression" are the wrapper
+	// messages. (The CSV reader's "parse error on line ..." is a stream-time
+	// error and never reaches this command-line-parse categorizer.)
+	if strings.Contains(msg, "cannot parse DSL") ||
+		strings.Contains(msg, "DSL expression") ||
+		strings.Contains(msg, "parse error:") {
 		return StructuredError{
 			Error: msg,
 			Kind:  "dsl-parse-error",

@@ -32,6 +32,7 @@ var putOptions = []OptionSpec{
 	{Flag: "-E", Type: "bool", Desc: "Echo DSL expression before printing parse-tree."},
 	{Flag: "-v", Type: "bool", Desc: "Same as -E -p."},
 	{Flag: "-X", Type: "bool", Desc: "Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you only want to look at parser information."},
+	{Flag: "--explain", Type: "bool", Desc: "Parse and type-check the DSL expression, report whether it is valid, and exit without reading the input stream. Exit status is 0 if the expression is valid and non-zero otherwise; combine with --errors-json for a machine-readable error."},
 }
 
 var PutSetup = TransformerSetup{
@@ -60,6 +61,7 @@ var filterOptions = []OptionSpec{
 	{Flag: "-E", Type: "bool", Desc: "Echo DSL expression before printing parse-tree."},
 	{Flag: "-v", Type: "bool", Desc: "Same as -E -p."},
 	{Flag: "-X", Type: "bool", Desc: "Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you only want to look at parser information."},
+	{Flag: "--explain", Type: "bool", Desc: "Parse and type-check the DSL expression, report whether it is valid, and exit without reading the input stream. Exit status is 0 if the expression is valid and non-zero otherwise; combine with --errors-json for a machine-readable error."},
 }
 
 var FilterSetup = TransformerSetup{
@@ -195,6 +197,7 @@ func transformerPutOrFilterParseCLI(
 	printASTMultiLine := false
 	printASTSingleLine := false
 	exitAfterParse := false
+	doExplain := false
 	doWarnings := false
 	warningsAreFatal := false
 	strictMode := false
@@ -301,6 +304,8 @@ func transformerPutOrFilterParseCLI(
 			printASTSingleLine = true
 		case "-X":
 			exitAfterParse = true
+		case "--explain":
+			doExplain = true
 		case "-w":
 			doWarnings = true
 			warningsAreFatal = false
@@ -375,6 +380,7 @@ func transformerPutOrFilterParseCLI(
 		printASTMultiLine,
 		printASTSingleLine,
 		exitAfterParse,
+		doExplain,
 		doWarnings,
 		warningsAreFatal,
 		strictMode,
@@ -409,6 +415,7 @@ func NewTransformerPut(
 	printASTMultiLine bool,
 	printASTSingleLine bool,
 	exitAfterParse bool,
+	doExplain bool,
 	doWarnings bool,
 	warningsAreFatal bool,
 	strictMode bool,
@@ -448,6 +455,26 @@ func NewTransformerPut(
 
 		},
 	)
+
+	// --explain is a validate/dry-run: report whether the DSL parsed and
+	// type-checked, then exit without reading the input stream. A parse/build
+	// error is returned so it flows through the normal error path (including
+	// --errors-json); a valid expression prints a confirmation and exits 0.
+	if doExplain {
+		if err != nil {
+			return nil, err
+		}
+		verbName := "put"
+		if doFilter {
+			verbName = "filter"
+		}
+		if warningsAreFatal && hadWarnings {
+			fmt.Fprintf(os.Stderr, "mlr %s: DSL expression has warnings treated as fatal.\n", verbName)
+			os.Exit(1)
+		}
+		fmt.Printf("mlr %s: DSL expression is valid.\n", verbName)
+		os.Exit(0)
+	}
 
 	if warningsAreFatal && hadWarnings {
 		fmt.Printf(

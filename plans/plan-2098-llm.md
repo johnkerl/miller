@@ -226,7 +226,7 @@ per the issue.)
 
 ---
 
-## PR 5 — DSL `--explain` / validate dry-run
+## PR 5 — DSL `--explain` / validate dry-run  *(landed)*
 
 **Goal.** Validate/type-check a DSL expression *before* spending a full input
 pass (a big context saver for agents).
@@ -235,6 +235,19 @@ pass (a big context saver for agents).
   DSL, report errors (ideally via the PR4 structured-error path), and exit
   **without consuming the full input stream**.
 - Reuse the existing DSL parse/CST build path; gate it before the record loop.
+
+**Landed.** `--explain` added to put/filter (`put_or_filter.go`): after the
+existing `cstRootNode.Build` (which already does parse → ValidateAST → CST build
+→ Resolve), a valid expression prints `mlr {put,filter}: DSL expression is
+valid.` and exits 0; an invalid one returns the build error up the normal path,
+so `--errors-json` yields a structured document. The gate sits in the pass-two
+constructor, before any input file is opened, so no input is read. DSL parser
+messages (`parse error: ...`) now categorize as `dsl-parse-error` rather than
+`generic` (`climain/errors_json.go`). Tests: `dsl-explain/0001-0004` regression
+cases (valid put/filter, invalid plain, invalid `--errors-json`) plus categorize
+unit tests. Note: the older `-X` ("exit after parsing") still exits 0 even on a
+parse error — a pre-existing quirk left as-is since `--explain` is the correct
+validation path.
 
 ---
 
