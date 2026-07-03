@@ -72,8 +72,8 @@ func RunDiffCommandOnStrings(
 ) {
 	actualOutputFileName := lib.WriteTempFileOrDie(actualOutput)
 	expectedOutputFileName := lib.WriteTempFileOrDie(expectedOutput)
-	defer os.Remove(actualOutputFileName)
-	defer os.Remove(expectedOutputFileName)
+	defer func() { _ = os.Remove(actualOutputFileName) }()
+	defer func() { _ = os.Remove(expectedOutputFileName) }()
 
 	// This is diff or fc
 	diffRunArray := platform.GetDiffRunArray(actualOutputFileName, expectedOutputFileName)

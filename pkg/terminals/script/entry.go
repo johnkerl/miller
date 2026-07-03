@@ -123,8 +123,14 @@ func ScriptMain(args []string) int {
 		scriptUsage(scriptName, os.Stderr, 1)
 	}
 
-	cli.FinalizeReaderOptions(&options.ReaderOptions)
-	cli.FinalizeWriterOptions(&options.WriterOptions)
+	if err := cli.FinalizeReaderOptions(&options.ReaderOptions); err != nil {
+		fmt.Fprintf(os.Stderr, "mlr %s: %v\n", scriptName, err)
+		return 1
+	}
+	if err := cli.FinalizeWriterOptions(&options.WriterOptions); err != nil {
+		fmt.Fprintf(os.Stderr, "mlr %s: %v\n", scriptName, err)
+		return 1
+	}
 	options.WriterOptions.AutoFlatten = cli.DecideFinalFlatten(&options.WriterOptions)
 	options.WriterOptions.AutoUnflatten = cli.DecideFinalUnflatten(options, [][]string{})
 
@@ -143,7 +149,11 @@ func ScriptMain(args []string) int {
 		os.Exit(1)
 	}
 
-	scr.bufferedRecordOutputStream.Flush()
+	err = scr.bufferedRecordOutputStream.Flush()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "mlr script: %v\n", err)
+		os.Exit(1)
+	}
 	err = scr.closeBufferedOutputStream()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "mlr script: %v\n", err)

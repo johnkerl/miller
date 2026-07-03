@@ -39,7 +39,7 @@ func unhexMain(args []string) int {
 				os.Exit(1)
 			}
 			unhexFile(istream, os.Stdout)
-			istream.Close()
+			_ = istream.Close()
 		}
 	}
 
@@ -83,7 +83,10 @@ func unhexFile(istream *os.File, ostream *os.File) {
 					os.Exit(1)
 				}
 				byteArray[0] = byte(scanValue)
-				ostream.Write(byteArray)
+				if _, err := ostream.Write(byteArray); err != nil {
+					fmt.Fprintln(os.Stderr, "mlr unhex:", err)
+					os.Exit(1)
+				}
 			}
 		}
 	}

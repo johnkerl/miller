@@ -788,7 +788,7 @@ func BIF_json_parse(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_json_stringify_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	outputBytes, err := input1.MarshalJSON(mlrval.JSON_SINGLE_LINE, false)
+	outputBytes, err := input1.FormatAsJSON(mlrval.JSON_SINGLE_LINE, false)
 	if err != nil {
 		return mlrval.FromError(err)
 	}
@@ -805,7 +805,7 @@ func BIF_json_stringify_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		jsonFormatting = mlrval.JSON_MULTILINE
 	}
 
-	outputBytes, err := input1.MarshalJSON(jsonFormatting, false)
+	outputBytes, err := input1.FormatAsJSON(jsonFormatting, false)
 	if err != nil {
 		return mlrval.FromError(err)
 	}

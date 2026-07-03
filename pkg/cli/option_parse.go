@@ -3458,7 +3458,7 @@ var MiscFlagSection = FlagSection{
 					fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 					os.Exit(1)
 				}
-				defer handle.Close()
+				defer func() { _ = handle.Close() }()
 
 				lineReader := bufio.NewReader(handle)
 
@@ -3565,7 +3565,7 @@ var MiscFlagSection = FlagSection{
 			help: "Specify timezone, overriding `$TZ` environment variable (if any).",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
-				os.Setenv("TZ", args[*pargi+1])
+				_ = os.Setenv("TZ", args[*pargi+1])
 				*pargi += 2
 			},
 		},

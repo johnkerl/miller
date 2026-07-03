@@ -47,7 +47,7 @@ func tryLoadMlrrc(
 	if err != nil {
 		return false
 	}
-	defer handle.Close()
+	defer func() { _ = handle.Close() }()
 
 	lineReader := bufio.NewReader(handle)
 

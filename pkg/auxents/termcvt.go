@@ -96,9 +96,11 @@ func termcvtMain(args []string) int {
 
 			termcvtFile(istream, ostream, inputTerminator, outputTerminator)
 
-			istream.Close()
-			// TODO: check return status
-			ostream.Close()
+			_ = istream.Close()
+			if err := ostream.Close(); err != nil {
+				fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
+				os.Exit(1)
+			}
 
 			err = os.Rename(tempname, filename)
 			if err != nil {
@@ -120,7 +122,7 @@ func termcvtMain(args []string) int {
 
 			termcvtFile(istream, os.Stdout, inputTerminator, outputTerminator)
 
-			istream.Close()
+			_ = istream.Close()
 		}
 	}
 	return 0
@@ -144,6 +146,9 @@ func termcvtFile(istream *os.File, ostream *os.File, inputTerminator string, out
 
 		// This is how to do a chomp:
 		line = strings.TrimRight(line, inputTerminator)
-		ostream.Write([]byte(line + outputTerminator))
+		if _, err := ostream.Write([]byte(line + outputTerminator)); err != nil {
+			fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
+			os.Exit(1)
+		}
 	}
 }

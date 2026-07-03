@@ -164,7 +164,8 @@ var whichStopwords = map[string]bool{
 // single-character tokens and stopwords.
 func whichTokenize(query string) []string {
 	words := strings.FieldsFunc(strings.ToLower(query), func(r rune) bool {
-		return !('a' <= r && r <= 'z') && !('0' <= r && r <= '9') && r != '-' && r != '_'
+		isWordRune := ('a' <= r && r <= 'z') || ('0' <= r && r <= '9') || r == '-' || r == '_'
+		return !isWordRune
 	})
 	var tokens []string
 	seen := map[string]bool{}

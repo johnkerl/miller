@@ -143,7 +143,8 @@ func (node *DirectFieldValueLvalueNode) UnassignIndexed(
 		name := node.lhsFieldName.String()
 		state.Inrec.Remove(name)
 	} else {
-		state.Inrec.RemoveIndexed(
+		// unset of a non-existent path is a no-op
+		_ = state.Inrec.RemoveIndexed(
 			append([]*mlrval.Mlrval{node.lhsFieldName}, indices...),
 		)
 	}
@@ -254,7 +255,8 @@ func (node *IndirectFieldValueLvalueNode) UnassignIndexed(
 		name := lhsFieldName.String()
 		state.Inrec.Remove(name)
 	} else {
-		state.Inrec.RemoveIndexed(
+		// unset of a non-existent path is a no-op
+		_ = state.Inrec.RemoveIndexed(
 			append([]*mlrval.Mlrval{lhsFieldName.Copy()}, indices...),
 		)
 	}
@@ -357,12 +359,12 @@ func (node *PositionalFieldNameLvalueNode) UnassignIndexed(
 		index, ok := lhsFieldIndex.GetIntValue()
 		if ok {
 			state.Inrec.RemoveWithPositionalIndex(index)
-		} else {
-			// TODO: incorporate error-return into this API
 		}
+		// TODO: incorporate error-return into this API for the non-int case
 	} else {
 		// xxx positional
-		state.Inrec.RemoveIndexed(
+		// unset of a non-existent path is a no-op
+		_ = state.Inrec.RemoveIndexed(
 			append([]*mlrval.Mlrval{lhsFieldIndex}, indices...),
 		)
 	}
@@ -475,12 +477,12 @@ func (node *PositionalFieldValueLvalueNode) UnassignIndexed(
 		index, ok := lhsFieldIndex.GetIntValue()
 		if ok {
 			state.Inrec.RemoveWithPositionalIndex(index)
-		} else {
-			// TODO: incorporate error-return into this API
 		}
+		// TODO: incorporate error-return into this API for the non-int case
 	} else {
 		// xxx positional
-		state.Inrec.RemoveIndexed(
+		// unset of a non-existent path is a no-op
+		_ = state.Inrec.RemoveIndexed(
 			append([]*mlrval.Mlrval{lhsFieldIndex}, indices...),
 		)
 	}
@@ -493,7 +495,7 @@ func (root *RootNode) BuildFullSrecLvalueNode(astNode *asts.ASTNode) (IAssignabl
 	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeFullSrec))
 	lib.InternalCodingErrorIf(astNode == nil)
 	// PGPG FullSrec has empty list as children
-	lib.InternalCodingErrorIf(astNode.Children != nil && len(astNode.Children) > 0)
+	lib.InternalCodingErrorIf(len(astNode.Children) > 0)
 	return NewFullSrecLvalueNode(), nil
 }
 
@@ -556,7 +558,8 @@ func (node *FullSrecLvalueNode) UnassignIndexed(
 	if indices == nil {
 		state.Inrec.Clear()
 	} else {
-		state.Inrec.RemoveIndexed(indices)
+		// unset of a non-existent path is a no-op
+		_ = state.Inrec.RemoveIndexed(indices)
 	}
 }
 
@@ -625,7 +628,8 @@ func (node *DirectOosvarValueLvalueNode) UnassignIndexed(
 		name := node.lhsOosvarName.String()
 		state.Oosvars.Remove(name)
 	} else {
-		state.Oosvars.RemoveIndexed(
+		// unset of a non-existent path is a no-op
+		_ = state.Oosvars.RemoveIndexed(
 			append([]*mlrval.Mlrval{node.lhsOosvarName}, indices...),
 		)
 	}
@@ -705,7 +709,8 @@ func (node *IndirectOosvarValueLvalueNode) UnassignIndexed(
 		sname := lhsOosvarName.String()
 		state.Oosvars.Remove(sname)
 	} else {
-		state.Oosvars.RemoveIndexed(
+		// unset of a non-existent path is a no-op
+		_ = state.Oosvars.RemoveIndexed(
 			append([]*mlrval.Mlrval{lhsOosvarName}, indices...),
 		)
 	}
@@ -717,7 +722,7 @@ type FullOosvarLvalueNode struct {
 func (root *RootNode) BuildFullOosvarLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != asts.NodeType(NodeTypeFullOosvar))
 	lib.InternalCodingErrorIf(astNode == nil)
-	lib.InternalCodingErrorIf(astNode.Children != nil && len(astNode.Children) > 0)
+	lib.InternalCodingErrorIf(len(astNode.Children) > 0)
 	return NewFullOosvarLvalueNode(), nil
 }
 
@@ -762,7 +767,8 @@ func (node *FullOosvarLvalueNode) UnassignIndexed(
 	if indices == nil {
 		state.Oosvars.Clear()
 	} else {
-		state.Oosvars.RemoveIndexed(indices)
+		// unset of a non-existent path is a no-op
+		_ = state.Oosvars.RemoveIndexed(indices)
 	}
 }
 
@@ -780,7 +786,7 @@ type LocalVariableLvalueNode struct {
 }
 
 func (root *RootNode) BuildTypedeclLocalVariableLvalueNode(astNode *asts.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Children == nil || len(astNode.Children) < 2)
+	lib.InternalCodingErrorIf(len(astNode.Children) < 2)
 	typeNode := astNode.Children[0]
 	varNode := astNode.Children[1]
 	// PGPG Typedecl produces kw_int, kw_bool, etc. (no Typedecl wrapper node)
@@ -803,7 +809,7 @@ func (root *RootNode) BuildLocalVariableLvalueNode(astNode *asts.ASTNode) (IAssi
 	typeName := "any"
 	defineTypedAtScope := false
 	// PGPG: LocalVariable is terminal (children nil or empty). Miller had typed params with Children[0]=Typedecl.
-	if astNode.Children != nil && len(astNode.Children) > 0 { // typed, like 'num x = 3'
+	if len(astNode.Children) > 0 { // typed, like 'num x = 3'
 		typeNode := astNode.Children[0]
 		lib.InternalCodingErrorIf(typeNode.Type != asts.NodeType(NodeTypeTypedecl))
 		typeName = tokenLit(typeNode)
@@ -1062,7 +1068,9 @@ func (node *EnvironmentVariableLvalueNode) Assign(
 
 	sname := name.String()
 	svalue := rvalue.String()
-	os.Setenv(sname, svalue)
+	if err := os.Setenv(sname, svalue); err != nil {
+		return err
+	}
 	if sname == "TZ" {
 		err := lib.SetTZFromEnv() // affects the time library; notify it
 		if err != nil {
@@ -1093,7 +1101,7 @@ func (node *EnvironmentVariableLvalueNode) Unassign(
 		return
 	}
 
-	os.Unsetenv(name.String())
+	_ = os.Unsetenv(name.String())
 }
 
 func (node *EnvironmentVariableLvalueNode) UnassignIndexed(

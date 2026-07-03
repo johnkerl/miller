@@ -79,6 +79,10 @@ CSV, TSV, CSV-lite, and TSV-lite have in common the `--implicit-csv-header` flag
 
 See also the [`--lazy-quotes` flag](reference-main-flag-list.md#csv-only-flags), which can help with CSV files that are not fully compliant with RFC-4180.
 
+### Troubleshooting CSV and JSON input
+
+Please see [this page](troubleshooting-csv-and-json-input.md).
+
 ## JSON
 
 [JSON](https://json.org) is a format which supports scalars (numbers, strings,

@@ -102,7 +102,9 @@ func transformerTeeParseCLI(
 		}
 	}
 
-	cli.FinalizeWriterOptions(&localOptions.WriterOptions)
+	if err := cli.FinalizeWriterOptions(&localOptions.WriterOptions); err != nil {
+		return nil, cli.VerbErrorf(verbNameTee, "%v", err)
+	}
 
 	// Get the filename/command from the command line, after the flags
 	if argi >= argc {

@@ -149,16 +149,16 @@ func (rt *RegTester) Execute(
 ) bool {
 	// Don't let the current user's settings affect expected results
 	for _, name := range envVarsToUnset {
-		os.Unsetenv(name)
+		_ = os.Unsetenv(name)
 	}
 	// If there is an accessible .mlrrc file, we don't want it to be read for the regression test.
-	os.Setenv("MLRRC", "__none__")
+	_ = os.Setenv("MLRRC", "__none__")
 
 	// This is important for multi-platform regression testing, wherein default floating-point
 	// output format has varying numbers of decimal places between the platform where
 	// the expected results were generated, and the platform where the actual values are being
 	// computed. For regression-test we OFMT from an environment variable.
-	os.Setenv("MLR_OFMT", "%.8f")
+	_ = os.Setenv("MLR_OFMT", "%.8f")
 
 	rt.resetCounts()
 
@@ -328,7 +328,7 @@ func (rt *RegTester) hasCaseSubdirectories(
 		fmt.Printf("%s: %v\n", dirName, err)
 		os.Exit(1)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	names, err := f.Readdirnames(-1)
 	if err != nil {
@@ -461,12 +461,12 @@ func (rt *RegTester) executeSingleCmdFile(
 		if verbosityLevel >= 3 {
 			fmt.Printf("SETENV %s=%s\n", key, value)
 		}
-		os.Setenv(key, value)
+		_ = os.Setenv(key, value)
 	}
 	// This is so 'mlr' files can find the case-directory if they need it --
 	// typically, for redirected emit/dump/etc statements where we want
 	// the redirected-to files to be written into the case-directory.
-	os.Setenv("CASEDIR", caseDir)
+	_ = os.Setenv("CASEDIR", caseDir)
 
 	// Copy any files requested by the test. (Most don't; some do, e.g. those
 	// which test the write-in-place logic of mlr -I.)
@@ -496,9 +496,9 @@ func (rt *RegTester) executeSingleCmdFile(
 		if verbosityLevel >= 3 {
 			fmt.Printf("UNSETENV %s\n", key)
 		}
-		os.Setenv(key, "")
+		_ = os.Setenv(key, "")
 	}
-	os.Setenv("CASEDIR", "")
+	_ = os.Setenv("CASEDIR", "")
 
 	// The .postcmp needn't exist (most test cases don't have one) in which case
 	// the returned map will be empty.
@@ -542,7 +542,7 @@ func (rt *RegTester) executeSingleCmdFile(
 		// Write the .should-fail file
 		if actualExitCode == 0 {
 			// Remove it, if it exists.
-			os.Remove(expectFailFileName)
+			_ = os.Remove(expectFailFileName)
 		} else {
 			err = rt.storeFile(expectFailFileName, "")
 			if err != nil {
@@ -716,7 +716,7 @@ func (rt *RegTester) executeSingleCmdFile(
 		// Clean up any requested file-copies so that we're git-clean after the regression-test run.
 		for _, pair := range preCopySrcDestPairs {
 			dst := pair.second
-			os.Remove(dst)
+			_ = os.Remove(dst)
 			if verbosityLevel >= 3 {
 				fmt.Printf("%s: clean up %s\n", cmdFilePath, dst)
 			}
@@ -725,7 +725,7 @@ func (rt *RegTester) executeSingleCmdFile(
 		// Clean up any extra output files so that we're git-clean after the regression-test run.
 		for _, pair := range postCompareExpectedActualPairs {
 			actualFileName := pair.second
-			os.Remove(actualFileName)
+			_ = os.Remove(actualFileName)
 			if verbosityLevel >= 3 {
 				fmt.Printf("%s: clean up %s\n", cmdFilePath, actualFileName)
 			}

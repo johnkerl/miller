@@ -202,7 +202,9 @@ func (node *DumpStatementNode) Execute(state *runtime.State) (*BlockExitPayload,
 		}
 	}
 	outputString := buffer.String()
-	node.dumpToRedirectFunc(outputString, state)
+	if err := node.dumpToRedirectFunc(outputString, state); err != nil {
+		return nil, err
+	}
 	return nil, nil
 }
 
@@ -244,6 +246,5 @@ func (node *DumpStatementNode) dumpToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	node.outputHandlerManager.WriteString(outputString, outputFileName)
-	return nil
+	return node.outputHandlerManager.WriteString(outputString, outputFileName)
 }

@@ -269,7 +269,9 @@ func transformerJoinParseCLI(
 		}
 	}
 
-	cli.FinalizeReaderOptions(&opts.joinFlagOptions.ReaderOptions)
+	if err := cli.FinalizeReaderOptions(&opts.joinFlagOptions.ReaderOptions); err != nil {
+		return nil, cli.VerbErrorf(verb, "%v", err)
+	}
 
 	if opts.leftFileName == "" {
 		return nil, cli.VerbErrorf(verb, "need left file name")
