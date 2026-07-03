@@ -87,12 +87,14 @@ nil check before len), 3 QF1007 (merge conditional assignment), 3 QF1006 (lift i
    - `os.Setenv`/`os.Unsetenv` — low-risk but cheap to fix
 2. `staticcheck` style — 34 findings, mostly mechanical (type inference, nil-check cleanup, etc.)
 
-## Possible bug noticed in passing (not lint scope)
+## Bug noticed in passing (fixed on `johnkerl/lint4`)
 
-In `pkg/mlrval/mlrval_collections.go`, `removeIndexedOnArray` with a single in-bounds index removes
-the element but then falls through to `return errors.New("array index out of bounds for unset")` —
-the success path never returns nil. Callers currently ignore this error (that's several of the
-errcheck findings), so fixing errcheck here will surface this. Worth deciding intended behavior first.
+In `pkg/mlrval/mlrval_collections.go`, `removeIndexedOnArray` with a single in-bounds index removed
+the element but then fell through to `return errors.New("array index out of bounds for unset")` —
+the success path never returned nil. Callers ignored the error (several of the errcheck findings),
+which masked it. Fixed by returning nil on the success path, matching `removeIndexedOnMap`;
+unit tests added in `pkg/mlrval/mlrval_collections_test.go`. No observable behavior change today,
+but errcheck fixes for `RemoveIndexed` call sites can now propagate the error meaningfully.
 
 ## Unique source files with issues (baseline, 64 files)
 

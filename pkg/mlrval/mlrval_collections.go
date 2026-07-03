@@ -459,6 +459,7 @@ func removeIndexedOnArray(
 			leftSlice := (*baseArray)[0:zindex]
 			rightSlice := (*baseArray)[zindex+1 : len((*baseArray))]
 			*baseArray = append(leftSlice, rightSlice...)
+			return nil
 		} else if mindex.intf.(int64) == 0 {
 			return errors.New("zero indices are not supported. Indices are 1-up")
 		}
