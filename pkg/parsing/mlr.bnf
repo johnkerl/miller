@@ -95,6 +95,8 @@ const_M_PI      ::= 'M' '_' 'P' 'I' ;
 const_M_E       ::= 'M' '_' 'E' ;
 # %%%panic%%% - special token for short-circuit tests (causes panic when evaluated)
 panic           ::= '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
+# Bytes literals b"..." (must precede non_sigil_name since 'b' is an idchar)
+bytes_literal   ::= 'b' '"' { _string_char | _escape } '"' ;
 non_sigil_name  ::= _leading_idchar { _idchar } ;
 
 _hex ::= '0'-'9' | 'A'-'F' | 'a'-'f' ;
@@ -652,6 +654,7 @@ MlrvalOrFunction ::=
   | FloatLiteral
   | RegexCaseInsensitive
   | StringLiteral
+  | BytesLiteral
   | BoolLiteral
   | NullLiteral
   | PanicLiteral
@@ -702,6 +705,8 @@ RegexCaseInsensitive ::=
   string_literal non_sigil_name -> { "parent": 0, "children": [0], "type": "RegexCaseInsensitive" } ;
 StringLiteral::=
   string_literal -> { "parent": 0, "children": [], "type": "string_literal" } ;
+BytesLiteral ::=
+  bytes_literal -> { "parent": 0, "children": [], "type": "bytes_literal" } ;
 BoolLiteral          ::=
     literal_true  -> { "parent": 0, "children": [], "type": "bool_literal" }
   | literal_false -> { "parent": 0, "children": [], "type": "bool_literal" }

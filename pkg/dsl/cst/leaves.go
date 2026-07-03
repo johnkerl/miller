@@ -42,6 +42,9 @@ func (root *RootNode) BuildLeafNode(
 	case asts.NodeType(NodeTypeStringLiteral):
 		return root.BuildStringLiteralNode(sval), nil
 
+	case asts.NodeType(NodeTypeBytesLiteral):
+		return root.BuildBytesLiteralNode(sval), nil
+
 	case asts.NodeType(NodeTypeRegex):
 		// During the BNF parse all string literals -- "foo" or "(..)_(...)"
 		// regexes etc -- are marked as asts.NodeType(NodeTypeStringLiteral). However, a
@@ -103,6 +106,8 @@ func (root *RootNode) BuildLeafNode(
 		return root.BuildLocalVariableNode(sval), nil
 	case "string_literal":
 		return root.BuildStringLiteralNode(sval), nil
+	case "bytes_literal":
+		return root.BuildBytesLiteralNode(sval), nil
 	case "int_literal":
 		return root.BuildIntLiteralNode(sval), nil
 	case "float_literal":
@@ -325,6 +330,33 @@ func (root *RootNode) BuildStringLiteralNode(literal string) IEvaluable {
 }
 
 func (node *StringLiteralNode) Evaluate(
+	state *runtime.State,
+) *mlrval.Mlrval {
+	return node.literal
+}
+
+type BytesLiteralNode struct {
+	literal *mlrval.Mlrval
+}
+
+func (root *RootNode) BuildBytesLiteralNode(literal string) IEvaluable {
+	// The PGPG lexer produces a bytes_literal token with the leading 'b' and
+	// surrounding quotes in the lexeme. Strip them so b"a" becomes a.
+	if len(literal) >= 1 && literal[0] == 'b' {
+		literal = literal[1:]
+	}
+	if len(literal) >= 2 && literal[0] == '"' && literal[len(literal)-1] == '"' {
+		literal = literal[1 : len(literal)-1]
+	}
+	// UnbackslashStringLiteral is byte-oriented: "\xff" becomes the single
+	// byte 0xff, not the UTF-8 encoding of U+00FF. Unlike string literals,
+	// bytes literals never participate in regex-capture replacement.
+	return &BytesLiteralNode{
+		literal: mlrval.FromBytes([]byte(lib.UnbackslashStringLiteral(literal))),
+	}
+}
+
+func (node *BytesLiteralNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
 	return node.literal

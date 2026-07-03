@@ -82,6 +82,7 @@ const (
 	NodeTypeIntLiteral                = "int_literal"
 	NodeTypeFloatLiteral              = "float_literal"
 	NodeTypeStringLiteral             = "string_literal"
+	NodeTypeBytesLiteral              = "bytes_literal"
 	NodeTypeBoolLiteral               = "bool_literal"
 	NodeTypeNullLiteral               = "null_literal"
 	NodeTypeMultiIndex                = "MultiIndex"

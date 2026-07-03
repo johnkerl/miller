@@ -1,6 +1,7 @@
 package mlrval
 
 import (
+	"encoding/hex"
 	"fmt"
 	"os"
 	"reflect"
@@ -90,6 +91,9 @@ func (mv *Mlrval) setPrintRep() {
 			} else {
 				mv.printrep = "false"
 			}
+
+		case MT_BYTES:
+			mv.printrep = hex.EncodeToString(mv.intf.([]byte))
 
 		case MT_ARRAY:
 			bytes, err := mv.FormatAsJSON(JSON_MULTILINE, false)
