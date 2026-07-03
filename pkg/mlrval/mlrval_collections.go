@@ -474,8 +474,6 @@ func removeIndexedOnArray(
 		// TODO: improve wording
 		return errors.New("array index out of bounds for unset")
 	}
-
-	return nil
 }
 
 // Nominally for TopKeeper

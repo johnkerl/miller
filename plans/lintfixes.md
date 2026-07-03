@@ -57,30 +57,42 @@ golangci-lint v2.12.2, run against `./cmd/mlr ./pkg/...` (same as CI).
 | [#2112](https://github.com/johnkerl/miller/pull/2112) | Convert if/else-if chains to typed switch (staticcheck QF1003) | 2026-06-28 |
 
 PR #2112 alone fixed ~29 QF1003 findings across 72 files. PRs #2108 and #2110 addressed other batches.
-**Run `make lint` on a fresh sync of `main` to get the current remaining count before continuing.**
 
-## Work done on branch `johnkerl/lintfixes`
+**Note:** The `johnkerl/lintfixes` branch listed commits `0f8b931bc` (MarshalJSON rename) and
+`f57edc037` (unreachable code) in an earlier version of this file, but those were never pushed —
+`origin/johnkerl/lintfixes` ends at the plan-file commit. Those fixes were redone on `johnkerl/lint4`.
 
-| Commit | Description |
-|--------|-------------|
-| `2c577fb39` | Add `make lint` target, linter setup docs in `CLAUDE.md` and `README-dev.md` |
-| `e067e286c` | Add `plans/lintfixes.md` (this file) |
-| `0f8b931bc` | Rename `MarshalJSON` → `FormatAsJSON` on `Mlrval` and `Mlrmap` (fixes `govet stdmethods`, 2 findings) |
-| `f57edc037` | Remove unreachable `return nil` after exhaustive if-else in `mlrval_collections.go` (fixes `govet unreachable`, 1 finding) |
+## Work done on branch `johnkerl/lint4` (2026-07-03)
 
-**Note:** Before continuing on `johnkerl/lintfixes`, sync with `main` (`git merge main` or rebase) since
-PRs #2108, #2110, and #2112 have merged and will affect which findings remain.
+- Rename `MarshalJSON` → `FormatAsJSON` on `Mlrval` and `Mlrmap` (fixes `govet stdmethods`, 2 findings;
+  13 references across 6 files). The old signature shadowed `json.Marshaler` with an incompatible one.
+- Remove unreachable `return nil` after exhaustive if-else in `pkg/mlrval/mlrval_collections.go`
+  (fixes `govet unreachable`, 1 finding).
+- The `unused` finding (`exeName` field in `pkg/terminals/script/types.go`) was already resolved on
+  `main` by an unrelated change (field renamed to `name` and now referenced).
+
+## Remaining after `johnkerl/lint4` govet batch (2026-07-03)
+
+**84 issues: 50 errcheck, 34 staticcheck.** All `govet`, `unused`, and `ineffassign` findings are resolved.
+
+Staticcheck breakdown: 16 ST1023 (omit explicit type), 3 SA9003 (empty branch), 3 S1009 (redundant
+nil check before len), 3 QF1007 (merge conditional assignment), 3 QF1006 (lift into loop condition),
+3 QF1001 (De Morgan), 2 QF1011 (omit explicit type), 1 S1031 (nil check before range).
 
 ## Priority order for remaining fixes
 
-1. `govet` findings — highest priority (real correctness issues, not style). All 3 are now fixed.
-2. `unused` — 1 finding, `pkg/terminals/script/types.go:18`, unused struct field `exeName`. Trivial.
-3. `errcheck` — 50 findings. Varies in seriousness:
+1. `errcheck` — 50 findings. Varies in seriousness:
    - DSL emit/execute return values, `RemoveIndexed`/`PutIndexed`, `Flush`/`Close` — worth checking individually
    - `fmt.Fprintf`/`fmt.Fprint` to stderr — genuinely safe to ignore; consider `//nolint:errcheck`
    - `os.Setenv`/`os.Unsetenv` — low-risk but cheap to fix
-4. `ineffassign` — 30 findings, mechanical/safe
-5. `staticcheck` style — 50 findings, mostly mechanical (type inference, nil-check cleanup, etc.)
+2. `staticcheck` style — 34 findings, mostly mechanical (type inference, nil-check cleanup, etc.)
+
+## Possible bug noticed in passing (not lint scope)
+
+In `pkg/mlrval/mlrval_collections.go`, `removeIndexedOnArray` with a single in-bounds index removes
+the element but then falls through to `return errors.New("array index out of bounds for unset")` —
+the success path never returns nil. Callers currently ignore this error (that's several of the
+errcheck findings), so fixing errcheck here will surface this. Worth deciding intended behavior first.
 
 ## Unique source files with issues (baseline, 64 files)
 
