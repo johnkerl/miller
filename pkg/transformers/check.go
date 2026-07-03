@@ -11,11 +11,14 @@ import (
 
 const verbNameCheck = "check"
 
+var checkOptions = []OptionSpec{}
+
 var CheckSetup = TransformerSetup{
 	Verb:         verbNameCheck,
 	UsageFunc:    transformerCheckUsage,
 	ParseCLIFunc: transformerCheckParseCLI,
 	IgnoresInput: false,
+	Options:      checkOptions,
 }
 
 func transformerCheckUsage(
@@ -23,13 +26,12 @@ func transformerCheckUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameCheck)
 	fmt.Fprintf(o, "Consumes records without printing any output,\n")
-	fmt.Fprintf(o, "Useful for doing a well-formatted check on input data.\n")
 	fmt.Fprintf(o, "with the exception that warnings are printed to stderr.\n")
+	fmt.Fprintf(o, "Useful for doing a well-formatted check on input data.\n")
 	fmt.Fprintf(o, "Current checks are:\n")
 	fmt.Fprintf(o, "* Data are parseable\n")
 	fmt.Fprintf(o, "* If any key is the empty string\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, checkOptions)
 }
 
 func transformerCheckParseCLI(

@@ -16,11 +16,27 @@ import (
 
 const verbNameNest = "nest"
 
+var nestOptions = []OptionSpec{
+	{Flag: "--explode", Type: "bool", Desc: "Explode field values into separate fields/records. One of --explode or --implode is required."},
+	{Flag: "--implode", Type: "bool", Desc: "Reverse of --explode. One of --explode or --implode is required."},
+	{Flag: "--values", Type: "bool", Desc: "Operate on field values. One of --values or --pairs is required."},
+	{Flag: "--pairs", Type: "bool", Desc: "Operate on field key-value pairs. One of --values or --pairs is required."},
+	{Flag: "--across-records", Type: "bool", Desc: "Explode/implode across records. One of --across-records or --across-fields is required."},
+	{Flag: "--across-fields", Type: "bool", Desc: "Explode/implode across fields. One of --across-records or --across-fields is required."},
+	{Flag: "-f", Arg: "{field name}", Type: "string", Desc: "Required field name to operate on."},
+	{Flag: "-r", Arg: "{field names}", Type: "regex", Desc: "Like -f but treat arguments as a regular expression. Match all field names and operate on each in record order. Example: -r '^[xy]$'."},
+	{Flag: "--nested-fs", Arg: "{string}", Type: "string", Desc: "Field separator for nested values. Defaults to \";\"."},
+	{Flag: "--nested-ps", Arg: "{string}", Type: "string", Desc: "Pair separator for nested key-value pairs. Defaults to \":\"."},
+	{Flag: "--evar", Arg: "{string}", Type: "string", Desc: "Shorthand for --explode --values --across-records --nested-fs {string}."},
+	{Flag: "--ivar", Arg: "{string}", Type: "string", Desc: "Shorthand for --implode --values --across-records --nested-fs {string}."},
+}
+
 var NestSetup = TransformerSetup{
 	Verb:         verbNameNest,
 	UsageFunc:    transformerNestUsage,
 	ParseCLIFunc: transformerNestParseCLI,
 	IgnoresInput: false,
+	Options:      nestOptions,
 }
 
 func transformerNestUsage(
@@ -31,17 +47,7 @@ func transformerNestUsage(
 
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprintf(o, "Explodes specified field values into separate fields/records, or reverses this.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "  --explode,--implode   One is required.\n")
-	fmt.Fprintf(o, "  --values,--pairs      One is required.\n")
-	fmt.Fprintf(o, "  --across-records,--across-fields One is required.\n")
-	fmt.Fprintf(o, "  -f {field name}       Required.\n")
-	fmt.Fprintf(o, "  -r {field names}      Like -f but treat arguments as a regular expression. Match all\n")
-	fmt.Fprintf(o, "                        field names and operate on each in record order. Example: `-r '^[xy]$`'.\n")
-	fmt.Fprintf(o, "  --nested-fs {string}  Defaults to \";\". Field separator for nested values.\n")
-	fmt.Fprintf(o, "  --nested-ps {string}  Defaults to \":\". Pair separator for nested key-value pairs.\n")
-	fmt.Fprintf(o, "  --evar {string}       Shorthand for --explode --values --across-records --nested-fs {string}\n")
-	fmt.Fprintf(o, "  --ivar {string}       Shorthand for --implode --values --across-records --nested-fs {string}\n")
+	WriteVerbOptions(o, nestOptions)
 	fmt.Fprintf(o, "Please use \"%s --usage-separator-options\" for information on specifying separators.\n",
 		argv0)
 

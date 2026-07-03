@@ -67,11 +67,19 @@ var summaryDefaultSummarizerNames = []string{
 	"distinct_count",
 }
 
+var summaryOptions = []OptionSpec{
+	{Flag: "-a", Arg: "{mean,sum,etc.}", Type: "enum", Desc: "Use only the specified summarizers.", Values: []string{"field_type", "count", "null_count", "distinct_count", "mode", "sum", "mean", "stddev", "var", "skewness", "minlen", "maxlen", "min", "p25", "median", "p75", "max", "iqr", "lof", "lif", "uif", "uof"}},
+	{Flag: "-x", Arg: "{mean,sum,etc.}", Type: "enum", Desc: "Use all summarizers except the specified ones.", Values: []string{"field_type", "count", "null_count", "distinct_count", "mode", "sum", "mean", "stddev", "var", "skewness", "minlen", "maxlen", "min", "p25", "median", "p75", "max", "iqr", "lof", "lif", "uif", "uof"}},
+	{Flag: "--all", Type: "bool", Desc: "Use all available summarizers."},
+	{Flag: "--transpose", Type: "bool", Desc: "Show output with field names as column names."},
+}
+
 var SummarySetup = TransformerSetup{
 	Verb:         verbNameSummary,
 	UsageFunc:    transformerSummaryUsage,
 	ParseCLIFunc: transformerSummaryParseCLI,
 	IgnoresInput: false,
+	Options:      summaryOptions,
 }
 
 func transformerSummaryUsage(
@@ -100,12 +108,7 @@ func transformerSummaryUsage(
 	fmt.Fprintf(o, "* Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.\n")
 	fmt.Fprintf(o, "* If the mode is not unique in the input data, the first-encountered value is reported as the mode.\n")
 	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-a {mean,sum,etc.} Use only the specified summarizers.\n")
-	fmt.Fprintf(o, "-x {mean,sum,etc.} Use all summarizers, except the specified ones.\n")
-	fmt.Fprintf(o, "--all              Use all available summarizers.\n")
-	fmt.Fprintf(o, "--transpose        Show output with field names as column names..\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, summaryOptions)
 }
 
 func transformerSummaryParseCLI(

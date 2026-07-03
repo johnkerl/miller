@@ -12,11 +12,14 @@ import (
 
 const verbNameRemoveEmptyColumns = "remove-empty-columns"
 
+var removeEmptyColumnsOptions = []OptionSpec{}
+
 var RemoveEmptyColumnsSetup = TransformerSetup{
 	Verb:         verbNameRemoveEmptyColumns,
 	UsageFunc:    transformerRemoveEmptyColumnsUsage,
 	ParseCLIFunc: transformerRemoveEmptyColumnsParseCLI,
 	IgnoresInput: false,
+	Options:      removeEmptyColumnsOptions,
 }
 
 func transformerRemoveEmptyColumnsUsage(
@@ -24,8 +27,7 @@ func transformerRemoveEmptyColumnsUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameRemoveEmptyColumns)
 	fmt.Fprintf(o, "Omits fields which are empty on every input row. Non-streaming.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, removeEmptyColumnsOptions)
 }
 
 func transformerRemoveEmptyColumnsParseCLI(

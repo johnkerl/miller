@@ -12,11 +12,16 @@ import (
 
 const verbNameBootstrap = "bootstrap"
 
+var bootstrapOptions = []OptionSpec{
+	{Flag: "-n", Arg: "{n}", Type: "int", Desc: "Number of samples to output. Defaults to number of input records. Must be non-negative."},
+}
+
 var BootstrapSetup = TransformerSetup{
 	Verb:         verbNameBootstrap,
 	UsageFunc:    transformerBootstrapUsage,
 	ParseCLIFunc: transformerBootstrapParseCLI,
 	IgnoresInput: false,
+	Options:      bootstrapOptions,
 }
 
 func transformerBootstrapUsage(
@@ -27,12 +32,7 @@ func transformerBootstrapUsage(
 		`Emits an n-sample, with replacement, of the input records.
 See also %s sample and %s shuffle.
 `, "mlr", "mlr")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o,
-		` -n Number of samples to output. Defaults to number of input records.
-    Must be non-negative.
-`)
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, bootstrapOptions)
 }
 
 func transformerBootstrapParseCLI(

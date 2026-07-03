@@ -17,11 +17,27 @@ import (
 
 const verbNameStats1 = "stats1"
 
+var stats1Options = []OptionSpec{
+	{Flag: "-a", Arg: "{sum,count,...}", Type: "enum", Desc: "Names of accumulators: one or more of the listed values. Also accepts median (same as p50) and percentiles p{n} for n in 0..100, e.g. p10 p25.2 p50 p98 p100.", Values: []string{"count", "null_count", "distinct_count", "mode", "antimode", "sum", "mean", "mad", "var", "stddev", "meaneb", "skewness", "kurtosis", "min", "max", "minlen", "maxlen"}},
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Value-field names on which to compute statistics."},
+	{Flag: "--fr", Arg: "{regex}", Type: "regex", Desc: "Regex for value-field names on which to compute statistics (compute statistics on values in all field names matching the regex)."},
+	{Flag: "--fx", Arg: "{regex}", Type: "regex", Desc: "Inverted regex for value-field names on which to compute statistics (compute statistics on values in all field names not matching the regex)."},
+	{Flag: "-g", Arg: "{d,e,f}", Type: "csv-list", Desc: "Optional group-by-field names."},
+	{Flag: "--gr", Arg: "{regex}", Type: "regex", Desc: "Regex for optional group-by-field names (group by values in field names matching the regex)."},
+	{Flag: "--gx", Arg: "{regex}", Type: "regex", Desc: "Inverted regex for optional group-by-field names (group by values in field names not matching the regex)."},
+	{Flag: "--grfx", Arg: "{regex}", Type: "regex", Desc: "Shorthand for --gr {regex} --fx {that same regex}."},
+	{Flag: "-i", Type: "bool", Desc: "Use interpolated percentiles, like R's type=7; default like type=1. Not sensical for string-valued fields."},
+	{Flag: "-s", Type: "bool", Desc: "Print iterative stats. Useful in tail -f contexts, in which case please avoid pprint-format output since end of input stream will never be seen. Likewise, if input is coming from `tail -f` be sure to use `--records-per-batch 1`."},
+	{Flag: "-S", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
+	{Flag: "-F", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
+}
+
 var Stats1Setup = TransformerSetup{
 	Verb:         verbNameStats1,
 	UsageFunc:    transformerStats1Usage,
 	ParseCLIFunc: transformerStats1ParseCLI,
 	IgnoresInput: false,
+	Options:      stats1Options,
 }
 
 func transformerStats1Usage(
@@ -31,35 +47,14 @@ func transformerStats1Usage(
 	fmt.Fprint(o,
 		`Computes univariate statistics for one or more given fields, accumulated across
 the input record stream.
-Options:
--a {sum,count,...} Names of accumulators: one or more of:
+`)
+	WriteVerbOptions(o, stats1Options)
+	fmt.Fprint(o,
+		`Names of accumulators for -a, one or more of:
   median   This is the same as p50
   p10 p25.2 p50 p98 p100 etc.
 `)
 	utils.ListStats1Accumulators(o)
-	fmt.Fprint(o, `
--f {a,b,c}     Value-field names on which to compute statistics
---fr {regex}   Regex for value-field names on which to compute statistics
-               (compute statistics on values in all field names matching regex
---fx {regex}   Inverted regex for value-field names on which to compute statistics
-               (compute statistics on values in all field names not matching regex)
-
--g {d,e,f}     Optional group-by-field names
---gr {regex}   Regex for optional group-by-field names
-               (group by values in field names matching regex)
---gx {regex}   Inverted regex for optional group-by-field names
-               (group by values in field names not matching regex)
-
---grfx {regex} Shorthand for --gr {regex} --fx {that same regex}
-
--i             Use interpolated percentiles, like R's type=7; default like type=1.
-               Not sensical for string-valued fields.\n");
--s             Print iterative stats. Useful in tail -f contexts, in which
-               case please avoid pprint-format output since end of input
-`)
-	fmt.Fprintln(o, "               stream will never be seen. Likewise, if input is coming from `tail -f`")
-	fmt.Fprintln(o, "               be sure to use `--records-per-batch 1`.")
-	fmt.Fprintln(o, "-h|--help      Show this message.")
 
 	fmt.Fprintln(o,
 		"Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape")
@@ -72,7 +67,7 @@ Options:
 	fmt.Fprintln(o,
 		`        This computes count and mode statistics on all field names beginning
          with a through h, grouped by all field names starting with k.`)
-	fmt.Println()
+	fmt.Fprintln(o)
 	fmt.Fprint(o,
 		`Notes:
 * p50 and median are synonymous.

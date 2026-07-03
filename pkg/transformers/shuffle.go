@@ -12,11 +12,14 @@ import (
 
 const verbNameShuffle = "shuffle"
 
+var shuffleOptions = []OptionSpec{}
+
 var ShuffleSetup = TransformerSetup{
 	Verb:         verbNameShuffle,
 	UsageFunc:    transformerShuffleUsage,
 	ParseCLIFunc: transformerShuffleParseCLI,
 	IgnoresInput: false,
+	Options:      shuffleOptions,
 }
 
 func transformerShuffleUsage(
@@ -27,8 +30,7 @@ func transformerShuffleUsage(
 	fmt.Fprintf(o, "all input records are read. See also %s bootstrap and %s sample.\n",
 		"mlr", "mlr",
 	)
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, shuffleOptions)
 }
 
 func transformerShuffleParseCLI(

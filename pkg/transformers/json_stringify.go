@@ -13,11 +13,31 @@ import (
 
 const verbNameJSONStringify = "json-stringify"
 
+var jsonStringifyOptions = []OptionSpec{
+	{
+		Flag: "-f",
+		Arg:  "{a,b,c}",
+		Type: "csv-list",
+		Desc: "Comma-separated list of field names to json-stringify (default all).",
+	},
+	{
+		Flag: "--jvstack",
+		Type: "bool",
+		Desc: "Produce multi-line JSON output.",
+	},
+	{
+		Flag: "--no-jvstack",
+		Type: "bool",
+		Desc: "Produce single-line JSON output per record (default).",
+	},
+}
+
 var JSONStringifySetup = TransformerSetup{
 	Verb:         verbNameJSONStringify,
 	UsageFunc:    transformerJSONStringifyUsage,
 	ParseCLIFunc: transformerJSONStringifyParseCLI,
 	IgnoresInput: false,
+	Options:      jsonStringifyOptions,
 }
 
 func transformerJSONStringifyUsage(
@@ -27,11 +47,7 @@ func transformerJSONStringifyUsage(
 	fmt.Fprint(o,
 		`Produces string field values from field-value data, e.g. [1,2,3] -> "[1,2,3]".
 `)
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f {...} Comma-separated list of field names to json-parse (default all).\n")
-	fmt.Fprintf(o, "--jvstack Produce multi-line JSON output.\n")
-	fmt.Fprintf(o, "--no-jvstack Produce single-line JSON output per record (default).\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, jsonStringifyOptions)
 }
 
 func transformerJSONStringifyParseCLI(

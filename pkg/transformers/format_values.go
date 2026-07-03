@@ -16,11 +16,19 @@ const defaultFormatValuesStringFormat = "%s"
 const defaultFormatValuesIntFormat = "%d"
 const defaultFormatValuesFloatFormat = "%f"
 
+var formatValuesOptions = []OptionSpec{
+	{Flag: "-i", Arg: "{integer format}", Type: "string", Desc: "Integer format string; defaults to \"%d\". Examples: \"%06lld\", \"%08llx\". Note that Miller integers are long long so you must use formats which apply to long long, e.g. with ll in them. Undefined behavior results otherwise."},
+	{Flag: "-f", Arg: "{float format}", Type: "string", Desc: "Float format string; defaults to \"%f\". Examples: \"%8.3lf\", \"%.6le\". Note that Miller floats are double-precision so you must use formats which apply to double, e.g. with l[efg] in them. Undefined behavior results otherwise."},
+	{Flag: "-s", Arg: "{string format}", Type: "string", Desc: "String format string; defaults to \"%s\". Examples: \"_%s\", \"%08s\". Note that you must use formats which apply to string, e.g. with s in them. Undefined behavior results otherwise."},
+	{Flag: "-n", Type: "bool", Desc: "Coerce field values autodetected as int to float, and then apply the float format."},
+}
+
 var FormatValuesSetup = TransformerSetup{
 	Verb:         verbNameFormatValues,
 	UsageFunc:    transformerFormatValuesUsage,
 	ParseCLIFunc: transformerFormatValuesParseCLI,
 	IgnoresInput: false,
+	Options:      formatValuesOptions,
 }
 
 func transformerFormatValuesUsage(
@@ -38,23 +46,7 @@ func transformerFormatValuesUsage(
 	fmt.Fprintf(o, "Note: this verb lets you apply arbitrary format strings, which can produce\n")
 	fmt.Fprintf(o, "undefined behavior and/or program crashes.  See your system's \"man printf\".\n")
 	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-i {integer format} Defaults to \"%s\".\n", defaultFormatValuesIntFormat)
-	fmt.Fprintf(o, "                    Examples: \"%%06lld\", \"%%08llx\".\n")
-	fmt.Fprintf(o, "                    Note that Miller integers are long long so you must use\n")
-	fmt.Fprintf(o, "                    formats which apply to long long, e.g. with ll in them.\n")
-	fmt.Fprintf(o, "                    Undefined behavior results otherwise.\n")
-	fmt.Fprintf(o, "-f {float format}   Defaults to \"%s\".\n", defaultFormatValuesFloatFormat)
-	fmt.Fprintf(o, "                    Examples: \"%%8.3lf\", \"%%.6le\".\n")
-	fmt.Fprintf(o, "                    Note that Miller floats are double-precision so you must\n")
-	fmt.Fprintf(o, "                    use formats which apply to double, e.g. with l[efg] in them.\n")
-	fmt.Fprintf(o, "                    Undefined behavior results otherwise.\n")
-	fmt.Fprintf(o, "-s {string format}  Defaults to \"%s\".\n", defaultFormatValuesStringFormat)
-	fmt.Fprintf(o, "                    Examples: \"_%%s\", \"%%08s\".\n")
-	fmt.Fprintf(o, "                    Note that you must use formats which apply to string, e.g.\n")
-	fmt.Fprintf(o, "                    with s in them. Undefined behavior results otherwise.\n")
-	fmt.Fprintf(o, "-n                  Coerce field values autodetected as int to float, and then\n")
-	fmt.Fprintf(o, "                    apply the float format.\n")
+	WriteVerbOptions(o, formatValuesOptions)
 }
 
 func transformerFormatValuesParseCLI(

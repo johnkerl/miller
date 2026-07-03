@@ -11,11 +11,19 @@ import (
 
 const verbNameDecimate = "decimate"
 
+var decimateOptions = []OptionSpec{
+	{Flag: "-b", Type: "bool", Desc: "Decimate by printing first of every n."},
+	{Flag: "-e", Type: "bool", Desc: "Decimate by printing last of every n (default)."},
+	{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Optional group-by-field names for decimate counts, e.g. a,b,c."},
+	{Flag: "-n", Arg: "{n}", Type: "int", Desc: "Decimation factor (default 10)."},
+}
+
 var DecimateSetup = TransformerSetup{
 	Verb:         verbNameDecimate,
 	UsageFunc:    transformerDecimateUsage,
 	ParseCLIFunc: transformerDecimateParseCLI,
 	IgnoresInput: false,
+	Options:      decimateOptions,
 }
 
 func transformerDecimateUsage(
@@ -23,12 +31,7 @@ func transformerDecimateUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameDecimate)
 	fmt.Fprintf(o, "Passes through one of every n records, optionally by category.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, " -b Decimate by printing first of every n.\n")
-	fmt.Fprintf(o, " -e Decimate by printing last of every n (default).\n")
-	fmt.Fprintf(o, " -g {a,b,c} Optional group-by-field names for decimate counts, e.g. a,b,c.\n")
-	fmt.Fprintf(o, " -n {n} Decimation factor (default 10).\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, decimateOptions)
 }
 
 func transformerDecimateParseCLI(

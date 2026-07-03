@@ -12,11 +12,18 @@ import (
 
 const verbNameGrep = "grep"
 
+var grepOptions = []OptionSpec{
+	{Flag: "-i", Type: "bool", Desc: "Use case-insensitive search."},
+	{Flag: "-v", Type: "bool", Desc: "Invert: pass through records which do not match the regex."},
+	{Flag: "-a", Type: "bool", Desc: "Only grep for values, not keys and values."},
+}
+
 var GrepSetup = TransformerSetup{
 	Verb:         verbNameGrep,
 	UsageFunc:    transformerGrepUsage,
 	ParseCLIFunc: transformerGrepParseCLI,
 	IgnoresInput: false,
+	Options:      grepOptions,
 }
 
 func transformerGrepUsage(
@@ -25,11 +32,7 @@ func transformerGrepUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options] {regular expression}\n", "mlr", verbNameGrep)
 	fmt.Fprintf(o, "Passes through records which match the regular expression.\n")
 
-	fmt.Fprint(o, "Options:\n")
-	fmt.Fprint(o, "-i  Use case-insensitive search.\n")
-	fmt.Fprint(o, "-v  Invert: pass through records which do not match the regex.\n")
-	fmt.Fprint(o, "-a  Only grep for values, not keys and values.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, grepOptions)
 
 	fmt.Fprintf(o, `Note that "%s filter" is more powerful, but requires you to know field names.
 By contrast, "%s grep" allows you to regex-match the entire record. It does this

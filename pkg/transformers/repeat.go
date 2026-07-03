@@ -19,12 +19,27 @@ const (
 
 const verbNameRepeat = "repeat"
 
+var repeatOptions = []OptionSpec{
+	{
+		Flag: "-n",
+		Arg:  "{repeat count}",
+		Type: "int",
+		Desc: "Repeat each input record this many times.",
+	},
+	{
+		Flag: "-f",
+		Arg:  "{field name}",
+		Type: "string",
+		Desc: "Same as -n, but take the repeat count from the specified field name of each input record.",
+	},
+}
+
 var RepeatSetup = TransformerSetup{
 	Verb:         verbNameRepeat,
 	UsageFunc:    transformerRepeatUsage,
 	ParseCLIFunc: transformerRepeatParseCLI,
-
 	IgnoresInput: false,
+	Options:      repeatOptions,
 }
 
 func transformerRepeatUsage(
@@ -32,11 +47,8 @@ func transformerRepeatUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameRepeat)
 	fmt.Fprintf(o, "Copies input records to output records multiple times.\n")
-	fmt.Fprintf(o, "Options must be exactly one of the following:\n")
-	fmt.Fprintf(o, "-n {repeat count}  Repeat each input record this many times.\n")
-	fmt.Fprintf(o, "-f {field name}    Same, but take the repeat count from the specified\n")
-	fmt.Fprintf(o, "                   field name of each input record.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	fmt.Fprintf(o, "Options must be exactly one of -n or -f.\n")
+	WriteVerbOptions(o, repeatOptions)
 	fmt.Fprintf(o, "Example:\n")
 	fmt.Fprintf(o, "  echo x=0 | %s %s -n 4 then put '$x=urand()'\n", "mlr", verbNameRepeat)
 	fmt.Fprintf(o, "produces:\n")

@@ -12,23 +12,27 @@ import (
 
 const verbNameSec2GMTDate = "sec2gmtdate"
 
+var sec2GMTDateOptions = []OptionSpec{}
+
 var Sec2GMTDateSetup = TransformerSetup{
 	Verb:         verbNameSec2GMTDate,
 	UsageFunc:    transformerSec2GMTDateUsage,
 	ParseCLIFunc: transformerSec2GMTDateParseCLI,
 	IgnoresInput: false,
+	Options:      sec2GMTDateOptions,
 }
 
 func transformerSec2GMTDateUsage(
 	o *os.File,
 ) {
-	fmt.Fprintf(o, "Usage: ../c/mlr sec2gmtdate {comma-separated list of field names}\n")
+	fmt.Fprintf(o, "Usage: mlr sec2gmtdate {comma-separated list of field names}\n")
 	fmt.Fprintf(o, "Replaces a numeric field representing seconds since the epoch with the\n")
 	fmt.Fprintf(o, "corresponding GMT year-month-day timestamp; leaves non-numbers as-is.\n")
 	fmt.Fprintf(o, "This is nothing more than a keystroke-saver for the sec2gmtdate function:\n")
-	fmt.Fprintf(o, "  ../c/mlr sec2gmtdate time1,time2\n")
+	fmt.Fprintf(o, "  mlr sec2gmtdate time1,time2\n")
 	fmt.Fprintf(o, "is the same as\n")
-	fmt.Fprintf(o, "  ../c/mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'\n")
+	fmt.Fprintf(o, "  mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'\n")
+	WriteVerbOptions(o, sec2GMTDateOptions)
 }
 
 func transformerSec2GMTDateParseCLI(

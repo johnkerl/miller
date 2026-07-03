@@ -14,11 +14,21 @@ import (
 const verbNameHistogram = "histogram"
 const histogramDefaultBinCount = int64(20)
 
+var histogramOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Value-field names for histogram counts."},
+	{Flag: "--lo", Arg: "{lo}", Type: "float", Desc: "Histogram low value."},
+	{Flag: "--hi", Arg: "{hi}", Type: "float", Desc: "Histogram high value."},
+	{Flag: "--nbins", Arg: "{n}", Type: "int", Desc: "Number of histogram bins. Defaults to 20."},
+	{Flag: "--auto", Type: "bool", Desc: "Automatically computes limits, ignoring --lo and --hi. Holds all values in memory before producing any output."},
+	{Flag: "-o", Arg: "{prefix}", Type: "string", Desc: "Prefix for output field name. Default: no prefix."},
+}
+
 var HistogramSetup = TransformerSetup{
 	Verb:         verbNameHistogram,
 	UsageFunc:    transformerHistogramUsage,
 	ParseCLIFunc: transformerHistogramParseCLI,
 	IgnoresInput: false,
+	Options:      histogramOptions,
 }
 
 func transformerHistogramUsage(
@@ -28,14 +38,7 @@ func transformerHistogramUsage(
 	verb := verbNameHistogram
 	fmt.Fprintf(o, "Just a histogram. Input values < lo or > hi are not counted.\n")
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
-	fmt.Fprintf(o, "-f {a,b,c}    Value-field names for histogram counts\n")
-	fmt.Fprintf(o, "--lo {lo}     Histogram low value\n")
-	fmt.Fprintf(o, "--hi {hi}     Histogram high value\n")
-	fmt.Fprintf(o, "--nbins {n}   Number of histogram bins. Defaults to %d.\n", histogramDefaultBinCount)
-	fmt.Fprintf(o, "--auto        Automatically computes limits, ignoring --lo and --hi.\n")
-	fmt.Fprintf(o, "              Holds all values in memory before producing any output.\n")
-	fmt.Fprintf(o, "-o {prefix}   Prefix for output field name. Default: no prefix.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, histogramOptions)
 }
 
 func transformerHistogramParseCLI(

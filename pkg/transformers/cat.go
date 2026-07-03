@@ -12,11 +12,20 @@ import (
 
 const verbNameCat = "cat"
 
+var catOptions = []OptionSpec{
+	{Flag: "-n", Type: "bool", Desc: "Prepend field \"n\" to each record with record-counter starting at 1."},
+	{Flag: "-N", Arg: "{name}", Type: "string", Desc: "Prepend field {name} to each record with record-counter starting at 1."},
+	{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Optional group-by-field names for counters, e.g. a,b,c."},
+	{Flag: "--filename", Type: "bool", Desc: "Prepend current filename to each record."},
+	{Flag: "--filenum", Type: "bool", Desc: "Prepend current filenum (1-up) to each record."},
+}
+
 var CatSetup = TransformerSetup{
 	Verb:         verbNameCat,
 	UsageFunc:    transformerCatUsage,
 	ParseCLIFunc: transformerCatParseCLI,
 	IgnoresInput: false,
+	Options:      catOptions,
 }
 
 func transformerCatUsage(
@@ -24,13 +33,7 @@ func transformerCatUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameCat)
 	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-n         Prepend field \"n\" to each record with record-counter starting at 1.\n")
-	fmt.Fprintf(o, "-N {name}  Prepend field {name} to each record with record-counter starting at 1.\n")
-	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c\n")
-	fmt.Fprintf(o, "--filename Prepend current filename to each record.\n")
-	fmt.Fprintf(o, "--filenum  Prepend current filenum (1-up) to each record.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, catOptions)
 }
 
 func transformerCatParseCLI(

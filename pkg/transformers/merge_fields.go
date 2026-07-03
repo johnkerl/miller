@@ -14,11 +14,24 @@ import (
 
 const verbNameMergeFields = "merge-fields"
 
+var mergeFieldsOptions = []OptionSpec{
+	{Flag: "-a", Arg: "{sum,count,...}", Type: "enum", Desc: "Names of accumulators: one or more of the accumulators listed below.", Values: []string{"count", "null_count", "distinct_count", "mode", "antimode", "sum", "mean", "mad", "var", "stddev", "meaneb", "skewness", "kurtosis", "min", "max", "minlen", "maxlen"}},
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Value-field names on which to compute statistics. Requires -o."},
+	{Flag: "-r", Arg: "{a,b,c}", Type: "csv-list", Desc: "Regular expressions for value-field names on which to compute statistics. Requires -o."},
+	{Flag: "-c", Arg: "{a,b,c}", Type: "csv-list", Desc: "Substrings for collapse mode: all fields which have the same names after removing substrings will be accumulated together. Please see examples below."},
+	{Flag: "-i", Type: "bool", Desc: "Use interpolated percentiles, like R's type=7; default like type=1. Not sensical for string-valued fields."},
+	{Flag: "-o", Arg: "{name}", Type: "string", Desc: "Output field basename for -f/-r."},
+	{Flag: "-k", Type: "bool", Desc: "Keep the input fields which contributed to the output statistics; the default is to omit them."},
+	{Flag: "-S", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
+	{Flag: "-F", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
+}
+
 var MergeFieldsSetup = TransformerSetup{
 	Verb:         verbNameMergeFields,
 	UsageFunc:    transformerMergeFieldsUsage,
 	ParseCLIFunc: transformerMergeFieldsParseCLI,
 	IgnoresInput: false,
+	Options:      mergeFieldsOptions,
 }
 
 type mergeByType int
@@ -38,20 +51,10 @@ func transformerMergeFieldsUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprintf(o, "Computes univariate statistics for each input record, accumulated across\n")
 	fmt.Fprintf(o, "specified fields.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-a {sum,count,...}  Names of accumulators. One or more of:\n")
+	WriteVerbOptions(o, mergeFieldsOptions)
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Accumulators for -a:\n")
 	utils.ListStats1Accumulators(o)
-	fmt.Fprintf(o, "-f {a,b,c}  Value-field names on which to compute statistics. Requires -o.\n")
-	fmt.Fprintf(o, "-r {a,b,c}  Regular expressions for value-field names on which to compute\n")
-	fmt.Fprintf(o, "            statistics. Requires -o.\n")
-	fmt.Fprintf(o, "-c {a,b,c}  Substrings for collapse mode. All fields which have the same names\n")
-	fmt.Fprintf(o, "            after removing substrings will be accumulated together. Please see\n")
-	fmt.Fprintf(o, "            examples below.\n")
-	fmt.Fprintf(o, "-i          Use interpolated percentiles, like R's type=7; default like type=1.\n")
-	fmt.Fprintf(o, "            Not sensical for string-valued fields.\n")
-	fmt.Fprintf(o, "-o {name}   Output field basename for -f/-r.\n")
-	fmt.Fprintf(o, "-k          Keep the input fields which contributed to the output statistics;\n")
-	fmt.Fprintf(o, "            the default is to omit them.\n")
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "String-valued data make sense unless arithmetic on them is required,\n")
 	fmt.Fprintf(o, "e.g. for sum, mean, interpolated percentiles, etc. In case of mixed data,\n")

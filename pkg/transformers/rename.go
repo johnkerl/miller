@@ -13,11 +13,25 @@ import (
 
 const verbNameRename = "rename"
 
+var renameOptions = []OptionSpec{
+	{
+		Flag: "-r",
+		Type: "bool",
+		Desc: "Treat old field names as regular expressions. \"ab\", \"a.*b\" will match any field name containing the substring \"ab\" or matching \"a.*b\", respectively; anchors of the form \"^ab$\", \"^a.*b$\" may be used. New field names may be plain strings, or may contain capture groups of the form \"\\1\" through \"\\9\". Wrapping the regex in double quotes is optional, but is required if you wish to follow it with 'i' to indicate case-insensitivity.",
+	},
+	{
+		Flag: "-g",
+		Type: "bool",
+		Desc: "Do global replacement within each field name rather than first-match replacement.",
+	},
+}
+
 var RenameSetup = TransformerSetup{
 	Verb:         verbNameRename,
 	UsageFunc:    transformerRenameUsage,
 	ParseCLIFunc: transformerRenameParseCLI,
 	IgnoresInput: false,
+	Options:      renameOptions,
 }
 
 func transformerRenameUsage(
@@ -28,18 +42,7 @@ func transformerRenameUsage(
 
 	fmt.Fprintf(o, "Usage: %s %s [options] {old1,new1,old2,new2,...}\n", "mlr", verbNameRename)
 	fmt.Fprintf(o, "Renames specified fields.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-r         Treat old field  names as regular expressions. \"ab\", \"a.*b\"\n")
-	fmt.Fprintf(o, "           will match any field name containing the substring \"ab\" or\n")
-	fmt.Fprintf(o, "           matching \"a.*b\", respectively; anchors of the form \"^ab$\",\n")
-	fmt.Fprintf(o, "           \"^a.*b$\" may be used. New field names may be plain strings,\n")
-	fmt.Fprintf(o, "           or may contain capture groups of the form \"\\1\" through\n")
-	fmt.Fprintf(o, "           \"\\9\". Wrapping the regex in double quotes is optional, but\n")
-	fmt.Fprintf(o, "           is required if you wish to follow it with 'i' to indicate\n")
-	fmt.Fprintf(o, "           case-insensitivity.\n")
-	fmt.Fprintf(o, "-g         Do global replacement within each field name rather than\n")
-	fmt.Fprintf(o, "           first-match replacement.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, renameOptions)
 	fmt.Fprintf(o, "Examples:\n")
 	fmt.Fprintf(o, "%s %s old_name,new_name\n", exeName, verb)
 	fmt.Fprintf(o, "%s %s old_name_1,new_name_1,old_name_2,new_name_2\n", exeName, verb)

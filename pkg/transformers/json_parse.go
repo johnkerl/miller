@@ -12,11 +12,26 @@ import (
 
 const verbNameJSONParse = "json-parse"
 
+var jsonParseOptions = []OptionSpec{
+	{
+		Flag: "-f",
+		Arg:  "{a,b,c}",
+		Type: "csv-list",
+		Desc: "Comma-separated list of field names to json-parse (default all).",
+	},
+	{
+		Flag: "-k",
+		Type: "bool",
+		Desc: "If supplied, then on parse fail for any cell, keep the (unparsable) input value for the cell.",
+	},
+}
+
 var JSONParseSetup = TransformerSetup{
 	Verb:         verbNameJSONParse,
 	UsageFunc:    transformerJSONParseUsage,
 	ParseCLIFunc: transformerJSONParseParseCLI,
 	IgnoresInput: false,
+	Options:      jsonParseOptions,
 }
 
 func transformerJSONParseUsage(
@@ -27,11 +42,7 @@ func transformerJSONParseUsage(
 		o,
 		`Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -> [1,2,3].`,
 	)
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f {...} Comma-separated list of field names to json-parse (default all).\n")
-	fmt.Fprintf(o, "-k       If supplied, then on parse fail for any cell, keep the (unparsable)\n")
-	fmt.Fprintf(o, "         input value for the cell.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, jsonParseOptions)
 }
 
 func transformerJSONParseParseCLI(

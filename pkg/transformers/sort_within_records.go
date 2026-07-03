@@ -17,11 +17,18 @@ import (
 
 const verbNameSortWithinRecords = "sort-within-records"
 
+var sortWithinRecordsOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{names}", Type: "csv-list", Desc: "Sort only these keys; others preserve record order."},
+	{Flag: "-r", Arg: "{regex}", Type: "regex", Desc: "Sort only keys matching this regex; others preserve record order. Example: -r '^[xy]' sorts keys starting with x or y. With no regex argument, -r recursively sorts subobjects/submaps (e.g. for JSON input), or combines with -f to treat names as regexes."},
+	{Flag: "-n", Type: "bool", Desc: "Sort field names naturally (e.g. 2 before 12). Combines with -f/-r."},
+}
+
 var SortWithinRecordsSetup = TransformerSetup{
 	Verb:         verbNameSortWithinRecords,
 	UsageFunc:    transformerSortWithinRecordsUsage,
 	ParseCLIFunc: transformerSortWithinRecordsParseCLI,
 	IgnoresInput: false,
+	Options:      sortWithinRecordsOptions,
 }
 
 func transformerSortWithinRecordsUsage(
@@ -29,14 +36,7 @@ func transformerSortWithinRecordsUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameSortWithinRecords)
 	fmt.Fprintln(o, "Outputs records sorted lexically ascending by keys.")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f {names}   Sort only these keys; others preserve record order.\n")
-	fmt.Fprintf(o, "-r {regex}   Sort only keys matching this regex; others preserve record order.\n")
-	fmt.Fprintf(o, "             Example: -r '^[xy]' sorts keys starting with x or y.\n")
-	fmt.Fprintf(o, "             With no regex argument, -r recursively sorts subobjects/submaps\n")
-	fmt.Fprintf(o, "             (e.g. for JSON input), or combines with -f to treat names as regex.\n")
-	fmt.Fprintf(o, "-n           Sort field names naturally (e.g. 2 before 12). Combines with -f/-r.\n")
-	fmt.Fprintf(o, "-h|--help    Show this message.\n")
+	WriteVerbOptions(o, sortWithinRecordsOptions)
 }
 
 func transformerSortWithinRecordsParseCLI(

@@ -12,27 +12,29 @@ import (
 
 const verbNameTee = "tee"
 
+var teeOptions = []OptionSpec{
+	{Flag: "-a", Type: "bool", Desc: "Append to existing file, if any, rather than overwriting."},
+	{Flag: "-p", Type: "bool", Desc: "Treat filename as a pipe-to command."},
+}
+
 var TeeSetup = TransformerSetup{
 	Verb:         verbNameTee,
 	UsageFunc:    transformerTeeUsage,
 	ParseCLIFunc: transformerTeeParseCLI,
 	IgnoresInput: false,
+	Options:      teeOptions,
 }
 
 func transformerTeeUsage(
 	o *os.File,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {filename}\n", "mlr", verbNameTee)
-	fmt.Fprintf(o, "Options:\n")
+	WriteVerbOptions(o, teeOptions)
 	fmt.Fprintf(o,
-		`-a    Append to existing file, if any, rather than overwriting.
--p    Treat filename as a pipe-to command.
-Any of the output-format command-line flags (see mlr -h). Example: using
+		`Any of the output-format command-line flags (see mlr -h). Example: using
   mlr --icsv --opprint put '...' then tee --ojson ./mytap.dat then stats1 ...
 the input is CSV, the output is pretty-print tabular, but the tee-file output
 is written in JSON format.
-
--h|--help Show this message.
 `)
 }
 

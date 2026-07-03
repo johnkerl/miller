@@ -49,6 +49,27 @@ type TransformerParseCLIFunc func(
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) (RecordTransformer, error)
 
+// OptionSpec describes one verb option in a machine-readable form. It is the
+// building block for the structured Tier-2 catalog (PR3 of the AI-friendly
+// roadmap). Verbs migrate to this incrementally; verbs with Options == nil
+// fall back to the prose UsageText in the JSON catalog.
+//
+// Type is one of: bool, string, int, float, csv-list, regex, filename,
+// format, enum.  For Type=="enum", Values contains every valid choice.
+// Arg is the placeholder shown in usage text, e.g. "{n}" or "{a,b,c}";
+// it is empty for bool flags.  Repeatable marks flags that may appear
+// multiple times on the command line.  Aliases lists alternate spellings
+// of Flag (e.g. "--sorted-input" for "-s").
+type OptionSpec struct {
+	Flag       string   `json:"flag"`
+	Aliases    []string `json:"aliases,omitempty"`
+	Arg        string   `json:"arg,omitempty"`
+	Type       string   `json:"type"`
+	Desc       string   `json:"desc"`
+	Repeatable bool     `json:"repeatable,omitempty"`
+	Values     []string `json:"values,omitempty"`
+}
+
 type TransformerSetup struct {
 	Verb         string
 	UsageFunc    TransformerUsageFunc
@@ -59,6 +80,11 @@ type TransformerSetup struct {
 	// own. (The seqgen verb probably should have been designed as a zero-file
 	// record "reader" object, rather than a verb, alas.)
 	IgnoresInput bool
+
+	// Options is the structured option list for this verb. nil means the verb
+	// has not yet been migrated to Tier-2; agents fall back to UsageText.
+	// An explicitly empty slice means the verb accepts no options.
+	Options []OptionSpec
 }
 
 // HandleDefaultDownstreamDone is a utility function for most verbs other than

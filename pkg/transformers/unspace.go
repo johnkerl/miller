@@ -12,11 +12,18 @@ import (
 
 const verbNameUnspace = "unspace"
 
+var unspaceOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{x}", Type: "string", Desc: "Replace spaces with specified filler character. Default \"_\"."},
+	{Flag: "-k", Type: "bool", Desc: "Unspace only keys, not keys and values."},
+	{Flag: "-v", Type: "bool", Desc: "Unspace only values, not keys and values."},
+}
+
 var UnspaceSetup = TransformerSetup{
 	Verb:         verbNameUnspace,
 	UsageFunc:    transformerUnspaceUsage,
 	ParseCLIFunc: transformerUnspaceParseCLI,
 	IgnoresInput: false,
+	Options:      unspaceOptions,
 }
 
 func transformerUnspaceUsage(
@@ -24,11 +31,7 @@ func transformerUnspaceUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameUnspace)
 	fmt.Fprintf(o, "Replaces spaces in record keys and/or values with _. This is helpful for PPRINT output.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f {x}    Replace spaces with specified filler character.\n")
-	fmt.Fprintf(o, "-k        Unspace only keys, not keys and values.\n")
-	fmt.Fprintf(o, "-v        Unspace only values, not keys and values.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, unspaceOptions)
 }
 
 func transformerUnspaceParseCLI(

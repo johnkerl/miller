@@ -13,11 +13,17 @@ import (
 const verbNameFillEmpty = "fill-empty"
 const defaultFillEmptyString = "N/A"
 
+var fillEmptyOptions = []OptionSpec{
+	{Flag: "-v", Arg: "{string}", Type: "string", Desc: "Fill-value: defaults to \"N/A\""},
+	{Flag: "-S", Type: "bool", Desc: "Don't infer type -- so '-v 0' would fill string 0 not int 0."},
+}
+
 var FillEmptySetup = TransformerSetup{
 	Verb:         verbNameFillEmpty,
 	UsageFunc:    transformerFillEmptyUsage,
 	ParseCLIFunc: transformerFillEmptyParseCLI,
 	IgnoresInput: false,
+	Options:      fillEmptyOptions,
 }
 
 func transformerFillEmptyUsage(
@@ -25,9 +31,7 @@ func transformerFillEmptyUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameFillEmpty)
 	fmt.Fprintf(o, "Fills empty-string fields with specified fill-value.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-v {string} Fill-value: defaults to \"%s\"\n", defaultFillEmptyString)
-	fmt.Fprintf(o, "-S          Don't infer type -- so '-v 0' would fill string 0 not int 0.\n")
+	WriteVerbOptions(o, fillEmptyOptions)
 }
 
 func transformerFillEmptyParseCLI(
