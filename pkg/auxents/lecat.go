@@ -54,7 +54,7 @@ func lecatMain(args []string) int {
 
 			lecatFile(istream, doColor)
 
-			istream.Close()
+			_ = istream.Close()
 		}
 	}
 	return 0

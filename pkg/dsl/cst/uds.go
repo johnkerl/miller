@@ -254,13 +254,13 @@ func (root *RootNode) BuildAndInstallUDS(astNode *asts.ASTNode) error {
 	typeGatedParameterNames := make([]*types.TypeGatedMlrvalName, arity)
 	for i, parameterASTNode := range flatParams {
 		var variableName string
-		var typeName string = "any"
-		if parameterASTNode.Children != nil && len(parameterASTNode.Children) == 2 {
+		typeName := "any"
+		if len(parameterASTNode.Children) == 2 {
 			// Typedecl LocalVariable -> [Typedecl, LocalVariable]
 			typeNode := parameterASTNode.Children[0]
 			nameNode := parameterASTNode.Children[1]
 			typeName = tokenLit(typeNode)
-			if typeName == "" && typeNode.Children != nil && len(typeNode.Children) > 0 {
+			if typeName == "" && len(typeNode.Children) > 0 {
 				typeName = tokenLit(typeNode.Children[0])
 			}
 			if typeName == "" {
@@ -269,7 +269,7 @@ func (root *RootNode) BuildAndInstallUDS(astNode *asts.ASTNode) error {
 			if string(nameNode.Type) == NodeTypeLocalVariable || nameNode.Type == asts.NodeType(NodeTypeLocalVariable) {
 				variableName = tokenLit(nameNode)
 			}
-		} else if parameterASTNode.Children != nil && len(parameterASTNode.Children) == 1 {
+		} else if len(parameterASTNode.Children) == 1 {
 			typeGatedParameterNameASTNode := parameterASTNode.Children[0]
 			lib.InternalCodingErrorIf(typeGatedParameterNameASTNode.Type != asts.NodeType(NodeTypeLocalVariable))
 			variableName = tokenLit(typeGatedParameterNameASTNode)

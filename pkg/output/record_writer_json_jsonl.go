@@ -74,9 +74,9 @@ func (writer *RecordWriterJSON) writeWithListWrap(
 			bufferedOutputStream.WriteString("[\n")
 		}
 
-		// The Mlrmap MarshalJSON doesn't include the final newline, so that we
+		// The Mlrmap FormatAsJSON doesn't include the final newline, so that we
 		// can place it neatly with commas here (if the user requested them).
-		s, err := outrec.MarshalJSON(writer.jsonFormatting, outputIsStdout)
+		s, err := outrec.FormatAsJSON(writer.jsonFormatting, outputIsStdout)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
@@ -115,9 +115,9 @@ func (writer *RecordWriterJSON) writeWithoutListWrap(
 		return
 	}
 
-	// The Mlrmap MarshalJSON doesn't include the final newline, so that we
+	// The Mlrmap FormatAsJSON doesn't include the final newline, so that we
 	// can place it neatly with commas here (if the user requested them).
-	s, err := outrec.MarshalJSON(writer.jsonFormatting, outputIsStdout)
+	s, err := outrec.FormatAsJSON(writer.jsonFormatting, outputIsStdout)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 		os.Exit(1)

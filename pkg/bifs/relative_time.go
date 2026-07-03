@@ -27,10 +27,7 @@ func BIF_dhms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	remainingInput := input
 	var seconds int64
 
-	for {
-		if remainingInput == "" {
-			break
-		}
+	for remainingInput != "" {
 		var n int64
 		var rest string
 
@@ -89,10 +86,7 @@ func BIF_dhms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	remainingInput := input
 	var seconds float64
 
-	for {
-		if remainingInput == "" {
-			break
-		}
+	for remainingInput != "" {
 		var f float64
 		var rest string
 

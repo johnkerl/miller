@@ -33,16 +33,16 @@ func captureStdout(f func()) string {
 	done := make(chan string)
 	go func() {
 		var buf bytes.Buffer
-		io.Copy(&buf, r)
+		_, _ = io.Copy(&buf, r)
 		done <- buf.String()
 	}()
 
 	f()
 
-	w.Close()
+	_ = w.Close()
 	os.Stdout = old
 	s := <-done
-	r.Close()
+	_ = r.Close()
 	return s
 }
 

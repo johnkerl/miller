@@ -73,11 +73,14 @@ func (writer *RecordWriterCSV) Write(
 			fields[i] = pe.Key
 			i++
 		}
-		writer.WriteCSVRecordMaybeColorized(fields, bufferedOutputStream, outputIsStdout, true, writer.quoteAll)
+		err := writer.WriteCSVRecordMaybeColorized(fields, bufferedOutputStream, outputIsStdout, true, writer.quoteAll)
+		if err != nil {
+			return err
+		}
 		writer.needToPrintHeader = false
 	}
 
-	var outputNF int64 = outrec.FieldCount
+	outputNF := outrec.FieldCount
 	if outputNF < writer.firstRecordNF {
 		outputNF = writer.firstRecordNF
 	}
@@ -103,7 +106,5 @@ func (writer *RecordWriterCSV) Write(
 		fields[i] = ""
 	}
 
-	writer.WriteCSVRecordMaybeColorized(fields, bufferedOutputStream, outputIsStdout, false, writer.quoteAll)
-
-	return nil
+	return writer.WriteCSVRecordMaybeColorized(fields, bufferedOutputStream, outputIsStdout, false, writer.quoteAll)
 }

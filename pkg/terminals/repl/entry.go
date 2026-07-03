@@ -147,8 +147,14 @@ func ReplMain(args []string) int {
 		}
 	}
 
-	cli.FinalizeReaderOptions(&options.ReaderOptions)
-	cli.FinalizeWriterOptions(&options.WriterOptions)
+	if err := cli.FinalizeReaderOptions(&options.ReaderOptions); err != nil {
+		fmt.Fprintf(os.Stderr, "mlr %s: %v\n", replName, err)
+		return 1
+	}
+	if err := cli.FinalizeWriterOptions(&options.WriterOptions); err != nil {
+		fmt.Fprintf(os.Stderr, "mlr %s: %v\n", replName, err)
+		return 1
+	}
 
 	// --auto-flatten is on by default. But if input and output formats are both JSON,
 	// then we don't need to actually do anything. See also mlrcli_parse.go.
@@ -186,7 +192,11 @@ func ReplMain(args []string) int {
 		os.Exit(1)
 	}
 
-	repl.bufferedRecordOutputStream.Flush()
+	err = repl.bufferedRecordOutputStream.Flush()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "mlr %s: %v\n", repl.replName, err)
+		os.Exit(1)
+	}
 	err = repl.closeBufferedOutputStream()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "mlr %s: %v\n", repl.replName, err)

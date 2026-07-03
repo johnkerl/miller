@@ -563,13 +563,13 @@ func (root *RootNode) BuildUDF(
 	for i, parameterASTNode := range flatParams {
 		// PGPG: Parameter has one child (LocalVariable), or two (Typedecl, LocalVariable) for typed params.
 		var variableName string
-		var typeName string = "any"
-		if parameterASTNode.Children != nil && len(parameterASTNode.Children) == 2 {
+		typeName := "any"
+		if len(parameterASTNode.Children) == 2 {
 			// Typedecl LocalVariable -> [Typedecl, LocalVariable]
 			typeNode := parameterASTNode.Children[0]
 			nameNode := parameterASTNode.Children[1]
 			typeName = tokenLit(typeNode)
-			if typeName == "" && typeNode.Children != nil && len(typeNode.Children) > 0 {
+			if typeName == "" && len(typeNode.Children) > 0 {
 				typeName = tokenLit(typeNode.Children[0])
 			}
 			if typeName == "" {
@@ -579,14 +579,14 @@ func (root *RootNode) BuildUDF(
 			if string(nameNode.Type) == NodeTypeLocalVariable || nameNode.Type == asts.NodeType(NodeTypeLocalVariable) {
 				variableName = tokenLit(nameNode)
 			}
-		} else if parameterASTNode.Children != nil && len(parameterASTNode.Children) == 1 {
+		} else if len(parameterASTNode.Children) == 1 {
 			typeGatedParameterNameASTNode := parameterASTNode.Children[0]
 			if string(typeGatedParameterNameASTNode.Type) != NodeTypeLocalVariable &&
 				typeGatedParameterNameASTNode.Type != asts.NodeType(NodeTypeLocalVariable) {
 				lib.InternalCodingErrorWithMessageIf(true, "expected LocalVariable as parameter name")
 			}
 			variableName = tokenLit(typeGatedParameterNameASTNode)
-		} else if parameterASTNode.Children == nil || len(parameterASTNode.Children) == 0 {
+		} else if len(parameterASTNode.Children) == 0 {
 			// Direct LocalVariable (e.g. from with_prepended_children flattening)
 			if string(parameterASTNode.Type) != NodeTypeLocalVariable &&
 				parameterASTNode.Type != asts.NodeType(NodeTypeLocalVariable) {

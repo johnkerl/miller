@@ -18,9 +18,9 @@ func (root *RootNode) BuildLeafNode(
 ) (IEvaluable, error) {
 	// The BNF uses empty slice for terminals. It may also produce reduced literal nodes
 	// (float_literal, int_literal) with one child (the terminal).
-	lib.InternalCodingErrorIf(astNode.Children != nil && len(astNode.Children) > 1)
+	lib.InternalCodingErrorIf(len(astNode.Children) > 1)
 	sval := tokenLit(astNode)
-	if sval == "" && astNode.Children != nil && len(astNode.Children) == 1 {
+	if sval == "" && len(astNode.Children) == 1 {
 		sval = tokenLit(astNode.Children[0])
 	}
 

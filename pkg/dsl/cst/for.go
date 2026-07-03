@@ -182,9 +182,8 @@ func (node *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 			}
 		}
 
-	} else if indexMlrval.IsAbsent() {
-		// Data-heterogeneity no-op
 	}
+	// else if indexMlrval.IsAbsent(): data-heterogeneity no-op
 
 	// TODO: backwards compatibility with the C port means we treat this as
 	// silent zero-pass. But maybe we should surface it as an error. Maybe
@@ -372,9 +371,8 @@ func (node *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 			}
 		}
 
-	} else if indexMlrval.IsAbsent() {
-		// Data-heterogeneity no-op
 	}
+	// else if indexMlrval.IsAbsent(): data-heterogeneity no-op
 
 	// TODO: backwards compatibility with the C port means we treat this as
 	// silent zero-pass. But maybe we should surface it as an error. Maybe
@@ -581,9 +579,8 @@ func (node *ForLoopMultivariableNode) executeOuter(
 			}
 		}
 
-	} else if mv.IsAbsent() {
-		// Data-heterogeneity no-op
 	}
+	// else if mv.IsAbsent(): data-heterogeneity no-op
 
 	// TODO: backwards compatibility with the C port means we treat this as
 	// silent zero-pass. But maybe we should surface it as an error. Maybe
@@ -675,9 +672,8 @@ func (node *ForLoopMultivariableNode) executeInner(
 			}
 		}
 
-	} else if mv.IsAbsent() {
-		// Data-heterogeneity no-op
 	}
+	// else if mv.IsAbsent(): data-heterogeneity no-op
 
 	// TODO: backwards compatibility with the C port means we treat this as
 	// silent zero-pass. But maybe we should surface it as an error. Maybe

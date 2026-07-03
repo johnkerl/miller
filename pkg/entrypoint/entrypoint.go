@@ -171,14 +171,14 @@ func processFileInPlace(
 	// Get a handle with, perhaps, a recompression wrapper around it.
 	wrappedHandle, isNew, err := lib.WrapOutputHandle(handle, inputFileEncoding)
 	if err != nil {
-		os.Remove(tempFileName)
+		_ = os.Remove(tempFileName)
 		return err
 	}
 
 	// Run the Miller processing stream from the input file to the temp-output file.
 	err = stream.Stream([]string{fileName}, options, recordTransformers, wrappedHandle, false)
 	if err != nil {
-		os.Remove(tempFileName)
+		_ = os.Remove(tempFileName)
 		return err
 	}
 
@@ -186,7 +186,7 @@ func processFileInPlace(
 	if isNew {
 		err = wrappedHandle.Close()
 		if err != nil {
-			os.Remove(tempFileName)
+			_ = os.Remove(tempFileName)
 			return err
 		}
 	}
@@ -195,14 +195,14 @@ func processFileInPlace(
 	// it must be error-checked.
 	err = handle.Close()
 	if err != nil {
-		os.Remove(tempFileName)
+		_ = os.Remove(tempFileName)
 		return err
 	}
 
 	// Rename the temp-output file on top of the input file.
 	err = os.Rename(tempFileName, fileName)
 	if err != nil {
-		os.Remove(tempFileName)
+		_ = os.Remove(tempFileName)
 		return err
 	}
 

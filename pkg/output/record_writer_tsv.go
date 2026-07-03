@@ -75,7 +75,7 @@ func (writer *RecordWriterTSV) Write(
 		writer.needToPrintHeader = false
 	}
 
-	var outputNF int64 = outrec.FieldCount
+	outputNF := outrec.FieldCount
 	if outputNF < writer.firstRecordNF {
 		outputNF = writer.firstRecordNF
 	}
