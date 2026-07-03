@@ -38,6 +38,14 @@
     * If you don't want to do `pip install mkdocs` then feel free to put up a PR which edits a `foo.md.in` as well as its `foo.md`.
   * `git add` your modified files (`*.md.in` as well as `*.md), `git commit`, `git push`, and submit a PR at https://github.com/johnkerl/miller.
 
+## Adding a new page
+
+* Create `docs/src/foo.md.in`.
+* Add a nav entry in `docs/mkdocs.yml` pointing at `foo.md` -- the filename must match the basename of your new `.md.in` exactly, or the built page won't be linked into the site.
+* First-time gotcha: `docs/src/Makefile`'s `genmds` target only rebuilds files already listed in `$(wildcard *.md)`. Since `foo.md` doesn't exist yet, a plain `make` won't generate it. From `docs/src`, run `./genmds foo.md.in` directly (or `make forcebuild`) once to create the initial `foo.md`. After that, it's picked up by ordinary `make` runs like any other page.
+* Don't work around this by pre-creating an empty `foo.md` yourself (e.g. via `touch`): if its mtime ends up newer than `foo.md.in`, make's implicit `%.md: %.md.in` rule will see the target as up to date and skip regenerating it, silently leaving it empty.
+* `git add` both `foo.md.in` and the generated `foo.md`.
+
 ## Notes
 
 * Miller documents use the Oxford comma: not _red, yellow and green_, but rather _red, yellow, and green_.
