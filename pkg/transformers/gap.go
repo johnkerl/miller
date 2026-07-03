@@ -30,7 +30,7 @@ func transformerGapUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameGap)
 	fmt.Fprint(o, "Emits an empty record every n records, or when certain values change.\n")
-	fmt.Fprintf(o, "One of -f or -g is required.\n")
+	fmt.Fprintf(o, "One of -n or -g is required.\n")
 	WriteVerbOptions(o, gapOptions)
 }
 

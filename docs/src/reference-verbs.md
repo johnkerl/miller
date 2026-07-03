@@ -1356,7 +1356,7 @@ male   orange 448  100
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr gap [options]
 Emits an empty record every n records, or when certain values change.
-One of -f or -g is required.
+One of -n or -g is required.
 Options:
 -g {a,b,c} Print a gap whenever values of these fields (e.g. a,b,c) changes.
 -n {n}     Print a gap every n records. Ignored if -g is present.
@@ -2065,7 +2065,7 @@ Options:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr utf8-to-latin1, with no options.
-Recursively converts record strings from Latin-1 to UTF-8.
+Recursively converts record strings from UTF-8 to Latin-1.
 For field-level control, please see the utf8_to_latin1 DSL function.
 Options:
 -h|--help Show this message.
@@ -2928,13 +2928,13 @@ Options:
 <b>mlr sec2gmtdate -h</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-Usage: ../c/mlr sec2gmtdate {comma-separated list of field names}
+Usage: mlr sec2gmtdate {comma-separated list of field names}
 Replaces a numeric field representing seconds since the epoch with the
 corresponding GMT year-month-day timestamp; leaves non-numbers as-is.
 This is nothing more than a keystroke-saver for the sec2gmtdate function:
-  ../c/mlr sec2gmtdate time1,time2
+  mlr sec2gmtdate time1,time2
 is the same as
-  ../c/mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+  mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
 Options:
 -h|--help Show this message.
 </pre>
@@ -2946,9 +2946,8 @@ Options:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr seqgen [options]
-Passes input records directly to output. Most useful for format conversion.
 Produces a sequence of counters.  Discards the input record stream. Produces
-output as specified by the options
+output as specified by the options.
 
 Options:
 -f {name}       Field name for counters. Default "i".
@@ -4177,6 +4176,7 @@ Options:
 -n {count} How many records to print per category; default 1.
 -a         Print all fields for top-value records; default is to print only
            value and group-by fields. Requires a single value-field name only.
+--max      Print top largest values. This is the default.
 --min      Print top smallest values; default is top largest values.
 -F         Keep top values as floats even if they look like integers (ignored in
            Miller 6, kept for backward compatibility).

@@ -20,6 +20,7 @@ var topOptions = []OptionSpec{
 	{Flag: "-g", Arg: "{d,e,f}", Type: "csv-list", Desc: "Optional group-by-field names for top counts."},
 	{Flag: "-n", Arg: "{count}", Type: "int", Desc: "How many records to print per category; default 1."},
 	{Flag: "-a", Type: "bool", Desc: "Print all fields for top-value records; default is to print only value and group-by fields. Requires a single value-field name only."},
+	{Flag: "--max", Type: "bool", Desc: "Print top largest values. This is the default."},
 	{Flag: "--min", Type: "bool", Desc: "Print top smallest values; default is top largest values."},
 	{Flag: "-F", Type: "bool", Desc: "Keep top values as floats even if they look like integers (ignored in Miller 6, kept for backward compatibility)."},
 	{Flag: "-o", Arg: "{name}", Type: "string", Desc: "Field name for output indices. Default \"top_idx\". Ignored if -a is used."},

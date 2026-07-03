@@ -1,6 +1,6 @@
 Usage: mlr gap [options]
 Emits an empty record every n records, or when certain values change.
-One of -f or -g is required.
+One of -n or -g is required.
 Options:
 -g {a,b,c} Print a gap whenever values of these fields (e.g. a,b,c) changes.
 -n {n}     Print a gap every n records. Ignored if -g is present.

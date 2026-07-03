@@ -124,13 +124,13 @@ To search by substring, use `mlr help find`:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 sec2gmtdate
-Usage: ../c/mlr sec2gmtdate {comma-separated list of field names}
+Usage: mlr sec2gmtdate {comma-separated list of field names}
 Replaces a numeric field representing seconds since the epoch with the
 corresponding GMT year-month-day timestamp; leaves non-numbers as-is.
 This is nothing more than a keystroke-saver for the sec2gmtdate function:
-  ../c/mlr sec2gmtdate time1,time2
+  mlr sec2gmtdate time1,time2
 is the same as
-  ../c/mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+  mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
 Options:
 -h|--help Show this message.
 sec2gmt

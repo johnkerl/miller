@@ -32,9 +32,8 @@ func transformerSeqgenUsage(
 	o *os.File,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameSeqgen)
-	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
 	fmt.Fprintf(o, "Produces a sequence of counters.  Discards the input record stream. Produces\n")
-	fmt.Fprintf(o, "output as specified by the options\n")
+	fmt.Fprintf(o, "output as specified by the options.\n")
 	fmt.Fprintf(o, "\n")
 	WriteVerbOptions(o, seqgenOptions)
 

@@ -27,7 +27,7 @@ func transformerUTF8ToLatin1Usage(
 	o *os.File,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s, with no options.\n", "mlr", verbNameUTF8ToLatin1)
-	fmt.Fprintf(o, "Recursively converts record strings from Latin-1 to UTF-8.\n")
+	fmt.Fprintf(o, "Recursively converts record strings from UTF-8 to Latin-1.\n")
 	fmt.Fprintf(o, "For field-level control, please see the utf8_to_latin1 DSL function.\n")
 	WriteVerbOptions(o, utf8ToLatin1Options)
 }

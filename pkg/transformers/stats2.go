@@ -19,7 +19,7 @@ const verbNameStats2 = "stats2"
 const stats2KeySeparator = "\001"
 
 var stats2Options = []OptionSpec{
-	{Flag: "-a", Arg: "{linreg-ols,corr,...}", Type: "enum", Desc: "Names of accumulators: one or more of the listed values.", Values: []string{"linreg-ols", "r2", "logireg", "corr", "cov"}},
+	{Flag: "-a", Arg: "{linreg-ols,corr,...}", Type: "enum", Desc: "Names of accumulators: one or more of the listed values.", Values: []string{"linreg-ols", "linreg-pca", "r2", "logireg", "corr", "cov"}},
 	{Flag: "-f", Arg: "{a,b,c,d}", Type: "csv-list", Desc: "Value-field name-pairs on which to compute statistics. There must be an even number of names."},
 	{Flag: "-g", Arg: "{e,f,g}", Type: "csv-list", Desc: "Optional group-by-field names."},
 	{Flag: "-v", Type: "bool", Desc: "Print additional output for linreg-pca."},
