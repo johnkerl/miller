@@ -1,11 +1,13 @@
 sec2gmtdate
-Usage: ../c/mlr sec2gmtdate {comma-separated list of field names}
+Usage: mlr sec2gmtdate {comma-separated list of field names}
 Replaces a numeric field representing seconds since the epoch with the
 corresponding GMT year-month-day timestamp; leaves non-numbers as-is.
 This is nothing more than a keystroke-saver for the sec2gmtdate function:
-  ../c/mlr sec2gmtdate time1,time2
+  mlr sec2gmtdate time1,time2
 is the same as
-  ../c/mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+  mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+Options:
+-h|--help Show this message.
 sec2gmt
 Usage: mlr sec2gmt [options] {comma-separated list of field names}
 Replaces a numeric field representing seconds since the epoch with the
@@ -15,10 +17,18 @@ more than a keystroke-saver for the sec2gmt function:
 is the same as
   mlr put '$time1 = sec2gmt($time1); $time2 = sec2gmt($time2)'
 Options:
--1 through -9: format the seconds using 1..9 decimal places, respectively.
---millis Input numbers are treated as milliseconds since the epoch.
---micros Input numbers are treated as microseconds since the epoch.
---nanos  Input numbers are treated as nanoseconds since the epoch.
+-1        Format seconds with 1 decimal place.
+-2        Format seconds with 2 decimal places.
+-3        Format seconds with 3 decimal places.
+-4        Format seconds with 4 decimal places.
+-5        Format seconds with 5 decimal places.
+-6        Format seconds with 6 decimal places.
+-7        Format seconds with 7 decimal places.
+-8        Format seconds with 8 decimal places.
+-9        Format seconds with 9 decimal places.
+--millis  Input numbers are treated as milliseconds since the epoch.
+--micros  Input numbers are treated as microseconds since the epoch.
+--nanos   Input numbers are treated as nanoseconds since the epoch.
 -h|--help Show this message.
 fsec2dhms  (class=time #args=1) Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
 fsec2hms  (class=time #args=1) Formats floating-point seconds as in fsec2hms(5000.25) = "01:23:20.250000"

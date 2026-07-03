@@ -18,17 +18,26 @@ const verbNameLeastFrequent = "least-frequent"
 const mostLeastFrequentDefaultMaxOutputLength = int64(10)
 const mostLeastFrequentDefaultOutputFieldName = "count"
 
+var mostFrequentOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "One or more comma-separated field names to group by. Required flag."},
+	{Flag: "-n", Arg: "{count}", Type: "int", Desc: "Maximum number of results to output. Optional flag defaulting to 10."},
+	{Flag: "-b", Type: "bool", Desc: "Suppress counts; show only field values."},
+	{Flag: "-o", Arg: "{name}", Type: "string", Desc: "Field name for output count. Default \"count\"."},
+}
+
 var MostFrequentSetup = TransformerSetup{
 	Verb:         verbNameMostFrequent,
 	UsageFunc:    transformerMostFrequentUsage,
 	ParseCLIFunc: transformerMostFrequentParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to group by. Required."},
-		{Flag: "-n", Arg: "{count}", Type: "int", Desc: "Maximum number of results to output. Default 10."},
-		{Flag: "-b", Type: "bool", Desc: "Suppress counts; show only field values."},
-		{Flag: "-o", Arg: "{name}", Type: "string", Desc: "Field name for output count. Default \"count\"."},
-	},
+	Options:      mostFrequentOptions,
+}
+
+var leastFrequentOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "One or more comma-separated field names to group by. Required flag."},
+	{Flag: "-n", Arg: "{count}", Type: "int", Desc: "Maximum number of results to output. Optional flag defaulting to 10."},
+	{Flag: "-b", Type: "bool", Desc: "Suppress counts; show only field values."},
+	{Flag: "-o", Arg: "{name}", Type: "string", Desc: "Field name for output count. Default \"count\"."},
 }
 
 var LeastFrequentSetup = TransformerSetup{
@@ -36,12 +45,7 @@ var LeastFrequentSetup = TransformerSetup{
 	UsageFunc:    transformerLeastFrequentUsage,
 	ParseCLIFunc: transformerLeastFrequentParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to group by. Required."},
-		{Flag: "-n", Arg: "{count}", Type: "int", Desc: "Maximum number of results to output. Default 10."},
-		{Flag: "-b", Type: "bool", Desc: "Suppress counts; show only field values."},
-		{Flag: "-o", Arg: "{name}", Type: "string", Desc: "Field name for output count. Default \"count\"."},
-	},
+	Options:      leastFrequentOptions,
 }
 
 func transformerMostFrequentUsage(
@@ -52,11 +56,7 @@ func transformerMostFrequentUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprintf(o, "Shows the most frequently occurring distinct values for specified field names.\n")
 	fmt.Fprintf(o, "The first entry is the statistical mode; the remaining are runners-up.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f {one or more comma-separated field names}. Required flag.\n")
-	fmt.Fprintf(o, "-n {count}. Optional flag defaulting to %d.\n", mostLeastFrequentDefaultMaxOutputLength)
-	fmt.Fprintf(o, "-b          Suppress counts; show only field values.\n")
-	fmt.Fprintf(o, "-o {name}   Field name for output count. Default \"%s\".\n", mostLeastFrequentDefaultOutputFieldName)
+	WriteVerbOptions(o, mostFrequentOptions)
 	fmt.Fprintf(o, "See also \"%s %s\".\n", argv0, "least-frequent")
 }
 
@@ -68,11 +68,7 @@ func transformerLeastFrequentUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprintf(o, "Shows the least frequently occurring distinct values for specified field names.\n")
 	fmt.Fprintf(o, "The first entry is the statistical anti-mode; the remaining are runners-up.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f {one or more comma-separated field names}. Required flag.\n")
-	fmt.Fprintf(o, "-n {count}. Optional flag defaulting to %d.\n", mostLeastFrequentDefaultMaxOutputLength)
-	fmt.Fprintf(o, "-b          Suppress counts; show only field values.\n")
-	fmt.Fprintf(o, "-o {name}   Field name for output count. Default \"%s\".\n", mostLeastFrequentDefaultOutputFieldName)
+	WriteVerbOptions(o, leastFrequentOptions)
 	fmt.Fprintf(o, "See also \"%s %s\".\n", argv0, "most-frequent")
 }
 

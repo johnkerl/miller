@@ -11,12 +11,14 @@ import (
 
 const verbNameSkipTrivialRecords = "skip-trivial-records"
 
+var skipTrivialRecordsOptions = []OptionSpec{}
+
 var SkipTrivialRecordsSetup = TransformerSetup{
 	Verb:         verbNameSkipTrivialRecords,
 	UsageFunc:    transformerSkipTrivialRecordsUsage,
 	ParseCLIFunc: transformerSkipTrivialRecordsParseCLI,
 	IgnoresInput: false,
-	Options:      []OptionSpec{},
+	Options:      skipTrivialRecordsOptions,
 }
 
 func transformerSkipTrivialRecordsUsage(
@@ -25,8 +27,7 @@ func transformerSkipTrivialRecordsUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameSkipTrivialRecords)
 	fmt.Fprintf(o, "Passes through all records except those with zero fields,\n")
 	fmt.Fprintf(o, "or those for which all fields have empty value.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, skipTrivialRecordsOptions)
 }
 
 func transformerSkipTrivialRecordsParseCLI(

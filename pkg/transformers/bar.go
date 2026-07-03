@@ -20,21 +20,23 @@ const barDefaultWidth = int64(40)
 
 const verbNameBar = "bar"
 
+var barOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to convert to bars."},
+	{Flag: "--lo", Arg: "{lo}", Type: "float", Desc: "Lower-limit value for min-width bar: default '0.000000'."},
+	{Flag: "--hi", Arg: "{hi}", Type: "float", Desc: "Upper-limit value for max-width bar: default '100.000000'."},
+	{Flag: "-w", Arg: "{n}", Type: "int", Desc: "Bar-field width: default '40'."},
+	{Flag: "--auto", Type: "bool", Desc: "Automatically computes limits, ignoring --lo and --hi. Holds all records in memory before producing any output."},
+	{Flag: "-c", Arg: "{character}", Type: "string", Desc: "Fill character: default '*'."},
+	{Flag: "-x", Arg: "{character}", Type: "string", Desc: "Out-of-bounds character: default '#'."},
+	{Flag: "-b", Arg: "{character}", Type: "string", Desc: "Blank character: default '.'."},
+}
+
 var BarSetup = TransformerSetup{
 	Verb:         verbNameBar,
 	UsageFunc:    transformerBarUsage,
 	ParseCLIFunc: transformerBarParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to convert to bars."},
-		{Flag: "--lo", Arg: "{lo}", Type: "float", Desc: "Lower-limit value for min-width bar: default '0.000000'."},
-		{Flag: "--hi", Arg: "{hi}", Type: "float", Desc: "Upper-limit value for max-width bar: default '100.000000'."},
-		{Flag: "-w", Arg: "{n}", Type: "int", Desc: "Bar-field width: default '40'."},
-		{Flag: "--auto", Type: "bool", Desc: "Automatically computes limits, ignoring --lo and --hi. Holds all records in memory before producing any output."},
-		{Flag: "-c", Arg: "{character}", Type: "string", Desc: "Fill character: default '*'."},
-		{Flag: "-x", Arg: "{character}", Type: "string", Desc: "Out-of-bounds character: default '#'."},
-		{Flag: "-b", Arg: "{character}", Type: "string", Desc: "Blank character: default '.'."},
-	},
+	Options:      barOptions,
 }
 
 func transformerBarUsage(
@@ -43,19 +45,9 @@ func transformerBarUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameBar)
 	fmt.Fprintf(o, "Replaces a numeric field with a number of asterisks, allowing for cheesy\n")
 	fmt.Fprintf(o, "bar plots. These align best with --opprint or --oxtab output format.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f   {a,b,c}      Field names to convert to bars.\n")
-	fmt.Fprintf(o, "--lo {lo}         Lower-limit value for min-width bar: default '%f'.\n", barDefaultLo)
-	fmt.Fprintf(o, "--hi {hi}         Upper-limit value for max-width bar: default '%f'.\n", barDefaultHi)
-	fmt.Fprintf(o, "-w   {n}          Bar-field width: default '%d'.\n", barDefaultWidth)
-	fmt.Fprintf(o, "--auto            Automatically computes limits, ignoring --lo and --hi.\n")
-	fmt.Fprintf(o, "                  Holds all records in memory before producing any output.\n")
-	fmt.Fprintf(o, "-c   {character}  Fill character: default '%s'.\n", barDefaultFillString)
-	fmt.Fprintf(o, "-x   {character}  Out-of-bounds character: default '%s'.\n", barDefaultOOBString)
-	fmt.Fprintf(o, "-b   {character}  Blank character: default '%s'.\n", barDefaultBlankString)
+	WriteVerbOptions(o, barOptions)
 	fmt.Fprintf(o, "Nominally the fill, out-of-bounds, and blank characters will be strings of length 1.\n")
 	fmt.Fprintf(o, "However you can make them all longer if you so desire.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
 }
 
 func transformerBarParseCLI(

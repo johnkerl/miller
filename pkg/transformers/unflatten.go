@@ -12,15 +12,17 @@ import (
 
 const verbNameUnflatten = "unflatten"
 
+var unflattenOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Comma-separated list of field names to unflatten (default all)."},
+	{Flag: "-s", Arg: "{string}", Type: "string", Desc: "Separator, defaulting to mlr --flatsep value."},
+}
+
 var UnflattenSetup = TransformerSetup{
 	Verb:         verbNameUnflatten,
 	UsageFunc:    transformerUnflattenUsage,
 	ParseCLIFunc: transformerUnflattenParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Comma-separated list of field names to unflatten (default all)."},
-		{Flag: "-s", Arg: "{string}", Type: "string", Desc: "Separator, defaulting to mlr --flatsep value."},
-	},
+	Options:      unflattenOptions,
 }
 
 func transformerUnflattenUsage(
@@ -31,10 +33,7 @@ func transformerUnflattenUsage(
 		`Reverses flatten. Example: field with name 'a.b.c' and value 4
 becomes name 'a' and value '{"b": { "c": 4 }}'.
 `)
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f {a,b,c} Comma-separated list of field names to unflatten (default all).\n")
-	fmt.Fprintf(o, "-s {string} Separator, defaulting to %s --flatsep value.\n", "mlr")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, unflattenOptions)
 }
 
 func transformerUnflattenParseCLI(

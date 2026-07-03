@@ -16,18 +16,19 @@ import (
 
 const verbNameCut = "cut"
 
+var cutOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Comma-separated field names to include or exclude, e.g. a,b,c."},
+	{Flag: "-o", Type: "bool", Desc: "Retain fields in the order specified by -f rather than in input-record order."},
+	{Flag: "-x", Aliases: []string{"--complement"}, Type: "bool", Desc: "Exclude, rather than include, the field names specified by -f."},
+	{Flag: "-r", Type: "bool", Desc: "Treat field names as regular expressions. \"ab\", \"a.*b\" will match any field name containing the substring \"ab\" or matching \"a.*b\", respectively; anchors of the form \"^ab$\", \"^a.*b$\" may be used."},
+}
+
 var CutSetup = TransformerSetup{
 	Verb:         verbNameCut,
 	UsageFunc:    transformerCutUsage,
 	ParseCLIFunc: transformerCutParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Comma-separated field names to include or exclude."},
-		{Flag: "-o", Type: "bool", Desc: "Retain fields in the order specified by -f rather than in input-record order."},
-		{Flag: "-x", Type: "bool", Desc: "Exclude, rather than include, the field names specified by -f."},
-		{Flag: "--complement", Type: "bool", Desc: "Synonym for -x."},
-		{Flag: "-r", Type: "bool", Desc: "Treat field names as regular expressions."},
-	},
+	Options:      cutOptions,
 }
 
 func transformerCutUsage(
@@ -35,16 +36,7 @@ func transformerCutUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameCut)
 	fmt.Fprintf(o, "Passes through input records with specified fields included/excluded.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, " -f {a,b,c} Comma-separated field names for cut, e.g. a,b,c.\n")
-	fmt.Fprintf(o, " -o Retain fields in the order specified here in the argument list.\n")
-	fmt.Fprintf(o, "    Default is to retain them in the order found in the input data.\n")
-	fmt.Fprintf(o, " -x|--complement  Exclude, rather than include, field names specified by -f.\n")
-	fmt.Fprintf(o, " -r Treat field names as regular expressions. \"ab\", \"a.*b\" will\n")
-	fmt.Fprintf(o, "   match any field name containing the substring \"ab\" or matching\n")
-	fmt.Fprintf(o, "   \"a.*b\", respectively; anchors of the form \"^ab$\", \"^a.*b$\" may\n")
-	fmt.Fprintf(o, "   be used.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, cutOptions)
 	fmt.Fprintf(o, "Examples:\n")
 	fmt.Fprintf(o, "  %s %s -f hostname,status\n", "mlr", verbNameCut)
 	fmt.Fprintf(o, "  %s %s -x -f hostname,status\n", "mlr", verbNameCut)

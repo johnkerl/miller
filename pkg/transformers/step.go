@@ -83,19 +83,21 @@ const DEFAULT_STRING_ALPHA = "0.5"
 
 const verbNameStep = "step"
 
+var stepOptions = []OptionSpec{
+	{Flag: "-a", Arg: "{delta,rsum,...}", Type: "enum", Desc: "Names of steppers: comma-separated, one or more of the listed values.", Values: []string{"counter", "delta", "ewma", "from-first", "ratio", "rprod", "rsum", "shift", "shift_lag", "shift_lead", "slwin"}},
+	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Value-field names on which to compute statistics."},
+	{Flag: "-g", Arg: "{d,e,f}", Type: "csv-list", Desc: "Optional group-by-field names."},
+	{Flag: "-F", Type: "bool", Desc: "Computes integerable things (e.g. counter) in floating point. As of Miller 6 this happens automatically, but the flag is accepted as a no-op for backward compatibility with Miller 5 and below."},
+	{Flag: "-d", Arg: "{x,y,z}", Type: "csv-list", Desc: "Weights for EWMA. 1 means current sample gets all weight (no smoothing), near under 1 is light smoothing, near over 0 is heavy smoothing. Multiple weights may be specified, e.g. \"mlr step -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted is \"-d " + DEFAULT_STRING_ALPHA + "\"."},
+	{Flag: "-o", Arg: "{a,b,c}", Type: "csv-list", Desc: "Custom suffixes for EWMA output fields. If omitted, these default to the -d values. If supplied, the number of -o values must be the same as the number of -d values."},
+}
+
 var StepSetup = TransformerSetup{
 	Verb:         verbNameStep,
 	UsageFunc:    transformerStepUsage,
 	ParseCLIFunc: transformerStepParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-a", Arg: "{delta,rsum,...}", Type: "enum", Desc: "Names of steppers: one or more of the listed values.", Values: []string{"counter", "delta", "ewma", "from-first", "ratio", "rprod", "rsum", "shift", "shift_lag", "shift_lead", "slwin"}},
-		{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Value-field names on which to compute statistics."},
-		{Flag: "-g", Arg: "{d,e,f}", Type: "csv-list", Desc: "Optional group-by-field names."},
-		{Flag: "-d", Arg: "{x,y,z}", Type: "csv-list", Desc: "Weights for EWMA. Multiple weights may be specified. Default is 0.5."},
-		{Flag: "-o", Arg: "{a,b,c}", Type: "csv-list", Desc: "Custom suffixes for EWMA output fields. If supplied, the number of -o values must match -d values."},
-		{Flag: "-F", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
-	},
+	Options:      stepOptions,
 }
 
 func transformerStepUsage(
@@ -103,32 +105,13 @@ func transformerStepUsage(
 ) {
 	fmt.Fprintf(o, "Usage: mlr %s [options]\n", verbNameStep)
 	fmt.Fprintf(o, "Computes values dependent on earlier/later records, optionally grouped by category.\n")
-	fmt.Fprintf(o, "Options:\n")
+	WriteVerbOptions(o, stepOptions)
 
-	fmt.Fprintf(o, "-a {delta,rsum,...} Names of steppers: comma-separated, one or more of:\n")
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Names of steppers for -a, comma-separated, one or more of:\n")
 	for _, stepperLookup := range STEPPER_LOOKUP_TABLE {
 		fmt.Fprintf(o, "  %-10s %s\n", stepperLookup.name, stepperLookup.desc)
 	}
-	fmt.Fprintf(o, "\n")
-
-	fmt.Fprintf(o, "-f {a,b,c}   Value-field names on which to compute statistics\n")
-
-	fmt.Fprintf(o, "-g {d,e,f}   Optional group-by-field names\n")
-
-	fmt.Fprintf(o, "-F           Computes integerable things (e.g. counter) in floating point.\n")
-	fmt.Fprintf(o, "             As of Miller 6 this happens automatically, but the flag is accepted\n")
-	fmt.Fprintf(o, "             as a no-op for backward compatibility with Miller 5 and below.\n")
-
-	fmt.Fprintf(o, "-d {x,y,z}   Weights for EWMA. 1 means current sample gets all weight (no\n")
-	fmt.Fprintf(o, "             smoothing), near under 1 is light smoothing, near over 0 is\n")
-	fmt.Fprintf(o, "             heavy smoothing. Multiple weights may be specified, e.g.\n")
-	fmt.Fprintf(o, "             \"mlr %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", verbNameStep)
-	fmt.Fprintf(o, "             is \"-d %s\".\n", DEFAULT_STRING_ALPHA)
-
-	fmt.Fprintf(o, "-o {a,b,c}   Custom suffixes for EWMA output fields. If omitted, these default to\n")
-	fmt.Fprintf(o, "             the -d values. If supplied, the number of -o values must be the same\n")
-	fmt.Fprintf(o, "             as the number of -d values.\n")
-	fmt.Fprintf(o, "-h|--help   Show this message.\n")
 
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Examples:\n")

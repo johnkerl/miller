@@ -8,6 +8,8 @@ func (mv *Mlrval) Copy() *Mlrval {
 		other.intf = mv.intf.(*Mlrmap).Copy()
 	case MT_ARRAY:
 		other.intf = CopyMlrvalArray(mv.intf.([]*Mlrval))
+	case MT_BYTES:
+		other.intf = append([]byte(nil), mv.intf.([]byte)...)
 	}
 	return &other
 }

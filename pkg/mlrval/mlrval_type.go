@@ -105,14 +105,21 @@ const (
 
 	MT_STRING MVType = 4
 
+	// intf is []byte. Bytes values are immutable once constructed; Copy()
+	// clones the slice defensively. Placed right after MT_STRING since bytes
+	// sort adjacent to strings in the mixed-type sort order (see the cmp
+	// disposition matrices, which are the actual source of truth for that
+	// ordering).
+	MT_BYTES MVType = 5
+
 	// intf is []*Mlrval
-	MT_ARRAY MVType = 5
+	MT_ARRAY MVType = 6
 
 	// intf is *Mlrmap
-	MT_MAP MVType = 6
+	MT_MAP MVType = 7
 
 	// intf is interface{} -- resolved in the cst package to avoid circular dependencies
-	MT_FUNC MVType = 7
+	MT_FUNC MVType = 8
 
 	// E.g. error encountered in one eval & it propagates up the AST at
 	// evaluation time.  Various runtime errors, such as file-not-found, result
@@ -120,22 +127,22 @@ const (
 	// are intended to result in "(error)"-valued output rather than a crash.
 	// This is analogous to the way that IEEE-754 arithmetic carries around
 	// Inf and NaN through computation chains.
-	MT_ERROR MVType = 8
+	MT_ERROR MVType = 9
 
 	// Used only for JSON null, and for 'empty' slots when an array is
 	// auto-extended by assigning to an index having a gap from the last index.
 	// E.g. x=[1,2,3] then x[5]=5; now x[4] is null
-	MT_NULL MVType = 9
+	MT_NULL MVType = 10
 
 	// Key not present in input record, e.g. 'foo = $nosuchkey'
-	MT_ABSENT MVType = 10
+	MT_ABSENT MVType = 11
 
 	// Not a type -- this is a dimension for disposition vectors and
 	// disposition matrices. For example, when we want to add two mlrvals,
 	// instead of if/elsing or switching on the types of both operands, we
 	// instead jump directly to a type-specific function in a matrix of
 	// function pointers which is MT_DIM x MT_DIM.
-	MT_DIM MVType = 11
+	MT_DIM MVType = 12
 )
 
 var TYPE_NAMES = [MT_DIM]string{
@@ -144,6 +151,7 @@ var TYPE_NAMES = [MT_DIM]string{
 	"bool",
 	"empty", // For backward compatibility with the C impl: this is user-visible
 	"string",
+	"bytes",
 	"array",
 	"map",
 	"funct",
@@ -162,6 +170,7 @@ const MT_TYPE_MASK_BOOL = 1 << MT_BOOL
 const MT_TYPE_MASK_STRING = (1 << MT_STRING) | (1 << MT_VOID)
 const MT_TYPE_MASK_ARRAY = 1 << MT_ARRAY
 const MT_TYPE_MASK_MAP = 1 << MT_MAP
+const MT_TYPE_MASK_BYTES = 1 << MT_BYTES
 const MT_TYPE_MASK_VAR = (1 << MT_INT) |
 	(1 << MT_FLOAT) |
 	(1 << MT_BOOL) |
@@ -169,7 +178,8 @@ const MT_TYPE_MASK_VAR = (1 << MT_INT) |
 	(1 << MT_NULL) |
 	(1 << MT_STRING) |
 	(1 << MT_ARRAY) |
-	(1 << MT_MAP)
+	(1 << MT_MAP) |
+	(1 << MT_BYTES)
 const MT_TYPE_MASK_FUNC = 1 << MT_FUNC
 
 // Not exposed in userspace
@@ -184,6 +194,7 @@ var typeNameToMaskMap = map[string]int{
 	"str":   MT_TYPE_MASK_STRING,
 	"arr":   MT_TYPE_MASK_ARRAY,
 	"map":   MT_TYPE_MASK_MAP,
+	"bytes": MT_TYPE_MASK_BYTES,
 	"funct": MT_TYPE_MASK_FUNC,
 	"var":   MT_TYPE_MASK_VAR,
 	"any":   MT_TYPE_MASK_ANY,

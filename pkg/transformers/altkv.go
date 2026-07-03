@@ -13,12 +13,14 @@ import (
 
 const verbNameAltkv = "altkv"
 
+var altkvOptions = []OptionSpec{}
+
 var AltkvSetup = TransformerSetup{
 	Verb:         verbNameAltkv,
 	UsageFunc:    transformerAltkvUsage,
 	ParseCLIFunc: transformerAltkvParseCLI,
 	IgnoresInput: false,
-	Options:      []OptionSpec{},
+	Options:      altkvOptions,
 }
 
 func transformerAltkvUsage(
@@ -26,8 +28,7 @@ func transformerAltkvUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameAltkv)
 	fmt.Fprintf(o, "Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, altkvOptions)
 }
 
 func transformerAltkvParseCLI(

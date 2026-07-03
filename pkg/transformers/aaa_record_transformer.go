@@ -58,9 +58,11 @@ type TransformerParseCLIFunc func(
 // format, enum.  For Type=="enum", Values contains every valid choice.
 // Arg is the placeholder shown in usage text, e.g. "{n}" or "{a,b,c}";
 // it is empty for bool flags.  Repeatable marks flags that may appear
-// multiple times on the command line.
+// multiple times on the command line.  Aliases lists alternate spellings
+// of Flag (e.g. "--sorted-input" for "-s").
 type OptionSpec struct {
 	Flag       string   `json:"flag"`
+	Aliases    []string `json:"aliases,omitempty"`
 	Arg        string   `json:"arg,omitempty"`
 	Type       string   `json:"type"`
 	Desc       string   `json:"desc"`

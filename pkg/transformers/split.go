@@ -17,43 +17,34 @@ const verbNameSplit = "split"
 const splitDefaultOutputFileNamePrefix = "split"
 const splitDefaultFileNamePartJoiner = "_"
 
+var splitOptions = []OptionSpec{
+	{Flag: "-n", Arg: "{n}", Type: "int", Desc: "Cap output file sizes at N records."},
+	{Flag: "-m", Arg: "{m}", Type: "int", Desc: "Produce M files, round-robining records among them."},
+	{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Write separate files with records having distinct values for the specified field names."},
+	{Flag: "--prefix", Arg: "{p}", Type: "string", Desc: "Output filename prefix. Default \"split\"."},
+	{Flag: "--suffix", Arg: "{s}", Type: "string", Desc: "Output filename suffix. Default is from the output format, e.g. \"csv\"."},
+	{Flag: "--folder", Arg: "{f}", Type: "filename", Desc: "Output directory. Default is current directory."},
+	{Flag: "-a", Type: "bool", Desc: "Append to existing files rather than overwriting."},
+	{Flag: "-v", Type: "bool", Desc: "Send records downstream as well as splitting to files."},
+	{Flag: "-e", Type: "bool", Desc: "Do NOT URL-escape names of output files."},
+	{Flag: "-j", Arg: "{J}", Type: "string", Desc: "String used to join filename parts. Default \"_\"."},
+}
+
 var SplitSetup = TransformerSetup{
 	Verb:         verbNameSplit,
 	UsageFunc:    transformerSplitUsage,
 	ParseCLIFunc: transformerSplitParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-n", Arg: "{n}", Type: "int", Desc: "Cap output file sizes at N records."},
-		{Flag: "-m", Arg: "{m}", Type: "int", Desc: "Produce M files, round-robining records among them."},
-		{Flag: "-g", Arg: "{a,b,c}", Type: "csv-list", Desc: "Write separate files with records having distinct values for the specified field names."},
-		{Flag: "--prefix", Arg: "{p}", Type: "string", Desc: "Output filename prefix. Default \"split\"."},
-		{Flag: "--suffix", Arg: "{s}", Type: "string", Desc: "Output filename suffix. Default is from the output format, e.g. \"csv\"."},
-		{Flag: "--folder", Arg: "{f}", Type: "filename", Desc: "Output directory. Default is current directory."},
-		{Flag: "-a", Type: "bool", Desc: "Append to existing files rather than overwriting."},
-		{Flag: "-v", Type: "bool", Desc: "Send records downstream as well as splitting to files."},
-		{Flag: "-e", Type: "bool", Desc: "Do NOT URL-escape names of output files."},
-		{Flag: "-j", Arg: "{J}", Type: "string", Desc: "String used to join filename parts. Default \"_\"."},
-	},
+	Options:      splitOptions,
 }
 
 func transformerSplitUsage(
 	o *os.File,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {filename}\n", "mlr", verbNameSplit)
+	WriteVerbOptions(o, splitOptions)
 	fmt.Fprintf(o,
-		`Options:
--n {n}:      Cap file sizes at N records.
--m {m}:      Produce M files, round-robining records among them.
--g {a,b,c}:  Write separate files with records having distinct values for fields named a,b,c.
-Exactly one  of -m, -n, or -g must be supplied.
---prefix {p} Specify filename prefix; default "`+splitDefaultOutputFileNamePrefix+`".
---suffix {s} Specify filename suffix; default is from mlr output format, e.g. "csv".
---folder {f} Specify output directory; default is current directory.
--a           Append to existing file(s), if any, rather than overwriting.
--v           Send records along to downstream verbs as well as splitting to files.
--e           Do NOT URL-escape names of output files.
--j {J}       Use string J to join filename parts; default "`+splitDefaultFileNamePartJoiner+`".
--h|--help    Show this message.
+		`Exactly one of -m, -n, or -g must be supplied.
 Any of the output-format command-line flags (see mlr -h). For example, using
   mlr --icsv --from myfile.csv split --ojson -n 1000
 the input is CSV, but the output files are JSON.

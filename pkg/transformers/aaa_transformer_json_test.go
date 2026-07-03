@@ -136,11 +136,3 @@ func TestAllVerbsHaveOptionsKeyInJSON(t *testing.T) {
 		}
 	}
 }
-
-// TestVerbOptionsNilCheckRuns ensures VerbOptionsNilCheck doesn't panic and
-// reports expected migrated verbs as migrated.
-func TestVerbOptionsNilCheckRuns(t *testing.T) {
-	// Just verify it doesn't panic; output goes to stdout which test harness ignores.
-	// The actual count is asserted via the regression test case.
-	VerbOptionsNilCheck()
-}

@@ -13,12 +13,14 @@ import (
 
 const verbNameRegularize = "regularize"
 
+var regularizeOptions = []OptionSpec{}
+
 var RegularizeSetup = TransformerSetup{
 	Verb:         verbNameRegularize,
 	UsageFunc:    transformerRegularizeUsage,
 	ParseCLIFunc: transformerRegularizeParseCLI,
 	IgnoresInput: false,
-	Options:      []OptionSpec{},
+	Options:      regularizeOptions,
 }
 
 func transformerRegularizeUsage(
@@ -26,8 +28,7 @@ func transformerRegularizeUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameRegularize)
 	fmt.Fprintf(o, "Outputs records sorted lexically ascending by keys.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, regularizeOptions)
 }
 
 func transformerRegularizeParseCLI(

@@ -120,7 +120,6 @@ func init() {
 				internal: true,
 				handlerInfos: []tHandlerInfo{
 					{name: "flag-table-nil-check", zaryHandlerFunc: flagTableNilCheck},
-					{name: "verb-options-nil-check", zaryHandlerFunc: verbOptionsNilCheck},
 					{name: "list-flag-sections", zaryHandlerFunc: listFlagSections},
 					{name: "list-flags-for-section", varArgHandlerFunc: listFlagsForSection},
 					{name: "list-functions-as-paragraph", zaryHandlerFunc: listFunctionsAsParagraph},
@@ -906,8 +905,4 @@ func helpForKeyword(args []string) {
 // for any flags, etc.
 func flagTableNilCheck() {
 	cli.FLAG_TABLE.NilCheck()
-}
-
-func verbOptionsNilCheck() {
-	transformers.VerbOptionsNilCheck()
 }

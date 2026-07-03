@@ -55,15 +55,15 @@ Operators are listed here along with functions. In this case, the argument count
 * [**Arithmetic functions**](#arithmetic-functions):  [bitcount](#bitcount),  [madd](#madd),  [mexp](#mexp),  [mmul](#mmul),  [msub](#msub),  [pow](#pow),  [%](#percent),  [&](#bitwise-and),  [\*](#times),  [\**](#exponentiation),  [\+](#plus),  [\-](#minus),  [\.\*](#dot-times),  [\.\+](#dot-plus),  [\.\-](#dot-minus),  [\./](#dot-slash),  [/](#slash),  [//](#slash-slash),  [<<](#lsh),  [>>](#srsh),  [>>>](#ursh),  [^](#bitwise-xor),  [\|](#bitwise-or),  [~](#bitwise-not).
 * [**Boolean functions**](#boolean-functions):  [\!](#exclamation-point),  [\!=](#exclamation-point-equals),  [!=~](#regnotmatch),  [&&](#logical-and),  [<](#less-than),  [<=](#less-than-or-equals),  [<=>](#<=>),  [==](#double-equals),  [=~](#regmatch),  [>](#greater-than),  [>=](#greater-than-or-equals),  [?:](#question-mark-colon),  [??](#absent-coalesce),  [???](#absent-empty-coalesce),  [^^](#logical-xor),  [\|\|](#logical-or).
 * [**Collections functions**](#collections-functions):  [append](#append),  [arrayify](#arrayify),  [concat](#concat),  [depth](#depth),  [flatten](#flatten),  [get_keys](#get_keys),  [get_values](#get_values),  [haskey](#haskey),  [hasvalue](#hasvalue),  [json_parse](#json_parse),  [json_stringify](#json_stringify),  [leafcount](#leafcount),  [length](#length),  [mapdiff](#mapdiff),  [mapexcept](#mapexcept),  [mapselect](#mapselect),  [mapsum](#mapsum),  [unflatten](#unflatten).
-* [**Conversion functions**](#conversion-functions):  [boolean](#boolean),  [float](#float),  [fmtifnum](#fmtifnum),  [fmtnum](#fmtnum),  [hexfmt](#hexfmt),  [int](#int),  [joink](#joink),  [joinkv](#joinkv),  [joinv](#joinv),  [splita](#splita),  [splitax](#splitax),  [splitkv](#splitkv),  [splitkvx](#splitkvx),  [splitnv](#splitnv),  [splitnvx](#splitnvx),  [string](#string).
+* [**Conversion functions**](#conversion-functions):  [boolean](#boolean),  [bytes](#bytes),  [float](#float),  [fmtifnum](#fmtifnum),  [fmtnum](#fmtnum),  [hexfmt](#hexfmt),  [int](#int),  [joink](#joink),  [joinkv](#joinkv),  [joinv](#joinv),  [splita](#splita),  [splitax](#splitax),  [splitkv](#splitkv),  [splitkvx](#splitkvx),  [splitnv](#splitnv),  [splitnvx](#splitnvx),  [string](#string).
 * [**Hashing functions**](#hashing-functions):  [md5](#md5),  [sha1](#sha1),  [sha256](#sha256),  [sha512](#sha512).
 * [**Higher-order-functions functions**](#higher-order-functions-functions):  [any](#any),  [apply](#apply),  [every](#every),  [fold](#fold),  [reduce](#reduce),  [select](#select),  [sort](#sort).
 * [**Math functions**](#math-functions):  [abs](#abs),  [acos](#acos),  [acosh](#acosh),  [asin](#asin),  [asinh](#asinh),  [atan](#atan),  [atan2](#atan2),  [atanh](#atanh),  [cbrt](#cbrt),  [ceil](#ceil),  [cos](#cos),  [cosh](#cosh),  [erf](#erf),  [erfc](#erfc),  [exp](#exp),  [expm1](#expm1),  [floor](#floor),  [invqnorm](#invqnorm),  [log](#log),  [log10](#log10),  [log1p](#log1p),  [logifit](#logifit),  [max](#max),  [min](#min),  [qnorm](#qnorm),  [round](#round),  [roundm](#roundm),  [sgn](#sgn),  [sin](#sin),  [sinh](#sinh),  [sqrt](#sqrt),  [tan](#tan),  [tanh](#tanh),  [urand](#urand),  [urand32](#urand32),  [urandelement](#urandelement),  [urandint](#urandint),  [urandrange](#urandrange).
 * [**Stats functions**](#stats-functions):  [antimode](#antimode),  [count](#count),  [distinct_count](#distinct_count),  [kurtosis](#kurtosis),  [maxlen](#maxlen),  [mean](#mean),  [meaneb](#meaneb),  [median](#median),  [minlen](#minlen),  [mode](#mode),  [null_count](#null_count),  [percentile](#percentile),  [percentiles](#percentiles),  [skewness](#skewness),  [sort_collection](#sort_collection),  [stddev](#stddev),  [sum](#sum),  [sum2](#sum2),  [sum3](#sum3),  [sum4](#sum4),  [variance](#variance).
-* [**String functions**](#string-functions):  [capitalize](#capitalize),  [clean_whitespace](#clean_whitespace),  [collapse_whitespace](#collapse_whitespace),  [contains](#contains),  [format](#format),  [gssub](#gssub),  [gsub](#gsub),  [index](#index),  [latin1_to_utf8](#latin1_to_utf8),  [leftpad](#leftpad),  [lstrip](#lstrip),  [regextract](#regextract),  [regextract_or_else](#regextract_or_else),  [rightpad](#rightpad),  [rstrip](#rstrip),  [ssub](#ssub),  [strip](#strip),  [strlen](#strlen),  [strmatch](#strmatch),  [strmatchx](#strmatchx),  [sub](#sub),  [substr](#substr),  [substr0](#substr0),  [substr1](#substr1),  [tolower](#tolower),  [toupper](#toupper),  [truncate](#truncate),  [unformat](#unformat),  [unformatx](#unformatx),  [utf8_to_latin1](#utf8_to_latin1),  [\.](#dot).
+* [**String functions**](#string-functions):  [base64_decode](#base64_decode),  [base64_encode](#base64_encode),  [capitalize](#capitalize),  [clean_whitespace](#clean_whitespace),  [collapse_whitespace](#collapse_whitespace),  [contains](#contains),  [format](#format),  [gssub](#gssub),  [gsub](#gsub),  [hex_decode](#hex_decode),  [hex_encode](#hex_encode),  [index](#index),  [latin1_to_utf8](#latin1_to_utf8),  [leftpad](#leftpad),  [lstrip](#lstrip),  [regextract](#regextract),  [regextract_or_else](#regextract_or_else),  [rightpad](#rightpad),  [rstrip](#rstrip),  [ssub](#ssub),  [strip](#strip),  [strlen](#strlen),  [strmatch](#strmatch),  [strmatchx](#strmatchx),  [sub](#sub),  [substr](#substr),  [substr0](#substr0),  [substr1](#substr1),  [tolower](#tolower),  [toupper](#toupper),  [truncate](#truncate),  [unformat](#unformat),  [unformatx](#unformatx),  [utf8_to_latin1](#utf8_to_latin1),  [\.](#dot).
 * [**System functions**](#system-functions):  [exec](#exec),  [hostname](#hostname),  [next](#next),  [os](#os),  [stat](#stat),  [system](#system),  [version](#version).
 * [**Time functions**](#time-functions):  [dhms2fsec](#dhms2fsec),  [dhms2sec](#dhms2sec),  [fsec2dhms](#fsec2dhms),  [fsec2hms](#fsec2hms),  [gmt2localtime](#gmt2localtime),  [gmt2nsec](#gmt2nsec),  [gmt2sec](#gmt2sec),  [hms2fsec](#hms2fsec),  [hms2sec](#hms2sec),  [localtime2gmt](#localtime2gmt),  [localtime2nsec](#localtime2nsec),  [localtime2sec](#localtime2sec),  [nsec2gmt](#nsec2gmt),  [nsec2gmtdate](#nsec2gmtdate),  [nsec2localdate](#nsec2localdate),  [nsec2localtime](#nsec2localtime),  [sec2dhms](#sec2dhms),  [sec2gmt](#sec2gmt),  [sec2gmtdate](#sec2gmtdate),  [sec2hms](#sec2hms),  [sec2localdate](#sec2localdate),  [sec2localtime](#sec2localtime),  [strfntime](#strfntime),  [strfntime_local](#strfntime_local),  [strftime](#strftime),  [strftime_local](#strftime_local),  [strpntime](#strpntime),  [strpntime_local](#strpntime_local),  [strptime](#strptime),  [strptime_local](#strptime_local),  [sysntime](#sysntime),  [systime](#systime),  [systimeint](#systimeint),  [upntime](#upntime),  [uptime](#uptime).
-* [**Typing functions**](#typing-functions):  [asserting_absent](#asserting_absent),  [asserting_array](#asserting_array),  [asserting_bool](#asserting_bool),  [asserting_boolean](#asserting_boolean),  [asserting_empty](#asserting_empty),  [asserting_empty_map](#asserting_empty_map),  [asserting_error](#asserting_error),  [asserting_float](#asserting_float),  [asserting_int](#asserting_int),  [asserting_map](#asserting_map),  [asserting_nonempty_map](#asserting_nonempty_map),  [asserting_not_array](#asserting_not_array),  [asserting_not_empty](#asserting_not_empty),  [asserting_not_map](#asserting_not_map),  [asserting_not_null](#asserting_not_null),  [asserting_null](#asserting_null),  [asserting_numeric](#asserting_numeric),  [asserting_present](#asserting_present),  [asserting_string](#asserting_string),  [is_absent](#is_absent),  [is_array](#is_array),  [is_bool](#is_bool),  [is_boolean](#is_boolean),  [is_empty](#is_empty),  [is_empty_map](#is_empty_map),  [is_error](#is_error),  [is_float](#is_float),  [is_int](#is_int),  [is_map](#is_map),  [is_nan](#is_nan),  [is_nonempty_map](#is_nonempty_map),  [is_not_array](#is_not_array),  [is_not_empty](#is_not_empty),  [is_not_map](#is_not_map),  [is_not_null](#is_not_null),  [is_null](#is_null),  [is_numeric](#is_numeric),  [is_present](#is_present),  [is_string](#is_string),  [typeof](#typeof).
+* [**Typing functions**](#typing-functions):  [asserting_absent](#asserting_absent),  [asserting_array](#asserting_array),  [asserting_bool](#asserting_bool),  [asserting_boolean](#asserting_boolean),  [asserting_bytes](#asserting_bytes),  [asserting_empty](#asserting_empty),  [asserting_empty_map](#asserting_empty_map),  [asserting_error](#asserting_error),  [asserting_float](#asserting_float),  [asserting_int](#asserting_int),  [asserting_map](#asserting_map),  [asserting_nonempty_map](#asserting_nonempty_map),  [asserting_not_array](#asserting_not_array),  [asserting_not_empty](#asserting_not_empty),  [asserting_not_map](#asserting_not_map),  [asserting_not_null](#asserting_not_null),  [asserting_null](#asserting_null),  [asserting_numeric](#asserting_numeric),  [asserting_present](#asserting_present),  [asserting_string](#asserting_string),  [is_absent](#is_absent),  [is_array](#is_array),  [is_bool](#is_bool),  [is_boolean](#is_boolean),  [is_bytes](#is_bytes),  [is_empty](#is_empty),  [is_empty_map](#is_empty_map),  [is_error](#is_error),  [is_float](#is_float),  [is_int](#is_int),  [is_map](#is_map),  [is_nan](#is_nan),  [is_nonempty_map](#is_nonempty_map),  [is_not_array](#is_not_array),  [is_not_empty](#is_not_empty),  [is_not_map](#is_not_map),  [is_not_null](#is_not_null),  [is_null](#is_null),  [is_numeric](#is_numeric),  [is_present](#is_present),  [is_string](#is_string),  [typeof](#typeof).
 
 ## Arithmetic functions
 
@@ -507,6 +507,15 @@ boolean  (class=conversion #args=1) Convert int/float/bool/string to boolean.
 </pre>
 
 
+### bytes
+<pre class="pre-non-highlight-non-pair">
+bytes  (class=conversion #args=1) Convert string to bytes; bytes values pass through as-is. See string() for the reverse.
+Examples:
+bytes("hi") gives the bytes 6869
+string(bytes("hi")) gives "hi"
+</pre>
+
+
 ### float
 <pre class="pre-non-highlight-non-pair">
 float  (class=conversion #args=1) Convert int/float/bool/string to float.
@@ -633,7 +642,7 @@ splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
 
 ### string
 <pre class="pre-non-highlight-non-pair">
-string  (class=conversion #args=1) Convert int/float/bool/string/array/map to string.
+string  (class=conversion #args=1) Convert int/float/bool/string/array/map to string. For bytes values, reinterprets the raw bytes as a (UTF-8) string -- the reverse of bytes().
 </pre>
 
 ## Hashing functions
@@ -641,25 +650,25 @@ string  (class=conversion #args=1) Convert int/float/bool/string/array/map to st
 
 ### md5
 <pre class="pre-non-highlight-non-pair">
-md5  (class=hashing #args=1) MD5 hash.
+md5  (class=hashing #args=1) MD5 hash of a string or bytes value.
 </pre>
 
 
 ### sha1
 <pre class="pre-non-highlight-non-pair">
-sha1  (class=hashing #args=1) SHA1 hash.
+sha1  (class=hashing #args=1) SHA1 hash of a string or bytes value.
 </pre>
 
 
 ### sha256
 <pre class="pre-non-highlight-non-pair">
-sha256  (class=hashing #args=1) SHA256 hash.
+sha256  (class=hashing #args=1) SHA256 hash of a string or bytes value.
 </pre>
 
 
 ### sha512
 <pre class="pre-non-highlight-non-pair">
-sha512  (class=hashing #args=1) SHA512 hash.
+sha512  (class=hashing #args=1) SHA512 hash of a string or bytes value.
 </pre>
 
 ## Higher-order-functions functions
@@ -1197,6 +1206,24 @@ variance([4,5,9,10,11]) is 9.7
 ## String functions
 
 
+### base64_decode
+<pre class="pre-non-highlight-non-pair">
+base64_decode  (class=string #args=1) Decodes a base64-encoded string to a bytes value; use string() to interpret the result as UTF-8 text. Returns error if the input is not valid base64.
+Examples:
+base64_decode("aGVsbG8=") gives the bytes 68656c6c6f
+string(base64_decode("aGVsbG8=")) gives "hello"
+</pre>
+
+
+### base64_encode
+<pre class="pre-non-highlight-non-pair">
+base64_encode  (class=string #args=1) Encodes a string or bytes value using standard base64 encoding.
+Examples:
+base64_encode("hello") gives "aGVsbG8="
+base64_encode(b"\xff") gives "/w=="
+</pre>
+
+
 ### capitalize
 <pre class="pre-non-highlight-non-pair">
 capitalize  (class=string #args=1) Convert string's first character to uppercase.
@@ -1254,6 +1281,23 @@ gsub("abc.def", ".", "X") gives "XXXXXXX"
 gsub("abc.def", "\.", "X") gives "abcXdef"
 gsub("abcdefg", "[ce]", "X") gives "abXdXfg"
 gsub("prefix4529:suffix8567", "(....ix)([0-9]+)", "[\1 : \2]") gives "[prefix : 4529]:[suffix : 8567]"
+</pre>
+
+
+### hex_decode
+<pre class="pre-non-highlight-non-pair">
+hex_decode  (class=string #args=1) Decodes a hex-encoded string to a bytes value; use string() to interpret the result as UTF-8 text. Returns error if the input is not valid hex.
+Examples:
+hex_decode("6869") gives the bytes 6869
+string(hex_decode("6869")) gives "hi"
+</pre>
+
+
+### hex_encode
+<pre class="pre-non-highlight-non-pair">
+hex_encode  (class=string #args=1) Encodes a string or bytes value as lowercase hex.
+Example:
+hex_encode("hi") gives "6869"
 </pre>
 
 
@@ -1344,7 +1388,7 @@ strip  (class=string #args=1) Strip leading and trailing whitespace from string.
 
 ### strlen
 <pre class="pre-non-highlight-non-pair">
-strlen  (class=string #args=1) String length.
+strlen  (class=string #args=1) String length in UTF-8 characters, or bytes-value length in bytes.
 </pre>
 
 
@@ -1846,6 +1890,12 @@ asserting_boolean  (class=typing #args=1) Aborts with an error if is_boolean on 
 </pre>
 
 
+### asserting_bytes
+<pre class="pre-non-highlight-non-pair">
+asserting_bytes  (class=typing #args=1) Aborts with an error if is_bytes on the argument returns false, else returns its argument.
+</pre>
+
+
 ### asserting_empty
 <pre class="pre-non-highlight-non-pair">
 asserting_empty  (class=typing #args=1) Aborts with an error if is_empty on the argument returns false, else returns its argument.
@@ -1957,6 +2007,12 @@ is_bool  (class=typing #args=1) True if field is present with boolean value. Syn
 ### is_boolean
 <pre class="pre-non-highlight-non-pair">
 is_boolean  (class=typing #args=1) True if field is present with boolean value. Synonymous with is_bool.
+</pre>
+
+
+### is_bytes
+<pre class="pre-non-highlight-non-pair">
+is_bytes  (class=typing #args=1) True if field is present with bytes value.
 </pre>
 
 

@@ -13,22 +13,23 @@ import (
 
 const verbNameUTF8ToLatin1 = "utf8-to-latin1"
 
+var utf8ToLatin1Options = []OptionSpec{}
+
 var UTF8ToLatin1Setup = TransformerSetup{
 	Verb:         verbNameUTF8ToLatin1,
 	UsageFunc:    transformerUTF8ToLatin1Usage,
 	ParseCLIFunc: transformerUTF8ToLatin1ParseCLI,
 	IgnoresInput: false,
-	Options:      []OptionSpec{},
+	Options:      utf8ToLatin1Options,
 }
 
 func transformerUTF8ToLatin1Usage(
 	o *os.File,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s, with no options.\n", "mlr", verbNameUTF8ToLatin1)
-	fmt.Fprintf(o, "Recursively converts record strings from Latin-1 to UTF-8.\n")
+	fmt.Fprintf(o, "Recursively converts record strings from UTF-8 to Latin-1.\n")
 	fmt.Fprintf(o, "For field-level control, please see the utf8_to_latin1 DSL function.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	WriteVerbOptions(o, utf8ToLatin1Options)
 }
 
 func transformerUTF8ToLatin1ParseCLI(

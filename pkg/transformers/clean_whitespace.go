@@ -13,17 +13,17 @@ import (
 
 const verbNameCleanWhitespace = "clean-whitespace"
 
+var cleanWhitespaceOptions = []OptionSpec{
+	{Flag: "-k", Aliases: []string{"--keys-only"}, Type: "bool", Desc: "Do not touch values."},
+	{Flag: "-v", Aliases: []string{"--values-only"}, Type: "bool", Desc: "Do not touch keys."},
+}
+
 var CleanWhitespaceSetup = TransformerSetup{
 	Verb:         verbNameCleanWhitespace,
 	UsageFunc:    transformerCleanWhitespaceUsage,
 	ParseCLIFunc: transformerCleanWhitespaceParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-k", Type: "bool", Desc: "Do not touch values."},
-		{Flag: "--keys-only", Type: "bool", Desc: "Do not touch values."},
-		{Flag: "-v", Type: "bool", Desc: "Do not touch keys."},
-		{Flag: "--values-only", Type: "bool", Desc: "Do not touch keys."},
-	},
+	Options:      cleanWhitespaceOptions,
 }
 
 func transformerCleanWhitespaceUsage(
@@ -36,12 +36,9 @@ func transformerCleanWhitespaceUsage(
 	fmt.Fprintf(o, "please see the DSL functions lstrip, rstrip, strip, collapse_whitespace,\n")
 	fmt.Fprintf(o, "and clean_whitespace.\n")
 	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-k|--keys-only    Do not touch values.\n")
-	fmt.Fprintf(o, "-v|--values-only  Do not touch keys.\n")
+	WriteVerbOptions(o, cleanWhitespaceOptions)
 	fmt.Fprintf(o, "It is an error to specify -k as well as -v -- to clean keys and values,\n")
 	fmt.Fprintf(o, "leave off -k as well as -v.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
 }
 
 func transformerCleanWhitespaceParseCLI(

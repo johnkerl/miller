@@ -16,54 +16,58 @@ import (
 
 const verbNamePut = "put"
 
+var putOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{file name}", Type: "filename", Desc: "File containing a DSL expression (see examples below). If the filename is a directory, all *.mlr files in that directory are loaded.", Repeatable: true},
+	{Flag: "-e", Arg: "{expression}", Type: "string", Desc: "DSL expression to evaluate. You can use this after -f to add an expression. Example use case: define functions/subroutines in a file you specify with -f, then call them with an expression you specify with -e.", Repeatable: true},
+	{Flag: "-s", Arg: "{name=value}", Type: "string", Desc: "Predefines out-of-stream variable @name to have the given value. Thus mlr put -s foo=97 '$column += @foo' is like mlr put 'begin {@foo = 97} $column += @foo'. The value part is subject to type-inferencing. May be specified more than once, e.g. -s name1=value1 -s name2=value2. Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE.", Repeatable: true},
+	{Flag: "-x", Type: "bool", Desc: "Prints records for which {expression} evaluates to false, not true, i.e. invert the sense of the filter expression. Default false."},
+	{Flag: "-q", Type: "bool", Desc: "Does not include the modified record in the output stream. Useful for when all desired output is in begin and/or end blocks."},
+	{Flag: "-S", Type: "bool", Desc: "No-op in Miller 6 and above, since type-inferencing is now done by the record-readers before filter/put is executed. Supported as a no-op pass-through flag for backward compatibility."},
+	{Flag: "-F", Type: "bool", Desc: "No-op in Miller 6 and above, since type-inferencing is now done by the record-readers before filter/put is executed. Supported as a no-op pass-through flag for backward compatibility."},
+	{Flag: "-w", Type: "bool", Desc: "Print warnings about things like uninitialized variables."},
+	{Flag: "-W", Type: "bool", Desc: "Same as -w, but exit the process if there are any warnings."},
+	{Flag: "-p", Type: "bool", Desc: "Prints the expression's AST (abstract syntax tree), which gives full transparency on the precedence and associativity rules of Miller's grammar, to stdout."},
+	{Flag: "-d", Type: "bool", Desc: "Like -p but uses a parenthesized-expression format for the AST."},
+	{Flag: "-D", Type: "bool", Desc: "Like -d but with output all on one line."},
+	{Flag: "-E", Type: "bool", Desc: "Echo DSL expression before printing parse-tree."},
+	{Flag: "-v", Type: "bool", Desc: "Same as -E -p."},
+	{Flag: "-X", Type: "bool", Desc: "Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you only want to look at parser information."},
+}
+
 var PutSetup = TransformerSetup{
 	Verb:         verbNamePut,
 	UsageFunc:    transformerPutUsage,
 	ParseCLIFunc: transformerPutOrFilterParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-f", Arg: "{file name}", Type: "filename", Desc: "File containing a DSL expression. If the filename is a directory, all *.mlr files in that directory are loaded.", Repeatable: true},
-		{Flag: "-e", Arg: "{expression}", Type: "string", Desc: "DSL expression to evaluate. May be used after -f to add an expression.", Repeatable: true},
-		{Flag: "-s", Arg: "{name=value}", Type: "string", Desc: "Predefines out-of-stream variable @name to have the given value. May be specified more than once.", Repeatable: true},
-		{Flag: "-x", Type: "bool", Desc: "Prints records for which the expression evaluates to false, not true (invert the sense of the filter expression)."},
-		{Flag: "-q", Type: "bool", Desc: "Does not include the modified record in the output stream. Useful for when all desired output is in begin and/or end blocks."},
-		{Flag: "-S", Type: "bool", Desc: "No-op in Miller 6 and above; supported for backward compatibility."},
-		{Flag: "-F", Type: "bool", Desc: "No-op in Miller 6 and above; supported for backward compatibility."},
-		{Flag: "-w", Type: "bool", Desc: "Print warnings about things like uninitialized variables."},
-		{Flag: "-W", Type: "bool", Desc: "Same as -w, but exit the process if there are any warnings."},
-		{Flag: "-p", Type: "bool", Desc: "Print the expression's AST (abstract syntax tree) to stdout."},
-		{Flag: "-d", Type: "bool", Desc: "Like -p but uses a parenthesized-expression format for the AST."},
-		{Flag: "-D", Type: "bool", Desc: "Like -d but with output all on one line."},
-		{Flag: "-E", Type: "bool", Desc: "Echo DSL expression before printing parse-tree."},
-		{Flag: "-v", Type: "bool", Desc: "Same as -E -p."},
-		{Flag: "-X", Type: "bool", Desc: "Exit after parsing but before stream-processing."},
-	},
+	Options:      putOptions,
 }
 
 const verbNameFilter = "filter"
+
+var filterOptions = []OptionSpec{
+	{Flag: "-f", Arg: "{file name}", Type: "filename", Desc: "File containing a DSL expression (see examples below). If the filename is a directory, all *.mlr files in that directory are loaded.", Repeatable: true},
+	{Flag: "-e", Arg: "{expression}", Type: "string", Desc: "DSL expression to evaluate. You can use this after -f to add an expression. Example use case: define functions/subroutines in a file you specify with -f, then call them with an expression you specify with -e.", Repeatable: true},
+	{Flag: "-s", Arg: "{name=value}", Type: "string", Desc: "Predefines out-of-stream variable @name to have the given value. Thus mlr put -s foo=97 '$column += @foo' is like mlr put 'begin {@foo = 97} $column += @foo'. The value part is subject to type-inferencing. May be specified more than once, e.g. -s name1=value1 -s name2=value2. Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE.", Repeatable: true},
+	{Flag: "-x", Type: "bool", Desc: "Prints records for which {expression} evaluates to false, not true, i.e. invert the sense of the filter expression. Default false."},
+	{Flag: "-q", Type: "bool", Desc: "Does not include the modified record in the output stream. Useful for when all desired output is in begin and/or end blocks."},
+	{Flag: "-S", Type: "bool", Desc: "No-op in Miller 6 and above, since type-inferencing is now done by the record-readers before filter/put is executed. Supported as a no-op pass-through flag for backward compatibility."},
+	{Flag: "-F", Type: "bool", Desc: "No-op in Miller 6 and above, since type-inferencing is now done by the record-readers before filter/put is executed. Supported as a no-op pass-through flag for backward compatibility."},
+	{Flag: "-w", Type: "bool", Desc: "Print warnings about things like uninitialized variables."},
+	{Flag: "-W", Type: "bool", Desc: "Same as -w, but exit the process if there are any warnings."},
+	{Flag: "-p", Type: "bool", Desc: "Prints the expression's AST (abstract syntax tree), which gives full transparency on the precedence and associativity rules of Miller's grammar, to stdout."},
+	{Flag: "-d", Type: "bool", Desc: "Like -p but uses a parenthesized-expression format for the AST."},
+	{Flag: "-D", Type: "bool", Desc: "Like -d but with output all on one line."},
+	{Flag: "-E", Type: "bool", Desc: "Echo DSL expression before printing parse-tree."},
+	{Flag: "-v", Type: "bool", Desc: "Same as -E -p."},
+	{Flag: "-X", Type: "bool", Desc: "Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you only want to look at parser information."},
+}
 
 var FilterSetup = TransformerSetup{
 	Verb:         verbNameFilter,
 	UsageFunc:    transformerFilterUsage,
 	ParseCLIFunc: transformerPutOrFilterParseCLI,
 	IgnoresInput: false,
-	Options: []OptionSpec{
-		{Flag: "-f", Arg: "{file name}", Type: "filename", Desc: "File containing a DSL expression. If the filename is a directory, all *.mlr files in that directory are loaded.", Repeatable: true},
-		{Flag: "-e", Arg: "{expression}", Type: "string", Desc: "DSL expression to evaluate. May be used after -f to add an expression.", Repeatable: true},
-		{Flag: "-s", Arg: "{name=value}", Type: "string", Desc: "Predefines out-of-stream variable @name to have the given value. May be specified more than once.", Repeatable: true},
-		{Flag: "-x", Type: "bool", Desc: "Prints records for which the expression evaluates to false, not true (invert the sense of the filter expression)."},
-		{Flag: "-q", Type: "bool", Desc: "Does not include the modified record in the output stream. Useful for when all desired output is in begin and/or end blocks."},
-		{Flag: "-S", Type: "bool", Desc: "No-op in Miller 6 and above; supported for backward compatibility."},
-		{Flag: "-F", Type: "bool", Desc: "No-op in Miller 6 and above; supported for backward compatibility."},
-		{Flag: "-w", Type: "bool", Desc: "Print warnings about things like uninitialized variables."},
-		{Flag: "-W", Type: "bool", Desc: "Same as -w, but exit the process if there are any warnings."},
-		{Flag: "-p", Type: "bool", Desc: "Print the expression's AST (abstract syntax tree) to stdout."},
-		{Flag: "-d", Type: "bool", Desc: "Like -p but uses a parenthesized-expression format for the AST."},
-		{Flag: "-D", Type: "bool", Desc: "Like -d but with output all on one line."},
-		{Flag: "-E", Type: "bool", Desc: "Echo DSL expression before printing parse-tree."},
-		{Flag: "-v", Type: "bool", Desc: "Same as -E -p."},
-		{Flag: "-X", Type: "bool", Desc: "Exit after parsing but before stream-processing."},
-	},
+	Options:      filterOptions,
 }
 
 func transformerPutUsage(
@@ -92,59 +96,17 @@ func transformerPutOrFilterUsage(
 	}
 	fmt.Fprintf(o, "See also: https://miller.readthedocs.io/en/latest/reference-verbs\n")
 	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o,
-		`-f {file name} File containing a DSL expression (see examples below). If the filename
-   is a directory, all *.mlr files in that directory are loaded.
-
--e {expression} You can use this after -f to add an expression. Example use
-   case: define functions/subroutines in a file you specify with -f, then call
-   them with an expression you specify with -e.
-
-(If you mix -e and -f then the expressions are evaluated in the order encountered.
-Since the expression pieces are simply concatenated, please be sure to use intervening
-semicolons to separate expressions.)
-
--s name=value: Predefines out-of-stream variable @name to have
-    Thus mlr put -s foo=97 '$column += @foo' is like
-    mlr put 'begin {@foo = 97} $column += @foo'.
-    The value part is subject to type-inferencing.
-    May be specified more than once, e.g. -s name1=value1 -s name2=value2.
-    Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
-
--x (default false) Prints records for which {expression} evaluates to false, not true,
-   i.e. invert the sense of the filter expression.
-
--q Does not include the modified record in the output stream.
-   Useful for when all desired output is in begin and/or end blocks.
-
--S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
-   by the record-readers before filter/put is executed. Supported as no-op pass-through
-   flags for backward compatibility.
-
--h|--help Show this message.
-
-Parser-info options:
-
--w Print warnings about things like uninitialized variables.
-
--W Same as -w, but exit the process if there are any warnings.
-
--p Prints the expressions's AST (abstract syntax tree), which gives full
-  transparency on the precedence and associativity rules of Miller's grammar,
-  to stdout.
-
--d Like -p but uses a parenthesized-expression format for the AST.
-
--D Like -d but with output all on one line.
-
--E Echo DSL expression before printing parse-tree
-
--v Same as -E -p.
-
--X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
-   only want to look at parser information.
-`)
+	if verb == "put" {
+		WriteVerbOptions(o, putOptions)
+	} else {
+		WriteVerbOptions(o, filterOptions)
+	}
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "If you mix -e and -f then the expressions are evaluated in the order encountered.\n")
+	fmt.Fprintf(o, "Since the expression pieces are simply concatenated, please be sure to use intervening\n")
+	fmt.Fprintf(o, "semicolons to separate expressions.\n")
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Parser-info options are -w, -W, -p, -d, -D, -E, -v, and -X.\n")
 
 	if verb == "put" {
 		fmt.Fprintln(o)

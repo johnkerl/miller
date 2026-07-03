@@ -10,50 +10,46 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
 )
 
-func BIF_md5(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	if !input1.IsStringOrVoid() {
-		return mlrval.FromNotStringError("md5", input1)
+// hashableBytes returns the raw payload to hash: for strings, their UTF-8
+// bytes; for bytes values, the bytes themselves.
+func hashableBytes(funcname string, input1 *mlrval.Mlrval) ([]byte, *mlrval.Mlrval) {
+	if input1.IsBytes() {
+		return input1.AcquireBytesValue(), nil
 	}
-	return mlrval.FromString(
-		fmt.Sprintf(
-			"%x",
-			md5.Sum([]byte(input1.AcquireStringValue())),
-		),
-	)
+	if !input1.IsStringOrVoid() {
+		return nil, mlrval.FromNotStringError(funcname, input1)
+	}
+	return []byte(input1.AcquireStringValue()), nil
+}
+
+func BIF_md5(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	payload, errval := hashableBytes("md5", input1)
+	if errval != nil {
+		return errval
+	}
+	return mlrval.FromString(fmt.Sprintf("%x", md5.Sum(payload)))
 }
 
 func BIF_sha1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	if !input1.IsStringOrVoid() {
-		return mlrval.FromNotStringError("sha1", input1)
+	payload, errval := hashableBytes("sha1", input1)
+	if errval != nil {
+		return errval
 	}
-	return mlrval.FromString(
-		fmt.Sprintf(
-			"%x",
-			sha1.Sum([]byte(input1.AcquireStringValue())),
-		),
-	)
+	return mlrval.FromString(fmt.Sprintf("%x", sha1.Sum(payload)))
 }
 
 func BIF_sha256(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	if !input1.IsStringOrVoid() {
-		return mlrval.FromNotStringError("sha256", input1)
+	payload, errval := hashableBytes("sha256", input1)
+	if errval != nil {
+		return errval
 	}
-	return mlrval.FromString(
-		fmt.Sprintf(
-			"%x",
-			sha256.Sum256([]byte(input1.AcquireStringValue())),
-		),
-	)
+	return mlrval.FromString(fmt.Sprintf("%x", sha256.Sum256(payload)))
 }
 
 func BIF_sha512(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	if !input1.IsStringOrVoid() {
-		return mlrval.FromNotStringError("sha512", input1)
+	payload, errval := hashableBytes("sha512", input1)
+	if errval != nil {
+		return errval
 	}
-	return mlrval.FromString(
-		fmt.Sprintf(
-			"%x",
-			sha512.Sum512([]byte(input1.AcquireStringValue())),
-		),
-	)
+	return mlrval.FromString(fmt.Sprintf("%x", sha512.Sum512(payload)))
 }

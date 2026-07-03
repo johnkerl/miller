@@ -1,0 +1,22 @@
+"bytes"
+6869
+"hi"
+bytes: unacceptable type int with value 5
+true
+false
+"aGVsbG8="
+68656c6c6f
+"bytes"
+"hello"
+illegal base64 data at input byte 0
+"/w=="
+ff
+"привет"
+"6869"
+6869
+"hi"
+encoding/hex: invalid byte: U+0078 'x'
+true
+"da39a3ee5e6b4b0d3255bfef95601890afd80709"
+"a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89"
+1

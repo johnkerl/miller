@@ -1,0 +1,1 @@
+mlr --icsv --ojson put '$decoded = base64_decode($enc); $text = string($decoded); $nested = {"payload": $decoded}' ./${CASEDIR}/input

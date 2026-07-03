@@ -236,34 +236,35 @@ This is simply a copy of what you should see on running `man mlr` at a command p
 
 1mFUNCTION LIST0m
        abs acos acosh antimode any append apply arrayify asin asinh asserting_absent
-       asserting_array asserting_bool asserting_boolean asserting_empty
-       asserting_empty_map asserting_error asserting_float asserting_int
-       asserting_map asserting_nonempty_map asserting_not_array asserting_not_empty
-       asserting_not_map asserting_not_null asserting_null asserting_numeric
-       asserting_present asserting_string atan atan2 atanh bitcount boolean
-       capitalize cbrt ceil clean_whitespace collapse_whitespace concat contains cos
-       cosh count depth dhms2fsec dhms2sec distinct_count erf erfc every exec exp
-       expm1 flatten float floor fmtifnum fmtnum fold format fsec2dhms fsec2hms
-       get_keys get_values gmt2localtime gmt2nsec gmt2sec gssub gsub haskey hasvalue
-       hexfmt hms2fsec hms2sec hostname index int invqnorm is_absent is_array is_bool
-       is_boolean is_empty is_empty_map is_error is_float is_int is_map is_nan
-       is_nonempty_map is_not_array is_not_empty is_not_map is_not_null is_null
-       is_numeric is_present is_string joink joinkv joinv json_parse json_stringify
-       kurtosis latin1_to_utf8 leafcount leftpad length localtime2gmt localtime2nsec
-       localtime2sec log log10 log1p logifit lstrip madd mapdiff mapexcept mapselect
-       mapsum max maxlen md5 mean meaneb median mexp min minlen mmul mode msub next
-       nsec2gmt nsec2gmtdate nsec2localdate nsec2localtime null_count os percentile
-       percentiles pow qnorm reduce regextract regextract_or_else rightpad round
-       roundm rstrip sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime
-       select sgn sha1 sha256 sha512 sin sinh skewness sort sort_collection splita
-       splitax splitkv splitkvx splitnv splitnvx sqrt ssub stat stddev strfntime
-       strfntime_local strftime strftime_local string strip strlen strmatch strmatchx
-       strpntime strpntime_local strptime strptime_local sub substr substr0 substr1
-       sum sum2 sum3 sum4 sysntime system systime systimeint tan tanh tolower toupper
-       truncate typeof unflatten unformat unformatx upntime uptime urand urand32
-       urandelement urandint urandrange utf8_to_latin1 variance version ! != !=~ % &
-       && * ** + - . .* .+ .- ./ / // &lt; &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ |
-       || ~
+       asserting_array asserting_bool asserting_boolean asserting_bytes
+       asserting_empty asserting_empty_map asserting_error asserting_float
+       asserting_int asserting_map asserting_nonempty_map asserting_not_array
+       asserting_not_empty asserting_not_map asserting_not_null asserting_null
+       asserting_numeric asserting_present asserting_string atan atan2 atanh
+       base64_decode base64_encode bitcount boolean bytes capitalize cbrt ceil
+       clean_whitespace collapse_whitespace concat contains cos cosh count depth
+       dhms2fsec dhms2sec distinct_count erf erfc every exec exp expm1 flatten float
+       floor fmtifnum fmtnum fold format fsec2dhms fsec2hms get_keys get_values
+       gmt2localtime gmt2nsec gmt2sec gssub gsub haskey hasvalue hex_decode
+       hex_encode hexfmt hms2fsec hms2sec hostname index int invqnorm is_absent
+       is_array is_bool is_boolean is_bytes is_empty is_empty_map is_error is_float
+       is_int is_map is_nan is_nonempty_map is_not_array is_not_empty is_not_map
+       is_not_null is_null is_numeric is_present is_string joink joinkv joinv
+       json_parse json_stringify kurtosis latin1_to_utf8 leafcount leftpad length
+       localtime2gmt localtime2nsec localtime2sec log log10 log1p logifit lstrip madd
+       mapdiff mapexcept mapselect mapsum max maxlen md5 mean meaneb median mexp min
+       minlen mmul mode msub next nsec2gmt nsec2gmtdate nsec2localdate nsec2localtime
+       null_count os percentile percentiles pow qnorm reduce regextract
+       regextract_or_else rightpad round roundm rstrip sec2dhms sec2gmt sec2gmtdate
+       sec2hms sec2localdate sec2localtime select sgn sha1 sha256 sha512 sin sinh
+       skewness sort sort_collection splita splitax splitkv splitkvx splitnv splitnvx
+       sqrt ssub stat stddev strfntime strfntime_local strftime strftime_local string
+       strip strlen strmatch strmatchx strpntime strpntime_local strptime
+       strptime_local sub substr substr0 substr1 sum sum2 sum3 sum4 sysntime system
+       systime systimeint tan tanh tolower toupper truncate typeof unflatten unformat
+       unformatx upntime uptime urand urand32 urandelement urandint urandrange
+       utf8_to_latin1 variance version ! != !=~ % & && * ** + - . .* .+ .- ./ / // &lt;
+       &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
 
 1mCOMMENTS-IN-DATA FLAGS0m
        Miller lets you put comments in your data, such as
@@ -2393,6 +2394,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
    1masserting_boolean0m
         (class=typing #args=1) Aborts with an error if is_boolean on the argument returns false, else returns its argument.
 
+   1masserting_bytes0m
+        (class=typing #args=1) Aborts with an error if is_bytes on the argument returns false, else returns its argument.
+
    1masserting_empty0m
         (class=typing #args=1) Aborts with an error if is_empty on the argument returns false, else returns its argument.
 
@@ -2447,11 +2451,29 @@ This is simply a copy of what you should see on running `man mlr` at a command p
    1matanh0m
         (class=math #args=1) Inverse hyperbolic tangent.
 
+   1mbase64_decode0m
+        (class=string #args=1) Decodes a base64-encoded string to a bytes value; use string() to interpret the result as UTF-8 text. Returns error if the input is not valid base64.
+       Examples:
+       base64_decode("aGVsbG8=") gives the bytes 68656c6c6f
+       string(base64_decode("aGVsbG8=")) gives "hello"
+
+   1mbase64_encode0m
+        (class=string #args=1) Encodes a string or bytes value using standard base64 encoding.
+       Examples:
+       base64_encode("hello") gives "aGVsbG8="
+       base64_encode(b"\xff") gives "/w=="
+
    1mbitcount0m
         (class=arithmetic #args=1) Count of 1-bits.
 
    1mboolean0m
         (class=conversion #args=1) Convert int/float/bool/string to boolean.
+
+   1mbytes0m
+        (class=conversion #args=1) Convert string to bytes; bytes values pass through as-is. See string() for the reverse.
+       Examples:
+       bytes("hi") gives the bytes 6869
+       string(bytes("hi")) gives "hi"
 
    1mcapitalize0m
         (class=string #args=1) Convert string's first character to uppercase.
@@ -2626,6 +2648,17 @@ This is simply a copy of what you should see on running `man mlr` at a command p
    1mhasvalue0m
         (class=collections #args=2) True/false if map/array has/hasn't value, e.g. 'hasvalue($*, "a")' or 'hasvalue(myarray, myvalue)', returns true if the value is present in the collection. Error if 1st argument is not a map or array.
 
+   1mhex_decode0m
+        (class=string #args=1) Decodes a hex-encoded string to a bytes value; use string() to interpret the result as UTF-8 text. Returns error if the input is not valid hex.
+       Examples:
+       hex_decode("6869") gives the bytes 6869
+       string(hex_decode("6869")) gives "hi"
+
+   1mhex_encode0m
+        (class=string #args=1) Encodes a string or bytes value as lowercase hex.
+       Example:
+       hex_encode("hi") gives "6869"
+
    1mhexfmt0m
         (class=conversion #args=1) Convert int to hex string, e.g. 255 to "0xff".
 
@@ -2672,6 +2705,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
 
    1mis_boolean0m
         (class=typing #args=1) True if field is present with boolean value. Synonymous with is_bool.
+
+   1mis_bytes0m
+        (class=typing #args=1) True if field is present with bytes value.
 
    1mis_empty0m
         (class=typing #args=1) True if field is present in input with empty string value, false otherwise.
@@ -2826,7 +2862,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        maxlen(["ao", "alto"]) is 4
 
    1mmd50m
-        (class=hashing #args=1) MD5 hash.
+        (class=hashing #args=1) MD5 hash of a string or bytes value.
 
    1mmean0m
         (class=stats #args=1) Returns the arithmetic mean of values in an array or map. Returns empty string AKA void for empty array/map; returns error for non-array/non-map types.
@@ -3047,13 +3083,13 @@ This is simply a copy of what you should see on running `man mlr` at a command p
         (class=math #args=1) +1, 0, -1 for positive, zero, negative input respectively.
 
    1msha10m
-        (class=hashing #args=1) SHA1 hash.
+        (class=hashing #args=1) SHA1 hash of a string or bytes value.
 
    1msha2560m
-        (class=hashing #args=1) SHA256 hash.
+        (class=hashing #args=1) SHA256 hash of a string or bytes value.
 
    1msha5120m
-        (class=hashing #args=1) SHA512 hash.
+        (class=hashing #args=1) SHA512 hash of a string or bytes value.
 
    1msin0m
         (class=math #args=1) Trigonometric sine.
@@ -3169,13 +3205,13 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%3S %z", "Asia/Istanbul") = "2015-08-28 16:33:21.700 +0300"
 
    1mstring0m
-        (class=conversion #args=1) Convert int/float/bool/string/array/map to string.
+        (class=conversion #args=1) Convert int/float/bool/string/array/map to string. For bytes values, reinterprets the raw bytes as a (UTF-8) string -- the reverse of bytes().
 
    1mstrip0m
         (class=string #args=1) Strip leading and trailing whitespace from string.
 
    1mstrlen0m
-        (class=string #args=1) String length.
+        (class=string #args=1) String length in UTF-8 characters, or bytes-value length in bytes.
 
    1mstrmatch0m
         (class=string #args=2) Boolean yes/no for whether the stringable first argument matches the regular-expression second argument. No regex captures are provided; please see `strmatch`.
@@ -3863,5 +3899,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-06-28                         4mMILLER24m(1)
+                                  2026-07-01                         4mMILLER24m(1)
 </pre>

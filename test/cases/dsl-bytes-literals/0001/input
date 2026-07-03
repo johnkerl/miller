@@ -1,0 +1,12 @@
+typeof(b"")
+typeof(b"abc")
+strlen(b"")
+b"\xff\x01"
+strlen(b"\xff\x01")
+b"abc"
+b"\x41\x42\x43"
+b"\n\t\\\""
+b"\101\102\103"
+b"héllo"
+strlen(b"héllo")
+b"❦"
