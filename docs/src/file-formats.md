@@ -239,7 +239,7 @@ See also the [`--lazy-quotes` flag](reference-main-flag-list.md#csv-only-flags),
 
 ### Troubleshooting CSV and JSON input
 
-Please see [xxx](xxx).
+Please see [this page](troubleshooting-csv-and-json-input.md).
 
 ## JSON
 
