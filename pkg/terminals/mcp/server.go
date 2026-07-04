@@ -76,15 +76,17 @@ func newServer(config *serverConfig) *mcpsdk.Server {
 		Description: "Learn the shape of input data before constructing a command " +
 			"(mlr describe): per-field name, types seen with counts, occurrence count, null count, " +
 			"cardinality, min/max, and -- for low-cardinality fields -- every distinct value. " +
-			"Copy field names and values from here instead of guessing them.",
+			"Copy field names and values from here instead of guessing them. " +
+			"Pass input file paths via the files field, and optionally the input format " +
+			"(csv, tsv, json, etc.) via input_format.",
 		Annotations: &mcpsdk.ToolAnnotations{ReadOnlyHint: true, IdempotentHint: true},
 	}, describeDataHandler(config))
 
 	mcpsdk.AddTool(server, &mcpsdk.Tool{
 		Name: "run",
-		Description: "Run an mlr command line. Pass argv after the leading \"mlr\", one element per " +
-			"shell word, e.g. [\"--icsv\", \"--ojson\", \"cat\", \"data.csv\"]; optional inline input " +
-			"via stdin_text. Returns {exit_code, stdout, stderr} plus a parsed structured error " +
+		Description: "Run an mlr command line. Pass argv after the leading \"mlr\" via the args field, " +
+			"one element per shell word, e.g. [\"--icsv\", \"--ojson\", \"cat\", \"data.csv\"]; optional " +
+			"inline input via the stdin_text field. Returns {exit_code, stdout, stderr} plus a parsed structured error " +
 			"when the command fails. Output is truncated at the server's --max-output-bytes; " +
 			"execution is time-limited. External-command execution (the DSL system/exec functions, " +
 			"piped redirects, --prepipe) is disabled unless the server was started with --allow-shell. " +
