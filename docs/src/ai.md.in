@@ -26,7 +26,7 @@ at the end packages it all up for MCP-speaking agents.
 
 ## The bare minimum
 
-**To get the AI features:** install Miller 6.19 or newer ([Installing
+**To get the AI features:** install Miller 6.20 or newer ([Installing
 Miller](installing-miller.md)). That's all. Everything on this page ships
 inside the ordinary `mlr` binary -- there are no plugins, no separate
 installs, no API keys, and nothing here makes network calls.
