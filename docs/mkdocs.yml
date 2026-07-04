@@ -41,7 +41,8 @@ nav:
     - "Shell completion": "shell-completion.md"
     - "Syntax highlighting: vimrc": "vimrc.md"
     - "The REPL": "repl.md"
-    - "The MCP server": "mcp-server.md"
+    - "The Miller Agent Skill": "agent-skill.md"
+    - "The Miller MCP server": "mcp-server.md"
     - "Online help": "online-help.md"
     - "How to contribute": "contributing.md"
   - 'FAQs and examples':

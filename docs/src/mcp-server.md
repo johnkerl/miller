@@ -16,8 +16,8 @@ Quick links:
 </div>
 # The Miller MCP server
 
-As of 2026 there are two main ways to get your AI to know about a software tool (Miller, or others):
-**skills files**, and **MCP**.  (See [Miller and AI](ai.md) for an introduction.)
+As of July 2026 there are two main ways to get your AI to know about a software tool (Miller, or others):
+[**agent skills**](agent-skill.md), and **MCP**.  (See [Miller and AI](ai.md) for an introduction.)
 
 Miller ships with a built-in [Model Context Protocol](https://modelcontextprotocol.io) server
 included within the `mlr` executable, so AI agents (Claude Code, Claude Desktop, Cursor, and other
