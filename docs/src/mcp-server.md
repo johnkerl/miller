@@ -109,4 +109,5 @@ effective with Miller: **discover** capabilities from the catalog rather than
 inventing them, **constrain** to the data's actual fields and values via
 `describe_data`, **validate** DSL before running it, and **run** with
 structured-error recovery. The same text lives in the Miller source tree at
-`pkg/terminals/mcp/SKILL.md` in Agent Skill format.
+[pkg/terminals/mcp/SKILL.md](https://github.com/johnkerl/miller/blob/main/pkg/terminals/mcp/SKILL.md)
+in Agent Skill format.

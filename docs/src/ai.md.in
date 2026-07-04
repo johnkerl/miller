@@ -61,8 +61,10 @@ constructing mlr commands:
 GENMD-EOF
 
   A fuller, ready-made version of that lesson ships in the Miller source
-  tree at `pkg/terminals/mcp/SKILL.md`, in Agent Skill format -- suitable for
-  dropping into e.g. a `.claude/skills/miller/` directory as-is.
+  tree at
+  [pkg/terminals/mcp/SKILL.md](https://github.com/johnkerl/miller/blob/main/pkg/terminals/mcp/SKILL.md),
+  in Agent Skill format -- suitable for dropping into e.g. a
+  `.claude/skills/miller/` directory as-is.
 
 The rest of this page is what those instructions rest on, feature by
 feature.
