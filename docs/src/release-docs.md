@@ -24,6 +24,7 @@ If your `mlr version` says something like `Miller v5.10.2` or `mlr 6.0.0`, witho
 | Release | Docs                                                                | Release notes |
 |---------|---------------------------------------------------------------------|---------------|
 main      | [main branch](https://miller.readthedocs.io/en/main)                | N/A |
+6.20.2     | [Miller 6.20.2](https://miller.readthedocs.io/en/6.20.2)           | [Miller 6.20.2: Miller and AI, shell tab-completion, bytes datatype](https://github.com/johnkerl/miller/releases/tag/v6.20.2) |
 6.19.0     | [Miller 6.19.0](https://miller.readthedocs.io/en/6.19.0)           | [Miller 6.19.0: Performance improvements, `--omd-aligned` flag, bugfixes](https://github.com/johnkerl/miller/releases/tag/v6.19.0) |
 6.18.1     | [Miller 6.18.1](https://miller.readthedocs.io/en/6.18.1)           | [v6.18.1: DKVPX file format; misc. features and bugfixes](https://github.com/johnkerl/miller/releases/tag/v6.18.1) |
 6.17.0     | [Miller 6.17.0](https://miller.readthedocs.io/en/6.17.0)           | [Miller 6.17.0: YAML and DCF file formats; performance improvements; bugfixes](https://github.com/johnkerl/miller/releases/tag/v6.17.0) |
