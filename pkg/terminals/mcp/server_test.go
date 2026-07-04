@@ -315,6 +315,6 @@ func TestParseStructuredError(t *testing.T) {
 }
 
 func TestPlaybookHasFrontmatter(t *testing.T) {
-	assert.True(t, strings.HasPrefix(playbookText, "---\n"))
-	assert.Contains(t, playbookText, "name: miller")
+	assert.True(t, strings.HasPrefix(PlaybookText, "---\n"))
+	assert.Contains(t, PlaybookText, "name: miller")
 }

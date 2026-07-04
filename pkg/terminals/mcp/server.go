@@ -11,8 +11,13 @@ import (
 	mcpsdk "github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
+// PlaybookText is the Miller Agent Skill / playbook content: the same text
+// served here as the "miller-playbook" MCP prompt/resource, and reused
+// as-is by `mlr skill` (pkg/terminals/skill) for agents that read Agent
+// Skills from disk rather than over MCP.
+//
 //go:embed SKILL.md
-var playbookText string
+var PlaybookText string
 
 const playbookPromptName = "miller-playbook"
 const playbookResourceURI = "miller://playbook"
@@ -117,7 +122,7 @@ func playbookPromptHandler(_ context.Context, _ *mcpsdk.GetPromptRequest) (*mcps
 		Messages: []*mcpsdk.PromptMessage{
 			{
 				Role:    "user",
-				Content: &mcpsdk.TextContent{Text: playbookText},
+				Content: &mcpsdk.TextContent{Text: PlaybookText},
 			},
 		},
 	}, nil
@@ -129,7 +134,7 @@ func playbookResourceHandler(_ context.Context, _ *mcpsdk.ReadResourceRequest) (
 			{
 				URI:      playbookResourceURI,
 				MIMEType: "text/markdown",
-				Text:     playbookText,
+				Text:     PlaybookText,
 			},
 		},
 	}, nil
