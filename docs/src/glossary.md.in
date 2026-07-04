@@ -24,6 +24,14 @@ The [data type](reference-main-data-types.md) obtained from accessing a missing
 key, e.g. `$x` when the current [record](#record) has no [field](#field) named `x`.  See the
 [null-data page](reference-main-null-data.md).
 
+## agent skill
+
+A file (`SKILL.md`) that AI coding agents such as Claude Code read directly
+from disk, giving them instructions for using a tool like Miller. Miller
+ships a built-in agent skill; see the [agent-skill page](agent-skill.md) for
+how to install and use it. See also [MCP](#mcp) and [Miller and
+AI](ai.md).
+
 ## all
 
 All [out-of-stream variables](reference-dsl-variables.md#out-of-stream-variables), as a [map](reference-main-maps.md).
@@ -484,6 +492,14 @@ an ordered sequence of [key](#key)-[value](#value) pairs.
 See the [maps page](reference-main-maps.md) for more information.
 
 Note that Miller operates on [records](#records) by treating them as maps.
+
+## MCP
+
+Stands for _Model Context Protocol_, a standard letting AI agents (Claude
+Code, Claude Desktop, Cursor, and others) discover and invoke external
+tools. Miller ships a built-in MCP server, run via `mlr mcp`; see the
+[MCP-server page](mcp-server.md) for setup and details. See also [agent
+skill](#agent-skill) and [Miller and AI](ai.md).
 
 ## .mlrrc
 
