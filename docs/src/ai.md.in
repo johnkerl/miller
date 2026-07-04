@@ -24,7 +24,7 @@ any agent harness, system prompt, or script -- and it's equally useful for
 plain shell tooling like `jq`. The [MCP server](#plug-it-in-the-mcp-server)
 at the end packages it all up for MCP-speaking agents.
 
-## The bare minimum
+## The essentials
 
 **To get the AI features:** install Miller 6.20 or newer ([Installing
 Miller](installing-miller.md)). That's all. Everything on this page ships
