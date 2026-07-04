@@ -24,6 +24,7 @@ nav:
   - 'Getting started':
     - "Installing Miller": "installing-miller.md"
     - "Miller in 10 minutes": "10min.md"
+    - "Miller and AI": "ai.md"
     - "Keystroke-savers": "keystroke-savers.md"
     - "Intro to Miller's programming language": "miller-programming-language.md"
     - "Miller on Windows": "miller-on-windows.md"
@@ -40,7 +41,7 @@ nav:
     - "Shell completion": "shell-completion.md"
     - "Syntax highlighting: vimrc": "vimrc.md"
     - "The REPL": "repl.md"
-    - "AI agents and the MCP server": "mcp-server.md"
+    - "The MCP server": "mcp-server.md"
     - "Online help": "online-help.md"
     - "How to contribute": "contributing.md"
   - 'FAQs and examples':
