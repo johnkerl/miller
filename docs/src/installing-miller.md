@@ -46,7 +46,7 @@ As a first check, you should be able to run `mlr --version` at your system's com
 <b>mlr --version</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-mlr 6.20.1
+mlr 6.20.2
 </pre>
 
 A note on documentation:
