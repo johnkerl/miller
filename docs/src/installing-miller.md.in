@@ -26,9 +26,8 @@ Note that the [Miller releases page](https://github.com/johnkerl/miller/releases
 
 As a first check, you should be able to run `mlr --version` at your system's command prompt and see something like the following:
 
-GENMD-CARDIFY-HIGHLIGHT-ONE
+GENMD-RUN-COMMAND
 mlr --version
-mlr 6.0.0
 GENMD-EOF
 
 A note on documentation:

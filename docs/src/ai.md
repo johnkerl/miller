@@ -17,16 +17,16 @@ Quick links:
 # Miller and AI
 
 Miller treats AI agents as first-class users. When an agent drives a
-command-line tool, it fails in predictable ways: it invents flags that don't
+command-line tool, it can fail in predictable ways: it invents flags that don't
 exist, guesses values that aren't in the data, misreads error prose, and
 burns whole runs discovering a typo. Miller closes off each of those failure
-modes with structure:
+modes with the following structure:
 
 * Miller's entire surface -- verbs, DSL functions, flags, keywords -- is
   available as **machine-readable JSON**, so agents ground themselves in what
   actually exists.
 * Options with fixed domains carry their **complete value sets**, and input
-  data can be **profiled in one pass** -- so agents copy real values instead
+  data can be **profiled in one pass**, so that agents copy real values instead
   of inventing them.
 * DSL expressions can be **validated before running**, without reading any
   input.
@@ -37,28 +37,55 @@ modes with structure:
 
 Everything on this page is an ordinary command-line feature: it works from
 any agent harness, system prompt, or script -- and it's equally useful for
-plain shell tooling like `jq`. The [MCP server](#plug-it-in-the-mcp-server)
-at the end packages it all up for MCP-speaking agents.
+plain shell tooling like `jq`.
 
 ## The essentials
 
 **To get the AI features:** install Miller 6.20 or newer ([Installing
-Miller](installing-miller.md)). That's all. Everything on this page ships
-inside the ordinary `mlr` binary -- there are no plugins, no separate
-installs, no API keys, and nothing here makes network calls.
+Miller](installing-miller.md)). That's it. Everything on this page ships inside the ordinary `mlr`
+binary -- there are no plugins, no separate installs, no API keys, and nothing here makes network
+calls.
 
-**To get your AI to use them,** pick whichever matches your setup:
+To get your AI to see these features, pick whichever matches your setup.
 
-* **If your agent speaks MCP** (Claude Code, Claude Desktop, Cursor, ...):
-  register the server -- for Claude Code that's `claude mcp add miller -- mlr
-  mcp` -- and you're done. The tools describe themselves, and the server
-  ships its own instructions and playbook, so you usually don't need to say
-  anything special; if the agent doesn't reach for them, a nudge like "use
-  the Miller tools" suffices. Details in [The MCP server](mcp-server.md).
+### If your agent speaks MCP
 
-* **If your agent just runs shell commands** (a system prompt, a
-  `CLAUDE.md`, Cursor rules, a script harness): paste this standing
-  instruction into its context:
+For Claude Code, Claude Desktop, Cursor, etc.: register the "Miller MCP server", which is simply
+having the AI run the `mlr` executable to ask it questions. For Claude Code, that's
+
+<pre class="pre-highlight-in-pair">
+<b>claude mcp add miller -- mlr mcp</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Added stdio MCP server miller with command: mlr mcp to local config
+File modified: /Users/kerl/.claude.json [project: /Users/kerl/git/johnkerl/miller]
+</pre>
+
+The MCP tools describe themselves, and the `mlr` binary ships its own instructions and playbook, so
+you usually don't need to say anything special; if the agent doesn't reach for them, a nudge like
+"use the Miller tools" suffices. Details in [The MCP server](mcp-server.md).
+
+What happens to your system when you run this? Only that Claude Code will remember to run the `mlr`
+binary -- the same one you use a the command line -- with command-line options that help Claude talk
+to it.  No webserver is installed.
+
+To uninstall, you can do
+
+<pre class="pre-highlight-in-pair">
+<b>claude mcp remove miller</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Removed MCP server "miller" from local config
+File modified: /Users/kerl/.claude.json [project: /Users/kerl/git/johnkerl/miller]
+</pre>
+
+What happens to your system when you run this? It tells Claude Code to forget about running the `mlr`
+binary to get how-to instructions.
+
+### If your agent just runs shell commands
+
+A system prompt, a `CLAUDE.md`, Cursor rules, a script harness): paste this standing instruction
+into its context:
 
 <pre class="pre-non-highlight-non-pair">
 Miller (mlr) is installed for processing CSV/TSV/JSON/etc. data. When
