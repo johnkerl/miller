@@ -411,14 +411,21 @@ phase_1_bump_versions() {
   run_cmd make dev
 
   banner "PHASE 1: commit + push"
-  if git diff-index --quiet HEAD -- 2>/dev/null; then
-    note "no staged or unstaged changes after make dev -- commit likely already present"
+  # Stage first, then check what's *staged* against HEAD. Checking
+  # git diff-index against the worktree before staging is racy: files
+  # `make dev` just rewrote can have mtimes too close to the index's
+  # cached stat info for git to trust without rehashing, so it can
+  # report "dirty" even when the regenerated content is identical to
+  # what's already committed. `git add` forces the real content
+  # comparison and refreshes the index, so the post-add check is exact.
+  run_cmd git add pkg/version/version.go miller.spec
+  # `make dev` may have regenerated docs and manpages; include them.
+  # Pick up anything else make dev touched, but limit to tracked files only
+  # to avoid sweeping in stray files.
+  run_cmd git add -u
+  if git diff --cached --quiet; then
+    note "no staged changes after make dev -- commit likely already present"
   else
-    run_cmd git add pkg/version/version.go miller.spec
-    # `make dev` may have regenerated docs and manpages; include them.
-    # Pick up anything else make dev touched, but limit to tracked files only
-    # to avoid sweeping in stray files.
-    run_cmd git add -u
     run_cmd git commit -m "Prepare ${VERSION} release"
   fi
 
