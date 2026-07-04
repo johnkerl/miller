@@ -16,9 +16,9 @@ Quick links:
 </div>
 # Miller and AI
 
-As of July 2026, Miller supports two ways to let agents know about it: _agent skills_ and _MCP_.
-Either one works. If you're not sure which one to start with, perhaps start with the Miller agent
-skill.
+As of version 6.20, released in July 2026, Miller supports two ways to let agents know about it:
+an **agent skill** and **MCP**.  Either one works. If you're not sure which one to start with, perhaps
+start with the Miller agent skill.
 
 This page covers essential setup, and an example session.  For more information on agent skills,
 click [here](agent-skill.md); for more on MCP, click [here](mcp-server.md).
@@ -46,98 +46,16 @@ Added stdio MCP server miller with command: mlr mcp to local config
 File modified: /Users/kerl/.claude.json [project: /Users/kerl/git/johnkerl/miller]
 </pre>
 
-## Why AI support
-
-Miller treats AI agents as first-class users. When an agent drives a command-line tool, the agent
-can fail in predictable ways: it invents flags that don't exist, guesses values that aren't in the
-data, misreads error prose, and burns whole runs discovering a typo. Miller closes off each of those
-failure modes with the following structure:
-
-* Miller's entire surface -- verbs, DSL functions, flags, keywords -- is
-  available as **machine-readable JSON**, so agents ground themselves in what
-  actually exists.
-* Options with fixed domains carry their **complete value sets**, and input
-  data can be **profiled in one pass**, so that agents copy real values instead
-  of inventing them.
-* DSL expressions can be **validated before running**, without reading any
-  input.
-* **Errors are structured** -- kind, hint, did-you-mean -- so agents branch
-  on data rather than parsing English.
-* A **sandbox flag** removes external-command execution, so an
-  agent-constructed command line is just data processing.
-
-Everything on this page is an ordinary command-line feature: it works from
-any agent harness, system prompt, or script.
-
-## The essentials
-
-## Plug it in: the MCP server
-
-If your agent speaks the [Model Context
-Protocol](https://modelcontextprotocol.io) -- Claude Code, Claude Desktop,
-Cursor, and many others -- everything above is one line away. For Claude
-Code:
-
-<pre class="pre-highlight-in-pair">
-<b>claude mcp add miller -- mlr mcp</b>
-</pre>
-
-That's the whole setup. The server's five tools are exactly the features on
-this page -- `list_capabilities` and `which` for discovery, `describe_data`
-to constrain, `validate_dsl` to validate, and `run` (sandboxed with
-`--no-shell` by default) to execute -- plus a shipped playbook, as MCP prompt
-and resource, teaching the agent the loop. Then just talk to your agent
-about your data:
-
-* "Which fields in `data.csv` have missing values?"
-* "Convert this CSV to JSON, keeping only rows where status is active."
-* "Join `a.csv` and `b.csv` on id, and give me the mean rate per group."
-
-See [The MCP server](mcp-server.md) for the full tool reference and server
-options.
-
 ## Before and after: a first session with the skill installed
 
-Everything above assumes you already know why each piece matters. If you're new to Miller, or
-you've used Miller before but this is your first time on 6.20 or newer, here's the same idea as one
-worked example: install the skill, then watch what changes about talking to your AI assistant.
+If you're new to Miller, or you've used Miller before but this is your first time on 6.20 or newer,
+here's a worked example: install the skill, then watch what changes about talking to your AI
+assistant.
 
 One thing to be clear on before the example: you never type `mlr` yourself in this section. You
 type plain English to your agent, same as always. Every `mlr` command shown below is the agent's
 *own* work -- what it runs on your behalf, in the background, to answer you. They're printed here
 so you can see exactly what changes, not because you'd type them.
-
-### Install the skill
-
-One command. It writes a single file; nothing runs in the background, and nothing here makes a
-network call:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr skill install ~/.claude/skills/miller</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-Wrote /Users/kerl/.claude/skills/miller/SKILL.md
-</pre>
-
-For Claude Code, that's the whole setup -- it picks up skills under `~/.claude/skills/`
-automatically. Other agents that read Agent Skills from disk look in their own equivalent
-directory; check your agent's docs for where that is.
-
-The file itself is short -- it's instructions, not code, so it's worth reading once:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr skill print | head -n 8</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
----
-name: miller
-description: >
-  Drive Miller (mlr) to process CSV/TSV/JSON/etc. data. Use when constructing
-  mlr command lines: discover capabilities from the catalog rather than
-  guessing, learn the data's shape before writing expressions, validate DSL
-  before running, and recover from failures via structured errors.
----
-</pre>
 
 ### Before: an agent guessing at your data
 
@@ -146,9 +64,8 @@ else, to your AI assistant:
 
 > **You:** In example.csv, show me the red rows.
 
-Without the skill, a reasonable-sounding guess for the DSL is `$color == "Red"` -- English
-capitalizes color names, so why not? Here's that guess, run exactly as the agent would run it,
-behind the scenes, on your machine:
+Without the skill, a reasonable-sounding guess for the DSL might be `$color == "Red"`.  Here's that
+guess, run exactly as the agent would run it, behind the scenes, on your machine:
 
 <pre class="pre-highlight-non-pair">
 <b>mlr --csv filter '$color == "Red"' example.csv</b>
@@ -217,6 +134,29 @@ agent looked before it leapt, and you never saw the intermediate `describe` unle
 That one habit, *check the data before writing a comparison*, is the skill in miniature; the rest
 of the playbook applies the same idea to verb and function names (discover), DSL syntax (validate),
 and error messages (recover) -- see the sections above for each.
+
+## Why AI support
+
+Miller treats AI agents as first-class users. When an agent drives a command-line tool, the agent
+can fail in predictable ways: it invents flags that don't exist, guesses values that aren't in the
+data, misreads error prose, and burns whole runs discovering a typo. Miller closes off each of those
+failure modes with the following structure:
+
+* Miller's entire surface -- verbs, DSL functions, flags, keywords -- is
+  available as **machine-readable JSON**, so agents ground themselves in what
+  actually exists.
+* Options with fixed domains carry their **complete value sets**, and input
+  data can be **profiled in one pass**, so that agents copy real values instead
+  of inventing them.
+* DSL expressions can be **validated before running**, without reading any
+  input.
+* **Errors are structured** -- kind, hint, did-you-mean -- so agents branch
+  on data rather than parsing English.
+* A **sandbox flag** removes external-command execution, so an
+  agent-constructed command line is just data processing.
+
+Everything on this page is an ordinary command-line feature: it works from
+any agent harness, system prompt, or script.
 
 ## Skill file or MCP: which should you use?
 

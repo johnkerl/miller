@@ -17,13 +17,15 @@ Quick links:
 # Miller AI support
 
 When you use the [Miller agent skill](agent-skill.md) or the [Miller MCP server](mcp-server.md),
-here are the `mlr` subcommands your agent runs on your behalf to acquire support. If you like, you
-can run these commands yourself, although you don't need to. These AI-support subcommands are
-documented here for transparency.
+here are the `mlr` subcommands your agent runs on your behalf to acquire support.  (See also [Miller
+and AI](ai.md) for an introduction.)
 
-The new Miller subcommands as of version 6.20 allow agents to _discover_ information about how to use
-Miller, _constrain_ attempted solutions to match the data, _validate_ Miller commands before running
-them, _run_ them, and robustly _recover_ from errors.
+The new Miller subcommands as of version 6.20 allow agents to **discover** information about how to
+use Miller, **constrain** attempted solutions to match the data, **validate** Miller commands before
+running them, **run** them, and robustly **recover** from errors.
+
+If you like, you can run these subcommands yourself, although you don't need to. These AI-support
+subcommands are documented here for transparency.
 
 ## Discover: the machine-readable catalog
 

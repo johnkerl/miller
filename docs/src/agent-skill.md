@@ -202,20 +202,8 @@ rather than re-running the same command.
   separate conversion step.
 </pre>
 
-That playbook is prose, not named tools, but it rests on the same four Miller features documented
-throughout [Miller and AI](ai.md):
-
-- **Discover** is [`mlr help --as-json`](online-help.md) and `mlr which`: the machine-readable
-  catalog of [verbs](reference-verbs.md), [DSL functions](reference-dsl-builtin-functions.md),
-  [flags](reference-main-flag-list.md), and
-  [keywords](reference-dsl-variables.md/#keywords-for-filter-and-put), plus intent-to-capability
-  routing.
-- **Constrain** is [`mlr describe`](reference-verbs.md#describe): field names, types, cardinality,
-  and value domains for your actual input data.
-- **Validate** is `mlr put --explain` / `mlr filter --explain`: parse and type-check a DSL
-  expression before reading any input files.
-- **Run** is an ordinary `mlr` command line, with `--errors-json` so a failure comes back as a
-  structured document instead of prose.
+That playbook is prose, not named tools, but it rests on the Miller features documented
+in the [Miller AI internals](ai-support.md) page.
 
 ## What using the Miller skill looks like in practice
 

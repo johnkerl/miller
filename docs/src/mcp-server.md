@@ -113,6 +113,8 @@ the command line:
 - `run` executes an `mlr` command line and reports exit code, output, and --
   on failure -- the structured error document from `mlr --errors-json`.
 
+See also the [Miller AI support page](ai-support.md) for more information.
+
 ## What Miller MCP looks like in practice
 
 Here are some screenshots from a Claude Code session.
