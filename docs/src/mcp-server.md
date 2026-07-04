@@ -14,7 +14,7 @@ Quick links:
 <a class="quicklink" href="../release-docs/index.html">Release docs</a>
 </span>
 </div>
-# AI agents and the MCP server
+# The MCP server
 
 Miller ships with a built-in [Model Context Protocol](https://modelcontextprotocol.io)
 server, so AI agents (Claude Code, Claude Desktop, Cursor, and other MCP

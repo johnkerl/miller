@@ -167,5 +167,5 @@ about your data:
 * "Convert this CSV to JSON, keeping only rows where status is active."
 * "Join `a.csv` and `b.csv` on id, and give me the mean rate per group."
 
-See [AI agents and the MCP server](mcp-server.md) for the full tool
-reference and server options.
+See [The MCP server](mcp-server.md) for the full tool reference and server
+options.
