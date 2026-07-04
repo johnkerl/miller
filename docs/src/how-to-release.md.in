@@ -14,7 +14,11 @@ Much of the mechanical work below is automated by `tools/release.sh`, which has 
 
 `rpmbuild` is mandatory for `pre-release` (the SRPM is a required release artifact); `rpmlint` is optional and is run only if installed. The ReadTheDocs admin steps and the flip from pre-release to public remain manual. Each subcommand is idempotent, so a partial run can be re-invoked safely.
 
+**If you are running `pre-release`, do not also do the version-bump / tarball / SRPM / GitHub-release-and-tag steps below by hand first.** `pre-release` does all of that itself, in the order that makes the tag land correctly (version bump commit pushed *before* the tag is cut). Manually creating the GitHub release/tag before the version-bump commit is pushed reproduces the exact bug called out under "Create the GitHub release tag" below -- the tag gets pinned to whatever commit `main` was at that moment, forever, even though it looks like `--target main`. Worse, `pre-release`'s idempotency check only confirms *a* release exists for the tag; it does not verify the tagged commit actually contains the version bump, so a subsequent `pre-release` run will not notice or fix a bad tag -- it will just keep uploading assets to it. If this happens, the only fix is to delete the GitHub release and the tag (`git push --delete origin vX.Y.Z`, plus the local tag) and recreate it pointing at the correct commit.
+
 ## Manual steps
+
+These are the individual steps `pre-release`/`docs`/`afterwork` automate, kept here as a reference for what each phase actually does (and as a fallback if you need to run a step by hand). Do not run these separately from the script for a release the script is also handling.
 
 * Update version found in `mlr --version` and `man mlr`:
 
@@ -38,6 +42,7 @@ Much of the mechanical work below is automated by `tools/release.sh`, which has 
 
 * Create the GitHub release tag:
 
+    * If `pre-release` is handling this release, skip this step -- do not create the release/tag by hand first. See the warning above.
     * Don't forget the `v` in `v6.3.0`
     * Write the release notes -- save as a pre-release until below
         * Be sure the commit being used is the (non-`main`) PR commit containing the new version, or, `main` after that PR is merged back to `main`. (Otherwise, the release will be tagging the commit _before_ the changes, and `mlr version` will not show the new release number.)
