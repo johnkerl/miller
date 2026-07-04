@@ -24,11 +24,11 @@ Agent Skill](agent-skill.md); for more on MCP, see [The Miller MCP server](mcp-s
 
 ## Quick start
 
-First, you need to **install Miller 6.20 or newer** ([Installing Miller](installing-miller.md)).
+First, you need to **install Miller 6.20 or newer** (see [Installing Miller](installing-miller.md)).
 Everything on this page ships inside the ordinary `mlr` binary -- there are no plugins, no separate
 installs, no API keys, and nothing here makes network calls.
 
-Examples for Claude Code (choose one):
+To install as **skill file** for Claude:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr skill install ~/.claude/skills/miller</b>
@@ -37,12 +37,28 @@ Examples for Claude Code (choose one):
 Wrote /Users/kerl/.claude/skills/miller/SKILL.md
 </pre>
 
+For Codex or Gemini:
+
+<pre class="pre-highlight-non-pair">
+<b>mlr skill install ~/.agents/skills/miller</b>
+</pre>
+
+If you prefer to use **MCP**:
+
 <pre class="pre-highlight-in-pair">
 <b>claude mcp add miller -- mlr mcp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Added stdio MCP server miller with command: mlr mcp to local config
 File modified: /Users/kerl/.claude.json [project: /Users/kerl/git/johnkerl/miller]
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>codex mcp add miller -- mlr mcp</b>
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>gemini mcp add miller mlr mcp</b>
 </pre>
 
 ## Before and after: a first session with the skill installed

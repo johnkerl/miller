@@ -8,21 +8,37 @@ Agent Skill](agent-skill.md); for more on MCP, see [The Miller MCP server](mcp-s
 
 ## Quick start
 
-First, you need to **install Miller 6.20 or newer** ([Installing Miller](installing-miller.md)).
+First, you need to **install Miller 6.20 or newer** (see [Installing Miller](installing-miller.md)).
 Everything on this page ships inside the ordinary `mlr` binary -- there are no plugins, no separate
 installs, no API keys, and nothing here makes network calls.
 
-Examples for Claude Code (choose one):
+To install as **skill file** for Claude:
 
 GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr skill install ~/.claude/skills/miller
 Wrote /Users/kerl/.claude/skills/miller/SKILL.md
 GENMD-EOF
 
+For Codex or Gemini:
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+mlr skill install ~/.agents/skills/miller
+GENMD-EOF
+
+If you prefer to use **MCP**:
+
 GENMD-CARDIFY-HIGHLIGHT-ONE
 claude mcp add miller -- mlr mcp
 Added stdio MCP server miller with command: mlr mcp to local config
 File modified: /Users/kerl/.claude.json [project: /Users/kerl/git/johnkerl/miller]
+GENMD-EOF
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+codex mcp add miller -- mlr mcp
+GENMD-EOF
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+gemini mcp add miller mlr mcp
 GENMD-EOF
 
 ## Before and after: a first session with the skill installed

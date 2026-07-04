@@ -29,7 +29,7 @@ mcp` as a subprocess. No network port is opened, and the server exits when the c
 
 ## Setup
 
-Example registration for Claude Code (do this before starting your `claude` session):
+Example registration for some common CLI agents (do this before starting your session):
 
 <pre class="pre-highlight-in-pair">
 <b>claude mcp add miller -- mlr mcp</b>
@@ -37,6 +37,14 @@ Example registration for Claude Code (do this before starting your `claude` sess
 <pre class="pre-non-highlight-in-pair">
 Added stdio MCP server miller with command: mlr mcp to local config
 File modified: /Users/kerl/.claude.json [project: /Users/kerl/git/johnkerl/miller]
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>codex mcp add miller --  mlr mcp</b>
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>gemini mcp add miller mlr mcp</b>
 </pre>
 
 You can undo that as follows:
@@ -47,6 +55,14 @@ You can undo that as follows:
 <pre class="pre-non-highlight-in-pair">
 Removed MCP server "miller" from local config
 File modified: /Users/kerl/.claude.json [project: /Users/kerl/git/johnkerl/miller]
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>codex mcp remove miller</b>
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>gemini mcp remove miller</b>
 </pre>
 
 Then -- just interact with your agent as always! When you say something like `describe the data file example.csv`,

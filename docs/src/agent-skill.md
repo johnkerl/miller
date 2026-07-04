@@ -67,6 +67,12 @@ Write the skill file to Claude Code's personal skills directory (do this before 
 Wrote /Users/kerl/.claude/skills/miller/SKILL.md
 </pre>
 
+For Codex and Gemini:
+
+<pre class="pre-highlight-non-pair">
+<b>mlr skill install ~/.agents/skills/miller</b>
+</pre>
+
 With no argument, `install` writes to `.claude/skills/miller/SKILL.md` under the current directory
 instead. This is handy for a project-scoped skill checked into that project's repo rather than one
 installed for every project on your machine:
