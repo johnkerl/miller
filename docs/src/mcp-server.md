@@ -16,8 +16,9 @@ Quick links:
 </div>
 # The Miller MCP server
 
-As of July 2026 there are two main ways to get your AI to know about a software tool (Miller, or others):
-[**agent skills**](agent-skill.md), and **MCP**.  (See [Miller and AI](ai.md) for an introduction.)
+As of Miller version 6.20, released in July 2026, there are two main ways to get your AI to know
+about a software tool (Miller, or others): [**agent skills**](agent-skill.md), and **MCP**.  (See
+[Miller and AI](ai.md) for an introduction.)
 
 Miller ships with a built-in [Model Context Protocol](https://modelcontextprotocol.io) server
 included within the `mlr` executable, so AI agents (Claude Code, Claude Desktop, Cursor, and other
@@ -49,7 +50,7 @@ File modified: /Users/kerl/.claude.json [project: /Users/kerl/git/johnkerl/mille
 </pre>
 
 Then -- just interact with your agent as always! When you say something like `describe the data file example.csv`,
-the agent will already know how to use Miller to help answer than question.
+the agent will already know how to use Miller to help answer that question.
 
 ![pix/mcp-describe.png](pix/mcp-describe.png)
 
@@ -102,9 +103,9 @@ Each MCP tool is a thin wrapper over a Miller feature you can also, if you like,
 the command line:
 
 - `list_capabilities` is [`mlr help --as-json`](online-help.md): the
-  machine-readable catalog of [verbs](references-verbs.md),
+  machine-readable catalog of [verbs](reference-verbs.md),
   [DSL functions](reference-dsl-builtin-functions.md), [flags](reference-main-flag-list.md), and
-  [keywords](reference-dsl-variables.md/#keywords-for-filter-and-put).
+  [keywords](reference-dsl-variables.md#keywords-for-filter-and-put).
 - `which` is `mlr which`: turns natural-language intent into ranked capabilities.
 - `validate_dsl` is `mlr put --explain` / `mlr filter --explain`: to parse and
   type-check a DSL expression before reading any input files.
@@ -113,7 +114,7 @@ the command line:
 - `run` executes an `mlr` command line and reports exit code, output, and --
   on failure -- the structured error document from `mlr --errors-json`.
 
-See also the [Miller AI support page](ai-support.md) for more information.
+See also the [Miller AI internals page](ai-support.md) for more information.
 
 ## What Miller MCP looks like in practice
 
@@ -139,7 +140,7 @@ Then we select Miller:
 
 The status shows it's installed. Note that there is no long-running Miller "server" process: this is
 just Claude remembering to run things like `mlr mcp ...` in order to get how-to instructions from
-the `mlr` executable you already have instaled.
+the `mlr` executable you already have installed.
 
 ![pix/mcp-status.png](pix/mcp-status.png)
 
@@ -169,6 +170,6 @@ features fail cleanly instead of executing. Start the server with
 `mlr mcp --allow-shell` to turn that off.
 
 The same gate is available outside the MCP server: pass `--no-shell` to any `mlr` invocation, or set
-the `MLR_NO_SHELL` [environment variable](reference-main-env-vars.md) to `true`.  Note that Miller
+the `MLR_NO_SHELL` [environment variable](reference-main-env-vars.md) to `true`. Note that Miller
 can still write files when asked to (`tee`, `split`, DSL output redirection): the gate is
 specifically about executing external commands.

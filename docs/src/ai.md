@@ -17,11 +17,10 @@ Quick links:
 # Miller and AI
 
 As of version 6.20, released in July 2026, Miller supports two ways to let agents know about it:
-an **agent skill** and **MCP**.  Either one works. If you're not sure which one to start with, perhaps
-start with the Miller agent skill.
+an **agent skill** and **MCP**. Either one works -- not sure which? Start with the Miller agent skill.
 
-This page covers essential setup, and an example session.  For more information on agent skills,
-click [here](agent-skill.md); for more on MCP, click [here](mcp-server.md).
+This page covers essential setup, and an example session. For more on agent skills, see [The Miller
+Agent Skill](agent-skill.md); for more on MCP, see [The Miller MCP server](mcp-server.md).
 
 ## Quick start
 
@@ -64,7 +63,7 @@ else, to your AI assistant:
 
 > **You:** In example.csv, show me the red rows.
 
-Without the skill, a reasonable-sounding guess for the DSL might be `$color == "Red"`.  Here's that
+Without the skill, a reasonable-sounding guess for the DSL might be `$color == "Red"`. Here's that
 guess, run exactly as the agent would run it, behind the scenes, on your machine:
 
 <pre class="pre-highlight-non-pair">
@@ -133,7 +132,7 @@ Same question, same data, same underlying `mlr` binary -- the only thing that ch
 agent looked before it leapt, and you never saw the intermediate `describe` unless you asked to.
 That one habit, *check the data before writing a comparison*, is the skill in miniature; the rest
 of the playbook applies the same idea to verb and function names (discover), DSL syntax (validate),
-and error messages (recover) -- see the sections above for each.
+and error messages (recover) -- see [Miller AI internals](ai-support.md) for how each of those works.
 
 ## Why AI support
 
@@ -155,8 +154,8 @@ failure modes with the following structure:
 * A **sandbox flag** removes external-command execution, so an
   agent-constructed command line is just data processing.
 
-Everything on this page is an ordinary command-line feature: it works from
-any agent harness, system prompt, or script.
+Every one of those is an ordinary command-line feature, documented in [Miller AI
+internals](ai-support.md): each works from any agent harness, system prompt, or script.
 
 ## Skill file or MCP: which should you use?
 
@@ -165,17 +164,17 @@ exclusive; nothing stops you running both.
 
 **Miller agent skill file:**
 
-- Plus: One command, one static file -- no process, no client registration, nothing to reconnect
-- Plus: Works with any agent that reads Agent Skills from disk, not just MCP clients
-- Minus: No enforcement: it's advisory text, so no automatic `--no-shell` sandbox, no output caps or timeouts
-- Minus: The agent parses plain `mlr` text output and exit codes itself -- no structured JSON per call
+- Plus: One command, one static file -- no process, no client registration, nothing to reconnect.
+- Plus: Works with any agent that reads Agent Skills from disk, not just MCP clients.
+- Minus: No enforcement: it's advisory text, so no automatic `--no-shell` sandbox, no output caps or timeouts.
+- Minus: The agent parses plain `mlr` text output and exit codes itself -- no structured JSON per call.
 
 **Miller MCP server:**
 
-- Plus: Structured typed calls in, structured JSON back -- no text-parsing on the agent's side
-- Plus: Sandboxed by default (`MLR_NO_SHELL=1`), output-capped, timeout-guarded
-- Minus: One more moving part: per-client registration, plus a subprocess to spawn and reconnect each session
-- Minus: Only helps agents that actually speak MCP
+- Plus: Structured typed calls in, structured JSON back -- no text-parsing on the agent's side.
+- Plus: Sandboxed by default (`MLR_NO_SHELL=1`), output-capped, timeout-guarded.
+- Minus: One more moving part: per-client registration, plus a subprocess to spawn and reconnect each session.
+- Minus: Only helps agents that actually speak MCP.
 
-In one line: the skill is zero setup and the most portable, with weaker guarantees; MCP is a bit
+In one line: the skill is less setup and the most portable, with weaker guarantees; MCP is a bit
 more setup, with stronger guarantees, for a narrower set of clients.

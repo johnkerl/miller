@@ -1,4 +1,4 @@
-# Miller AI support
+# Miller AI internals
 
 When you use the [Miller agent skill](agent-skill.md) or the [Miller MCP server](mcp-server.md),
 here are the `mlr` subcommands your agent runs on your behalf to acquire support.  (See also [Miller
@@ -15,7 +15,7 @@ subcommands are documented here for transparency.
 
 This is the machine-readable catalog of [verbs](reference-verbs.md), [DSL
 functions](reference-dsl-builtin-functions.md), [flags](reference-main-flag-list.md), and
-[keywords](reference-dsl-variables.md/#keywords-for-filter-and-put), plus intent-to-capability
+[keywords](reference-dsl-variables.md#keywords-for-filter-and-put), plus intent-to-capability
 routing.
 
 These are implemented by `mlr help --as-json` and `mlr which`.

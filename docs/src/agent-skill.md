@@ -16,8 +16,9 @@ Quick links:
 </div>
 # The Miller Agent Skill
 
-As of July 2026 there are two main ways to get your AI to know about a software tool (Miller, or others):
-**skills files**, and [**MCP**](mcp-server.md).  (See [Miller and AI](ai.md) for an introduction.)
+As of Miller version 6.20, released in July 2026, there are two main ways to get your AI to know
+about a software tool (Miller, or others): **agent skills**, and [**MCP**](mcp-server.md).  (See
+[Miller and AI](ai.md) for an introduction.)
 
 Miller ships a built-in [Agent Skill](https://www.anthropic.com/news/skills) -- a single `SKILL.md`
 file -- inside the `mlr` executable, so agents that read skills directly from disk (Claude Code,
@@ -85,7 +86,7 @@ an ordinary file operation:
 </pre>
 
 Then -- just interact with your agent as always! When you say something like `describe the data file example.csv`,
-the agent will already know how to use Miller to help answer than question.
+the agent will already know how to use Miller to help answer that question.
 
 ## What the Miller skill maps to
 
