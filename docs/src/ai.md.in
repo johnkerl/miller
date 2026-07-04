@@ -1,47 +1,37 @@
-# asdfsadssf
+# Miller and AI
 
-## Using a skill file
+As of July 2026, Miller supports two ways to let agents know about it: _agent skills_ and _MCP_.
+Either one works. If you're not sure which one to start with, perhaps start with the Miller agent
+skill.
 
-GENMD-CARDIFY-HIGHLIGHT-ONE
-$ mlr skill print | head -n 15
----
-name: miller
-description: >
-  Drive Miller (mlr) to process CSV/TSV/JSON/etc. data. Use when constructing
-  mlr command lines: discover capabilities from the catalog rather than
-  guessing, learn the data's shape before writing expressions, validate DSL
-  before running, and recover from failures via structured errors.
----
+This page covers essential setup, and an example session.  For more information on agent skills,
+click [here](agent-skill.md); for more on MCP, click [here](mcp-server.md).
 
-# Miller agent playbook
+## Quick start
 
-Miller (`mlr`) is a command-line data processor for CSV, TSV, JSON, JSON
-Lines, and other tabular/record formats, with SQL-like verbs (`cut`, `sort`,
-`join`, `stats1`, ...) and an awk-like DSL (`put`, `filter`).
-GENMD-EOF
+First, you need to **install Miller 6.20 or newer** ([Installing Miller](installing-miller.md)).
+Everything on this page ships inside the ordinary `mlr` binary -- there are no plugins, no separate
+installs, no API keys, and nothing here makes network calls.
+
+Examples for Claude Code (choose one):
 
 GENMD-CARDIFY-HIGHLIGHT-ONE
-$ mlr skill install /tmp
-Wrote /tmp/SKILL.md
-GENMD-EOF
-
-GENMD-CARDIFY-HIGHLIGHT-ONE
-$ mlr skill install
-Wrote .claude/skills/miller/SKILL.md
-GENMD-EOF
-
-GENMD-CARDIFY-HIGHLIGHT-ONE
-$ mlr skill install ~/.claude/skills/miller
+mlr skill install ~/.claude/skills/miller
 Wrote /Users/kerl/.claude/skills/miller/SKILL.md
+GENMD-EOF
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+claude mcp add miller -- mlr mcp
+Added stdio MCP server miller with command: mlr mcp to local config
+File modified: /Users/kerl/.claude.json [project: /Users/kerl/git/johnkerl/miller]
 GENMD-EOF
 
 ## Why AI support
 
-Miller treats AI agents as first-class users. When an agent drives a
-command-line tool, it can fail in predictable ways: it invents flags that don't
-exist, guesses values that aren't in the data, misreads error prose, and
-burns whole runs discovering a typo. Miller closes off each of those failure
-modes with the following structure:
+Miller treats AI agents as first-class users. When an agent drives a command-line tool, the agent
+can fail in predictable ways: it invents flags that don't exist, guesses values that aren't in the
+data, misreads error prose, and burns whole runs discovering a typo. Miller closes off each of those
+failure modes with the following structure:
 
 * Miller's entire surface -- verbs, DSL functions, flags, keywords -- is
   available as **machine-readable JSON**, so agents ground themselves in what
@@ -57,198 +47,9 @@ modes with the following structure:
   agent-constructed command line is just data processing.
 
 Everything on this page is an ordinary command-line feature: it works from
-any agent harness, system prompt, or script -- and it's equally useful for
-plain shell tooling like `jq`.
+any agent harness, system prompt, or script.
 
 ## The essentials
-
-**To get the AI features:** install Miller 6.20 or newer ([Installing
-Miller](installing-miller.md)). That's it. Everything on this page ships inside the ordinary `mlr`
-binary -- there are no plugins, no separate installs, no API keys, and nothing here makes network
-calls.
-
-To get your AI to see these features, pick whichever matches your setup.
-
-### If your agent speaks MCP
-
-For Claude Code, Claude Desktop, Cursor, etc.: register the "Miller MCP server", which is simply
-having the AI run the `mlr` executable to ask it questions. For Claude Code, that's
-
-GENMD-CARDIFY-HIGHLIGHT-ONE
-claude mcp add miller -- mlr mcp
-Added stdio MCP server miller with command: mlr mcp to local config
-File modified: /Users/kerl/.claude.json [project: /Users/kerl/git/johnkerl/miller]
-GENMD-EOF
-
-The MCP tools describe themselves, and the `mlr` binary ships its own instructions and playbook, so
-you usually don't need to say anything special; if the agent doesn't reach for them, a nudge like
-"use the Miller tools" suffices. Details in [The MCP server](mcp-server.md).
-
-What happens to your system when you run this? Only that Claude Code will remember to run the `mlr`
-binary -- the same one you use a the command line -- with command-line options that help Claude talk
-to it.  No webserver is installed.
-
-To uninstall, you can do
-
-GENMD-CARDIFY-HIGHLIGHT-ONE
-claude mcp remove miller
-Removed MCP server "miller" from local config
-File modified: /Users/kerl/.claude.json [project: /Users/kerl/git/johnkerl/miller]
-GENMD-EOF
-
-What happens to your system when you run this? It tells Claude Code to forget about running the `mlr`
-binary to get how-to instructions.
-
-### If your agent just runs shell commands
-
-A system prompt, a `CLAUDE.md`, Cursor rules, a script harness): paste this standing instruction
-into its context:
-
-GENMD-CARDIFY
-Miller (mlr) is installed for processing CSV/TSV/JSON/etc. data. When
-constructing mlr commands:
-1. Discover: `mlr help --as-json --index` lists every verb/function/flag;
-   `mlr which "&lt;intent&gt;"` routes a goal to the right one; `mlr help
-   verb &lt;name&gt; --as-json` gives full details. Never invent flag or
-   function names.
-2. Constrain: `mlr --icsv --ojson describe &lt;file&gt;` (or --ijson etc.)
-   shows the data's fields, types, and values. Copy names and values from it
-   rather than guessing them.
-3. Validate: check DSL expressions with `mlr put --explain '&lt;expr&gt;'`
-   before using them.
-4. Run with `--errors-json`; on failure, correct using the error's kind,
-   hint, and did_you_mean rather than re-guessing.
-GENMD-EOF
-
-  A fuller, ready-made version of that lesson ships in the Miller source
-  tree at
-  [pkg/terminals/mcp/SKILL.md](https://github.com/johnkerl/miller/blob/main/pkg/terminals/mcp/SKILL.md),
-  in Agent Skill format -- suitable for dropping into e.g. a
-  `.claude/skills/miller/` directory as-is.
-
-The rest of this page is what those instructions rest on, feature by
-feature.
-
-## Discover: the machine-readable catalog
-
-`mlr help --as-json` emits Miller's entire help catalog as one JSON document.
-The `--index` form is the cheap first call -- every capability with a
-one-line summary (here trimmed, and then counted, using Miller itself):
-
-GENMD-RUN-COMMAND
-mlr help --as-json --index | mlr --json head -n 2
-GENMD-EOF
-
-GENMD-RUN-COMMAND
-mlr help --as-json --index | mlr --json count
-GENMD-EOF
-
-From the index, an agent drills into full entries one at a time: `mlr help
-verb sort --as-json`, `mlr help function splitax --as-json`, `mlr help flag
---ifs --as-json`, `mlr help keyword ENV --as-json` -- each accepting one or
-more names. A verb entry carries a structured option list -- flag, argument
-placeholder, type -- alongside the familiar usage text:
-
-GENMD-RUN-COMMAND
-mlr help verb decimate --as-json
-GENMD-EOF
-
-Note that `usage_text` -- what `mlr decimate --help` prints -- is rendered
-*from* the same structured options, so the human help and the machine help
-cannot drift apart. Function entries carry name, class, arity, help, and
-examples; the examples across the whole catalog are exercised by Miller's
-test suite, so they never rot.
-
-Three properties make the catalog cheap to use:
-
-* **It's a perfect cache key.** Every document carries `mlr_version` and
-  `catalog_schema_version`. Miller is a static binary, so the catalog changes
-  only when the binary does: fetch once, cache forever, re-fetch on a version
-  bump. No TTLs.
-* **It's deterministic.** One document per invocation, sorted entries, no
-  colorization -- stable for diffing and for prompt caches.
-* **It's opt-in twice over.** Per-call via `--as-json`, or set-once via a
-  truthy `MLR_HELP_JSON` environment variable.
-
-For routing an *intent* to a capability -- the reverse of browsing -- `mlr
-which` returns ranked candidates:
-
-GENMD-RUN-COMMAND
-mlr which "join two files on a key" | mlr --json head -n 2
-GENMD-EOF
-
-Its exit code signals confidence -- 0 when a query word matched a
-capability's name, 2 when it didn't -- so a harness can branch on status
-without parsing anything.
-
-## Constrain: the tool's shape, and the data's shape
-
-Agents don't just hallucinate flags; they hallucinate *values*. Miller
-attacks that from both sides.
-
-Where an option's domain is fixed by the binary, the catalog says so:
-`type` is `enum` and `values` is the complete list. Here's one option of the
-[summary](reference-verbs.md#summary) verb, extracted from the catalog --
-using Miller to query Miller:
-
-GENMD-RUN-COMMAND
-mlr help verb summary --as-json | mlr --json put -q 'emit $options[1]'
-GENMD-EOF
-
-Where the domain depends on your *data* -- which fields exist, what values
-`filter` could compare against, what to pass to `-g` -- the
-[describe](reference-verbs.md#describe) verb profiles the input in one pass:
-per field, the types seen, counts, cardinality, min/max, and (for
-low-cardinality fields) every distinct value:
-
-GENMD-RUN-COMMAND
-mlr --icsv --ojson describe then head -n 2 example.csv
-GENMD-EOF
-
-The catalog is the *tool's* shape; `describe` is the *data's* shape. An
-agent that consults both has nothing left to guess.
-
-## Validate: check DSL before spending a run
-
-`mlr put --explain` (likewise `mlr filter --explain`) parses and type-checks
-an expression, then exits -- without opening any input at all:
-
-GENMD-RUN-COMMAND
-mlr put --explain '$z = $x + $y'
-GENMD-EOF
-
-## Run and recover: errors as data
-
-With `--errors-json` (or a truthy `MLR_ERRORS_JSON` environment variable),
-errors arrive as a structured document. The `kind` field gives an agent
-something to branch on; `hint` is a runnable next step, not a sentence; and
-`did_you_mean` is computed against the same catalog the agent discovered
-from, closing the self-correction loop:
-
-GENMD-RUN-COMMAND-TOLERATING-ERROR
-mlr --errors-json --icsv sortt -f shape example.csv
-GENMD-EOF
-
-And since Miller's DSL includes [system and exec](shell-commands.md), there's
-a sandbox: `--no-shell` (or a truthy `MLR_NO_SHELL` environment variable)
-disables all external-command execution -- the DSL `system` and `exec`
-functions, piped redirects, and `--prepipe` fail cleanly:
-
-GENMD-RUN-COMMAND
-mlr --no-shell -n put 'end{print system("hostname")}'
-GENMD-EOF
-
-A typical agent profile sets all three environment variables once:
-
-GENMD-CARDIFY
-export MLR_HELP_JSON=1    # help/catalog output as JSON
-export MLR_ERRORS_JSON=1  # errors as structured JSON
-export MLR_NO_SHELL=1     # no external-command execution
-GENMD-EOF
-
-Put together, the sections above are a loop -- discover, constrain,
-validate, run -- where each step feeds the next and failures route back with
-structure instead of prose.
 
 ## Plug it in: the MCP server
 
@@ -292,7 +93,7 @@ One command. It writes a single file; nothing runs in the background, and nothin
 network call:
 
 GENMD-CARDIFY-HIGHLIGHT-ONE
-$ mlr skill install ~/.claude/skills/miller
+mlr skill install ~/.claude/skills/miller
 Wrote /Users/kerl/.claude/skills/miller/SKILL.md
 GENMD-EOF
 
@@ -362,13 +163,24 @@ That one habit, *check the data before writing a comparison*, is the skill in mi
 of the playbook applies the same idea to verb and function names (discover), DSL syntax (validate),
 and error messages (recover) -- see the sections above for each.
 
-### Do you need the MCP server too?
+## Skill file or MCP: which should you use?
 
-Not to get this benefit. The skill alone gets an agent through the whole loop using plain `mlr`
-commands over whatever shell-executing tool your agent already has -- nothing above required MCP.
-If your agent also speaks [MCP](https://modelcontextprotocol.io), registering the [MCP
-server](mcp-server.md) upgrades the *mechanism*: `describe_data`, `validate_dsl`, and the rest
-become typed tool calls returning structured JSON, instead of the agent reading `mlr`'s text output
-itself. But the *loop* -- discover, constrain, validate, run -- is identical either way. Day one,
-the skill alone is enough; add the MCP server later if your agent supports it and you want the
-sturdier plumbing.
+For day one, the short version: start with the skill; add MCP later if you want it. They aren't
+exclusive; nothing stops you running both.
+
+**Miller agent skill file:**
+
+- Plus: One command, one static file -- no process, no client registration, nothing to reconnect
+- Plus: Works with any agent that reads Agent Skills from disk, not just MCP clients
+- Minus: No enforcement: it's advisory text, so no automatic `--no-shell` sandbox, no output caps or timeouts
+- Minus: The agent parses plain `mlr` text output and exit codes itself -- no structured JSON per call
+
+**Miller MCP server:**
+
+- Plus: Structured typed calls in, structured JSON back -- no text-parsing on the agent's side
+- Plus: Sandboxed by default (`MLR_NO_SHELL=1`), output-capped, timeout-guarded
+- Minus: One more moving part: per-client registration, plus a subprocess to spawn and reconnect each session
+- Minus: Only helps agents that actually speak MCP
+
+In one line: the skill is zero setup and the most portable, with weaker guarantees; MCP is a bit
+more setup, with stronger guarantees, for a narrower set of clients.

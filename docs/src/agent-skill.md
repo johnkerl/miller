@@ -24,10 +24,35 @@ file -- inside the `mlr` executable, so agents that read skills directly from di
 and other tools that support the Agent Skills format) can discover and drive Miller without
 scraping help text or guessing at flags.
 
-Unlike the [MCP server](mcp-server.md), there's no process to run and no protocol to speak: the
-skill is plain markdown with a YAML frontmatter header, placed where your agent already looks for
-skills. The agent reads it into context once, the same way it reads any other instructions, and
-from then on runs ordinary `mlr` commands via whatever shell-executing tool it already has.
+The skill is plain markdown with a YAML frontmatter header, placed where your agent already looks
+for skills. The agent reads it into context once, the same way it reads any other instructions, and
+from then on it runs `mlr` commands via whatever shell-executing tool it already has.
+
+Here's what the skill file looks like:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr skill print | head -n 15</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+---
+name: miller
+description: >
+  Drive Miller (mlr) to process CSV/TSV/JSON/etc. data. Use when constructing
+  mlr command lines: discover capabilities from the catalog rather than
+  guessing, learn the data's shape before writing expressions, validate DSL
+  before running, and recover from failures via structured errors.
+---
+
+# Miller agent playbook
+
+Miller (`mlr`) is a command-line data processor for CSV, TSV, JSON, JSON
+Lines, and other tabular/record formats, with SQL-like verbs (`cut`, `sort`,
+`join`, `stats1`, ...) and an awk-like DSL (`put`, `filter`).
+
+</pre>
+
+For more background on the `mlr` commands the agent runs on your behalf, please see
+[Miller AI internals](ai-support.md).
 
 ## Setup
 
@@ -35,28 +60,28 @@ Write the skill file to Claude Code's personal skills directory (do this before 
 `claude` session):
 
 <pre class="pre-highlight-in-pair">
-<b>$ mlr skill install ~/.claude/skills/miller</b>
+<b>mlr skill install ~/.claude/skills/miller</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Wrote /Users/kerl/.claude/skills/miller/SKILL.md
 </pre>
 
 With no argument, `install` writes to `.claude/skills/miller/SKILL.md` under the current directory
-instead -- handy for a project-scoped skill checked into that project's repo rather than one
+instead. This is handy for a project-scoped skill checked into that project's repo rather than one
 installed for every project on your machine:
 
 <pre class="pre-highlight-in-pair">
-<b>$ mlr skill install</b>
+<b>mlr skill install</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Wrote .claude/skills/miller/SKILL.md
 </pre>
 
-There's no "uninstall" subcommand, since `install` only ever writes one plain file: removing it is
-an ordinary file operation.
+There's no "uninstall" subcommand, since `install` only ever writes one plain file. Removing it is
+an ordinary file operation:
 
 <pre class="pre-highlight-non-pair">
-<b>$ rm -rf ~/.claude/skills/miller</b>
+<b>rm -rf ~/.claude/skills/miller</b>
 </pre>
 
 Then -- just interact with your agent as always! When you say something like `describe the data file example.csv`,

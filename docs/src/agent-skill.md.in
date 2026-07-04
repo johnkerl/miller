@@ -8,10 +8,18 @@ file -- inside the `mlr` executable, so agents that read skills directly from di
 and other tools that support the Agent Skills format) can discover and drive Miller without
 scraping help text or guessing at flags.
 
-Unlike the [MCP server](mcp-server.md), there's no process to run and no protocol to speak: the
-skill is plain markdown with a YAML frontmatter header, placed where your agent already looks for
-skills. The agent reads it into context once, the same way it reads any other instructions, and
-from then on runs ordinary `mlr` commands via whatever shell-executing tool it already has.
+The skill is plain markdown with a YAML frontmatter header, placed where your agent already looks
+for skills. The agent reads it into context once, the same way it reads any other instructions, and
+from then on it runs `mlr` commands via whatever shell-executing tool it already has.
+
+Here's what the skill file looks like:
+
+GENMD-RUN-COMMAND
+mlr skill print | head -n 15
+GENMD-EOF
+
+For more background on the `mlr` commands the agent runs on your behalf, please see
+[Miller AI internals](ai-support.md).
 
 ## Setup
 
@@ -19,7 +27,7 @@ Write the skill file to Claude Code's personal skills directory (do this before 
 `claude` session):
 
 GENMD-CARDIFY-HIGHLIGHT-ONE
-$ mlr skill install ~/.claude/skills/miller
+mlr skill install ~/.claude/skills/miller
 Wrote /Users/kerl/.claude/skills/miller/SKILL.md
 GENMD-EOF
 
@@ -28,7 +36,7 @@ instead. This is handy for a project-scoped skill checked into that project's re
 installed for every project on your machine:
 
 GENMD-CARDIFY-HIGHLIGHT-ONE
-$ mlr skill install
+mlr skill install
 Wrote .claude/skills/miller/SKILL.md
 GENMD-EOF
 
@@ -36,7 +44,7 @@ There's no "uninstall" subcommand, since `install` only ever writes one plain fi
 an ordinary file operation:
 
 GENMD-CARDIFY-HIGHLIGHT-ONE
-$ rm -rf ~/.claude/skills/miller
+rm -rf ~/.claude/skills/miller
 GENMD-EOF
 
 Then -- just interact with your agent as always! When you say something like `describe the data file example.csv`,

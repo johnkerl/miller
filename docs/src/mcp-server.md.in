@@ -33,6 +33,9 @@ the agent will already know how to use Miller to help answer than question.
 
 ![pix/mcp-describe.png](pix/mcp-describe.png)
 
+For more background on the `mlr` commands the agent runs on your behalf, please see
+[Miller AI internals](ai-support.md).
+
 ## What the Miller MCP tools map to
 
 As shown below, you don't have to type `mcp` in your agent sessions: rather you've empowered the

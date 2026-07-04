@@ -43,6 +43,7 @@ nav:
     - "The REPL": "repl.md"
     - "The Miller Agent Skill": "agent-skill.md"
     - "The Miller MCP server": "mcp-server.md"
+    - "Miller AI internals": "ai-support.md"
     - "Online help": "online-help.md"
     - "How to contribute": "contributing.md"
   - 'FAQs and examples':
