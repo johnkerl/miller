@@ -1,0 +1,171 @@
+# Miller and AI
+
+Miller treats AI agents as first-class users. When an agent drives a
+command-line tool, it fails in predictable ways: it invents flags that don't
+exist, guesses values that aren't in the data, misreads error prose, and
+burns whole runs discovering a typo. Miller closes off each of those failure
+modes with structure:
+
+* Miller's entire surface -- verbs, DSL functions, flags, keywords -- is
+  available as **machine-readable JSON**, so agents ground themselves in what
+  actually exists.
+* Options with fixed domains carry their **complete value sets**, and input
+  data can be **profiled in one pass** -- so agents copy real values instead
+  of inventing them.
+* DSL expressions can be **validated before running**, without reading any
+  input.
+* **Errors are structured** -- kind, hint, did-you-mean -- so agents branch
+  on data rather than parsing English.
+* A **sandbox flag** removes external-command execution, so an
+  agent-constructed command line is just data processing.
+
+Everything on this page is an ordinary command-line feature: it works from
+any agent harness, system prompt, or script -- and it's equally useful for
+plain shell tooling like `jq`. The [MCP server](#plug-it-in-the-mcp-server)
+at the end packages it all up for MCP-speaking agents.
+
+## Discover: the machine-readable catalog
+
+`mlr help --as-json` emits Miller's entire help catalog as one JSON document.
+The `--index` form is the cheap first call -- every capability with a
+one-line summary (here trimmed, and then counted, using Miller itself):
+
+GENMD-RUN-COMMAND
+mlr help --as-json --index | mlr --json head -n 2
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr help --as-json --index | mlr --json count
+GENMD-EOF
+
+From the index, an agent drills into full entries one at a time: `mlr help
+verb sort --as-json`, `mlr help function splitax --as-json`, `mlr help flag
+--ifs --as-json`, `mlr help keyword ENV --as-json` -- each accepting one or
+more names. A verb entry carries a structured option list -- flag, argument
+placeholder, type -- alongside the familiar usage text:
+
+GENMD-RUN-COMMAND
+mlr help verb decimate --as-json
+GENMD-EOF
+
+Note that `usage_text` -- what `mlr decimate --help` prints -- is rendered
+*from* the same structured options, so the human help and the machine help
+cannot drift apart. Function entries carry name, class, arity, help, and
+examples; the examples across the whole catalog are exercised by Miller's
+test suite, so they never rot.
+
+Three properties make the catalog cheap to use:
+
+* **It's a perfect cache key.** Every document carries `mlr_version` and
+  `catalog_schema_version`. Miller is a static binary, so the catalog changes
+  only when the binary does: fetch once, cache forever, re-fetch on a version
+  bump. No TTLs.
+* **It's deterministic.** One document per invocation, sorted entries, no
+  colorization -- stable for diffing and for prompt caches.
+* **It's opt-in twice over.** Per-call via `--as-json`, or set-once via a
+  truthy `MLR_HELP_JSON` environment variable.
+
+For routing an *intent* to a capability -- the reverse of browsing -- `mlr
+which` returns ranked candidates:
+
+GENMD-RUN-COMMAND
+mlr which "join two files on a key" | mlr --json head -n 2
+GENMD-EOF
+
+Its exit code signals confidence -- 0 when a query word matched a
+capability's name, 2 when it didn't -- so a harness can branch on status
+without parsing anything.
+
+## Constrain: the tool's shape, and the data's
+
+Agents don't just hallucinate flags; they hallucinate *values*. Miller
+attacks that from both sides.
+
+Where an option's domain is fixed by the binary, the catalog says so:
+`type` is `enum` and `values` is the complete list. Here's one option of the
+[summary](reference-verbs.md#summary) verb, extracted from the catalog --
+using Miller to query Miller:
+
+GENMD-RUN-COMMAND
+mlr help verb summary --as-json | mlr --json put -q 'emit $options[1]'
+GENMD-EOF
+
+Where the domain depends on your *data* -- which fields exist, what values
+`filter` could compare against, what to pass to `-g` -- the
+[describe](reference-verbs.md#describe) verb profiles the input in one pass:
+per field, the types seen, counts, cardinality, min/max, and (for
+low-cardinality fields) every distinct value:
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson describe then head -n 2 example.csv
+GENMD-EOF
+
+The catalog is the *tool's* shape; `describe` is the *data's* shape. An
+agent that consults both has nothing left to guess.
+
+## Validate: check DSL before spending a run
+
+`mlr put --explain` (likewise `mlr filter --explain`) parses and type-checks
+an expression, then exits -- without opening any input at all:
+
+GENMD-RUN-COMMAND
+mlr put --explain '$z = $x + $y'
+GENMD-EOF
+
+## Run and recover: errors as data
+
+With `--errors-json` (or a truthy `MLR_ERRORS_JSON` environment variable),
+errors arrive as a structured document. The `kind` field gives an agent
+something to branch on; `hint` is a runnable next step, not a sentence; and
+`did_you_mean` is computed against the same catalog the agent discovered
+from, closing the self-correction loop:
+
+GENMD-RUN-COMMAND-TOLERATING-ERROR
+mlr --errors-json --icsv sortt -f shape example.csv
+GENMD-EOF
+
+And since Miller's DSL includes [system and exec](shell-commands.md), there's
+a sandbox: `--no-shell` (or a truthy `MLR_NO_SHELL` environment variable)
+disables all external-command execution -- the DSL `system` and `exec`
+functions, piped redirects, and `--prepipe` fail cleanly:
+
+GENMD-RUN-COMMAND
+mlr --no-shell -n put 'end{print system("hostname")}'
+GENMD-EOF
+
+A typical agent profile sets all three environment variables once:
+
+GENMD-CARDIFY
+export MLR_HELP_JSON=1    # help/catalog output as JSON
+export MLR_ERRORS_JSON=1  # errors as structured JSON
+export MLR_NO_SHELL=1     # no external-command execution
+GENMD-EOF
+
+Put together, the sections above are a loop -- discover, constrain,
+validate, run -- where each step feeds the next and failures route back with
+structure instead of prose.
+
+## Plug it in: the MCP server
+
+If your agent speaks the [Model Context
+Protocol](https://modelcontextprotocol.io) -- Claude Code, Claude Desktop,
+Cursor, and many others -- everything above is one line away. For Claude
+Code:
+
+<pre class="pre-highlight-in-pair">
+<b>claude mcp add miller -- mlr mcp</b>
+</pre>
+
+That's the whole setup. The server's five tools are exactly the features on
+this page -- `list_capabilities` and `which` for discovery, `describe_data`
+to constrain, `validate_dsl` to validate, and `run` (sandboxed with
+`--no-shell` by default) to execute -- plus a shipped playbook, as MCP prompt
+and resource, teaching the agent the loop. Then just talk to your agent
+about your data:
+
+* "Which fields in `data.csv` have missing values?"
+* "Convert this CSV to JSON, keeping only rows where status is active."
+* "Join `a.csv` and `b.csv` on id, and give me the mean rate per group."
+
+See [AI agents and the MCP server](mcp-server.md) for the full tool
+reference and server options.
