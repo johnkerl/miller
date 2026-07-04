@@ -40,6 +40,49 @@ any agent harness, system prompt, or script -- and it's equally useful for
 plain shell tooling like `jq`. The [MCP server](#plug-it-in-the-mcp-server)
 at the end packages it all up for MCP-speaking agents.
 
+## The bare minimum
+
+**To get the AI features:** install Miller 6.19 or newer ([Installing
+Miller](installing-miller.md)). That's all. Everything on this page ships
+inside the ordinary `mlr` binary -- there are no plugins, no separate
+installs, no API keys, and nothing here makes network calls.
+
+**To get your AI to use them,** pick whichever matches your setup:
+
+* **If your agent speaks MCP** (Claude Code, Claude Desktop, Cursor, ...):
+  register the server -- for Claude Code that's `claude mcp add miller -- mlr
+  mcp` -- and you're done. The tools describe themselves, and the server
+  ships its own instructions and playbook, so you usually don't need to say
+  anything special; if the agent doesn't reach for them, a nudge like "use
+  the Miller tools" suffices. Details in [The MCP server](mcp-server.md).
+
+* **If your agent just runs shell commands** (a system prompt, a
+  `CLAUDE.md`, Cursor rules, a script harness): paste this standing
+  instruction into its context:
+
+<pre class="pre-non-highlight-non-pair">
+Miller (mlr) is installed for processing CSV/TSV/JSON/etc. data. When
+constructing mlr commands:
+1. Discover: `mlr help --as-json --index` lists every verb/function/flag;
+   `mlr which "&lt;intent&gt;"` routes a goal to the right one; `mlr help
+   verb &lt;name&gt; --as-json` gives full details. Never invent flag or
+   function names.
+2. Constrain: `mlr --icsv --ojson describe &lt;file&gt;` (or --ijson etc.)
+   shows the data's fields, types, and values. Copy names and values from it
+   rather than guessing them.
+3. Validate: check DSL expressions with `mlr put --explain '&lt;expr&gt;'`
+   before using them.
+4. Run with `--errors-json`; on failure, correct using the error's kind,
+   hint, and did_you_mean rather than re-guessing.
+</pre>
+
+  A fuller, ready-made version of that lesson ships in the Miller source
+  tree at `pkg/terminals/mcp/SKILL.md`, in Agent Skill format -- suitable for
+  dropping into e.g. a `.claude/skills/miller/` directory as-is.
+
+The rest of this page is what those instructions rest on, feature by
+feature.
+
 ## Discover: the machine-readable catalog
 
 `mlr help --as-json` emits Miller's entire help catalog as one JSON document.
@@ -163,7 +206,7 @@ Its exit code signals confidence -- 0 when a query word matched a
 capability's name, 2 when it didn't -- so a harness can branch on status
 without parsing anything.
 
-## Constrain: the tool's shape, and the data's
+## Constrain: the tool's shape, and the data's shape
 
 Agents don't just hallucinate flags; they hallucinate *values*. Miller
 attacks that from both sides.
