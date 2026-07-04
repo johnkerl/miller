@@ -14,22 +14,69 @@ Quick links:
 <a class="quicklink" href="../release-docs/index.html">Release docs</a>
 </span>
 </div>
-# The MCP server
+# The Miller MCP server
 
-Miller ships with a built-in [Model Context Protocol](https://modelcontextprotocol.io)
-server, so AI agents (Claude Code, Claude Desktop, Cursor, and other MCP
-clients) can discover and drive Miller without scraping help text or guessing
-at flags. (For the overview of Miller's whole AI feature set -- with or
-without MCP -- see [Miller and AI](ai.md).)
+As of Miller version 6.20, released in July 2026, there are two main ways to get your AI to know
+about a software tool (Miller, or others): [**agent skills**](agent-skill.md), and **MCP**.  (See
+[Miller and AI](ai.md) for an introduction.)
 
-The server speaks JSON-RPC over stdin/stdout (MCP's "stdio" transport): the
-MCP client spawns `mlr mcp` as a subprocess. No network port is opened, and
-the server exits when the client disconnects. Example registration, for
-Claude Code:
+Miller ships with a built-in [Model Context Protocol](https://modelcontextprotocol.io) server
+included within the `mlr` executable, so AI agents (Claude Code, Claude Desktop, Cursor, and other
+MCP clients) can discover and drive Miller without scraping help text or guessing at flags.
+
+The server speaks JSON-RPC over stdin/stdout (MCP's **stdio** transport): the MCP client spawns `mlr
+mcp` as a subprocess. No network port is opened, and the server exits when the client disconnects.
+
+## Setup
+
+Example registration for some common CLI agents (do this before starting your session):
 
 <pre class="pre-highlight-in-pair">
 <b>claude mcp add miller -- mlr mcp</b>
 </pre>
+<pre class="pre-non-highlight-in-pair">
+Added stdio MCP server miller with command: mlr mcp to local config
+File modified: /Users/kerl/.claude.json [project: /Users/kerl/git/johnkerl/miller]
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>codex mcp add miller --  mlr mcp</b>
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>gemini mcp add miller mlr mcp</b>
+</pre>
+
+You can undo that as follows:
+
+<pre class="pre-highlight-in-pair">
+<b>claude mcp remove miller</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Removed MCP server "miller" from local config
+File modified: /Users/kerl/.claude.json [project: /Users/kerl/git/johnkerl/miller]
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>codex mcp remove miller</b>
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>gemini mcp remove miller</b>
+</pre>
+
+Then -- just interact with your agent as always! When you say something like `describe the data file example.csv`,
+the agent will already know how to use Miller to help answer that question.
+
+![pix/mcp-describe.png](pix/mcp-describe.png)
+
+For more background on the `mlr` commands the agent runs on your behalf, please see
+[Miller AI internals](ai-support.md).
+
+## What the Miller MCP tools map to
+
+As shown below, you don't have to type `mcp` in your agent sessions: rather you've empowered the
+agent to discover things about Miller. But if you're curious what the AI agent will see:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr mcp --help</b>
@@ -68,25 +115,68 @@ Options:
  -h or --help            Show this message.
 </pre>
 
-## What the tools map to
+Each MCP tool is a thin wrapper over a Miller feature you can also, if you like, use directly from
+the command line:
 
-Each MCP tool is a thin wrapper over a Miller feature you can also use
-directly from the command line:
-
-* `list_capabilities` is [`mlr help --as-json`](online-help.md) -- the
-  machine-readable catalog of verbs, DSL functions, flags, and keywords.
-* `which` is `mlr which` -- natural-language intent to ranked capabilities.
-* `validate_dsl` is `mlr put --explain` / `mlr filter --explain` -- parse and
-  type-check a DSL expression without reading any input.
-* `describe_data` is [`mlr describe`](reference-verbs.md#describe) -- field
+- `list_capabilities` is [`mlr help --as-json`](online-help.md): the
+  machine-readable catalog of [verbs](reference-verbs.md),
+  [DSL functions](reference-dsl-builtin-functions.md), [flags](reference-main-flag-list.md), and
+  [keywords](reference-dsl-variables.md#keywords-for-filter-and-put).
+- `which` is `mlr which`: turns natural-language intent into ranked capabilities.
+- `validate_dsl` is `mlr put --explain` / `mlr filter --explain`: to parse and
+  type-check a DSL expression before reading any input files.
+- `describe_data` is [`mlr describe`](reference-verbs.md#describe): this shows field
   names, types, cardinality, and value domains for input data.
-* `run` executes an `mlr` command line and reports exit code, output, and --
+- `run` executes an `mlr` command line and reports exit code, output, and --
   on failure -- the structured error document from `mlr --errors-json`.
 
-The catalog tools are answered in-process; the others run this same `mlr`
-binary as a subprocess, so agents see exactly what a terminal user sees.
+See also the [Miller AI internals page](ai-support.md) for more information.
 
-## Sandboxing: --no-shell
+## What Miller MCP looks like in practice
+
+Here are some screenshots from a Claude Code session.
+
+At the shell, before starting `claude`, we've first run
+
+<pre class="pre-highlight-in-pair">
+<b>claude mcp add miller -- mlr mcp</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Added stdio MCP server miller with command: mlr mcp to local config
+File modified: /Users/kerl/.claude.json [project: /Users/kerl/git/johnkerl/miller]
+</pre>
+
+Then, inside Claude code, we type `/mcp`:
+
+![pix/mcp-slash.png](pix/mcp-slash.png)
+
+Then we select Miller:
+
+![pix/mcp-manage.png](pix/mcp-manage.png)
+
+The status shows it's installed. Note that there is no long-running Miller "server" process: this is
+just Claude remembering to run things like `mlr mcp ...` in order to get how-to instructions from
+the `mlr` executable you already have installed.
+
+![pix/mcp-status.png](pix/mcp-status.png)
+
+The MCP tools are names for Claude to remember -- you don't have to. For transparency, though, here they are:
+
+![pix/mcp-tools.png](pix/mcp-tools.png)
+
+Here are descriptions of a couple of them:
+
+![pix/mcp-describe-data.png](pix/mcp-describe-data.png)
+
+![pix/mcp-list-capabilities.png](pix/mcp-list-capabilities.png)
+
+When you're in your AI session, you don't have to type `mcp` or the specific names of Miller MCP tools.
+Rather, you just interact as always, and the AI remembers to call Miller MCP tools on your behalf.
+For example:
+
+![pix/mcp-describe.png](pix/mcp-describe.png)
+
+## A note on sandboxing
 
 Miller's DSL includes [`system` and `exec`](shell-commands.md), and
 `--prepipe`/piped redirects also run external commands. So that an
@@ -95,19 +185,7 @@ subprocesses started by the MCP server run with `MLR_NO_SHELL=1`: those
 features fail cleanly instead of executing. Start the server with
 `mlr mcp --allow-shell` to turn that off.
 
-The same gate is available outside the MCP server: pass `--no-shell` to any
-`mlr` invocation, or set the `MLR_NO_SHELL` environment variable to a truthy
-value. Note that Miller can still write files when asked to (`tee`, `split`,
-DSL output redirection) -- the gate is specifically about executing external
-commands.
-
-## The agent playbook
-
-The server also exposes a playbook -- as MCP prompt `miller-playbook` and MCP
-resource `miller://playbook` -- encoding the loop that makes an agent
-effective with Miller: **discover** capabilities from the catalog rather than
-inventing them, **constrain** to the data's actual fields and values via
-`describe_data`, **validate** DSL before running it, and **run** with
-structured-error recovery. The same text lives in the Miller source tree at
-[pkg/terminals/mcp/SKILL.md](https://github.com/johnkerl/miller/blob/main/pkg/terminals/mcp/SKILL.md)
-in Agent Skill format.
+The same gate is available outside the MCP server: pass `--no-shell` to any `mlr` invocation, or set
+the `MLR_NO_SHELL` [environment variable](reference-main-env-vars.md) to `true`. Note that Miller
+can still write files when asked to (`tee`, `split`, DSL output redirection): the gate is
+specifically about executing external commands.

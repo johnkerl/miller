@@ -19,6 +19,7 @@ const (
 	Regtest      = "regtest"
 	Repl         = "repl"
 	Script       = "script"
+	Skill        = "skill"
 	Version      = "version"
 	Which        = "which"
 )
@@ -32,6 +33,7 @@ var Names = []string{
 	Regtest,
 	Repl,
 	Script,
+	Skill,
 	Version,
 	Which,
 }
