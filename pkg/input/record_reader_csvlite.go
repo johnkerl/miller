@@ -254,7 +254,11 @@ func getRecordBatchExplicitCSVHeader(
 				if nh > nd {
 					// if header longer than data: use "" values
 					for i = nd; i < nh; i++ {
-						record.PutCopy(reader.headerStrings[i], mlrval.VOID)
+						_, err := record.PutReferenceMaybeDedupe(reader.headerStrings[i], mlrval.VOID.Copy(), dedupeFieldNames)
+						if err != nil {
+							errorChannel <- err
+							return
+						}
 					}
 				}
 			}

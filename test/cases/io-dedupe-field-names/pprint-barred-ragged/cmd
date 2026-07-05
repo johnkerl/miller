@@ -1,0 +1,1 @@
+mlr --ipprint --barred-input --ojson --ragged cat ${CASEDIR}/input
