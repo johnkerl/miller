@@ -530,3 +530,141 @@ See also the
 [JSON parse and stringify section](reference-main-data-types.md#json-parse-and-stringify) section for
 more on this -- for example, when Miller is producing SQL-query output from
 tables having one or more columns that contain JSON-encoded data.
+
+## Using verbs with nested data
+
+Miller's [verbs](reference-verbs.md) -- such as [cut](reference-verbs.md#cut),
+[rename](reference-verbs.md#rename), [sort](reference-verbs.md#sort), and so on
+-- refer to fields by _non-nested_ field names. To a verb, `domain.domain` is
+simply a nine-character field name, not an instruction to look up the key
+`domain` inside a map-valued field named `domain`. (Within the [Miller
+programming language](miller-programming-language.md), by contrast,
+`$domain.domain` _does_ mean nested-field access.)
+
+So, given nested JSON input like this:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/whois.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "domain": {
+    "id": "2138514_DOMAIN_COM-VRSN",
+    "domain": "google.com",
+    "extension": "com"
+  },
+  "registrar": {
+    "id": "292",
+    "name": "MarkMonitor Inc."
+  }
+}
+</pre>
+
+the following produces no data output, since the record contains a
+map-valued field named `domain` but nothing named `domain.domain`:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --ocsv cut -f domain.domain data/whois.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+
+
+</pre>
+
+Note that even though the output format here is CSV, auto-flatten happens at
+the _end_ of the [chain](reference-main-then-chaining.md) -- so the `cut` verb
+still sees the nested data.
+
+The solution is to use the [flatten](reference-verbs.md#flatten) verb _before_
+the verb which needs the flattened field names. After the flatten, the record
+really does contain a field named `domain.domain`, which `cut` can operate on:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --ocsv flatten then cut -f domain.domain data/whois.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+domain.domain
+google.com
+</pre>
+
+If the output format is JSON, auto-flatten and auto-unflatten don't happen
+(there's no need to flatten JSON-to-JSON) -- so, to get nested output back, use
+the [unflatten](reference-verbs.md#unflatten) verb after the verb which needed
+the flattened field names:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --json flatten then cut -f domain.domain then unflatten data/whois.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "domain": {
+    "domain": "google.com"
+  }
+}
+]
+</pre>
+
+The same technique applies to renaming a nested field. Given this input:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/nested-body.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+  { "Body": { "meta": 5,  "id": "abc" } },
+  { "Body": { "meta": 6,  "id": "def" } }
+]
+</pre>
+
+using `rename Body.meta,Body.renamed_meta` by itself is a no-op, since no field
+is literally named `Body.meta` -- but with flatten and unflatten around it, we
+get what we want:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --json flatten then rename Body.meta,Body.renamed_meta then unflatten data/nested-body.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "Body": {
+    "renamed_meta": 5,
+    "id": "abc"
+  }
+},
+{
+  "Body": {
+    "renamed_meta": 6,
+    "id": "def"
+  }
+}
+]
+</pre>
+
+An alternative, without flatten/unflatten, is to use
+[put](reference-verbs.md#put) and [unset](reference-dsl-variables.md) with the
+DSL's nested-field access:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --json put '$Body.renamed_meta = $Body.meta; unset $Body.meta' data/nested-body.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "Body": {
+    "id": "abc",
+    "renamed_meta": 5
+  }
+},
+{
+  "Body": {
+    "id": "def",
+    "renamed_meta": 6
+  }
+}
+]
+</pre>
+
+One difference between the two: flatten-rename-unflatten leaves the renamed
+field in its original position within the record, while the put-then-unset
+approach places the new field after the existing ones.
