@@ -2443,7 +2443,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
    1muniq0m
        Usage: mlr uniq [options]
        Prints distinct values for specified field names. With -c, same as
-       count-distinct. For uniq, -f is a synonym for -g.
+       count-distinct. For uniq, -f is a synonym for -g. Output fields are
+       written in the order in which they are named with -g or -f, not in the
+       order in which they appear in the input records.
 
        Options:
        -g {d,e,f} Group-by field names for uniq counts.
@@ -4040,5 +4042,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-07-04                         4mMILLER24m(1)
+                                  2026-07-05                         4mMILLER24m(1)
 </pre>
