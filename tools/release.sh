@@ -127,6 +127,32 @@ push_if_needed() {
   run_cmd git push "$@" origin "$branch"
 }
 
+# verify_release_tag_commit guards against the classic ordering bug: a
+# release/tag for $TAG created (by hand, or by anything other than this
+# script's own Phase 4) BEFORE the version-bump commit was pushed. Git tags
+# don't retroactively follow branch movement, so once cut against the wrong
+# commit they stay wrong -- and a same-tag `gh release view` success on a
+# resumed run looks identical whether the tag is right or wrong. This checks
+# the actual tagged commit's pkg/version/version.go, not just tag existence.
+verify_release_tag_commit() {
+  local tag="$1"
+  # Read-only (fetch/rev-parse/show), so this runs even under --dry-run --
+  # skipping it there would hide exactly the bug it exists to catch.
+  git fetch --tags origin >/dev/null 2>&1 || true
+  if ! git rev-parse --verify --quiet "refs/tags/$tag" >/dev/null; then
+    # Not fetchable yet (e.g. propagation lag right after creation); nothing
+    # to check against.
+    return 0
+  fi
+  local tagged_version
+  tagged_version="$(git show "${tag}:pkg/version/version.go" 2>/dev/null \
+    | awk -F'"' '/^var[[:space:]]+STRING/ { print $2; exit }')"
+  if [ "$tagged_version" != "$VERSION" ]; then
+    die "tag '$tag' points at a commit where pkg/version/version.go reports '$tagged_version', not '$VERSION' -- it was likely created before the version-bump commit landed (see docs/src/how-to-release.md.in's warning on tag ordering). Delete the release and the tag (locally and on origin) and recreate it pointing at the correct commit before continuing."
+  fi
+  note "verified tag '$tag' points at a commit with version.go == '$VERSION'"
+}
+
 # ============================================================================
 # Argument parsing
 # ============================================================================
@@ -565,6 +591,8 @@ phase_4_github_release() {
       --title "Miller $VERSION" \
       --notes-file "$NOTES_FILE"
   fi
+
+  verify_release_tag_commit "$TAG"
 
   banner "PHASE 4: upload assets"
   # --clobber so that a resumed run can re-upload a replaced artifact.
