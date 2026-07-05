@@ -2311,7 +2311,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Show summary statistics about the input data.
 
        All summarizers:
-         field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed
+         field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed (see notes below)
          count           +1 for every instance of the field across all records in the input record stream
          null_count      count of field values either empty string or JSON null
          distinct_count  count of distinct values for the field
@@ -2341,6 +2341,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        * min, p25, median, p75, and max work for strings as well as numbers
        * Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
        * If the mode is not unique in the input data, the first-encountered value is reported as the mode.
+       * A field_type of "int-string", "empty-string", etc. means the column contains values of mixed types --
+         all types encountered are printed, hyphen-joined, in the order first encountered.
 
        Options:
        -a {mean,sum,etc.} Use only the specified summarizers.
@@ -4040,5 +4042,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-07-04                         4mMILLER24m(1)
+                                  2026-07-05                         4mMILLER24m(1)
 </pre>
