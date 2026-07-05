@@ -185,6 +185,13 @@ func getRecordBatchExplicitTSVHeader(
 			// Get data lines on subsequent loop iterations
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
+				if reader.readerOptions.SkipTrivialRecords && !hasNonEmptyField(fields) {
+					// The then-chain includes the skip-trivial-records verb,
+					// so trivial records -- e.g. blank lines at the end of
+					// the file -- are to be skipped, not treated as fatal
+					// header/data length mismatches. See issue #1535.
+					continue
+				}
 				err := fmt.Errorf(
 					"TSV header/data length mismatch %d != %d at filename %s line %d",
 					len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,

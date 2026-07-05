@@ -261,6 +261,13 @@ func (reader *RecordReaderCSV) getRecordBatch(
 
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput {
+				if reader.readerOptions.SkipTrivialRecords && !hasNonEmptyField(csvRecord) {
+					// The then-chain includes the skip-trivial-records verb,
+					// so trivial records -- e.g. blank lines at the end of
+					// the file -- are to be skipped, not treated as fatal
+					// header/data length mismatches. See issue #1535.
+					continue
+				}
 				err := fmt.Errorf(
 					"CSV header/data length mismatch %d != %d at filename %s row %d",
 					nh, nd, reader.filename, reader.rowNumber,

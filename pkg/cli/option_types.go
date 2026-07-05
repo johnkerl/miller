@@ -51,8 +51,14 @@ type TReaderOptions struct {
 	irsWasSpecified            bool
 	allowRepeatIFSWasSpecified bool
 
-	UseImplicitHeader    bool
-	AllowRaggedCSVInput  bool
+	UseImplicitHeader   bool
+	AllowRaggedCSVInput bool
+	// Not settable by a command-line flag of its own: this is set when the
+	// skip-trivial-records verb is present in the then-chain. It lets the
+	// CSV/TSV record-readers know that trivial records -- e.g. blank lines
+	// at the end of a CSV file -- are to be skipped rather than treated as
+	// fatal header/data length mismatches. See issue #1535.
+	SkipTrivialRecords   bool
 	CSVLazyQuotes        bool
 	CSVTrimLeadingSpace  bool
 	BarredPprintInput    bool
