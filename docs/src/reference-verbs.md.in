@@ -1315,6 +1315,22 @@ GENMD-RUN-COMMAND
 mlr --c2p uniq -n -g color,shape data/colored-shapes.csv
 GENMD-EOF
 
+Note that `mlr uniq -g` outputs only the group-by columns. If you want to deduplicate
+records by one or more fields, while keeping all the other columns, you can use
+[head](reference-verbs.md#head) with `-n 1` and `-g`, which keeps the first record for
+each distinct combination of the group-by fields:
+
+GENMD-RUN-COMMAND
+mlr --c2p head -n 1 -g color,shape then sort -f color,shape data/colored-shapes.csv
+GENMD-EOF
+
+If you sort the input first, you control which record is kept for each group -- for
+example, the one with the highest value of the `u` field:
+
+GENMD-RUN-COMMAND
+mlr --c2p sort -nr u then head -n 1 -g color,shape then sort -f color,shape data/colored-shapes.csv
+GENMD-EOF
+
 The second main way to use `mlr uniq` is without group-by columns, using `-a` instead:
 
 GENMD-RUN-COMMAND
