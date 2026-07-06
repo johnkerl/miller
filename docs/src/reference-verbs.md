@@ -4414,7 +4414,9 @@ Options:
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr uniq [options]
 Prints distinct values for specified field names. With -c, same as
-count-distinct. For uniq, -f is a synonym for -g.
+count-distinct. For uniq, -f is a synonym for -g. Output fields are
+written in the order in which they are named with -g or -f, not in the
+order in which they appear in the input records.
 
 Options:
 -g {d,e,f} Group-by field names for uniq counts.
