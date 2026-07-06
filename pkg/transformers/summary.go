@@ -29,7 +29,7 @@ type tSummarizerInfo struct {
 }
 
 var allSummarizerInfos = []tSummarizerInfo{
-	{"field_type", "string, int, etc. -- if a column has mixed types, all encountered types are printed", stFieldType},
+	{"field_type", "string, int, etc. -- if a column has mixed types, all encountered types are printed (see notes below)", stFieldType},
 
 	{"count", "+1 for every instance of the field across all records in the input record stream", stAccumulator},
 	{"null_count", "count of field values either empty string or JSON null", stAccumulator},
@@ -107,6 +107,8 @@ func transformerSummaryUsage(
 	fmt.Fprintf(o, "* min, p25, median, p75, and max work for strings as well as numbers\n")
 	fmt.Fprintf(o, "* Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.\n")
 	fmt.Fprintf(o, "* If the mode is not unique in the input data, the first-encountered value is reported as the mode.\n")
+	fmt.Fprintf(o, "* A field_type of \"int-string\", \"empty-string\", etc. means the column contains values of mixed types --\n")
+	fmt.Fprintf(o, "  all types encountered are printed, hyphen-joined, in the order first encountered.\n")
 	fmt.Fprintf(o, "\n")
 	WriteVerbOptions(o, summaryOptions)
 }
