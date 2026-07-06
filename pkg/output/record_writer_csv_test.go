@@ -37,7 +37,9 @@ func runWriter(t *testing.T, writer IRecordWriter) string {
 	if err != nil {
 		t.Fatal(err)
 	}
-	bufferedOutputStream.Flush()
+	if err := bufferedOutputStream.Flush(); err != nil {
+		t.Fatal(err)
+	}
 	return buffer.String()
 }
 
