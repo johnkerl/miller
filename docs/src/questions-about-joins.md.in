@@ -85,3 +85,67 @@ mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id \
   then join -f multi-join/status-lookup.csv -j id \
   multi-join/input.csv
 GENMD-EOF
+
+## Merging several files on a common key when column names collide
+
+The previous example worked painlessly because the non-key column names -- `name` and `status` -- were different in each lookup file. Now suppose you have several files, each containing measurements of a _different_ quantity, but all with the _same_ column names -- say, one file each for temperature, humidity, and pressure, keyed by timestamp:
+
+GENMD-RUN-COMMAND
+cat data/sensor-temp.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat data/sensor-humidity.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat data/sensor-pressure.csv
+GENMD-EOF
+
+(Note that the humidity file is missing a row for the middle timestamp.)
+
+If we merge these with a `then`-chain of `join` commands, as in the previous section, columns are lost: since every file's non-key columns have the same names, each join step overwrites the values from the step before, and only one file's values survive:
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint \
+  join -j unixTime -f data/sensor-temp.csv \
+  then join -j unixTime -f data/sensor-humidity.csv \
+  data/sensor-pressure.csv
+GENMD-EOF
+
+The fix is `join`'s `--lp` (left-prefix) option, which renames the non-key columns coming from each `-f` file so that nothing collides:
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint \
+  join --lp temp: -j unixTime -f data/sensor-temp.csv \
+  then join --lp humidity: -j unixTime -f data/sensor-humidity.csv \
+  data/sensor-pressure.csv
+GENMD-EOF
+
+The columns from the file at the end of the command line -- here, the pressure file -- keep their unprefixed names.
+
+If you want just one value column per file, you can also use `join`'s `--lk` option to keep only that column from each `-f` file, then use [cut](reference-verbs.md#cut) and [label](reference-verbs.md#label) to arrange and rename the output columns:
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint \
+  join --lp temp: --lk averageValue -j unixTime -f data/sensor-temp.csv \
+  then join --lp humidity: --lk averageValue -j unixTime -f data/sensor-humidity.csv \
+  then cut -o -f unixTime,temp:averageValue,humidity:averageValue,averageValue \
+  then label unixTime,temperature,humidity,pressure \
+  data/sensor-pressure.csv
+GENMD-EOF
+
+Note that `join` gives inner-join semantics by default, so the timestamp missing from the humidity file has been dropped from the output. (This is also why the `paste` command is not a substitute for `join` here: `paste` matches rows by position, so a row missing from one file shifts that file's remaining values onto the wrong rows.) If you'd rather keep those rows, with empty cells where a file has no data, add `--ul --ur` to each join step, and [unsparsify](reference-verbs.md#unsparsify) afterward:
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint \
+  join --ul --ur --lp temp: --lk averageValue -j unixTime -f data/sensor-temp.csv \
+  then join --ul --ur --lp humidity: --lk averageValue -j unixTime -f data/sensor-humidity.csv \
+  then unsparsify \
+  then cut -o -f unixTime,temp:averageValue,humidity:averageValue,averageValue \
+  then label unixTime,temperature,humidity,pressure \
+  then sort -t unixTime \
+  data/sensor-pressure.csv
+GENMD-EOF
+
+The `unsparsify` must come before the `cut`-and-`label` step, since `label` renames columns positionally. The `sort` is there because unpaired records may be emitted out of order relative to paired ones.

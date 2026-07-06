@@ -198,3 +198,105 @@ id status   name  task
 10 idle     Bob   knead
 30 occupied Alice clean
 </pre>
+
+## Merging several files on a common key when column names collide
+
+The previous example worked painlessly because the non-key column names -- `name` and `status` -- were different in each lookup file. Now suppose you have several files, each containing measurements of a _different_ quantity, but all with the _same_ column names -- say, one file each for temperature, humidity, and pressure, keyed by timestamp:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/sensor-temp.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+unixTime,minValue,averageValue,maxValue
+1740000000,37.2,37.4,37.6
+1740000060,37.5,37.6,37.7
+1740000120,37.8,37.9,38.0
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/sensor-humidity.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+unixTime,minValue,averageValue,maxValue
+1740000000,50.1,50.3,50.5
+1740000120,52.3,52.5,52.7
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/sensor-pressure.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+unixTime,minValue,averageValue,maxValue
+1740000000,1012.2,1012.3,1012.4
+1740000060,1011.8,1011.9,1012.0
+1740000120,1011.5,1011.6,1011.7
+</pre>
+
+(Note that the humidity file is missing a row for the middle timestamp.)
+
+If we merge these with a `then`-chain of `join` commands, as in the previous section, columns are lost: since every file's non-key columns have the same names, each join step overwrites the values from the step before, and only one file's values survive:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint \</b>
+<b>  join -j unixTime -f data/sensor-temp.csv \</b>
+<b>  then join -j unixTime -f data/sensor-humidity.csv \</b>
+<b>  data/sensor-pressure.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+unixTime   minValue averageValue maxValue
+1740000000 1012.2   1012.3       1012.4
+1740000120 1011.5   1011.6       1011.7
+</pre>
+
+The fix is `join`'s `--lp` (left-prefix) option, which renames the non-key columns coming from each `-f` file so that nothing collides:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint \</b>
+<b>  join --lp temp: -j unixTime -f data/sensor-temp.csv \</b>
+<b>  then join --lp humidity: -j unixTime -f data/sensor-humidity.csv \</b>
+<b>  data/sensor-pressure.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+unixTime   humidity:minValue humidity:averageValue humidity:maxValue temp:minValue temp:averageValue temp:maxValue minValue averageValue maxValue
+1740000000 50.1              50.3                  50.5              37.2          37.4              37.6          1012.2   1012.3       1012.4
+1740000120 52.3              52.5                  52.7              37.8          37.9              38.0          1011.5   1011.6       1011.7
+</pre>
+
+The columns from the file at the end of the command line -- here, the pressure file -- keep their unprefixed names.
+
+If you want just one value column per file, you can also use `join`'s `--lk` option to keep only that column from each `-f` file, then use [cut](reference-verbs.md#cut) and [label](reference-verbs.md#label) to arrange and rename the output columns:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint \</b>
+<b>  join --lp temp: --lk averageValue -j unixTime -f data/sensor-temp.csv \</b>
+<b>  then join --lp humidity: --lk averageValue -j unixTime -f data/sensor-humidity.csv \</b>
+<b>  then cut -o -f unixTime,temp:averageValue,humidity:averageValue,averageValue \</b>
+<b>  then label unixTime,temperature,humidity,pressure \</b>
+<b>  data/sensor-pressure.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+unixTime   temperature humidity pressure
+1740000000 37.4        50.3     1012.3
+1740000120 37.9        52.5     1011.6
+</pre>
+
+Note that `join` gives inner-join semantics by default, so the timestamp missing from the humidity file has been dropped from the output. (This is also why the `paste` command is not a substitute for `join` here: `paste` matches rows by position, so a row missing from one file shifts that file's remaining values onto the wrong rows.) If you'd rather keep those rows, with empty cells where a file has no data, add `--ul --ur` to each join step, and [unsparsify](reference-verbs.md#unsparsify) afterward:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint \</b>
+<b>  join --ul --ur --lp temp: --lk averageValue -j unixTime -f data/sensor-temp.csv \</b>
+<b>  then join --ul --ur --lp humidity: --lk averageValue -j unixTime -f data/sensor-humidity.csv \</b>
+<b>  then unsparsify \</b>
+<b>  then cut -o -f unixTime,temp:averageValue,humidity:averageValue,averageValue \</b>
+<b>  then label unixTime,temperature,humidity,pressure \</b>
+<b>  then sort -t unixTime \</b>
+<b>  data/sensor-pressure.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+unixTime   temperature humidity pressure
+1740000000 37.4        50.3     1012.3
+1740000060 37.6        -        1011.9
+1740000120 37.9        52.5     1011.6
+</pre>
+
+The `unsparsify` must come before the `cut`-and-`label` step, since `label` renames columns positionally. The `sort` is there because unpaired records may be emitted out of order relative to paired ones.
