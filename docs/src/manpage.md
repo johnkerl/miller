@@ -801,6 +801,11 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                                 right-align-multi-word
        --fw {string}            Shortcut for --fixed left-align-multi-word
        --right                  Right-justifies all fields for PPRINT output.
+       --right-align-numeric    Right-justifies fields with numeric values for PPRINT
+                                output, leaving other fields (and header lines)
+                                left-justified. Also applies to markdown output,
+                                where numeric columns get right-alignment markers
+                                (`---:`) in the header-separator line.
 
 1mPROFILING FLAGS0m
        These are flags for profiling Miller performance.
@@ -4043,5 +4048,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-07-05                         4mMILLER24m(1)
+                                  2026-07-06                         4mMILLER24m(1)
 </pre>

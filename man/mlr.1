@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2026-07-05
+.\"      Date: 2026-07-06
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2026-07-05" "\ \&" "\ \&"
+.TH "MILLER" "1" "2026-07-06" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -932,6 +932,11 @@ These are flags which are applicable to PPRINT format.
                          right-align-multi-word
 --fw {string}            Shortcut for --fixed left-align-multi-word
 --right                  Right-justifies all fields for PPRINT output.
+--right-align-numeric    Right-justifies fields with numeric values for PPRINT
+                         output, leaving other fields (and header lines)
+                         left-justified. Also applies to markdown output,
+                         where numeric columns get right-alignment markers
+                         (`---:`) in the header-separator line.
 .fi
 .if n \{\
 .RE
