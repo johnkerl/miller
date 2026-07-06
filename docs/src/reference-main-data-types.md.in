@@ -46,6 +46,30 @@ will produce `x=1,y=2,z=3`.
 Numbers retain their original string representation, so if `x` is `1.2` on one
 record and `1.200` on another, they'll print out that way on output (unless of
 course they've been modified during processing, e.g. `mlr put '$x = $x + 10`).
+One exception: on JSON output, numbers whose original text isn't valid in the
+JSON grammar -- e.g. `004.56`, whose leading zeros JSON disallows -- are
+re-rendered (here, as `4.56`) so that Miller always writes valid JSON.
+
+Note that double quotes in CSV input don't affect type inference. In CSV,
+quoting exists to allow field content containing commas, newlines, and/or
+double quotes -- unlike in JSON, quoting doesn't distinguish strings from
+numbers. So `"4.56"` in a CSV file scans as a float, just as `4.56` does. If
+you want values kept as strings, you can use `mlr -S` (or, synonymously, `mlr
+--infer-none`) to disable type inference entirely, or use the
+[`string` DSL function](reference-dsl-builtin-functions.md#string) to cast
+specific fields:
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson cat data/quoted-numeric.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson -S cat data/quoted-numeric.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson put '$b = string($b)' data/quoted-numeric.csv
+GENMD-EOF
 
 Generally strings, numbers, and booleans don't mix; use type-casting like
 `string($x)` to convert. However, the dot (string-concatenation) operator has
