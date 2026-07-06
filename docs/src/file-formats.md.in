@@ -409,6 +409,22 @@ GENMD-RUN-COMMAND
 mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt
 GENMD-EOF
 
+Note that NIDX and DKVP split each line on the field separator without regard to double quotes: a separator inside a double-quoted string still starts a new field.
+
+GENMD-RUN-COMMAND
+cat data/semicolon-quoted.txt
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --inidx --ifs semicolon --oxtab cat data/semicolon-quoted.txt
+GENMD-EOF
+
+If your data uses RFC-4180-style double-quoting to protect separators inside field values, use CSV format with `--ifs` set to your separator -- along with `--implicit-csv-header` if the file has no header line:
+
+GENMD-RUN-COMMAND
+mlr --icsv --ifs semicolon --implicit-csv-header --oxtab cat data/semicolon-quoted.txt
+GENMD-EOF
+
 ## DCF (Debian control file)
 
 GENMD-RUN-COMMAND
