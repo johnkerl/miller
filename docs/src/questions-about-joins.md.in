@@ -85,3 +85,66 @@ mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id \
   then join -f multi-join/status-lookup.csv -j id \
   multi-join/input.csv
 GENMD-EOF
+
+## Updating a database file with new values from another
+
+Suppose you have a durable "database" file, and you periodically receive a download
+containing updates for some of its records, on some of its columns. You'd like to
+update matching records in place, and pass records without updates through unchanged --
+without introducing any new records or columns. For example:
+
+GENMD-INCLUDE-ESCAPED(data/update-db.csv)
+
+GENMD-INCLUDE-ESCAPED(data/update-download.csv)
+
+The tool for this is `join`, and the key fact is its collision rule: **when a
+non-join field is present on both sides of a paired record, the value from the
+right file overwrites the value from the left file.** So put the database file
+on the left (with `-f`) and the download on the right -- then the downloaded
+values win. Adding `--ul` also emits unpaired left records, i.e., database
+records for which no update arrived. A pleasant side effect of this ordering is
+that the output columns are exactly the database file's columns, in the
+database file's order:
+
+GENMD-RUN-COMMAND
+mlr --csv join --ul -j id -f data/update-db.csv data/update-download.csv
+GENMD-EOF
+
+Records 1 and 3 have been updated from the download, while records 2 and 4 are
+passed through unchanged. Two things to note:
+
+* Paired records are emitted first (in download order, since the right file is
+the one being streamed), then the unpaired database records. If you want the
+original ordering back, append a `sort`:
+
+GENMD-RUN-COMMAND
+mlr --csv join --ul -j id -f data/update-db.csv \
+  then sort -t id \
+  data/update-download.csv
+GENMD-EOF
+
+* The download's _empty_ `size` cell for record 3 overwrote the database's
+`30`. If empty cells in the download should mean "leave the database value
+alone", give the download's fields a prefix using `--rp` -- so they no longer
+collide -- and then copy over only the non-empty ones:
+
+GENMD-RUN-COMMAND
+mlr --csv join --ul --rp upd_ -j id -f data/update-db.csv \
+  then put '
+    for (k, v in $*) {
+      if (k =~ "^upd_") {
+        if (!is_empty(v)) {
+          $[sub(k, "^upd_", "")] = v;
+        }
+        unset $[k];
+      }
+    }
+  ' \
+  then sort -t id \
+  data/update-download.csv
+GENMD-EOF
+
+Here record 3's `size` keeps its database value `30`, while all the non-empty
+downloaded values are applied as before.
+
+See also [issue 826](https://github.com/johnkerl/miller/issues/826).

@@ -198,3 +198,97 @@ id status   name  task
 10 idle     Bob   knead
 30 occupied Alice clean
 </pre>
+
+## Updating a database file with new values from another
+
+Suppose you have a durable "database" file, and you periodically receive a download
+containing updates for some of its records, on some of its columns. You'd like to
+update matching records in place, and pass records without updates through unchanged --
+without introducing any new records or columns. For example:
+
+<pre class="pre-non-highlight-non-pair">
+id,name,color,size,shape
+1,alice,red,10,circle
+2,bob,green,20,square
+3,carol,blue,30,triangle
+4,dave,yellow,40,hexagon
+</pre>
+
+<pre class="pre-non-highlight-non-pair">
+id,color,size
+1,crimson,11
+3,navy,
+</pre>
+
+The tool for this is `join`, and the key fact is its collision rule: **when a
+non-join field is present on both sides of a paired record, the value from the
+right file overwrites the value from the left file.** So put the database file
+on the left (with `-f`) and the download on the right -- then the downloaded
+values win. Adding `--ul` also emits unpaired left records, i.e., database
+records for which no update arrived. A pleasant side effect of this ordering is
+that the output columns are exactly the database file's columns, in the
+database file's order:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv join --ul -j id -f data/update-db.csv data/update-download.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,name,color,size,shape
+1,alice,crimson,11,circle
+3,carol,navy,,triangle
+2,bob,green,20,square
+4,dave,yellow,40,hexagon
+</pre>
+
+Records 1 and 3 have been updated from the download, while records 2 and 4 are
+passed through unchanged. Two things to note:
+
+* Paired records are emitted first (in download order, since the right file is
+the one being streamed), then the unpaired database records. If you want the
+original ordering back, append a `sort`:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv join --ul -j id -f data/update-db.csv \</b>
+<b>  then sort -t id \</b>
+<b>  data/update-download.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,name,color,size,shape
+1,alice,crimson,11,circle
+2,bob,green,20,square
+3,carol,navy,,triangle
+4,dave,yellow,40,hexagon
+</pre>
+
+* The download's _empty_ `size` cell for record 3 overwrote the database's
+`30`. If empty cells in the download should mean "leave the database value
+alone", give the download's fields a prefix using `--rp` -- so they no longer
+collide -- and then copy over only the non-empty ones:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv join --ul --rp upd_ -j id -f data/update-db.csv \</b>
+<b>  then put '</b>
+<b>    for (k, v in $*) {</b>
+<b>      if (k =~ "^upd_") {</b>
+<b>        if (!is_empty(v)) {</b>
+<b>          $[sub(k, "^upd_", "")] = v;</b>
+<b>        }</b>
+<b>        unset $[k];</b>
+<b>      }</b>
+<b>    }</b>
+<b>  ' \</b>
+<b>  then sort -t id \</b>
+<b>  data/update-download.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,name,color,size,shape
+1,alice,crimson,11,circle
+2,bob,green,20,square
+3,carol,navy,30,triangle
+4,dave,yellow,40,hexagon
+</pre>
+
+Here record 3's `size` keeps its database value `30`, while all the non-empty
+downloaded values are applied as before.
+
+See also [issue 826](https://github.com/johnkerl/miller/issues/826).
