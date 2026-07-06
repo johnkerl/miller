@@ -166,7 +166,9 @@ func transformerUniqUsage(
 	verb := verbNameUniq
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprintf(o, "Prints distinct values for specified field names. With -c, same as\n")
-	fmt.Fprintf(o, "count-distinct. For uniq, -f is a synonym for -g.\n")
+	fmt.Fprintf(o, "count-distinct. For uniq, -f is a synonym for -g. Output fields are\n")
+	fmt.Fprintf(o, "written in the order in which they are named with -g or -f, not in the\n")
+	fmt.Fprintf(o, "order in which they appear in the input records.\n")
 	fmt.Fprintf(o, "\n")
 	WriteVerbOptions(o, uniqOptions)
 }

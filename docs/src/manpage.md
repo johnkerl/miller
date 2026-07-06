@@ -1533,7 +1533,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        File-format options default to those for the right file names on the Miller
        argument list, but may be overridden for the left file as follows. Please see
        the main "mlr --help" for more information on syntax for these arguments:
-         -i {one of csv,dkvp,nidx,pprint,xtab}
+         -i {format name} for the left-file format, e.g. 'csv' or 'json'. Or, flags
+            like --icsv, --ijson, etc.: '--icsv' is the same as '-i csv', and so on.
          --irs {record-separator character}
          --ifs {field-separator character}
          --ips {pair-separator character}
@@ -2446,7 +2447,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
    1muniq0m
        Usage: mlr uniq [options]
        Prints distinct values for specified field names. With -c, same as
-       count-distinct. For uniq, -f is a synonym for -g.
+       count-distinct. For uniq, -f is a synonym for -g. Output fields are
+       written in the order in which they are named with -g or -f, not in the
+       order in which they appear in the input records.
 
        Options:
        -g {d,e,f} Group-by field names for uniq counts.

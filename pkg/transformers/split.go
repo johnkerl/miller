@@ -333,7 +333,14 @@ func (tr *TransformerSplit) splitModUngrouped(
 		remainder := 1 + (tr.ungroupedCounter % tr.n)
 		filename := tr.makeUngroupedOutputFileName(remainder)
 
-		err := tr.outputHandlerManager.WriteRecordAndContext(inrecAndContext, filename)
+		// If we're also emitting the record downstream, give the (asynchronous)
+		// file-writer its own copy so downstream in-place mutations can't leak
+		// into the split output (issue #1671).
+		recordAndContextForWriter := inrecAndContext
+		if tr.emitDownstream {
+			recordAndContextForWriter = inrecAndContext.Copy()
+		}
+		err := tr.outputHandlerManager.WriteRecordAndContext(recordAndContextForWriter, filename)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
@@ -390,7 +397,14 @@ func (tr *TransformerSplit) splitSizeUngrouped(
 			tr.previousQuotient = quotient
 		}
 
-		err = tr.outputHandler.WriteRecordAndContext(inrecAndContext)
+		// If we're also emitting the record downstream, give the (asynchronous)
+		// file-writer its own copy so downstream in-place mutations can't leak
+		// into the split output (issue #1671).
+		recordAndContextForWriter := inrecAndContext
+		if tr.emitDownstream {
+			recordAndContextForWriter = inrecAndContext.Copy()
+		}
+		err = tr.outputHandler.WriteRecordAndContext(recordAndContextForWriter)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
@@ -434,7 +448,14 @@ func (tr *TransformerSplit) splitGrouped(
 		} else {
 			filename = tr.makeGroupedOutputFileName(groupByFieldValues)
 		}
-		err := tr.outputHandlerManager.WriteRecordAndContext(inrecAndContext, filename)
+		// If we're also emitting the record downstream, give the (asynchronous)
+		// file-writer its own copy so downstream in-place mutations can't leak
+		// into the split output (issue #1671).
+		recordAndContextForWriter := inrecAndContext
+		if tr.emitDownstream {
+			recordAndContextForWriter = inrecAndContext.Copy()
+		}
+		err := tr.outputHandlerManager.WriteRecordAndContext(recordAndContextForWriter, filename)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
