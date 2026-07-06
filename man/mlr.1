@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2026-07-05
+.\"      Date: 2026-07-06
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2026-07-05" "\ \&" "\ \&"
+.TH "MILLER" "1" "2026-07-06" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -987,6 +987,9 @@ Notes about line endings:
 * Default line endings (`--irs` and `--ors`) are newline
   which is interpreted to accept carriage-return/newline files (e.g. on Windows)
   for input, and to produce platform-appropriate line endings on output.
+* For CSV, CSV-lite, TSV, and TSV-lite output, ORS may be either newline (the
+  default) or carriage-return/newline: e.g. `--ors crlf` or `--ors '\er\en'`
+  for RFC-4180-style line endings on any platform.
 
 Notes about all other separators:
 

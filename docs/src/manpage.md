@@ -840,6 +840,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        * Default line endings (`--irs` and `--ors`) are newline
          which is interpreted to accept carriage-return/newline files (e.g. on Windows)
          for input, and to produce platform-appropriate line endings on output.
+       * For CSV, CSV-lite, TSV, and TSV-lite output, ORS may be either newline (the
+         default) or carriage-return/newline: e.g. `--ors crlf` or `--ors '\r\n'`
+         for RFC-4180-style line endings on any platform.
 
        Notes about all other separators:
 
@@ -4045,5 +4048,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-07-05                         4mMILLER24m(1)
+                                  2026-07-06                         4mMILLER24m(1)
 </pre>
