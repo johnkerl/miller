@@ -198,3 +198,73 @@ id status   name  task
 10 idle     Bob   knead
 30 occupied Alice clean
 </pre>
+
+## How to preprocess the left file of a join?
+
+The left file (the `-f` argument to `join`) is opened by the `join` verb itself, so it doesn't pass through the main record stream: a `then`-chain can preprocess the right file(s), but not the left one.
+
+For example, suppose both of these files have multi-valued `id` fields which need [nest --explode](reference-verbs.md#nest) before joining:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/join-nest-left.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,color
+1;2,blue
+3,green
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/join-nest-right.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,shape
+1,circle
+2;3,square
+</pre>
+
+Using `nest` in a `then`-chain handles the right file, but the left file still has the unexploded `id` value `1;2`, so only `id=3` pairs up:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv nest --evar ';' -f id \</b>
+<b>  then join -j id -f data/join-nest-left.csv \</b>
+<b>  data/join-nest-right.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,color,shape
+3,green,square
+</pre>
+
+One way to preprocess the left file, without creating an intermediate file, is the main-level `--prepipe` flag. The left file inherits the main input options -- including `--prepipe` -- so the specified command is applied to the left file as well as to the right file(s):
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv --prepipe 'mlr --csv nest --evar ";" -f id' \</b>
+<b>  join -j id -f data/join-nest-left.csv \</b>
+<b>  data/join-nest-right.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,color,shape
+1,blue,circle
+2,blue,square
+3,green,square
+</pre>
+
+Note that `--prepipe` applies the same command to _every_ input file -- which is just what's wanted here, since both files need the same `nest`.
+
+Another way, if your shell supports it -- bash, zsh, and ksh do, although plain POSIX `sh` and Windows `cmd` do not -- is [process substitution](https://en.wikipedia.org/wiki/Process_substitution), which lets you preprocess the left file with any command at all, independently of the right file(s):
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv nest --evar ';' -f id \</b>
+<b>  then join -j id -f <(mlr --csv nest --evar ';' -f id data/join-nest-left.csv) \</b>
+<b>  data/join-nest-right.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,color,shape
+1,blue,circle
+2,blue,square
+3,green,square
+</pre>
+
+Note that while `mlr join --help` lists verb-level `--prepipe` and `--prepipex` flags, as of Miller 6 these do not take effect for the left file -- please use one of the recipes above instead.
+
+Thanks to @sonicdoe for the process-substitution tip!
