@@ -169,6 +169,9 @@ func transformerUniqUsage(
 	fmt.Fprintf(o, "count-distinct. For uniq, -f is a synonym for -g. Output fields are\n")
 	fmt.Fprintf(o, "written in the order in which they are named with -g or -f, not in the\n")
 	fmt.Fprintf(o, "order in which they appear in the input records.\n")
+	fmt.Fprintf(o, "To deduplicate records by one or more fields while keeping all other\n")
+	fmt.Fprintf(o, "fields, use head: e.g. \"%s head -n 1 -g hash\" keeps the first record\n", argv0)
+	fmt.Fprintf(o, "for each distinct value of the hash field, with all fields intact.\n")
 	fmt.Fprintf(o, "\n")
 	WriteVerbOptions(o, uniqOptions)
 }
