@@ -1,0 +1,1 @@
+mlr --icsvlite --ojson --ragged cat ${CASEDIR}/input
