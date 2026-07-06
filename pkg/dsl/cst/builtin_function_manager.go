@@ -696,11 +696,17 @@ Arrays are new in Miller 6; the substr function is older.`,
 			name:  "format",
 			class: FUNC_CLASS_STRING,
 			help: `Using first argument as format string, interpolate remaining arguments in place of
-each "{}" in the format string. Too-few arguments are treated as the empty string; too-many arguments are discarded.`,
+each "{}" in the format string. Also supports 1-based positional placeholders such as "{1}", which allow
+arguments to be reused and/or reordered. Plain "{}" placeholders consume arguments sequentially,
+independently of any positional placeholders. Too-few arguments are treated as the empty string, as are
+positional placeholders exceeding the number of arguments; too-many arguments are discarded. "{0}" is an
+error value, since positional placeholders are 1-based.`,
 			examples: []string{
-				`format("{}:{}:{}", 1,2)     gives "1:2:".`,
-				`format("{}:{}:{}", 1,2,3)   gives "1:2:3".`,
-				`format("{}:{}:{}", 1,2,3,4) gives "1:2:3".`,
+				`format("{}:{}:{}", 1,2)        gives "1:2:".`,
+				`format("{}:{}:{}", 1,2,3)      gives "1:2:3".`,
+				`format("{}:{}:{}", 1,2,3,4)    gives "1:2:3".`,
+				`format("{1}:{2}:{1}", "a","b") gives "a:b:a".`,
+				`format("{2}{}:{1}{}", 3,4)     gives "43:34".`,
 			},
 			variadicFunc: bifs.BIF_format,
 		},

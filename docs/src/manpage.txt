@@ -2727,11 +2727,13 @@
        Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum": accv+ev**2}}, {"sum":10000}) returns 10035.
 
    1mformat0m
-        (class=string #args=variadic) Using first argument as format string, interpolate remaining arguments in place of each "{}" in the format string. Too-few arguments are treated as the empty string; too-many arguments are discarded.
+        (class=string #args=variadic) Using first argument as format string, interpolate remaining arguments in place of each "{}" in the format string. Also supports 1-based positional placeholders such as "{1}", which allow arguments to be reused and/or reordered. Plain "{}" placeholders consume arguments sequentially, independently of any positional placeholders. Too-few arguments are treated as the empty string, as are positional placeholders exceeding the number of arguments; too-many arguments are discarded. "{0}" is an error value, since positional placeholders are 1-based.
        Examples:
-       format("{}:{}:{}", 1,2)     gives "1:2:".
-       format("{}:{}:{}", 1,2,3)   gives "1:2:3".
-       format("{}:{}:{}", 1,2,3,4) gives "1:2:3".
+       format("{}:{}:{}", 1,2)        gives "1:2:".
+       format("{}:{}:{}", 1,2,3)      gives "1:2:3".
+       format("{}:{}:{}", 1,2,3,4)    gives "1:2:3".
+       format("{1}:{2}:{1}", "a","b") gives "a:b:a".
+       format("{2}{}:{1}{}", 3,4)     gives "43:34".
 
    1mfsec2dhms0m
         (class=time #args=1) Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
