@@ -105,6 +105,22 @@ func TestRead_CommentSkipped(t *testing.T) {
 	assert.Equal(t, map[string]string{"a": "1", "b": "2"}, orderedMapToMap(rec))
 }
 
+func TestRead_NonDefaultComma(t *testing.T) {
+	r := NewReader(strings.NewReader("a=1;b=2;c=\"x;y\"\n"))
+	r.Comma = ';'
+	rec, err := r.Read()
+	assert.NoError(t, err)
+	assert.Equal(t, map[string]string{"a": "1", "b": "2", "c": "x;y"}, orderedMapToMap(rec))
+}
+
+func TestRead_NonDefaultEquals(t *testing.T) {
+	r := NewReader(strings.NewReader("a:1,b:2,c:\"x:y\"\n"))
+	r.Equals = ':'
+	rec, err := r.Read()
+	assert.NoError(t, err)
+	assert.Equal(t, map[string]string{"a": "1", "b": "2", "c": "x:y"}, orderedMapToMap(rec))
+}
+
 func TestRead_OrderPreserved(t *testing.T) {
 	r := NewReader(strings.NewReader("z=3,x=1,y=2\n"))
 	rec, err := r.Read()

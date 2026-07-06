@@ -1,10 +1,12 @@
-// RecordReaderDKVPX reads DKVPX format: comma-delimited key=value pairs with
-// CSV-style quoting. It uses the dkvpx package for parsing.
+// RecordReaderDKVPX reads DKVPX format: IFS-delimited (default comma) key=value
+// pairs (default pair separator "=") with CSV-style quoting. It uses the dkvpx
+// package for parsing.
 package input
 
 import (
 	"fmt"
 	"io"
+	"unicode/utf8"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/dkvpx"
@@ -16,6 +18,8 @@ import (
 type RecordReaderDKVPX struct {
 	readerOptions   *cli.TReaderOptions
 	recordsPerBatch int64
+	ifs             rune // The dkvpx reader requires single-character IFS
+	ips             rune // The dkvpx reader requires single-character IPS
 }
 
 func NewRecordReaderDKVPX(
@@ -25,9 +29,19 @@ func NewRecordReaderDKVPX(
 	if readerOptions.IRS != "\n" && readerOptions.IRS != "\r\n" {
 		return nil, fmt.Errorf("for DKVPX, IRS cannot be altered; LF vs CR/LF is autodetected")
 	}
+	if utf8.RuneCountInString(readerOptions.IFS) != 1 {
+		return nil, fmt.Errorf("for DKVPX, IFS can only be a single character")
+	}
+	if utf8.RuneCountInString(readerOptions.IPS) != 1 {
+		return nil, fmt.Errorf("for DKVPX, IPS can only be a single character")
+	}
+	ifs, _ := utf8.DecodeRuneInString(readerOptions.IFS)
+	ips, _ := utf8.DecodeRuneInString(readerOptions.IPS)
 	return &RecordReaderDKVPX{
 		readerOptions:   readerOptions,
 		recordsPerBatch: recordsPerBatch,
+		ifs:             ifs,
+		ips:             ips,
 	}, nil
 }
 
@@ -82,7 +96,8 @@ func (reader *RecordReaderDKVPX) processHandle(
 	recordsPerBatch := reader.recordsPerBatch
 
 	dkvpxReader := dkvpx.NewReader(NewBOMStrippingReader(handle))
-	dkvpxReader.Comma = ','
+	dkvpxReader.Comma = reader.ifs
+	dkvpxReader.Equals = reader.ips
 	if reader.readerOptions.CommentHandling != cli.CommentsAreData &&
 		len(reader.readerOptions.CommentString) == 1 {
 		dkvpxReader.Comment = rune(reader.readerOptions.CommentString[0])

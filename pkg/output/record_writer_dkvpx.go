@@ -42,8 +42,8 @@ func (writer *RecordWriterDKVPX) Write(
 		}
 		first = false
 
-		keyStr := dkvpx.FormatField(pe.Key)
-		valStr := dkvpx.FormatField(pe.Value.String())
+		keyStr := dkvpx.FormatFieldWithSeparators(pe.Key, writer.writerOptions.OFS, writer.writerOptions.OPS)
+		valStr := dkvpx.FormatFieldWithSeparators(pe.Value.String(), writer.writerOptions.OFS, writer.writerOptions.OPS)
 
 		bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(keyStr, outputIsStdout))
 		bufferedOutputStream.WriteString(writer.writerOptions.OPS)
