@@ -191,7 +191,13 @@ func (tr *TransformerTee) Transform(
 	}
 
 	if !inrecAndContext.EndOfStream {
-		err := tr.fileOutputHandler.WriteRecordAndContext(inrecAndContext)
+		// The file-output handler writes records asynchronously on another
+		// goroutine, and buffering formats like pprint/json can hold onto them
+		// even longer. Meanwhile we also forward the same record downstream,
+		// where subsequent verbs may mutate it in place. Give the tee output
+		// its own copy so downstream mutations can't leak into it (issue
+		// #1671).
+		err := tr.fileOutputHandler.WriteRecordAndContext(inrecAndContext.Copy())
 		if err != nil {
 			fmt.Fprintf(
 				os.Stderr,

@@ -1,0 +1,1 @@
+mlr --icsv -o pprint split -n 5 -v --prefix ${CASEDIR}/split then put '$extra=1' then nothing test/input/example.csv
