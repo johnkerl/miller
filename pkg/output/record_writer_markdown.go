@@ -79,7 +79,15 @@ func (writer *RecordWriterMarkdown) writeStreaming(
 
 		bufferedOutputStream.WriteString("|")
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
-			bufferedOutputStream.WriteString(" --- |")
+			// In streaming mode the header-separator line must be emitted
+			// before subsequent records are seen, so with
+			// --right-align-numeric the alignment marker is chosen from this
+			// first record's value.
+			if writer.writerOptions.RightAlignNumericOutput && pe.Value.IsNumeric() {
+				bufferedOutputStream.WriteString(" ---: |")
+			} else {
+				bufferedOutputStream.WriteString(" --- |")
+			}
 		}
 		bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 
@@ -138,10 +146,30 @@ func (writer *RecordWriterMarkdown) flushBatch(
 
 	first := writer.batch[0]
 
-	// Floor of 3 so "---" never overflows the column.
+	// With --right-align-numeric, a column gets a right-alignment marker
+	// (`---:`) when every value in the batch's column is numeric.
+	columnRightAligned := make(map[string]bool)
+	if writer.writerOptions.RightAlignNumericOutput {
+		for pe := first.Head; pe != nil; pe = pe.Next {
+			columnRightAligned[pe.Key] = true
+		}
+		for _, rec := range writer.batch {
+			for pe := rec.Head; pe != nil; pe = pe.Next {
+				if !pe.Value.IsNumeric() {
+					columnRightAligned[pe.Key] = false
+				}
+			}
+		}
+	}
+
+	// Floor of 3 so "---" never overflows the column -- or 4 for "---:".
 	maxWidths := make(map[string]int)
 	for pe := first.Head; pe != nil; pe = pe.Next {
-		maxWidths[pe.Key] = max(lib.DisplayWidth(pe.Key), 3)
+		minWidth := 3
+		if columnRightAligned[pe.Key] {
+			minWidth = 4
+		}
+		maxWidths[pe.Key] = max(lib.DisplayWidth(pe.Key), minWidth)
 	}
 	for _, rec := range writer.batch {
 		for pe := rec.Head; pe != nil; pe = pe.Next {
@@ -153,12 +181,19 @@ func (writer *RecordWriterMarkdown) flushBatch(
 		}
 	}
 
-	// Header
+	// Header. Right-aligned columns get right-justified header text so that
+	// header and data share the same alignment in the raw markdown, matching
+	// how Markdown viewers render the `---:` marker.
 	bufferedOutputStream.WriteString("|")
 	for pe := first.Head; pe != nil; pe = pe.Next {
 		bufferedOutputStream.WriteString(" ")
-		bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
-		writePadding(bufferedOutputStream, maxWidths[pe.Key]-lib.DisplayWidth(pe.Key))
+		if columnRightAligned[pe.Key] {
+			writePadding(bufferedOutputStream, maxWidths[pe.Key]-lib.DisplayWidth(pe.Key))
+			bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+		} else {
+			bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+			writePadding(bufferedOutputStream, maxWidths[pe.Key]-lib.DisplayWidth(pe.Key))
+		}
 		bufferedOutputStream.WriteString(" |")
 	}
 	bufferedOutputStream.WriteString(writer.writerOptions.ORS)
@@ -166,8 +201,13 @@ func (writer *RecordWriterMarkdown) flushBatch(
 	// Separator
 	bufferedOutputStream.WriteString("|")
 	for pe := first.Head; pe != nil; pe = pe.Next {
-		bufferedOutputStream.WriteString(" ---")
-		writePadding(bufferedOutputStream, maxWidths[pe.Key]-3)
+		if columnRightAligned[pe.Key] {
+			writePadding(bufferedOutputStream, maxWidths[pe.Key]-4)
+			bufferedOutputStream.WriteString(" ---:")
+		} else {
+			bufferedOutputStream.WriteString(" ---")
+			writePadding(bufferedOutputStream, maxWidths[pe.Key]-3)
+		}
 		bufferedOutputStream.WriteString(" |")
 	}
 	bufferedOutputStream.WriteString(writer.writerOptions.ORS)
@@ -178,8 +218,13 @@ func (writer *RecordWriterMarkdown) flushBatch(
 		for pe := rec.Head; pe != nil; pe = pe.Next {
 			value := strings.ReplaceAll(pe.Value.String(), "|", "\\|")
 			bufferedOutputStream.WriteString(" ")
-			bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(value, outputIsStdout))
-			writePadding(bufferedOutputStream, maxWidths[pe.Key]-lib.DisplayWidth(value))
+			if columnRightAligned[pe.Key] {
+				writePadding(bufferedOutputStream, maxWidths[pe.Key]-lib.DisplayWidth(value))
+				bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(value, outputIsStdout))
+			} else {
+				bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(value, outputIsStdout))
+				writePadding(bufferedOutputStream, maxWidths[pe.Key]-lib.DisplayWidth(value))
+			}
 			bufferedOutputStream.WriteString(" |")
 		}
 		bufferedOutputStream.WriteString(writer.writerOptions.ORS)

@@ -1,0 +1,1 @@
+mlr --icsv --opprint reorder -r '^bbb,f1$' test/input/reorder-prefix.csv

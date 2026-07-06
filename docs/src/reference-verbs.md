@@ -2751,8 +2751,10 @@ Options:
            record start.
 -f {a,b,c} Field names to reorder.
 -r {a,b,c} Treat field names as regular expressions. Matched fields are moved to
-           start or end in record order. Example: -r '^YYY,^XXX' puts all YYY-
-           and XXX-prefixed fields first (in record order), then the rest.
+           start or end, grouped by the order the regexes are given; within each
+           group, fields keep their record order. Example: -r '^YYY,^XXX' puts
+           all YYY-prefixed fields first, then all XXX-prefixed fields, then the
+           rest.
 -b {x}     Put field names specified with -f before field name specified by {x},
            if any. If {x} isn't present in a given record, the specified fields
            will not be moved.
@@ -2764,7 +2766,7 @@ Options:
 Examples:
 mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
 mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
-mlr reorder -r '^YYY,^XXX' puts YYY- and XXX-prefixed fields first (record order), then rest.
+mlr reorder -r '^YYY,^XXX' puts YYY-prefixed fields first, then XXX-prefixed fields, then rest.
 </pre>
 
 This pivots specified field names to the start or end of the record -- for
@@ -4045,7 +4047,7 @@ Usage: mlr summary [options]
 Show summary statistics about the input data.
 
 All summarizers:
-  field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed
+  field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed (see notes below)
   count           +1 for every instance of the field across all records in the input record stream
   null_count      count of field values either empty string or JSON null
   distinct_count  count of distinct values for the field
@@ -4075,6 +4077,8 @@ Notes:
 * min, p25, median, p75, and max work for strings as well as numbers
 * Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
 * If the mode is not unique in the input data, the first-encountered value is reported as the mode.
+* A field_type of "int-string", "empty-string", etc. means the column contains values of mixed types --
+  all types encountered are printed, hyphen-joined, in the order first encountered.
 
 Options:
 -a {mean,sum,etc.} Use only the specified summarizers.
@@ -4418,6 +4422,9 @@ Prints distinct values for specified field names. With -c, same as
 count-distinct. For uniq, -f is a synonym for -g. Output fields are
 written in the order in which they are named with -g or -f, not in the
 order in which they appear in the input records.
+To deduplicate records by one or more fields while keeping all other
+fields, use head: e.g. "mlr head -n 1 -g hash" keeps the first record
+for each distinct value of the hash field, with all fields intact.
 
 Options:
 -g {d,e,f} Group-by field names for uniq counts.
@@ -4526,6 +4533,64 @@ orange circle   68
 <pre class="pre-non-highlight-in-pair">
 count
 18
+</pre>
+
+Note that `mlr uniq -g` outputs only the group-by columns. If you want to deduplicate
+records by one or more fields, while keeping all the other columns, you can use
+[head](reference-verbs.md#head) with `-n 1` and `-g`, which keeps the first record for
+each distinct combination of the group-by fields:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p head -n 1 -g color,shape then sort -f color,shape data/colored-shapes.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag i     u        v        w        x
+blue   circle   0    1075  0.780359 0.331467 0.042890 5.725366
+blue   square   0    1604  0.656744 0.687258 0.312663 4.783385
+blue   triangle 0    1105  0.441773 0.445977 0.632936 4.306461
+green  circle   1    2102  0.083514 0.545773 0.518673 5.084667
+green  square   0    765   0.668443 0.016056 0.465615 5.434589
+green  triangle 1    632   0.151301 0.403468 0.051213 5.955109
+orange circle   1    23462 0.995404 0.023490 0.615945 4.749993
+orange square   0    8109  0.776857 0.741520 0.300047 6.671697
+orange triangle 0    2935  0.517583 0.089891 0.901171 4.265854
+purple circle   0    1573  0.997098 0.193719 0.466933 6.253743
+purple square   0    458   0.259926 0.824322 0.723735 6.854221
+purple triangle 0    257   0.435535 0.859129 0.812290 5.753095
+red    circle   1    84    0.209017 0.290052 0.138103 5.065034
+red    square   1    80    0.219668 0.001257 0.792778 2.944117
+red    triangle 0    620   0.427818 0.396070 0.466908 6.075594
+yellow circle   1    370   0.603365 0.423708 0.639785 7.006414
+yellow square   1    546   0.997474 0.676003 0.418644 3.901026
+yellow triangle 1    56    0.632170 0.988721 0.436498 5.798188
+</pre>
+
+If you sort the input first, you control which record is kept for each group -- for
+example, the one with the highest value of the `u` field:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p sort -nr u then head -n 1 -g color,shape then sort -f color,shape data/colored-shapes.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag i      u        v        w        x
+blue   circle   1    463634 0.999678 0.963520 0.476339 5.499486
+blue   square   0    99778  0.999969 0.660817 0.553475 5.623643
+blue   triangle 1    497983 0.993693 0.578201 0.477333 4.353290
+green  circle   0    279380 0.999908 0.795141 0.496896 5.600738
+green  square   1    214778 0.999936 0.174019 0.512225 3.508542
+green  triangle 0    267800 0.990811 0.046011 0.522084 5.566473
+orange circle   1    23462  0.995404 0.023490 0.615945 4.749993
+orange square   0    268054 0.998885 0.155239 0.488076 2.753851
+orange triangle 0    391556 0.984002 0.725036 0.491335 6.014094
+purple circle   0    1573   0.997098 0.193719 0.466933 6.253743
+purple square   0    5356   0.999647 0.121173 0.656153 4.255321
+purple triangle 0    450611 0.998687 0.303774 0.515493 5.365962
+red    circle   1    459124 0.999461 0.959222 0.505147 7.091866
+red    square   0    206305 0.999882 0.468152 0.458562 4.890052
+red    triangle 0    300634 0.999661 0.072334 0.486170 5.751868
+yellow circle   1    82010  0.999923 0.368765 0.533363 5.969732
+yellow square   1    87091  0.998947 0.809461 0.522049 5.606017
+yellow triangle 1    89217  0.995942 0.494142 0.512964 4.210098
 </pre>
 
 The second main way to use `mlr uniq` is without group-by columns, using `-a` instead:

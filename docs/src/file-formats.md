@@ -531,6 +531,47 @@ Since Miller 6.11.0, you can use `--barred-input` with pprint input format:
 ]
 </pre>
 
+Use `--right` to right-align all cells, or `--right-align-numeric` to right-align only the cells
+having numeric values, leaving other cells left-aligned. Headers are right-aligned over columns
+whose values are all numeric, so that header and data share the same alignment:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint --right-align-numeric cat example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag   k index quantity   rate
+yellow triangle true   1    11  43.6498 9.8870
+red    square   true   2    15  79.2778 0.0130
+red    circle   true   3    16  13.8103 2.9010
+red    square   false  4    48  77.5542 7.4670
+purple triangle false  5    51  81.2290 8.5910
+red    square   false  6    64  77.1991 9.5310
+purple triangle false  7    65  80.1405 5.8240
+yellow circle   true   8    73  63.9785 4.2370
+yellow circle   true   9    87  63.5058 8.3350
+purple square   false 10    91  72.3735 8.2430
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint --barred --right-align-numeric cat example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
++--------+----------+-------+----+-------+----------+--------+
+| color  | shape    | flag  |  k | index | quantity |   rate |
++--------+----------+-------+----+-------+----------+--------+
+| yellow | triangle | true  |  1 |    11 |  43.6498 | 9.8870 |
+| red    | square   | true  |  2 |    15 |  79.2778 | 0.0130 |
+| red    | circle   | true  |  3 |    16 |  13.8103 | 2.9010 |
+| red    | square   | false |  4 |    48 |  77.5542 | 7.4670 |
+| purple | triangle | false |  5 |    51 |  81.2290 | 8.5910 |
+| red    | square   | false |  6 |    64 |  77.1991 | 9.5310 |
+| purple | triangle | false |  7 |    65 |  80.1405 | 5.8240 |
+| yellow | circle   | true  |  8 |    73 |  63.9785 | 4.2370 |
+| yellow | circle   | true  |  9 |    87 |  63.5058 | 8.3350 |
+| purple | square   | false | 10 |    91 |  72.3735 | 8.2430 |
++--------+----------+-------+----+-------+----------+--------+
+</pre>
+
 ## Markdown tabular
 
 Markdown format looks like this:
@@ -578,6 +619,31 @@ do not need to pass `--md` in addition:
 
 <pre class="pre-highlight-non-pair">
 <b>mlr --md-aligned cat data/small</b>
+</pre>
+
+The `--right-align-numeric` flag also applies to markdown output: numeric columns get a
+right-alignment marker (`---:`) in the header-separator line, so they render right-aligned in
+Markdown viewers. With `--omd`, since output is streaming, the marker for each column is chosen
+from the first record of each same-schema group; with `--omd-aligned`, a column gets the marker
+when all its values are numeric, and its header and cell text are right-justified in the raw
+markdown as well:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --omd-aligned --right-align-numeric cat example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+| color  | shape    | flag  |    k | index | quantity |   rate |
+| ---    | ---      | ---   | ---: |  ---: |     ---: |   ---: |
+| yellow | triangle | true  |    1 |    11 |  43.6498 | 9.8870 |
+| red    | square   | true  |    2 |    15 |  79.2778 | 0.0130 |
+| red    | circle   | true  |    3 |    16 |  13.8103 | 2.9010 |
+| red    | square   | false |    4 |    48 |  77.5542 | 7.4670 |
+| purple | triangle | false |    5 |    51 |  81.2290 | 8.5910 |
+| red    | square   | false |    6 |    64 |  77.1991 | 9.5310 |
+| purple | triangle | false |    7 |    65 |  80.1405 | 5.8240 |
+| yellow | circle   | true  |    8 |    73 |  63.9785 | 4.2370 |
+| yellow | circle   | true  |    9 |    87 |  63.5058 | 8.3350 |
+| purple | square   | false |   10 |    91 |  72.3735 | 8.2430 |
 </pre>
 
 ## XTAB: Vertical tabular

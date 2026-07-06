@@ -780,6 +780,13 @@
                                 right-align-multi-word
        --fw {string}            Shortcut for --fixed left-align-multi-word
        --right                  Right-justifies all fields for PPRINT output.
+       --right-align-numeric    Right-justifies fields with numeric values for PPRINT
+                                output, leaving other fields left-justified. Headers
+                                are right-justified over columns whose values are all
+                                numeric, so that header and data share the same
+                                alignment. Also applies to markdown output, where
+                                numeric columns get right-alignment markers (`---:`)
+                                in the header-separator line.
 
 1mPROFILING FLAGS0m
        These are flags for profiling Miller performance.
@@ -819,6 +826,9 @@
        * Default line endings (`--irs` and `--ors`) are newline
          which is interpreted to accept carriage-return/newline files (e.g. on Windows)
          for input, and to produce platform-appropriate line endings on output.
+       * For CSV, CSV-lite, TSV, and TSV-lite output, ORS may be either newline (the
+         default) or carriage-return/newline: e.g. `--ors crlf` or `--ors '\r\n'`
+         for RFC-4180-style line endings on any platform.
 
        Notes about all other separators:
 
@@ -1819,8 +1829,10 @@
                   record start.
        -f {a,b,c} Field names to reorder.
        -r {a,b,c} Treat field names as regular expressions. Matched fields are moved to
-                  start or end in record order. Example: -r '^YYY,^XXX' puts all YYY-
-                  and XXX-prefixed fields first (in record order), then the rest.
+                  start or end, grouped by the order the regexes are given; within each
+                  group, fields keep their record order. Example: -r '^YYY,^XXX' puts
+                  all YYY-prefixed fields first, then all XXX-prefixed fields, then the
+                  rest.
        -b {x}     Put field names specified with -f before field name specified by {x},
                   if any. If {x} isn't present in a given record, the specified fields
                   will not be moved.
@@ -1832,7 +1844,7 @@
        Examples:
        mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
        mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
-       mlr reorder -r '^YYY,^XXX' puts YYY- and XXX-prefixed fields first (record order), then rest.
+       mlr reorder -r '^YYY,^XXX' puts YYY-prefixed fields first, then XXX-prefixed fields, then rest.
 
    1mrepeat0m
        Usage: mlr repeat [options]
@@ -2291,7 +2303,7 @@
        Show summary statistics about the input data.
 
        All summarizers:
-         field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed
+         field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed (see notes below)
          count           +1 for every instance of the field across all records in the input record stream
          null_count      count of field values either empty string or JSON null
          distinct_count  count of distinct values for the field
@@ -2321,6 +2333,8 @@
        * min, p25, median, p75, and max work for strings as well as numbers
        * Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
        * If the mode is not unique in the input data, the first-encountered value is reported as the mode.
+       * A field_type of "int-string", "empty-string", etc. means the column contains values of mixed types --
+         all types encountered are printed, hyphen-joined, in the order first encountered.
 
        Options:
        -a {mean,sum,etc.} Use only the specified summarizers.
@@ -2426,6 +2440,9 @@
        count-distinct. For uniq, -f is a synonym for -g. Output fields are
        written in the order in which they are named with -g or -f, not in the
        order in which they appear in the input records.
+       To deduplicate records by one or more fields while keeping all other
+       fields, use head: e.g. "mlr head -n 1 -g hash" keeps the first record
+       for each distinct value of the hash field, with all fields intact.
 
        Options:
        -g {d,e,f} Group-by field names for uniq counts.
@@ -2717,11 +2734,13 @@
        Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum": accv+ev**2}}, {"sum":10000}) returns 10035.
 
    1mformat0m
-        (class=string #args=variadic) Using first argument as format string, interpolate remaining arguments in place of each "{}" in the format string. Too-few arguments are treated as the empty string; too-many arguments are discarded.
+        (class=string #args=variadic) Using first argument as format string, interpolate remaining arguments in place of each "{}" in the format string. Also supports 1-based positional placeholders such as "{1}", which allow arguments to be reused and/or reordered. Plain "{}" placeholders consume arguments sequentially, independently of any positional placeholders. Too-few arguments are treated as the empty string, as are positional placeholders exceeding the number of arguments; too-many arguments are discarded. "{0}" is an error value, since positional placeholders are 1-based.
        Examples:
-       format("{}:{}:{}", 1,2)     gives "1:2:".
-       format("{}:{}:{}", 1,2,3)   gives "1:2:3".
-       format("{}:{}:{}", 1,2,3,4) gives "1:2:3".
+       format("{}:{}:{}", 1,2)        gives "1:2:".
+       format("{}:{}:{}", 1,2,3)      gives "1:2:3".
+       format("{}:{}:{}", 1,2,3,4)    gives "1:2:3".
+       format("{1}:{2}:{1}", "a","b") gives "a:b:a".
+       format("{2}{}:{1}{}", 3,4)     gives "43:34".
 
    1mfsec2dhms0m
         (class=time #args=1) Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
@@ -4022,4 +4041,4 @@
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-07-05                         4mMILLER24m(1)
+                                  2026-07-06                         4mMILLER24m(1)

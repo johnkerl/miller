@@ -32,7 +32,7 @@ func NewRecordWriterCSV(writerOptions *cli.TWriterOptions) (*RecordWriterCSV, er
 		return nil, fmt.Errorf("for CSV, OFS can only be a single character")
 	}
 	if writerOptions.ORS != "\n" && writerOptions.ORS != "\r\n" {
-		return nil, fmt.Errorf("for CSV, ORS cannot be altered")
+		return nil, fmt.Errorf("for CSV, ORS must be newline or carriage-return/newline")
 	}
 	writer := &RecordWriterCSV{
 		writerOptions:     writerOptions,
@@ -59,6 +59,9 @@ func (writer *RecordWriterCSV) Write(
 	if writer.csvWriter == nil {
 		writer.csvWriter = csv.NewWriter(bufferedOutputStream)
 		writer.csvWriter.Comma = rune(writer.writerOptions.OFS[0]) // xxx temp -- needs length-1 OFS
+		// Issues #1810 and #1722: honor `--ors '\r\n'` (or `--ors crlf`) for
+		// CSV output. The default remains "\n".
+		writer.csvWriter.UseCRLF = writer.writerOptions.ORS == "\r\n"
 	}
 
 	if writer.firstRecordKeys == nil {

@@ -481,6 +481,74 @@ sec2dhms  (class=time #args=1) Formats integer seconds as in sec2dhms(500000) = 
 sec2hms  (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:23:20"
 </pre>
 
+## Timezone troubleshooting
+
+Since Miller applies your `TZ` environment variable at startup, a timezone problem can make _any_
+Miller command fail immediately -- even one that does nothing with times, such as `mlr --csv cat
+example.csv`. The symptom is an error message like
+
+<pre class="pre-non-highlight-non-pair">
+mlr: TZ environment variable appears malformed: "..."
+</pre>
+
+or, from Miller 6.6.0 and earlier, the underlying error from the Go `time` library:
+
+<pre class="pre-non-highlight-non-pair">
+mlr :  time: invalid location name
+</pre>
+
+There are two distinct causes.
+
+**Cause 1: `TZ` is set to a file path.** The Go `time` library, which Miller uses, accepts only
+[IANA timezone names](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) such as
+`America/New_York` (plus the special values `UTC` and `Local`). Unlike the C library, it does not
+accept file paths such as `/usr/share/zoneinfo/US/Eastern`, nor the POSIX form with a leading colon
+such as `:/etc/localtime` -- even though those work fine with other tools on your system (and worked
+with Miller 5, which used the C library):
+
+<pre class="pre-highlight-in-pair">
+<b>export TZ=/usr/share/zoneinfo/US/Eastern</b>
+<b>mlr -n put 'end { print strftime_local(0, "%Y-%m-%d %H:%M:%S %Z") }'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+mlr: TZ environment variable appears malformed: "/usr/share/zoneinfo/US/Eastern"
+</pre>
+
+The remedy is to set `TZ` to the zone's name rather than its file path -- here, `export
+TZ=US/Eastern` -- or to unset it (`unset TZ`, or `export TZ=""`), in which case Miller uses the
+system's local-time setting.
+
+**Cause 2: the timezone database is missing.** Go programs such as Miller normally read timezone
+definitions from a database on the host system, and (unlike C programs) don't fall back to any
+built-in copy. If that database is absent, even a perfectly valid name fails:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv cat example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+mlr: TZ environment variable appears malformed: "Asia/Taipei"
+</pre>
+
+The database is normally present on Linux and macOS (at `/usr/share/zoneinfo`), but is often missing on:
+
+* Windows -- unless [Go itself is installed](https://go.dev/doc/install), since the Go toolchain ships a copy of the database (you don't need to _use_ Go; merely installing it suffices).
+* Cygwin, unless a package providing a full timezone database is installed.
+* Minimal Linux environments such as Alpine-based or `scratch` Docker containers, where the database is an optional package.
+
+Remedies, in decreasing order of thoroughness:
+
+* Install the timezone database: `apk add tzdata` on Alpine, `apt-get install tzdata` on
+  Debian/Ubuntu, and so on; on Windows, install Go as noted above.
+* Point the `ZONEINFO` environment variable at a zoneinfo directory or zip file -- the Go `time`
+  library checks it before the default system locations. For example, a Go installation provides
+  one at `$GOROOT/lib/time/zoneinfo.zip`.
+* Avoid timezone-name lookups altogether: leave `TZ` unset (or set to `""` or `UTC`, which need no
+  database), use the UTC-oriented functions such as
+  [sec2gmt](reference-dsl-builtin-functions.md#sec2gmt) and
+  [strftime](reference-dsl-builtin-functions.md#strftime), and use numeric fixed offsets such as
+  `+0200` (matched by `%z` in [strptime](reference-dsl-builtin-functions.md#strptime) format
+  strings) rather than timezone names.
+
 ## References
 
 * Non-Miller-specific list of formatting characters for `strftime` and `strptime`: [https://devhints.io/strftime](https://devhints.io/strftime)

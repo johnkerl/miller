@@ -158,6 +158,9 @@ Notes about line endings:
 * Default line endings (` + "`--irs`" + ` and ` + "`--ors`" + `) are newline
   which is interpreted to accept carriage-return/newline files (e.g. on Windows)
   for input, and to produce platform-appropriate line endings on output.
+* For CSV, CSV-lite, TSV, and TSV-lite output, ORS may be either newline (the
+  default) or carriage-return/newline: e.g. ` + "`--ors crlf`" + ` or ` + "`--ors '\\r\\n'`" + `
+  for RFC-4180-style line endings on any platform.
 
 Notes about all other separators:
 
@@ -527,6 +530,19 @@ var PPRINTOnlyFlagSection = FlagSection{
 			help: "Right-justifies all fields for PPRINT output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.RightAlignedPPRINTOutput = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--right-align-numeric",
+			help: "Right-justifies fields with numeric values for PPRINT output, leaving " +
+				"other fields left-justified. Headers are right-justified over columns " +
+				"whose values are all numeric, so that header and data share the same " +
+				"alignment. Also applies to markdown output, where numeric columns get " +
+				"right-alignment markers (`---:`) in the header-separator line.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.RightAlignNumericOutput = true
 				*pargi += 1
 			},
 		},

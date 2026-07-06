@@ -24,7 +24,7 @@ func NewRecordWriterTSV(writerOptions *cli.TWriterOptions) (*RecordWriterTSV, er
 		return nil, fmt.Errorf("for TSV, OFS cannot be altered")
 	}
 	if writerOptions.ORS != "\n" && writerOptions.ORS != "\r\n" {
-		return nil, fmt.Errorf("for CSV, ORS cannot be altered")
+		return nil, fmt.Errorf("for TSV, ORS must be newline or carriage-return/newline")
 	}
 	return &RecordWriterTSV{
 		writerOptions:     writerOptions,

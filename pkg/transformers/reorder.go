@@ -18,7 +18,7 @@ const verbNameReorder = "reorder"
 var reorderOptions = []OptionSpec{
 	{Flag: "-e", Type: "bool", Desc: "Put specified field names at record end: default is to put them at record start."},
 	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Field names to reorder."},
-	{Flag: "-r", Arg: "{a,b,c}", Type: "csv-list", Desc: "Treat field names as regular expressions. Matched fields are moved to start or end in record order. Example: -r '^YYY,^XXX' puts all YYY- and XXX-prefixed fields first (in record order), then the rest."},
+	{Flag: "-r", Arg: "{a,b,c}", Type: "csv-list", Desc: "Treat field names as regular expressions. Matched fields are moved to start or end, grouped by the order the regexes are given; within each group, fields keep their record order. Example: -r '^YYY,^XXX' puts all YYY-prefixed fields first, then all XXX-prefixed fields, then the rest."},
 	{Flag: "-b", Arg: "{x}", Type: "string", Desc: "Put field names specified with -f before field name specified by {x}, if any. If {x} isn't present in a given record, the specified fields will not be moved."},
 	{Flag: "-a", Arg: "{x}", Type: "string", Desc: "Put field names specified with -f after field name specified by {x}, if any. If {x} isn't present in a given record, the specified fields will not be moved."},
 }
@@ -45,7 +45,7 @@ func transformerReorderUsage(
 	fmt.Fprintf(o, "Examples:\n")
 	fmt.Fprintf(o, "%s %s    -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"a=1,b=2,d=4,c=3\".\n", argv0, verb)
 	fmt.Fprintf(o, "%s %s -e -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"d=4,c=3,a=1,b=2\".\n", argv0, verb)
-	fmt.Fprintf(o, "%s %s -r '^YYY,^XXX' puts YYY- and XXX-prefixed fields first (record order), then rest.\n", argv0, verb)
+	fmt.Fprintf(o, "%s %s -r '^YYY,^XXX' puts YYY-prefixed fields first, then XXX-prefixed fields, then rest.\n", argv0, verb)
 }
 
 func transformerReorderParseCLI(
@@ -238,18 +238,22 @@ func (tr *TransformerReorder) reorderToStartNoRegex(
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 }
 
-// reorderSplitByRegex splits record fields into matching (any regex) and rest, preserving record order.
+// reorderSplitByRegex splits record fields into matching (any regex) and rest. Matching fields
+// are grouped by the order the regexes were given on the command line; within each group, and
+// within rest, fields keep their record order. A field matching multiple regexes is claimed by
+// the first regex that matches it.
 func (tr *TransformerReorder) reorderSplitByRegex(inrec *mlrval.Mlrmap) (matching []*mlrval.MlrmapEntry, rest []*mlrval.MlrmapEntry) {
-	for pe := inrec.Head; pe != nil; pe = pe.Next {
-		found := false
-		for _, regex := range tr.regexes {
-			if regex.MatchString(pe.Key) {
+	claimed := make(map[string]bool)
+	for _, regex := range tr.regexes {
+		for pe := inrec.Head; pe != nil; pe = pe.Next {
+			if !claimed[pe.Key] && regex.MatchString(pe.Key) {
 				matching = append(matching, pe)
-				found = true
-				break
+				claimed[pe.Key] = true
 			}
 		}
-		if !found {
+	}
+	for pe := inrec.Head; pe != nil; pe = pe.Next {
+		if !claimed[pe.Key] {
 			rest = append(rest, pe)
 		}
 	}
@@ -373,13 +377,13 @@ func (tr *TransformerReorder) reorderBeforeOrAfterWithRegex(
 		return
 	}
 
-	// Build matching set in record order (OrderedMap preserves insertion order)
+	// Build matching set grouped by regex order (OrderedMap preserves insertion order);
+	// within each group, fields keep their record order.
 	matchingFieldNamesSet := lib.NewOrderedMap[*mlrval.Mlrval]()
-	for pe := inrec.Head; pe != nil; pe = pe.Next {
-		for _, regex := range tr.regexes {
-			if regex.MatchString(pe.Key) && pe.Key != tr.centerFieldName {
+	for _, regex := range tr.regexes {
+		for pe := inrec.Head; pe != nil; pe = pe.Next {
+			if pe.Key != tr.centerFieldName && !matchingFieldNamesSet.Has(pe.Key) && regex.MatchString(pe.Key) {
 				matchingFieldNamesSet.Put(pe.Key, pe.Value)
-				break
 			}
 		}
 	}

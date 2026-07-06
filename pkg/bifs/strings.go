@@ -381,6 +381,10 @@ func BIF_clean_whitespace(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInferredType(mv.String())
 }
 
+// Matches either a sequential placeholder "{}" or a positional placeholder
+// like "{1}", "{2}", etc.
+var _format_placeholder_regexp = regexp.MustCompile(`\{[0-9]*\}`)
+
 func BIF_format(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) == 0 {
 		return mlrval.VOID
@@ -390,38 +394,62 @@ func BIF_format(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.FromTypeErrorUnary("format", mlrvals[0])
 	}
 
-	pieces := lib.SplitString(formatString, "{}")
+	// Example: format("{}:{}", 8, 9) gives "8:9".
+	//
+	// Placeholders come in two forms:
+	// * "{}": consumes the next argument in sequence. The sequence counter is
+	//   advanced only by "{}" placeholders, independently of any positional
+	//   placeholders (same as Rust's format!).
+	// * "{N}" with N >= 1: refers to the Nth argument after the format string
+	//   (1-based). Arguments may be repeated and/or reordered this way:
+	//   format("{1}:{2}:{1}", 8, 9) gives "8:9:8".
+	//
+	// Q: What if too few arguments for format, or a positional index exceeds
+	//    the number of arguments?
+	// A: Interpolate the empty string.
+	// Q: What if too many arguments for format?
+	// A: Leave them off.
+	// Q: What about "{0}"?
+	// A: It's an error value, since positional placeholders are 1-based.
 
 	var buffer bytes.Buffer
 
-	// Example: format("{}:{}", 8, 9)
-	//
-	// * piece[0] ""
-	// * piece[1] ":"
-	// * piece[2] ""
-	// * mlrval[1] 8
-	// * mlrval[2] 9
-	//
-	// So:
-	// * Write piece[0]
-	// * Write mlrvals[1]
-	// * Write piece[1]
-	// * Write mlrvals[2]
-	// * Write piece[2]
+	n := len(mlrvals) // arguments are mlrvals[1] .. mlrvals[n-1]
+	position := 1     // implicit counter for "{}" placeholders
+	remaining := formatString
 
-	// Q: What if too few arguments for format?
-	// A: Leave them off
-	// Q: What if too many arguments for format?
-	// A: Leave them off
-
-	n := len(mlrvals)
-	for i, piece := range pieces {
-		if i > 0 {
-			if i < n {
-				buffer.WriteString(mlrvals[i].String())
-			}
+	for {
+		loc := _format_placeholder_regexp.FindStringIndex(remaining)
+		if loc == nil {
+			buffer.WriteString(remaining)
+			break
 		}
-		buffer.WriteString(piece)
+		buffer.WriteString(remaining[:loc[0]])
+		placeholder := remaining[loc[0]:loc[1]]
+		remaining = remaining[loc[1]:]
+
+		var index int
+		if placeholder == "{}" {
+			index = position
+			position++
+		} else {
+			numString := placeholder[1 : len(placeholder)-1]
+			num, err := strconv.Atoi(numString)
+			if err != nil || num < 1 {
+				return mlrval.FromError(
+					fmt.Errorf(
+						"format: positional placeholder %s is invalid: indices are 1-based",
+						placeholder,
+					),
+				)
+			}
+			index = num
+		}
+
+		if index < n {
+			buffer.WriteString(mlrvals[index].String())
+		}
+		// Else, too few arguments: interpolate the empty string.
 	}
 
 	return mlrval.FromString(buffer.String())

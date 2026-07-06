@@ -261,8 +261,8 @@ a:4;b:5;c:6;d:>>>,|||;<<<
 
 Notes:
 
-* CSV IRS and ORS must be newline, and CSV IFS must be a single character. (CSV-lite does not have these restrictions.)
-* TSV IRS and ORS must be newline, and TSV IFS must be a tab. (TSV-lite does not have these restrictions.)
+* CSV IRS must be newline -- CR/LF line endings are accepted on input. CSV ORS must be either newline (the default) or carriage-return/newline -- e.g. `--ors crlf` or `--ors '\r\n'` for RFC-4180-style line endings on any platform. CSV IFS must be a single character. (CSV-lite does not have these restrictions.)
+* TSV IRS must be newline -- CR/LF line endings are accepted on input. TSV ORS must be either newline (the default) or carriage-return/newline. TSV IFS must be a tab. (TSV-lite does not have these restrictions.)
 * See the [CSV section](file-formats.md#csvtsvasvusvetc) for information about ASV and USV.
 * JSON and YAML: ignore separator flags from the command line.
 * Headerless CSV overlaps quite a bit with NIDX format using comma for IFS. See also the page on [CSV with and without headers](csv-with-and-without-headers.md).
@@ -270,8 +270,8 @@ Notes:
 
 |            | **RS**  | **FS**  | **PS**   |
 |------------|---------|---------|----------|
-| [**CSV**](file-formats.md#csvtsvasvusvetc)    | Always `\n`; not alterable * | Default `,`; must be single-character    | None     |
-| [**TSV**](file-formats.md#csvtsvasvusvetc)    | Always `\n`; not alterable * |  Default `\t`; must be single-character   | None     |
+| [**CSV**](file-formats.md#csvtsvasvusvetc)    | Default `\n`; may be set to `\r\n` * | Default `,`; must be single-character    | None     |
+| [**TSV**](file-formats.md#csvtsvasvusvetc)    | Default `\n`; may be set to `\r\n` * |  Default `\t`; must be single-character   | None     |
 | [**CSV-lite**](file-formats.md#csvtsvasvusvetc)    | Default `\n` *   | Default `,`    | None     |
 | [**TSV-lite**](file-formats.md#csvtsvasvusvetc)    | Default `\n` *  |  Default `\t`   | None     |
 | [**JSON**](file-formats.md#json)   | N/A; records are between `{` and `}` | Always `,`; not alterable    | Always `:`; not alterable |
