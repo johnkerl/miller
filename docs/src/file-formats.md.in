@@ -213,7 +213,8 @@ mlr -o pprint --barred cat data/small | mlr -i pprint --barred-input -o json fil
 GENMD-EOF
 
 Use `--right` to right-align all cells, or `--right-align-numeric` to right-align only the cells
-having numeric values, leaving other cells (and the header line) left-aligned:
+having numeric values, leaving other cells left-aligned. Headers are right-aligned over columns
+whose values are all numeric, so that header and data share the same alignment:
 
 GENMD-RUN-COMMAND
 mlr --icsv --opprint --right-align-numeric cat example.csv
@@ -258,7 +259,8 @@ The `--right-align-numeric` flag also applies to markdown output: numeric column
 right-alignment marker (`---:`) in the header-separator line, so they render right-aligned in
 Markdown viewers. With `--omd`, since output is streaming, the marker for each column is chosen
 from the first record of each same-schema group; with `--omd-aligned`, a column gets the marker
-when all its values are numeric, and its cell text is right-justified in the raw markdown as well:
+when all its values are numeric, and its header and cell text are right-justified in the raw
+markdown as well:
 
 GENMD-RUN-COMMAND
 mlr --icsv --omd-aligned --right-align-numeric cat example.csv
