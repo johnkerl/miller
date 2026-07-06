@@ -26,6 +26,15 @@ func TestFormatField_EscapedQuotes(t *testing.T) {
 	assert.Equal(t, `"the ""word"""`, FormatField(`the "word"`))
 }
 
+func TestFormatFieldWithSeparators_NonDefault(t *testing.T) {
+	// With OFS=";" and OPS=":", those characters require quoting; comma and equals do not.
+	assert.Equal(t, `"x;y"`, FormatFieldWithSeparators("x;y", ";", ":"))
+	assert.Equal(t, `"u:v"`, FormatFieldWithSeparators("u:v", ";", ":"))
+	assert.Equal(t, "p,q", FormatFieldWithSeparators("p,q", ";", ":"))
+	assert.Equal(t, "b=c", FormatFieldWithSeparators("b=c", ";", ":"))
+	assert.Equal(t, `"the ""word"""`, FormatFieldWithSeparators(`the "word"`, ";", ":"))
+}
+
 func TestFormatField_RoundTrip(t *testing.T) {
 	input := `"x,y"="a,b,c",z=3` + "\n"
 	rdr := NewReader(strings.NewReader(input))

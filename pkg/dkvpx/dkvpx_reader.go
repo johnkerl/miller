@@ -26,6 +26,9 @@ type Reader struct {
 	// Comma is the pair delimiter (default ',').
 	Comma rune
 
+	// Equals is the key-value separator within a pair (default '=').
+	Equals rune
+
 	// Comment, if not 0, causes lines beginning with this character to be skipped.
 	Comment rune
 
@@ -42,8 +45,9 @@ type Reader struct {
 // NewReader returns a new Reader that reads from r.
 func NewReader(r io.Reader) *Reader {
 	return &Reader{
-		Comma: ',',
-		r:     bufio.NewReader(r),
+		Comma:  ',',
+		Equals: '=',
+		r:      bufio.NewReader(r),
 	}
 }
 
@@ -209,7 +213,7 @@ func (r *Reader) readRecord() (*lib.OrderedMap[string], error) {
 			continue
 		}
 
-		if rn == '=' && !haveKey {
+		if rn == r.Equals && !haveKey {
 			haveKey = true
 			line = line[rnLen:]
 			continue
