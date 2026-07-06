@@ -415,7 +415,7 @@ These are flags which are applicable to PPRINT format.
 * `--fixed {string}`: Fixed width specification. One of 'widths:<col1-width>,<col2-width>,...', left-align, left-align-multi-word, right-align, right-align-multi-word
 * `--fw {string}`: Shortcut for --fixed left-align-multi-word
 * `--right`: Right-justifies all fields for PPRINT output.
-* `--right-align-numeric`: Right-justifies fields with numeric values for PPRINT output, leaving other fields (and header lines) left-justified. Also applies to markdown output, where numeric columns get right-alignment markers (`---:`) in the header-separator line.
+* `--right-align-numeric`: Right-justifies fields with numeric values for PPRINT output, leaving other fields left-justified. Headers are right-justified over columns whose values are all numeric, so that header and data share the same alignment. Also applies to markdown output, where numeric columns get right-alignment markers (`---:`) in the header-separator line.
 
 ## Profiling flags
 

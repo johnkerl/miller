@@ -802,10 +802,12 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        --fw {string}            Shortcut for --fixed left-align-multi-word
        --right                  Right-justifies all fields for PPRINT output.
        --right-align-numeric    Right-justifies fields with numeric values for PPRINT
-                                output, leaving other fields (and header lines)
-                                left-justified. Also applies to markdown output,
-                                where numeric columns get right-alignment markers
-                                (`---:`) in the header-separator line.
+                                output, leaving other fields left-justified. Headers
+                                are right-justified over columns whose values are all
+                                numeric, so that header and data share the same
+                                alignment. Also applies to markdown output, where
+                                numeric columns get right-alignment markers (`---:`)
+                                in the header-separator line.
 
 1mPROFILING FLAGS0m
        These are flags for profiling Miller performance.
@@ -1848,8 +1850,10 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                   record start.
        -f {a,b,c} Field names to reorder.
        -r {a,b,c} Treat field names as regular expressions. Matched fields are moved to
-                  start or end in record order. Example: -r '^YYY,^XXX' puts all YYY-
-                  and XXX-prefixed fields first (in record order), then the rest.
+                  start or end, grouped by the order the regexes are given; within each
+                  group, fields keep their record order. Example: -r '^YYY,^XXX' puts
+                  all YYY-prefixed fields first, then all XXX-prefixed fields, then the
+                  rest.
        -b {x}     Put field names specified with -f before field name specified by {x},
                   if any. If {x} isn't present in a given record, the specified fields
                   will not be moved.
@@ -1861,7 +1865,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Examples:
        mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
        mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
-       mlr reorder -r '^YYY,^XXX' puts YYY- and XXX-prefixed fields first (record order), then rest.
+       mlr reorder -r '^YYY,^XXX' puts YYY-prefixed fields first, then XXX-prefixed fields, then rest.
 
    1mrepeat0m
        Usage: mlr repeat [options]
@@ -2457,6 +2461,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        count-distinct. For uniq, -f is a synonym for -g. Output fields are
        written in the order in which they are named with -g or -f, not in the
        order in which they appear in the input records.
+       To deduplicate records by one or more fields while keeping all other
+       fields, use head: e.g. "mlr head -n 1 -g hash" keeps the first record
+       for each distinct value of the hash field, with all fields intact.
 
        Options:
        -g {d,e,f} Group-by field names for uniq counts.
