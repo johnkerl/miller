@@ -1,0 +1,1 @@
+mlr -T cut -x -f name test/input/simple.tsv
