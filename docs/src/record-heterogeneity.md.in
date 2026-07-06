@@ -205,6 +205,55 @@ GENMD-RUN-COMMAND
 mlr --csv --allow-ragged-csv-input cat data/het/ragged.csv
 GENMD-EOF
 
+### Combining multiple CSV files with different headers
+
+A common special case of the above: you have several CSV files whose column names overlap but
+don't all match -- say, data exported year by year, where columns were added or reordered over
+time -- and you want to concatenate them into a single rectangular table, with empty cells where a
+file didn't have a given column.
+
+GENMD-RUN-COMMAND
+cat data/het/sales-2021.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat data/het/sales-2022.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat data/het/sales-2023.csv
+GENMD-EOF
+
+Since each file's records take their schema from that file's header line, simply catting the
+files together gives a schema change partway through the record stream -- which RFC-4180 CSV
+output doesn't allow:
+
+GENMD-RUN-COMMAND-TOLERATING-ERROR
+mlr --csv cat data/het/sales-2021.csv data/het/sales-2022.csv data/het/sales-2023.csv
+GENMD-EOF
+
+The solution is the [`unsparsify`](reference-verbs.md#unsparsify) verb, which we saw above: it
+gives every record the union of all field names, filling in empty values (or, using
+`--fill-with`, whatever you like) where a record lacks a field:
+
+GENMD-RUN-COMMAND
+mlr --csv unsparsify data/het/sales-2021.csv data/het/sales-2022.csv data/het/sales-2023.csv
+GENMD-EOF
+
+Note that `unsparsify` (without `-f`) is
+[non-streaming](streaming-and-memory.md): it can't know the full set of field names until it has
+read all input, so it retains all records in memory before producing any output. If your files
+are too large for that, but you know the complete list of field names up front, you can use
+`unsparsify -f` which is streaming. Fields filled in by `-f` are appended to each record, so if
+the input files order their columns differently, follow up with
+[`regularize`](reference-verbs.md#regularize) or
+[`sort-within-records`](reference-verbs.md#sort-within-records) (also both streaming) to give all
+records the same column ordering:
+
+GENMD-RUN-COMMAND
+mlr --csv unsparsify -f id,product,sales,color,returns then regularize data/het/sales-2021.csv data/het/sales-2022.csv data/het/sales-2023.csv
+GENMD-EOF
+
 ## Processing heterogeneous data
 
 Above we saw how to make heterogeneous data homogeneous, and then how to print heterogeneous data.
