@@ -185,7 +185,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 			if s == "" {
 				s = "-"
 			}
-			if !writer.writerOptions.RightAlignedPPRINTOutput { // left-align
+			if !writer.cellIsRightAligned(pe.Value) { // left-align
 				if pe.Next != nil {
 					// Data line, left-align, not last column
 					bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
@@ -343,7 +343,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 		bufferedOutputStream.WriteString(bc.verticalStart)
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			s := pe.Value.String()
-			if !writer.writerOptions.RightAlignedPPRINTOutput { // left-align
+			if !writer.cellIsRightAligned(pe.Value) { // left-align
 				bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
 				writer.writePadding(s, maxWidths[pe.Key], bufferedOutputStream)
 			} else { // right-align
@@ -377,6 +377,16 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 			_ = bufferedOutputStream.Flush()
 		}
 	}
+}
+
+// cellIsRightAligned decides the alignment of a single data cell: everything
+// with --right; numeric values only with --right-align-numeric. Header cells
+// are not passed through here -- they right-align only with --right.
+func (writer *RecordWriterPPRINT) cellIsRightAligned(value *mlrval.Mlrval) bool {
+	if writer.writerOptions.RightAlignedPPRINTOutput {
+		return true
+	}
+	return writer.writerOptions.RightAlignNumericOutput && value.IsNumeric()
 }
 
 func (writer *RecordWriterPPRINT) writePadding(

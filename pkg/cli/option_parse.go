@@ -535,6 +535,18 @@ var PPRINTOnlyFlagSection = FlagSection{
 		},
 
 		{
+			name: "--right-align-numeric",
+			help: "Right-justifies fields with numeric values for PPRINT output, leaving " +
+				"other fields (and header lines) left-justified. Also applies to markdown " +
+				"output, where numeric columns get right-alignment markers (`---:`) in the " +
+				"header-separator line.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.RightAlignNumericOutput = true
+				*pargi += 1
+			},
+		},
+
+		{
 			name:     "--barred",
 			altNames: []string{"--barred-output"},
 			help:     "Prints a border around PPRINT output.",

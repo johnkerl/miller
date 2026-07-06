@@ -102,6 +102,9 @@ type TWriterOptions struct {
 	RightAlignedPPRINTOutput bool
 	RightAlignedXTABOutput   bool
 	MarkdownAlignedOutput    bool
+	// Right-align numeric values in PPRINT output; for markdown output,
+	// use `---:` alignment markers for all-numeric columns.
+	RightAlignNumericOutput bool
 
 	// JSON output: --jlistwrap on, --jvstack on
 	// JSON Lines output: --jlistwrap off, --jvstack off

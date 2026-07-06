@@ -212,6 +212,17 @@ GENMD-RUN-COMMAND
 mlr -o pprint --barred cat data/small | mlr -i pprint --barred-input -o json filter '$b == "pan"'
 GENMD-EOF
 
+Use `--right` to right-align all cells, or `--right-align-numeric` to right-align only the cells
+having numeric values, leaving other cells (and the header line) left-aligned:
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint --right-align-numeric cat example.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint --barred --right-align-numeric cat example.csv
+GENMD-EOF
+
 ## Markdown tabular
 
 Markdown format looks like this:
@@ -241,6 +252,16 @@ do not need to pass `--md` in addition:
 
 GENMD-RUN-COMMAND
 mlr --md-aligned cat data/small
+GENMD-EOF
+
+The `--right-align-numeric` flag also applies to markdown output: numeric columns get a
+right-alignment marker (`---:`) in the header-separator line, so they render right-aligned in
+Markdown viewers. With `--omd`, since output is streaming, the marker for each column is chosen
+from the first record of each same-schema group; with `--omd-aligned`, a column gets the marker
+when all its values are numeric, and its cell text is right-justified in the raw markdown as well:
+
+GENMD-RUN-COMMAND
+mlr --icsv --omd-aligned --right-align-numeric cat example.csv
 GENMD-EOF
 
 ## XTAB: Vertical tabular
