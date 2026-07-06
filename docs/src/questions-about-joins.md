@@ -139,6 +139,84 @@ Thanks to @aborruso for the tip!
 
 See also the [record-heterogeneity page](record-heterogeneity.md).
 
+## Doing SQL-style left, right, inner, and full-outer joins
+
+Miller's `join` verb is defined in terms of _paired_ and _unpaired_ records, rather than SQL-database terminology -- but you can get SQL-style joins using the `--ul` and `--ur` flags (which emit unpaired left-file and right-file records, respectively), along with [`unsparsify`](reference-verbs.md#unsparsify) to fill in empty cells for non-matches.
+
+Suppose you have the following two data files, where we want to join on the left file's `a` field matching the right file's `e` field:
+
+<pre class="pre-non-highlight-non-pair">
+a,b,c
+a,t,1
+b,u,2
+c,v,3
+</pre>
+
+<pre class="pre-non-highlight-non-pair">
+e,f,g
+a,t,3
+b,u,2
+d,w,1
+</pre>
+
+In all the following examples, the `-f` file (`data/join-x.csv`) is the left file, and the file in the main input stream (`data/join-y.csv`) is the right file. The flags `-j a -r e` say that the left file's `a` field is matched against the right file's `e` field, with the output join column named `a`.
+
+**Inner join** -- only matching records -- is what Miller's `join` does by default, since only paired records are emitted:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ocsv join -j a -r e -f data/join-x.csv data/join-y.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c,f,g
+a,t,1,t,3
+b,u,2,u,2
+</pre>
+
+**Left join** keeps all records from the left file, with empty cells where the right file has no match. Use `--ul` to also emit unpaired left-file records, then `unsparsify` to square up the output:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ocsv join --ul -j a -r e -f data/join-x.csv \</b>
+<b>  then unsparsify --fill-with "" \</b>
+<b>  data/join-y.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c,f,g
+a,t,1,t,3
+b,u,2,u,2
+c,v,3,,
+</pre>
+
+**Right join** keeps all records from the right file. Use `--ur` to also emit unpaired right-file records:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ocsv join --ur -j a -r e -f data/join-x.csv \</b>
+<b>  then unsparsify --fill-with "" \</b>
+<b>  data/join-y.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c,f,g
+a,t,1,t,3
+b,u,2,u,2
+d,,,w,1
+</pre>
+
+**Full outer join** keeps all records from both files. Use both `--ul` and `--ur`:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ocsv join --ul --ur -j a -r e -f data/join-x.csv \</b>
+<b>  then unsparsify --fill-with "" \</b>
+<b>  data/join-y.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c,f,g
+a,t,1,t,3
+b,u,2,u,2
+d,,,w,1
+c,v,3,,
+</pre>
+
+Note that unpaired records are emitted after all paired records, so the output ordering may differ from what a SQL database would produce; you can pipe the output through [`sort`](reference-verbs.md#sort) if you need a particular ordering.
+
 ## Doing multiple joins
 
 Suppose we have the following data:
