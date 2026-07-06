@@ -1,0 +1,1 @@
+mlr --icsv --ocsv --ors crlf cat test/input/line-term-lf.csv
