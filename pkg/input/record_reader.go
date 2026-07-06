@@ -34,3 +34,15 @@ func hasNonEmptyField(fields []string) bool {
 	}
 	return false
 }
+
+// blankInputLineHint returns a hint to be appended to CSV/TSV header/data
+// length mismatch errors when the offending input line is blank -- e.g. one
+// or more blank lines at the end of the file. Without this, the bare
+// mismatch error can be hard to act on, especially for large files. See
+// issue #1572.
+func blankInputLineHint(fields []string) string {
+	if hasNonEmptyField(fields) {
+		return ""
+	}
+	return "; this input line is blank -- use the skip-trivial-records verb to have blank input lines skipped"
+}
