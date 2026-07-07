@@ -60,6 +60,50 @@ Thanks to @aborruso for the tip!
 
 See also the [record-heterogeneity page](record-heterogeneity.md).
 
+## Doing SQL-style left, right, inner, and full-outer joins
+
+Miller's `join` verb is defined in terms of _paired_ and _unpaired_ records, rather than SQL-database terminology -- but you can get SQL-style joins using the `--ul` and `--ur` flags (which emit unpaired left-file and right-file records, respectively), along with [`unsparsify`](reference-verbs.md#unsparsify) to fill in empty cells for non-matches.
+
+Suppose you have the following two data files, where we want to join on the left file's `a` field matching the right file's `e` field:
+
+GENMD-INCLUDE-ESCAPED(data/join-x.csv)
+
+GENMD-INCLUDE-ESCAPED(data/join-y.csv)
+
+In all the following examples, the `-f` file (`data/join-x.csv`) is the left file, and the file in the main input stream (`data/join-y.csv`) is the right file. The flags `-j a -r e` say that the left file's `a` field is matched against the right file's `e` field, with the output join column named `a`.
+
+**Inner join** -- only matching records -- is what Miller's `join` does by default, since only paired records are emitted:
+
+GENMD-RUN-COMMAND
+mlr --icsv --ocsv join -j a -r e -f data/join-x.csv data/join-y.csv
+GENMD-EOF
+
+**Left join** keeps all records from the left file, with empty cells where the right file has no match. Use `--ul` to also emit unpaired left-file records, then `unsparsify` to square up the output:
+
+GENMD-RUN-COMMAND
+mlr --icsv --ocsv join --ul -j a -r e -f data/join-x.csv \
+  then unsparsify --fill-with "" \
+  data/join-y.csv
+GENMD-EOF
+
+**Right join** keeps all records from the right file. Use `--ur` to also emit unpaired right-file records:
+
+GENMD-RUN-COMMAND
+mlr --icsv --ocsv join --ur -j a -r e -f data/join-x.csv \
+  then unsparsify --fill-with "" \
+  data/join-y.csv
+GENMD-EOF
+
+**Full outer join** keeps all records from both files. Use both `--ul` and `--ur`:
+
+GENMD-RUN-COMMAND
+mlr --icsv --ocsv join --ul --ur -j a -r e -f data/join-x.csv \
+  then unsparsify --fill-with "" \
+  data/join-y.csv
+GENMD-EOF
+
+Note that unpaired records are emitted after all paired records, so the output ordering may differ from what a SQL database would produce; you can pipe the output through [`sort`](reference-verbs.md#sort) if you need a particular ordering.
+
 ## Doing multiple joins
 
 Suppose we have the following data:
@@ -85,3 +129,115 @@ mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id \
   then join -f multi-join/status-lookup.csv -j id \
   multi-join/input.csv
 GENMD-EOF
+
+## Merging several files on a common key when column names collide
+
+The previous example worked painlessly because the non-key column names -- `name` and `status` -- were different in each lookup file. Now suppose you have several files, each containing measurements of a _different_ quantity, but all with the _same_ column names -- say, one file each for temperature, humidity, and pressure, keyed by timestamp:
+
+GENMD-RUN-COMMAND
+cat data/sensor-temp.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat data/sensor-humidity.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat data/sensor-pressure.csv
+GENMD-EOF
+
+(Note that the humidity file is missing a row for the middle timestamp.)
+
+If we merge these with a `then`-chain of `join` commands, as in the previous section, columns are lost: since every file's non-key columns have the same names, each join step overwrites the values from the step before, and only one file's values survive:
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint \
+  join -j unixTime -f data/sensor-temp.csv \
+  then join -j unixTime -f data/sensor-humidity.csv \
+  data/sensor-pressure.csv
+GENMD-EOF
+
+The fix is `join`'s `--lp` (left-prefix) option, which renames the non-key columns coming from each `-f` file so that nothing collides:
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint \
+  join --lp temp: -j unixTime -f data/sensor-temp.csv \
+  then join --lp humidity: -j unixTime -f data/sensor-humidity.csv \
+  data/sensor-pressure.csv
+GENMD-EOF
+
+The columns from the file at the end of the command line -- here, the pressure file -- keep their unprefixed names.
+
+If you want just one value column per file, you can also use `join`'s `--lk` option to keep only that column from each `-f` file, then use [cut](reference-verbs.md#cut) and [label](reference-verbs.md#label) to arrange and rename the output columns:
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint \
+  join --lp temp: --lk averageValue -j unixTime -f data/sensor-temp.csv \
+  then join --lp humidity: --lk averageValue -j unixTime -f data/sensor-humidity.csv \
+  then cut -o -f unixTime,temp:averageValue,humidity:averageValue,averageValue \
+  then label unixTime,temperature,humidity,pressure \
+  data/sensor-pressure.csv
+GENMD-EOF
+
+Note that `join` gives inner-join semantics by default, so the timestamp missing from the humidity file has been dropped from the output. (This is also why the `paste` command is not a substitute for `join` here: `paste` matches rows by position, so a row missing from one file shifts that file's remaining values onto the wrong rows.) If you'd rather keep those rows, with empty cells where a file has no data, add `--ul --ur` to each join step, and [unsparsify](reference-verbs.md#unsparsify) afterward:
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint \
+  join --ul --ur --lp temp: --lk averageValue -j unixTime -f data/sensor-temp.csv \
+  then join --ul --ur --lp humidity: --lk averageValue -j unixTime -f data/sensor-humidity.csv \
+  then unsparsify \
+  then cut -o -f unixTime,temp:averageValue,humidity:averageValue,averageValue \
+  then label unixTime,temperature,humidity,pressure \
+  then sort -t unixTime \
+  data/sensor-pressure.csv
+GENMD-EOF
+
+The `unsparsify` must come before the `cut`-and-`label` step, since `label` renames columns positionally. The `sort` is there because unpaired records may be emitted out of order relative to paired ones.
+
+## How to preprocess the left file of a join?
+
+The left file (the `-f` argument to `join`) is opened by the `join` verb itself, so it doesn't pass through the main record stream: a `then`-chain can preprocess the right file(s), but not the left one.
+
+For example, suppose both of these files have multi-valued `id` fields which need [nest --explode](reference-verbs.md#nest) before joining:
+
+GENMD-RUN-COMMAND
+cat data/join-nest-left.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat data/join-nest-right.csv
+GENMD-EOF
+
+Using `nest` in a `then`-chain handles the right file, but the left file still has the unexploded `id` value `1;2`, so only `id=3` pairs up:
+
+GENMD-RUN-COMMAND
+mlr --csv nest --evar ';' -f id \
+  then join -j id -f data/join-nest-left.csv \
+  data/join-nest-right.csv
+GENMD-EOF
+
+One way to preprocess the left file, without creating an intermediate file, is the main-level `--prepipe` flag. The left file inherits the main input options -- including `--prepipe` -- so the specified command is applied to the left file as well as to the right file(s):
+
+GENMD-RUN-COMMAND
+mlr --csv --prepipe 'mlr --csv nest --evar ";" -f id' \
+  join -j id -f data/join-nest-left.csv \
+  data/join-nest-right.csv
+GENMD-EOF
+
+Note that `--prepipe` applies the same command to _every_ input file -- which is just what's wanted here, since both files need the same `nest`.
+
+Another way, if your shell supports it -- bash, zsh, and ksh do, although plain POSIX `sh` and Windows `cmd` do not -- is [process substitution](https://en.wikipedia.org/wiki/Process_substitution), which lets you preprocess the left file with any command at all, independently of the right file(s):
+
+GENMD-CARDIFY-HIGHLIGHT-THREE
+mlr --csv nest --evar ';' -f id \
+  then join -j id -f <(mlr --csv nest --evar ';' -f id data/join-nest-left.csv) \
+  data/join-nest-right.csv
+id,color,shape
+1,blue,circle
+2,blue,square
+3,green,square
+GENMD-EOF
+
+Note that while `mlr join --help` lists verb-level `--prepipe` and `--prepipex` flags, as of Miller 6 these do not take effect for the left file -- please use one of the recipes above instead.
+
+Thanks to @sonicdoe for the process-substitution tip!

@@ -553,6 +553,17 @@ func (keeper *JoinBucketKeeper) readRecord() *types.RecordAndContext {
 		leftrecAndContext := leftrecsAndContexts[0]
 		leftrecAndContext.Record = KeepLeftFieldNames(leftrecAndContext.Record, keeper.leftKeepFieldNameSet)
 		if leftrecAndContext.EndOfStream { // end-of-stream marker
+			// The record-reader may have sent an error (e.g. the left file is
+			// missing or unreadable) immediately before its end-of-stream
+			// marker. Since those are separate channels, the select can see
+			// the end-of-stream marker first -- so, check the error channel
+			// before declaring the left-file read complete.
+			select {
+			case err := <-keeper.errorChannel:
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+				os.Exit(1)
+			default:
+			}
 			keeper.recordReaderDone = true
 			return nil
 		}

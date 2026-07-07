@@ -1,0 +1,1 @@
+mlr --ijson -o dkvpx --ofs semicolon --ops colon cat ${CASEDIR}/input

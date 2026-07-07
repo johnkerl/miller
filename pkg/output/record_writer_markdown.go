@@ -181,12 +181,19 @@ func (writer *RecordWriterMarkdown) flushBatch(
 		}
 	}
 
-	// Header
+	// Header. Right-aligned columns get right-justified header text so that
+	// header and data share the same alignment in the raw markdown, matching
+	// how Markdown viewers render the `---:` marker.
 	bufferedOutputStream.WriteString("|")
 	for pe := first.Head; pe != nil; pe = pe.Next {
 		bufferedOutputStream.WriteString(" ")
-		bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
-		writePadding(bufferedOutputStream, maxWidths[pe.Key]-lib.DisplayWidth(pe.Key))
+		if columnRightAligned[pe.Key] {
+			writePadding(bufferedOutputStream, maxWidths[pe.Key]-lib.DisplayWidth(pe.Key))
+			bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+		} else {
+			bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+			writePadding(bufferedOutputStream, maxWidths[pe.Key]-lib.DisplayWidth(pe.Key))
+		}
 		bufferedOutputStream.WriteString(" |")
 	}
 	bufferedOutputStream.WriteString(writer.writerOptions.ORS)
