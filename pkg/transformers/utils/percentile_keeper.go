@@ -82,6 +82,27 @@ func (keeper *PercentileKeeper) EmitLinearlyInterpolated(percentile float64) *ml
 	return bifs.GetPercentileLinearlyInterpolated(keeper.data, int(len(keeper.data)), percentile)
 }
 
+// EmitRank returns the standard competition rank (1,2,2,4,...) of value
+// among all values ingested so far: one plus the number of ingested values
+// strictly less than it.
+func (keeper *PercentileKeeper) EmitRank(value *mlrval.Mlrval) *mlrval.Mlrval {
+	if len(keeper.data) == 0 {
+		return mlrval.VOID
+	}
+	keeper.sortIfNecessary()
+	n := len(keeper.data)
+	lo, hi := 0, n
+	for lo < hi {
+		mid := (lo + hi) / 2
+		if mlrval.LessThan(keeper.data[mid], value) {
+			lo = mid + 1
+		} else {
+			hi = mid
+		}
+	}
+	return mlrval.FromInt(int64(lo + 1))
+}
+
 // TODO: COMMENT
 func (keeper *PercentileKeeper) EmitNamed(name string) *mlrval.Mlrval {
 	switch name {

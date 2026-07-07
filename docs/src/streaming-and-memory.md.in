@@ -84,6 +84,7 @@ They are memory-friendly, and they don't wait for end of input to produce their 
 * [merge-fields](reference-verbs.md#merge-fields)
 * [nest](reference-verbs.md#nest) -- if not `implode-values-across-records`
 * [nothing](reference-verbs.md#nothing)
+* [rank](reference-verbs.md#rank) -- if `--sorted`
 * [regularize](reference-verbs.md#regularize)
 * [rename](reference-verbs.md#rename)
 * [reorder](reference-verbs.md#reorder)
@@ -115,6 +116,7 @@ They are memory-unfriendly, and they wait for end of input to produce their outp
 * [least-frequent](reference-verbs.md#least-frequent)
 * [most-frequent](reference-verbs.md#most-frequent)
 * [nest](reference-verbs.md#nest) -- if `implode-values-across-records`
+* [rank](reference-verbs.md#rank) -- if not `--sorted`
 * [remove-empty-columns](reference-verbs.md#remove-empty-columns)
 * [reshape](reference-verbs.md#reshape) -- if long-to-wide
 * [sample](reference-verbs.md#sample)
