@@ -48,6 +48,7 @@ var TRANSFORMER_LOOKUP_TABLE = []TransformerSetup{
 	NestSetup,
 	NothingSetup,
 	PutSetup,
+	RankSetup,
 	RegularizeSetup,
 	RemoveEmptyColumnsSetup,
 	RenameSetup,

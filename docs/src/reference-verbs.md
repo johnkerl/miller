@@ -54,7 +54,7 @@ These fall into categories as follows:
 
 * `awk`-like functionality: [filter](reference-verbs.md#filter), [put](reference-verbs.md#put), [sec2gmt](reference-verbs.md#sec2gmt), [sec2gmtdate](reference-verbs.md#sec2gmtdate), [step](reference-verbs.md#step), [tee](reference-verbs.md#tee).
 
-* Statistically oriented: [bar](reference-verbs.md#bar), [bootstrap](reference-verbs.md#bootstrap), [decimate](reference-verbs.md#decimate), [histogram](reference-verbs.md#histogram), [least-frequent](reference-verbs.md#least-frequent), [most-frequent](reference-verbs.md#most-frequent), [sample](reference-verbs.md#sample), [shuffle](reference-verbs.md#shuffle), [sparkline](reference-verbs.md#sparkline), [stats1](reference-verbs.md#stats1), [stats2](reference-verbs.md#stats2).
+* Statistically oriented: [bar](reference-verbs.md#bar), [bootstrap](reference-verbs.md#bootstrap), [decimate](reference-verbs.md#decimate), [histogram](reference-verbs.md#histogram), [least-frequent](reference-verbs.md#least-frequent), [most-frequent](reference-verbs.md#most-frequent), [rank](reference-verbs.md#rank), [sample](reference-verbs.md#sample), [shuffle](reference-verbs.md#shuffle), [sparkline](reference-verbs.md#sparkline), [stats1](reference-verbs.md#stats1), [stats2](reference-verbs.md#stats2).
 
 * Particularly oriented toward [Record Heterogeneity](record-heterogeneity.md), although all Miller commands can handle heterogeneous records: [group-by](reference-verbs.md#group-by), [group-like](reference-verbs.md#group-like), [having-fields](reference-verbs.md#having-fields).
 
@@ -2627,6 +2627,106 @@ See also https://miller.readthedocs.io/reference-dsl for more context.
 ### Features which put shares with filter
 
 Please see the [DSL reference](reference-dsl.md) for more information about the expression language for `mlr put`.
+
+## rank
+
+<pre class="pre-highlight-in-pair">
+<b>mlr rank --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr rank [options]
+For each record's value in specified fields, computes the standard
+competition rank (1,2,2,4,...) of that value among all input records,
+optionally within groups.
+E.g. with input records x=10, x=20, x=20, and x=30, emits output records
+x=10,x_rank=1  x=20,x_rank=2  x=20,x_rank=2  and  x=30,x_rank=4.
+
+Note: by default this is a two-pass algorithm: on the first pass it retains
+input records and their values; on the second pass it computes ranks and
+emits output records, in original input order. This means it produces no
+output until all input is read, but gives correct ranks regardless of input
+order. Use --sorted for a single-pass streaming alternative.
+
+Options:
+-f {a,b,c} Field name(s) to rank.
+-g {d,e,f} Optional group-by-field name(s).
+--sorted   Promise that the input is already sorted by the field(s) being ranked
+           (within each group, if -g is given). This computes rank in a single
+           streaming pass and O(1) space, by comparing each record's value only
+           to the immediately preceding one, rather than buffering all records
+           to compute an order-independent rank. Produces wrong output if the
+           input is not in fact sorted.
+-h|--help  Show this message.
+Example: mlr rank -f x data/rank-example.csv
+Example: mlr rank -f x -g g data/rank-example.csv
+Example: mlr sort -f x then rank -f x --sorted data/rank-example.csv
+</pre>
+
+For example, suppose you have the following CSV file:
+
+<pre class="pre-non-highlight-non-pair">
+g,x
+a,10
+a,20
+a,20
+a,30
+b,5
+b,5
+b,9
+</pre>
+
+Then we can rank each record's `x` among all records:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint rank -f x data/rank-example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+g x  x_rank
+a 10 4
+a 20 5
+a 20 5
+a 30 7
+b 5  1
+b 5  1
+b 9  3
+</pre>
+
+Using `-g` we can rank within each group instead:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint rank -f x -g g data/rank-example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+g x  x_rank
+a 10 1
+a 20 2
+a 20 2
+a 30 4
+b 5  1
+b 5  1
+b 9  3
+</pre>
+
+By default `rank` is a two-pass algorithm: it retains all input records so that it can compute
+ranks which don't depend on input order, even when same-valued records aren't adjacent to one
+another. If you know your input is already sorted on the field(s) you're ranking by -- e.g. by
+piping through `mlr sort` first -- then `--sorted` computes ranks in a single streaming pass
+and O(1) space instead, by comparing each record only to the one immediately before it (within
+its group, if `-g` is given):
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint sort -f g -nf x then rank -f x -g g --sorted data/rank-example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+g x  x_rank
+a 10 1
+a 20 2
+a 20 2
+a 30 4
+b 5  1
+b 5  1
+b 9  3
+</pre>
 
 ## regularize
 

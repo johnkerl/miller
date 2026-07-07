@@ -207,11 +207,11 @@
        count-similar cut decimate describe fill-down fill-empty filter flatten
        format-values fraction gap grep group-by group-like gsub having-fields head
        histogram json-parse json-stringify join label latin1-to-utf8 least-frequent
-       merge-fields most-frequent nest nothing put regularize remove-empty-columns
-       rename reorder repeat reshape sample sec2gmtdate sec2gmt seqgen shuffle
-       skip-trivial-records sort sort-within-records sparkline sparsify split ssub
-       stats1 stats2 step sub summary surv tac tail tee template top utf8-to-latin1
-       unflatten uniq unspace unsparsify
+       merge-fields most-frequent nest nothing put rank regularize
+       remove-empty-columns rename reorder repeat reshape sample sec2gmtdate sec2gmt
+       seqgen shuffle skip-trivial-records sort sort-within-records sparkline
+       sparsify split ssub stats1 stats2 step sub summary surv tac tail tee template
+       top utf8-to-latin1 unflatten uniq unspace unsparsify
 
 1mFUNCTION LIST0m
        abs acos acosh antimode any append apply arrayify asin asinh asserting_absent
@@ -1790,6 +1790,34 @@
            '
 
        See also https://miller.readthedocs.io/reference-dsl for more context.
+
+   1mrank0m
+       Usage: mlr rank [options]
+       For each record's value in specified fields, computes the standard
+       competition rank (1,2,2,4,...) of that value among all input records,
+       optionally within groups.
+       E.g. with input records x=10, x=20, x=20, and x=30, emits output records
+       x=10,x_rank=1  x=20,x_rank=2  x=20,x_rank=2  and  x=30,x_rank=4.
+
+       Note: by default this is a two-pass algorithm: on the first pass it retains
+       input records and their values; on the second pass it computes ranks and
+       emits output records, in original input order. This means it produces no
+       output until all input is read, but gives correct ranks regardless of input
+       order. Use --sorted for a single-pass streaming alternative.
+
+       Options:
+       -f {a,b,c} Field name(s) to rank.
+       -g {d,e,f} Optional group-by-field name(s).
+       --sorted   Promise that the input is already sorted by the field(s) being ranked
+                  (within each group, if -g is given). This computes rank in a single
+                  streaming pass and O(1) space, by comparing each record's value only
+                  to the immediately preceding one, rather than buffering all records
+                  to compute an order-independent rank. Produces wrong output if the
+                  input is not in fact sorted.
+       -h|--help  Show this message.
+       Example: mlr rank -f x data/rank-example.csv
+       Example: mlr rank -f x -g g data/rank-example.csv
+       Example: mlr sort -f x then rank -f x --sorted data/rank-example.csv
 
    1mregularize0m
        Usage: mlr regularize [options]

@@ -1,0 +1,1 @@
+mlr --icsv --ocsv rank -f x test/input/rank-data-unsorted.csv
