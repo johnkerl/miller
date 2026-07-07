@@ -17,6 +17,7 @@ data/nmc?.*
 
 docs/src/polyglot-dkvp-io/__pycache__
 docs/site/
+docs/miller-docs.epub
 
 .cursor
 .claude

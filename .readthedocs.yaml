@@ -10,6 +10,17 @@ build:
   os: ubuntu-24.04
   tools:
     python: "3.12"
+  apt_packages:
+    - pandoc
+  jobs:
+    # Read the Docs' built-in `formats:` support (below) only produces
+    # epub/PDF/htmlzip for Sphinx projects, not MkDocs ones. So for issue
+    # #1835 we build the epub ourselves after the MkDocs HTML build; anything
+    # placed in $READTHEDOCS_OUTPUT/epub/ is published on the project's
+    # Downloads page and in the docs' flyout menu.
+    post_build:
+      - mkdir -p $READTHEDOCS_OUTPUT/epub
+      - bash docs/build-epub.sh $READTHEDOCS_OUTPUT/epub/miller.epub
 
 python:
   install:

@@ -1,4 +1,4 @@
-<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<!--  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. -->
 <div>
 <span class="quicklinks">
 Quick links:
@@ -64,7 +64,7 @@ one-line summary (here trimmed, and then counted, using Miller itself):
 <pre class="pre-non-highlight-in-pair">
 [
 {
-  "count": 661
+  "count": 662
 }
 ]
 </pre>

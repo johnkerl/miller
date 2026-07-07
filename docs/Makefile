@@ -3,4 +3,10 @@ build:
 	make -C src genmds
 	mkdocs build
 
-.PHONY: build
+# Optional: build a single-file epub of the documentation for offline
+# reading. Requires pandoc. Not part of the default build; Read the Docs runs
+# this via .readthedocs.yaml (see docs/build-epub.sh for details).
+epub:
+	./build-epub.sh
+
+.PHONY: build epub
