@@ -230,9 +230,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        histogram json-parse json-stringify join label latin1-to-utf8 least-frequent
        merge-fields most-frequent nest nothing put rank regularize
        remove-empty-columns rename reorder repeat reshape sample sec2gmtdate sec2gmt
-       seqgen shuffle skip-trivial-records sort sort-within-records sparsify split
-       ssub stats1 stats2 step sub summary surv tac tail tee template top
-       utf8-to-latin1 unflatten uniq unspace unsparsify
+       seqgen shuffle skip-trivial-records sort sort-within-records sparkline
+       sparsify split ssub stats1 stats2 step sub summary surv tac tail tee template
+       top utf8-to-latin1 unflatten uniq unspace unsparsify
 
 1mFUNCTION LIST0m
        abs acos acosh antimode any append apply arrayify asin asinh asserting_absent
@@ -2113,6 +2113,16 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                   argument, -r recursively sorts subobjects/submaps (e.g. for JSON
                   input), or combines with -f to treat names as regexes.
        -n         Sort field names naturally (e.g. 2 before 12). Combines with -f/-r.
+       -h|--help  Show this message.
+
+   1msparkline0m
+       Usage: mlr sparkline [options]
+       Reduces numeric field(s), across all records in input order, to a compact
+       Unicode sparkline -- one block character per record -- for visualizing
+       trends. Emits one output record per field. Holds all records in memory
+       before producing any output.
+       Options:
+       -f {a,b,c} Field names to sparkline.
        -h|--help  Show this message.
 
    1msparsify0m

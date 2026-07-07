@@ -251,9 +251,9 @@ format-values fraction gap grep group-by group-like gsub having-fields head
 histogram json-parse json-stringify join label latin1-to-utf8 least-frequent
 merge-fields most-frequent nest nothing put rank regularize
 remove-empty-columns rename reorder repeat reshape sample sec2gmtdate sec2gmt
-seqgen shuffle skip-trivial-records sort sort-within-records sparsify split
-ssub stats1 stats2 step sub summary surv tac tail tee template top
-utf8-to-latin1 unflatten uniq unspace unsparsify
+seqgen shuffle skip-trivial-records sort sort-within-records sparkline
+sparsify split ssub stats1 stats2 step sub summary surv tac tail tee template
+top utf8-to-latin1 unflatten uniq unspace unsparsify
 .fi
 .if n \{\
 .RE
@@ -284,14 +284,14 @@ minlen mmul mode msub next nsec2gmt nsec2gmtdate nsec2localdate nsec2localtime
 null_count os percentile percentiles pow qnorm reduce regextract
 regextract_or_else rightpad round roundm rstrip sec2dhms sec2gmt sec2gmtdate
 sec2hms sec2localdate sec2localtime select sgn sha1 sha256 sha512 sin sinh
-skewness sort sort_collection splita splitax splitkv splitkvx splitnv splitnvx
-sqrt ssub stat stddev strfntime strfntime_local strftime strftime_local string
-strip strlen strmatch strmatchx strpntime strpntime_local strptime
-strptime_local sub substr substr0 substr1 sum sum2 sum3 sum4 sysntime system
-systime systimeint tan tanh tolower toupper truncate typeof unflatten unformat
-unformatx upntime uptime urand urand32 urandelement urandint urandrange
-utf8_to_latin1 variance version ! != !=~ % & && * ** + - . .* .+ .- ./ / // <
-<< <= <=> == =~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
+skewness sort sort_collection sparkline splita splitax splitkv splitkvx
+splitnv splitnvx sqrt ssub stat stddev strfntime strfntime_local strftime
+strftime_local string strip strlen strmatch strmatchx strpntime
+strpntime_local strptime strptime_local sub substr substr0 substr1 sum sum2
+sum3 sum4 sysntime system systime systimeint tan tanh tolower toupper truncate
+typeof unflatten unformat unformatx upntime uptime urand urand32 urandelement
+urandint urandrange utf8_to_latin1 variance version ! != !=~ % & && * ** + - .
+\&.* .+ .- ./ / // < << <= <=> == =~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
 .fi
 .if n \{\
 .RE
@@ -1791,7 +1791,11 @@ Options:
 --auto      Automatically computes limits, ignoring --lo and --hi. Holds all
             values in memory before producing any output.
 -o {prefix} Prefix for output field name. Default: no prefix.
+-s          Print a one-line Unicode sparkline per field instead of per-bin
+            counts.
 -h|--help   Show this message.
+With -s, output is one record per value-field, with a sparkline field
+instead of one record per bin.
 .fi
 .if n \{\
 .RE
@@ -2594,6 +2598,22 @@ Options:
            argument, -r recursively sorts subobjects/submaps (e.g. for JSON
            input), or combines with -f to treat names as regexes.
 -n         Sort field names naturally (e.g. 2 before 12). Combines with -f/-r.
+-h|--help  Show this message.
+.fi
+.if n \{\
+.RE
+.SS "sparkline"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr sparkline [options]
+Reduces numeric field(s), across all records in input order, to a compact
+Unicode sparkline -- one block character per record -- for visualizing
+trends. Emits one output record per field. Holds all records in memory
+before producing any output.
+Options:
+-f {a,b,c} Field names to sparkline.
 -h|--help  Show this message.
 .fi
 .if n \{\
@@ -4962,6 +4982,18 @@ Map without function: sort({"c":2,"a":3,"b":1}, "vnr") returns {"a":3,"c":2,"b":
 .\}
 .nf
  (class=stats #args=1) This is a helper function for the percentiles function; please see its online help for details.
+.fi
+.if n \{\
+.RE
+.SS "sparkline"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=stats #args=1) Returns a string of Unicode block characters (one of ▁▂▃▄▅▆▇█ per element) representing the relative magnitudes of values in an array or map, for a compact ASCII/Unicode bar chart. Returns error for non-array/non-map types.
+Examples:
+sparkline([1,2,3,4,5,6,7,8]) is "▁▂▃▄▅▆▇█"
+sparkline([3,3,3]) is "▁▁▁"
 .fi
 .if n \{\
 .RE
