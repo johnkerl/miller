@@ -1626,6 +1626,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
          kurtosis Compute sample kurtosis of specified fields
          min      Compute minimum values of specified fields
          max      Compute maximum values of specified fields
+         rank     Compute rank 1,2,2,4,... of specified fields, assuming input is sorted by that field; use with -s
          minlen   Compute minimum string-lengths of specified fields
          maxlen   Compute maximum string-lengths of specified fields
 
@@ -2202,6 +2203,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
          kurtosis Compute sample kurtosis of specified fields
          min      Compute minimum values of specified fields
          max      Compute maximum values of specified fields
+         rank     Compute rank 1,2,2,4,... of specified fields, assuming input is sorted by that field; use with -s
          minlen   Compute minimum string-lengths of specified fields
          maxlen   Compute maximum string-lengths of specified fields
        Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
@@ -2221,6 +2223,10 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        * count and mode allow text input; the rest require numeric input.
          In particular, 1 and 1.0 are distinct text for count and mode.
        * When there are mode ties, the first-encountered datum wins.
+       * rank assumes the input is already sorted (e.g. by mlr sort) on the field
+         being ranked, and assigns standard competition rank (1,2,2,4,...) by
+         comparing each record's value to the immediately preceding one. Use with
+         -s to get a rank on every input record.
 
    1mstats20m
        Usage: mlr stats2 [options]
@@ -4062,5 +4068,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-07-06                         4mMILLER24m(1)
+                                  2026-07-07                         4mMILLER24m(1)
 </pre>

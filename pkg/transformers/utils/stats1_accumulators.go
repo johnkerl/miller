@@ -112,6 +112,12 @@ var stats1AccumulatorInfos []stats1AccumulatorInfo = []stats1AccumulatorInfo{
 	},
 
 	{
+		"rank",
+		"Compute rank 1,2,2,4,... of specified fields, assuming input is sorted by that field; use with -s",
+		NewStats1RankAccumulator,
+	},
+
+	{
 		"minlen",
 		"Compute minimum string-lengths of specified fields",
 		NewStats1MinLenAccumulator,
@@ -531,6 +537,48 @@ func (acc *Stats1MeanAbsDevAccumulator) Emit() *mlrval.Mlrval {
 }
 func (acc *Stats1MeanAbsDevAccumulator) Reset() {
 	acc.samples = make([]*mlrval.Mlrval, 0, 1000)
+}
+
+// Stats1RankAccumulator implements standard competition ranking (1,2,2,4,...)
+// on a sequence of values, e.g. as produced by 'mlr sort'. This assumes
+// same-valued items are adjacent in the input stream: it compares each
+// ingested value only to the immediately preceding one. This accumulator is
+// most useful with 'stats1 -s' so that a rank is emitted for every input
+// record, rather than only once at end of stream.
+type Stats1RankAccumulator struct {
+	count               int64
+	rank                int64
+	havePreviousValue   bool
+	previousValueString string
+}
+
+func NewStats1RankAccumulator() IStats1Accumulator {
+	return &Stats1RankAccumulator{
+		count:             0,
+		rank:              0,
+		havePreviousValue: false,
+	}
+}
+func (acc *Stats1RankAccumulator) Ingest(value *mlrval.Mlrval) {
+	acc.count++
+	valueString := value.String() // 1, 1.0, and 1.000 are distinct
+	if !acc.havePreviousValue || valueString != acc.previousValueString {
+		acc.rank = acc.count
+		acc.previousValueString = valueString
+		acc.havePreviousValue = true
+	}
+}
+func (acc *Stats1RankAccumulator) Emit() *mlrval.Mlrval {
+	if acc.count == 0 {
+		return mlrval.VOID
+	}
+	return mlrval.FromInt(acc.rank)
+}
+func (acc *Stats1RankAccumulator) Reset() {
+	acc.count = 0
+	acc.rank = 0
+	acc.havePreviousValue = false
+	acc.previousValueString = ""
 }
 
 type Stats1MinAccumulator struct {

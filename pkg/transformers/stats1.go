@@ -18,7 +18,7 @@ import (
 const verbNameStats1 = "stats1"
 
 var stats1Options = []OptionSpec{
-	{Flag: "-a", Arg: "{sum,count,...}", Type: "enum", Desc: "Names of accumulators: one or more of the listed values. Also accepts median (same as p50) and percentiles p{n} for n in 0..100, e.g. p10 p25.2 p50 p98 p100.", Values: []string{"count", "null_count", "distinct_count", "mode", "antimode", "sum", "mean", "mad", "var", "stddev", "meaneb", "skewness", "kurtosis", "min", "max", "minlen", "maxlen"}},
+	{Flag: "-a", Arg: "{sum,count,...}", Type: "enum", Desc: "Names of accumulators: one or more of the listed values. Also accepts median (same as p50) and percentiles p{n} for n in 0..100, e.g. p10 p25.2 p50 p98 p100.", Values: []string{"count", "null_count", "distinct_count", "mode", "antimode", "sum", "mean", "mad", "var", "stddev", "meaneb", "skewness", "kurtosis", "min", "max", "rank", "minlen", "maxlen"}},
 	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Value-field names on which to compute statistics."},
 	{Flag: "--fr", Arg: "{regex}", Type: "regex", Desc: "Regex for value-field names on which to compute statistics (compute statistics on values in all field names matching the regex)."},
 	{Flag: "--fx", Arg: "{regex}", Type: "regex", Desc: "Inverted regex for value-field names on which to compute statistics (compute statistics on values in all field names not matching the regex)."},
@@ -79,6 +79,10 @@ the input record stream.
 * count and mode allow text input; the rest require numeric input.
   In particular, 1 and 1.0 are distinct text for count and mode.
 * When there are mode ties, the first-encountered datum wins.
+* rank assumes the input is already sorted (e.g. by mlr sort) on the field
+  being ranked, and assigns standard competition rank (1,2,2,4,...) by
+  comparing each record's value to the immediately preceding one. Use with
+  -s to get a rank on every input record.
 `)
 }
 
