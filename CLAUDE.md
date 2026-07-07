@@ -70,9 +70,18 @@ make lint           # Run golangci-lint, same invocation as CI (see Initial Setu
 ```
 
 `make lint` runs `golangci-lint run ./cmd/mlr ./pkg/...`, matching
-`.github/workflows/golangci-lint.yml` exactly, so a clean local run means CI's
-lint job will pass too. It is not part of `make check` or `make dev`, so run
-it explicitly before pushing.
+`.github/workflows/golangci-lint.yml` exactly, so a clean local run usually
+means CI's lint job will pass too. It is not part of `make check` or
+`make dev`, so run it explicitly before pushing.
+
+**Note:** CI's lint job restores a persistent `golangci-lint` results cache
+shared across commits and PRs (via `golangci-lint-action`), which can
+occasionally serve stale `staticcheck` results (e.g. spurious `SA5011`
+nil-check warnings) unrelated to your diff. The job is `continue-on-error:
+true` for this reason, so it won't block merging. If CI lint fails but
+`make lint` is clean locally, it's likely a stale cache — rerun the job, or a
+maintainer can clear it: `gh cache list --key golangci-lint` then
+`gh cache delete <id>`.
 
 ### Full Developer Workflow
 ```bash
