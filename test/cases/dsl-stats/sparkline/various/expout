@@ -1,0 +1,22 @@
+sparkline_0                     (error)
+sparkline_0_type                error
+sparkline_null                  (error)
+sparkline_null_type             error
+sparkline_empty_array           
+sparkline_empty_array_type      empty
+sparkline_array_1               ▁
+sparkline_array_1_type          string
+sparkline_array_flat            ▁▁▁
+sparkline_array_flat_type       string
+sparkline_array_ascending       ▁▂▃▄▅▆▇█
+sparkline_array_ascending_type  string
+sparkline_array_descending      █▇▆▅▄▃▂▁
+sparkline_array_descending_type string
+sparkline_array_nonnumeric      (error)
+sparkline_array_nonnumeric_type error
+sparkline_empty_map             
+sparkline_empty_map_type        empty
+sparkline_map_1                 ▁
+sparkline_map_1_type            string
+sparkline_map_ascending         ▁▄█
+sparkline_map_ascending_type    string

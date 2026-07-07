@@ -27,7 +27,7 @@ These fall into categories as follows:
 
 * `awk`-like functionality: [filter](reference-verbs.md#filter), [put](reference-verbs.md#put), [sec2gmt](reference-verbs.md#sec2gmt), [sec2gmtdate](reference-verbs.md#sec2gmtdate), [step](reference-verbs.md#step), [tee](reference-verbs.md#tee).
 
-* Statistically oriented: [bar](reference-verbs.md#bar), [bootstrap](reference-verbs.md#bootstrap), [decimate](reference-verbs.md#decimate), [histogram](reference-verbs.md#histogram), [least-frequent](reference-verbs.md#least-frequent), [most-frequent](reference-verbs.md#most-frequent), [sample](reference-verbs.md#sample), [shuffle](reference-verbs.md#shuffle), [stats1](reference-verbs.md#stats1), [stats2](reference-verbs.md#stats2).
+* Statistically oriented: [bar](reference-verbs.md#bar), [bootstrap](reference-verbs.md#bootstrap), [decimate](reference-verbs.md#decimate), [histogram](reference-verbs.md#histogram), [least-frequent](reference-verbs.md#least-frequent), [most-frequent](reference-verbs.md#most-frequent), [sample](reference-verbs.md#sample), [shuffle](reference-verbs.md#shuffle), [sparkline](reference-verbs.md#sparkline), [stats1](reference-verbs.md#stats1), [stats2](reference-verbs.md#stats2).
 
 * Particularly oriented toward [Record Heterogeneity](record-heterogeneity.md), although all Miller commands can handle heterogeneous records: [group-by](reference-verbs.md#group-by), [group-like](reference-verbs.md#group-like), [having-fields](reference-verbs.md#having-fields).
 
@@ -579,6 +579,14 @@ mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \
   data/medium
 GENMD-EOF
 
+Use `-s` for a compact one-line Unicode sparkline per field, rather than one output record per bin. Note this sparklines the *binned counts* -- i.e. the shape of the value distribution -- not the field's raw values in record order; for the latter, use [sparkline](reference-verbs.md#sparkline) instead:
+
+GENMD-RUN-COMMAND
+mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \
+  then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -s \
+  data/medium
+GENMD-EOF
+
 ## join
 
 GENMD-RUN-COMMAND
@@ -1015,6 +1023,22 @@ GENMD-EOF
 
 GENMD-RUN-COMMAND
 mlr --ijson --opprint sort-within-records data/sort-within-records.json
+GENMD-EOF
+
+## sparkline
+
+GENMD-RUN-COMMAND
+mlr sparkline --help
+GENMD-EOF
+
+This reduces one or more numeric fields, in input-record order, to a compact
+Unicode sparkline -- a quick way to eyeball a trend across records without
+plotting software. Contrast with [histogram](reference-verbs.md#histogram)
+`-s`, which sparklines the *distribution* of a field's values (binned by
+value, order-independent) rather than the field's values in record order.
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint sparkline -f index,quantity,rate example.csv
 GENMD-EOF
 
 ## sparsify
