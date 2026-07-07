@@ -1,0 +1,8 @@
+Usage: mlr sparkline [options]
+Reduces numeric field(s), across all records in input order, to a compact
+Unicode sparkline -- one block character per record -- for visualizing
+trends. Emits one output record per field. Holds all records in memory
+before producing any output.
+Options:
+-f {a,b,c} Field names to sparkline.
+-h|--help  Show this message.

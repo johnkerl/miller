@@ -54,7 +54,7 @@ These fall into categories as follows:
 
 * `awk`-like functionality: [filter](reference-verbs.md#filter), [put](reference-verbs.md#put), [sec2gmt](reference-verbs.md#sec2gmt), [sec2gmtdate](reference-verbs.md#sec2gmtdate), [step](reference-verbs.md#step), [tee](reference-verbs.md#tee).
 
-* Statistically oriented: [bar](reference-verbs.md#bar), [bootstrap](reference-verbs.md#bootstrap), [decimate](reference-verbs.md#decimate), [histogram](reference-verbs.md#histogram), [least-frequent](reference-verbs.md#least-frequent), [most-frequent](reference-verbs.md#most-frequent), [sample](reference-verbs.md#sample), [shuffle](reference-verbs.md#shuffle), [stats1](reference-verbs.md#stats1), [stats2](reference-verbs.md#stats2).
+* Statistically oriented: [bar](reference-verbs.md#bar), [bootstrap](reference-verbs.md#bootstrap), [decimate](reference-verbs.md#decimate), [histogram](reference-verbs.md#histogram), [least-frequent](reference-verbs.md#least-frequent), [most-frequent](reference-verbs.md#most-frequent), [sample](reference-verbs.md#sample), [shuffle](reference-verbs.md#shuffle), [sparkline](reference-verbs.md#sparkline), [stats1](reference-verbs.md#stats1), [stats2](reference-verbs.md#stats2).
 
 * Particularly oriented toward [Record Heterogeneity](record-heterogeneity.md), although all Miller commands can handle heterogeneous records: [group-by](reference-verbs.md#group-by), [group-like](reference-verbs.md#group-like), [having-fields](reference-verbs.md#having-fields).
 
@@ -1787,7 +1787,11 @@ Options:
 --auto      Automatically computes limits, ignoring --lo and --hi. Holds all
             values in memory before producing any output.
 -o {prefix} Prefix for output field name. Default: no prefix.
+-s          Print a one-line Unicode sparkline per field instead of per-bin
+            counts.
 -h|--help   Show this message.
+With -s, output is one record per value-field, with a sparkline field
+instead of one record per bin.
 </pre>
 
 This is just a histogram; there's not too much to say here. A note about binning, by example: Suppose you use `--lo 0.0 --hi 1.0 --nbins 10 -f x`.  The input numbers less than 0 or greater than 1 aren't counted in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin 0 has `0.0 < x < 0.1`, bin 1 has `0.1 < x < 0.2`, etc., but bin 9 has `0.9 < x < 1.0`.
@@ -1828,6 +1832,20 @@ my_bin_lo my_bin_hi my_x_count my_x2_count my_x3_count
 0.7       0.8       1007       560         420
 0.8       0.9       986        571         383
 0.9       1         1013       507         341
+</pre>
+
+Use `-s` for a compact one-line Unicode sparkline per field, rather than one output record per bin. Note this sparklines the *binned counts* -- i.e. the shape of the value distribution -- not the field's raw values in record order; for the latter, use [sparkline](reference-verbs.md#sparkline) instead:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \</b>
+<b>  then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -s \</b>
+<b>  data/medium</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+field lo hi sparkline
+x     0  1  █▁▆▄▂▄▅▅▄▅
+x2    0  1  █▃▂▂▂▁▁▁▁▁
+x3    0  1  █▂▂▂▁▁▁▁▁▁
 </pre>
 
 ## join
@@ -3390,6 +3408,38 @@ a b c
 1 2 3
 5 4 6
 9 8 7
+</pre>
+
+## sparkline
+
+<pre class="pre-highlight-in-pair">
+<b>mlr sparkline --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr sparkline [options]
+Reduces numeric field(s), across all records in input order, to a compact
+Unicode sparkline -- one block character per record -- for visualizing
+trends. Emits one output record per field. Holds all records in memory
+before producing any output.
+Options:
+-f {a,b,c} Field names to sparkline.
+-h|--help  Show this message.
+</pre>
+
+This reduces one or more numeric fields, in input-record order, to a compact
+Unicode sparkline -- a quick way to eyeball a trend across records without
+plotting software. Contrast with [histogram](reference-verbs.md#histogram)
+`-s`, which sparklines the *distribution* of a field's values (binned by
+value, order-independent) rather than the field's values in record order.
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint sparkline -f index,quantity,rate example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+field    n  lo      hi     sparkline
+index    10 11      91     ▁▁▁▄▅▆▆▆██
+quantity 10 13.8103 81.229 ▄█▁████▆▆▇
+rate     10 0.013   9.887  █▁▃▆▇█▅▄▇▇
 </pre>
 
 ## sparsify

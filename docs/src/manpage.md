@@ -257,14 +257,14 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        null_count os percentile percentiles pow qnorm reduce regextract
        regextract_or_else rightpad round roundm rstrip sec2dhms sec2gmt sec2gmtdate
        sec2hms sec2localdate sec2localtime select sgn sha1 sha256 sha512 sin sinh
-       skewness sort sort_collection splita splitax splitkv splitkvx splitnv splitnvx
-       sqrt ssub stat stddev strfntime strfntime_local strftime strftime_local string
-       strip strlen strmatch strmatchx strpntime strpntime_local strptime
-       strptime_local sub substr substr0 substr1 sum sum2 sum3 sum4 sysntime system
-       systime systimeint tan tanh tolower toupper truncate typeof unflatten unformat
-       unformatx upntime uptime urand urand32 urandelement urandint urandrange
-       utf8_to_latin1 variance version ! != !=~ % & && * ** + - . .* .+ .- ./ / // &lt;
-       &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
+       skewness sort sort_collection sparkline splita splitax splitkv splitkvx
+       splitnv splitnvx sqrt ssub stat stddev strfntime strfntime_local strftime
+       strftime_local string strip strlen strmatch strmatchx strpntime
+       strpntime_local strptime strptime_local sub substr substr0 substr1 sum sum2
+       sum3 sum4 sysntime system systime systimeint tan tanh tolower toupper truncate
+       typeof unflatten unformat unformatx upntime uptime urand urand32 urandelement
+       urandint urandrange utf8_to_latin1 variance version ! != !=~ % & && * ** + - .
+       .* .+ .- ./ / // &lt; &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
 
 1mCOMMENTS-IN-DATA FLAGS0m
        Miller lets you put comments in your data, such as
@@ -1462,7 +1462,11 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        --auto      Automatically computes limits, ignoring --lo and --hi. Holds all
                    values in memory before producing any output.
        -o {prefix} Prefix for output field name. Default: no prefix.
+       -s          Print a one-line Unicode sparkline per field instead of per-bin
+                   counts.
        -h|--help   Show this message.
+       With -s, output is one record per value-field, with a sparkline field
+       instead of one record per bin.
 
    1mjson-parse0m
        Usage: mlr json-parse [options]
@@ -3284,6 +3288,12 @@ This is simply a copy of what you should see on running `man mlr` at a command p
    1msort_collection0m
         (class=stats #args=1) This is a helper function for the percentiles function; please see its online help for details.
 
+   1msparkline0m
+        (class=stats #args=1) Returns a string of Unicode block characters (one of  per element) representing the relative magnitudes of values in an array or map, for a compact ASCII/Unicode bar chart. Returns error for non-array/non-map types.
+       Examples:
+       sparkline([1,2,3,4,5,6,7,8]) is ""
+       sparkline([3,3,3]) is ""
+
    1msplita0m
         (class=conversion #args=2) Splits string into array with type inference. First argument is string to split; second is the separator to split on.
        Example:
@@ -4062,5 +4072,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-07-06                         4mMILLER24m(1)
+                                  2026-07-07                         4mMILLER24m(1)
 </pre>

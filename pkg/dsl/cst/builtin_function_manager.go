@@ -1098,6 +1098,17 @@ is normally distributed.`,
 		},
 
 		{
+			name:      "sparkline",
+			class:     FUNC_CLASS_STATS,
+			help:      `Returns a string of Unicode block characters (one of ▁▂▃▄▅▆▇█ per element) representing the relative magnitudes of values in an array or map, for a compact ASCII/Unicode bar chart. Returns error for non-array/non-map types.`,
+			unaryFunc: bifs.BIF_sparkline,
+			examples: []string{
+				`sparkline([1,2,3,4,5,6,7,8]) is "▁▂▃▄▅▆▇█"`,
+				`sparkline([3,3,3]) is "▁▁▁"`,
+			},
+		},
+
+		{
 			name:      "mode",
 			class:     FUNC_CLASS_STATS,
 			help:      `Returns the most frequently occurring value in an array or map. Returns error for non-array/non-map types. Values are stringified for comparison, so for example string "1" and integer 1 are not distinct. In cases of ties, first-found wins.`,

@@ -1,0 +1,27 @@
+end {
+    outputs = {};
+
+    outputs["sparkline_0"] = sparkline(0);
+    outputs["sparkline_null"] = sparkline(null);
+    outputs["sparkline_nonesuch"] = sparkline(nonesuch);
+
+    outputs["sparkline_empty_array"] = sparkline([]);
+    outputs["sparkline_array_1"] = sparkline([7]);
+    outputs["sparkline_array_flat"] = sparkline([3,3,3]);
+    outputs["sparkline_array_ascending"] = sparkline([1,2,3,4,5,6,7,8]);
+    outputs["sparkline_array_descending"] = sparkline([8,7,6,5,4,3,2,1]);
+    outputs["sparkline_array_nonnumeric"] = sparkline([1,"abc"]);
+
+    outputs["sparkline_empty_map"] = sparkline({});
+    outputs["sparkline_map_1"] = sparkline({ "a" : 7 });
+    outputs["sparkline_map_ascending"] = sparkline({ "a" : 1, "b" : 4, "c" : 8 });
+
+    typed_outputs = {};
+
+    for (k, v in outputs) {
+        typed_outputs[k] = v;
+        typed_outputs[k."_type"] = typeof(v);
+    }
+
+    emit typed_outputs;
+}
