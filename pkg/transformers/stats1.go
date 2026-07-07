@@ -27,6 +27,7 @@ var stats1Options = []OptionSpec{
 	{Flag: "--gx", Arg: "{regex}", Type: "regex", Desc: "Inverted regex for optional group-by-field names (group by values in field names not matching the regex)."},
 	{Flag: "--grfx", Arg: "{regex}", Type: "regex", Desc: "Shorthand for --gr {regex} --fx {that same regex}."},
 	{Flag: "-i", Type: "bool", Desc: "Use interpolated percentiles, like R's type=7; default like type=1. Not sensical for string-valued fields."},
+	{Flag: "--rank-sorted", Type: "bool", Desc: "For the rank accumulator: promise that the input is already sorted by the field(s) being ranked, and rank by comparing each record's value only to the immediately preceding one. This is faster and streams in O(1) space, but produces wrong output on unsorted input. Without this flag, rank computes standard competition rank from all values seen so far, independent of input order, at the cost of buffering those values."},
 	{Flag: "-s", Type: "bool", Desc: "Print iterative stats. Useful in tail -f contexts, in which case please avoid pprint-format output since end of input stream will never be seen. Likewise, if input is coming from `tail -f` be sure to use `--records-per-batch 1`."},
 	{Flag: "-S", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
 	{Flag: "-F", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
@@ -79,10 +80,9 @@ the input record stream.
 * count and mode allow text input; the rest require numeric input.
   In particular, 1 and 1.0 are distinct text for count and mode.
 * When there are mode ties, the first-encountered datum wins.
-* rank assumes the input is already sorted (e.g. by mlr sort) on the field
-  being ranked, and assigns standard competition rank (1,2,2,4,...) by
-  comparing each record's value to the immediately preceding one. Use with
-  -s to get a rank on every input record.
+* rank assigns standard competition rank (1,2,2,4,...), independent of
+  input order: the rank of a value is one plus the count of values less
+  than it seen so far. Use with -s to get a rank on every input record.
 `)
 }
 
@@ -110,6 +110,7 @@ func transformerStats1ParseCLI(
 
 	doInterpolatedPercentiles := false
 	doIterativeStats := false
+	doAssumeSortedRank := false
 
 	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -186,6 +187,9 @@ func transformerStats1ParseCLI(
 		case "-i":
 			doInterpolatedPercentiles = true
 
+		case "--rank-sorted":
+			doAssumeSortedRank = true
+
 		case "-s":
 			doIterativeStats = true
 
@@ -222,6 +226,7 @@ func transformerStats1ParseCLI(
 
 		doInterpolatedPercentiles,
 		doIterativeStats,
+		doAssumeSortedRank,
 	)
 	if err != nil {
 		return nil, err
@@ -253,6 +258,7 @@ type TransformerStats1 struct {
 
 	doInterpolatedPercentiles bool
 	doIterativeStats          bool
+	doAssumeSortedRank        bool
 
 	// State:
 	accumulatorFactory *utils.Stats1AccumulatorFactory
@@ -323,6 +329,7 @@ func NewTransformerStats1(
 
 	doInterpolatedPercentiles bool,
 	doIterativeStats bool,
+	doAssumeSortedRank bool,
 ) (*TransformerStats1, error) {
 	for _, name := range accumulatorNameList {
 		if !utils.ValidateStats1AccumulatorName(name) {
@@ -343,6 +350,7 @@ func NewTransformerStats1(
 
 		doInterpolatedPercentiles:        doInterpolatedPercentiles,
 		doIterativeStats:                 doIterativeStats,
+		doAssumeSortedRank:               doAssumeSortedRank,
 		accumulatorFactory:               utils.NewStats1AccumulatorFactory(),
 		namedAccumulators:                lib.NewOrderedMap[*lib.OrderedMap[*lib.OrderedMap[*utils.Stats1NamedAccumulator]]](),
 		groupingKeysToGroupByFieldValues: make(map[string]*lib.OrderedMap[*mlrval.Mlrval]),
@@ -523,6 +531,7 @@ func (tr *TransformerStats1) ingestWithoutValueFieldRegexes(
 					groupingKey,
 					valueFieldName,
 					tr.doInterpolatedPercentiles,
+					tr.doAssumeSortedRank,
 				)
 				level3.Put(accumulatorName, namedAccumulator)
 			}
@@ -568,6 +577,7 @@ func (tr *TransformerStats1) ingestWithValueFieldRegexes(
 					groupingKey,
 					valueFieldName,
 					tr.doInterpolatedPercentiles,
+					tr.doAssumeSortedRank,
 				)
 				level3.Put(accumulatorName, namedAccumulator)
 			}

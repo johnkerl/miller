@@ -113,7 +113,7 @@ var stats1AccumulatorInfos []stats1AccumulatorInfo = []stats1AccumulatorInfo{
 
 	{
 		"rank",
-		"Compute rank 1,2,2,4,... of specified fields, assuming input is sorted by that field; use with -s",
+		"Compute standard competition rank (1,2,2,4,...) of specified fields; use with -s",
 		NewStats1RankAccumulator,
 	},
 
@@ -237,6 +237,7 @@ func (fac *Stats1AccumulatorFactory) MakeNamedAccumulator(
 	groupingKey string,
 	valueFieldName string,
 	doInterpolatedPercentiles bool,
+	doAssumeSortedRank bool,
 ) *Stats1NamedAccumulator {
 
 	accumulator := fac.MakeAccumulator(
@@ -244,6 +245,7 @@ func (fac *Stats1AccumulatorFactory) MakeNamedAccumulator(
 		groupingKey,
 		valueFieldName,
 		doInterpolatedPercentiles,
+		doAssumeSortedRank,
 	)
 	// We don't return an error here -- we fatal. The nominal case is that the stats1 verb has already
 	// pre-validated accumulator names, and this is just a fallback. The accumulators are instantiated for
@@ -266,7 +268,13 @@ func (fac *Stats1AccumulatorFactory) MakeAccumulator(
 	groupingKey string,
 	valueFieldName string,
 	doInterpolatedPercentiles bool,
+	doAssumeSortedRank bool,
 ) IStats1Accumulator {
+	// rank has a fast/streaming variant, opted into via --rank-sorted.
+	if accumulatorName == "rank" && doAssumeSortedRank {
+		return NewStats1SortedRankAccumulator()
+	}
+
 	// First try percentiles, which have parameterized names.
 	percentile, ok := tryPercentileFromName(accumulatorName)
 	if ok {
@@ -539,27 +547,65 @@ func (acc *Stats1MeanAbsDevAccumulator) Reset() {
 	acc.samples = make([]*mlrval.Mlrval, 0, 1000)
 }
 
-// Stats1RankAccumulator implements standard competition ranking (1,2,2,4,...)
-// on a sequence of values, e.g. as produced by 'mlr sort'. This assumes
-// same-valued items are adjacent in the input stream: it compares each
-// ingested value only to the immediately preceding one. This accumulator is
-// most useful with 'stats1 -s' so that a rank is emitted for every input
-// record, rather than only once at end of stream.
+// Stats1RankAccumulator implements standard competition ranking (1,2,2,4,...):
+// the rank of the most-recently-ingested value is one plus the number of
+// values strictly less than it, among all values ingested so far. This is
+// independent of input order. This accumulator is most useful with
+// 'stats1 -s' so that a rank is emitted for every input record, rather than
+// only once at end of stream (in which case only the last-ingested value's
+// rank within its whole group is emitted).
 type Stats1RankAccumulator struct {
+	keeper        *PercentileKeeper
+	lastValue     *mlrval.Mlrval
+	haveLastValue bool
+}
+
+func NewStats1RankAccumulator() IStats1Accumulator {
+	return &Stats1RankAccumulator{
+		keeper:        NewPercentileKeeper(false),
+		haveLastValue: false,
+	}
+}
+func (acc *Stats1RankAccumulator) Ingest(value *mlrval.Mlrval) {
+	acc.keeper.Ingest(value)
+	acc.lastValue = value.Copy()
+	acc.haveLastValue = true
+}
+func (acc *Stats1RankAccumulator) Emit() *mlrval.Mlrval {
+	if !acc.haveLastValue {
+		return mlrval.VOID
+	}
+	return acc.keeper.EmitRank(acc.lastValue)
+}
+func (acc *Stats1RankAccumulator) Reset() {
+	acc.keeper.Reset()
+	acc.lastValue = nil
+	acc.haveLastValue = false
+}
+
+// Stats1SortedRankAccumulator is the --rank-sorted opt-in variant of
+// Stats1RankAccumulator: it assumes the caller has promised the input is
+// already sorted by the field being ranked, so same-valued items are
+// adjacent in the input stream. It computes standard competition rank
+// (1,2,2,4,...) by comparing each ingested value only to the immediately
+// preceding one, in O(1) space, rather than buffering all values seen so
+// far. On unsorted input this produces wrong (input-order-dependent)
+// results.
+type Stats1SortedRankAccumulator struct {
 	count               int64
 	rank                int64
 	havePreviousValue   bool
 	previousValueString string
 }
 
-func NewStats1RankAccumulator() IStats1Accumulator {
-	return &Stats1RankAccumulator{
+func NewStats1SortedRankAccumulator() IStats1Accumulator {
+	return &Stats1SortedRankAccumulator{
 		count:             0,
 		rank:              0,
 		havePreviousValue: false,
 	}
 }
-func (acc *Stats1RankAccumulator) Ingest(value *mlrval.Mlrval) {
+func (acc *Stats1SortedRankAccumulator) Ingest(value *mlrval.Mlrval) {
 	acc.count++
 	valueString := value.String() // 1, 1.0, and 1.000 are distinct
 	if !acc.havePreviousValue || valueString != acc.previousValueString {
@@ -568,13 +614,13 @@ func (acc *Stats1RankAccumulator) Ingest(value *mlrval.Mlrval) {
 		acc.havePreviousValue = true
 	}
 }
-func (acc *Stats1RankAccumulator) Emit() *mlrval.Mlrval {
+func (acc *Stats1SortedRankAccumulator) Emit() *mlrval.Mlrval {
 	if acc.count == 0 {
 		return mlrval.VOID
 	}
 	return mlrval.FromInt(acc.rank)
 }
-func (acc *Stats1RankAccumulator) Reset() {
+func (acc *Stats1SortedRankAccumulator) Reset() {
 	acc.count = 0
 	acc.rank = 0
 	acc.havePreviousValue = false

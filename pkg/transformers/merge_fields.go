@@ -298,6 +298,7 @@ func NewTransformerMergeFields(
 			"", // grouping-key used for stats1, not here
 			outputFieldBasename,
 			doInterpolatedPercentiles,
+			false, // --rank-sorted is stats1-only
 		)
 		tr.namedAccumulators.Put(accumulatorName, accumulator)
 	}
@@ -507,6 +508,7 @@ func (tr *TransformerMergeFields) transformByCollapsing(
 					"", // grouping-key used for stats1, not here
 					shortName,
 					tr.doInterpolatedPercentiles,
+					false, // --rank-sorted is stats1-only
 				)
 				namedAccumulators.Put(accumulatorName, accumulator)
 			}
