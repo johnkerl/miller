@@ -1,4 +1,4 @@
-<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<!--  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. -->
 <div>
 <span class="quicklinks">
 Quick links:

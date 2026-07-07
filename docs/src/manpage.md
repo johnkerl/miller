@@ -1,4 +1,4 @@
-<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<!--  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. -->
 <div>
 <span class="quicklinks">
 Quick links:
@@ -2457,6 +2457,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        count-distinct. For uniq, -f is a synonym for -g. Output fields are
        written in the order in which they are named with -g or -f, not in the
        order in which they appear in the input records.
+       To deduplicate records by one or more fields while keeping all other
+       fields, use head: e.g. "mlr head -n 1 -g hash" keeps the first record
+       for each distinct value of the hash field, with all fields intact.
 
        Options:
        -g {d,e,f} Group-by field names for uniq counts.
