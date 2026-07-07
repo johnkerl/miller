@@ -1,1 +1,0 @@
-mlr --icsv --ocsv stats1 -a rank -f x -g g -s test/input/rank-data-grouped-unsorted.csv

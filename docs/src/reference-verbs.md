@@ -2317,7 +2317,7 @@ Accumulators for -a:
   kurtosis Compute sample kurtosis of specified fields
   min      Compute minimum values of specified fields
   max      Compute maximum values of specified fields
-  rank     Compute standard competition rank (1,2,2,4,...) of specified fields; use with -s
+  rank     Compute rank 1,2,2,4,... of specified fields, assuming input is sorted by that field; use with -s
   minlen   Compute minimum string-lengths of specified fields
   maxlen   Compute maximum string-lengths of specified fields
 
@@ -3544,14 +3544,6 @@ Options:
 --grfx {regex}     Shorthand for --gr {regex} --fx {that same regex}.
 -i                 Use interpolated percentiles, like R's type=7; default like
                    type=1. Not sensical for string-valued fields.
---rank-sorted      For the rank accumulator: promise that the input is already
-                   sorted by the field(s) being ranked, and rank by comparing
-                   each record's value only to the immediately preceding one.
-                   This is faster and streams in O(1) space, but produces wrong
-                   output on unsorted input. Without this flag, rank computes
-                   standard competition rank from all values seen so far,
-                   independent of input order, at the cost of buffering those
-                   values.
 -s                 Print iterative stats. Useful in tail -f contexts, in which
                    case please avoid pprint-format output since end of input
                    stream will never be seen. Likewise, if input is coming from
@@ -3577,7 +3569,7 @@ Names of accumulators for -a, one or more of:
   kurtosis Compute sample kurtosis of specified fields
   min      Compute minimum values of specified fields
   max      Compute maximum values of specified fields
-  rank     Compute standard competition rank (1,2,2,4,...) of specified fields; use with -s
+  rank     Compute rank 1,2,2,4,... of specified fields, assuming input is sorted by that field; use with -s
   minlen   Compute minimum string-lengths of specified fields
   maxlen   Compute maximum string-lengths of specified fields
 Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
@@ -3597,9 +3589,10 @@ Notes:
 * count and mode allow text input; the rest require numeric input.
   In particular, 1 and 1.0 are distinct text for count and mode.
 * When there are mode ties, the first-encountered datum wins.
-* rank assigns standard competition rank (1,2,2,4,...), independent of
-  input order: the rank of a value is one plus the count of values less
-  than it seen so far. Use with -s to get a rank on every input record.
+* rank assumes the input is already sorted (e.g. by mlr sort) on the field
+  being ranked, and assigns standard competition rank (1,2,2,4,...) by
+  comparing each record's value to the immediately preceding one. Use with
+  -s to get a rank on every input record.
 </pre>
 
 These are simple univariate statistics on one or more number-valued fields
