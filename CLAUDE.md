@@ -28,6 +28,24 @@ staticcheck -version
 
 If this works, you can use `make staticcheck` without any further setup.
 
+### Setting Up golangci-lint
+
+CI runs `golangci-lint` (config in `.golangci.yml`) on every push and PR via
+`.github/workflows/golangci-lint.yml`. To run it locally, install the version
+matching CI (currently v2.12.2) per the
+[official instructions](https://golangci-lint.run/welcome/install/#local-installation), e.g.:
+
+```bash
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.12.2
+```
+
+This also installs to `~/go/bin/`, so the same `PATH` addition above covers it.
+
+**Verify the installation:**
+```bash
+golangci-lint --version
+```
+
 ## Build & Test
 
 ### Building
@@ -48,7 +66,22 @@ make bench          # Run benchmarks
 ```bash
 make fmt            # Format code with go fmt
 make staticcheck    # Run static analysis (see Initial Setup section above)
+make lint           # Run golangci-lint, same invocation as CI (see Initial Setup section above)
 ```
+
+`make lint` runs `golangci-lint run ./cmd/mlr ./pkg/...`, matching
+`.github/workflows/golangci-lint.yml` exactly, so a clean local run usually
+means CI's lint job will pass too. It is not part of `make check` or
+`make dev`, so run it explicitly before pushing.
+
+**Note:** CI's lint job restores a persistent `golangci-lint` results cache
+shared across commits and PRs (via `golangci-lint-action`), which can
+occasionally serve stale `staticcheck` results (e.g. spurious `SA5011`
+nil-check warnings) unrelated to your diff. The job is `continue-on-error:
+true` for this reason, so it won't block merging. If CI lint fails but
+`make lint` is clean locally, it's likely a stale cache — rerun the job, or a
+maintainer can clear it: `gh cache list --key golangci-lint` then
+`gh cache delete <id>`.
 
 ### Full Developer Workflow
 ```bash
@@ -125,9 +158,10 @@ Documentation is built from `.md.in` template files that contain live code sampl
 Always run:
 ```bash
 make dev
+make lint
 ```
 
-This ensures code formatting, builds successfully, passes all tests, and documentation is up to date.
+`make dev` ensures code formatting, builds successfully, passes all tests, and documentation is up to date. `make lint` is separate (not part of `make dev`/`make check`) and mirrors the CI lint job.
 
 ## Additional Resources
 

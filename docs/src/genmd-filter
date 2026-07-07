@@ -18,7 +18,7 @@ def main
   input_handle = $stdin
   output_handle = $stdout
 
-  output_handle.puts("<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->")
+  output_handle.puts("<!--  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. -->")
 
   # The filename on the command line is used for link-generation; file contents
   # are read from standard input.
