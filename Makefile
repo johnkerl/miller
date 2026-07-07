@@ -79,6 +79,11 @@ fmt format:
 staticcheck:
 	staticcheck ./pkg/... ./cmd/mlr/...
 
+# Needs first: https://golangci-lint.run/welcome/install/#local-installation
+# Config lives in .golangci.yml; same invocation as .github/workflows/golangci-lint.yml
+lint:
+	golangci-lint run ./cmd/mlr ./pkg/...
+
 # ----------------------------------------------------------------
 # For developers before pushing to GitHub.
 #
@@ -125,4 +130,4 @@ release_tarball release-tarball: build check
 
 # ================================================================
 # Go does its own dependency management, outside of make.
-.PHONY: build mlr check unit_test regression_test bench fmt staticcheck dev docs man
+.PHONY: build mlr check unit_test regression_test bench fmt staticcheck lint dev docs man

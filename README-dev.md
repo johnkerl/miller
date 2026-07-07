@@ -1,6 +1,7 @@
 # Quickstart for developers
 
 * `make`, `make check`, `make docs`, etc: see [Makefile](Makefile) in the repo base directory.
+* Linting: `make lint` runs [golangci-lint](https://golangci-lint.run/) (config in [.golangci.yml](.golangci.yml)) with the same invocation used by [.github/workflows/golangci-lint.yml](.github/workflows/golangci-lint.yml), so a clean local run means CI's lint job will pass too. Install golangci-lint locally per the [official instructions](https://golangci-lint.run/welcome/install/#local-installation) (match the CI version, currently v2.12.2). It's a separate step from `make dev`/`make check` -- run it explicitly before pushing. `make staticcheck` (requires [staticcheck](https://staticcheck.io)) is a second, independent static-analysis pass.
 * Software-testing methodology: see [./test/README.md](./test/README.md).
 * Source-code indexing: please see [https://sourcegraph.com/github.com/johnkerl/miller](https://sourcegraph.com/github.com/johnkerl/miller)
 * Godoc As of September 2021, `godoc` support is minimal: package-level synopses exist; most `func`/`const`/etc content lacks `godoc`-style comments.  To view doc material, you can:
