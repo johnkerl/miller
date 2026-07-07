@@ -1,0 +1,1 @@
+mlr --ojson sparkline -f i,x,y test/input/abixy

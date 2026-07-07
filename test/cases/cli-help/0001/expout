@@ -474,7 +474,11 @@ Options:
 --auto      Automatically computes limits, ignoring --lo and --hi. Holds all
             values in memory before producing any output.
 -o {prefix} Prefix for output field name. Default: no prefix.
+-s          Print a one-line Unicode sparkline per field instead of per-bin
+            counts.
 -h|--help   Show this message.
+With -s, output is one record per value-field, with a sparkline field
+instead of one record per bin.
 
 ================================================================
 json-parse
@@ -1147,6 +1151,17 @@ Options:
            argument, -r recursively sorts subobjects/submaps (e.g. for JSON
            input), or combines with -f to treat names as regexes.
 -n         Sort field names naturally (e.g. 2 before 12). Combines with -f/-r.
+-h|--help  Show this message.
+
+================================================================
+sparkline
+Usage: mlr sparkline [options]
+Reduces numeric field(s), across all records in input order, to a compact
+Unicode sparkline -- one block character per record -- for visualizing
+trends. Emits one output record per field. Holds all records in memory
+before producing any output.
+Options:
+-f {a,b,c} Field names to sparkline.
 -h|--help  Show this message.
 
 ================================================================
