@@ -298,17 +298,29 @@ Available format strings for `strptime`:
 | Pattern | Description |
 |---------|-------------|
 | `%%` |  A literal '%' character. |
+| `%a` |  Weekday as locale’s abbreviated name. |
+| `%A` |  Weekday as locale’s full name. |
 | `%b` |  Month as locale’s abbreviated name. |
 | `%B` |  Month as locale’s full name. |
+| `%c` |  Locale’s date and time representation. Equivalent to `%a %b %e %H:%M:%S %Y`. |
 | `%d` |  Day of the month as a zero-padded decimal number. |
+| `%D` |  Equivalent to `%m/%d/%y`. |
+| `%e` |  Day of the month as a space-padded decimal number. |
 | `%f` |  Microsecond as a decimal number, zero-padded on the left. |
+| `%F` |  Equivalent to `%Y-%m-%d`. |
+| `%h` |  Same as `%b`. |
 | `%H` |  Hour (24-hour clock) as a zero-padded decimal number. |
 | `%I` |  Hour (12-hour clock) as a zero-padded decimal number. |
 | `%j` |  Three-digit day of year, like 004 or 363. |
 | `%m` |  Month as a zero-padded decimal number. |
 | `%M` |  Minute as a zero-padded decimal number. |
 | `%p` |  Locale’s equivalent of either AM or PM. |
+| `%r` |  Equivalent to `%I:%M:%S %p`. |
+| `%R` |  Equivalent to `%H:%M`. |
 | `%S` |  Second as a zero-padded decimal number. |
+| `%T` |  Equivalent to `%H:%M:%S`. |
+| `%x` |  Locale’s date representation. Equivalent to `%m/%d/%y`. |
+| `%X` |  Locale’s time representation. Equivalent to `%H:%M:%S`. |
 | `%y` |  Year without century as a zero-padded decimal number. |
 | `%Y` |  Year with century as a decimal number. |
 | `%z` |  UTC offset in the form +HHMM or -HHMM. |

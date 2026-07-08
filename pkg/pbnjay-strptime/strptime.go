@@ -23,9 +23,13 @@ THE SOFTWARE.
 // Package strptime provides a C-style strptime wrappers for time.Parse.
 //
 // It supports the following subset of format strings (stolen from python docs):
+//     %a  Weekday as locale’s abbreviated name.
+//     %A  Weekday as locale’s full name.
 //     %d  Day of the month as a zero-padded decimal number.
+//     %e  Day of the month as a space-padded decimal number.
 //     %b  Month as locale’s abbreviated name.
 //     %B  Month as locale’s full name.
+//     %h  Month as locale’s abbreviated name (alias of %b).
 //     %m  Month as a zero-padded decimal number.
 //     %y  Year without century as a zero-padded decimal number.
 //     %Y  Year with century as a decimal number.
@@ -40,6 +44,9 @@ THE SOFTWARE.
 //         "2022-04-03 17:38:20.123 UTC" all parse with "%Y-%m-%d %H:%M:%S.%f UTC").
 //     %z  UTC offset in the form +HHMM or -HHMM.
 //     %Z  Time zone name. UTC, EST, CST
+//     %c  Locale’s date and time representation. Shorthand for "%a %b %e %H:%M:%S %Y".
+//     %x  Locale’s date representation. Shorthand for "%m/%d/%y".
+//     %X  Locale’s time representation. Shorthand for "%H:%M:%S".
 //     %%  A literal '%' character.
 //
 // BUG(pbnjay): If an unsupported specifier is used, it may NOT directly precede a
@@ -225,38 +232,46 @@ func strptime_tz(
 		interveningLen := sil
 		// Now sil becomes the offset of this part within the strptime-style input.
 		if sil > 0 {
-			// Optional ".%f" (mixed modes): when format has ".%f" and next format code is 'f',
-			// the literal "." may be absent (e.g. "2022-04-03 17:38:20 UTC" vs "2022-04-03 17:38:20.123 UTC").
-			dotOptional := false
-			if partsIndex+1 < nparts {
-				nextPart := partsBetweenPercentSigns[partsIndex+1]
-				if len(partBetweenPercentSigns) > 0 &&
-					partBetweenPercentSigns[len(partBetweenPercentSigns)-1] == '.' &&
-					len(nextPart) > 0 && nextPart[0] == 'f' {
-					dotOptional = true
-				}
-			}
-			if dotOptional {
-				dotSearch := partBetweenPercentSigns[1:]
-				sil = strings.Index(strptimeInput[inputIdx:], dotSearch)
-				if sil == -1 {
-					// Try without the dot: find the first char of the literal after %f
-					if partsIndex+1 < nparts {
-						nextPart := partsBetweenPercentSigns[partsIndex+1]
-						if len(nextPart) > 1 {
-							fallbackSearch := string(nextPart[1])
-							sil = strings.Index(strptimeInput[inputIdx:], fallbackSearch)
-							if sil != -1 {
-								interveningLen = 0
-							}
-						} else {
-							sil = len(strptimeInput) - inputIdx
-							interveningLen = 0
-						}
+			if formatCode == 'e' {
+				// %e's own optional leading pad space is indistinguishable from a
+				// literal separator space (e.g. "%b %e %T" matching "Mar  4 ..."), so a
+				// plain search for the next literal text would stop at %e's own padding.
+				// Determine the field width directly instead.
+				sil = spacePaddedDayLen(strptimeInput[inputIdx:])
+			} else {
+				// Optional ".%f" (mixed modes): when format has ".%f" and next format code is 'f',
+				// the literal "." may be absent (e.g. "2022-04-03 17:38:20 UTC" vs "2022-04-03 17:38:20.123 UTC").
+				dotOptional := false
+				if partsIndex+1 < nparts {
+					nextPart := partsBetweenPercentSigns[partsIndex+1]
+					if len(partBetweenPercentSigns) > 0 &&
+						partBetweenPercentSigns[len(partBetweenPercentSigns)-1] == '.' &&
+						len(nextPart) > 0 && nextPart[0] == 'f' {
+						dotOptional = true
 					}
 				}
-			} else {
-				sil = strings.Index(strptimeInput[inputIdx:], partBetweenPercentSigns[1:])
+				if dotOptional {
+					dotSearch := partBetweenPercentSigns[1:]
+					sil = strings.Index(strptimeInput[inputIdx:], dotSearch)
+					if sil == -1 {
+						// Try without the dot: find the first char of the literal after %f
+						if partsIndex+1 < nparts {
+							nextPart := partsBetweenPercentSigns[partsIndex+1]
+							if len(nextPart) > 1 {
+								fallbackSearch := string(nextPart[1])
+								sil = strings.Index(strptimeInput[inputIdx:], fallbackSearch)
+								if sil != -1 {
+									interveningLen = 0
+								}
+							} else {
+								sil = len(strptimeInput) - inputIdx
+								interveningLen = 0
+							}
+						}
+					}
+				} else {
+					sil = strings.Index(strptimeInput[inputIdx:], partBetweenPercentSigns[1:])
+				}
 			}
 		}
 		if sil == -1 {
@@ -273,13 +288,22 @@ func strptime_tz(
 		if supported {
 			// Accumulate the go-lib style template and input strings.
 			if sil == 0 { // No intervening text, e.g. "%Y%m%d"
-				if formatCode == 'f' {
+				switch formatCode {
+				case 'f':
 					// %f is optional decimal point + 0-6 digit runes (microseconds).
 					// Supports mixed modes: no fraction ("20 UTC"), dot only ("20. UTC"), or digits ("20.123 UTC").
 					// Do not consume the rest of the string so that %f%z works:
 					// e.g. ".160001+0100" -> %f takes ".160001", %z takes "+0100".
 					sil, fracHasDigits = parseFracLen(strptimeInput[inputIdx:])
-				} else {
+				case 'e':
+					sil = spacePaddedDayLen(strptimeInput[inputIdx:])
+					if sil == -1 {
+						if _debug {
+							fmt.Printf("format/template mismatch 2\n")
+						}
+						return time.Time{}, ErrFormatMismatch
+					}
+				default:
 					want := len(templateComponent)
 					remaining := len(strptimeInput) - inputIdx
 					if remaining == 0 {
@@ -414,17 +438,42 @@ func parseFracLen(s string) (length int, hasDigits bool) {
 	return n, digits > 0
 }
 
+// spacePaddedDayLen returns the byte length of a strptime %e field in s: a day-of-month
+// as either a single digit ("4"), a space followed by a digit (" 4"), or two digits
+// ("14"). Returns -1 if s does not start with a valid %e field.
+func spacePaddedDayLen(s string) int {
+	isDigit := func(b byte) bool { return b >= '0' && b <= '9' }
+	if s == "" {
+		return -1
+	}
+	if s[0] == ' ' {
+		if len(s) > 1 && isDigit(s[1]) {
+			return 2
+		}
+		return -1
+	}
+	if !isDigit(s[0]) {
+		return -1
+	}
+	if len(s) > 1 && isDigit(s[1]) {
+		return 2
+	}
+	return 1
+}
+
 // expandShorthands handles some shorthands that the C library uses, which we can easily
 // replicate -- e.g. "%F" is "%Y-%m-%d".
 func expandShorthands(format string) string {
 	// TODO: mem cache
+	format = strings.ReplaceAll(format, "%c", "%a %b %e %H:%M:%S %Y")
+	format = strings.ReplaceAll(format, "%x", "%m/%d/%y")
+	format = strings.ReplaceAll(format, "%X", "%H:%M:%S")
 	format = strings.ReplaceAll(format, "%T", "%H:%M:%S")
 	format = strings.ReplaceAll(format, "%D", "%m/%d/%y")
 	format = strings.ReplaceAll(format, "%F", "%Y-%m-%d")
 	format = strings.ReplaceAll(format, "%R", "%H:%M")
 	format = strings.ReplaceAll(format, "%r", "%I:%M:%S %p")
 	format = strings.ReplaceAll(format, "%T", "%H:%M:%S")
-	// We've no %e in this package
 	// format = strings.ReplaceAll(format, "%v", "%e-%b-%Y")
 	return format
 }
@@ -437,9 +486,13 @@ var (
 	ErrFormatUnsupported = errors.New("date format contains unsupported percent-encodings")
 
 	formatMap = map[int]string{
+		'a': "Mon",
+		'A': "Monday",
 		'b': "Jan",
 		'B': "January",
+		'h': "Jan",
 		'd': "02",
+		'e': "_2",
 		'f': "999999",
 		'H': "15",
 		'I': "03",
