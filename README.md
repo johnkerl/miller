@@ -24,29 +24,6 @@ including but not limited to the familiar **CSV**, **TSV**, and **JSON**/**JSON 
 In the above image you can see how Miller embraces the common themes of
 key-value-pair data in a variety of data formats.
 
-# Getting started
-
-[![deepwiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/johnkerl/miller)
-
-* [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min)
-* [A Guide To Command-Line Data Manipulation](https://www.smashingmagazine.com/2022/12/guide-command-line-data-manipulation-cli-miller)
-* [A quick tutorial on Miller](https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html)
-* [Miller Exercises](https://github.com/GuilloteauQ/miller-exercises)
-* [Tools to manipulate CSV files from the Command Line](https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html)
-* [www.togaware.com/linux/survivor/CSV_Files.html](https://www.togaware.com/linux/survivor/CSV_Files.html)
-* [MLR for CSV manipulation](https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html)
-* [Linux Magazine: Process structured text files with Miller](https://www.linux-magazine.com/Issues/2016/187/Miller)
-* [Miller: Command Line CSV File Processing](https://onepointzero.app/posts/miller-command-line-csv-file-processing/)
-* [Miller - A Swiss Army Chainsaw for CSV Data, Data Science and Data Munging](https://fuzzyblog.io/blog/data_science/2022/05/13/miller-a-swiss-army-chainsaw-for-csv-data-data-science-and-data-munging.html)
-* [Pandas Killer: mlr, the Scientist](https://xvzftube.xyz/posts/pandas_killers/#mlr%3A-the-scientist)
-
-# More documentation links
-
-* [**Full documentation**](https://miller.readthedocs.io/)
-* [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/main/LICENSE.txt)
-* [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
-* [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
-
 # Installing
 There's a good chance you can get Miller pre-built for your system:
 [![Ubuntu](https://img.shields.io/badge/distros-ubuntu-db4923.svg)](https://launchpad.net/ubuntu/+source/miller)
@@ -74,6 +51,78 @@ There's a good chance you can get Miller pre-built for your system:
 See also [README-versions.md](./README-versions.md) for a full list of package versions. Note that long-term-support (LtS) releases will likely be on older versions.
 
 See also [building from source](https://miller.readthedocs.io/en/latest/build.html).
+
+# Features
+
+* Miller is **multi-purpose**: it's useful for **data cleaning**,
+**data reduction**, **statistical reporting**, **devops**, **system
+administration**, **log-file processing**, **format conversion**, and
+**database-query post-processing**.
+
+* You can use Miller to snarf and munge **log-file data**, including selecting
+out relevant substreams, then produce CSV format and load that into
+all-in-memory/data-frame utilities for further statistical and/or graphical
+processing.
+
+* Miller complements **data-analysis tools** such as **R**, **pandas**, etc.:
+you can use Miller to **clean** and **prepare** your data. While you can do
+**basic statistics** entirely in Miller, its streaming-data feature and
+single-pass algorithms enable you to **reduce very large data sets**.
+
+* Miller complements SQL **databases**: you can slice, dice, and reformat data
+on the client side on its way into or out of a database. You can also reap some
+of the benefits of databases for quick, setup-free one-off tasks when you just
+need to query some data in disk files in a hurry.
+
+* Miller also goes beyond the classic Unix tools by stepping fully into our
+modern, **no-SQL** world: its essential record-heterogeneity property allows
+Miller to operate on data where records with different schema (field names) are
+interleaved.
+
+* Miller is **streaming**: most operations need only a single record in
+memory at a time, rather than ingesting all input before producing any output.
+For those operations which require deeper retention (`sort`, `tac`, `stats1`),
+Miller retains only as much data as needed. This means that whenever
+functionally possible, you can operate on files which are larger than your
+system&rsquo;s available RAM, and you can use Miller in **tail -f** contexts.
+
+* Miller is **pipe-friendly** and interoperates with the Unix toolkit.
+
+* Miller's I/O formats include **tabular pretty-printing**, **positionally
+  indexed** (Unix-toolkit style), CSV, TSV, JSON, JSON Lines, and others.
+
+* Miller does **conversion** between formats.
+
+* Miller's **processing is format-aware**: e.g. CSV `sort` and `tac` keep header lines first.
+
+* Miller has high-throughput **performance** on par with the Unix toolkit.
+
+* Miller is written in portable, modern Go, with **zero runtime dependencies**.
+You can download or compile a single binary, `scp` it to a faraway machine,
+and expect it to work.
+
+# Getting started
+
+[![deepwiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/johnkerl/miller)
+
+* [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min)
+* [A Guide To Command-Line Data Manipulation](https://www.smashingmagazine.com/2022/12/guide-command-line-data-manipulation-cli-miller)
+* [A quick tutorial on Miller](https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html)
+* [Miller Exercises](https://github.com/GuilloteauQ/miller-exercises)
+* [Tools to manipulate CSV files from the Command Line](https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html)
+* [www.togaware.com/linux/survivor/CSV_Files.html](https://www.togaware.com/linux/survivor/CSV_Files.html)
+* [MLR for CSV manipulation](https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html)
+* [Linux Magazine: Process structured text files with Miller](https://www.linux-magazine.com/Issues/2016/187/Miller)
+* [Miller: Command Line CSV File Processing](https://onepointzero.app/posts/miller-command-line-csv-file-processing/)
+* [Miller - A Swiss Army Chainsaw for CSV Data, Data Science and Data Munging](https://fuzzyblog.io/blog/data_science/2022/05/13/miller-a-swiss-army-chainsaw-for-csv-data-data-science-and-data-munging.html)
+* [Pandas Killer: mlr, the Scientist](https://xvzftube.xyz/posts/pandas_killers/#mlr%3A-the-scientist)
+
+# More documentation links
+
+* [**Full documentation**](https://miller.readthedocs.io/)
+* [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/main/LICENSE.txt)
+* [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
+* [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 
 # Community
 
@@ -124,55 +173,6 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 # License
 
 [License: BSD2](https://github.com/johnkerl/miller/blob/main/LICENSE.txt)
-
-# Features
-
-* Miller is **multi-purpose**: it's useful for **data cleaning**,
-**data reduction**, **statistical reporting**, **devops**, **system
-administration**, **log-file processing**, **format conversion**, and
-**database-query post-processing**.
-
-* You can use Miller to snarf and munge **log-file data**, including selecting
-out relevant substreams, then produce CSV format and load that into
-all-in-memory/data-frame utilities for further statistical and/or graphical
-processing.
-
-* Miller complements **data-analysis tools** such as **R**, **pandas**, etc.:
-you can use Miller to **clean** and **prepare** your data. While you can do
-**basic statistics** entirely in Miller, its streaming-data feature and
-single-pass algorithms enable you to **reduce very large data sets**.
-
-* Miller complements SQL **databases**: you can slice, dice, and reformat data
-on the client side on its way into or out of a database. You can also reap some
-of the benefits of databases for quick, setup-free one-off tasks when you just
-need to query some data in disk files in a hurry.
-
-* Miller also goes beyond the classic Unix tools by stepping fully into our
-modern, **no-SQL** world: its essential record-heterogeneity property allows
-Miller to operate on data where records with different schema (field names) are
-interleaved.
-
-* Miller is **streaming**: most operations need only a single record in
-memory at a time, rather than ingesting all input before producing any output.
-For those operations which require deeper retention (`sort`, `tac`, `stats1`),
-Miller retains only as much data as needed. This means that whenever
-functionally possible, you can operate on files which are larger than your
-system&rsquo;s available RAM, and you can use Miller in **tail -f** contexts.
-
-* Miller is **pipe-friendly** and interoperates with the Unix toolkit.
-
-* Miller's I/O formats include **tabular pretty-printing**, **positionally
-  indexed** (Unix-toolkit style), CSV, TSV, JSON, JSON Lines, and others.
-
-* Miller does **conversion** between formats.
-
-* Miller's **processing is format-aware**: e.g. CSV `sort` and `tac` keep header lines first.
-
-* Miller has high-throughput **performance** on par with the Unix toolkit.
-
-* Miller is written in portable, modern Go, with **zero runtime dependencies**.
-You can download or compile a single binary, `scp` it to a faraway machine,
-and expect it to work.
 
 # What people are saying about Miller
 
