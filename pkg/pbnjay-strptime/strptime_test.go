@@ -58,7 +58,7 @@ var testData = []testDataType{
 	},
 	{
 		"01/02/70 14:20",
-		"%D %X", // no such format code
+		"%D %U", // no such format code
 		false,
 		0,
 	},
@@ -150,6 +150,81 @@ var testData = []testDataType{
 		"%Y-%m-%d %H:%M:%S.%f UTC",
 		true,
 		1649007500, // .1 second = 1649007500.1 in float, but Unix() truncates to 1649007500
+	},
+
+	// %a / %A (weekday name) and %e (space-padded day of month), and %h (alias of
+	// %b). This is the exact repro from https://github.com/johnkerl/miller/issues/1518:
+	// strptime rejected format codes that strftime itself produces.
+	{
+		"Mon Mar  4 11:41:08 2024",
+		"%a %b %e %T %Y",
+		true,
+		1709552468,
+	},
+	{
+		"Monday Mar  4 11:41:08 2024",
+		"%A %b %e %T %Y",
+		true,
+		1709552468,
+	},
+	{
+		"Mon Mar  4 11:41:08 2024",
+		"%a %h %e %T %Y",
+		true,
+		1709552468,
+	},
+	// %e with a double-digit day -- no space padding present in the source.
+	{
+		"Tue Oct 22 00:00:00 2024",
+		"%a %b %e %T %Y",
+		true,
+		1729555200,
+	},
+	// %e with a single (non-padded) space before a single-digit day.
+	{
+		"Mar 4 2024",
+		"%b %e %Y",
+		true,
+		1709510400,
+	},
+	// %e directly adjacent to another format code, no intervening literal text.
+	{
+		"4Mar2024",
+		"%e%b%Y",
+		true,
+		1709510400,
+	},
+	{
+		"14Mar2024",
+		"%e%b%Y",
+		true,
+		1710374400,
+	},
+	// %e at the very end of the string.
+	{
+		"2024-03-4",
+		"%Y-%m-%e",
+		true,
+		1709510400,
+	},
+	{
+		"2024-03-14",
+		"%Y-%m-%e",
+		true,
+		1710374400,
+	},
+	// %c, %x, %X shorthands.
+	{
+		"Mon Mar  4 11:41:08 2024",
+		"%c",
+		true,
+		1709552468,
+	},
+	{
+		"03/04/24 11:41:08",
+		"%x %X",
+		true,
+		1709552468,
 	},
 }
 
