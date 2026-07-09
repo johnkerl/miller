@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2026-07-05
+.\"      Date: 2026-07-08
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2026-07-05" "\ \&" "\ \&"
+.TH "MILLER" "1" "2026-07-08" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -249,11 +249,11 @@ altkv bar bootstrap case cat check clean-whitespace count-distinct count
 count-similar cut decimate describe fill-down fill-empty filter flatten
 format-values fraction gap grep group-by group-like gsub having-fields head
 histogram json-parse json-stringify join label latin1-to-utf8 least-frequent
-merge-fields most-frequent nest nothing put regularize remove-empty-columns
-rename reorder repeat reshape sample sec2gmtdate sec2gmt seqgen shuffle
-skip-trivial-records sort sort-within-records sparsify split ssub stats1
-stats2 step sub summary surv tac tail tee template top utf8-to-latin1
-unflatten uniq unspace unsparsify
+merge-fields most-frequent nest nothing put rank regularize
+remove-empty-columns rename reorder repeat reshape sample sec2gmtdate sec2gmt
+seqgen shuffle skip-trivial-records sort sort-within-records sparkline
+sparsify split ssub stats1 stats2 step sub summary surv tac tail tee template
+top utf8-to-latin1 unflatten uniq unspace unsparsify
 .fi
 .if n \{\
 .RE
@@ -284,14 +284,14 @@ minlen mmul mode msub next nsec2gmt nsec2gmtdate nsec2localdate nsec2localtime
 null_count os percentile percentiles pow qnorm reduce regextract
 regextract_or_else rightpad round roundm rstrip sec2dhms sec2gmt sec2gmtdate
 sec2hms sec2localdate sec2localtime select sgn sha1 sha256 sha512 sin sinh
-skewness sort sort_collection splita splitax splitkv splitkvx splitnv splitnvx
-sqrt ssub stat stddev strfntime strfntime_local strftime strftime_local string
-strip strlen strmatch strmatchx strpntime strpntime_local strptime
-strptime_local sub substr substr0 substr1 sum sum2 sum3 sum4 sysntime system
-systime systimeint tan tanh tolower toupper truncate typeof unflatten unformat
-unformatx upntime uptime urand urand32 urandelement urandint urandrange
-utf8_to_latin1 variance version ! != !=~ % & && * ** + - . .* .+ .- ./ / // <
-<< <= <=> == =~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
+skewness sort sort_collection sparkline splita splitax splitkv splitkvx
+splitnv splitnvx sqrt ssub stat stddev strfntime strfntime_local strftime
+strftime_local string strip strlen strmatch strmatchx strpntime
+strpntime_local strptime strptime_local sub substr substr0 substr1 sum sum2
+sum3 sum4 sysntime system systime systimeint tan tanh tolower toupper truncate
+typeof unflatten unformat unformatx upntime uptime urand urand32 urandelement
+urandint urandrange utf8_to_latin1 variance version ! != !=~ % & && * ** + - .
+\&.* .+ .- ./ / // < << <= <=> == =~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
 .fi
 .if n \{\
 .RE
@@ -932,6 +932,13 @@ These are flags which are applicable to PPRINT format.
                          right-align-multi-word
 --fw {string}            Shortcut for --fixed left-align-multi-word
 --right                  Right-justifies all fields for PPRINT output.
+--right-align-numeric    Right-justifies fields with numeric values for PPRINT
+                         output, leaving other fields left-justified. Headers
+                         are right-justified over columns whose values are all
+                         numeric, so that header and data share the same
+                         alignment. Also applies to markdown output, where
+                         numeric columns get right-alignment markers (`---:`)
+                         in the header-separator line.
 .fi
 .if n \{\
 .RE
@@ -987,6 +994,9 @@ Notes about line endings:
 * Default line endings (`--irs` and `--ors`) are newline
   which is interpreted to accept carriage-return/newline files (e.g. on Windows)
   for input, and to produce platform-appropriate line endings on output.
+* For CSV, CSV-lite, TSV, and TSV-lite output, ORS may be either newline (the
+  default) or carriage-return/newline: e.g. `--ors crlf` or `--ors '\er\en'`
+  for RFC-4180-style line endings on any platform.
 
 Notes about all other separators:
 
@@ -1781,7 +1791,11 @@ Options:
 --auto      Automatically computes limits, ignoring --lo and --hi. Holds all
             values in memory before producing any output.
 -o {prefix} Prefix for output field name. Default: no prefix.
+-s          Print a one-line Unicode sparkline per field instead of per-bin
+            counts.
 -h|--help   Show this message.
+With -s, output is one record per value-field, with a sparkline field
+instead of one record per bin.
 .fi
 .if n \{\
 .RE
@@ -2195,6 +2209,40 @@ See also https://miller.readthedocs.io/reference-dsl for more context.
 .fi
 .if n \{\
 .RE
+.SS "rank"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr rank [options]
+For each record's value in specified fields, computes the standard
+competition rank (1,2,2,4,...) of that value among all input records,
+optionally within groups.
+E.g. with input records x=10, x=20, x=20, and x=30, emits output records
+x=10,x_rank=1  x=20,x_rank=2  x=20,x_rank=2  and  x=30,x_rank=4.
+
+Note: by default this is a two-pass algorithm: on the first pass it retains
+input records and their values; on the second pass it computes ranks and
+emits output records, in original input order. This means it produces no
+output until all input is read, but gives correct ranks regardless of input
+order. Use --sorted for a single-pass streaming alternative.
+
+Options:
+-f {a,b,c} Field name(s) to rank.
+-g {d,e,f} Optional group-by-field name(s).
+--sorted   Promise that the input is already sorted by the field(s) being ranked
+           (within each group, if -g is given). This computes rank in a single
+           streaming pass and O(1) space, by comparing each record's value only
+           to the immediately preceding one, rather than buffering all records
+           to compute an order-independent rank. Produces wrong output if the
+           input is not in fact sorted.
+-h|--help  Show this message.
+Example: mlr rank -f x data/rank-example.csv
+Example: mlr rank -f x -g g data/rank-example.csv
+Example: mlr sort -f x then rank -f x --sorted data/rank-example.csv
+.fi
+.if n \{\
+.RE
 .SS "regularize"
 .if n \{\
 .RS 0
@@ -2259,8 +2307,10 @@ Options:
            record start.
 -f {a,b,c} Field names to reorder.
 -r {a,b,c} Treat field names as regular expressions. Matched fields are moved to
-           start or end in record order. Example: -r '^YYY,^XXX' puts all YYY-
-           and XXX-prefixed fields first (in record order), then the rest.
+           start or end, grouped by the order the regexes are given; within each
+           group, fields keep their record order. Example: -r '^YYY,^XXX' puts
+           all YYY-prefixed fields first, then all XXX-prefixed fields, then the
+           rest.
 -b {x}     Put field names specified with -f before field name specified by {x},
            if any. If {x} isn't present in a given record, the specified fields
            will not be moved.
@@ -2272,7 +2322,7 @@ Options:
 Examples:
 mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
 mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
-mlr reorder -r '^YYY,^XXX' puts YYY- and XXX-prefixed fields first (record order), then rest.
+mlr reorder -r '^YYY,^XXX' puts YYY-prefixed fields first, then XXX-prefixed fields, then rest.
 .fi
 .if n \{\
 .RE
@@ -2548,6 +2598,22 @@ Options:
            argument, -r recursively sorts subobjects/submaps (e.g. for JSON
            input), or combines with -f to treat names as regexes.
 -n         Sort field names naturally (e.g. 2 before 12). Combines with -f/-r.
+-h|--help  Show this message.
+.fi
+.if n \{\
+.RE
+.SS "sparkline"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr sparkline [options]
+Reduces numeric field(s), across all records in input order, to a compact
+Unicode sparkline -- one block character per record -- for visualizing
+trends. Emits one output record per field. Holds all records in memory
+before producing any output.
+Options:
+-f {a,b,c} Field names to sparkline.
 -h|--help  Show this message.
 .fi
 .if n \{\
@@ -2839,7 +2905,7 @@ Usage: mlr summary [options]
 Show summary statistics about the input data.
 
 All summarizers:
-  field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed
+  field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed (see notes below)
   count           +1 for every instance of the field across all records in the input record stream
   null_count      count of field values either empty string or JSON null
   distinct_count  count of distinct values for the field
@@ -2869,6 +2935,8 @@ Notes:
 * min, p25, median, p75, and max work for strings as well as numbers
 * Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
 * If the mode is not unique in the input data, the first-encountered value is reported as the mode.
+* A field_type of "int-string", "empty-string", etc. means the column contains values of mixed types --
+  all types encountered are printed, hyphen-joined, in the order first encountered.
 
 Options:
 -a {mean,sum,etc.} Use only the specified summarizers.
@@ -3028,6 +3096,9 @@ Prints distinct values for specified field names. With -c, same as
 count-distinct. For uniq, -f is a synonym for -g. Output fields are
 written in the order in which they are named with -g or -f, not in the
 order in which they appear in the input records.
+To deduplicate records by one or more fields while keeping all other
+fields, use head: e.g. "mlr head -n 1 -g hash" keeps the first record
+for each distinct value of the hash field, with all fields intact.
 
 Options:
 -g {d,e,f} Group-by field names for uniq counts.
@@ -3723,11 +3794,13 @@ Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum": 
 .RS 0
 .\}
 .nf
- (class=string #args=variadic) Using first argument as format string, interpolate remaining arguments in place of each "{}" in the format string. Too-few arguments are treated as the empty string; too-many arguments are discarded.
+ (class=string #args=variadic) Using first argument as format string, interpolate remaining arguments in place of each "{}" in the format string. Also supports 1-based positional placeholders such as "{1}", which allow arguments to be reused and/or reordered. Plain "{}" placeholders consume arguments sequentially, independently of any positional placeholders. Too-few arguments are treated as the empty string, as are positional placeholders exceeding the number of arguments; too-many arguments are discarded. "{0}" is an error value, since positional placeholders are 1-based.
 Examples:
-format("{}:{}:{}", 1,2)     gives "1:2:".
-format("{}:{}:{}", 1,2,3)   gives "1:2:3".
-format("{}:{}:{}", 1,2,3,4) gives "1:2:3".
+format("{}:{}:{}", 1,2)        gives "1:2:".
+format("{}:{}:{}", 1,2,3)      gives "1:2:3".
+format("{}:{}:{}", 1,2,3,4)    gives "1:2:3".
+format("{1}:{2}:{1}", "a","b") gives "a:b:a".
+format("{2}{}:{1}{}", 3,4)     gives "43:34".
 .fi
 .if n \{\
 .RE
@@ -4909,6 +4982,18 @@ Map without function: sort({"c":2,"a":3,"b":1}, "vnr") returns {"a":3,"c":2,"b":
 .\}
 .nf
  (class=stats #args=1) This is a helper function for the percentiles function; please see its online help for details.
+.fi
+.if n \{\
+.RE
+.SS "sparkline"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=stats #args=1) Returns a string of Unicode block characters (one of ▁▂▃▄▅▆▇█ per element) representing the relative magnitudes of values in an array or map, for a compact ASCII/Unicode bar chart. Returns error for non-array/non-map types.
+Examples:
+sparkline([1,2,3,4,5,6,7,8]) is "▁▂▃▄▅▆▇█"
+sparkline([3,3,3]) is "▁▁▁"
 .fi
 .if n \{\
 .RE

@@ -1,4 +1,4 @@
-<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<!--  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. -->
 <div>
 <span class="quicklinks">
 Quick links:
@@ -261,8 +261,8 @@ a:4;b:5;c:6;d:>>>,|||;<<<
 
 Notes:
 
-* CSV IRS and ORS must be newline, and CSV IFS must be a single character. (CSV-lite does not have these restrictions.)
-* TSV IRS and ORS must be newline, and TSV IFS must be a tab. (TSV-lite does not have these restrictions.)
+* CSV IRS must be newline -- CR/LF line endings are accepted on input. CSV ORS must be either newline (the default) or carriage-return/newline -- e.g. `--ors crlf` or `--ors '\r\n'` for RFC-4180-style line endings on any platform. CSV IFS must be a single character. (CSV-lite does not have these restrictions.)
+* TSV IRS must be newline -- CR/LF line endings are accepted on input. TSV ORS must be either newline (the default) or carriage-return/newline. TSV IFS must be a tab. (TSV-lite does not have these restrictions.)
 * See the [CSV section](file-formats.md#csvtsvasvusvetc) for information about ASV and USV.
 * JSON and YAML: ignore separator flags from the command line.
 * Headerless CSV overlaps quite a bit with NIDX format using comma for IFS. See also the page on [CSV with and without headers](csv-with-and-without-headers.md).
@@ -270,15 +270,15 @@ Notes:
 
 |            | **RS**  | **FS**  | **PS**   |
 |------------|---------|---------|----------|
-| [**CSV**](file-formats.md#csvtsvasvusvetc)    | Always `\n`; not alterable * | Default `,`; must be single-character    | None     |
-| [**TSV**](file-formats.md#csvtsvasvusvetc)    | Always `\n`; not alterable * |  Default `\t`; must be single-character   | None     |
+| [**CSV**](file-formats.md#csvtsvasvusvetc)    | Default `\n`; may be set to `\r\n` * | Default `,`; must be single-character    | None     |
+| [**TSV**](file-formats.md#csvtsvasvusvetc)    | Default `\n`; may be set to `\r\n` * |  Default `\t`; must be single-character   | None     |
 | [**CSV-lite**](file-formats.md#csvtsvasvusvetc)    | Default `\n` *   | Default `,`    | None     |
 | [**TSV-lite**](file-formats.md#csvtsvasvusvetc)    | Default `\n` *  |  Default `\t`   | None     |
 | [**JSON**](file-formats.md#json)   | N/A; records are between `{` and `}` | Always `,`; not alterable    | Always `:`; not alterable |
 | [**YAML**](file-formats.md#yaml)   | N/A; documents separated by `---` or single array   | N/A; not alterable    | Always `:`; not alterable |
 | [**DCF**](file-formats.md#dcf-debian-control-file)   | N/A; paragraphs separated by blank lines   | N/A; not alterable    | Always `:`; not alterable |
 | [**DKVP**](file-formats.md#dkvp-key-value-pairs)   | Default `\n`    | Default `,`    | Default `=` |
-| [**DKVPX**](file-formats.md#dkvpx-key-value-pairs-with-csv-style-quoting)   | Default `\n`    | Default `,`    | Default `=` |
+| [**DKVPX**](file-formats.md#dkvpx-key-value-pairs-with-csv-style-quoting)   | Default `\n`    | Default `,`; must be single-character for input    | Default `=`; must be single-character for input |
 | [**NIDX**](file-formats.md#nidx-index-numbered-toolkit-style)   | Default `\n`    | Default space    | None     |
 | [**XTAB**](file-formats.md#xtab-vertical-tabular)   | Not used; records are separated by an extra FS    | `\n` *    | Default: space with repeats  |
 | [**PPRINT**](file-formats.md#pprint-pretty-printed-tabular) | Default `\n` *    | Space with repeats    | None     |

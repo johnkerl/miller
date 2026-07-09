@@ -1,4 +1,4 @@
-<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<!--  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. -->
 <div>
 <span class="quicklinks">
 Quick links:
@@ -59,7 +59,7 @@ Operators are listed here along with functions. In this case, the argument count
 * [**Hashing functions**](#hashing-functions):  [md5](#md5),  [sha1](#sha1),  [sha256](#sha256),  [sha512](#sha512).
 * [**Higher-order-functions functions**](#higher-order-functions-functions):  [any](#any),  [apply](#apply),  [every](#every),  [fold](#fold),  [reduce](#reduce),  [select](#select),  [sort](#sort).
 * [**Math functions**](#math-functions):  [abs](#abs),  [acos](#acos),  [acosh](#acosh),  [asin](#asin),  [asinh](#asinh),  [atan](#atan),  [atan2](#atan2),  [atanh](#atanh),  [cbrt](#cbrt),  [ceil](#ceil),  [cos](#cos),  [cosh](#cosh),  [erf](#erf),  [erfc](#erfc),  [exp](#exp),  [expm1](#expm1),  [floor](#floor),  [invqnorm](#invqnorm),  [log](#log),  [log10](#log10),  [log1p](#log1p),  [logifit](#logifit),  [max](#max),  [min](#min),  [qnorm](#qnorm),  [round](#round),  [roundm](#roundm),  [sgn](#sgn),  [sin](#sin),  [sinh](#sinh),  [sqrt](#sqrt),  [tan](#tan),  [tanh](#tanh),  [urand](#urand),  [urand32](#urand32),  [urandelement](#urandelement),  [urandint](#urandint),  [urandrange](#urandrange).
-* [**Stats functions**](#stats-functions):  [antimode](#antimode),  [count](#count),  [distinct_count](#distinct_count),  [kurtosis](#kurtosis),  [maxlen](#maxlen),  [mean](#mean),  [meaneb](#meaneb),  [median](#median),  [minlen](#minlen),  [mode](#mode),  [null_count](#null_count),  [percentile](#percentile),  [percentiles](#percentiles),  [skewness](#skewness),  [sort_collection](#sort_collection),  [stddev](#stddev),  [sum](#sum),  [sum2](#sum2),  [sum3](#sum3),  [sum4](#sum4),  [variance](#variance).
+* [**Stats functions**](#stats-functions):  [antimode](#antimode),  [count](#count),  [distinct_count](#distinct_count),  [kurtosis](#kurtosis),  [maxlen](#maxlen),  [mean](#mean),  [meaneb](#meaneb),  [median](#median),  [minlen](#minlen),  [mode](#mode),  [null_count](#null_count),  [percentile](#percentile),  [percentiles](#percentiles),  [skewness](#skewness),  [sort_collection](#sort_collection),  [sparkline](#sparkline),  [stddev](#stddev),  [sum](#sum),  [sum2](#sum2),  [sum3](#sum3),  [sum4](#sum4),  [variance](#variance).
 * [**String functions**](#string-functions):  [base64_decode](#base64_decode),  [base64_encode](#base64_encode),  [capitalize](#capitalize),  [clean_whitespace](#clean_whitespace),  [collapse_whitespace](#collapse_whitespace),  [contains](#contains),  [format](#format),  [gssub](#gssub),  [gsub](#gsub),  [hex_decode](#hex_decode),  [hex_encode](#hex_encode),  [index](#index),  [latin1_to_utf8](#latin1_to_utf8),  [leftpad](#leftpad),  [lstrip](#lstrip),  [regextract](#regextract),  [regextract_or_else](#regextract_or_else),  [rightpad](#rightpad),  [rstrip](#rstrip),  [ssub](#ssub),  [strip](#strip),  [strlen](#strlen),  [strmatch](#strmatch),  [strmatchx](#strmatchx),  [sub](#sub),  [substr](#substr),  [substr0](#substr0),  [substr1](#substr1),  [tolower](#tolower),  [toupper](#toupper),  [truncate](#truncate),  [unformat](#unformat),  [unformatx](#unformatx),  [utf8_to_latin1](#utf8_to_latin1),  [\.](#dot).
 * [**System functions**](#system-functions):  [exec](#exec),  [hostname](#hostname),  [next](#next),  [os](#os),  [stat](#stat),  [system](#system),  [version](#version).
 * [**Time functions**](#time-functions):  [dhms2fsec](#dhms2fsec),  [dhms2sec](#dhms2sec),  [fsec2dhms](#fsec2dhms),  [fsec2hms](#fsec2hms),  [gmt2localtime](#gmt2localtime),  [gmt2nsec](#gmt2nsec),  [gmt2sec](#gmt2sec),  [hms2fsec](#hms2fsec),  [hms2sec](#hms2sec),  [localtime2gmt](#localtime2gmt),  [localtime2nsec](#localtime2nsec),  [localtime2sec](#localtime2sec),  [nsec2gmt](#nsec2gmt),  [nsec2gmtdate](#nsec2gmtdate),  [nsec2localdate](#nsec2localdate),  [nsec2localtime](#nsec2localtime),  [sec2dhms](#sec2dhms),  [sec2gmt](#sec2gmt),  [sec2gmtdate](#sec2gmtdate),  [sec2hms](#sec2hms),  [sec2localdate](#sec2localdate),  [sec2localtime](#sec2localtime),  [strfntime](#strfntime),  [strfntime_local](#strfntime_local),  [strftime](#strftime),  [strftime_local](#strftime_local),  [strpntime](#strpntime),  [strpntime_local](#strpntime_local),  [strptime](#strptime),  [strptime_local](#strptime_local),  [sysntime](#sysntime),  [systime](#systime),  [systimeint](#systimeint),  [upntime](#upntime),  [uptime](#uptime).
@@ -1156,6 +1156,15 @@ sort_collection  (class=stats #args=1) This is a helper function for the percent
 </pre>
 
 
+### sparkline
+<pre class="pre-non-highlight-non-pair">
+sparkline  (class=stats #args=1) Returns a string of Unicode block characters (one of ▁▂▃▄▅▆▇█ per element) representing the relative magnitudes of values in an array or map, for a compact ASCII/Unicode bar chart. Returns error for non-array/non-map types.
+Examples:
+sparkline([1,2,3,4,5,6,7,8]) is "▁▂▃▄▅▆▇█"
+sparkline([3,3,3]) is "▁▁▁"
+</pre>
+
+
 ### stddev
 <pre class="pre-non-highlight-non-pair">
 stddev  (class=stats #args=1) Returns the sample standard deviation of values in an array or map. Returns empty string AKA void for array/map of length less than two; returns error for non-array/non-map types.
@@ -1256,11 +1265,13 @@ contains([1,2,3], 2) gives (error)
 
 ### format
 <pre class="pre-non-highlight-non-pair">
-format  (class=string #args=variadic) Using first argument as format string, interpolate remaining arguments in place of each "{}" in the format string. Too-few arguments are treated as the empty string; too-many arguments are discarded.
+format  (class=string #args=variadic) Using first argument as format string, interpolate remaining arguments in place of each "{}" in the format string. Also supports 1-based positional placeholders such as "{1}", which allow arguments to be reused and/or reordered. Plain "{}" placeholders consume arguments sequentially, independently of any positional placeholders. Too-few arguments are treated as the empty string, as are positional placeholders exceeding the number of arguments; too-many arguments are discarded. "{0}" is an error value, since positional placeholders are 1-based.
 Examples:
-format("{}:{}:{}", 1,2)     gives "1:2:".
-format("{}:{}:{}", 1,2,3)   gives "1:2:3".
-format("{}:{}:{}", 1,2,3,4) gives "1:2:3".
+format("{}:{}:{}", 1,2)        gives "1:2:".
+format("{}:{}:{}", 1,2,3)      gives "1:2:3".
+format("{}:{}:{}", 1,2,3,4)    gives "1:2:3".
+format("{1}:{2}:{1}", "a","b") gives "a:b:a".
+format("{2}{}:{1}{}", 3,4)     gives "43:34".
 </pre>
 
 

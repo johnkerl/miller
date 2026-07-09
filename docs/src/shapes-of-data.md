@@ -1,4 +1,4 @@
-<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<!--  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. -->
 <div>
 <span class="quicklinks">
 Quick links:
@@ -388,3 +388,89 @@ outer=3,middle=31,inner1=313,inner2=314
 See also the [record-heterogeneity page](record-heterogeneity.md); see in
 particular the [`regularize` verb](reference-verbs.md#regularize) for a way to
 do this with much less keystroking.
+
+## Transposing very wide data
+
+If your data has many columns -- hundreds, say -- then tabular output formats
+such as CSV or [PPRINT](file-formats.md#pprint-pretty-printed-tabular) become
+hard to read on-screen. One option is [XTAB output
+format](file-formats.md#xtab-vertical-tabular), which prints each record
+vertically -- one field per line, with a blank line between records:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --oxtab head -n 2 example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color    yellow
+shape    triangle
+flag     true
+k        1
+index    11
+quantity 43.6498
+rate     9.8870
+
+color    red
+shape    square
+flag     true
+k        2
+index    15
+quantity 79.2778
+rate     0.0130
+</pre>
+
+Another option is a full transpose -- turning each input column into an output
+row. Since Miller keys data by field name, rather than by positional index,
+there isn't a built-in `transpose` verb -- but you can get the same effect
+using [out-of-stream variables](reference-dsl-variables.md#out-of-stream-variables).
+Here, the `-N` flag (same as `--implicit-csv-header --headerless-csv-output`)
+makes Miller treat the header line as data -- so field keys are the positional
+names `1`, `2`, `3`, etc. on both input and output, and the header line
+transposes right along with the data lines:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv -N put -q '</b>
+<b>  for (k, v in $*) {</b>
+<b>    @transpose[k][NR] = v;</b>
+<b>  }</b>
+<b>  end {</b>
+<b>    emit @transpose;</b>
+<b>  }</b>
+<b>' example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color,yellow,red,red,red,purple,red,purple,yellow,yellow,purple
+shape,triangle,square,circle,square,triangle,square,triangle,circle,circle,square
+flag,true,true,true,false,false,false,false,true,true,false
+k,1,2,3,4,5,6,7,8,9,10
+index,11,15,16,48,51,64,65,73,87,91
+quantity,43.6498,79.2778,13.8103,77.5542,81.2290,77.1991,80.1405,63.9785,63.5058,72.3735
+rate,9.8870,0.0130,2.9010,7.4670,8.5910,9.5310,5.8240,4.2370,8.3350,8.2430
+</pre>
+
+For an on-screen view of the same, use `--opprint` to align the columns:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint -N put -q '</b>
+<b>  for (k, v in $*) {</b>
+<b>    @transpose[k][NR] = v;</b>
+<b>  }</b>
+<b>  end {</b>
+<b>    emit @transpose;</b>
+<b>  }</b>
+<b>' example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color    yellow   red     red     red     purple   red     purple   yellow  yellow  purple
+shape    triangle square  circle  square  triangle square  triangle circle  circle  square
+flag     true     true    true    false   false    false   false    true    true    false
+k        1        2       3       4       5        6       7        8       9       10
+index    11       15      16      48      51       64      65       73      87      91
+quantity 43.6498  79.2778 13.8103 77.5542 81.2290  77.1991 80.1405  63.9785 63.5058 72.3735
+rate     9.8870   0.0130  2.9010  7.4670  8.5910   9.5310  5.8240   4.2370  8.3350  8.2430
+</pre>
+
+Note that this accumulates the entire file in memory before producing any
+output -- as any full transpose must.
+
+Thanks to @Fravadona on [issue 321](https://github.com/johnkerl/miller/issues/321)
+for the original version of this recipe.

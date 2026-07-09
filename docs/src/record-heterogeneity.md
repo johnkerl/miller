@@ -1,4 +1,4 @@
-<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<!--  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. -->
 <div>
 <span class="quicklinks">
 Quick links:
@@ -472,6 +472,95 @@ a,b,c
 1,2,3
 4,5,
 7,8,9,10
+</pre>
+
+### Combining multiple CSV files with different headers
+
+A common special case of the above: you have several CSV files whose column names overlap but
+don't all match -- say, data exported year by year, where columns were added or reordered over
+time -- and you want to concatenate them into a single rectangular table, with empty cells where a
+file didn't have a given column.
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/het/sales-2021.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,product,sales
+1,pencil,100
+2,eraser,17
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/het/sales-2022.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,product,color,sales
+3,pencil,red,120
+4,eraser,green,32
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/het/sales-2023.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,product,sales,returns
+5,pencil,200,6
+6,notebook,41,2
+</pre>
+
+Since each file's records take their schema from that file's header line, simply catting the
+files together gives a schema change partway through the record stream -- which RFC-4180 CSV
+output doesn't allow:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv cat data/het/sales-2021.csv data/het/sales-2022.csv data/het/sales-2023.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,product,sales
+1,pencil,100
+2,eraser,17
+mlr: CSV schema change: first keys "id,product,sales"; current keys "id,product,color,sales"
+mlr: exiting due to data error
+</pre>
+
+The solution is the [`unsparsify`](reference-verbs.md#unsparsify) verb, which we saw above: it
+gives every record the union of all field names, filling in empty values (or, using
+`--fill-with`, whatever you like) where a record lacks a field:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv unsparsify data/het/sales-2021.csv data/het/sales-2022.csv data/het/sales-2023.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,product,sales,color,returns
+1,pencil,100,,
+2,eraser,17,,
+3,pencil,120,red,
+4,eraser,32,green,
+5,pencil,200,,6
+6,notebook,41,,2
+</pre>
+
+Note that `unsparsify` (without `-f`) is
+[non-streaming](streaming-and-memory.md): it can't know the full set of field names until it has
+read all input, so it retains all records in memory before producing any output. If your files
+are too large for that, but you know the complete list of field names up front, you can use
+`unsparsify -f` which is streaming. Fields filled in by `-f` are appended to each record, so if
+the input files order their columns differently, follow up with
+[`regularize`](reference-verbs.md#regularize) or
+[`sort-within-records`](reference-verbs.md#sort-within-records) (also both streaming) to give all
+records the same column ordering:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv unsparsify -f id,product,sales,color,returns then regularize data/het/sales-2021.csv data/het/sales-2022.csv data/het/sales-2023.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,product,sales,color,returns
+1,pencil,100,,
+2,eraser,17,,
+3,pencil,120,red,
+4,eraser,32,green,
+5,pencil,200,,6
+6,notebook,41,,2
 </pre>
 
 ## Processing heterogeneous data

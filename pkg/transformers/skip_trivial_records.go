@@ -34,7 +34,7 @@ func transformerSkipTrivialRecordsParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cli.TOptions,
+	options *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) (RecordTransformer, error) {
 
@@ -59,6 +59,12 @@ func transformerSkipTrivialRecordsParseCLI(
 			return nil, cli.VerbErrorf(verbNameSkipTrivialRecords, "option \"%s\" not recognized", opt)
 		}
 	}
+
+	// Since the user has explicitly asked for trivial records to be skipped,
+	// let the record-readers know that trivial input lines -- e.g. blank
+	// lines at the end of a CSV file -- are to be skipped rather than
+	// treated as fatal header/data length mismatches. See issue #1535.
+	options.ReaderOptions.SkipTrivialRecords = true
 
 	*pargi = argi
 	if !doConstruct { // All transformers must do this for main command-line parsing

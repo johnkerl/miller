@@ -1,4 +1,4 @@
-<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<!--  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. -->
 <div>
 <span class="quicklinks">
 Quick links:
@@ -54,7 +54,7 @@ These fall into categories as follows:
 
 * `awk`-like functionality: [filter](reference-verbs.md#filter), [put](reference-verbs.md#put), [sec2gmt](reference-verbs.md#sec2gmt), [sec2gmtdate](reference-verbs.md#sec2gmtdate), [step](reference-verbs.md#step), [tee](reference-verbs.md#tee).
 
-* Statistically oriented: [bar](reference-verbs.md#bar), [bootstrap](reference-verbs.md#bootstrap), [decimate](reference-verbs.md#decimate), [histogram](reference-verbs.md#histogram), [least-frequent](reference-verbs.md#least-frequent), [most-frequent](reference-verbs.md#most-frequent), [sample](reference-verbs.md#sample), [shuffle](reference-verbs.md#shuffle), [stats1](reference-verbs.md#stats1), [stats2](reference-verbs.md#stats2).
+* Statistically oriented: [bar](reference-verbs.md#bar), [bootstrap](reference-verbs.md#bootstrap), [decimate](reference-verbs.md#decimate), [histogram](reference-verbs.md#histogram), [least-frequent](reference-verbs.md#least-frequent), [most-frequent](reference-verbs.md#most-frequent), [rank](reference-verbs.md#rank), [sample](reference-verbs.md#sample), [shuffle](reference-verbs.md#shuffle), [sparkline](reference-verbs.md#sparkline), [stats1](reference-verbs.md#stats1), [stats2](reference-verbs.md#stats2).
 
 * Particularly oriented toward [Record Heterogeneity](record-heterogeneity.md), although all Miller commands can handle heterogeneous records: [group-by](reference-verbs.md#group-by), [group-like](reference-verbs.md#group-like), [having-fields](reference-verbs.md#having-fields).
 
@@ -1787,7 +1787,11 @@ Options:
 --auto      Automatically computes limits, ignoring --lo and --hi. Holds all
             values in memory before producing any output.
 -o {prefix} Prefix for output field name. Default: no prefix.
+-s          Print a one-line Unicode sparkline per field instead of per-bin
+            counts.
 -h|--help   Show this message.
+With -s, output is one record per value-field, with a sparkline field
+instead of one record per bin.
 </pre>
 
 This is just a histogram; there's not too much to say here. A note about binning, by example: Suppose you use `--lo 0.0 --hi 1.0 --nbins 10 -f x`.  The input numbers less than 0 or greater than 1 aren't counted in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin 0 has `0.0 < x < 0.1`, bin 1 has `0.1 < x < 0.2`, etc., but bin 9 has `0.9 < x < 1.0`.
@@ -1828,6 +1832,20 @@ my_bin_lo my_bin_hi my_x_count my_x2_count my_x3_count
 0.7       0.8       1007       560         420
 0.8       0.9       986        571         383
 0.9       1         1013       507         341
+</pre>
+
+Use `-s` for a compact one-line Unicode sparkline per field, rather than one output record per bin. Note this sparklines the *binned counts* -- i.e. the shape of the value distribution -- not the field's raw values in record order; for the latter, use [sparkline](reference-verbs.md#sparkline) instead:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \</b>
+<b>  then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -s \</b>
+<b>  data/medium</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+field lo hi sparkline
+x     0  1  █▁▆▄▂▄▅▅▄▅
+x2    0  1  █▃▂▂▂▁▁▁▁▁
+x3    0  1  █▂▂▂▁▁▁▁▁▁
 </pre>
 
 ## join
@@ -2610,6 +2628,106 @@ See also https://miller.readthedocs.io/reference-dsl for more context.
 
 Please see the [DSL reference](reference-dsl.md) for more information about the expression language for `mlr put`.
 
+## rank
+
+<pre class="pre-highlight-in-pair">
+<b>mlr rank --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr rank [options]
+For each record's value in specified fields, computes the standard
+competition rank (1,2,2,4,...) of that value among all input records,
+optionally within groups.
+E.g. with input records x=10, x=20, x=20, and x=30, emits output records
+x=10,x_rank=1  x=20,x_rank=2  x=20,x_rank=2  and  x=30,x_rank=4.
+
+Note: by default this is a two-pass algorithm: on the first pass it retains
+input records and their values; on the second pass it computes ranks and
+emits output records, in original input order. This means it produces no
+output until all input is read, but gives correct ranks regardless of input
+order. Use --sorted for a single-pass streaming alternative.
+
+Options:
+-f {a,b,c} Field name(s) to rank.
+-g {d,e,f} Optional group-by-field name(s).
+--sorted   Promise that the input is already sorted by the field(s) being ranked
+           (within each group, if -g is given). This computes rank in a single
+           streaming pass and O(1) space, by comparing each record's value only
+           to the immediately preceding one, rather than buffering all records
+           to compute an order-independent rank. Produces wrong output if the
+           input is not in fact sorted.
+-h|--help  Show this message.
+Example: mlr rank -f x data/rank-example.csv
+Example: mlr rank -f x -g g data/rank-example.csv
+Example: mlr sort -f x then rank -f x --sorted data/rank-example.csv
+</pre>
+
+For example, suppose you have the following CSV file:
+
+<pre class="pre-non-highlight-non-pair">
+g,x
+a,10
+a,20
+a,20
+a,30
+b,5
+b,5
+b,9
+</pre>
+
+Then we can rank each record's `x` among all records:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint rank -f x data/rank-example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+g x  x_rank
+a 10 4
+a 20 5
+a 20 5
+a 30 7
+b 5  1
+b 5  1
+b 9  3
+</pre>
+
+Using `-g` we can rank within each group instead:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint rank -f x -g g data/rank-example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+g x  x_rank
+a 10 1
+a 20 2
+a 20 2
+a 30 4
+b 5  1
+b 5  1
+b 9  3
+</pre>
+
+By default `rank` is a two-pass algorithm: it retains all input records so that it can compute
+ranks which don't depend on input order, even when same-valued records aren't adjacent to one
+another. If you know your input is already sorted on the field(s) you're ranking by -- e.g. by
+piping through `mlr sort` first -- then `--sorted` computes ranks in a single streaming pass
+and O(1) space instead, by comparing each record only to the one immediately before it (within
+its group, if `-g` is given):
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint sort -f g -nf x then rank -f x -g g --sorted data/rank-example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+g x  x_rank
+a 10 1
+a 20 2
+a 20 2
+a 30 4
+b 5  1
+b 5  1
+b 9  3
+</pre>
+
 ## regularize
 
 <pre class="pre-highlight-in-pair">
@@ -2751,8 +2869,10 @@ Options:
            record start.
 -f {a,b,c} Field names to reorder.
 -r {a,b,c} Treat field names as regular expressions. Matched fields are moved to
-           start or end in record order. Example: -r '^YYY,^XXX' puts all YYY-
-           and XXX-prefixed fields first (in record order), then the rest.
+           start or end, grouped by the order the regexes are given; within each
+           group, fields keep their record order. Example: -r '^YYY,^XXX' puts
+           all YYY-prefixed fields first, then all XXX-prefixed fields, then the
+           rest.
 -b {x}     Put field names specified with -f before field name specified by {x},
            if any. If {x} isn't present in a given record, the specified fields
            will not be moved.
@@ -2764,7 +2884,7 @@ Options:
 Examples:
 mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
 mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
-mlr reorder -r '^YYY,^XXX' puts YYY- and XXX-prefixed fields first (record order), then rest.
+mlr reorder -r '^YYY,^XXX' puts YYY-prefixed fields first, then XXX-prefixed fields, then rest.
 </pre>
 
 This pivots specified field names to the start or end of the record -- for
@@ -3388,6 +3508,38 @@ a b c
 1 2 3
 5 4 6
 9 8 7
+</pre>
+
+## sparkline
+
+<pre class="pre-highlight-in-pair">
+<b>mlr sparkline --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr sparkline [options]
+Reduces numeric field(s), across all records in input order, to a compact
+Unicode sparkline -- one block character per record -- for visualizing
+trends. Emits one output record per field. Holds all records in memory
+before producing any output.
+Options:
+-f {a,b,c} Field names to sparkline.
+-h|--help  Show this message.
+</pre>
+
+This reduces one or more numeric fields, in input-record order, to a compact
+Unicode sparkline -- a quick way to eyeball a trend across records without
+plotting software. Contrast with [histogram](reference-verbs.md#histogram)
+`-s`, which sparklines the *distribution* of a field's values (binned by
+value, order-independent) rather than the field's values in record order.
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint sparkline -f index,quantity,rate example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+field    n  lo      hi     sparkline
+index    10 11      91     ▁▁▁▄▅▆▆▆██
+quantity 10 13.8103 81.229 ▄█▁████▆▆▇
+rate     10 0.013   9.887  █▁▃▆▇█▅▄▇▇
 </pre>
 
 ## sparsify
@@ -4045,7 +4197,7 @@ Usage: mlr summary [options]
 Show summary statistics about the input data.
 
 All summarizers:
-  field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed
+  field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed (see notes below)
   count           +1 for every instance of the field across all records in the input record stream
   null_count      count of field values either empty string or JSON null
   distinct_count  count of distinct values for the field
@@ -4075,6 +4227,8 @@ Notes:
 * min, p25, median, p75, and max work for strings as well as numbers
 * Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
 * If the mode is not unique in the input data, the first-encountered value is reported as the mode.
+* A field_type of "int-string", "empty-string", etc. means the column contains values of mixed types --
+  all types encountered are printed, hyphen-joined, in the order first encountered.
 
 Options:
 -a {mean,sum,etc.} Use only the specified summarizers.
@@ -4418,6 +4572,9 @@ Prints distinct values for specified field names. With -c, same as
 count-distinct. For uniq, -f is a synonym for -g. Output fields are
 written in the order in which they are named with -g or -f, not in the
 order in which they appear in the input records.
+To deduplicate records by one or more fields while keeping all other
+fields, use head: e.g. "mlr head -n 1 -g hash" keeps the first record
+for each distinct value of the hash field, with all fields intact.
 
 Options:
 -g {d,e,f} Group-by field names for uniq counts.
@@ -4526,6 +4683,64 @@ orange circle   68
 <pre class="pre-non-highlight-in-pair">
 count
 18
+</pre>
+
+Note that `mlr uniq -g` outputs only the group-by columns. If you want to deduplicate
+records by one or more fields, while keeping all the other columns, you can use
+[head](reference-verbs.md#head) with `-n 1` and `-g`, which keeps the first record for
+each distinct combination of the group-by fields:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p head -n 1 -g color,shape then sort -f color,shape data/colored-shapes.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag i     u        v        w        x
+blue   circle   0    1075  0.780359 0.331467 0.042890 5.725366
+blue   square   0    1604  0.656744 0.687258 0.312663 4.783385
+blue   triangle 0    1105  0.441773 0.445977 0.632936 4.306461
+green  circle   1    2102  0.083514 0.545773 0.518673 5.084667
+green  square   0    765   0.668443 0.016056 0.465615 5.434589
+green  triangle 1    632   0.151301 0.403468 0.051213 5.955109
+orange circle   1    23462 0.995404 0.023490 0.615945 4.749993
+orange square   0    8109  0.776857 0.741520 0.300047 6.671697
+orange triangle 0    2935  0.517583 0.089891 0.901171 4.265854
+purple circle   0    1573  0.997098 0.193719 0.466933 6.253743
+purple square   0    458   0.259926 0.824322 0.723735 6.854221
+purple triangle 0    257   0.435535 0.859129 0.812290 5.753095
+red    circle   1    84    0.209017 0.290052 0.138103 5.065034
+red    square   1    80    0.219668 0.001257 0.792778 2.944117
+red    triangle 0    620   0.427818 0.396070 0.466908 6.075594
+yellow circle   1    370   0.603365 0.423708 0.639785 7.006414
+yellow square   1    546   0.997474 0.676003 0.418644 3.901026
+yellow triangle 1    56    0.632170 0.988721 0.436498 5.798188
+</pre>
+
+If you sort the input first, you control which record is kept for each group -- for
+example, the one with the highest value of the `u` field:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p sort -nr u then head -n 1 -g color,shape then sort -f color,shape data/colored-shapes.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag i      u        v        w        x
+blue   circle   1    463634 0.999678 0.963520 0.476339 5.499486
+blue   square   0    99778  0.999969 0.660817 0.553475 5.623643
+blue   triangle 1    497983 0.993693 0.578201 0.477333 4.353290
+green  circle   0    279380 0.999908 0.795141 0.496896 5.600738
+green  square   1    214778 0.999936 0.174019 0.512225 3.508542
+green  triangle 0    267800 0.990811 0.046011 0.522084 5.566473
+orange circle   1    23462  0.995404 0.023490 0.615945 4.749993
+orange square   0    268054 0.998885 0.155239 0.488076 2.753851
+orange triangle 0    391556 0.984002 0.725036 0.491335 6.014094
+purple circle   0    1573   0.997098 0.193719 0.466933 6.253743
+purple square   0    5356   0.999647 0.121173 0.656153 4.255321
+purple triangle 0    450611 0.998687 0.303774 0.515493 5.365962
+red    circle   1    459124 0.999461 0.959222 0.505147 7.091866
+red    square   0    206305 0.999882 0.468152 0.458562 4.890052
+red    triangle 0    300634 0.999661 0.072334 0.486170 5.751868
+yellow circle   1    82010  0.999923 0.368765 0.533363 5.969732
+yellow square   1    87091  0.998947 0.809461 0.522049 5.606017
+yellow triangle 1    89217  0.995942 0.494142 0.512964 4.210098
 </pre>
 
 The second main way to use `mlr uniq` is without group-by columns, using `-a` instead:

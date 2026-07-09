@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/johnkerl/miller/v6/pkg/bifs"
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
@@ -21,6 +22,7 @@ var histogramOptions = []OptionSpec{
 	{Flag: "--nbins", Arg: "{n}", Type: "int", Desc: "Number of histogram bins. Defaults to 20."},
 	{Flag: "--auto", Type: "bool", Desc: "Automatically computes limits, ignoring --lo and --hi. Holds all values in memory before producing any output."},
 	{Flag: "-o", Arg: "{prefix}", Type: "string", Desc: "Prefix for output field name. Default: no prefix."},
+	{Flag: "-s", Type: "bool", Desc: "Print a one-line Unicode sparkline per field instead of per-bin counts."},
 }
 
 var HistogramSetup = TransformerSetup{
@@ -39,6 +41,8 @@ func transformerHistogramUsage(
 	fmt.Fprintf(o, "Just a histogram. Input values < lo or > hi are not counted.\n")
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	WriteVerbOptions(o, histogramOptions)
+	fmt.Fprintf(o, "With -s, output is one record per value-field, with a sparkline field\n")
+	fmt.Fprintf(o, "instead of one record per bin.\n")
 }
 
 func transformerHistogramParseCLI(
@@ -61,6 +65,7 @@ func transformerHistogramParseCLI(
 	hi := 0.0
 	doAuto := false
 	outputPrefix := ""
+	doSparkline := false
 
 	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -111,6 +116,9 @@ func transformerHistogramParseCLI(
 				return nil, err
 			}
 
+		case "-s":
+			doSparkline = true
+
 		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
@@ -140,6 +148,7 @@ func transformerHistogramParseCLI(
 		hi,
 		doAuto,
 		outputPrefix,
+		doSparkline,
 	)
 	if err != nil {
 		return nil, err
@@ -160,6 +169,7 @@ type TransformerHistogram struct {
 	countsByField      map[string][]int64
 	vectorsByFieldName map[string][]float64 // For auto-mode
 	outputPrefix       string
+	doSparkline        bool
 
 	recordTransformerFunc RecordTransformerFunc
 }
@@ -171,6 +181,7 @@ func NewTransformerHistogram(
 	hi float64,
 	doAuto bool,
 	outputPrefix string,
+	doSparkline bool,
 ) (*TransformerHistogram, error) {
 
 	countsByField := make(map[string][]int64)
@@ -185,6 +196,7 @@ func NewTransformerHistogram(
 		valueFieldNames: valueFieldNames,
 		countsByField:   countsByField,
 		outputPrefix:    outputPrefix,
+		doSparkline:     doSparkline,
 		nbins:           nbins,
 	}
 
@@ -256,10 +268,40 @@ func (tr *TransformerHistogram) ingestNonAuto(
 	}
 }
 
+// sparklineRecord summarizes a field's binned counts as a single record with
+// a Unicode-block sparkline field, rather than one record per bin.
+func (tr *TransformerHistogram) sparklineRecord(
+	valueFieldName string,
+	lo float64,
+	hi float64,
+) *mlrval.Mlrmap {
+	counts := tr.countsByField[valueFieldName]
+	countMlrvals := make([]*mlrval.Mlrval, len(counts))
+	for i, count := range counts {
+		countMlrvals[i] = mlrval.FromInt(count)
+	}
+	sparkline := bifs.BIF_sparkline(mlrval.FromArray(countMlrvals))
+
+	outrec := mlrval.NewMlrmapAsRecord()
+	outrec.PutReference(tr.outputPrefix+"field", mlrval.FromString(valueFieldName))
+	outrec.PutReference(tr.outputPrefix+"lo", mlrval.FromFloat(lo))
+	outrec.PutReference(tr.outputPrefix+"hi", mlrval.FromFloat(hi))
+	outrec.PutReference(tr.outputPrefix+"sparkline", sparkline)
+	return outrec
+}
+
 func (tr *TransformerHistogram) emitNonAuto(
 	endOfStreamContext *types.Context,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
+	if tr.doSparkline {
+		for _, valueFieldName := range tr.valueFieldNames {
+			outrec := tr.sparklineRecord(valueFieldName, tr.lo, tr.hi)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(outrec, endOfStreamContext))
+		}
+		return
+	}
+
 	countFieldNames := make(map[string]string)
 	for _, valueFieldName := range tr.valueFieldNames {
 		countFieldNames[valueFieldName] = tr.outputPrefix + valueFieldName + "_count"
@@ -361,6 +403,14 @@ func (tr *TransformerHistogram) emitAuto(
 				counts[idx]++
 			}
 		}
+	}
+
+	if tr.doSparkline {
+		for _, valueFieldName := range tr.valueFieldNames {
+			outrec := tr.sparklineRecord(valueFieldName, lo, hi)
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(outrec, endOfStreamContext))
+		}
+		return
 	}
 
 	// Emission pass

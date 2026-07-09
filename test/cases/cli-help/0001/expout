@@ -474,7 +474,11 @@ Options:
 --auto      Automatically computes limits, ignoring --lo and --hi. Holds all
             values in memory before producing any output.
 -o {prefix} Prefix for output field name. Default: no prefix.
+-s          Print a one-line Unicode sparkline per field instead of per-bin
+            counts.
 -h|--help   Show this message.
+With -s, output is one record per value-field, with a sparkline field
+instead of one record per bin.
 
 ================================================================
 json-parse
@@ -832,6 +836,35 @@ More example put expressions:
 See also https://miller.readthedocs.io/reference-dsl for more context.
 
 ================================================================
+rank
+Usage: mlr rank [options]
+For each record's value in specified fields, computes the standard
+competition rank (1,2,2,4,...) of that value among all input records,
+optionally within groups.
+E.g. with input records x=10, x=20, x=20, and x=30, emits output records
+x=10,x_rank=1  x=20,x_rank=2  x=20,x_rank=2  and  x=30,x_rank=4.
+
+Note: by default this is a two-pass algorithm: on the first pass it retains
+input records and their values; on the second pass it computes ranks and
+emits output records, in original input order. This means it produces no
+output until all input is read, but gives correct ranks regardless of input
+order. Use --sorted for a single-pass streaming alternative.
+
+Options:
+-f {a,b,c} Field name(s) to rank.
+-g {d,e,f} Optional group-by-field name(s).
+--sorted   Promise that the input is already sorted by the field(s) being ranked
+           (within each group, if -g is given). This computes rank in a single
+           streaming pass and O(1) space, by comparing each record's value only
+           to the immediately preceding one, rather than buffering all records
+           to compute an order-independent rank. Produces wrong output if the
+           input is not in fact sorted.
+-h|--help  Show this message.
+Example: mlr rank -f x data/rank-example.csv
+Example: mlr rank -f x -g g data/rank-example.csv
+Example: mlr sort -f x then rank -f x --sorted data/rank-example.csv
+
+================================================================
 regularize
 Usage: mlr regularize [options]
 Outputs records sorted lexically ascending by keys.
@@ -877,8 +910,10 @@ Options:
            record start.
 -f {a,b,c} Field names to reorder.
 -r {a,b,c} Treat field names as regular expressions. Matched fields are moved to
-           start or end in record order. Example: -r '^YYY,^XXX' puts all YYY-
-           and XXX-prefixed fields first (in record order), then the rest.
+           start or end, grouped by the order the regexes are given; within each
+           group, fields keep their record order. Example: -r '^YYY,^XXX' puts
+           all YYY-prefixed fields first, then all XXX-prefixed fields, then the
+           rest.
 -b {x}     Put field names specified with -f before field name specified by {x},
            if any. If {x} isn't present in a given record, the specified fields
            will not be moved.
@@ -890,7 +925,7 @@ Options:
 Examples:
 mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
 mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
-mlr reorder -r '^YYY,^XXX' puts YYY- and XXX-prefixed fields first (record order), then rest.
+mlr reorder -r '^YYY,^XXX' puts YYY-prefixed fields first, then XXX-prefixed fields, then rest.
 
 ================================================================
 repeat
@@ -1116,6 +1151,17 @@ Options:
            argument, -r recursively sorts subobjects/submaps (e.g. for JSON
            input), or combines with -f to treat names as regexes.
 -n         Sort field names naturally (e.g. 2 before 12). Combines with -f/-r.
+-h|--help  Show this message.
+
+================================================================
+sparkline
+Usage: mlr sparkline [options]
+Reduces numeric field(s), across all records in input order, to a compact
+Unicode sparkline -- one block character per record -- for visualizing
+trends. Emits one output record per field. Holds all records in memory
+before producing any output.
+Options:
+-f {a,b,c} Field names to sparkline.
 -h|--help  Show this message.
 
 ================================================================
@@ -1367,7 +1413,7 @@ Usage: mlr summary [options]
 Show summary statistics about the input data.
 
 All summarizers:
-  field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed
+  field_type      string, int, etc. -- if a column has mixed types, all encountered types are printed (see notes below)
   count           +1 for every instance of the field across all records in the input record stream
   null_count      count of field values either empty string or JSON null
   distinct_count  count of distinct values for the field
@@ -1397,6 +1443,8 @@ Notes:
 * min, p25, median, p75, and max work for strings as well as numbers
 * Distinct-counts are computed on string representations -- so 4.1 and 4.10 are counted as distinct here.
 * If the mode is not unique in the input data, the first-encountered value is reported as the mode.
+* A field_type of "int-string", "empty-string", etc. means the column contains values of mixed types --
+  all types encountered are printed, hyphen-joined, in the order first encountered.
 
 Options:
 -a {mean,sum,etc.} Use only the specified summarizers.
@@ -1511,6 +1559,9 @@ Prints distinct values for specified field names. With -c, same as
 count-distinct. For uniq, -f is a synonym for -g. Output fields are
 written in the order in which they are named with -g or -f, not in the
 order in which they appear in the input records.
+To deduplicate records by one or more fields while keeping all other
+fields, use head: e.g. "mlr head -n 1 -g hash" keeps the first record
+for each distinct value of the hash field, with all fields intact.
 
 Options:
 -g {d,e,f} Group-by field names for uniq counts.

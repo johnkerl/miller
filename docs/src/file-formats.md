@@ -1,4 +1,4 @@
-<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<!--  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. -->
 <div>
 <span class="quicklinks">
 Quick links:
@@ -236,6 +236,79 @@ mlr: exiting due to data error
 CSV, TSV, CSV-lite, and TSV-lite have in common the `--implicit-csv-header` flag for input and the `--headerless-csv-output` flag for output.
 
 See also the [`--lazy-quotes` flag](reference-main-flag-list.md#csv-only-flags), which can help with CSV files that are not fully compliant with RFC-4180.
+
+### Handling stray quote characters
+
+The [`--lazy-quotes` flag](reference-main-flag-list.md#csv-only-flags) makes two specific
+relaxations to RFC-4180 parsing (following the semantics of the
+[Go CSV library](https://pkg.go.dev/encoding/csv)): a quote may appear inside an *unquoted*
+field, and a non-doubled quote may appear inside a *quoted* field.
+
+What it does **not** change is how quoted fields are delimited. A field whose first character
+is a double quote is still a quoted field, and its contents extend -- across field separators
+and even line endings -- until the next double quote. In particular, if a field has an
+unmatched opening quote, everything up to the next quote character in the file (or the end
+of the file) becomes part of that field. This matches the behavior of the Go CSV library
+with `LazyQuotes`, as well as Python's `csv` module. For example:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/lazy-quotes.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,name,flag,city
+1,"ACME CORP. INC,Q8,Rome
+2,BETA,X,Milan
+</pre>
+
+Here the second field of the first data line has an opening quote with no matching close,
+so without `--lazy-quotes` we get an error:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ojson cat data/lazy-quotes.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+mlr: CSV header/data length mismatch 4 != 1 at filename data/lazy-quotes.csv row 2
+</pre>
+
+With `--lazy-quotes`, the quoted field silently absorbs the rest of the file -- including
+the field separators and the newline -- since there is no closing quote anywhere:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ojson --lazy-quotes --allow-ragged-csv-input cat data/lazy-quotes.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "id": 1,
+  "name": "ACME CORP. INC,Q8,Rome\n2,BETA,X,Milan\n"
+}
+]
+</pre>
+
+If quote characters in your data are really just ordinary data characters -- that is, the
+file doesn't use RFC-4180-style quoting at all -- then [CSV-lite](file-formats.md#csvtsvasvusvetc)
+is often a better choice, since it splits on the field separator without treating quotes
+specially (the literal quote character is retained in the data):
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsvlite --ojson cat data/lazy-quotes.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "id": 1,
+  "name": "\"ACME CORP. INC",
+  "flag": "Q8",
+  "city": "Rome"
+},
+{
+  "id": 2,
+  "name": "BETA",
+  "flag": "X",
+  "city": "Milan"
+}
+]
+</pre>
 
 ### Troubleshooting CSV and JSON input
 
@@ -531,6 +604,47 @@ Since Miller 6.11.0, you can use `--barred-input` with pprint input format:
 ]
 </pre>
 
+Use `--right` to right-align all cells, or `--right-align-numeric` to right-align only the cells
+having numeric values, leaving other cells left-aligned. Headers are right-aligned over columns
+whose values are all numeric, so that header and data share the same alignment:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint --right-align-numeric cat example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag   k index quantity   rate
+yellow triangle true   1    11  43.6498 9.8870
+red    square   true   2    15  79.2778 0.0130
+red    circle   true   3    16  13.8103 2.9010
+red    square   false  4    48  77.5542 7.4670
+purple triangle false  5    51  81.2290 8.5910
+red    square   false  6    64  77.1991 9.5310
+purple triangle false  7    65  80.1405 5.8240
+yellow circle   true   8    73  63.9785 4.2370
+yellow circle   true   9    87  63.5058 8.3350
+purple square   false 10    91  72.3735 8.2430
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint --barred --right-align-numeric cat example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
++--------+----------+-------+----+-------+----------+--------+
+| color  | shape    | flag  |  k | index | quantity |   rate |
++--------+----------+-------+----+-------+----------+--------+
+| yellow | triangle | true  |  1 |    11 |  43.6498 | 9.8870 |
+| red    | square   | true  |  2 |    15 |  79.2778 | 0.0130 |
+| red    | circle   | true  |  3 |    16 |  13.8103 | 2.9010 |
+| red    | square   | false |  4 |    48 |  77.5542 | 7.4670 |
+| purple | triangle | false |  5 |    51 |  81.2290 | 8.5910 |
+| red    | square   | false |  6 |    64 |  77.1991 | 9.5310 |
+| purple | triangle | false |  7 |    65 |  80.1405 | 5.8240 |
+| yellow | circle   | true  |  8 |    73 |  63.9785 | 4.2370 |
+| yellow | circle   | true  |  9 |    87 |  63.5058 | 8.3350 |
+| purple | square   | false | 10 |    91 |  72.3735 | 8.2430 |
++--------+----------+-------+----+-------+----------+--------+
+</pre>
+
 ## Markdown tabular
 
 Markdown format looks like this:
@@ -578,6 +692,31 @@ do not need to pass `--md` in addition:
 
 <pre class="pre-highlight-non-pair">
 <b>mlr --md-aligned cat data/small</b>
+</pre>
+
+The `--right-align-numeric` flag also applies to markdown output: numeric columns get a
+right-alignment marker (`---:`) in the header-separator line, so they render right-aligned in
+Markdown viewers. With `--omd`, since output is streaming, the marker for each column is chosen
+from the first record of each same-schema group; with `--omd-aligned`, a column gets the marker
+when all its values are numeric, and its header and cell text are right-justified in the raw
+markdown as well:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --omd-aligned --right-align-numeric cat example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+| color  | shape    | flag  |    k | index | quantity |   rate |
+| ---    | ---      | ---   | ---: |  ---: |     ---: |   ---: |
+| yellow | triangle | true  |    1 |    11 |  43.6498 | 9.8870 |
+| red    | square   | true  |    2 |    15 |  79.2778 | 0.0130 |
+| red    | circle   | true  |    3 |    16 |  13.8103 | 2.9010 |
+| red    | square   | false |    4 |    48 |  77.5542 | 7.4670 |
+| purple | triangle | false |    5 |    51 |  81.2290 | 8.5910 |
+| red    | square   | false |    6 |    64 |  77.1991 | 9.5310 |
+| purple | triangle | false |    7 |    65 |  80.1405 | 5.8240 |
+| yellow | circle   | true  |    8 |    73 |  63.9785 | 4.2370 |
+| yellow | circle   | true  |    9 |    87 |  63.5058 | 8.3350 |
+| purple | square   | false |   10 |    91 |  72.3735 | 8.2430 |
 </pre>
 
 ## XTAB: Vertical tabular

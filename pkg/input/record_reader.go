@@ -20,3 +20,17 @@ type IRecordReader interface {
 		downstreamDoneChannel <-chan bool, // for mlr head
 	)
 }
+
+// hasNonEmptyField returns true if any of the split-out fields is non-empty.
+// A blank input line splits to zero fields or to a single empty field; a line
+// consisting only of field separators splits to all-empty fields. Used by the
+// CSV/TSV readers to support skipping trivial records at read time, when the
+// skip-trivial-records verb is present in the then-chain. See issue #1535.
+func hasNonEmptyField(fields []string) bool {
+	for _, field := range fields {
+		if field != "" {
+			return true
+		}
+	}
+	return false
+}

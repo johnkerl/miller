@@ -491,8 +491,8 @@ func (tr *TransformerJoin) ingestLeftFile() {
 	// TODO: perhaps increase recordsPerBatch, and/or refactor
 	recordReader, err := input.Create(readerOpts, 1)
 	if err != nil {
-		// TODO: propagate error to caller
-		return
+		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+		os.Exit(1)
 	}
 
 	// Set the initial context for the left-file.
@@ -521,9 +521,8 @@ func (tr *TransformerJoin) ingestLeftFile() {
 		select {
 
 		case err := <-errorChannel:
-			// TODO: propagate error to caller
-			_ = err
-			return
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+			os.Exit(1)
 
 		case leftrecsAndContexts := <-readerChannel:
 			// TODO: temp for batch-reader refactor
@@ -532,6 +531,17 @@ func (tr *TransformerJoin) ingestLeftFile() {
 			leftrecAndContext.Record = utils.KeepLeftFieldNames(leftrecAndContext.Record, tr.leftKeepFieldNameSet)
 
 			if leftrecAndContext.EndOfStream {
+				// The record-reader may have sent an error (e.g. the left file
+				// is missing or unreadable) immediately before its end-of-stream
+				// marker. Since those are separate channels, the select can see
+				// the end-of-stream marker first -- so, check the error channel
+				// before declaring the ingest complete.
+				select {
+				case err := <-errorChannel:
+					fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+					os.Exit(1)
+				default:
+				}
 				done = true
 				break // breaks the switch, not the for, in Golang
 			}
