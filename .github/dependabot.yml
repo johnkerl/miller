@@ -10,6 +10,13 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    groups:
+      # The codeql-analysis.yml workflow pins init/autobuild/analyze to the
+      # same commit SHA, so they must be bumped together or CI breaks with a
+      # CodeQL config-version mismatch.
+      codeql-action:
+        patterns:
+          - "github/codeql-action/*"
 
   # Maintain dependencies for Go 
   - package-ecosystem: "gomod"
