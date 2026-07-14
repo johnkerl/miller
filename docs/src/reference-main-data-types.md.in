@@ -111,6 +111,30 @@ those. These are valid IEEE floating-point numbers, but Miller treats these as
 strings. You can explicit force conversion: if `x=infinity` in a data file,
 then `typeof($x)` is `string` but `typeof(float($x))` is `float`.
 
+As of Miller 6.21, you can also opt in to inferring these at the record level,
+without per-field coercions. The `--infer-booleans` flag treats `true` and
+`false` in data files (exactly those spellings) as booleans, and the
+`--infer-special-floats` flag treats `Inf`, `Infinity`, and `NaN` --
+case-insensitively, with optional leading `+` or `-` on the first two -- as
+floats. Both compose with `-A` and `-O`; neither has any effect when type
+inference is disabled entirely with `-S`.
+
+GENMD-RUN-COMMAND
+cat data/infer-literals.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint put '$t = typeof($y)' data/infer-literals.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --infer-booleans --infer-special-floats --icsv --opprint put '$t = typeof($y)' data/infer-literals.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --infer-booleans --icsv --opprint filter '$y == true' data/infer-literals.csv
+GENMD-EOF
+
 ## JSON parse and stringify
 
 If you have, say, a CSV file whose columns contain strings which are well-formatted JSON,

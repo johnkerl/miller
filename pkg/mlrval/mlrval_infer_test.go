@@ -248,3 +248,81 @@ func TestInferString(t *testing.T) {
 	assert.True(t, inferString(FromDeferredType(".2e-3")).IsString())
 	assert.True(t, inferString(FromDeferredType("-.2e-3")).IsString())
 }
+
+// Opt-in inference of "true"/"false" as booleans: mlr --infer-booleans.
+// Issue #965.
+func TestInferBooleans(t *testing.T) {
+	defer func() { inferTrueFalseAsBool = false }()
+	inferTrueFalseAsBool = true
+
+	assert.True(t, inferNormally(FromDeferredType("true")).IsBool())
+	assert.True(t, inferNormally(FromDeferredType("false")).IsBool())
+
+	// Case-sensitive, exact-match only.
+	assert.True(t, inferNormally(FromDeferredType("True")).IsString())
+	assert.True(t, inferNormally(FromDeferredType("FALSE")).IsString())
+	assert.True(t, inferNormally(FromDeferredType("truex")).IsString())
+
+	// Original string representations are retained.
+	assert.Equal(t, "true", inferNormally(FromDeferredType("true")).String())
+	assert.Equal(t, "false", inferNormally(FromDeferredType("false")).String())
+
+	// Everything else is unaffected.
+	assert.True(t, inferNormally(FromDeferredType("")).IsVoid())
+	assert.True(t, inferNormally(FromDeferredType("abc")).IsString())
+	assert.True(t, inferNormally(FromDeferredType("123")).IsInt())
+	assert.True(t, inferNormally(FromDeferredType("-123")).IsInt())
+	assert.True(t, inferNormally(FromDeferredType("123.456")).IsFloat())
+	assert.True(t, inferNormally(FromDeferredType("NaN")).IsString())
+	assert.True(t, inferNormally(FromDeferredType("Inf")).IsString())
+
+	// Composes with -O.
+	assert.True(t, inferWithOctalAsInt(FromDeferredType("true")).IsBool())
+	assert.True(t, inferWithOctalAsInt(FromDeferredType("0123")).IsInt())
+
+	// No effect with -S.
+	assert.True(t, inferString(FromDeferredType("true")).IsString())
+	assert.True(t, inferString(FromDeferredType("false")).IsString())
+}
+
+// Opt-in inference of "Inf"/"Infinity"/"NaN" as floats: mlr
+// --infer-special-floats. Issue #965.
+func TestInferSpecialFloats(t *testing.T) {
+	defer func() { inferInfNanAsFloat = false }()
+	inferInfNanAsFloat = true
+
+	assert.True(t, inferNormally(FromDeferredType("Inf")).IsFloat())
+	assert.True(t, inferNormally(FromDeferredType("inf")).IsFloat())
+	assert.True(t, inferNormally(FromDeferredType("INF")).IsFloat())
+	assert.True(t, inferNormally(FromDeferredType("+Inf")).IsFloat())
+	assert.True(t, inferNormally(FromDeferredType("-Inf")).IsFloat())
+	assert.True(t, inferNormally(FromDeferredType("Infinity")).IsFloat())
+	assert.True(t, inferNormally(FromDeferredType("-infinity")).IsFloat())
+	assert.True(t, inferNormally(FromDeferredType("NaN")).IsFloat())
+	assert.True(t, inferNormally(FromDeferredType("nan")).IsFloat())
+
+	// Original string representations are retained.
+	assert.Equal(t, "Infinity", inferNormally(FromDeferredType("Infinity")).String())
+	assert.Equal(t, "NaN", inferNormally(FromDeferredType("NaN")).String())
+
+	// Near-misses stay strings.
+	assert.True(t, inferNormally(FromDeferredType("Info")).IsString())
+	assert.True(t, inferNormally(FromDeferredType("nancy")).IsString())
+	assert.True(t, inferNormally(FromDeferredType("+")).IsString())
+	assert.True(t, inferNormally(FromDeferredType("-")).IsString())
+
+	// Everything else is unaffected.
+	assert.True(t, inferNormally(FromDeferredType("")).IsVoid())
+	assert.True(t, inferNormally(FromDeferredType("true")).IsString())
+	assert.True(t, inferNormally(FromDeferredType("123")).IsInt())
+	assert.True(t, inferNormally(FromDeferredType("-123")).IsInt())
+	assert.True(t, inferNormally(FromDeferredType("123.456")).IsFloat())
+
+	// Composes with -O.
+	assert.True(t, inferWithOctalAsInt(FromDeferredType("NaN")).IsFloat())
+	assert.True(t, inferWithOctalAsInt(FromDeferredType("0123")).IsInt())
+
+	// No effect with -S.
+	assert.True(t, inferString(FromDeferredType("NaN")).IsString())
+	assert.True(t, inferString(FromDeferredType("Inf")).IsString())
+}

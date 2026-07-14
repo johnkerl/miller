@@ -592,6 +592,12 @@
                                 many fields, and many of them being processed during
                                 a given processing run, --hash-records might offer a
                                 slight performance benefit.
+       --infer-booleans         Treat `true` and `false` in data files as boolean
+                                values. The default is to leave them as strings,
+                                since anything in a data file is treated as a string
+                                unless it looks like a number. This composes with
+                                `-A` and `-O`; it has no effect when `-S` is
+                                supplied.
        --infer-int-as-float or -A
                                 Cast all integers in data files to floats.
        --infer-none or -S       Don't treat values like 123 or 456.7 in data files as
@@ -599,6 +605,12 @@
        --infer-octal or -O      Treat numbers like 0123 in data files as numeric;
                                 default is string. Note that 00--07 etc scan as int;
                                 08-09 scan as float.
+       --infer-special-floats   Treat `Inf`, `Infinity`, and `NaN` in data files --
+                                case-insensitively, with optional leading `+` or `-`
+                                on the first two -- as floating-point values. The
+                                default is to leave them as strings. This composes
+                                with `-A` and `-O`; it has no effect when `-S` is
+                                supplied.
        --load {filename}        Load DSL script file for all put/filter operations on
                                 the command line. If the name following `--load` is a
                                 directory, load all `*.mlr` files in that directory.
@@ -4089,4 +4101,4 @@
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-07-08                         4mMILLER24m(1)
+                                  2026-07-14                         4mMILLER24m(1)

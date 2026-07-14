@@ -288,6 +288,20 @@ func FromBool(input bool) *Mlrval {
 	return FALSE
 }
 
+// SetFromBool is an in-place mutator, used (for example) by the JIT
+// type-inferrer for mlr --infer-booleans.
+func (mv *Mlrval) SetFromBool(input bool) *Mlrval {
+	if input {
+		mv.printrep = "true"
+	} else {
+		mv.printrep = "false"
+	}
+	mv.printrepValid = true
+	mv.intf = input
+	mv.mvtype = MT_BOOL
+	return mv
+}
+
 func FromBoolString(input string) *Mlrval {
 	switch input {
 	case "true":

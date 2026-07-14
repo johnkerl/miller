@@ -1,0 +1,7 @@
+x,y
+1,true
+2,false
+3,NaN
+4,-Inf
+5,Infinity
+6,hello
