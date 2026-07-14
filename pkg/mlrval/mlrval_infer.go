@@ -6,7 +6,8 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/scan"
 )
 
-// Note: we do not infer bools from data files; always false in this path.
+// Note: we do not infer bools from data files by default; see the opt-in
+// --infer-booleans flag (issue #965).
 
 // It's essential that we use mv.Type() not mv.mvtype since types are
 // JIT-computed on first access for most data-file values. See type.go for more
@@ -39,15 +40,87 @@ func SetInferrerStringOnly() {
 	packageLevelInferrer = inferString
 }
 
+// Support for mlr --infer-booleans and mlr --infer-special-floats (issue
+// #965). Unlike the -S/-A/-O options above, these don't replace the
+// package-level inferrer; they augment it, so they compose with -A and -O.
+// They intentionally have no effect with -S / --infer-none, which disables
+// type inference entirely.
+var inferTrueFalseAsBool bool = false
+var inferInfNanAsFloat bool = false
+
+// SetInferrerBooleans is for mlr --infer-booleans.
+func SetInferrerBooleans() {
+	inferTrueFalseAsBool = true
+}
+
+// SetInferrerSpecialFloats is for mlr --infer-special-floats.
+func SetInferrerSpecialFloats() {
+	inferInfNanAsFloat = true
+}
+
 func inferNormally(mv *Mlrval) *Mlrval {
+	if inferTrueFalseAsBool || inferInfNanAsFloat {
+		if pmv := tryOptInLiteralInference(mv); pmv != nil {
+			return pmv
+		}
+	}
 	scanType := scan.FindScanType(mv.printrep)
 	return normalInferrerTable[scanType](mv)
 }
 
 // inferWithOctalAsInt uses the leading-zero-as-int inferrer table (mlr -O).
 func inferWithOctalAsInt(mv *Mlrval) *Mlrval {
+	if inferTrueFalseAsBool || inferInfNanAsFloat {
+		if pmv := tryOptInLiteralInference(mv); pmv != nil {
+			return pmv
+		}
+	}
 	scanType := scan.FindScanType(mv.printrep)
 	return leadingZeroAsIntInferrerTable[scanType](mv)
+}
+
+// tryOptInLiteralInference handles opt-in inference of fixed literals --
+// "true"/"false" for --infer-booleans, and "Inf"/"Infinity"/"NaN" for
+// --infer-special-floats -- all of which the scan package classifies as
+// strings. It returns nil when no literal matches, in which case the caller
+// proceeds with normal scan-type dispatch.
+func tryOptInLiteralInference(mv *Mlrval) *Mlrval {
+	if len(mv.printrep) == 0 {
+		return nil
+	}
+
+	if inferTrueFalseAsBool {
+		// Exactly "true" and "false", matching the Miller DSL's boolean
+		// literals as well as JSON's.
+		if mv.printrep == "true" {
+			return mv.SetFromBool(true)
+		}
+		if mv.printrep == "false" {
+			return mv.SetFromBool(false)
+		}
+	}
+
+	if inferInfNanAsFloat {
+		// strconv.ParseFloat accepts "inf", "infinity", and "nan",
+		// case-insensitively, with optional leading sign for the first two.
+		// The first-character gate keeps ordinary numeric strings like "-123"
+		// on the normal inference path, so that they still infer as int.
+		rest := mv.printrep
+		if rest[0] == '+' || rest[0] == '-' {
+			rest = rest[1:]
+		}
+		if len(rest) > 0 {
+			r0 := rest[0]
+			if r0 == 'i' || r0 == 'I' || r0 == 'n' || r0 == 'N' {
+				floatval, err := strconv.ParseFloat(mv.printrep, 64)
+				if err == nil {
+					return mv.SetFromPrevalidatedFloatString(mv.printrep, floatval)
+				}
+			}
+		}
+	}
+
+	return nil
 }
 
 // inferWithIntAsFloat is for mlr -A.

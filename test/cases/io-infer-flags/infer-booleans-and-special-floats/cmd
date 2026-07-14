@@ -1,0 +1,1 @@
+mlr --infer-booleans --infer-special-floats --c2p put -f ${CASEDIR}/mlr test/input/infer-literals.csv

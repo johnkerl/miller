@@ -187,6 +187,61 @@ those. These are valid IEEE floating-point numbers, but Miller treats these as
 strings. You can explicit force conversion: if `x=infinity` in a data file,
 then `typeof($x)` is `string` but `typeof(float($x))` is `float`.
 
+As of Miller 6.21, you can also opt in to inferring these at the record level,
+without per-field coercions. The `--infer-booleans` flag treats `true` and
+`false` in data files (exactly those spellings) as booleans, and the
+`--infer-special-floats` flag treats `Inf`, `Infinity`, and `NaN` --
+case-insensitively, with optional leading `+` or `-` on the first two -- as
+floats. Both compose with `-A` and `-O`; neither has any effect when type
+inference is disabled entirely with `-S`.
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/infer-literals.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+x,y
+1,true
+2,false
+3,NaN
+4,-Inf
+5,Infinity
+6,hello
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint put '$t = typeof($y)' data/infer-literals.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+x y        t
+1 true     string
+2 false    string
+3 NaN      string
+4 -Inf     string
+5 Infinity string
+6 hello    string
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --infer-booleans --infer-special-floats --icsv --opprint put '$t = typeof($y)' data/infer-literals.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+x y        t
+1 true     bool
+2 false    bool
+3 NaN      float
+4 -Inf     float
+5 Infinity float
+6 hello    string
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --infer-booleans --icsv --opprint filter '$y == true' data/infer-literals.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+x y
+1 true
+</pre>
+
 ## JSON parse and stringify
 
 If you have, say, a CSV file whose columns contain strings which are well-formatted JSON,

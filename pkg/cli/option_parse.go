@@ -3732,6 +3732,28 @@ Note that 00--07 etc scan as int; 08-09 scan as float.`,
 		},
 
 		{
+			name: "--infer-booleans",
+			help: "Treat `true` and `false` in data files as boolean values. The default is to leave them as strings, " +
+				"since anything in a data file is treated as a string unless it looks like a number. " +
+				"This composes with `-A` and `-O`; it has no effect when `-S` is supplied.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				mlrval.SetInferrerBooleans()
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--infer-special-floats",
+			help: "Treat `Inf`, `Infinity`, and `NaN` in data files -- case-insensitively, with optional leading `+` or `-` " +
+				"on the first two -- as floating-point values. The default is to leave them as strings. " +
+				"This composes with `-A` and `-O`; it has no effect when `-S` is supplied.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				mlrval.SetInferrerSpecialFloats()
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--fflush",
 			help: `Force buffered output to be written after every output record.
 The default is flush output after every record if the output is to the terminal, or less often if

@@ -64,7 +64,7 @@ one-line summary (here trimmed, and then counted, using Miller itself):
 <pre class="pre-non-highlight-in-pair">
 [
 {
-  "count": 665
+  "count": 667
 }
 ]
 </pre>
