@@ -1,0 +1,1 @@
+mlr --opprint --from test/input/abixy step -a shift_lag_2,shift_lead_2 -f i -g a then sort -f a

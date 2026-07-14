@@ -1207,6 +1207,12 @@ GENMD-RUN-COMMAND
 mlr --opprint step -a shift,delta,rsum,counter -f x -g a data/medium | head -15
 GENMD-EOF
 
+The `shift`, `shift_lag`, `shift_lead`, `delta`, and `ratio` steppers accept an optional trailing count: `shift_lag_{n}` refers `n` records back, and `shift_lead_{n}` refers `n` records forward. The plain forms are equivalent to a count of 1: e.g. `shift_lag` is the same as `shift_lag_1`.
+
+GENMD-RUN-COMMAND
+mlr --opprint step -a shift_lag,shift_lag_3,delta_3 -f x data/medium | head -15
+GENMD-EOF
+
 GENMD-RUN-COMMAND
 mlr --opprint step -a ewma -f x -d 0.1,0.9 data/medium | head -15
 GENMD-EOF

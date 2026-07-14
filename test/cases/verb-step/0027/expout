@@ -1,0 +1,27 @@
+a   b   i x          y          x_delta    x_shift_lag_2 x_shift_lead_2
+pan pan 1 0.34679014 0.72680286 0          -             0.20460331
+eks pan 2 0.75867996 0.52215111 0.41188982 -             0.38139939
+
+aaa b   i x          y
+wye wye 3 0.20460331 0.33831853
+
+a   bbb i x          y          x_delta x_shift_lag_2 x_shift_lead_2
+eks wye 4 0.38139939 0.13418874 0       0.75867996    0.52712616
+
+a   b   i xxx        y          x_shift_lag_2 x_shift_lead_2
+wye pan 5 0.57328892 0.86362447 -             0.61178406
+
+a   b   i x          y          x_delta x_shift_lag_2 x_shift_lead_2
+zee pan 6 0.52712616 0.49322129 0       0.38139939    0.59855401
+
+a   b   iii x          y          x_delta    x_shift_lag_2 x_shift_lead_2
+eks zee 7   0.61178406 0.18788492 0.08465790 -             0.03144188
+
+a   b   i x          yyy        x_delta     x_shift_lag_2 x_shift_lead_2
+zee wye 8 0.59855401 0.97618139 -0.01323005 0.52712616    0.50262601
+
+aaa bbb i x          y          x_delta     x_shift_lag_2 x_shift_lead_2
+hat wye 9 0.03144188 0.74955076 -0.56711213 0.61178406    -
+
+a   b   i  x          y          x_delta    x_shift_lag_2 x_shift_lead_2
+pan wye 10 0.50262601 0.95261836 0.47118413 0.59855401    -
