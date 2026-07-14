@@ -41,6 +41,34 @@ func TestParseStepperCount(t *testing.T) {
 	}
 }
 
+func TestStepperNameHasBadCount(t *testing.T) {
+	cases := []struct {
+		stepperName string
+		want        bool
+	}{
+		{"delta_0", true},
+		{"delta_-1", true},
+		{"delta_x", true},
+		{"delta_3_4", true},
+		{"shift_lag_0", true},
+		{"shift_lead_-2", true},
+		{"ratio_", true},
+		{"shift_", true},
+		{"delta", false},   // valid; never reaches the error path anyway
+		{"delta_7", false}, // valid; never reaches the error path anyway
+		{"foo", false},
+		{"foo_0", false},
+		{"slwin_x_y", false}, // slwin has its own handling
+	}
+
+	for _, tc := range cases {
+		got := stepperNameHasBadCount(tc.stepperName)
+		if got != tc.want {
+			t.Errorf("stepperNameHasBadCount(%q) = %v; want %v", tc.stepperName, got, tc.want)
+		}
+	}
+}
+
 func TestStepperInputFromNameWithCounts(t *testing.T) {
 	cases := []struct {
 		stepperName  string

@@ -179,6 +179,11 @@ func transformerStepParseCLI(
 			for _, stepperName := range stepperNames {
 				stepperInput := stepperInputFromName(stepperName)
 				if stepperInput == nil {
+					if stepperNameHasBadCount(stepperName) {
+						return nil, cli.VerbErrorf(
+							verb, "stepper \"%s\": count must be a positive integer", stepperName,
+						)
+					}
 					return nil, cli.VerbErrorf(verb, "stepper \"%s\" not found", stepperName)
 				}
 				stepperInputs = append(stepperInputs, stepperInput)
@@ -769,6 +774,28 @@ func parseStepperCount(
 		return 0, false
 	}
 	return n, true
+}
+
+// stepperCountSuffixBases lists the steppers which accept an optional
+// trailing count, e.g. "shift_lag_12". Longer names come first so that e.g.
+// "shift_lag_0" reports against base "shift_lag" rather than "shift".
+var stepperCountSuffixBases = []string{"shift_lead", "shift_lag", "shift", "delta", "ratio"}
+
+// stepperNameHasBadCount detects stepper names which look like the
+// count-suffixed form of a known stepper but whose suffix is not a positive
+// integer -- e.g. "delta_0", "delta_-1", "delta_x" -- so the CLI parser can
+// give a more specific error than "stepper not found".
+func stepperNameHasBadCount(
+	stepperName string,
+) bool {
+	for _, baseName := range stepperCountSuffixBases {
+		if strings.HasPrefix(stepperName, baseName+"_") {
+			if _, ok := parseStepperCount(stepperName, baseName); !ok {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // tValueRing is a fixed-size ring buffer of cached field values, used by the
