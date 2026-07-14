@@ -1,0 +1,3 @@
+$ta = typeof($active);
+$tv = typeof($verified);
+$flipped = is_boolean($active) ? !$active : "(not-boolean)"

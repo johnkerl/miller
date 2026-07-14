@@ -189,6 +189,54 @@ func TestInferWithIntAsFloat(t *testing.T) {
 	assert.True(t, inferWithOctalAsInt(FromDeferredType("-.2e-3")).IsFloat())
 }
 
+func TestInferUserDefinedBooleans(t *testing.T) {
+	// This test mutates package-level state; restore it on exit so other
+	// tests in this package see default inference behavior.
+	defer func() {
+		inferrerBooleanTable = nil
+	}()
+
+	SetInferrerBooleanStrings([]string{"True", "yes", "on"}, true)
+	SetInferrerBooleanStrings([]string{"False", "no", "off"}, false)
+
+	mv := inferNormally(FromDeferredType("True"))
+	assert.True(t, mv.IsBool())
+	boolval, ok := mv.GetBoolValue()
+	assert.True(t, ok)
+	assert.True(t, boolval)
+	// Original string representation is retained for output.
+	assert.Equal(t, "True", mv.String())
+
+	mv = inferNormally(FromDeferredType("no"))
+	assert.True(t, mv.IsBool())
+	boolval, ok = mv.GetBoolValue()
+	assert.True(t, ok)
+	assert.False(t, boolval)
+	assert.Equal(t, "no", mv.String())
+
+	assert.True(t, inferNormally(FromDeferredType("yes")).IsBool())
+	assert.True(t, inferNormally(FromDeferredType("on")).IsBool())
+	assert.True(t, inferNormally(FromDeferredType("off")).IsBool())
+
+	// Matching is exact and case-sensitive; unlisted strings are unaffected.
+	assert.True(t, inferNormally(FromDeferredType("true")).IsString())
+	assert.True(t, inferNormally(FromDeferredType("TRUE")).IsString())
+	assert.True(t, inferNormally(FromDeferredType("Yes")).IsString())
+	assert.True(t, inferNormally(FromDeferredType("abc")).IsString())
+
+	// Non-boolean inference is unaffected.
+	assert.True(t, inferNormally(FromDeferredType("")).IsVoid())
+	assert.True(t, inferNormally(FromDeferredType("123")).IsInt())
+	assert.True(t, inferNormally(FromDeferredType("123.456")).IsFloat())
+
+	// Also applies with -O and -A inference variants.
+	assert.True(t, inferWithOctalAsInt(FromDeferredType("True")).IsBool())
+	assert.True(t, inferWithIntAsFloat(FromDeferredType("no")).IsBool())
+
+	// -S bypasses all inference, including user-defined booleans.
+	assert.True(t, inferString(FromDeferredType("True")).IsString())
+}
+
 func TestInferString(t *testing.T) {
 	assert.True(t, inferString(FromDeferredType("")).IsVoid())
 

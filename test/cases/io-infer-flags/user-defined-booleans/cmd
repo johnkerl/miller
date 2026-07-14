@@ -1,0 +1,1 @@
+mlr --infer-true True,yes --infer-false False,no --c2p put -f ${CASEDIR}/mlr test/input/user-defined-booleans.csv

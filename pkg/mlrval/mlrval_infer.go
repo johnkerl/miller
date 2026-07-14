@@ -6,7 +6,10 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/scan"
 )
 
-// Note: we do not infer bools from data files; always false in this path.
+// Note: we do not infer bools from data files by default. Users can opt in to
+// having specific strings of their choice (e.g. "True"/"False", "yes"/"no")
+// inferred as booleans using the --infer-true and --infer-false flags. See
+// https://github.com/johnkerl/miller/issues/1651.
 
 // It's essential that we use mv.Type() not mv.mvtype since types are
 // JIT-computed on first access for most data-file values. See type.go for more
@@ -39,13 +42,53 @@ func SetInferrerStringOnly() {
 	packageLevelInferrer = inferString
 }
 
+// inferrerBooleanTable supports mlr --infer-true and --infer-false: it maps
+// user-specified strings (e.g. "True", "yes", "off") to the boolean values
+// they should be inferred as when read from data files. It is nil unless one
+// of those flags was provided; the nil check keeps the default inference path
+// cheap.
+var inferrerBooleanTable map[string]bool = nil
+
+// SetInferrerBooleanStrings is for mlr --infer-true and --infer-false: each of
+// the given strings will be inferred, when read from data files, as a boolean
+// with the given value. Note that this has no effect when -S is in effect,
+// since -S bypasses all type inference.
+func SetInferrerBooleanStrings(printreps []string, boolval bool) {
+	if inferrerBooleanTable == nil {
+		inferrerBooleanTable = make(map[string]bool)
+	}
+	for _, printrep := range printreps {
+		if printrep != "" {
+			inferrerBooleanTable[printrep] = boolval
+		}
+	}
+}
+
+// tryInferBoolean checks the user-specified boolean-strings table (mlr
+// --infer-true / --infer-false), returning nil if the table is unset or the
+// value isn't in it.
+func tryInferBoolean(mv *Mlrval) *Mlrval {
+	if inferrerBooleanTable != nil {
+		if boolval, ok := inferrerBooleanTable[mv.printrep]; ok {
+			return mv.SetFromPrevalidatedBooleanString(mv.printrep, boolval)
+		}
+	}
+	return nil
+}
+
 func inferNormally(mv *Mlrval) *Mlrval {
+	if bv := tryInferBoolean(mv); bv != nil {
+		return bv
+	}
 	scanType := scan.FindScanType(mv.printrep)
 	return normalInferrerTable[scanType](mv)
 }
 
 // inferWithOctalAsInt uses the leading-zero-as-int inferrer table (mlr -O).
 func inferWithOctalAsInt(mv *Mlrval) *Mlrval {
+	if bv := tryInferBoolean(mv); bv != nil {
+		return bv
+	}
 	scanType := scan.FindScanType(mv.printrep)
 	return leadingZeroAsIntInferrerTable[scanType](mv)
 }

@@ -187,6 +187,58 @@ those. These are valid IEEE floating-point numbers, but Miller treats these as
 strings. You can explicit force conversion: if `x=infinity` in a data file,
 then `typeof($x)` is `string` but `typeof(float($x))` is `float`.
 
+However, if your data uses specific strings for booleans -- e.g. `True`/`False`
+as Python prints them, or `yes`/`no` -- you can opt in to having those (and
+only those) inferred as booleans, using the `--infer-true` and `--infer-false`
+flags. Values are matched exactly and case-sensitively, and (as with ints and
+floats) the original string representation is retained for non-JSON output:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/user-defined-booleans.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,active,verified
+1,True,yes
+2,False,no
+3,true,maybe
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --infer-true True,yes --infer-false False,no --c2p put '</b>
+<b>  $ta = typeof($active);</b>
+<b>  $tv = typeof($verified);</b>
+<b>' data/user-defined-booleans.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id active verified ta     tv
+1  True   yes      bool   bool
+2  False  no       bool   bool
+3  true   maybe    string string
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --infer-true True,yes --infer-false False,no --icsv --ojson cat data/user-defined-booleans.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "id": 1,
+  "active": true,
+  "verified": true
+},
+{
+  "id": 2,
+  "active": false,
+  "verified": false
+},
+{
+  "id": 3,
+  "active": "true",
+  "verified": "maybe"
+}
+]
+</pre>
+
 ## JSON parse and stringify
 
 If you have, say, a CSV file whose columns contain strings which are well-formatted JSON,
