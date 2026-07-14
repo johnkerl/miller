@@ -1132,6 +1132,18 @@ GENMD-RUN-COMMAND
 mlr --c2p stats1 -a mode -f color -g shape data/colored-shapes.csv
 GENMD-EOF
 
+With `-w {n}`, statistics are computed over a sliding window of the last up-to-`n`
+records -- within each group, when `-g` is used -- and one output record is emitted
+per input record, with the windowed statistics appended to it:
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint --from example.csv stats1 -a mean,min,max -f quantity -w 4
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint --from example.csv stats1 -a mean -f quantity -g shape -w 2
+GENMD-EOF
+
 ## stats2
 
 GENMD-RUN-COMMAND

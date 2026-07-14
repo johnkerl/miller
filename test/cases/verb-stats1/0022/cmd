@@ -1,0 +1,1 @@
+mlr --opprint --from test/input/abixy stats1 -a p25,median,p75,distinct_count,mode -f i -w 4

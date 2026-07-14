@@ -1,0 +1,1 @@
+mlr --ojson --from test/input/abixy-het stats1 -a sum,count -f x,y -w 3

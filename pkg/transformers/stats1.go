@@ -28,6 +28,7 @@ var stats1Options = []OptionSpec{
 	{Flag: "--grfx", Arg: "{regex}", Type: "regex", Desc: "Shorthand for --gr {regex} --fx {that same regex}."},
 	{Flag: "-i", Type: "bool", Desc: "Use interpolated percentiles, like R's type=7; default like type=1. Not sensical for string-valued fields."},
 	{Flag: "-s", Type: "bool", Desc: "Print iterative stats. Useful in tail -f contexts, in which case please avoid pprint-format output since end of input stream will never be seen. Likewise, if input is coming from `tail -f` be sure to use `--records-per-batch 1`."},
+	{Flag: "-w", Arg: "{n}", Type: "int", Desc: "Sliding-window mode: compute statistics over a trailing window of up to n records (including the current one), rather than over the whole record stream. Windows are kept per group when -g is used. One output record is emitted per input record, with the windowed statistics appended to it. Not compatible with -s."},
 	{Flag: "-S", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
 	{Flag: "-F", Type: "bool", Desc: "No-op flag for backward compatibility with Miller 5."},
 }
@@ -62,6 +63,11 @@ the input record stream.
 		"Example: mlr stats1 -a count,mode -f size")
 	fmt.Fprintln(o,
 		"Example: mlr stats1 -a count,mode -f size -g shape")
+	fmt.Fprintln(o,
+		"Example: mlr stats1 -a mean,min,max -f quantity -g name -w 7")
+	fmt.Fprintln(o,
+		`        This emits one output record per input record, with sliding-window
+         statistics over the last up-to-7 records for each name.`)
 	fmt.Fprintln(o,
 		"Example: mlr stats1 -a count,mode --fr '^[a-h].*$' --gr '^k.*$'")
 	fmt.Fprintln(o,
@@ -106,6 +112,7 @@ func transformerStats1ParseCLI(
 
 	doInterpolatedPercentiles := false
 	doIterativeStats := false
+	slidingWindowSize := int64(0)
 
 	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -185,6 +192,15 @@ func transformerStats1ParseCLI(
 		case "-s":
 			doIterativeStats = true
 
+		case "-w":
+			slidingWindowSize, err = cli.VerbGetIntArg(verb, opt, args, &argi, argc)
+			if err != nil {
+				return nil, err
+			}
+			if slidingWindowSize < 1 {
+				return nil, cli.VerbErrorf(verbNameStats1, "-w argument must be positive; got %d", slidingWindowSize)
+			}
+
 		case "-S", "-F":
 			// No-op pass-through for backward compatibility with Miller 5
 
@@ -199,6 +215,9 @@ func transformerStats1ParseCLI(
 	}
 	if len(valueFieldNameList) == 0 {
 		return nil, cli.VerbErrorf(verbNameStats1, "-f option is required")
+	}
+	if doIterativeStats && slidingWindowSize > 0 {
+		return nil, cli.VerbErrorf(verbNameStats1, "-s and -w may not be used together")
 	}
 
 	*pargi = argi
@@ -218,6 +237,7 @@ func transformerStats1ParseCLI(
 
 		doInterpolatedPercentiles,
 		doIterativeStats,
+		slidingWindowSize,
 	)
 	if err != nil {
 		return nil, err
@@ -250,8 +270,18 @@ type TransformerStats1 struct {
 	doInterpolatedPercentiles bool
 	doIterativeStats          bool
 
+	// If positive, statistics are computed over a trailing window of up to
+	// this many records (per grouping key), with one output record emitted per
+	// input record.
+	slidingWindowSize int64
+
 	// State:
 	accumulatorFactory *utils.Stats1AccumulatorFactory
+
+	// For sliding-window mode: per grouping key, the last (up to)
+	// slidingWindowSize windowed entries. Each entry is a small record holding
+	// copies of only the relevant value fields from one input record.
+	slidingWindows map[string][]*mlrval.Mlrmap
 
 	// Accumulators are indexed by
 	//   groupByFieldName -> valueFieldName -> accumulatorName -> accumulator object
@@ -319,6 +349,7 @@ func NewTransformerStats1(
 
 	doInterpolatedPercentiles bool,
 	doIterativeStats bool,
+	slidingWindowSize int64,
 ) (*TransformerStats1, error) {
 	for _, name := range accumulatorNameList {
 		if !utils.ValidateStats1AccumulatorName(name) {
@@ -339,7 +370,9 @@ func NewTransformerStats1(
 
 		doInterpolatedPercentiles:        doInterpolatedPercentiles,
 		doIterativeStats:                 doIterativeStats,
+		slidingWindowSize:                slidingWindowSize,
 		accumulatorFactory:               utils.NewStats1AccumulatorFactory(),
+		slidingWindows:                   make(map[string][]*mlrval.Mlrmap),
 		namedAccumulators:                lib.NewOrderedMap[*lib.OrderedMap[*lib.OrderedMap[*utils.Stats1NamedAccumulator]]](),
 		groupingKeysToGroupByFieldValues: make(map[string]*lib.OrderedMap[*mlrval.Mlrval]),
 	}
@@ -379,6 +412,11 @@ func (tr *TransformerStats1) handleInputRecord(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
+	if tr.slidingWindowSize > 0 {
+		tr.handleInputRecordWindowed(inrecAndContext, outputRecordsAndContexts)
+		return
+	}
+
 	inrec := inrecAndContext.Record
 
 	// E.g. if grouping by "a" and "b", and the current record has a=circle, b=blue,
@@ -428,6 +466,103 @@ func (tr *TransformerStats1) handleInputRecord(
 		)
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+}
+
+// handleInputRecordWindowed processes one input record in sliding-window mode
+// (-w {n}). For each grouping key we retain the relevant value fields of the
+// last up-to-n records; on every input record the accumulators for that
+// grouping key are reset and re-fed from the window, then the windowed
+// statistics are appended to the record, which is emitted immediately.
+func (tr *TransformerStats1) handleInputRecordWindowed(
+	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
+) {
+	inrec := inrecAndContext.Record
+
+	// E.g. if grouping by "a" and "b", and the current record has a=circle, b=blue,
+	// then groupingKey is the string "circle,blue".
+	var groupingKey string
+	var groupByFieldValues *lib.OrderedMap[*mlrval.Mlrval] // OrderedMap[string]*mlrval.Mlrval
+	var ok bool
+	if tr.doRegexGroupByFieldNames {
+		groupingKey, groupByFieldValues, ok = tr.getGroupByFieldNamesWithRegexes(inrec)
+	} else {
+		groupingKey, ok = tr.getGroupingKeyWithoutRegexes(inrec)
+	}
+	if !ok {
+		return
+	}
+
+	level2 := tr.namedAccumulators.Get(groupingKey)
+	if level2 == nil {
+		level2 = lib.NewOrderedMap[*lib.OrderedMap[*utils.Stats1NamedAccumulator]]()
+		tr.namedAccumulators.Put(groupingKey, level2)
+		if !tr.doRegexGroupByFieldNames {
+			groupByFieldValues, ok = tr.buildGroupByFieldValuesWithoutRegexes(inrec)
+			if !ok {
+				return
+			}
+		}
+		tr.groupingKeysToGroupByFieldValues[groupingKey] = groupByFieldValues
+	} else if !tr.doRegexGroupByFieldNames {
+		groupByFieldValues = tr.groupingKeysToGroupByFieldValues[groupingKey]
+	}
+
+	// Update this grouping key's window with the current record's value fields.
+	window := tr.slidingWindows[groupingKey]
+	if int64(len(window)) >= tr.slidingWindowSize {
+		window = window[1:]
+	}
+	window = append(window, tr.buildWindowEntry(inrec))
+	tr.slidingWindows[groupingKey] = window
+
+	// Reset the accumulators for this grouping key, then re-ingest the values
+	// retained in the window. This is O(window size) per record but is fully
+	// generic: it works for any accumulator, including order-sensitive ones
+	// like mode/antimode and non-invertible ones like percentiles.
+	for pb := level2.Head; pb != nil; pb = pb.Next {
+		for pc := pb.Value.Head; pc != nil; pc = pc.Next {
+			pc.Value.Reset()
+		}
+	}
+	for _, windowEntry := range window {
+		if tr.doRegexValueFieldNames {
+			tr.ingestWithValueFieldRegexes(windowEntry, groupingKey, level2)
+		} else {
+			tr.ingestWithoutValueFieldRegexes(windowEntry, groupingKey, level2)
+		}
+	}
+
+	tr.emitIntoOutputRecord(
+		inrec,
+		groupByFieldValues,
+		level2,
+		inrec,
+	)
+	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+}
+
+// buildWindowEntry makes a small record holding copies of only the relevant
+// value fields from the given input record, for retention in a sliding window.
+func (tr *TransformerStats1) buildWindowEntry(
+	inrec *mlrval.Mlrmap,
+) *mlrval.Mlrmap {
+	windowEntry := mlrval.NewMlrmapAsRecord()
+	if tr.doRegexValueFieldNames {
+		for pe := inrec.Head; pe != nil; pe = pe.Next {
+			if tr.matchValueFieldName(pe.Key) {
+				windowEntry.PutCopy(pe.Key, pe.Value)
+			}
+		}
+	} else {
+		for _, valueFieldName := range tr.valueFieldNameList {
+			valueFieldValue := inrec.Get(valueFieldName)
+			if valueFieldValue != nil {
+				windowEntry.PutCopy(valueFieldName, valueFieldValue)
+			}
+		}
+	}
+	return windowEntry
 }
 
 // E.g. if grouping by "a" and "b", and the current record has a=circle,
@@ -610,7 +745,7 @@ func (tr *TransformerStats1) handleEndOfRecordStream(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 ) {
-	if tr.doIterativeStats {
+	if tr.doIterativeStats || tr.slidingWindowSize > 0 {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 		return
 	}
