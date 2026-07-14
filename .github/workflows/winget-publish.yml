@@ -1,0 +1,79 @@
+# Automatically publishes new Miller releases to the Windows Package Manager
+# (WinGet) community repository, updating the existing Miller.Miller package:
+# https://github.com/microsoft/winget-pkgs/tree/master/manifests/m/Miller/Miller
+#
+# See https://github.com/johnkerl/miller/issues/1459.
+#
+# One-time setup required before this workflow can succeed:
+#
+# 1. Fork https://github.com/microsoft/winget-pkgs under the same account as
+#    this repository (i.e. github.com/johnkerl/winget-pkgs). The action pushes
+#    manifest branches to that fork and opens PRs against microsoft/winget-pkgs
+#    from it.
+#
+# 2. Create a *classic* GitHub Personal Access Token with the `public_repo`
+#    scope (fine-grained PATs are not supported by the action; see
+#    https://github.com/vedantmgoyal9/winget-releaser/issues/172), and add it
+#    to this repository as an Actions secret named WINGET_GH_TOKEN.
+#
+# Triggers:
+#
+# * release/published: fires when a release is published by a user or by a
+#   workflow authenticated with a PAT. NOTE: releases created with the default
+#   GITHUB_TOKEN (as release.yml/goreleaser does today) do NOT emit events
+#   that trigger other workflows, so this trigger alone would never fire for
+#   Miller's current release process -- hence the workflow_run trigger below.
+# * workflow_run: fires when the "Release for GitHub" workflow (release.yml)
+#   completes successfully on a v* tag. This is what makes publishing
+#   automatic with the current goreleaser setup. If release.yml is ever
+#   changed to create releases with a PAT, remove this trigger to avoid
+#   double-publishing.
+# * workflow_dispatch: manual runs, e.g. to backfill an already-published
+#   release by tag.
+#
+# Under the hood the winget-releaser action uses komac
+# (https://github.com/russellbanks/Komac) to generate the version/installer/
+# locale manifests from the release's Windows zip assets and submit the PR.
+
+name: Publish to WinGet
+on:
+  release:
+    types: [published]
+  workflow_run:
+    workflows: ["Release for GitHub"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      release-tag:
+        description: "Release tag to publish to WinGet (e.g. v6.20.2)"
+        required: true
+        type: string
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # For workflow_run events, only proceed if the release workflow succeeded
+    # and actually ran on a version tag (release.yml can also be run manually
+    # on a branch, in which case head_branch is the branch name).
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       startsWith(github.event.workflow_run.head_branch, 'v'))
+    steps:
+      - name: Publish Miller.Miller to WinGet
+        uses: vedantmgoyal9/winget-releaser@v2
+        with:
+          identifier: Miller.Miller
+          # Matches the Windows zip assets produced by .goreleaser.yml, e.g.
+          # miller-6.20.2-windows-386.zip / -amd64.zip / -arm64.zip.
+          # Note: existing Miller.Miller manifests cover x86 and x64 only;
+          # komac detects arm64 from the asset URL and adds it as a new
+          # architecture. If that ever causes trouble, narrow this regex to
+          # '-windows-(386|amd64)\.zip$'.
+          installers-regex: '-windows-(386|amd64|arm64)\.zip$'
+          # The tag comes from whichever event fired: the dispatch input, the
+          # published release's tag, or the tag the release workflow ran on.
+          # The package version is derived from the tag with the leading "v"
+          # stripped (v6.20.2 -> 6.20.2).
+          release-tag: ${{ github.event.inputs.release-tag || github.event.release.tag_name || github.event.workflow_run.head_branch }}
+          token: ${{ secrets.WINGET_GH_TOKEN }}
