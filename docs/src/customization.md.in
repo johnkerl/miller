@@ -96,6 +96,9 @@ Semantics:
 * Since `--profile` selects a section of your `.mlrrc`, it can't be combined with `--norc`, or
   with `MLRRC=__none__` in the environment -- that's a fatal error.
 
+* Profiles are selected on the `mlr` command line, not from within a `.mlrrc` file: putting
+  `--profile` (or `-P`) inside a `.mlrrc` file is a parse error, just as `--prepipe` is.
+
 ## Where to put your .mlrrc
 
 If the environment variable `MLRRC` is set:

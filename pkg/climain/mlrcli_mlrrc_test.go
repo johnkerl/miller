@@ -196,3 +196,24 @@ func TestMlrrcPrepipeStillDisallowed(t *testing.T) {
 		t.Fatal("expected error for --prepipe within a profile, got nil")
 	}
 }
+
+func TestMlrrcProfileFlagDisallowedWithinMlrrc(t *testing.T) {
+	// Profiles are selected on the mlr command line, not from within a
+	// .mlrrc file: --profile / -P there is a parse error, like --prepipe.
+	for _, line := range []string{"profile j", "--profile j", "-P j"} {
+		writeTempMlrrc(t, line+"\n")
+		options := cli.DefaultOptions()
+		err := loadMlrrc(options, "")
+		if err == nil {
+			t.Errorf("expected parse error for %q within .mlrrc, got nil", line)
+		} else if !strings.Contains(err.Error(), "parse error") {
+			t.Errorf("expected parse error for %q within .mlrrc, got: %v", line, err)
+		}
+	}
+	// Inside a selected profile section, too.
+	writeTempMlrrc(t, "[j]\nprofile p\n")
+	options := cli.DefaultOptions()
+	if err := loadMlrrc(options, "j"); err == nil {
+		t.Fatal("expected parse error for --profile within a profile section, got nil")
+	}
+}

@@ -231,6 +231,10 @@ func handleMlrrcLine(
 	} else if args[0] == "--load" || args[0] == "--mload" {
 		// Don't allow code execution via .mlrrc
 		return false
+	} else if args[0] == "--profile" || args[0] == "-P" {
+		// Profiles are selected on the mlr command line, not from within a
+		// .mlrrc file
+		return false
 	} else if cli.FLAG_TABLE.Parse(args, argc, &argi, options) {
 		// handled
 	} else {
