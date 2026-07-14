@@ -35,6 +35,32 @@ Options:
 -h|--help Show this message.
 
 ================================================================
+bootstrap-ci
+Usage: mlr bootstrap-ci [options]
+Computes bootstrap confidence intervals for statistics of given fields,
+accumulated across the input record stream: values are resampled with
+replacement many times, the statistic is computed on each resample, and the
+confidence interval is taken from percentiles of the resampled statistics.
+For each value field and statistic, outputs the full-data statistic in
+{field}_{stat}, along with confidence-interval endpoints in {field}_{stat}_lo
+and {field}_{stat}_hi. Use mlr --seed for reproducible results.
+See also mlr bootstrap and mlr stats1.
+Options:
+-a {mean,...} Names of statistics to bootstrap: one or more of the listed
+              values, as in mlr stats1 -a. Also accepts median (same as p50) and
+              percentiles p{n} for n in 0..100. Defaults to mean.
+-f {a,b,c}    Value-field names on which to compute statistics. Required.
+-g {d,e,f}    Optional group-by-field names.
+-n {n}        Number of bootstrap resamples. Must be positive. Defaults to 1000.
+-c {level}    Confidence level, strictly between 0 and 1. Defaults to 0.95.
+-i            Use interpolated percentiles, like R's type=7, for percentile
+              statistics as well as for the confidence-interval endpoints;
+              default like type=1.
+-h|--help     Show this message.
+Example: mlr --seed 12345 bootstrap-ci -f x,y
+Example: mlr --seed 12345 bootstrap-ci -a mean,median -f x -g shape -n 5000 -c 0.99
+
+================================================================
 case
 Usage: mlr case [options]
 Uppercases strings in record keys and/or values.

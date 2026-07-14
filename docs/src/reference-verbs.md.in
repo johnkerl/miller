@@ -127,6 +127,32 @@ orange 0.4802164827586204  290
 green  0.5129018241860459  1075
 GENMD-EOF
 
+## bootstrap-ci
+
+GENMD-RUN-COMMAND
+mlr bootstrap-ci --help
+GENMD-EOF
+
+While [bootstrap](reference-verbs.md#bootstrap) emits a single resampling of the input records -- leaving
+the statistics to a subsequent [stats1](reference-verbs.md#stats1) -- `bootstrap-ci` repeats the resampling
+many times, computes the requested statistics on each resample, and reports confidence intervals taken from
+percentiles of the resampled statistics. For example, to put 95% confidence intervals on the per-color means
+of the `u` column:
+
+<!--- hard-coded, not live-code, since random sampling would generate different data on each doc run
+    which would needlessly complicate git diff; this run is reproducible using --seed 12345 -->
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+mlr --c2p --seed 12345 bootstrap-ci -f u -g color data/colored-shapes.csv
+color  u_mean              u_mean_lo           u_mean_hi
+yellow 0.4971291160651098  0.4824881075725413  0.512947563340412
+red    0.49255964641241273 0.4843660191769008  0.5009657815126062
+purple 0.49400496322241666 0.47856893607705775 0.5107408590192641
+green  0.5048610595130744  0.48776011181244316 0.5226325915238951
+blue   0.5177171537414964  0.5042351204081628  0.532012486394558
+orange 0.49053241584158375 0.4593377557755773  0.523765551155115
+GENMD-EOF
+
 ## case
 
 GENMD-RUN-COMMAND

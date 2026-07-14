@@ -1,0 +1,1 @@
+mlr --seed 12345 bootstrap-ci -i -a p25 -f x -n 50 test/input/abixy

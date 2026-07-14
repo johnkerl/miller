@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2026-07-08
+.\"      Date: 2026-07-14
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2026-07-08" "\ \&" "\ \&"
+.TH "MILLER" "1" "2026-07-14" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -245,15 +245,16 @@ for all things with "map" in their names.
 .RS 0
 .\}
 .nf
-altkv bar bootstrap case cat check clean-whitespace count-distinct count
-count-similar cut decimate describe fill-down fill-empty filter flatten
-format-values fraction gap grep group-by group-like gsub having-fields head
-histogram json-parse json-stringify join label latin1-to-utf8 least-frequent
-merge-fields most-frequent nest nothing put rank regularize
-remove-empty-columns rename reorder repeat reshape sample sec2gmtdate sec2gmt
-seqgen shuffle skip-trivial-records sort sort-within-records sparkline
-sparsify split ssub stats1 stats2 step sub summary surv tac tail tee template
-top utf8-to-latin1 unflatten uniq unspace unsparsify
+altkv bar bootstrap bootstrap-ci case cat check clean-whitespace
+count-distinct count count-similar cut decimate describe fill-down fill-empty
+filter flatten format-values fraction gap grep group-by group-like gsub
+having-fields head histogram json-parse json-stringify join label
+latin1-to-utf8 least-frequent merge-fields most-frequent nest nothing put rank
+regularize remove-empty-columns rename reorder repeat reshape sample
+sec2gmtdate sec2gmt seqgen shuffle skip-trivial-records sort
+sort-within-records sparkline sparsify split ssub stats1 stats2 step sub
+summary surv tac tail tee template top utf8-to-latin1 unflatten uniq unspace
+unsparsify
 .fi
 .if n \{\
 .RE
@@ -1230,6 +1231,37 @@ Options:
 -n {n}    Number of samples to output. Defaults to number of input records. Must
           be non-negative.
 -h|--help Show this message.
+.fi
+.if n \{\
+.RE
+.SS "bootstrap-ci"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr bootstrap-ci [options]
+Computes bootstrap confidence intervals for statistics of given fields,
+accumulated across the input record stream: values are resampled with
+replacement many times, the statistic is computed on each resample, and the
+confidence interval is taken from percentiles of the resampled statistics.
+For each value field and statistic, outputs the full-data statistic in
+{field}_{stat}, along with confidence-interval endpoints in {field}_{stat}_lo
+and {field}_{stat}_hi. Use mlr --seed for reproducible results.
+See also mlr bootstrap and mlr stats1.
+Options:
+-a {mean,...} Names of statistics to bootstrap: one or more of the listed
+              values, as in mlr stats1 -a. Also accepts median (same as p50) and
+              percentiles p{n} for n in 0..100. Defaults to mean.
+-f {a,b,c}    Value-field names on which to compute statistics. Required.
+-g {d,e,f}    Optional group-by-field names.
+-n {n}        Number of bootstrap resamples. Must be positive. Defaults to 1000.
+-c {level}    Confidence level, strictly between 0 and 1. Defaults to 0.95.
+-i            Use interpolated percentiles, like R's type=7, for percentile
+              statistics as well as for the confidence-interval endpoints;
+              default like type=1.
+-h|--help     Show this message.
+Example: mlr --seed 12345 bootstrap-ci -f x,y
+Example: mlr --seed 12345 bootstrap-ci -a mean,median -f x -g shape -n 5000 -c 0.99
 .fi
 .if n \{\
 .RE

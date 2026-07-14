@@ -233,6 +233,59 @@ orange 0.4802164827586204  290
 green  0.5129018241860459  1075
 </pre>
 
+## bootstrap-ci
+
+<pre class="pre-highlight-in-pair">
+<b>mlr bootstrap-ci --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr bootstrap-ci [options]
+Computes bootstrap confidence intervals for statistics of given fields,
+accumulated across the input record stream: values are resampled with
+replacement many times, the statistic is computed on each resample, and the
+confidence interval is taken from percentiles of the resampled statistics.
+For each value field and statistic, outputs the full-data statistic in
+{field}_{stat}, along with confidence-interval endpoints in {field}_{stat}_lo
+and {field}_{stat}_hi. Use mlr --seed for reproducible results.
+See also mlr bootstrap and mlr stats1.
+Options:
+-a {mean,...} Names of statistics to bootstrap: one or more of the listed
+              values, as in mlr stats1 -a. Also accepts median (same as p50) and
+              percentiles p{n} for n in 0..100. Defaults to mean.
+-f {a,b,c}    Value-field names on which to compute statistics. Required.
+-g {d,e,f}    Optional group-by-field names.
+-n {n}        Number of bootstrap resamples. Must be positive. Defaults to 1000.
+-c {level}    Confidence level, strictly between 0 and 1. Defaults to 0.95.
+-i            Use interpolated percentiles, like R's type=7, for percentile
+              statistics as well as for the confidence-interval endpoints;
+              default like type=1.
+-h|--help     Show this message.
+Example: mlr --seed 12345 bootstrap-ci -f x,y
+Example: mlr --seed 12345 bootstrap-ci -a mean,median -f x -g shape -n 5000 -c 0.99
+</pre>
+
+While [bootstrap](reference-verbs.md#bootstrap) emits a single resampling of the input records -- leaving
+the statistics to a subsequent [stats1](reference-verbs.md#stats1) -- `bootstrap-ci` repeats the resampling
+many times, computes the requested statistics on each resample, and reports confidence intervals taken from
+percentiles of the resampled statistics. For example, to put 95% confidence intervals on the per-color means
+of the `u` column:
+
+<!--- hard-coded, not live-code, since random sampling would generate different data on each doc run
+    which would needlessly complicate git diff; this run is reproducible using --seed 12345 -->
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p --seed 12345 bootstrap-ci -f u -g color data/colored-shapes.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  u_mean              u_mean_lo           u_mean_hi
+yellow 0.4971291160651098  0.4824881075725413  0.512947563340412
+red    0.49255964641241273 0.4843660191769008  0.5009657815126062
+purple 0.49400496322241666 0.47856893607705775 0.5107408590192641
+green  0.5048610595130744  0.48776011181244316 0.5226325915238951
+blue   0.5177171537414964  0.5042351204081628  0.532012486394558
+orange 0.49053241584158375 0.4593377557755773  0.523765551155115
+</pre>
+
 ## case
 
 <pre class="pre-highlight-in-pair">

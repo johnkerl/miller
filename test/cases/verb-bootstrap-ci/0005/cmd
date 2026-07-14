@@ -1,0 +1,1 @@
+mlr bootstrap-ci -f x -c 2 test/input/abixy
