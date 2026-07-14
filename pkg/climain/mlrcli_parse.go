@@ -309,16 +309,30 @@ func parseCommandLinePassTwo(
 	ignoresInput := false
 
 	// Load a .mlrrc file unless --norc was a main-flag on the command line.
+	// If --profile {name} / -P {name} was a main-flag, apply the settings
+	// from that [name] section of the .mlrrc file, after any global
+	// (pre-section) settings. These must be found before the .mlrrc file is
+	// loaded, which is before the main flag-sequences are processed.
 	loadMlrrc := true
+	mlrrcProfileName := ""
 	for _, flagSequence := range flagSequences {
 		lib.InternalCodingErrorIf(len(flagSequence) < 1)
-		if flagSequence[0] == "--norc" {
+		switch flagSequence[0] {
+		case "--norc":
 			loadMlrrc = false
-			break
+		case "--profile", "-P":
+			lib.InternalCodingErrorIf(len(flagSequence) < 2)
+			mlrrcProfileName = flagSequence[1]
 		}
 	}
 	if loadMlrrc {
-		loadMlrrcOrDie(options)
+		loadMlrrcOrDie(options, mlrrcProfileName)
+	} else if mlrrcProfileName != "" {
+		fmt.Fprintf(os.Stderr,
+			"mlr: --profile \"%s\" was specified along with --norc, which disables .mlrrc processing.\n",
+			mlrrcProfileName,
+		)
+		os.Exit(1)
 	}
 
 	// Process the flag-sequences in order from pass one. We assume all the

@@ -1,0 +1,9 @@
+# Global settings, applied always:
+icsv
+
+[j]
+ojson # Settings for the "j" profile
+jvstack
+
+[p]
+opprint

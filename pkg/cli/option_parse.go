@@ -3789,5 +3789,23 @@ has its own overhead.`,
 				*pargi += 1
 			},
 		},
+
+		{
+			name:     "--profile",
+			altNames: []string{"-P"},
+			arg:      "{name}",
+			help: `Apply the settings from the [name] section of your .mlrrc file, after any global
+(pre-section) settings. It's an error if no such section exists in any .mlrrc file processed.
+For more information please see ` + lib.DOC_URL + `/en/latest/customization/.`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				// The actual profile selection is handled in pkg/climain,
+				// before the .mlrrc file is loaded, which is in turn before
+				// main-flag sequences are parsed into the options struct.
+				// Registration here ensures the flag is recognized (not an
+				// error) during flag parsing, and appears in --help.
+				*pargi += 2
+			},
+		},
 	},
 }
