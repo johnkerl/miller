@@ -13,6 +13,7 @@ var TRANSFORMER_LOOKUP_TABLE = []TransformerSetup{
 	AltkvSetup,
 	BarSetup,
 	BootstrapSetup,
+	BootstrapCISetup,
 	CaseSetup,
 	CatSetup,
 	CheckSetup,

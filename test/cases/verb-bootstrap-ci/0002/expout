@@ -1,0 +1,5 @@
+a=pan,x_mean=0.42470807,x_mean_lo=0.34679014,x_mean_hi=0.50262601,x_median=0.50262601,x_median_lo=0.34679014,x_median_hi=0.50262601
+a=eks,x_mean=0.58395447,x_mean_lo=0.45819428,x_mean_hi=0.75867996,x_median=0.61178406,x_median_lo=0.38139939,x_median_hi=0.75867996
+a=wye,x_mean=0.38894611,x_mean_lo=0.20460331,x_mean_hi=0.57328892,x_median=0.57328892,x_median_lo=0.20460331,x_median_hi=0.57328892
+a=zee,x_mean=0.56284008,x_mean_lo=0.52712616,x_mean_hi=0.59855401,x_median=0.59855401,x_median_lo=0.52712616,x_median_hi=0.59855401
+a=hat,x_mean=0.03144188,x_mean_lo=0.03144188,x_mean_hi=0.03144188,x_median=0.03144188,x_median_lo=0.03144188,x_median_hi=0.03144188

@@ -109,6 +109,7 @@ They are memory-unfriendly, and they wait for end of input to produce their outp
 
 * [bar](reference-verbs.md#bar) -- if auto-mode
 * [bootstrap](reference-verbs.md#bootstrap)
+* [bootstrap-ci](reference-verbs.md#bootstrap-ci)
 * [count-similar](reference-verbs.md#count-similar)
 * [fraction](reference-verbs.md#fraction)
 * [group-by](reference-verbs.md#group-by)
