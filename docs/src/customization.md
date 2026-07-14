@@ -80,6 +80,57 @@ jlistwrap
 skip-comments-with @
 </pre>
 
+## Named profiles in your .mlrrc
+
+You can group settings into INI-style named sections, called _profiles_, and select one with the
+`--profile {name}` main flag, or its alias `-P {name}`. For example, given
+
+<pre class="pre-non-highlight-non-pair">
+    # Global settings, applied always:
+    icsv
+
+    [j]
+    # Settings applied only with mlr --profile j (or mlr -P j):
+    ojson
+    jvstack
+
+    [tsvout]
+    # Settings applied only with mlr --profile tsvout (or mlr -P tsvout):
+    otsv
+</pre>
+
+then `mlr cat myfile.csv` reads CSV and writes DKVP (the global setting applies, and the
+sections are ignored), while `mlr -P j cat myfile.csv` reads CSV and writes vertically stacked
+JSON (the global setting applies first, then the settings from the `[j]` section).
+
+Semantics:
+
+* Lines before any `[name]` section header are global settings, and are always applied. A
+  `.mlrrc` file without any section headers behaves just as it did in older versions of Miller.
+
+* With `--profile {name}` (or `-P {name}`), global settings are applied first, then the settings
+  from the `[name]` section. It's a fatal error if no `[name]` section exists in any `.mlrrc`
+  file processed -- or if no `.mlrrc` file was found at all.
+
+* Without `--profile`, sections are ignored entirely -- their lines aren't even parsed -- so a
+  typo inside an unused profile won't affect your other invocations of `mlr`.
+
+* Section names are matched exactly (case-sensitively). Whitespace around and within the
+  brackets is ignored: `[ j ]` is the same as `[j]`. Comments are allowed after section headers.
+
+* If the same section name appears more than once, the settings from all its blocks are applied,
+  in the order they appear in the file.
+
+* If both `$HOME/.mlrrc` and `./.mlrrc` are processed, each file's global settings and matching
+  section settings are applied in that per-file order, `$HOME/.mlrrc` first. The selected profile
+  needs to exist in only one of them.
+
+* Since `--profile` selects a section of your `.mlrrc`, it can't be combined with `--norc`, or
+  with `MLRRC=__none__` in the environment -- that's a fatal error.
+
+* Profiles are selected on the `mlr` command line, not from within a `.mlrrc` file: putting
+  `--profile` (or `-P`) inside a `.mlrrc` file is a parse error, just as `--prepipe` is.
+
 ## Where to put your .mlrrc
 
 If the environment variable `MLRRC` is set:

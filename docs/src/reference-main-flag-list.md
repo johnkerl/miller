@@ -320,6 +320,7 @@ These are flags which don't fit into any other category.
 * `--ofmte {n}`: Use --ofmte 6 as shorthand for --ofmt %.6e, etc.
 * `--ofmtf {n}`: Use --ofmtf 6 as shorthand for --ofmt %.6f, etc.
 * `--ofmtg {n}`: Use --ofmtg 6 as shorthand for --ofmt %.6g, etc.
+* `--profile or -P {name}`: Apply the settings from the [name] section of your .mlrrc file, after any global (pre-section) settings. It's an error if no such section exists in any .mlrrc file processed. For more information please see https://miller.readthedocs.io/en/latest/customization/.
 * `--records-per-batch {n}`: This is an internal parameter for maximum number of records in a batch size. Normally this does not need to be modified, except when input is from `tail -f`. See also https://miller.readthedocs.io/en/latest/reference-main-flag-list/.
 * `--s-no-comment-strip {file name}`: Take command-line flags from file name, like -s, but with no comment-stripping. For more information please see https://miller.readthedocs.io/en/latest/scripting/.
 * `--seed {n}`: with `n` of the form `12345678` or `0xcafefeed`. For `put`/`filter` `urand`, `urandint`, and `urand32`.

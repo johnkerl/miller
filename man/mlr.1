@@ -788,6 +788,11 @@ These are flags which don't fit into any other category.
 --ofmte {n}              Use --ofmte 6 as shorthand for --ofmt %.6e, etc.
 --ofmtf {n}              Use --ofmtf 6 as shorthand for --ofmt %.6f, etc.
 --ofmtg {n}              Use --ofmtg 6 as shorthand for --ofmt %.6g, etc.
+--profile or -P {name}   Apply the settings from the [name] section of your
+                         .mlrrc file, after any global (pre-section) settings.
+                         It's an error if no such section exists in any .mlrrc
+                         file processed. For more information please see
+                         https://miller.readthedocs.io/en/latest/customization/.
 --records-per-batch {n}  This is an internal parameter for maximum number of
                          records in a batch size. Normally this does not need
                          to be modified, except when input is from `tail -f`.

@@ -454,13 +454,18 @@ func (rt *RegTester) executeSingleCmdFile(
 
 	passed := true
 
-	// Set any case-specific environment variables before running the case.
+	// Set any case-specific environment variables before running the case,
+	// remembering their prior values so they can be restored afterward. E.g.
+	// the suite-wide MLRRC=__none__ must be restored after a case which
+	// points MLRRC at a test file.
+	previousEnvValues := make(map[string]string)
 	for pe := envKeyValuePairs.Head; pe != nil; pe = pe.Next {
 		key := pe.Key
 		value := pe.Value
 		if verbosityLevel >= 3 {
 			fmt.Printf("SETENV %s=%s\n", key, value)
 		}
+		previousEnvValues[key] = os.Getenv(key)
 		_ = os.Setenv(key, value)
 	}
 	// This is so 'mlr' files can find the case-directory if they need it --
@@ -488,7 +493,7 @@ func (rt *RegTester) executeSingleCmdFile(
 	actualStdout, actualStderr, actualExitCode := RunMillerCommand(rt.exeName, cmd)
 	// ****************************************************************
 
-	// Unset any case-specific environment variables after running the case.
+	// Restore any case-specific environment variables after running the case.
 	// This is important since the setenv is done in the current process,
 	// and we don't want to affect subsequent test cases.
 	for pe := envKeyValuePairs.Head; pe != nil; pe = pe.Next {
@@ -496,7 +501,7 @@ func (rt *RegTester) executeSingleCmdFile(
 		if verbosityLevel >= 3 {
 			fmt.Printf("UNSETENV %s\n", key)
 		}
-		_ = os.Setenv(key, "")
+		_ = os.Setenv(key, previousEnvValues[key])
 	}
 	_ = os.Setenv("CASEDIR", "")
 
