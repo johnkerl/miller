@@ -911,6 +911,41 @@ the dawn's
 light
 </pre>
 
+Note that NIDX and DKVP split each line on the field separator without regard to double quotes: a separator inside a double-quoted string still starts a new field.
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/semicolon-quoted.txt</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a;b
+"text; text";"more text"
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --inidx --ifs semicolon --oxtab cat data/semicolon-quoted.txt</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+1 a
+2 b
+
+1 "text
+2  text"
+3 "more text"
+</pre>
+
+If your data uses RFC-4180-style double-quoting to protect separators inside field values, use CSV format with `--ifs` set to your separator -- along with `--implicit-csv-header` if the file has no header line:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ifs semicolon --implicit-csv-header --oxtab cat data/semicolon-quoted.txt</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+1 a
+2 b
+
+1 text; text
+2 more text
+</pre>
+
 ## DCF (Debian control file)
 
 <pre class="pre-highlight-in-pair">
