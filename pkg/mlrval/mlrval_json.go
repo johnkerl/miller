@@ -490,7 +490,14 @@ func isValidJSONNumber(s string) bool {
 
 func (mv *Mlrval) marshalJSONBool(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_BOOL)
-	return colorizer.MaybeColorizeValue(mv.String(), outputIsStdout), nil
+	// Don't use mv.String() here: booleans inferred from user-defined strings
+	// (mlr --infer-true / --infer-false) retain their original string
+	// representation (e.g. "yes") which would not be valid JSON.
+	printrep := "false"
+	if mv.intf.(bool) {
+		printrep = "true"
+	}
+	return colorizer.MaybeColorizeValue(printrep, outputIsStdout), nil
 }
 
 func (mv *Mlrval) marshalJSONArray(

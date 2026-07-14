@@ -613,6 +613,12 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                                 many fields, and many of them being processed during
                                 a given processing run, --hash-records might offer a
                                 slight performance benefit.
+       --infer-false {a,b,c}    Comma-separated list of field values in data files to
+                                infer as boolean false, e.g. `--infer-false
+                                False,no,off`. Values are matched exactly
+                                (case-sensitively). The original string
+                                representation is retained for output. See also
+                                --infer-true. Ignored when -S is supplied.
        --infer-int-as-float or -A
                                 Cast all integers in data files to floats.
        --infer-none or -S       Don't treat values like 123 or 456.7 in data files as
@@ -620,6 +626,12 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        --infer-octal or -O      Treat numbers like 0123 in data files as numeric;
                                 default is string. Note that 00--07 etc scan as int;
                                 08-09 scan as float.
+       --infer-true {a,b,c}     Comma-separated list of field values in data files to
+                                infer as boolean true, e.g. `--infer-true
+                                True,yes,on`. Values are matched exactly
+                                (case-sensitively). The original string
+                                representation is retained for output. See also
+                                --infer-false. Ignored when -S is supplied.
        --load {filename}        Load DSL script file for all put/filter operations on
                                 the command line. If the name following `--load` is a
                                 directory, load all `*.mlr` files in that directory.
@@ -4110,5 +4122,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-07-08                         4mMILLER24m(1)
+                                  2026-07-14                         4mMILLER24m(1)
 </pre>

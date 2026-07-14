@@ -1,0 +1,4 @@
+id active verified ta     tv     flipped
+1  True   yes      bool   bool   false
+2  False  no       bool   bool   true
+3  true   maybe    string string (not-boolean)

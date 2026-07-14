@@ -3732,6 +3732,32 @@ Note that 00--07 etc scan as int; 08-09 scan as float.`,
 		},
 
 		{
+			name: "--infer-true",
+			arg:  "{a,b,c}",
+			help: `Comma-separated list of field values in data files to infer as boolean true,
+e.g. ` + "`--infer-true True,yes,on`" + `. Values are matched exactly (case-sensitively). The original
+string representation is retained for output. See also --infer-false. Ignored when -S is supplied.`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				mlrval.SetInferrerBooleanStrings(lib.SplitString(args[*pargi+1], ","), true)
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--infer-false",
+			arg:  "{a,b,c}",
+			help: `Comma-separated list of field values in data files to infer as boolean false,
+e.g. ` + "`--infer-false False,no,off`" + `. Values are matched exactly (case-sensitively). The original
+string representation is retained for output. See also --infer-true. Ignored when -S is supplied.`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				mlrval.SetInferrerBooleanStrings(lib.SplitString(args[*pargi+1], ","), false)
+				*pargi += 2
+			},
+		},
+
+		{
 			name: "--fflush",
 			help: `Force buffered output to be written after every output record.
 The default is flush output after every record if the output is to the terminal, or less often if

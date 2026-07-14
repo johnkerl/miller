@@ -288,6 +288,18 @@ func FromBool(input bool) *Mlrval {
 	return FALSE
 }
 
+// SetFromPrevalidatedBooleanString is for user-defined boolean strings via
+// mlr --infer-true and --infer-false: e.g. "yes" being read from a data file
+// as boolean true. As with ints and floats, the original string representation
+// is retained for output.
+func (mv *Mlrval) SetFromPrevalidatedBooleanString(input string, boolval bool) *Mlrval {
+	mv.printrep = input
+	mv.printrepValid = true
+	mv.intf = boolval
+	mv.mvtype = MT_BOOL
+	return mv
+}
+
 func FromBoolString(input string) *Mlrval {
 	switch input {
 	case "true":
