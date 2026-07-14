@@ -101,6 +101,11 @@ echo x=1,y=2 | mlr put '
 '
 GENMD-EOF
 
+Note that these examples rely on the fact that
+[`NF`](reference-dsl-variables.md#built-in-variables) is **dynamic**: it is
+re-evaluated at each reference, so each `$[NF+1] = ""` assignment increments
+`NF`, and the loop makes progress toward its exit condition.
+
 A `break` or `continue` within nested conditional blocks or if-statements will,
 of course, propagate to the innermost loop enclosing them, if any. A `break` or
 `continue` outside a loop is a syntax error that will be flagged as soon as the
@@ -340,6 +345,8 @@ Notes:
 * Miller has no `++` or `--` operators.
 
 * As with all `for`/`if`/`while` statements in Miller, the curly braces are required even if the body is a single statement or empty.
+
+* Since [`NF`](reference-dsl-variables.md#built-in-variables) is **dynamic** -- it is re-evaluated at each reference -- a loop such as `for (i = 1; i <= NF; i += 1)` whose body adds fields to the current record will never terminate, since each added field increments `NF`. To loop over the fields the record had on entry, take a copy first -- e.g. `num n = NF; for (i = 1; i <= n; i += 1) { ... }` -- or use a [key-value for-loop](#key-value-for-loops) such as `for (k, v in $*)`, which iterates over a copy of the record made before the loop began.
 
 ## Begin/end blocks
 

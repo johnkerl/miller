@@ -6639,7 +6639,10 @@ M_PI: the mathematical constant pi.
 .RS 0
 .\}
 .nf
-NF: evaluates to the number of fields in the current record.
+NF: evaluates to the number of fields in the current record. Note that NF
+is dynamic: it is re-evaluated at each reference, so if fields are added to or
+removed from the current record -- even within a single put/filter expression
+-- the value of NF changes accordingly.
 .fi
 .if n \{\
 .RE
