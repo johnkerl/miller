@@ -1,0 +1,1 @@
+mlr --opprint --from test/input/abixy stats1 -a count,mean -f i -g a -w 2

@@ -2223,6 +2223,12 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                           case please avoid pprint-format output since end of input
                           stream will never be seen. Likewise, if input is coming from
                           `tail -f` be sure to use `--records-per-batch 1`.
+       -w {n}             Sliding-window mode: compute statistics over a trailing
+                          window of up to n records (including the current one), rather
+                          than over the whole record stream. Windows are kept per group
+                          when -g is used. One output record is emitted per input
+                          record, with the windowed statistics appended to it. Not
+                          compatible with -s.
        -S                 No-op flag for backward compatibility with Miller 5.
        -F                 No-op flag for backward compatibility with Miller 5.
        -h|--help          Show this message.
@@ -2249,6 +2255,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
        Example: mlr stats1 -a count,mode -f size
        Example: mlr stats1 -a count,mode -f size -g shape
+       Example: mlr stats1 -a mean,min,max -f quantity -g name -w 7
+               This emits one output record per input record, with sliding-window
+                statistics over the last up-to-7 records for each name.
        Example: mlr stats1 -a count,mode --fr '^[a-h].*$' --gr '^k.*$'
                This computes count and mode statistics on all field names beginning
                 with a through h, grouped by all field names starting with k.
@@ -4110,5 +4119,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-07-08                         4mMILLER24m(1)
+                                  2026-07-14                         4mMILLER24m(1)
 </pre>

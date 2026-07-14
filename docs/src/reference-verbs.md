@@ -3697,6 +3697,12 @@ Options:
                    case please avoid pprint-format output since end of input
                    stream will never be seen. Likewise, if input is coming from
                    `tail -f` be sure to use `--records-per-batch 1`.
+-w {n}             Sliding-window mode: compute statistics over a trailing
+                   window of up to n records (including the current one), rather
+                   than over the whole record stream. Windows are kept per group
+                   when -g is used. One output record is emitted per input
+                   record, with the windowed statistics appended to it. Not
+                   compatible with -s.
 -S                 No-op flag for backward compatibility with Miller 5.
 -F                 No-op flag for backward compatibility with Miller 5.
 -h|--help          Show this message.
@@ -3723,6 +3729,9 @@ Names of accumulators for -a, one or more of:
 Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
 Example: mlr stats1 -a count,mode -f size
 Example: mlr stats1 -a count,mode -f size -g shape
+Example: mlr stats1 -a mean,min,max -f quantity -g name -w 7
+        This emits one output record per input record, with sliding-window
+         statistics over the last up-to-7 records for each name.
 Example: mlr stats1 -a count,mode --fr '^[a-h].*$' --gr '^k.*$'
         This computes count and mode statistics on all field names beginning
          with a through h, grouped by all field names starting with k.
@@ -3810,6 +3819,44 @@ shape    color_mode
 triangle red
 square   red
 circle   red
+</pre>
+
+With `-w {n}`, statistics are computed over a sliding window of the last up-to-`n`
+records -- within each group, when `-g` is used -- and one output record is emitted
+per input record, with the windowed statistics appended to it:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint --from example.csv stats1 -a mean,min,max -f quantity -w 4</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k  index quantity rate   quantity_mean      quantity_min quantity_max
+yellow triangle true  1  11    43.6498  9.8870 43.6498            43.6498      43.6498
+red    square   true  2  15    79.2778  0.0130 61.4638            43.6498      79.2778
+red    circle   true  3  16    13.8103  2.9010 45.579299999999996 13.8103      79.2778
+red    square   false 4  48    77.5542  7.4670 53.573025          13.8103      79.2778
+purple triangle false 5  51    81.2290  8.5910 62.96782499999999  13.8103      81.229
+red    square   false 6  64    77.1991  9.5310 62.44815           13.8103      81.229
+purple triangle false 7  65    80.1405  5.8240 79.0307            77.1991      81.229
+yellow circle   true  8  73    63.9785  4.2370 75.636775          63.9785      81.229
+yellow circle   true  9  87    63.5058  8.3350 71.20597500000001  63.5058      80.1405
+purple square   false 10 91    72.3735  8.2430 69.999575          63.5058      80.1405
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint --from example.csv stats1 -a mean -f quantity -g shape -w 2</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k  index quantity rate   quantity_mean
+yellow triangle true  1  11    43.6498  9.8870 43.6498
+red    square   true  2  15    79.2778  0.0130 79.2778
+red    circle   true  3  16    13.8103  2.9010 13.8103
+red    square   false 4  48    77.5542  7.4670 78.416
+purple triangle false 5  51    81.2290  8.5910 62.4394
+red    square   false 6  64    77.1991  9.5310 77.37665
+purple triangle false 7  65    80.1405  5.8240 80.68475000000001
+yellow circle   true  8  73    63.9785  4.2370 38.8944
+yellow circle   true  9  87    63.5058  8.3350 63.742149999999995
+purple square   false 10 91    72.3735  8.2430 74.78630000000001
 </pre>
 
 ## stats2

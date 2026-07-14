@@ -1,0 +1,1 @@
+mlr --opprint --from test/input/abixy stats1 -a sum --fr '^[xy]$' -w 3

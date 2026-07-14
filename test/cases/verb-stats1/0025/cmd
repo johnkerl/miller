@@ -1,0 +1,1 @@
+mlr --from test/input/abixy stats1 -a mean -f x -s -w 3
