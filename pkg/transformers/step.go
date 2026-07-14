@@ -124,9 +124,10 @@ func transformerStepUsage(
 	fmt.Fprintf(o, "  mlr %s -a slwin_9_0,slwin_0_9 -f x\n", verbNameStep)
 	fmt.Fprintf(o, "  mlr %s -a shift_lag_12 -f sales\n", verbNameStep)
 	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "The shift_lag, shift_lead, delta, and ratio steppers accept an optional\n")
-	fmt.Fprintf(o, "trailing count: e.g. shift_lag_12 refers 12 records back, and shift_lead_4\n")
-	fmt.Fprintf(o, "refers 4 records forward. The unsuffixed forms refer 1 record back/forward.\n")
+	fmt.Fprintf(o, "The shift, shift_lag, shift_lead, delta, and ratio steppers accept an\n")
+	fmt.Fprintf(o, "optional trailing count: shift_lag_{n} refers n records back, and\n")
+	fmt.Fprintf(o, "shift_lead_{n} refers n records forward. The plain forms are equivalent\n")
+	fmt.Fprintf(o, "to a count of 1: e.g. shift_lag is the same as shift_lag_1.\n")
 
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or\n")
@@ -623,7 +624,7 @@ var STEPPER_LOOKUP_TABLE = []tStepperLookup{
 		ownsPrefix:           stepperDeltaOwnsName,
 		stepperInputFromName: stepperDeltaInputFromName,
 		stepperAllocator:     stepperDeltaAlloc,
-		desc:                 "Compute differences in field(s) between successive records. E.g. delta_7 for 7 records back.",
+		desc:                 "Compute differences in field(s) between successive records. Use delta or equivalently delta_1 for the previous record, or delta_{n} for n records back.",
 	},
 	{
 		name:                 "ewma",
@@ -643,7 +644,7 @@ var STEPPER_LOOKUP_TABLE = []tStepperLookup{
 		ownsPrefix:           stepperRatioOwnsName,
 		stepperInputFromName: stepperRatioInputFromName,
 		stepperAllocator:     stepperRatioAlloc,
-		desc:                 "Compute ratios in field(s) between successive records. E.g. ratio_7 for 7 records back.",
+		desc:                 "Compute ratios in field(s) between successive records. Use ratio or equivalently ratio_1 for the previous record, or ratio_{n} for n records back.",
 	},
 	{
 		name:                 "rprod",
@@ -663,7 +664,7 @@ var STEPPER_LOOKUP_TABLE = []tStepperLookup{
 		ownsPrefix:           stepperShiftOwnsName,
 		stepperInputFromName: stepperShiftInputFromName,
 		stepperAllocator:     stepperShiftAlloc,
-		desc:                 "Alias for shift_lag",
+		desc:                 "Alias for shift_lag. Use shift or equivalently shift_1 for the previous record, or shift_{n} for n records back.",
 	},
 	{
 		name:                 "shift_lag",
@@ -671,7 +672,7 @@ var STEPPER_LOOKUP_TABLE = []tStepperLookup{
 		ownsPrefix:           stepperShiftLagOwnsName,
 		stepperInputFromName: stepperShiftLagInputFromName,
 		stepperAllocator:     stepperShiftLagAlloc,
-		desc:                 "Include value(s) in field(s) from the previous record, if any. E.g. shift_lag_7 for 7 records back.",
+		desc:                 "Include value(s) in field(s) from the previous record, if any. Use shift_lag or equivalently shift_lag_1 for the previous record, or shift_lag_{n} for n records back.",
 	},
 	{
 		name:                 "shift_lead",
@@ -679,7 +680,7 @@ var STEPPER_LOOKUP_TABLE = []tStepperLookup{
 		ownsPrefix:           stepperShiftLeadOwnsName,
 		stepperInputFromName: stepperShiftLeadInputFromName,
 		stepperAllocator:     stepperShiftLeadAlloc,
-		desc:                 "Include value(s) in field(s) from the next record, if any. E.g. shift_lead_7 for 7 records forward.",
+		desc:                 "Include value(s) in field(s) from the next record, if any. Use shift_lead or equivalently shift_lead_1 for the next record, or shift_lead_{n} for n records forward.",
 	},
 	{
 		name:                 "slwin",

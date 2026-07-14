@@ -4007,15 +4007,15 @@ Options:
 
 Names of steppers for -a, comma-separated, one or more of:
   counter    Count instances of field(s) between successive records
-  delta      Compute differences in field(s) between successive records. E.g. delta_7 for 7 records back.
+  delta      Compute differences in field(s) between successive records. Use delta or equivalently delta_1 for the previous record, or delta_{n} for n records back.
   ewma       Exponentially weighted moving average over successive records
   from-first Compute differences in field(s) from first record
-  ratio      Compute ratios in field(s) between successive records. E.g. ratio_7 for 7 records back.
+  ratio      Compute ratios in field(s) between successive records. Use ratio or equivalently ratio_1 for the previous record, or ratio_{n} for n records back.
   rprod      Compute running products of field(s) between successive records
   rsum       Compute running sums of field(s) between successive records
-  shift      Alias for shift_lag
-  shift_lag  Include value(s) in field(s) from the previous record, if any. E.g. shift_lag_7 for 7 records back.
-  shift_lead Include value(s) in field(s) from the next record, if any. E.g. shift_lead_7 for 7 records forward.
+  shift      Alias for shift_lag. Use shift or equivalently shift_1 for the previous record, or shift_{n} for n records back.
+  shift_lag  Include value(s) in field(s) from the previous record, if any. Use shift_lag or equivalently shift_lag_1 for the previous record, or shift_lag_{n} for n records back.
+  shift_lead Include value(s) in field(s) from the next record, if any. Use shift_lead or equivalently shift_lead_1 for the next record, or shift_lead_{n} for n records forward.
   slwin      Sliding-window averages over m records back and n forward. E.g. slwin_7_2 for 7 back and 2 forward.
 
 Examples:
@@ -4027,9 +4027,10 @@ Examples:
   mlr step -a slwin_9_0,slwin_0_9 -f x
   mlr step -a shift_lag_12 -f sales
 
-The shift_lag, shift_lead, delta, and ratio steppers accept an optional
-trailing count: e.g. shift_lag_12 refers 12 records back, and shift_lead_4
-refers 4 records forward. The unsuffixed forms refer 1 record back/forward.
+The shift, shift_lag, shift_lead, delta, and ratio steppers accept an
+optional trailing count: shift_lag_{n} refers n records back, and
+shift_lead_{n} refers n records forward. The plain forms are equivalent
+to a count of 1: e.g. shift_lag is the same as shift_lag_1.
 
 Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or
 https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
@@ -4080,7 +4081,7 @@ eks pan 13    0.4915175580479536     0.7709126592971468     0.6117840605678454  
 eks zee 14    0.5207382318405251     0.34141681118811673    0.4915175580479536     0.02922067379257154     2.7641192091174287  5
 </pre>
 
-The `shift_lag`, `shift_lead`, `delta`, and `ratio` steppers accept an optional trailing count: e.g. `shift_lag_12` refers 12 records back, and `shift_lead_4` refers 4 records forward. The unsuffixed forms refer 1 record back/forward.
+The `shift`, `shift_lag`, `shift_lead`, `delta`, and `ratio` steppers accept an optional trailing count: `shift_lag_{n}` refers `n` records back, and `shift_lead_{n}` refers `n` records forward. The plain forms are equivalent to a count of 1: e.g. `shift_lag` is the same as `shift_lag_1`.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint step -a shift_lag,shift_lag_3,delta_3 -f x data/medium | head -15</b>
