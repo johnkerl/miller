@@ -68,6 +68,7 @@ package transformers
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/bifs"
@@ -121,6 +122,11 @@ func transformerStepUsage(
 	fmt.Fprintf(o, "  mlr %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y\n", verbNameStep)
 	fmt.Fprintf(o, "  mlr %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name\n", verbNameStep)
 	fmt.Fprintf(o, "  mlr %s -a slwin_9_0,slwin_0_9 -f x\n", verbNameStep)
+	fmt.Fprintf(o, "  mlr %s -a shift_lag_12 -f sales\n", verbNameStep)
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "The shift_lag, shift_lead, delta, and ratio steppers accept an optional\n")
+	fmt.Fprintf(o, "trailing count: e.g. shift_lag_12 refers 12 records back, and shift_lead_4\n")
+	fmt.Fprintf(o, "refers 4 records forward. The unsuffixed forms refer 1 record back/forward.\n")
 
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or\n")
@@ -613,9 +619,11 @@ var STEPPER_LOOKUP_TABLE = []tStepperLookup{
 	},
 	{
 		name:                 "delta",
+		nameIsVariable:       true,
+		ownsPrefix:           stepperDeltaOwnsName,
 		stepperInputFromName: stepperDeltaInputFromName,
 		stepperAllocator:     stepperDeltaAlloc,
-		desc:                 "Compute differences in field(s) between successive records",
+		desc:                 "Compute differences in field(s) between successive records. E.g. delta_7 for 7 records back.",
 	},
 	{
 		name:                 "ewma",
@@ -631,9 +639,11 @@ var STEPPER_LOOKUP_TABLE = []tStepperLookup{
 	},
 	{
 		name:                 "ratio",
+		nameIsVariable:       true,
+		ownsPrefix:           stepperRatioOwnsName,
 		stepperInputFromName: stepperRatioInputFromName,
 		stepperAllocator:     stepperRatioAlloc,
-		desc:                 "Compute ratios in field(s) between successive records",
+		desc:                 "Compute ratios in field(s) between successive records. E.g. ratio_7 for 7 records back.",
 	},
 	{
 		name:                 "rprod",
@@ -649,21 +659,27 @@ var STEPPER_LOOKUP_TABLE = []tStepperLookup{
 	},
 	{
 		name:                 "shift",
+		nameIsVariable:       true,
+		ownsPrefix:           stepperShiftOwnsName,
 		stepperInputFromName: stepperShiftInputFromName,
 		stepperAllocator:     stepperShiftAlloc,
 		desc:                 "Alias for shift_lag",
 	},
 	{
 		name:                 "shift_lag",
+		nameIsVariable:       true,
+		ownsPrefix:           stepperShiftLagOwnsName,
 		stepperInputFromName: stepperShiftLagInputFromName,
 		stepperAllocator:     stepperShiftLagAlloc,
-		desc:                 "Include value(s) in field(s) from the previous record, if any",
+		desc:                 "Include value(s) in field(s) from the previous record, if any. E.g. shift_lag_7 for 7 records back.",
 	},
 	{
 		name:                 "shift_lead",
+		nameIsVariable:       true,
+		ownsPrefix:           stepperShiftLeadOwnsName,
 		stepperInputFromName: stepperShiftLeadInputFromName,
 		stepperAllocator:     stepperShiftLeadAlloc,
-		desc:                 "Include value(s) in field(s) from the next record, if any",
+		desc:                 "Include value(s) in field(s) from the next record, if any. E.g. shift_lead_7 for 7 records forward.",
 	},
 	{
 		name:                 "slwin",
@@ -723,21 +739,97 @@ func allocateStepper(
 	return nil
 }
 
+// parseStepperCount parses stepper names which accept an optional trailing
+// number-of-records-back/forward, like "shift_lag" (count 1) or "shift_lag_12"
+// (count 12). It returns ok=false if the name is neither the base name nor the
+// base name followed by an underscore and a positive integer.
+func parseStepperCount(
+	stepperName string,
+	baseName string,
+) (count int, ok bool) {
+	if stepperName == baseName {
+		return 1, true
+	}
+	prefix := baseName + "_"
+	if !strings.HasPrefix(stepperName, prefix) {
+		return 0, false
+	}
+	suffix := stepperName[len(prefix):]
+	if suffix == "" {
+		return 0, false
+	}
+	for _, c := range suffix {
+		if c < '0' || c > '9' {
+			return 0, false
+		}
+	}
+	n, err := strconv.Atoi(suffix)
+	if err != nil || n < 1 {
+		return 0, false
+	}
+	return n, true
+}
+
+// tValueRing is a fixed-size ring buffer of cached field values, used by the
+// steppers which reference a value from n records back -- e.g. shift_lag_7,
+// delta_7, ratio_7 -- as well as their unparameterized forms (n=1). Steppers
+// cache copies of previous values in their own state, rather than reading
+// from the window keeper's stored (already-emitted) records, which avoids a
+// race condition when downstream transformers run concurrently.
+type tValueRing struct {
+	values []*mlrval.Mlrval
+	next   int
+	filled int
+}
+
+func newValueRing(n int) *tValueRing {
+	return &tValueRing{
+		values: make([]*mlrval.Mlrval, n),
+		next:   0,
+		filled: 0,
+	}
+}
+
+// push inserts the newest value into the ring, returning the value from n
+// records back -- along with whether n records have been seen yet. A nil
+// value means the record n back did not have the field in question.
+func (ring *tValueRing) push(value *mlrval.Mlrval) (nBack *mlrval.Mlrval, has bool) {
+	nBack = ring.values[ring.next]
+	has = ring.filled >= len(ring.values)
+	ring.values[ring.next] = value
+	ring.next = (ring.next + 1) % len(ring.values)
+	if !has {
+		ring.filled++
+	}
+	return nBack, has
+}
+
 // Implementations of individual steppers, like "delta" or "rsum"
 
+// The stepper name may be "delta" for difference from the previous record, or
+// e.g. "delta_7" for difference from 7 records back.
 type tStepperDelta struct {
 	inputFieldName  string
 	outputFieldName string
-	prevValue       *mlrval.Mlrval
-	hasPrev         bool
+	prevValues      *tValueRing
+}
+
+func stepperDeltaOwnsName(
+	stepperName string,
+) bool {
+	_, ok := parseStepperCount(stepperName, "delta")
+	return ok
 }
 
 func stepperDeltaInputFromName(
 	stepperName string,
 ) *tStepperInput {
+	if _, ok := parseStepperCount(stepperName, "delta"); !ok {
+		return nil
+	}
 	return &tStepperInput{
 		name: stepperName,
-		// numRecordsBackward is 0: delta caches the previous value in its own struct
+		// numRecordsBackward is 0: delta caches previous values in its own struct
 		// rather than reading from the window keeper's stored (already-emitted) records,
 		// which avoids a race condition when downstream transformers run concurrently.
 		numRecordsBackward: 0,
@@ -751,9 +843,11 @@ func stepperDeltaAlloc(
 	_unused1 []string,
 	_unused2 []string,
 ) tStepper {
+	count, _ := parseStepperCount(stepperInput.name, "delta")
 	return &tStepperDelta{
 		inputFieldName:  inputFieldName,
-		outputFieldName: inputFieldName + "_delta",
+		outputFieldName: inputFieldName + "_" + stepperInput.name,
+		prevValues:      newValueRing(count),
 	}
 }
 
@@ -768,42 +862,64 @@ func (stepper *tStepperDelta) process(
 	currec := currecAndContext.Record
 	currval := currec.Get(stepper.inputFieldName)
 
+	// The record at the window center may lack the field, e.g. when this
+	// stepper is combined with a forward-window stepper such as shift_lead,
+	// over heterogeneous data.
+	if currval == nil {
+		stepper.prevValues.push(nil)
+		return
+	}
+
 	if currval.IsVoid() {
-		stepper.prevValue = nil
-		stepper.hasPrev = true
+		stepper.prevValues.push(nil)
 		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 		return
 	}
 
+	prevValue, hasPrev := stepper.prevValues.push(currval.Copy())
 	delta := mlrval.FromInt(0)
-	if stepper.hasPrev && stepper.prevValue != nil {
-		delta = bifs.BIF_minus_binary(currval, stepper.prevValue)
+	if hasPrev && prevValue != nil {
+		delta = bifs.BIF_minus_binary(currval, prevValue)
 	}
 	currec.PutCopy(stepper.outputFieldName, delta.Copy())
-
-	stepper.prevValue = currval.Copy()
-	stepper.hasPrev = true
 }
 
 func (stepper *tStepperDelta) clearPrevValue() {
-	stepper.prevValue = nil
-	stepper.hasPrev = true
+	stepper.prevValues.push(nil)
 }
 
-// shift is an alias for shift_lag
+// shift is an alias for shift_lag. The stepper name may be "shift_lag" for
+// the value from the previous record, or e.g. "shift_lag_7" for the value
+// from 7 records back; likewise "shift" and "shift_7".
 type tStepperShiftLag struct {
 	inputFieldName  string
 	outputFieldName string
-	prevValue       *mlrval.Mlrval
-	hasPrev         bool
+	prevValues      *tValueRing
+}
+
+func stepperShiftOwnsName(
+	stepperName string,
+) bool {
+	_, ok := parseStepperCount(stepperName, "shift")
+	return ok
+}
+
+func stepperShiftLagOwnsName(
+	stepperName string,
+) bool {
+	_, ok := parseStepperCount(stepperName, "shift_lag")
+	return ok
 }
 
 func stepperShiftInputFromName(
 	stepperName string,
 ) *tStepperInput {
+	if _, ok := parseStepperCount(stepperName, "shift"); !ok {
+		return nil
+	}
 	return &tStepperInput{
 		name: stepperName,
-		// numRecordsBackward is 0: shift caches the previous value in its own struct
+		// numRecordsBackward is 0: shift caches previous values in its own struct
 		// rather than reading from the window keeper's stored (already-emitted) records,
 		// which avoids a race condition when downstream transformers run concurrently.
 		numRecordsBackward: 0,
@@ -814,9 +930,12 @@ func stepperShiftInputFromName(
 func stepperShiftLagInputFromName(
 	stepperName string,
 ) *tStepperInput {
+	if _, ok := parseStepperCount(stepperName, "shift_lag"); !ok {
+		return nil
+	}
 	return &tStepperInput{
 		name: stepperName,
-		// numRecordsBackward is 0: shift_lag caches the previous value in its own struct
+		// numRecordsBackward is 0: shift_lag caches previous values in its own struct
 		// rather than reading from the window keeper's stored (already-emitted) records,
 		// which avoids a race condition when downstream transformers run concurrently.
 		numRecordsBackward: 0,
@@ -830,9 +949,11 @@ func stepperShiftAlloc(
 	_unused1 []string,
 	_unused2 []string,
 ) tStepper {
+	count, _ := parseStepperCount(stepperInput.name, "shift")
 	return &tStepperShiftLag{
 		inputFieldName:  inputFieldName,
-		outputFieldName: inputFieldName + "_shift",
+		outputFieldName: inputFieldName + "_" + stepperInput.name,
+		prevValues:      newValueRing(count),
 	}
 }
 
@@ -842,9 +963,11 @@ func stepperShiftLagAlloc(
 	_unused1 []string,
 	_unused2 []string,
 ) tStepper {
+	count, _ := parseStepperCount(stepperInput.name, "shift_lag")
 	return &tStepperShiftLag{
 		inputFieldName:  inputFieldName,
-		outputFieldName: inputFieldName + "_shift_lag",
+		outputFieldName: inputFieldName + "_" + stepperInput.name,
+		prevValues:      newValueRing(count),
 	}
 }
 
@@ -860,37 +983,49 @@ func (stepper *tStepperShiftLag) process(
 
 	curval := currec.Get(stepper.inputFieldName)
 
-	if !stepper.hasPrev || stepper.prevValue == nil {
+	var newValue *mlrval.Mlrval = nil
+	if curval != nil {
+		newValue = curval.Copy()
+	}
+	prevValue, hasPrev := stepper.prevValues.push(newValue)
+
+	if !hasPrev || prevValue == nil {
 		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 	} else {
-		currec.PutCopy(stepper.outputFieldName, stepper.prevValue.Copy())
+		currec.PutCopy(stepper.outputFieldName, prevValue.Copy())
 	}
-
-	if curval != nil {
-		stepper.prevValue = curval.Copy()
-	} else {
-		stepper.prevValue = nil
-	}
-	stepper.hasPrev = true
 }
 
 func (stepper *tStepperShiftLag) clearPrevValue() {
-	stepper.prevValue = nil
-	stepper.hasPrev = true
+	stepper.prevValues.push(nil)
 }
 
+// The stepper name may be "shift_lead" for the value from the next record, or
+// e.g. "shift_lead_7" for the value from 7 records forward.
 type tStepperShiftLead struct {
-	inputFieldName  string
-	outputFieldName string
+	inputFieldName    string
+	outputFieldName   string
+	numRecordsForward int
+}
+
+func stepperShiftLeadOwnsName(
+	stepperName string,
+) bool {
+	_, ok := parseStepperCount(stepperName, "shift_lead")
+	return ok
 }
 
 func stepperShiftLeadInputFromName(
 	stepperName string,
 ) *tStepperInput {
+	count, ok := parseStepperCount(stepperName, "shift_lead")
+	if !ok {
+		return nil
+	}
 	return &tStepperInput{
 		name:               stepperName,
 		numRecordsBackward: 0,
-		numRecordsForward:  1,
+		numRecordsForward:  count,
 	}
 }
 
@@ -901,8 +1036,9 @@ func stepperShiftLeadAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperShiftLead{
-		inputFieldName:  inputFieldName,
-		outputFieldName: inputFieldName + "_shift_lead",
+		inputFieldName:    inputFieldName,
+		outputFieldName:   inputFieldName + "_" + stepperInput.name,
+		numRecordsForward: stepperInput.numRecordsForward,
 	}
 }
 
@@ -916,7 +1052,7 @@ func (stepper *tStepperShiftLead) process(
 	currecAndContext := icur.(*types.RecordAndContext)
 	currec := currecAndContext.Record
 
-	inextrec := windowKeeper.Get(1)
+	inextrec := windowKeeper.Get(stepper.numRecordsForward)
 	if inextrec == nil {
 		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 		return
@@ -969,6 +1105,13 @@ func (stepper *tStepperFromFirst) process(
 	currec := currecAndContext.Record
 	currval := currec.Get(stepper.inputFieldName)
 
+	// The record at the window center may lack the field, e.g. when this
+	// stepper is combined with a forward-window stepper such as shift_lead,
+	// over heterogeneous data.
+	if currval == nil {
+		return
+	}
+
 	fromFirst := mlrval.FromInt(0)
 	if stepper.first == nil {
 		stepper.first = currval.Copy()
@@ -978,19 +1121,30 @@ func (stepper *tStepperFromFirst) process(
 	currec.PutCopy(stepper.outputFieldName, fromFirst)
 }
 
+// The stepper name may be "ratio" for ratio against the previous record, or
+// e.g. "ratio_7" for ratio against the record 7 records back.
 type tStepperRatio struct {
 	inputFieldName  string
 	outputFieldName string
-	prevValue       *mlrval.Mlrval
-	hasPrev         bool
+	prevValues      *tValueRing
+}
+
+func stepperRatioOwnsName(
+	stepperName string,
+) bool {
+	_, ok := parseStepperCount(stepperName, "ratio")
+	return ok
 }
 
 func stepperRatioInputFromName(
 	stepperName string,
 ) *tStepperInput {
+	if _, ok := parseStepperCount(stepperName, "ratio"); !ok {
+		return nil
+	}
 	return &tStepperInput{
 		name: stepperName,
-		// numRecordsBackward is 0: ratio caches the previous value in its own struct
+		// numRecordsBackward is 0: ratio caches previous values in its own struct
 		// rather than reading from the window keeper's stored (already-emitted) records,
 		// which avoids a race condition when downstream transformers run concurrently.
 		numRecordsBackward: 0,
@@ -1004,9 +1158,11 @@ func stepperRatioAlloc(
 	_unused1 []string,
 	_unused2 []string,
 ) tStepper {
+	count, _ := parseStepperCount(stepperInput.name, "ratio")
 	return &tStepperRatio{
 		inputFieldName:  inputFieldName,
-		outputFieldName: inputFieldName + "_ratio",
+		outputFieldName: inputFieldName + "_" + stepperInput.name,
+		prevValues:      newValueRing(count),
 	}
 }
 
@@ -1021,26 +1177,30 @@ func (stepper *tStepperRatio) process(
 	currec := currecAndContext.Record
 	currval := currec.Get(stepper.inputFieldName)
 
+	// The record at the window center may lack the field, e.g. when this
+	// stepper is combined with a forward-window stepper such as shift_lead,
+	// over heterogeneous data.
+	if currval == nil {
+		stepper.prevValues.push(nil)
+		return
+	}
+
 	if currval.IsVoid() {
-		stepper.prevValue = nil
-		stepper.hasPrev = true
+		stepper.prevValues.push(nil)
 		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 		return
 	}
 
+	prevValue, hasPrev := stepper.prevValues.push(currval.Copy())
 	ratio := mlrval.FromInt(1)
-	if stepper.hasPrev && stepper.prevValue != nil {
-		ratio = bifs.BIF_divide(currval, stepper.prevValue)
+	if hasPrev && prevValue != nil {
+		ratio = bifs.BIF_divide(currval, prevValue)
 	}
 	currec.PutCopy(stepper.outputFieldName, ratio.Copy())
-
-	stepper.prevValue = currval.Copy()
-	stepper.hasPrev = true
 }
 
 func (stepper *tStepperRatio) clearPrevValue() {
-	stepper.prevValue = nil
-	stepper.hasPrev = true
+	stepper.prevValues.push(nil)
 }
 
 type tStepperRprod struct {
@@ -1082,6 +1242,13 @@ func (stepper *tStepperRprod) process(
 	currecAndContext := icur.(*types.RecordAndContext)
 	currec := currecAndContext.Record
 	currval := currec.Get(stepper.inputFieldName)
+
+	// The record at the window center may lack the field, e.g. when this
+	// stepper is combined with a forward-window stepper such as shift_lead,
+	// over heterogeneous data.
+	if currval == nil {
+		return
+	}
 
 	if currval.IsVoid() {
 		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
@@ -1131,6 +1298,13 @@ func (stepper *tStepperRsum) process(
 	currec := currecAndContext.Record
 	currval := currec.Get(stepper.inputFieldName)
 
+	// The record at the window center may lack the field, e.g. when this
+	// stepper is combined with a forward-window stepper such as shift_lead,
+	// over heterogeneous data.
+	if currval == nil {
+		return
+	}
+
 	if currval.IsVoid() {
 		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 	} else {
@@ -1178,6 +1352,13 @@ func (stepper *tStepperCounter) process(
 	currecAndContext := icur.(*types.RecordAndContext)
 	currec := currecAndContext.Record
 	currval := currec.Get(stepper.inputFieldName)
+
+	// The record at the window center may lack the field, e.g. when this
+	// stepper is combined with a forward-window stepper such as shift_lead,
+	// over heterogeneous data.
+	if currval == nil {
+		return
+	}
 
 	if currval.IsVoid() {
 		currec.PutCopy(stepper.outputFieldName, mlrval.VOID)
@@ -1268,6 +1449,13 @@ func (stepper *tStepperEWMA) process(
 	currec := currecAndContext.Record
 	currval := currec.Get(stepper.inputFieldName)
 
+	// The record at the window center may lack the field, e.g. when this
+	// stepper is combined with a forward-window stepper such as shift_lead,
+	// over heterogeneous data.
+	if currval == nil {
+		return
+	}
+
 	if !stepper.havePrevs {
 		for i := range stepper.alphas {
 			currec.PutCopy(stepper.outputFieldNames[i], currval)
@@ -1354,7 +1542,7 @@ func (stepper *tStepperSlwin) process(
 		rac := irac.(*types.RecordAndContext)
 		rec := rac.Record
 		val := rec.Get(stepper.inputFieldName)
-		if val.IsVoid() {
+		if val == nil || val.IsVoid() {
 			continue
 		}
 		sum = bifs.BIF_plus_binary(sum, val)

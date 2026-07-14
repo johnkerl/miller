@@ -1,0 +1,1 @@
+mlr --opprint --from test/input/abixy step -a shift_2,delta_2,ratio_2 -f i

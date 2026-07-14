@@ -4007,15 +4007,15 @@ Options:
 
 Names of steppers for -a, comma-separated, one or more of:
   counter    Count instances of field(s) between successive records
-  delta      Compute differences in field(s) between successive records
+  delta      Compute differences in field(s) between successive records. E.g. delta_7 for 7 records back.
   ewma       Exponentially weighted moving average over successive records
   from-first Compute differences in field(s) from first record
-  ratio      Compute ratios in field(s) between successive records
+  ratio      Compute ratios in field(s) between successive records. E.g. ratio_7 for 7 records back.
   rprod      Compute running products of field(s) between successive records
   rsum       Compute running sums of field(s) between successive records
   shift      Alias for shift_lag
-  shift_lag  Include value(s) in field(s) from the previous record, if any
-  shift_lead Include value(s) in field(s) from the next record, if any
+  shift_lag  Include value(s) in field(s) from the previous record, if any. E.g. shift_lag_7 for 7 records back.
+  shift_lead Include value(s) in field(s) from the next record, if any. E.g. shift_lead_7 for 7 records forward.
   slwin      Sliding-window averages over m records back and n forward. E.g. slwin_7_2 for 7 back and 2 forward.
 
 Examples:
@@ -4025,6 +4025,11 @@ Examples:
   mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y
   mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name
   mlr step -a slwin_9_0,slwin_0_9 -f x
+  mlr step -a shift_lag_12 -f sales
+
+The shift_lag, shift_lead, delta, and ratio steppers accept an optional
+trailing count: e.g. shift_lag_12 refers 12 records back, and shift_lead_4
+refers 4 records forward. The unsuffixed forms refer 1 record back/forward.
 
 Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or
 https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
@@ -4073,6 +4078,29 @@ pan pan 11    0.7930488423451967     0.6505816637259333     0.5026260055412137  
 zee pan 12    0.3676141320555616     0.23614420670296965    0.5985540091064224     -0.23093987705086083    1.4932943012538389  3
 eks pan 13    0.4915175580479536     0.7709126592971468     0.6117840605678454     -0.1202665025198918     2.2433809772769036  4
 eks zee 14    0.5207382318405251     0.34141681118811673    0.4915175580479536     0.02922067379257154     2.7641192091174287  5
+</pre>
+
+The `shift_lag`, `shift_lead`, `delta`, and `ratio` steppers accept an optional trailing count: e.g. `shift_lag_12` refers 12 records back, and `shift_lead_4` refers 4 records forward. The unsuffixed forms refer 1 record back/forward.
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --opprint step -a shift_lag,shift_lag_3,delta_3 -f x data/medium | head -15</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a   b   i     x                      y                      x_shift_lag            x_shift_lag_3          x_delta_3
+pan pan 1     0.3467901443380824     0.7268028627434533     -                      -                      0
+eks pan 2     0.7586799647899636     0.5221511083334797     0.3467901443380824     -                      0
+wye wye 3     0.20460330576630303    0.33831852551664776    0.7586799647899636     -                      0
+eks wye 4     0.38139939387114097    0.13418874328430463    0.20460330576630303    0.3467901443380824     0.03460924953305855
+wye pan 5     0.5732889198020006     0.8636244699032729     0.38139939387114097    0.7586799647899636     -0.185391044987963
+zee pan 6     0.5271261600918548     0.49322128674835697    0.5732889198020006     0.20460330576630303    0.3225228543255517
+eks zee 7     0.6117840605678454     0.1878849191181694     0.5271261600918548     0.38139939387114097    0.23038466669670443
+zee wye 8     0.5985540091064224     0.976181385699006      0.6117840605678454     0.5732889198020006     0.02526508930442184
+hat wye 9     0.03144187646093577    0.7495507603507059     0.5985540091064224     0.5271261600918548     -0.495684283630919
+pan wye 10    0.5026260055412137     0.9526183602969864     0.03144187646093577    0.6117840605678454     -0.10915805502663167
+pan pan 11    0.7930488423451967     0.6505816637259333     0.5026260055412137     0.5985540091064224     0.19449483323877426
+zee pan 12    0.3676141320555616     0.23614420670296965    0.7930488423451967     0.03144187646093577    0.3361722555946258
+eks pan 13    0.4915175580479536     0.7709126592971468     0.3676141320555616     0.5026260055412137     -0.01110844749326012
+eks zee 14    0.5207382318405251     0.34141681118811673    0.4915175580479536     0.7930488423451967     -0.27231061050467154
 </pre>
 
 <pre class="pre-highlight-in-pair">
