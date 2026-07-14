@@ -414,9 +414,15 @@ func (tr *TransformerStats1) handleInputRecord(
 ) {
 	if tr.slidingWindowSize > 0 {
 		tr.handleInputRecordWindowed(inrecAndContext, outputRecordsAndContexts)
-		return
+	} else {
+		tr.handleInputRecordNonWindowed(inrecAndContext, outputRecordsAndContexts)
 	}
+}
 
+func (tr *TransformerStats1) handleInputRecordNonWindowed(
+	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
+) {
 	inrec := inrecAndContext.Record
 
 	// E.g. if grouping by "a" and "b", and the current record has a=circle, b=blue,
