@@ -588,7 +588,11 @@ func M_PIKeywordUsage() {
 }
 
 func NFKeywordUsage() {
-	fmt.Println(`evaluates to the number of fields in the current record.`)
+	fmt.Println(
+		`evaluates to the number of fields in the current record. Note that NF
+is dynamic: it is re-evaluated at each reference, so if fields are added to or
+removed from the current record -- even within a single put/filter expression
+-- the value of NF changes accordingly.`)
 }
 
 func NRKeywordUsage() {

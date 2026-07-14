@@ -4070,7 +4070,10 @@
        M_PI: the mathematical constant pi.
 
    1mNF0m
-       NF: evaluates to the number of fields in the current record.
+       NF: evaluates to the number of fields in the current record. Note that NF
+       is dynamic: it is re-evaluated at each reference, so if fields are added to or
+       removed from the current record -- even within a single put/filter expression
+       -- the value of NF changes accordingly.
 
    1mNR0m
        NR: evaluates to the number of the current record over all files

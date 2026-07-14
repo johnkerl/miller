@@ -131,7 +131,7 @@ a=eks,b=wye,i=4,x=NEW,y=0.134188
 a=wye,b=pan,i=5,x=0.573288,y=NEW
 </pre>
 
-Right-hand side accesses to non-existent fields -- i.e., with index less than 1 or greater than `NF` -- return an absent value. Likewise, left-hand side accesses only refer to fields that already exist. For example, if a field has 5 records, then assigning the name or value of the 6th (or 600th) field results in a no-op.
+Right-hand side accesses to non-existent fields -- i.e., with index less than 1 or greater than `NF` -- return an absent value. Likewise, left-hand side accesses only refer to fields that already exist. For example, if a record has 5 fields, then assigning the name or value of the 6th (or 600th) field results in a no-op.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put '$[[6]] = "NEW"' data/small</b>
@@ -607,6 +607,29 @@ mathematical constants, of course, do not change; `ENV` is populated from the
 system environment variables at the time Miller starts. Any changes made to
 `ENV` by assigning to it will affect any subprocesses, such as using
 [piped tee](reference-dsl-output-statements.md#redirected-output-statements).
+
+Note that, unlike the others, **`NF` is dynamic even within a single record**:
+it is re-evaluated at each reference, tracking the number of fields in the
+current record as of that moment. So if you add or remove fields -- even
+within a single `put` or `filter` expression -- the value of `NF` changes
+accordingly:
+
+<pre class="pre-highlight-in-pair">
+<b>echo 'x=1,y=2,z=3' | mlr put '$nf1 = NF; $u = 4; $nf2 = NF; unset $x, $y; $nf3 = NF'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+z=3,nf1=3,u=4,nf2=5,nf3=4
+</pre>
+
+In particular, be careful with loops whose continuation test involves `NF`,
+when the loop body adds fields to the record. For example,
+`for (i = 1; i <= NF; i += 1) { $["copy_".i] = $[[[i]]] }` is an **infinite
+loop**, since each new field increments `NF`, which is re-tested at each
+iteration. To loop over the fields a record had on entry, either take a copy
+of `NF` before the loop -- e.g. `num n = NF; for (i = 1; i <= n; i += 1) {
+... }` -- or use a [key-value for-loop](reference-dsl-control-structures.md#key-value-for-loops)
+such as `for (k, v in $*) { ... }`, which iterates over a copy of the record
+made before the loop began.
 
 Their **scope is global**: you can refer to them in any `filter` or `put` statement. The input-record reader assigns their values:
 
@@ -1260,7 +1283,10 @@ M_E: the mathematical constant e.
 
 M_PI: the mathematical constant pi.
 
-NF: evaluates to the number of fields in the current record.
+NF: evaluates to the number of fields in the current record. Note that NF
+is dynamic: it is re-evaluated at each reference, so if fields are added to or
+removed from the current record -- even within a single put/filter expression
+-- the value of NF changes accordingly.
 
 NR: evaluates to the number of the current record over all files
 being processed, starting with 1. Does not reset at the start of each file.
