@@ -104,6 +104,26 @@ func Stream(
 		}
 	}
 
+	// An error and the done-writing signal can be ready simultaneously, and
+	// select chooses among ready channels at random -- so an error may still
+	// be sitting in a buffer when the loop above exits. Senders guarantee the
+	// error is buffered before the end-of-stream marker that lets the writer
+	// finish, so a final non-blocking drain is sufficient to pick it up.
+	if retval == nil {
+		select {
+		case ierr := <-inputErrorChannel:
+			retval = ierr
+		default:
+		}
+	}
+	if retval == nil {
+		select {
+		case derr := <-dataProcessingErrorChannel:
+			retval = derr
+		default:
+		}
+	}
+
 	if err := bufferedOutputStream.Flush(); err != nil && retval == nil {
 		retval = err
 	}
