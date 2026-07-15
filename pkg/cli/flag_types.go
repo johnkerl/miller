@@ -55,12 +55,15 @@ import (
 //     the latter case, and mutating the options struct.
 //   - Successful handling of the flag is indicated by this function making a
 //     non-zero increment of *pargi.
+//   - Invalid or missing flag arguments are reported by returning a non-nil
+//     error, which the caller propagates up to the entrypoint layer (see
+//     plans/exit.md); parsers must not call os.Exit.
 type FlagParser func(
 	args []string,
 	argc int,
 	pargi *int,
 	options *TOptions,
-)
+) error
 
 // FlagTable holds all the flags for Miller, organized into sections.
 type FlagTable struct {
@@ -132,13 +135,15 @@ func (ft *FlagTable) Sort() {
 // Parse is for parsing a flag on the command line. Given say `--foo`, if a
 // Flag object is found which owns the flag, and if its parser accepts it (e.g.
 // `bar` is present and spelt correctly if the flag-parser expects `--foo bar`)
-// then the return value is true, else false.
+// then the boolean return value is true, else false. A non-nil error means the
+// flag was recognized but its argument was missing or invalid; the caller
+// should propagate it rather than continuing to parse.
 func (ft *FlagTable) Parse(
 	args []string,
 	argc int,
 	pargi *int,
 	options *TOptions,
-) bool {
+) (bool, error) {
 	for _, section := range ft.sections {
 		for _, flag := range section.flags {
 			if flag.Owns(args[*pargi]) {
@@ -146,13 +151,15 @@ func (ft *FlagTable) Parse(
 				// arguments follow the flag. E.g. `--ifs pipe` will advance
 				// *pargi by 2; `-I` will advance it by 1.
 				oargi := *pargi
-				flag.parser(args, argc, pargi, options)
+				if err := flag.parser(args, argc, pargi, options); err != nil {
+					return false, err
+				}
 				nargi := *pargi
-				return nargi > oargi
+				return nargi > oargi, nil
 			}
 		}
 	}
-	return false
+	return false, nil
 }
 
 // ShowHelp prints all-in-one on-line help, nominally for `mlr help flags`.
@@ -517,14 +524,15 @@ func (flag *Flag) NilCheck() {
 
 // NoOpParse1 is a helper function for flags which take no argument and are
 // backward-compatibility no-ops.
-func NoOpParse1(args []string, argc int, pargi *int, options *TOptions) {
+func NoOpParse1(args []string, argc int, pargi *int, options *TOptions) error {
 	*pargi += 1
+	return nil
 }
 
 // Introspection accessors for shell-completion support
 // (pkg/terminals/completion). These expose flag names and arity without
-// invoking the parser functions, which is important since some flag parsers
-// os.Exit on missing arguments.
+// invoking the parser functions, which is important since the parser
+// functions mutate the options struct (and can consume arguments).
 
 // TakesArg reports whether the flag consumes a following argument value, e.g.
 // `--ifs {string}` takes an argument whereas `--repifs` does not.
@@ -559,8 +567,8 @@ func (ft *FlagTable) GetFlagNames() []string {
 // FlagTakesArg looks up a main flag by any of its spellings. The first return
 // value reports whether the flag is a recognized main flag; the second reports
 // whether it consumes a following argument value. This drives the
-// shell-completion command-line walk without calling the (possibly
-// os.Exit-ing) parser functions.
+// shell-completion command-line walk without calling the (options-mutating)
+// parser functions.
 func (ft *FlagTable) FlagTakesArg(name string) (found bool, takesArg bool) {
 	for _, section := range ft.sections {
 		for _, flag := range section.flags {

@@ -20,12 +20,14 @@
 package repl
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path"
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
+	"github.com/johnkerl/miller/v6/pkg/lib"
 )
 
 func replUsage(verbName string, o *os.File, exitCode int) {
@@ -140,7 +142,15 @@ func ReplMain(args []string) int {
 				argi += 1
 			}
 
-		} else if cli.FLAG_TABLE.Parse(args, argc, &argi, options) {
+		} else if handled, flagErr := cli.FLAG_TABLE.Parse(args, argc, &argi, options); flagErr != nil {
+			var exitRequest *lib.ExitRequest
+			if errors.As(flagErr, &exitRequest) {
+				return exitRequest.Code
+			}
+			fmt.Fprintf(os.Stderr, "%v\n", flagErr)
+			return 1
+
+		} else if handled {
 
 		} else {
 			replUsage(replName, os.Stderr, 1)

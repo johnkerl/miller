@@ -163,7 +163,11 @@ func tryLoadMlrrc(
 			continue
 		}
 
-		if !handleMlrrcLine(options, stripped) {
+		handled, err := handleMlrrcLine(options, stripped)
+		if err != nil {
+			return true, err
+		}
+		if !handled {
 			return true, fmt.Errorf(
 				"parse error at file \"%s\" line %d: %s", path, lineno, line,
 			)
@@ -198,11 +202,13 @@ func parseMlrrcSectionHeader(line string) (string, bool) {
 }
 
 // handleMlrrcLine is a helper function for tryLoadMlrrc, handling a single
-// (comment-stripped, whitespace-trimmed, non-empty) settings line.
+// (comment-stripped, whitespace-trimmed, non-empty) settings line. The boolean
+// return says whether the line was recognized at all; a non-nil error is a
+// flag-argument error to be propagated as-is.
 func handleMlrrcLine(
 	options *cli.TOptions,
 	line string,
-) bool {
+) (bool, error) {
 	// Prepend initial "--" if it's not already there
 	if !strings.HasPrefix(line, "-") {
 		line = "--" + line
@@ -213,21 +219,18 @@ func handleMlrrcLine(
 	argi := 0
 	argc := len(args)
 
-	if args[0] == "--prepipe" || args[0] == "--prepipex" {
+	switch args[0] {
+	case "--prepipe", "--prepipex":
 		// Don't allow code execution via .mlrrc
-		return false
-	} else if args[0] == "--load" || args[0] == "--mload" {
+		return false, nil
+	case "--load", "--mload":
 		// Don't allow code execution via .mlrrc
-		return false
-	} else if args[0] == "--profile" || args[0] == "-P" {
+		return false, nil
+	case "--profile", "-P":
 		// Profiles are selected on the mlr command line, not from within a
 		// .mlrrc file
-		return false
-	} else if cli.FLAG_TABLE.Parse(args, argc, &argi, options) {
-		// handled
-	} else {
-		return false
+		return false, nil
 	}
 
-	return true
+	return cli.FLAG_TABLE.Parse(args, argc, &argi, options)
 }

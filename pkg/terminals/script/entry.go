@@ -10,6 +10,7 @@
 package script
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path"
@@ -112,7 +113,14 @@ func ScriptMain(args []string) int {
 			if argi < argc && args[argi] == "--" {
 				argi++
 			}
-		} else if cli.FLAG_TABLE.Parse(args, argc, &argi, options) {
+		} else if handled, flagErr := cli.FLAG_TABLE.Parse(args, argc, &argi, options); flagErr != nil {
+			var exitRequest *lib.ExitRequest
+			if errors.As(flagErr, &exitRequest) {
+				return exitRequest.Code
+			}
+			fmt.Fprintf(os.Stderr, "%v\n", flagErr)
+			return 1
+		} else if handled {
 		} else {
 			scriptUsage(scriptName, os.Stderr, 1)
 		}

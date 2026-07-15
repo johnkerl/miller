@@ -257,8 +257,10 @@ var SeparatorFlagSection = FlagSection{
 			name: "--ifs",
 			arg:  "{string}",
 			help: "Specify FS for input.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				// Backward compatibility with Miller <= 5. Auto-inference of
 				// LF vs CR/LF line endings is handled within Go libraries so
 				// we needn't do anything ourselves.
@@ -267,6 +269,7 @@ var SeparatorFlagSection = FlagSection{
 					options.ReaderOptions.ifsWasSpecified = true
 				}
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -274,8 +277,10 @@ var SeparatorFlagSection = FlagSection{
 			name: "--ifs-regex",
 			arg:  "{string}",
 			help: "Specify FS for input as a regular expression.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				// Backward compatibility with Miller <= 5. Auto-inference of
 				// LF vs CR/LF line endings is handled within Go libraries so
 				// we needn't do anything ourselves.
@@ -284,6 +289,7 @@ var SeparatorFlagSection = FlagSection{
 					options.ReaderOptions.ifsWasSpecified = true
 				}
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -291,11 +297,14 @@ var SeparatorFlagSection = FlagSection{
 			name: "--ips",
 			arg:  "{string}",
 			help: "Specify PS for input.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.ReaderOptions.IPS = SeparatorFromArg(args[*pargi+1])
 				options.ReaderOptions.ipsWasSpecified = true
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -303,11 +312,14 @@ var SeparatorFlagSection = FlagSection{
 			name: "--ips-regex",
 			arg:  "{string}",
 			help: "Specify PS for input as a regular expression.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.ReaderOptions.IPSRegex = lib.CompileMillerRegexOrDie(SeparatorRegexFromArg(args[*pargi+1]))
 				options.ReaderOptions.ipsWasSpecified = true
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -315,8 +327,10 @@ var SeparatorFlagSection = FlagSection{
 			name: "--irs",
 			arg:  "{string}",
 			help: "Specify RS for input.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				// Backward compatibility with Miller <= 5. Auto-inference of
 				// LF vs CR/LF line endings is handled within Go libraries so
 				// we needn't do anything ourselves.
@@ -325,16 +339,18 @@ var SeparatorFlagSection = FlagSection{
 					options.ReaderOptions.irsWasSpecified = true
 				}
 				*pargi += 2
+				return nil
 			},
 		},
 
 		{
 			name: "--repifs",
 			help: "Let IFS be repeated: e.g. for splitting on multiple spaces.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.AllowRepeatIFS = true
 				options.ReaderOptions.allowRepeatIFSWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -342,8 +358,10 @@ var SeparatorFlagSection = FlagSection{
 			name: "--ors",
 			arg:  "{string}",
 			help: "Specify RS for output.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				// Backward compatibility with Miller <= 5. Auto-inference of
 				// LF vs CR/LF line endings is handled within Go libraries so
 				// we needn't do anything ourselves.
@@ -352,6 +370,7 @@ var SeparatorFlagSection = FlagSection{
 					options.WriterOptions.orsWasSpecified = true
 				}
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -359,11 +378,14 @@ var SeparatorFlagSection = FlagSection{
 			name: "--ofs",
 			arg:  "{string}",
 			help: "Specify FS for output.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.WriterOptions.OFS = SeparatorFromArg(args[*pargi+1])
 				options.WriterOptions.ofsWasSpecified = true
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -371,11 +393,14 @@ var SeparatorFlagSection = FlagSection{
 			name: "--ops",
 			arg:  "{string}",
 			help: "Specify PS for output.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.WriterOptions.OPS = SeparatorFromArg(args[*pargi+1])
 				options.WriterOptions.opsWasSpecified = true
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -383,8 +408,10 @@ var SeparatorFlagSection = FlagSection{
 			name: "--rs",
 			arg:  "{string}",
 			help: "Specify RS for input and output.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				// Backward compatibility with Miller <= 5. Auto-inference of
 				// LF vs CR/LF line endings is handled within Go libraries so
 				// we needn't do anything ourselves.
@@ -395,6 +422,7 @@ var SeparatorFlagSection = FlagSection{
 					options.WriterOptions.orsWasSpecified = true
 				}
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -402,8 +430,10 @@ var SeparatorFlagSection = FlagSection{
 			name: "--fs",
 			arg:  "{string}",
 			help: "Specify FS for input and output.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				// Backward compatibility with Miller <= 5. Auto-inference of
 				// LF vs CR/LF line endings is handled within Go libraries so
 				// we needn't do anything ourselves.
@@ -414,6 +444,7 @@ var SeparatorFlagSection = FlagSection{
 					options.WriterOptions.ofsWasSpecified = true
 				}
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -421,13 +452,16 @@ var SeparatorFlagSection = FlagSection{
 			name: "--ps",
 			arg:  "{string}",
 			help: "Specify PS for input and output.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.ReaderOptions.IPS = SeparatorFromArg(args[*pargi+1])
 				options.WriterOptions.OPS = SeparatorFromArg(args[*pargi+1])
 				options.ReaderOptions.ipsWasSpecified = true
 				options.WriterOptions.opsWasSpecified = true
 				*pargi += 2
+				return nil
 			},
 		},
 	},
@@ -449,18 +483,20 @@ var JSONOnlyFlagSection = FlagSection{
 		{
 			name: "--jvstack",
 			help: "Put one key-value pair per line for JSON output (multi-line output). This is the default for JSON output format.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.JSONOutputMultiline = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--no-jvstack",
 			help: "Put objects/arrays all on one line for JSON output. This is the default for JSON Lines output format.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.JSONOutputMultiline = false
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -468,18 +504,20 @@ var JSONOnlyFlagSection = FlagSection{
 			name:     "--jlistwrap",
 			altNames: []string{"--jl"},
 			help:     "Wrap JSON output in outermost `[ ]`. This is the default for JSON output format.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.WrapJSONOutputInOuterList = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--no-jlistwrap",
 			help: "Do not wrap JSON output in outermost `[ ]`. This is the default for JSON Lines output format.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.WrapJSONOutputInOuterList = false
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -487,26 +525,29 @@ var JSONOnlyFlagSection = FlagSection{
 			name:     "--yarray",
 			altNames: []string{"--ya"},
 			help:     "Wrap YAML output in a single top-level array document. This is the default for YAML output format.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name: "--no-yarray",
 			help: "Do not wrap YAML output in a single array document; emit one YAML document per record with `---` between.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.WrapYAMLOutputInOuterList = false
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--jvquoteall",
 			help: "Force all JSON values -- recursively into lists and object -- to string.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.JVQuoteAll = true
 				*pargi += 1
+				return nil
 			},
 		},
 	},
@@ -528,9 +569,10 @@ var PPRINTOnlyFlagSection = FlagSection{
 		{
 			name: "--right",
 			help: "Right-justifies all fields for PPRINT output.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.RightAlignedPPRINTOutput = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -541,9 +583,10 @@ var PPRINTOnlyFlagSection = FlagSection{
 				"whose values are all numeric, so that header and data share the same " +
 				"alignment. Also applies to markdown output, where numeric columns get " +
 				"right-alignment markers (`---:`) in the header-separator line.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.RightAlignNumericOutput = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -551,29 +594,32 @@ var PPRINTOnlyFlagSection = FlagSection{
 			name:     "--barred",
 			altNames: []string{"--barred-output"},
 			help:     "Prints a border around PPRINT output.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.BarredPprintOutput = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--barred-unicode",
 			help: "Uses unicode printing chars for barred output",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.BarredPprintOutput = true
 				options.WriterOptions.BarredUseUnicode = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--barred-input",
 			help: "When used in conjunction with --pprint, accepts barred input.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.BarredPprintInput = true
 				options.ReaderOptions.IFS = "|"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -581,9 +627,10 @@ var PPRINTOnlyFlagSection = FlagSection{
 			name: "--fixed",
 			arg:  "{string}",
 			help: "Fixed width specification. One of 'widths:<col1-width>,<col2-width>,...', left-align, left-align-multi-word, right-align, right-align-multi-word",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.FixedWidthSpec = args[*pargi+1]
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -591,9 +638,10 @@ var PPRINTOnlyFlagSection = FlagSection{
 			name: "--fw",
 			arg:  "{string}",
 			help: "Shortcut for --fixed left-align-multi-word",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.FixedWidthSpec = "left-align-multi-word"
 				*pargi += 1
+				return nil
 			},
 		},
 	},
@@ -619,10 +667,11 @@ var MarkdownOnlyFlagSection = FlagSection{
 				"column to a uniform width, making the raw markdown source easier " +
 				"to read and maintain. (The rendered table is unaffected.) Implies " +
 				"--omd, so you do not need to also pass --omd.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "markdown"
 				options.WriterOptions.MarkdownAlignedOutput = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -632,11 +681,12 @@ var MarkdownOnlyFlagSection = FlagSection{
 			help: "Use markdown-tabular format for input and output data, with " +
 				"left-justified and padded columns. Implies --md, so you do not " +
 				"need to also pass --md.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "markdown"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				options.WriterOptions.MarkdownAlignedOutput = true
 				*pargi += 1
+				return nil
 			},
 		},
 	},
@@ -658,9 +708,10 @@ var DKVPOnlyFlagSection = FlagSection{
 		{
 			name: "--incr-key",
 			help: "Without this option, keyless DKVP fields are keyed by field number.  For example: `a=10,b=20,30,d=40,50` is ingested as `$a=10,$b=20,$3=30,$d=40,$5=50`.  With this option, they're keyed by a running counter of keyless fields.  For example: `a=10,b=20,30,d=40,50` is ingested as `$a=10,$b=20,$1=30,$d=40,$2=50`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.BarredPprintOutput = true
 				*pargi += 1
+				return nil
 			},
 		},
 	},
@@ -786,37 +837,41 @@ var FileFormatFlagSection = FlagSection{
 		{
 			name: "--icsv",
 			help: "Use CSV format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csv"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--icsvlite",
 			help: "Use CSV-lite format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csvlite"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--itsv",
 			help: "Use TSV format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name: "--itsvlite",
 			help: "Use TSV-lite format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csvlite"
 				options.ReaderOptions.IFS = "\t"
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -824,13 +879,14 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--iasv",
 			altNames: []string{"--iasvlite"},
 			help:     "Use ASV format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csvlite"
 				options.ReaderOptions.IFS = ASV_FS
 				options.ReaderOptions.IRS = ASV_RS
 				options.ReaderOptions.ifsWasSpecified = true
 				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -838,87 +894,96 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--iusv",
 			altNames: []string{"--iusvlite"},
 			help:     "Use USV format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csvlite"
 				options.ReaderOptions.IFS = USV_FS
 				options.ReaderOptions.IRS = USV_RS
 				options.ReaderOptions.ifsWasSpecified = true
 				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--idkvp",
 			help: "Use DKVP format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--ijson",
 			help: "Use JSON format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--ijsonl",
 			help: "Use JSON Lines format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--iyaml",
 			help: "Use YAML format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "yaml"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--idcf",
 			help: "Use Debian control file (DCF) format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dcf"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--inidx",
 			help: "Use NIDX format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--ixtab",
 			help: "Use XTAB format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--ipprint",
 			help: "Use PPRINT format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -926,13 +991,16 @@ var FileFormatFlagSection = FlagSection{
 			name: "-i",
 			arg:  "{format name}",
 			help: "Use format name for input data. For example: `-i csv` is the same as `--icsv`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.ReaderOptions.InputFileFormat = args[*pargi+1]
 				if options.ReaderOptions.InputFileFormat == "md" {
 					options.ReaderOptions.InputFileFormat = "markdown" // alias
 				}
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -940,49 +1008,62 @@ var FileFormatFlagSection = FlagSection{
 			name: "--igen",
 			help: `Ignore input files and instead generate sequential numeric input using --gen-field-name,
 --gen-start, --gen-step, and --gen-stop values. See also the seqgen verb, which is more useful/intuitive.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "gen"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name: "--gen-field-name",
 			help: `Specify field name for --igen. Defaults to "` + DEFAULT_GEN_FIELD_NAME + `".`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "gen"
-				CheckArgCount(args, *pargi, argc, 2)
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.ReaderOptions.GeneratorOptions.FieldName = args[*pargi+1]
 				*pargi += 2
+				return nil
 			},
 		},
 		{
 			name: "--gen-start",
 			help: "Specify start value for --igen. Defaults to " + DEFAULT_GEN_START_AS_STRING + ".",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "gen"
-				CheckArgCount(args, *pargi, argc, 2)
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.ReaderOptions.GeneratorOptions.StartAsString = args[*pargi+1]
 				*pargi += 2
+				return nil
 			},
 		},
 		{
 			name: "--gen-step",
 			help: "Specify step value for --igen. Defaults to " + DEFAULT_GEN_STEP_AS_STRING + ".",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "gen"
-				CheckArgCount(args, *pargi, argc, 2)
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.ReaderOptions.GeneratorOptions.StepAsString = args[*pargi+1]
 				*pargi += 2
+				return nil
 			},
 		},
 		{
 			name: "--gen-stop",
 			help: "Specify stop value for --igen. Defaults to " + DEFAULT_GEN_STOP_AS_STRING + ".",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "gen"
-				CheckArgCount(args, *pargi, argc, 2)
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.ReaderOptions.GeneratorOptions.StopAsString = args[*pargi+1]
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -990,53 +1071,60 @@ var FileFormatFlagSection = FlagSection{
 			name: "-o",
 			arg:  "{format name}",
 			help: "Use format name for output data.  For example: `-o csv` is the same as `--ocsv`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.WriterOptions.OutputFileFormat = args[*pargi+1]
 				if options.WriterOptions.OutputFileFormat == "md" {
 					options.WriterOptions.OutputFileFormat = "markdown" // alias
 				}
 				*pargi += 2
+				return nil
 			},
 		},
 
 		{
 			name: "--ocsv",
 			help: "Use CSV format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "csv"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--ocsvlite",
 			help: "Use CSV-lite format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "csvlite"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--otsv",
 			help: "Use TSV format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "tsv"
 				options.WriterOptions.OFS = "\t"
 				options.WriterOptions.ofsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--otsvlite",
 			help: "Use TSV-lite format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "csvlite"
 				options.WriterOptions.OFS = "\t"
 				options.WriterOptions.ofsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1044,13 +1132,14 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--oasv",
 			altNames: []string{"--oasvlite"},
 			help:     "Use ASV format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "csvlite"
 				options.WriterOptions.OFS = ASV_FS
 				options.WriterOptions.ORS = ASV_RS
 				options.WriterOptions.ofsWasSpecified = true
 				options.WriterOptions.orsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1058,13 +1147,14 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--ousv",
 			altNames: []string{"--ousvlite"},
 			help:     "Use USV format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "csvlite"
 				options.WriterOptions.OFS = USV_FS
 				options.WriterOptions.ORS = USV_RS
 				options.WriterOptions.ofsWasSpecified = true
 				options.WriterOptions.orsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1072,9 +1162,10 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--imd",
 			altNames: []string{"--imarkdown"},
 			help:     "Use markdown-tabular format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1082,9 +1173,10 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--omd",
 			altNames: []string{"--omarkdown"},
 			help:     "Use markdown-tabular format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1092,87 +1184,96 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--md",
 			altNames: []string{"--markdown"},
 			help:     "Use markdown-tabular format for input and output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "markdown"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--odkvp",
 			help: "Use DKVP format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "dkvp"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--ojson",
 			help: "Use JSON format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = true
 				options.WriterOptions.JSONOutputMultiline = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--ojsonl",
 			help: "Use JSON Lines format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "jsonl"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--oyaml",
 			help: "Use YAML format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "yaml"
 				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--odcf",
 			help: "Use Debian control file (DCF) format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "dcf"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--onidx",
 			help: "Use NIDX format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "nidx"
 				options.WriterOptions.OFS = " "
 				options.WriterOptions.ofsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--oxtab",
 			help: "Use XTAB format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "xtab"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--opprint",
 			help: "Use PPRINT format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "pprint"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1180,16 +1281,17 @@ var FileFormatFlagSection = FlagSection{
 			name: "--io",
 			arg:  "{format name}",
 			help: "Use format name for input and output data. For example: `--io csv` is the same as `--csv`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				if defaultFSes[args[*pargi+1]] == "" {
-					fmt.Fprintf(os.Stderr, "mlr: unrecognized I/O format \"%s\".\n",
-						args[*pargi+1])
-					os.Exit(1)
+					return FlagErrorf("mlr: unrecognized I/O format \"%s\".", args[*pargi+1])
 				}
 				options.ReaderOptions.InputFileFormat = args[*pargi+1]
 				options.WriterOptions.OutputFileFormat = args[*pargi+1]
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -1197,20 +1299,22 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--csv",
 			help:     "Use CSV format for input and output data.",
 			altNames: []string{"-c", "--c2c"},
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "csv"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--csvlite",
 			help: "Use CSV-lite format for input and output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csvlite"
 				options.WriterOptions.OutputFileFormat = "csvlite"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1218,17 +1322,18 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--tsv",
 			help:     "Use TSV format for input and output data.",
 			altNames: []string{"-t", "--t2t"},
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "tsv"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--tsvlite",
 			help: "Use TSV-lite format for input and output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csvlite"
 				options.WriterOptions.OutputFileFormat = "csvlite"
 				options.ReaderOptions.IFS = "\t"
@@ -1236,6 +1341,7 @@ var FileFormatFlagSection = FlagSection{
 				options.ReaderOptions.ifsWasSpecified = true
 				options.WriterOptions.ofsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1243,7 +1349,7 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--asv",
 			altNames: []string{"--asvlite"},
 			help:     "Use ASV format for input and output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csvlite"
 				options.WriterOptions.OutputFileFormat = "csvlite"
 				options.ReaderOptions.IFS = ASV_FS
@@ -1257,6 +1363,7 @@ var FileFormatFlagSection = FlagSection{
 				options.WriterOptions.ofsWasSpecified = true
 				options.WriterOptions.orsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1264,7 +1371,7 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--usv",
 			altNames: []string{"--usvlite"},
 			help:     "Use USV format for input and output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csvlite"
 				options.WriterOptions.OutputFileFormat = "csvlite"
 				options.ReaderOptions.IFS = USV_FS
@@ -1276,6 +1383,7 @@ var FileFormatFlagSection = FlagSection{
 				options.WriterOptions.ofsWasSpecified = true
 				options.WriterOptions.orsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1283,20 +1391,22 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--dkvp",
 			help:     "Use DKVP format for input and output data.",
 			altNames: []string{"--d2d"},
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "dkvp"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--dkvpx",
 			help: "Use DKVPX format for input and output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dkvpx"
 				options.WriterOptions.OutputFileFormat = "dkvpx"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1304,12 +1414,13 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--json",
 			help:     "Use JSON format for input and output data.",
 			altNames: []string{"-j", "--j2j"},
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = true
 				options.WriterOptions.JSONOutputMultiline = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1317,10 +1428,11 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--jsonl",
 			help:     "Use JSON Lines format for input and output data.",
 			altNames: []string{"--l2l"},
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "jsonl"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1328,21 +1440,23 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--yaml",
 			help:     "Use YAML format for input and output data.",
 			altNames: []string{"--y2y"},
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "yaml"
 				options.WriterOptions.OutputFileFormat = "yaml"
 				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--dcf",
 			help: "Use Debian control file (DCF) format for input and output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dcf"
 				options.WriterOptions.OutputFileFormat = "dcf"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1350,10 +1464,11 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--nidx",
 			help:     "Use NIDX format for input and output data.",
 			altNames: []string{"--n2n"},
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "nidx"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1361,19 +1476,21 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--xtab",
 			help:     "Use XTAB format for input and output data.",
 			altNames: []string{"--x2x"},
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "xtab"
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--xvright",
 			help: "Right-justify values for XTAB format.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.RightAlignedXTABOutput = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1381,12 +1498,13 @@ var FileFormatFlagSection = FlagSection{
 			name:     "--pprint",
 			help:     "Use PPRINT format for input and output data.",
 			altNames: []string{"--p2p"},
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
 				options.ReaderOptions.ifsWasSpecified = true
 				options.WriterOptions.OutputFileFormat = "pprint"
 				*pargi += 1
+				return nil
 			},
 		},
 	},
@@ -1424,7 +1542,7 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 		{
 			name: "-p",
 			help: "Keystroke-saver for `--nidx --fs space --repifs`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "nidx"
 				options.ReaderOptions.IFS = " "
@@ -1434,13 +1552,14 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 				options.ReaderOptions.AllowRepeatIFS = true
 				options.ReaderOptions.allowRepeatIFSWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "-T",
 			help: "Keystroke-saver for `--nidx --fs tab`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "nidx"
 				options.ReaderOptions.IFS = "\t"
@@ -1448,6 +1567,7 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 				options.ReaderOptions.ifsWasSpecified = true
 				options.WriterOptions.ofsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1457,11 +1577,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "tsv"
 				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1470,11 +1591,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "dkvp"
 				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1483,13 +1605,14 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "nidx"
 				options.WriterOptions.OFS = " "
 				options.ReaderOptions.irsWasSpecified = true
 				options.WriterOptions.ofsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1498,13 +1621,14 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = true
 				options.WriterOptions.JSONOutputMultiline = true
 				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1513,13 +1637,14 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = false
 				options.WriterOptions.JSONOutputMultiline = false
 				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1528,11 +1653,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1541,22 +1667,24 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--c2y",
 			help:                    "Use CSV for input, YAML for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "yaml"
 				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1565,12 +1693,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				options.WriterOptions.BarredPprintOutput = true
 				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1579,11 +1708,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "xtab"
 				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1592,11 +1722,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				options.ReaderOptions.irsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1606,10 +1737,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "csv"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1618,10 +1750,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "dkvp"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1630,13 +1763,14 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "nidx"
 				options.WriterOptions.OFS = " "
 				options.WriterOptions.ofsWasSpecified = true
 				options.ReaderOptions.CSVLazyQuotes = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1645,12 +1779,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = true
 				options.WriterOptions.JSONOutputMultiline = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1659,12 +1794,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = false
 				options.WriterOptions.JSONOutputMultiline = false
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1673,10 +1809,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1685,21 +1822,23 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--t2y",
 			help:                    "Use TSV for input, YAML for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "yaml"
 				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1708,11 +1847,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				options.WriterOptions.BarredPprintOutput = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1721,10 +1861,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "xtab"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1733,10 +1874,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "tsv"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1746,10 +1888,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "csv"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1758,13 +1901,14 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "tsv"
 				options.WriterOptions.OFS = "\t"
 				options.WriterOptions.ofsWasSpecified = true
 				options.WriterOptions.orsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1773,12 +1917,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "nidx"
 				options.WriterOptions.OFS = " "
 				options.WriterOptions.ofsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1787,12 +1932,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = true
 				options.WriterOptions.JSONOutputMultiline = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1801,12 +1947,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = false
 				options.WriterOptions.JSONOutputMultiline = false
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1815,10 +1962,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1827,21 +1975,23 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--d2y",
 			help:                    "Use DKVP for input, YAML for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "yaml"
 				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1850,11 +2000,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				options.WriterOptions.BarredPprintOutput = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1863,10 +2014,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "xtab"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1875,10 +2027,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1888,11 +2041,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "csv"
 				options.WriterOptions.orsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1901,10 +2055,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "tsv"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1913,10 +2068,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "dkvp"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1925,12 +2081,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = true
 				options.WriterOptions.JSONOutputMultiline = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1939,12 +2096,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = false
 				options.WriterOptions.JSONOutputMultiline = false
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1953,10 +2111,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1965,21 +2124,23 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--n2y",
 			help:                    "Use NIDX for input, YAML for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "yaml"
 				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -1988,11 +2149,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				options.WriterOptions.BarredPprintOutput = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2001,10 +2163,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "xtab"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2013,10 +2176,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -2026,11 +2190,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "csv"
 				options.WriterOptions.orsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2039,12 +2204,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = false
 				options.WriterOptions.JSONOutputMultiline = false
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -2054,10 +2220,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "tsv"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2066,10 +2233,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "dkvp"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2078,10 +2246,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "nidx"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2090,10 +2259,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2102,21 +2272,23 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--j2y",
 			help:                    "Use JSON for input, YAML for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "yaml"
 				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2125,11 +2297,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				options.WriterOptions.BarredPprintOutput = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2138,10 +2311,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "xtab"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2150,10 +2324,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -2163,11 +2338,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "csv"
 				options.WriterOptions.orsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2176,10 +2352,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "tsv"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2188,10 +2365,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "dkvp"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2200,10 +2378,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "json"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2212,10 +2391,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "nidx"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2224,10 +2404,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2236,21 +2417,23 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--l2y",
 			help:                    "Use JSON Lines for input, YAML for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "yaml"
 				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2259,11 +2442,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				options.WriterOptions.BarredPprintOutput = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2272,10 +2456,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "xtab"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2284,10 +2469,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -2297,13 +2483,14 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
 				options.WriterOptions.OutputFileFormat = "csv"
 				options.ReaderOptions.ifsWasSpecified = true
 				options.WriterOptions.orsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2312,12 +2499,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
 				options.WriterOptions.OutputFileFormat = "tsv"
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2326,12 +2514,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
 				options.WriterOptions.OutputFileFormat = "dkvp"
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2340,12 +2529,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
 				options.WriterOptions.OutputFileFormat = "nidx"
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2354,7 +2544,7 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
 				options.WriterOptions.OutputFileFormat = "json"
@@ -2362,6 +2552,7 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 				options.WriterOptions.JSONOutputMultiline = true
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2370,7 +2561,7 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
 				options.WriterOptions.OutputFileFormat = "json"
@@ -2378,6 +2569,7 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 				options.WriterOptions.JSONOutputMultiline = false
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2386,12 +2578,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
 				options.WriterOptions.OutputFileFormat = "xtab"
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2400,25 +2593,27 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
 				options.WriterOptions.OutputFileFormat = "markdown"
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--p2y",
 			help:                    "Use PPRINT for input, YAML for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
 				options.WriterOptions.OutputFileFormat = "yaml"
 				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -2428,12 +2623,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "markdown"
 				options.WriterOptions.OutputFileFormat = "csv"
 				options.ReaderOptions.ifsWasSpecified = true
 				options.WriterOptions.orsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2442,11 +2638,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "markdown"
 				options.WriterOptions.OutputFileFormat = "tsv"
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2455,11 +2652,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "markdown"
 				options.WriterOptions.OutputFileFormat = "dkvp"
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2468,11 +2666,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "markdown"
 				options.WriterOptions.OutputFileFormat = "nidx"
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2481,13 +2680,14 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "markdown"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = true
 				options.WriterOptions.JSONOutputMultiline = true
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2496,13 +2696,14 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "markdown"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = false
 				options.WriterOptions.JSONOutputMultiline = false
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2511,11 +2712,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "markdown"
 				options.WriterOptions.OutputFileFormat = "xtab"
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2524,22 +2726,24 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "markdown"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--m2y",
 			help:                    "Use markdown-tabular for input, YAML for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "markdown"
 				options.WriterOptions.OutputFileFormat = "yaml"
 				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				options.ReaderOptions.ifsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -2547,104 +2751,114 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			name:                    "--y2c",
 			help:                    "Use YAML for input, CSV for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "yaml"
 				options.WriterOptions.OutputFileFormat = "csv"
 				options.WriterOptions.orsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--y2t",
 			help:                    "Use YAML for input, TSV for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "yaml"
 				options.WriterOptions.OutputFileFormat = "tsv"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--y2j",
 			help:                    "Use YAML for input, JSON for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "yaml"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = true
 				options.WriterOptions.JSONOutputMultiline = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--y2l",
 			help:                    "Use YAML for input, JSON Lines for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "yaml"
 				options.WriterOptions.OutputFileFormat = "jsonl"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--y2d",
 			help:                    "Use YAML for input, DKVP for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "yaml"
 				options.WriterOptions.OutputFileFormat = "dkvp"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--y2n",
 			help:                    "Use YAML for input, NIDX for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "yaml"
 				options.WriterOptions.OutputFileFormat = "nidx"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--y2x",
 			help:                    "Use YAML for input, XTAB for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "yaml"
 				options.WriterOptions.OutputFileFormat = "xtab"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--y2p",
 			help:                    "Use YAML for input, PPRINT for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "yaml"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--y2m",
 			help:                    "Use YAML for input, markdown-tabular for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "yaml"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--y2y",
 			help:                    "Use YAML for input and output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "yaml"
 				options.WriterOptions.OutputFileFormat = "yaml"
 				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -2654,11 +2868,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "csv"
 				options.WriterOptions.orsWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2667,10 +2882,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "tsv"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2679,10 +2895,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "dkvp"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2691,10 +2908,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "nidx"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2703,12 +2921,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = true
 				options.WriterOptions.JSONOutputMultiline = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2717,12 +2936,13 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.WriterOptions.WrapJSONOutputInOuterList = false
 				options.WriterOptions.JSONOutputMultiline = false
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2731,10 +2951,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2743,21 +2964,23 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 		{
 			name:                    "--x2y",
 			help:                    "Use XTAB for input, YAML for output.",
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "yaml"
 				options.WriterOptions.WrapYAMLOutputInOuterList = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2766,11 +2989,12 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				options.WriterOptions.BarredPprintOutput = true
 				*pargi += 1
+				return nil
 			},
 		},
 		{
@@ -2779,10 +3003,11 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			// For format-conversion keystroke-savers, a matrix is plenty -- we don't
 			// need to print a tedious 60-line list.
 			suppressFlagEnumeration: true,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
+				return nil
 			},
 		},
 	},
@@ -2805,9 +3030,10 @@ var CSVTSVOnlyFlagSection = FlagSection{
 			name:     "--no-implicit-csv-header",
 			altNames: []string{"--no-implicit-tsv-header"},
 			help:     "Opposite of `--implicit-csv-header`. This is the default anyway -- the main use is for the flags to `mlr join` if you have main file(s) which are headerless but you want to join in on a file which does have a CSV/TSV header. Then you could use `mlr --csv --implicit-csv-header join --no-implicit-csv-header -l your-join-in-with-header.csv ... your-headerless.csv`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.UseImplicitHeader = false
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -2815,18 +3041,20 @@ var CSVTSVOnlyFlagSection = FlagSection{
 			name:     "--allow-ragged-csv-input",
 			altNames: []string{"--ragged", "--allow-ragged-tsv-input"},
 			help:     "If a data line has fewer fields than the header line, fill remaining keys with empty string. If a data line has more fields than the header line, use integer field labels as in the implicit-header case.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.AllowRaggedCSVInput = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--no-auto-unsparsify",
 			help: "For CSV/TSV output: if the record keys change from one row to another, emit a blank line and a new header line. This is non-compliant with RFC 4180 but it helpful for heterogeneous data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.NoAutoUnsparsify = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -2834,9 +3062,10 @@ var CSVTSVOnlyFlagSection = FlagSection{
 			name:     "--implicit-csv-header",
 			altNames: []string{"--headerless-csv-input", "--hi", "--implicit-tsv-header"},
 			help:     "Use 1,2,3,... as field labels, rather than from line 1 of input files. Tip: combine with `label` to recreate missing headers.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.UseImplicitHeader = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -2844,46 +3073,51 @@ var CSVTSVOnlyFlagSection = FlagSection{
 			name:     "--headerless-csv-output",
 			altNames: []string{"--ho", "--headerless-tsv-output"},
 			help:     "Print only CSV/TSV data lines; do not print CSV/TSV header lines.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.HeaderlessOutput = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "-N",
 			help: "Keystroke-saver for `--implicit-csv-header --headerless-csv-output`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.UseImplicitHeader = true
 				options.WriterOptions.HeaderlessOutput = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--lazy-quotes",
 			help: "Accepts quotes appearing in unquoted fields, and non-doubled quotes appearing in quoted fields.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.CSVLazyQuotes = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--csv-trim-leading-space",
 			help: `Trims leading spaces in CSV data. Use this for data like '"foo", "bar' which is non-RFC-4180 compliant, but common.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.CSVTrimLeadingSpace = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--quote-all",
 			help: "Force double-quoting of CSV fields.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.CSVQuoteAll = true
 				*pargi += 1
+				return nil
 			},
 		},
 	},
@@ -2934,11 +3168,14 @@ var CompressedDataFlagSection = FlagSection{
 			name: "--prepipe",
 			arg:  "{decompression command}",
 			help: "You can, of course, already do without this for single input files, e.g. `gunzip < myfile.csv.gz | mlr ...`.  Allowed at the command line, but not in `.mlrrc` to avoid unexpected code execution.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.ReaderOptions.Prepipe = args[*pargi+1]
 				options.ReaderOptions.PrepipeIsRaw = false
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -2946,87 +3183,98 @@ var CompressedDataFlagSection = FlagSection{
 			name: "--prepipex",
 			arg:  "{decompression command}",
 			help: "Like `--prepipe` with one exception: doesn't insert `<` between command and filename at runtime. Useful for some commands like `unzip -qc` which don't read standard input.  Allowed at the command line, but not in `.mlrrc` to avoid unexpected code execution.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.ReaderOptions.Prepipe = args[*pargi+1]
 				options.ReaderOptions.PrepipeIsRaw = true
 				*pargi += 2
+				return nil
 			},
 		},
 
 		{
 			name: "--prepipe-gunzip",
 			help: "Same as  `--prepipe gunzip`, except this is allowed in `.mlrrc`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.Prepipe = "gunzip"
 				options.ReaderOptions.PrepipeIsRaw = false
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--prepipe-zcat",
 			help: "Same as  `--prepipe zcat`, except this is allowed in `.mlrrc`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.Prepipe = "zcat"
 				options.ReaderOptions.PrepipeIsRaw = false
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--prepipe-zstdcat",
 			help: "Same as  `--prepipe zstdcat`, except this is allowed in `.mlrrc`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.Prepipe = "zstdcat"
 				options.ReaderOptions.PrepipeIsRaw = false
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--prepipe-bz2",
 			help: "Same as  `--prepipe bz2`, except this is allowed in `.mlrrc`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.Prepipe = "bz2"
 				options.ReaderOptions.PrepipeIsRaw = false
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--gzin",
 			help: "Uncompress gzip within the Miller process. Done by default if file ends in `.gz`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.FileInputEncoding = lib.FileInputEncodingGzip
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--zin",
 			help: "Uncompress zlib within the Miller process. Done by default if file ends in `.z`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.FileInputEncoding = lib.FileInputEncodingZlib
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--bz2in",
 			help: "Uncompress bzip2 within the Miller process. Done by default if file ends in `.bz2`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.FileInputEncoding = lib.FileInputEncodingBzip2
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--zstdin",
 			help: "Uncompress zstd within the Miller process. Done by default if file ends in `.zstd`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.FileInputEncoding = lib.FileInputEncodingZstd
 				*pargi += 1
+				return nil
 			},
 		},
 	},
@@ -3064,10 +3312,11 @@ var CommentsInDataFlagSection = FlagSection{
 		{
 			name: "--skip-comments",
 			help: "Ignore commented lines (prefixed by `" + DEFAULT_COMMENT_STRING + "`) within the input.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.CommentString = DEFAULT_COMMENT_STRING
 				options.ReaderOptions.CommentHandling = SkipComments
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -3075,21 +3324,25 @@ var CommentsInDataFlagSection = FlagSection{
 			name: "--skip-comments-with",
 			arg:  "{string}",
 			help: "Ignore commented lines within input, with specified prefix. For CSV input format, the prefix must be a single character.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.ReaderOptions.CommentString = args[*pargi+1]
 				options.ReaderOptions.CommentHandling = SkipComments
 				*pargi += 2
+				return nil
 			},
 		},
 
 		{
 			name: "--pass-comments",
 			help: "Immediately print commented lines (prefixed by `" + DEFAULT_COMMENT_STRING + "`) within the input.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.CommentString = DEFAULT_COMMENT_STRING
 				options.ReaderOptions.CommentHandling = PassComments
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -3097,11 +3350,14 @@ var CommentsInDataFlagSection = FlagSection{
 			name: "--pass-comments-with",
 			arg:  "{string}",
 			help: "Immediately print commented lines within input, with specified prefix. For CSV input format, the prefix must be a single character.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.ReaderOptions.CommentString = args[*pargi+1]
 				options.ReaderOptions.CommentHandling = PassComments
 				*pargi += 2
+				return nil
 			},
 		},
 	},
@@ -3180,18 +3436,18 @@ var OutputColorizationFlagSection = FlagSection{
 		{
 			name: "--list-color-codes",
 			help: "Show the available color codes in the range 0..255, such as 170 for example.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				colorizer.ListColorCodes()
-				os.Exit(0)
+				return lib.NewExitZeroRequest()
 			},
 		},
 
 		{
 			name: "--list-color-names",
 			help: "Show the names for the available color codes, such as `orchid` for example.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				colorizer.ListColorNames()
-				os.Exit(0)
+				return lib.NewExitZeroRequest()
 			},
 		},
 
@@ -3199,9 +3455,10 @@ var OutputColorizationFlagSection = FlagSection{
 			name:     "--no-color",
 			altNames: []string{"-M"},
 			help:     "Instructs Miller to not colorize any output.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				colorizer.SetColorization(colorizer.ColorizeOutputNever)
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -3209,89 +3466,95 @@ var OutputColorizationFlagSection = FlagSection{
 			name:     "--always-color",
 			altNames: []string{"-C"},
 			help:     "Instructs Miller to colorize output even when it normally would not. Useful for piping output to `less -r`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				colorizer.SetColorization(colorizer.ColorizeOutputAlways)
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--key-color",
 			help: "Specify the color (see `--list-color-codes` and `--list-color-names`) for record keys.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				ok := colorizer.SetKeyColor(args[*pargi+1])
 				if !ok {
-					fmt.Fprintf(os.Stderr,
-						"mlr: --key-color argument unrecognized; got \"%s\".\n",
+					return FlagErrorf("mlr: --key-color argument unrecognized; got \"%s\".",
 						args[*pargi+1])
-					os.Exit(1)
 				}
 				*pargi += 2
+				return nil
 			},
 		},
 
 		{
 			name: "--value-color",
 			help: "Specify the color (see `--list-color-codes` and `--list-color-names`) for record values.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				ok := colorizer.SetValueColor(args[*pargi+1])
 				if !ok {
-					fmt.Fprintf(os.Stderr,
-						"mlr: --value-color argument unrecognized; got \"%s\".\n",
+					return FlagErrorf("mlr: --value-color argument unrecognized; got \"%s\".",
 						args[*pargi+1])
-					os.Exit(1)
 				}
 				*pargi += 2
+				return nil
 			},
 		},
 
 		{
 			name: "--pass-color",
 			help: "Specify the color (see `--list-color-codes` and `--list-color-names`) for passing cases in `mlr regtest`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				ok := colorizer.SetPassColor(args[*pargi+1])
 				if !ok {
-					fmt.Fprintf(os.Stderr,
-						"mlr: --pass-color argument unrecognized; got \"%s\".\n",
+					return FlagErrorf("mlr: --pass-color argument unrecognized; got \"%s\".",
 						args[*pargi+1])
-					os.Exit(1)
 				}
 				*pargi += 2
+				return nil
 			},
 		},
 
 		{
 			name: "--fail-color",
 			help: "Specify the color (see `--list-color-codes` and `--list-color-names`) for failing cases in `mlr regtest`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				ok := colorizer.SetFailColor(args[*pargi+1])
 				if !ok {
-					fmt.Fprintf(os.Stderr,
-						"mlr: --fail-color argument unrecognized; got \"%s\".\n",
+					return FlagErrorf("mlr: --fail-color argument unrecognized; got \"%s\".",
 						args[*pargi+1])
-					os.Exit(1)
 				}
 				*pargi += 2
+				return nil
 			},
 		},
 
 		{
 			name: "--help-color",
 			help: "Specify the color (see `--list-color-codes` and `--list-color-names`) for highlights in `mlr help` output.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				ok := colorizer.SetHelpColor(args[*pargi+1])
 				if !ok {
-					fmt.Fprintf(os.Stderr,
-						"mlr: --help-color argument unrecognized; got \"%s\".\n",
+					return FlagErrorf("mlr: --help-color argument unrecognized; got \"%s\".",
 						args[*pargi+1])
-					os.Exit(1)
 				}
 				*pargi += 2
+				return nil
 			},
 		},
 	},
@@ -3317,28 +3580,33 @@ var FlattenUnflattenFlagSection = FlagSection{
 			altNames: []string{"--jflatsep"},
 			arg:      "{string}",
 			help:     "Separator for flattening multi-level JSON keys, e.g. `{\"a\":{\"b\":3}}` becomes `a:b => 3` for non-JSON formats. Defaults to `" + DEFAULT_JSON_FLATTEN_SEPARATOR + "`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.WriterOptions.FLATSEP = SeparatorFromArg(args[*pargi+1])
 				*pargi += 2
+				return nil
 			},
 		},
 
 		{
 			name: "--no-auto-flatten",
 			help: "When output is not JSON or YAML, suppress the default auto-flatten behavior. Default: if `$y = [7,8,9]` then this flattens to `y.1=7,y.2=8,y.3=9`, and similarly for maps. With `--no-auto-flatten`, instead we get `$y=[1, 2, 3]`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.AutoFlatten = false
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--no-auto-unflatten",
 			help: "When input is not JSON or YAML and output is JSON or YAML, suppress the default auto-unflatten behavior. Default: if the input has `y.1=7,y.2=8,y.3=9` then this unflattens to `$y=[7,8,9]`.  With `--no-auto-flatten`, instead we get `${y.1}=7,${y.2}=8,${y.3}=9`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.AutoUnflatten = false
 				*pargi += 1
+				return nil
 			},
 		},
 	},
@@ -3361,9 +3629,10 @@ var ProfilingFlagSection = FlagSection{
 			arg:  "{CPU-profile file name}",
 			help: `Create a CPU-profile file for performance analysis. Instructions will be printed to stderr.
 This flag must be the very first thing after 'mlr' on the command line.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				// Already handled in main(). Nothing to do here except to accept this as valid syntax.
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -3371,18 +3640,20 @@ This flag must be the very first thing after 'mlr' on the command line.`,
 			name: "--traceprofile",
 			help: `Create a trace-profile file for performance analysis. Instructions will be printed to stderr.
 This flag must be the very first thing after 'mlr' on the command line.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				// Already handled in main(). Nothing to do here except to accept this as valid syntax.
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--time",
 			help: "Print elapsed execution time in seconds to stderr at the end of the execution of the program.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.PrintElapsedTime = true
 				*pargi += 1
+				return nil
 			},
 		},
 	},
@@ -3404,47 +3675,52 @@ var MiscFlagSection = FlagSection{
 		{
 			name: "--errors-json",
 			help: "Emit parse errors as a JSON object to stderr instead of a plain text message. Intended for AI agents and scripts that branch on error kind rather than regex-matching prose. Equivalent to setting the `MLR_ERRORS_JSON` environment variable to a truthy value.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				// The actual effect is handled by pre-scan in pkg/entrypoint.
 				// Registration here ensures the flag is recognized (not an
 				// error) during pass-one flag parsing, and appears in --help.
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--no-shell",
 			help: "Disable Miller's ability to run external commands: the DSL `system` and `exec` functions, piped redirects such as `tee | \"command\"`, and `--prepipe`/`--prepipex` all fail cleanly instead of executing. Equivalent to setting the `MLR_NO_SHELL` environment variable to a truthy value. Intended for running agent-constructed command lines (e.g. via `mlr mcp`) without also granting arbitrary command execution. Once disabled, shell-outs cannot be re-enabled for the rest of the process.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				lib.DisableShellOut()
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "-x",
 			help: "If any record has an error value in it, report it and stop the process. The default is to print the field value as `(error)` and continue.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.FailOnDataError = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "-n",
 			help: "Process no input files, nor standard input either. Useful for `mlr put` with `begin`/`end` statements only. (Same as `--from /dev/null`.) Also useful in `mlr -n put -v '...'` for analyzing abstract syntax trees (if that's your thing).",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.NoInput = true
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "-I",
 			help: "Process files in-place. For each file name on the command line, output is written to a temp file in the same directory, which is then renamed over the original. Each file is processed in isolation: if the output format is CSV, CSV headers will be present in each output file, statistics are only over each file's own records; and so on.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.DoInPlace = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -3452,10 +3728,13 @@ var MiscFlagSection = FlagSection{
 			name: "--from",
 			arg:  "{filename}",
 			help: "Use this to specify an input file before the verb(s), rather than after. May be used more than once. Example: `mlr --from a.dat --from b.dat cat` is the same as `mlr cat a.dat b.dat`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.FileNames = append(options.FileNames, args[*pargi+1])
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -3463,20 +3742,22 @@ var MiscFlagSection = FlagSection{
 			name: "--mfrom",
 			arg:  "{filenames}",
 			help: "Use this to specify one of more input files before the verb(s), rather than after. May be used more than once.  The list of filename must end with `--`. This is useful for example since `--from *.csv` doesn't do what you might hope but `--mfrom *.csv --` does.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				*pargi += 1
 				for *pargi < argc && args[*pargi] != "--" {
 					options.FileNames = append(options.FileNames, args[*pargi])
 					*pargi += 1
 				}
 				if *pargi >= argc {
-					fmt.Fprintf(os.Stderr, "mlr: \"--mfrom\" must be terminated by \"--\".\n")
-					os.Exit(1)
+					return FlagErrorf("mlr: \"--mfrom\" must be terminated by \"--\".")
 				}
 				if args[*pargi] == "--" {
 					*pargi += 1
 				}
+				return nil
 			},
 		},
 
@@ -3484,15 +3765,15 @@ var MiscFlagSection = FlagSection{
 			name: "--files",
 			arg:  "{filename}",
 			help: "Use this to specify a file which itself contains, one per line, names of input files. May be used more than once.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 
 				fileName := args[*pargi+1]
 				handle, err := os.Open(fileName)
 				if err != nil {
-					/// XXXX return false
-					fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-					os.Exit(1)
+					return err
 				}
 				defer func() { _ = handle.Close() }()
 
@@ -3508,8 +3789,7 @@ var MiscFlagSection = FlagSection{
 					lineno++
 
 					if err != nil {
-						fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-						os.Exit(1)
+						return err
 					}
 
 					// This is how to do a chomp:
@@ -3520,6 +3800,7 @@ var MiscFlagSection = FlagSection{
 				}
 
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -3527,10 +3808,13 @@ var MiscFlagSection = FlagSection{
 			name: "--ofmt",
 			arg:  "{format}",
 			help: "E.g. `%.18f`, `%.0f`, `%9.6e`. Please use sprintf-style codes (https://pkg.go.dev/fmt) for floating-point numbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.WriterOptions.FPOFMT = args[*pargi+1]
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -3538,10 +3822,13 @@ var MiscFlagSection = FlagSection{
 			name: "--ofmte",
 			arg:  "{n}",
 			help: "Use --ofmte 6 as shorthand for --ofmt %.6e, etc.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.WriterOptions.FPOFMT = "%." + args[*pargi+1] + "e"
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -3549,10 +3836,13 @@ var MiscFlagSection = FlagSection{
 			name: "--ofmtf",
 			arg:  "{n}",
 			help: "Use --ofmtf 6 as shorthand for --ofmt %.6f, etc.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.WriterOptions.FPOFMT = "%." + args[*pargi+1] + "f"
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -3560,10 +3850,13 @@ var MiscFlagSection = FlagSection{
 			name: "--ofmtg",
 			arg:  "{n}",
 			help: "Use --ofmtg 6 as shorthand for --ofmt %.6g, etc.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.WriterOptions.FPOFMT = "%." + args[*pargi+1] + "g"
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -3571,10 +3864,13 @@ var MiscFlagSection = FlagSection{
 			name: "--load",
 			arg:  "{filename}",
 			help: "Load DSL script file for all put/filter operations on the command line.  If the name following `--load` is a directory, load all `*.mlr` files in that directory. This is just like `put -f` and `filter -f` except it's up-front on the command line, so you can do something like `alias mlr='mlr --load ~/myscripts'` if you like.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				options.DSLPreloadFileNames = append(options.DSLPreloadFileNames, args[*pargi+1])
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -3582,8 +3878,10 @@ var MiscFlagSection = FlagSection{
 			name: "--mload",
 			arg:  "{filenames}",
 			help: "Like `--load` but works with more than one filename, e.g. `--mload *.mlr --`.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				*pargi += 1
 				for *pargi < argc && args[*pargi] != "--" {
 					options.DSLPreloadFileNames = append(options.DSLPreloadFileNames, args[*pargi])
@@ -3592,6 +3890,7 @@ var MiscFlagSection = FlagSection{
 				if args[*pargi] == "--" {
 					*pargi += 1
 				}
+				return nil
 			},
 		},
 
@@ -3599,10 +3898,13 @@ var MiscFlagSection = FlagSection{
 			name: "--tz",
 			arg:  "{timezone}",
 			help: "Specify timezone, overriding `$TZ` environment variable (if any).",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				_ = os.Setenv("TZ", args[*pargi+1])
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -3610,17 +3912,19 @@ var MiscFlagSection = FlagSection{
 			name: "--nr-progress-mod",
 			arg:  "{m}",
 			help: "With m a positive integer: print filename and record count to os.Stderr every m input records.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				nrProgressMod, ok := lib.TryIntFromString(args[*pargi+1])
 				if !ok || nrProgressMod <= 0 {
-					fmt.Fprintf(os.Stderr,
-						"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
+					return FlagErrorf(
+						"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".",
 						"mlr", args[*pargi+1])
-					os.Exit(1)
 				}
 				options.NRProgressMod = nrProgressMod
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -3629,20 +3933,21 @@ var MiscFlagSection = FlagSection{
 			arg:  "{n}",
 			help: "with `n` of the form `12345678` or `0xcafefeed`. For `put`/`filter` `urand`, `urandint`, and `urand32`.",
 
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				randSeed, ok := lib.TryIntFromString(args[*pargi+1])
 				if ok {
 					options.RandSeed = randSeed
 					options.HaveRandSeed = true
 				} else {
-					fmt.Fprintf(os.Stderr,
-						"mlr: --seed argument must be a decimal or hexadecimal integer; got \"%s\".\n",
+					return FlagErrorf(
+						"mlr: --seed argument must be a decimal or hexadecimal integer; got \"%s\".\nPlease run \"mlr --help\" for detailed usage information.",
 						args[*pargi+1])
-					fmt.Fprintf(os.Stderr, "Please run \"mlr --help\" for detailed usage information.\n")
-					os.Exit(1)
 				}
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -3652,9 +3957,10 @@ var MiscFlagSection = FlagSection{
 another also named ` + "`x`" + `, the second will be renamed ` + "`x_2`" + `, and so on.  With this flag provided, the
 second ` + "`x`" + `'s value will replace the first ` + "`x`" + `'s value when the record is read.  This flag has no effect
 on JSON input records, where duplicate keys always result in the last one's value being retained.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.DedupeFieldNames = false
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -3664,17 +3970,19 @@ on JSON input records, where duplicate keys always result in the last one's valu
 			help: "This is an internal parameter for maximum number of records in a batch size. Normally this does not\n" +
 				"need to be modified, except when input is from `tail -f`. See also\n" +
 				"https://miller.readthedocs.io/en/latest/reference-main-flag-list/.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				recordsPerBatch, ok := lib.TryIntFromString(args[*pargi+1])
 				if !ok || recordsPerBatch <= 0 {
-					fmt.Fprintf(os.Stderr,
-						"%s: --records-per-batch argument must be a positive integer; got \"%s\".\n",
+					return FlagErrorf(
+						"%s: --records-per-batch argument must be a positive integer; got \"%s\".",
 						"mlr", args[*pargi+1])
-					os.Exit(1)
 				}
 				options.ReaderOptions.RecordsPerBatch = recordsPerBatch
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -3685,18 +3993,20 @@ It controls the mechanism by which Miller accesses fields within records.
 In general --no-hash-records is faster, and is the default. For specific use-cases involving
 data having many fields, and many of them being processed during a given processing run,
 --hash-records might offer a slight performance benefit.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				mlrval.HashRecords(true)
 				*pargi += 1
+				return nil
 			},
 		},
 
 		{
 			name: "--no-hash-records",
 			help: `See --hash-records.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				mlrval.HashRecords(false)
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -3704,9 +4014,10 @@ data having many fields, and many of them being processed during a given process
 			name:     "--infer-none",
 			altNames: []string{"-S"},
 			help:     `Don't treat values like 123 or 456.7 in data files as int/float; leave them as strings.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				mlrval.SetInferrerStringOnly()
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -3714,9 +4025,10 @@ data having many fields, and many of them being processed during a given process
 			name:     "--infer-int-as-float",
 			altNames: []string{"-A"},
 			help:     `Cast all integers in data files to floats.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				mlrval.SetInferrerIntAsFloat()
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -3725,9 +4037,10 @@ data having many fields, and many of them being processed during a given process
 			altNames: []string{"-O"},
 			help: `Treat numbers like 0123 in data files as numeric; default is string.
 Note that 00--07 etc scan as int; 08-09 scan as float.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				mlrval.SetInferrerOctalAsInt()
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -3738,10 +4051,11 @@ The default is flush output after every record if the output is to the terminal,
 the output is to a file or a pipe. The default is a significant performance optimization for large
 files.  Use this flag to force frequent updates even when output is to a pipe or file, at a
 performance cost.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.FlushOnEveryRecord = true
 				options.WriterOptions.flushOnEveryRecordWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -3753,10 +4067,11 @@ the output is to a file or a pipe. The default is a significant performance opti
 files.  Use this flag to allow less-frequent updates when output is to the terminal. This is
 unlikely to be a noticeable performance improvement, since direct-to-screen output for large files
 has its own overhead.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.FlushOnEveryRecord = false
 				options.WriterOptions.flushOnEveryRecordWasSpecified = true
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -3765,9 +4080,10 @@ has its own overhead.`,
 			arg:  "{file name}",
 			help: `Take command-line flags from file name. For more information please see ` +
 				lib.DOC_URL + `/en/latest/scripting/.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				// Already handled in main(). Nothing to do here except to accept this as valid syntax.
 				*pargi += 2
+				return nil
 			},
 		},
 
@@ -3776,17 +4092,19 @@ has its own overhead.`,
 			arg:  "{file name}",
 			help: `Take command-line flags from file name, like -s, but with no comment-stripping. For more information please see ` +
 				lib.DOC_URL + `/en/latest/scripting/.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				// Already handled in main(). Nothing to do here except to accept this as valid syntax.
 				*pargi += 2
+				return nil
 			},
 		},
 
 		{
 			name: "--norc",
 			help: "Do not load a .mlrrc file.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -3797,14 +4115,17 @@ has its own overhead.`,
 			help: `Apply the settings from the [name] section of your .mlrrc file, after any global
 (pre-section) settings. It's an error if no such section exists in any .mlrrc file processed.
 For more information please see ` + lib.DOC_URL + `/en/latest/customization/.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
+					return err
+				}
 				// The actual profile selection is handled in pkg/climain,
 				// before the .mlrrc file is loaded, which is in turn before
 				// main-flag sequences are parsed into the options struct.
 				// Registration here ensures the flag is recognized (not an
 				// error) during flag parsing, and appears in --help.
 				*pargi += 2
+				return nil
 			},
 		},
 	},

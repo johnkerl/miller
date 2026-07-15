@@ -1,18 +1,16 @@
 package cli
 
-import (
-	"fmt"
-	"os"
-)
-
 // CheckArgCount is for flags with values, e.g. ["-n" "10"], while we're
-// looking at the "-n": this let us see if the "10" slot exists.
-func CheckArgCount(args []string, argi int, argc int, n int) {
+// looking at the "-n": this let us see if the "10" slot exists. A non-nil
+// return is a (multi-line) user-facing error, ready for printing as-is by the
+// entrypoint layer.
+func CheckArgCount(args []string, argi int, argc int, n int) error {
 	if (argc - argi) < n {
-		fmt.Fprintf(os.Stderr, "%s: option \"%s\" missing argument(s).\n", "mlr", args[argi])
-		fmt.Fprintf(os.Stderr, "Please run \"%s --help\" for detailed usage information.\n", "mlr")
-		os.Exit(1)
+		return FlagErrorf(
+			"%s: option \"%s\" missing argument(s).\nPlease run \"%s --help\" for detailed usage information.",
+			"mlr", args[argi], "mlr")
 	}
+	return nil
 }
 
 // SeparatorFromArg is for letting people do things like `--ifs pipe`

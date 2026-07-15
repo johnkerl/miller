@@ -90,7 +90,11 @@ func transformerTeeParseCLI(
 			// loop (so individual if-statements don't need to). However,
 			// ParseWriterOptions expects it unadvanced.
 			largi := argi - 1
-			if cli.FLAG_TABLE.Parse(args, argc, &largi, localOptions) {
+			handled, err := cli.FLAG_TABLE.Parse(args, argc, &largi, localOptions)
+			if err != nil {
+				return nil, err
+			}
+			if handled {
 				// This lets mlr main and mlr tee have different output formats.
 				// Nothing else to handle here.
 				argi = largi

@@ -233,7 +233,11 @@ func transformerJoinParseCLI(
 			// loop (so individual if-statements don't need to). However,
 			// cli.Parse expects it unadvanced.
 			largi := argi - 1
-			if cli.FLAG_TABLE.Parse(args, argc, &largi, &opts.joinFlagOptions) {
+			handled, err := cli.FLAG_TABLE.Parse(args, argc, &largi, &opts.joinFlagOptions)
+			if err != nil {
+				return nil, err
+			}
+			if handled {
 				// This lets mlr main and mlr join have different input formats.
 				// Nothing else to handle here.
 				argi = largi
