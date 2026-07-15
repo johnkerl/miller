@@ -2,8 +2,6 @@ package output
 
 import (
 	"bufio"
-	"fmt"
-	"os"
 
 	"gopkg.in/yaml.v3"
 
@@ -33,25 +31,22 @@ func (writer *RecordWriterYAML) Write(
 	outputIsStdout bool,
 ) error {
 	if writer.writerOptions.WrapYAMLOutputInOuterList {
-		writer.writeWithListWrap(outrec, bufferedOutputStream)
-	} else {
-		writer.writeWithoutListWrap(outrec, bufferedOutputStream)
+		return writer.writeWithListWrap(outrec, bufferedOutputStream)
 	}
-	return nil
+	return writer.writeWithoutListWrap(outrec, bufferedOutputStream)
 }
 
 func (writer *RecordWriterYAML) writeWithListWrap(
 	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
-) {
+) error {
 	if outrec != nil {
 		if writer.bufferedRecords == nil {
 			writer.bufferedRecords = []*yaml.Node{}
 		}
 		native, err := mlrval.MlrmapToYAMLNative(outrec)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 		writer.bufferedRecords = append(writer.bufferedRecords, native)
 	} else {
@@ -60,34 +55,33 @@ func (writer *RecordWriterYAML) writeWithListWrap(
 		seqNode.Content = writer.bufferedRecords
 		out, err := yaml.Marshal(seqNode)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 		bufferedOutputStream.Write(out)
 		writer.bufferedRecords = nil
 	}
+	return nil
 }
 
 func (writer *RecordWriterYAML) writeWithoutListWrap(
 	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
-) {
+) error {
 	if outrec == nil {
-		return
+		return nil
 	}
 	if writer.wroteAnyRecords {
 		bufferedOutputStream.WriteString("---\n")
 	}
 	native, err := mlrval.MlrmapToYAMLNative(outrec)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return err
 	}
 	out, err := yaml.Marshal(native)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return err
 	}
 	bufferedOutputStream.Write(out)
 	writer.wroteAnyRecords = true
+	return nil
 }

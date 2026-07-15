@@ -158,27 +158,24 @@ func GetArrayKeysSorted(input map[string]string) []string {
 
 // WriteTempFile places the contents string into a temp file, which the caller
 // must remove.
-func WriteTempFileOrDie(contents string) string {
+func WriteTempFile(contents string) (string, error) {
 	// Use "" as first argument to os.CreateTemp to use default directory.
 	// Nominally "/tmp" or somesuch on all unix-like systems, but not for Windows.
 	handle, err := os.CreateTemp("", "mlr-temp")
 	if err != nil {
-		fmt.Printf("mlr: could not create temp file.\n")
-		os.Exit(1)
+		return "", fmt.Errorf("could not create temp file: %w", err)
 	}
 
 	_, err = handle.WriteString(contents)
 	if err != nil {
-		fmt.Printf("mlr: could not populate temp file.\n")
-		os.Exit(1)
+		return "", fmt.Errorf("could not populate temp file: %w", err)
 	}
 
 	err = handle.Close()
 	if err != nil {
-		fmt.Printf("mlr: could not finish write of  temp file.\n")
-		os.Exit(1)
+		return "", fmt.Errorf("could not finish write of temp file: %w", err)
 	}
-	return handle.Name()
+	return handle.Name(), nil
 }
 
 func StripEmpties(input []string) []string {

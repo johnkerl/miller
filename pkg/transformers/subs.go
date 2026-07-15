@@ -177,7 +177,7 @@ func transformerSubsParseCLI(
 		switch opt {
 		case "-h", "--help":
 			usageFunc(os.Stdout)
-			os.Exit(0)
+			return nil, cli.ErrHelpRequested
 
 		case "-a":
 			doAllFieldNames = true
@@ -195,19 +195,19 @@ func transformerSubsParseCLI(
 			doAllFieldNames = false
 		default:
 			usageFunc(os.Stderr)
-			os.Exit(1)
+			return nil, cli.ErrUsagePrinted
 		}
 	}
 
 	if fieldNames == nil && !doAllFieldNames {
 		usageFunc(os.Stderr)
-		os.Exit(1)
+		return nil, cli.ErrUsagePrinted
 	}
 
 	// Get the old and new text from the command line
 	if (argc - argi) < 2 {
 		usageFunc(os.Stderr)
-		os.Exit(1)
+		return nil, cli.ErrUsagePrinted
 	}
 	oldText = args[argi]
 	newText = args[argi+1]

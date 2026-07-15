@@ -230,8 +230,7 @@ func transformerSplitParseCLI(
 		&localOptions.WriterOptions,
 	)
 	if err != nil {
-		// Error message already printed out
-		os.Exit(1)
+		return nil, err
 	}
 
 	return transformer, nil
