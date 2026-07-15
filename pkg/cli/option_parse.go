@@ -958,9 +958,10 @@ var FileFormatFlagSection = FlagSection{
 		{
 			name: "--irecutils",
 			help: "Use GNU recutils (.rec) format for input data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "recutils"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1257,9 +1258,10 @@ var FileFormatFlagSection = FlagSection{
 		{
 			name: "--orecutils",
 			help: "Use GNU recutils (.rec) format for output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "recutils"
 				*pargi += 1
+				return nil
 			},
 		},
 
@@ -1481,10 +1483,11 @@ var FileFormatFlagSection = FlagSection{
 		{
 			name: "--recutils",
 			help: "Use GNU recutils (.rec) format for input and output data.",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.InputFileFormat = "recutils"
 				options.WriterOptions.OutputFileFormat = "recutils"
 				*pargi += 1
+				return nil
 			},
 		},
 
