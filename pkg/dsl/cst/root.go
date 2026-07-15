@@ -411,11 +411,12 @@ func (root *RootNode) RegisterOutputHandlerManager(
 	root.outputHandlerManagers = append(root.outputHandlerManagers, outputHandlerManager)
 }
 
-func (root *RootNode) ProcessEndOfStream() {
+func (root *RootNode) ProcessEndOfStream() error {
 	for _, outputHandlerManager := range root.outputHandlerManagers {
 		errs := outputHandlerManager.Close()
 		if len(errs) != 0 {
-			for _, err := range errs {
+			// Print any additional errors here; return the first one.
+			for _, err := range errs[1:] {
 				fmt.Fprintf(
 					os.Stderr,
 					"%s: error on end-of-stream close: %v\n",
@@ -423,9 +424,10 @@ func (root *RootNode) ProcessEndOfStream() {
 					err,
 				)
 			}
-			os.Exit(1)
+			return fmt.Errorf("mlr: error on end-of-stream close: %v", errs[0])
 		}
 	}
+	return nil
 }
 
 func (root *RootNode) ExecuteBeginBlocks(state *runtime.State) error {

@@ -615,7 +615,9 @@ func (tr *TransformerPut) Transform(
 
 		// Send all registered OutputHandlerManager instances the end-of-stream
 		// indicator.
-		tr.cstRootNode.ProcessEndOfStream()
+		if err := tr.cstRootNode.ProcessEndOfStream(); err != nil {
+			return err
+		}
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewEndOfStreamMarker(&context))
 	}
