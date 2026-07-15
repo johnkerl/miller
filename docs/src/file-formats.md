@@ -948,6 +948,56 @@ Description: Another package.
 ]
 </pre>
 
+## recutils
+
+[GNU recutils](https://www.gnu.org/software/recutils/manual/index.html) is a text-based format for record-oriented databases. Records are `FieldName: Value` lines, one field per line, with records separated by one or more blank lines:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/sample.rec</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+# A simple contacts database.
+
+Name: Mr. Foo
+Email: foo@example.com
+Phone: 555-1234
+Notes: Likes long walks
++ on the beach.
+
+Name: Mrs. Bar
+Email: bar@example.com
+Phone: 555-5678
+</pre>
+
+A field's value can be continued onto following lines by prefixing each continuation line with `+`; the continuation is joined onto the value with an embedded newline. (A trailing `\` at the very end of a line is also honored, recutils-style, to join two physical lines into one logical line with no embedded newline.)
+
+Since `#`-prefixed lines are, like every other Miller format, treated as data unless `--skip-comments` or `--pass-comments` is given (see [Comments in data](#comments-in-data)), reading the file above needs `--skip-comments`:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --skip-comments -i recutils -o json cat data/sample.rec</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "Name": "Mr. Foo",
+  "Email": "foo@example.com",
+  "Phone": "555-1234",
+  "Notes": "Likes long walks\non the beach."
+},
+{
+  "Name": "Mrs. Bar",
+  "Email": "bar@example.com",
+  "Phone": "555-5678"
+}
+]
+</pre>
+
+Miller has no notion of recutils' record-descriptor/schema records (lines starting with `%rec:` which declare field types, mandatory fields, keys, and so on) -- those are read and written as ordinary records, with no special interpretation, since Miller is a schema-less stream processor.
+
+Use `--irecutils`/`--orecutils`/`--recutils` (or `-i recutils`/`-o recutils`) for recutils input/output/both, analogously to `--idcf`/`--odcf`/`--dcf`.
+
+Note: a field value whose last line ends in a literal `\` is ambiguous with an in-progress backslash-continuation on write/re-read, since recutils has no in-value backslash-escaping mechanism. This is a limitation of the recutils format itself, not specific to Miller.
+
 ## Data-conversion keystroke-savers
 
 While you can do format conversion using `mlr --icsv --ojson cat myfile.csv`, there are also keystroke-savers for this purpose, such as `mlr --c2j cat myfile.csv`.  For a complete list:
@@ -960,6 +1010,7 @@ FORMAT-CONVERSION KEYSTROKE-SAVER FLAGS
 As keystroke-savers for format-conversion you may use the following.
 The letters c, t, j, l, d, n, x, p, m, and y refer to formats CSV, TSV, JSON, JSON Lines,
 DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively. DCF is also supported (use --dcf for DCF in and out).
+GNU recutils is also supported (use --recutils for recutils in and out).
 
 | In\out   | CSV      | TSV      | JSON     | JSONL | DKVP  | NIDX  | XTAB  | PPRINT | Markdown | YAML   |
 +----------+----------+----------+----------+-------+-------+-------+-------+--------+----------+--------+

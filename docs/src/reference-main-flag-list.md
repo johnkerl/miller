@@ -174,6 +174,7 @@ are overridden in all cases by setting output format to `format2`.
 * `--inidx`: Use NIDX format for input data.
 * `--io {format name}`: Use format name for input and output data. For example: `--io csv` is the same as `--csv`.
 * `--ipprint`: Use PPRINT format for input data.
+* `--irecutils`: Use GNU recutils (.rec) format for input data.
 * `--itsv`: Use TSV format for input data.
 * `--itsvlite`: Use TSV-lite format for input data.
 * `--iusv or --iusvlite`: Use USV format for input data.
@@ -193,12 +194,14 @@ are overridden in all cases by setting output format to `format2`.
 * `--omd or --omarkdown`: Use markdown-tabular format for output data.
 * `--onidx`: Use NIDX format for output data.
 * `--opprint`: Use PPRINT format for output data.
+* `--orecutils`: Use GNU recutils (.rec) format for output data.
 * `--otsv`: Use TSV format for output data.
 * `--otsvlite`: Use TSV-lite format for output data.
 * `--ousv or --ousvlite`: Use USV format for output data.
 * `--oxtab`: Use XTAB format for output data.
 * `--oyaml`: Use YAML format for output data.
 * `--pprint or --p2p`: Use PPRINT format for input and output data.
+* `--recutils`: Use GNU recutils (.rec) format for input and output data.
 * `--tsv or -t or --t2t`: Use TSV format for input and output data.
 * `--tsvlite`: Use TSV-lite format for input and output data.
 * `--usv or --usvlite`: Use USV format for input and output data.
@@ -527,6 +530,7 @@ Notes about all other separators:
         markdown " "    N/A    "\n"
         nidx     " "    N/A    "\n"
         pprint   " "    N/A    "\n"
+        recutils N/A    N/A    N/A
         tsv      "	"    N/A    "\n"
         xtab     "\n"   " "    "\n\n"
         yaml     N/A    N/A    N/A

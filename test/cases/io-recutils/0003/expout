@@ -1,0 +1,12 @@
+[
+{
+  "Package": "foo",
+  "Version": 1.00000000,
+  "Description": "A test package\nwith a continued description."
+},
+{
+  "Package": "bar",
+  "Version": 2.00000000,
+  "Description": "Another package."
+}
+]

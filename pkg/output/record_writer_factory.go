@@ -24,6 +24,8 @@ func Create(writerOptions *cli.TWriterOptions) (IRecordWriter, error) {
 		return NewRecordWriterYAML(writerOptions)
 	case "dcf":
 		return NewRecordWriterDCF(writerOptions)
+	case "recutils":
+		return NewRecordWriterREC(writerOptions)
 	case "md":
 		return NewRecordWriterMarkdown(writerOptions)
 	case "markdown":
