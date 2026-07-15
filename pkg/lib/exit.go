@@ -15,3 +15,10 @@ type ExitRequest struct {
 func (e *ExitRequest) Error() string {
 	return fmt.Sprintf("exit status %d", e.Code)
 }
+
+// NewExitZeroRequest is for the common case of requesting a normal, exit-0
+// termination: e.g. --version or -h, where the requested output has been
+// printed and nothing further should run.
+func NewExitZeroRequest() *ExitRequest {
+	return &ExitRequest{Code: 0}
+}

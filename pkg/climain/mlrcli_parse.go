@@ -154,19 +154,19 @@ func parseCommandLinePassOne(
 				// Exiting flag: print immediately, then request exit 0 from the
 				// entrypoint.
 				fmt.Printf("mlr %s\n", version.STRING)
-				parseErr = &lib.ExitRequest{}
+				parseErr = lib.NewExitZeroRequest()
 				return
 			} else if args[argi] == registry.BareVersionFlag {
 				// Exiting flag: print immediately, then request exit 0 from the
 				// entrypoint.
 				fmt.Printf("%s\n", version.STRING)
-				parseErr = &lib.ExitRequest{}
+				parseErr = lib.NewExitZeroRequest()
 				return
 			} else if help.ParseTerminalUsage(args[argi]) {
 				// Exiting flag: the usage text has been printed.
 				// Most help is in the 'mlr help' terminal but there are a few
 				// shorthands like 'mlr -h' and 'mlr -F'.
-				parseErr = &lib.ExitRequest{}
+				parseErr = lib.NewExitZeroRequest()
 				return
 
 			} else if args[argi] == "--norc" {

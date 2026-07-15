@@ -473,7 +473,7 @@ func NewTransformerPut(
 			return nil, cli.VerbErrorf(verbName, "DSL expression has warnings treated as fatal.")
 		}
 		fmt.Printf("mlr %s: DSL expression is valid.\n", verbName)
-		return nil, &lib.ExitRequest{}
+		return nil, lib.NewExitZeroRequest()
 	}
 
 	if warningsAreFatal && hadWarnings {
@@ -485,7 +485,7 @@ func NewTransformerPut(
 	}
 
 	if exitAfterParse {
-		return nil, &lib.ExitRequest{}
+		return nil, lib.NewExitZeroRequest()
 	}
 
 	if err != nil {
