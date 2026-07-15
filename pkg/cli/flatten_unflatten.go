@@ -65,7 +65,14 @@ func isNestable(format string) bool {
 func DecideFinalFlatten(writerOptions *TWriterOptions) bool {
 	ofmt := writerOptions.OutputFileFormat
 	if writerOptions.AutoFlatten {
-		// Preserve nested/array structure for formats that support it.
+		// JSON/YAML/JSON-Lines preserve nested/array structure natively, so
+		// they never need flattening.
+		//
+		// DCF is excluded for a different reason: it's not nestable, but it
+		// has its own hardcoded comma-list serialization for a fixed set of
+		// field names (Depends, Recommends, etc. -- see
+		// pkg/output/record_writer_dcf.go), which generic key-spreading
+		// flatten would clobber.
 		if !isNestable(ofmt) && ofmt != "dcf" {
 			return true
 		}
