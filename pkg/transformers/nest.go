@@ -313,12 +313,7 @@ func NewTransformerNest(
 	if doRegexes {
 		fieldRegex, err := lib.CompileMillerRegex(fieldName)
 		if err != nil {
-			fmt.Fprintf(
-				os.Stderr,
-				"%s %s: cannot compile regex [%s]\n",
-				"mlr", verbNameNest, fieldName,
-			)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verbNameNest, "cannot compile regex [%s]", fieldName)
 		}
 		tr.fieldRegex = fieldRegex
 		// implode uses fieldRegex directly when doRegexes
@@ -327,12 +322,7 @@ func NewTransformerNest(
 		regexString := "^" + fieldName + "_[0-9]+$"
 		regex, err := lib.CompileMillerRegex(regexString)
 		if err != nil {
-			fmt.Fprintf(
-				os.Stderr,
-				"%s %s: cannot compile regex [%s]\n",
-				"mlr", verbNameNest, regexString,
-			)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verbNameNest, "cannot compile regex [%s]", regexString)
 		}
 		tr.regex = regex
 	}

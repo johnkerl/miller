@@ -276,12 +276,7 @@ func NewTransformerReshape(
 		for i, inputFieldRegexString := range inputFieldRegexStrings {
 			regex, err := lib.CompileMillerRegex(inputFieldRegexString)
 			if err != nil {
-				fmt.Fprintf(
-					os.Stderr,
-					"%s %s: cannot compile regex [%s]\n",
-					"mlr", verbNameReshape, inputFieldRegexString,
-				)
-				os.Exit(1)
+				return nil, cli.VerbErrorf(verbNameReshape, "cannot compile regex [%s]", inputFieldRegexString)
 			}
 			tr.inputFieldRegexes[i] = regex
 		}

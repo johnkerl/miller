@@ -282,12 +282,8 @@ func NewTransformerMergeFields(
 		// Handles "a.*b"i Miller case-insensitive-regex specification
 		regex, err := lib.CompileMillerRegex(regexString)
 		if err != nil {
-			fmt.Fprintf(
-				os.Stderr,
-				"%s %s: cannot compile regex [%s]\n",
-				"mlr", verbNameCut, regexString,
-			)
-			os.Exit(1)
+			// (This formerly mis-reported itself as coming from the cut verb.)
+			return nil, cli.VerbErrorf(verbNameMergeFields, "cannot compile regex [%s]", regexString)
 		}
 		tr.valueFieldNameRegexes[i] = regex
 	}

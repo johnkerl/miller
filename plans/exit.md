@@ -9,6 +9,8 @@ The north star: `os.Exit` should happen only in `main` or its immediate callee
 be eliminated — genuine internal-coding-error assertions can stay — but user-facing
 error and exit paths should propagate.
 
+See also [issue 2200](https://github.com/johnkerl/miller/issues/2200).
+
 Motivation:
 
 - **General hygiene** — exits deep in library code make the packages unusable as a
