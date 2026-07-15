@@ -14,11 +14,11 @@ Quick links:
 <a class="quicklink" href="../release-docs/index.html">Release docs</a>
 </span>
 </div>
-# Flatten/unflatten: converting between JSON and tabular formats
+# Flatten/unflatten: converting between JSON/YAML and tabular formats
 
 Miller has long supported reading and writing multiple [file
-formats](file-formats.md) including CSV and JSON, as well as converting back
-and forth between them. Two things new in [Miller 6](new-in-miller-6-md),
+formats](file-formats.md) including CSV, JSON, and YAML, as well as converting
+back and forth between them. Two things new in [Miller 6](new-in-miller-6-md),
 though, are that [arrays are now fully supported](reference-main-arrays.md),
 and that [record values are typed](new-in-miller-6.md#improved-numeric-conversion)
 throughout Miller's processing chain from input through [verbs](reference-verbs.md)
@@ -26,9 +26,10 @@ to output -- which includes improved handling for [maps](reference-main-maps.md)
 [arrays](reference-main-arrays.md) as record values.
 
 This raises the question, though, of how to handle maps and arrays as record values.
-For [JSON files](file-formats.md#json), this is easy -- JSON is a nested format where values
-can be maps or arrays, which can contain other maps or arrays, and so on, with the nesting
-happily indicated by curly braces:
+For [JSON](file-formats.md#json) or [YAML](file-formats.md#yaml) files, this is easy --
+both are nested formats where values can be maps or arrays, which can contain other maps
+or arrays, and so on, with the nesting happily indicated by curly braces (JSON) or
+indentation (YAML):
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/map-values.json</b>
@@ -60,11 +61,11 @@ happily indicated by curly braces:
 
 How can we represent these in CSV files?
 
-Miller's [non-JSON formats](file-formats.md), such as CSV, are all non-nested -- a
-cell in a CSV row can't contain another entire row. As we'll see in this
-section, there are two main ways to **flatten** nested data structures down to
-individual CSV cells -- either by _key-spreading_ (which is the default), or by
-_JSON-stringifying_:
+Miller's non-JSON/YAML [file formats](file-formats.md), such as CSV, are all
+non-nested -- a cell in a CSV row can't contain another entire row. As we'll
+see in this section, there are two main ways to **flatten** nested data
+structures down to individual CSV cells -- either by _key-spreading_ (which
+is the default), or by _JSON-stringifying_:
 
 * **Key-spreading** is when the single map-valued field
 `b={"x": 2, "y": 3}` spreads into multiple fields `b.x=2,b.y=3`;
@@ -73,13 +74,7 @@ _JSON-stringifying_:
 Miller intends to provide intuitive default behavior for these conversions, while also
 providing you with more control when you need it.
 
-Everything below is written in terms of JSON, but it applies equally to
-[YAML](file-formats.md#yaml) -- another nested format where values can be
-maps or arrays. Auto-flattening happens whenever the output format is
-neither JSON nor YAML; auto-unflattening happens whenever the input format
-is neither JSON nor YAML but the output format is one or the other.
-
-## Converting maps between JSON and non-JSON
+## Converting maps between JSON/YAML and non-JSON/YAML
 
 Let's first look at the default behavior with map-valued fields. Miller's
 default behavior is to spread the map values into multiple keys -- using
@@ -158,7 +153,7 @@ a b.s.w b.s.x b.t.y b.t.z
 6 7     8     9     10
 </pre>
 
-**Unflattening** is simply the reverse -- from non-JSON back to JSON:
+**Unflattening** is simply the reverse -- from non-JSON/YAML back to JSON or YAML:
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/map-values.json</b>
@@ -205,7 +200,7 @@ a,b.x,b.y
 ]
 </pre>
 
-## Converting arrays between JSON and non-JSON
+## Converting arrays between JSON/YAML and non-JSON/YAML
 
 If the input data contains arrays, these are also flattened similarly: the
 [1-up array indices](reference-main-arrays.md#1-up-indexing) `1,2,3,...` become string keys
@@ -263,7 +258,7 @@ In the nested-data examples shown here, nested map values are shown containing
 maps, and nested array values are shown containing arrays -- of course (even
 though not shown here) nested map values can contain arrays, and vice versa.
 
-**Unflattening** arrays is, again, simply the reverse -- from non-JSON back to JSON:
+**Unflattening** arrays is, again, simply the reverse -- from non-JSON/YAML back to JSON or YAML:
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/array-values.json</b>
@@ -358,7 +353,7 @@ a.1,a.3,a.5
 
 An additional heuristic is that if a field name starts with a `.`, ends with
 a `.`, or has two or more consecutive `.` characters, no attempt is made
-to unflatten it on conversion from non-JSON to JSON.
+to unflatten it on conversion from non-JSON/YAML to JSON or YAML.
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/flatten-dots.csv</b>
