@@ -172,7 +172,7 @@ func (tr *TransformerTee) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 
 	// If we receive a downstream-done flag from a transformer downstream from
 	// us, read it to unblock their goroutine but -- unlike most other verbs --
@@ -202,25 +202,22 @@ func (tr *TransformerTee) Transform(
 		// #1671).
 		err := tr.fileOutputHandler.WriteRecordAndContext(inrecAndContext.Copy())
 		if err != nil {
-			fmt.Fprintf(
-				os.Stderr,
-				"%s: error writing to tee \"%s\":\n",
-				"mlr", tr.filenameOrCommandForDisplay,
+			return fmt.Errorf(
+				"%s: error writing to tee \"%s\":\n%v",
+				"mlr", tr.filenameOrCommandForDisplay, err,
 			)
-			os.Exit(1)
 		}
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	} else {
 		err := tr.fileOutputHandler.Close()
 		if err != nil {
-			fmt.Fprintf(
-				os.Stderr,
-				"%s: error closing tee \"%s\":\n",
-				"mlr", tr.filenameOrCommandForDisplay,
+			return fmt.Errorf(
+				"%s: error closing tee \"%s\":\n%v",
+				"mlr", tr.filenameOrCommandForDisplay, err,
 			)
-			os.Exit(1)
 		}
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }

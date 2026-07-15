@@ -87,7 +87,7 @@ func (tr *TransformerTac) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		tr.recordsAndContexts = append(tr.recordsAndContexts, inrecAndContext)
@@ -98,4 +98,5 @@ func (tr *TransformerTac) Transform(
 		}
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewEndOfStreamMarker(&inrecAndContext.Context))
 	}
+	return nil
 }

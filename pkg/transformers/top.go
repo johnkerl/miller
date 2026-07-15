@@ -186,13 +186,14 @@ func (tr *TransformerTop) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		tr.ingest(inrecAndContext)
 	} else {
 		tr.emit(inrecAndContext, outputRecordsAndContexts)
 	}
+	return nil
 }
 
 func (tr *TransformerTop) ingest(

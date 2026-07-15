@@ -531,7 +531,7 @@ func (tr *TransformerPut) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	tr.runtimeState.OutputRecordsAndContexts = outputRecordsAndContexts
 
@@ -545,8 +545,7 @@ func (tr *TransformerPut) Transform(
 			tr.runtimeState.Update(nil, &context)
 			err := tr.cstRootNode.ExecuteBeginBlocks(tr.runtimeState)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-				os.Exit(1)
+				return err
 			}
 			tr.executedBeginBlocks = true
 		}
@@ -556,8 +555,7 @@ func (tr *TransformerPut) Transform(
 		// Execute the main block on the current input record
 		outrec, err := tr.cstRootNode.ExecuteMainBlock(tr.runtimeState)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		if !tr.suppressOutputRecord {
@@ -577,12 +575,11 @@ func (tr *TransformerPut) Transform(
 					if tr.runtimeState.FilterExpression.IsAbsent() {
 						filterBool = false
 					} else {
-						fmt.Fprintf(os.Stderr,
-							"Filter expression did not evaluate to boolean: got %s value %s",
+						return fmt.Errorf(
+							"mlr: filter expression did not evaluate to boolean: got %s value %s",
 							tr.runtimeState.FilterExpression.String(),
 							tr.runtimeState.FilterExpression.GetTypeName(),
 						)
-						os.Exit(1)
 					}
 				}
 			} else {
@@ -606,16 +603,14 @@ func (tr *TransformerPut) Transform(
 		if !tr.executedBeginBlocks {
 			err := tr.cstRootNode.ExecuteBeginBlocks(tr.runtimeState)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-				os.Exit(1)
+				return err
 			}
 		}
 
 		// Execute the end { ... } after the last input record
 		err := tr.cstRootNode.ExecuteEndBlocks(tr.runtimeState)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		// Send all registered OutputHandlerManager instances the end-of-stream
@@ -624,4 +619,5 @@ func (tr *TransformerPut) Transform(
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewEndOfStreamMarker(&context))
 	}
+	return nil
 }

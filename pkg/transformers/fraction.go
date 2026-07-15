@@ -193,7 +193,7 @@ func (tr *TransformerFraction) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream { // Not end of stream; pass 1
 		inrec := inrecAndContext.Record
@@ -289,4 +289,5 @@ func (tr *TransformerFraction) Transform(
 		tr.recordsAndContexts = tr.recordsAndContexts[:0]
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
+	return nil
 }

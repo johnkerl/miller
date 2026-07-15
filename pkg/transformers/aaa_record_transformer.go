@@ -10,13 +10,20 @@ import (
 // RecordTransformer is the interface satisfied by all transformers, i.e.,
 // Miller verbs. See stream.go for context on the channels, as well as for
 // context on end-of-record-stream signaling.
+//
+// A non-nil error from Transform means a mid-stream failure (e.g. a DSL
+// runtime error, or a tee/split output file that can't be written). The
+// chain driver forwards any already-produced output plus an end-of-stream
+// marker downstream so the record-writer drains and finishes, then surfaces
+// the error up through stream.Stream to the entrypoint layer (see
+// plans/exit.md). Transformers must not call os.Exit.
 type RecordTransformer interface {
 	Transform(
 		inrecAndContext *types.RecordAndContext,
 		outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 		inputDownstreamDoneChannel <-chan bool,
 		outputDownstreamDoneChannel chan<- bool,
-	)
+	) error
 }
 
 type RecordTransformerFunc func(
@@ -24,7 +31,7 @@ type RecordTransformerFunc func(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-)
+) error
 
 // Used within some verbs
 type RecordTransformerHelperFunc func(

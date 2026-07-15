@@ -2,7 +2,6 @@ package stream
 
 import (
 	"bufio"
-	"errors"
 	"io"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
@@ -66,10 +65,14 @@ func Stream(
 
 	// We're done when a fatal error is registered on input (file not found,
 	// etc) or when the record-writer has written all its output. We use
-	// channels to communicate both of these conditions.
+	// channels to communicate both of these conditions. The
+	// dataProcessingErrorChannel carries mid-stream errors from the
+	// transformer chain (e.g. DSL runtime errors, tee/split write failures)
+	// and from the record-writer; senders use a non-blocking send, so the
+	// first error wins and is returned once the writer finishes draining.
 	inputErrorChannel := make(chan error, 1)
 	doneWritingChannel := make(chan bool, 1)
-	dataProcessingErrorChannel := make(chan bool, 1)
+	dataProcessingErrorChannel := make(chan error, 1)
 
 	// For mlr head, so a transformer can communicate it will disregard all
 	// further input.  It writes this back upstream, and that is passed back to
@@ -84,7 +87,7 @@ func Stream(
 
 	go recordReader.Read(fileNames, *initialContext, readerChannel, inputErrorChannel, readerDownstreamDoneChannel)
 	go transformers.ChainTransformer(readerChannel, readerDownstreamDoneChannel, recordTransformers,
-		writerChannel, options)
+		writerChannel, dataProcessingErrorChannel, options)
 	go output.ChannelWriter(writerChannel, recordWriter, &options.WriterOptions, doneWritingChannel,
 		dataProcessingErrorChannel, bufferedOutputStream, outputIsStdout)
 
@@ -94,8 +97,8 @@ func Stream(
 		select {
 		case ierr := <-inputErrorChannel:
 			retval = ierr
-		case <-dataProcessingErrorChannel:
-			retval = errors.New("exiting due to data error") // details already printed
+		case derr := <-dataProcessingErrorChannel:
+			retval = derr
 		case <-doneWritingChannel:
 			done = true
 		}

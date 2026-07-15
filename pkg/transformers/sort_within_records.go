@@ -188,9 +188,9 @@ func (tr *TransformerSortWithinRecords) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	return tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 // ----------------------------------------------------------------
@@ -243,7 +243,7 @@ func (tr *TransformerSortWithinRecords) transformSelective(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		var matchingKeys []string
@@ -266,6 +266,7 @@ func (tr *TransformerSortWithinRecords) transformSelective(
 		*inrec = *other
 	}
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+	return nil
 }
 
 // ----------------------------------------------------------------
@@ -274,7 +275,7 @@ func (tr *TransformerSortWithinRecords) transformSelectiveRecursively(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		var matchingKeys []string
@@ -308,6 +309,7 @@ func (tr *TransformerSortWithinRecords) transformSelectiveRecursively(
 		*inrec = *other
 	}
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+	return nil
 }
 
 // ----------------------------------------------------------------
@@ -316,7 +318,7 @@ func (tr *TransformerSortWithinRecords) transformNonrecursively(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		if tr.doNatural {
@@ -326,6 +328,7 @@ func (tr *TransformerSortWithinRecords) transformNonrecursively(
 		}
 	}
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // including end-of-stream marker
+	return nil
 }
 
 func (tr *TransformerSortWithinRecords) transformRecursively(
@@ -333,7 +336,7 @@ func (tr *TransformerSortWithinRecords) transformRecursively(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		if tr.doNatural {
@@ -343,4 +346,5 @@ func (tr *TransformerSortWithinRecords) transformRecursively(
 		}
 	}
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // including end-of-stream marker
+	return nil
 }

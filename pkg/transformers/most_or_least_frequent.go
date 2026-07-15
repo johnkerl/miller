@@ -217,13 +217,13 @@ func (tr *TransformerMostOrLeastFrequent) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 		if !ok {
-			return
+			return nil
 		}
 
 		iCount, ok := tr.countsByGroup.GetWithCheck(groupingKey)
@@ -291,4 +291,5 @@ func (tr *TransformerMostOrLeastFrequent) Transform(
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // End-of-stream marker
 	}
+	return nil
 }

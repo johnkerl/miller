@@ -222,9 +222,9 @@ func (tr *TransformerHistogram) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	return tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 func (tr *TransformerHistogram) transformNonAuto(
@@ -232,30 +232,29 @@ func (tr *TransformerHistogram) transformNonAuto(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
-		tr.ingestNonAuto(inrecAndContext)
+		if err := tr.ingestNonAuto(inrecAndContext); err != nil {
+			return err
+		}
 	} else {
 		tr.emitNonAuto(&inrecAndContext.Context, outputRecordsAndContexts)
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerHistogram) ingestNonAuto(
 	inrecAndContext *types.RecordAndContext,
-) {
+) error {
 	inrec := inrecAndContext.Record
 	for _, valueFieldName := range tr.valueFieldNames {
 		stringValue := inrec.Get(valueFieldName)
 		if stringValue != nil {
 			floatValue, ok := stringValue.GetNumericToFloatValue()
 			if !ok {
-				fmt.Fprintf(
-					os.Stderr,
-					"%s %s: cannot parse \"%s\" as float.\n",
-					"mlr", verbNameHistogram, stringValue.String(),
-				)
-				os.Exit(1)
+				return cli.VerbErrorf(verbNameHistogram,
+					"cannot parse \"%s\" as float.", stringValue.String())
 			}
 			if (floatValue >= tr.lo) && (floatValue < tr.hi) {
 				idx := int((floatValue - tr.lo) * tr.mul)
@@ -266,6 +265,7 @@ func (tr *TransformerHistogram) ingestNonAuto(
 			}
 		}
 	}
+	return nil
 }
 
 // sparklineRecord summarizes a field's binned counts as a single record with
@@ -334,13 +334,14 @@ func (tr *TransformerHistogram) transformAuto(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		tr.ingestAuto(inrecAndContext)
 	} else {
 		tr.emitAuto(&inrecAndContext.Context, outputRecordsAndContexts)
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerHistogram) ingestAuto(

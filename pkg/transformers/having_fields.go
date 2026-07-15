@@ -231,9 +231,9 @@ func (tr *TransformerHavingFields) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	return tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 func (tr *TransformerHavingFields) transformHavingFieldsAtLeast(
@@ -241,7 +241,7 @@ func (tr *TransformerHavingFields) transformHavingFieldsAtLeast(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		numFound := int64(0)
@@ -250,7 +250,7 @@ func (tr *TransformerHavingFields) transformHavingFieldsAtLeast(
 				numFound++
 				if numFound == tr.numFieldNames {
 					*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
-					return
+					return nil
 				}
 			}
 		}
@@ -258,6 +258,7 @@ func (tr *TransformerHavingFields) transformHavingFieldsAtLeast(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }
 
 func (tr *TransformerHavingFields) transformHavingFieldsWhichAre(
@@ -265,21 +266,22 @@ func (tr *TransformerHavingFields) transformHavingFieldsWhichAre(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		if inrec.FieldCount != tr.numFieldNames {
-			return
+			return nil
 		}
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if !tr.fieldNameSet[pe.Key] {
-				return
+				return nil
 			}
 		}
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }
 
 func (tr *TransformerHavingFields) transformHavingFieldsAtMost(
@@ -287,18 +289,19 @@ func (tr *TransformerHavingFields) transformHavingFieldsAtMost(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if !tr.fieldNameSet[pe.Key] {
-				return
+				return nil
 			}
 		}
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }
 
 func (tr *TransformerHavingFields) transformHavingAllFieldsMatching(
@@ -306,18 +309,19 @@ func (tr *TransformerHavingFields) transformHavingAllFieldsMatching(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if !tr.regex.MatchString(pe.Key) {
-				return
+				return nil
 			}
 		}
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }
 
 func (tr *TransformerHavingFields) transformHavingAnyFieldsMatching(
@@ -325,18 +329,19 @@ func (tr *TransformerHavingFields) transformHavingAnyFieldsMatching(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if tr.regex.MatchString(pe.Key) {
 				*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
-				return
+				return nil
 			}
 		}
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }
 
 func (tr *TransformerHavingFields) transformHavingNoFieldsMatching(
@@ -344,16 +349,17 @@ func (tr *TransformerHavingFields) transformHavingNoFieldsMatching(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if tr.regex.MatchString(pe.Key) {
-				return
+				return nil
 			}
 		}
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }

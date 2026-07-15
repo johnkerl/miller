@@ -137,7 +137,11 @@ func TestAllocateStepperOutputFieldNames(t *testing.T) {
 			t.Errorf("stepperInputFromName(%q) = nil; want non-nil", tc.stepperName)
 			continue
 		}
-		stepper := allocateStepper(stepperInput, "x", nil, nil)
+		stepper, err := allocateStepper(stepperInput, "x", nil, nil)
+		if err != nil {
+			t.Errorf("allocateStepper for %q: %v", tc.stepperName, err)
+			continue
+		}
 		if stepper == nil {
 			t.Errorf("allocateStepper for %q = nil; want non-nil", tc.stepperName)
 			continue

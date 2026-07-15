@@ -26,12 +26,12 @@ func runStats1TestTransformer(
 	outputDownstreamDoneChannel := make(chan bool, 1)
 	outputs := make([]*types.RecordAndContext, 0)
 	for _, input := range inputs {
-		tr.Transform(input, &outputs, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+		_ = tr.Transform(input, &outputs, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	}
 	// End-of-stream marker
 	eos := types.NewRecordAndContext(nil, types.NewNilContext())
 	eos.EndOfStream = true
-	tr.Transform(eos, &outputs, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	_ = tr.Transform(eos, &outputs, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	return outputs
 }
 

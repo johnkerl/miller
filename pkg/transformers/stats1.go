@@ -399,13 +399,14 @@ func (tr *TransformerStats1) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		tr.handleInputRecord(inrecAndContext, outputRecordsAndContexts)
 	} else {
 		tr.handleEndOfRecordStream(inrecAndContext, outputRecordsAndContexts)
 	}
+	return nil
 }
 
 func (tr *TransformerStats1) handleInputRecord(

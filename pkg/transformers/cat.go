@@ -171,9 +171,9 @@ func (tr *TransformerCat) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(
+	return tr.recordTransformerFunc(
 		inrecAndContext,
 		outputRecordsAndContexts,
 		inputDownstreamDoneChannel,
@@ -186,7 +186,7 @@ func (tr *TransformerCat) simpleCat(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		if tr.doFileName {
 			inrecAndContext.Record.PrependCopy("filename", mlrval.FromString(inrecAndContext.Context.FILENAME))
@@ -196,6 +196,7 @@ func (tr *TransformerCat) simpleCat(
 		}
 	}
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+	return nil
 }
 
 func (tr *TransformerCat) countersUngrouped(
@@ -203,7 +204,7 @@ func (tr *TransformerCat) countersUngrouped(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		tr.counter++
@@ -218,6 +219,7 @@ func (tr *TransformerCat) countersUngrouped(
 		}
 	}
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+	return nil
 }
 
 func (tr *TransformerCat) countersGrouped(
@@ -225,7 +227,7 @@ func (tr *TransformerCat) countersGrouped(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
@@ -256,4 +258,5 @@ func (tr *TransformerCat) countersGrouped(
 		}
 	}
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+	return nil
 }

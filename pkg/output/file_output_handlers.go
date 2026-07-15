@@ -13,7 +13,6 @@ package output
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -313,7 +312,7 @@ type FileOutputHandler struct {
 	recordWriter         IRecordWriter
 	recordOutputChannel  chan []*types.RecordAndContext // list of *types.RecordAndContext
 	recordDoneChannel    chan bool
-	recordErroredChannel chan bool
+	recordErroredChannel chan error
 }
 
 func newOutputHandlerCommon(
@@ -460,7 +459,7 @@ func (handler *FileOutputHandler) setUpRecordWriter() error {
 
 	handler.recordOutputChannel = make(chan []*types.RecordAndContext, 1) // list of *types.RecordAndContext
 	handler.recordDoneChannel = make(chan bool, 1)
-	handler.recordErroredChannel = make(chan bool, 1)
+	handler.recordErroredChannel = make(chan error, 1)
 
 	go ChannelWriter(
 		handler.recordOutputChannel,
@@ -487,9 +486,9 @@ func (handler *FileOutputHandler) Close() (retval error) {
 		done := false
 		for !done {
 			select {
-			case <-handler.recordErroredChannel:
+			case werr := <-handler.recordErroredChannel:
 				done = true
-				retval = errors.New("exiting due to data error") // details already printed
+				retval = werr // details already printed
 			case <-handler.recordDoneChannel:
 				done = true
 			}

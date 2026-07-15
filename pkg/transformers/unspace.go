@@ -122,10 +122,10 @@ func (tr *TransformerUnspace) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
-		tr.recordTransformerFunc(
+		return tr.recordTransformerFunc(
 			inrecAndContext,
 			outputRecordsAndContexts,
 			inputDownstreamDoneChannel,
@@ -134,6 +134,7 @@ func (tr *TransformerUnspace) Transform(
 	} else { // end of record stream
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }
 
 func (tr *TransformerUnspace) transformKeysOnly(
@@ -141,7 +142,7 @@ func (tr *TransformerUnspace) transformKeysOnly(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	_ <-chan bool,
 	__ chan<- bool,
-) {
+) error {
 	inrec := inrecAndContext.Record
 	newrec := mlrval.NewMlrmapAsRecord()
 	for pe := inrec.Head; pe != nil; pe = pe.Next {
@@ -150,6 +151,7 @@ func (tr *TransformerUnspace) transformKeysOnly(
 		newrec.PutReference(newkey, pe.Value)
 	}
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+	return nil
 }
 
 func (tr *TransformerUnspace) transformValuesOnly(
@@ -157,7 +159,7 @@ func (tr *TransformerUnspace) transformValuesOnly(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	_ <-chan bool,
 	__ chan<- bool,
-) {
+) error {
 	inrec := inrecAndContext.Record
 	for pe := inrec.Head; pe != nil; pe = pe.Next {
 		stringval, ok := pe.Value.GetStringValue()
@@ -166,6 +168,7 @@ func (tr *TransformerUnspace) transformValuesOnly(
 		}
 	}
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(inrec, &inrecAndContext.Context))
+	return nil
 }
 
 func (tr *TransformerUnspace) transformKeysAndValues(
@@ -173,7 +176,7 @@ func (tr *TransformerUnspace) transformKeysAndValues(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	_ <-chan bool,
 	__ chan<- bool,
-) {
+) error {
 	inrec := inrecAndContext.Record
 	newrec := mlrval.NewMlrmapAsRecord()
 	for pe := inrec.Head; pe != nil; pe = pe.Next {
@@ -187,6 +190,7 @@ func (tr *TransformerUnspace) transformKeysAndValues(
 		}
 	}
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+	return nil
 }
 
 func (tr *TransformerUnspace) unspace(input string) string {

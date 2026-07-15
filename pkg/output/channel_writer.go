@@ -2,6 +2,7 @@ package output
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 
@@ -14,7 +15,7 @@ func ChannelWriter(
 	recordWriter IRecordWriter,
 	writerOptions *cli.TWriterOptions,
 	doneChannel chan<- bool,
-	dataProcessingErrorChannel chan<- bool,
+	dataProcessingErrorChannel chan<- error,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
@@ -25,12 +26,17 @@ func ChannelWriter(
 			recordsAndContexts,
 			recordWriter,
 			writerOptions,
-			dataProcessingErrorChannel,
 			bufferedOutputStream,
 			outputIsStdout,
 		)
 		if errored {
-			dataProcessingErrorChannel <- true
+			// Details have already been printed to stderr by
+			// channelWriterHandleBatch. Non-blocking send: if a transformer
+			// errored first, that error wins.
+			select {
+			case dataProcessingErrorChannel <- errors.New("exiting due to data error"):
+			default:
+			}
 			doneChannel <- true
 			break
 		}
@@ -41,13 +47,13 @@ func ChannelWriter(
 	}
 }
 
-// TODO: comment
-// Returns true on end of record stream
+// channelWriterHandleBatch writes one batch of records. The first return
+// value is true on end of record stream; the second is true on a data error
+// (details already printed to stderr here).
 func channelWriterHandleBatch(
 	recordsAndContexts []*types.RecordAndContext,
 	recordWriter IRecordWriter,
 	writerOptions *cli.TWriterOptions,
-	dataProcessingErrorChannel chan<- bool,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) (done bool, errored bool) {

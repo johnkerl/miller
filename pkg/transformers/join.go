@@ -346,13 +346,17 @@ func NewTransformerJoin(
 		// miss anything. This lets people do joins that would otherwise take
 		// too much RAM.
 
-		tr.joinBucketKeeper = utils.NewJoinBucketKeeper(
+		joinBucketKeeper, err := utils.NewJoinBucketKeeper(
 			// opts.prepipe,
 			opts.leftFileName,
 			&opts.joinFlagOptions.ReaderOptions,
 			opts.leftJoinFieldNames,
 			tr.leftKeepFieldNameSet,
 		)
+		if err != nil {
+			return nil, err
+		}
+		tr.joinBucketKeeper = joinBucketKeeper
 
 		tr.recordTransformerFunc = tr.transformDoublyStreaming
 	}
@@ -365,9 +369,9 @@ func (tr *TransformerJoin) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts,
+	return tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts,
 		inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
@@ -378,14 +382,16 @@ func (tr *TransformerJoin) transformHalfStreaming(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	// This can't be done in the CLI-parser since it requires information which
 	// isn't known until after the CLI-parser is called.
 	//
 	// TODO: check if this is still true for the Go port, once everything else
 	// is done.
 	if !tr.ingested { // First call
-		tr.ingestLeftFile()
+		if err := tr.ingestLeftFile(); err != nil {
+			return err
+		}
 		tr.ingested = true
 	}
 
@@ -423,6 +429,7 @@ func (tr *TransformerJoin) transformHalfStreaming(
 		}
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerJoin) transformDoublyStreaming(
@@ -430,7 +437,7 @@ func (tr *TransformerJoin) transformDoublyStreaming(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	keeper := tr.joinBucketKeeper // keystroke-saver
 
 	if !rightRecAndContext.EndOfStream {
@@ -441,7 +448,11 @@ func (tr *TransformerJoin) transformDoublyStreaming(
 			tr.opts.rightJoinFieldNames,
 		)
 		if hasAllJoinKeys {
-			isPaired = keeper.FindJoinBucket(rightFieldValues)
+			var err error
+			isPaired, err = keeper.FindJoinBucket(rightFieldValues)
+			if err != nil {
+				return err
+			}
 		}
 		if tr.opts.emitLeftUnpairables {
 			tr.outputLeftUnpaireds(keeper, outputRecordsAndContexts)
@@ -461,7 +472,9 @@ func (tr *TransformerJoin) transformDoublyStreaming(
 		}
 
 	} else { // end of record stream
-		keeper.FindJoinBucket(nil)
+		if _, err := keeper.FindJoinBucket(nil); err != nil {
+			return err
+		}
 
 		if tr.opts.emitLeftUnpairables {
 			tr.outputLeftUnpaireds(keeper, outputRecordsAndContexts)
@@ -469,6 +482,7 @@ func (tr *TransformerJoin) transformDoublyStreaming(
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, rightRecAndContext) // emit end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerJoin) outputLeftUnpaireds(
@@ -488,15 +502,14 @@ func (tr *TransformerJoin) outputLeftUnpaireds(
 // Note: this logic is very similar to that in stream.go, which is what
 // processes the main/right files.
 
-func (tr *TransformerJoin) ingestLeftFile() {
+func (tr *TransformerJoin) ingestLeftFile() error {
 	readerOpts := &tr.opts.joinFlagOptions.ReaderOptions
 
 	// Instantiate the record-reader
 	// TODO: perhaps increase recordsPerBatch, and/or refactor
 	recordReader, err := input.Create(readerOpts, 1)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return err
 	}
 
 	// Set the initial context for the left-file.
@@ -525,8 +538,7 @@ func (tr *TransformerJoin) ingestLeftFile() {
 		select {
 
 		case err := <-errorChannel:
-			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-			os.Exit(1)
+			return err
 
 		case leftrecsAndContexts := <-readerChannel:
 			// TODO: temp for batch-reader refactor
@@ -542,8 +554,7 @@ func (tr *TransformerJoin) ingestLeftFile() {
 				// before declaring the ingest complete.
 				select {
 				case err := <-errorChannel:
-					fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-					os.Exit(1)
+					return err
 				default:
 				}
 				done = true
@@ -572,6 +583,7 @@ func (tr *TransformerJoin) ingestLeftFile() {
 			}
 		}
 	}
+	return nil
 }
 
 // This helper method is used by the half-streaming/unsorted join, as well as

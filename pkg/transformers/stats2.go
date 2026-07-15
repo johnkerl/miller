@@ -261,11 +261,13 @@ func (tr *TransformerStats2) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 
-		tr.ingest(inrecAndContext)
+		if err := tr.ingest(inrecAndContext); err != nil {
+			return err
+		}
 
 		if tr.doIterativeStats {
 			// The input record is modified in this case, with new fields appended
@@ -283,18 +285,19 @@ func (tr *TransformerStats2) Transform(
 		}
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerStats2) ingest(
 	inrecAndContext *types.RecordAndContext,
-) {
+) error {
 	inrec := inrecAndContext.Record
 
 	// E.g. if grouping by "a" and "b", and the current record has a=circle, b=blue,
 	// then groupingKey is the string "circle,blue".
 	groupingKey, groupByFieldValues, ok := inrec.GetSelectedValuesAndJoined(tr.groupByFieldNameList)
 	if !ok {
-		return
+		return nil
 	}
 
 	tr.groupingKeysToGroupByFieldValues.Put(groupingKey, groupByFieldValues)
@@ -349,8 +352,7 @@ func (tr *TransformerStats2) ingest(
 					tr.doVerbose,
 				)
 				if accumulator == nil {
-					fmt.Fprintf(os.Stderr, "mlr stats2: accumulator creation failed\n")
-					os.Exit(1)
+					return cli.VerbErrorf(verbNameStats2, "accumulator creation failed")
 				}
 				valueFieldsToAccumulator.Put(accumulatorName, accumulator)
 			}
@@ -369,6 +371,7 @@ func (tr *TransformerStats2) ingest(
 			)
 		}
 	}
+	return nil
 }
 
 func (tr *TransformerStats2) emit(

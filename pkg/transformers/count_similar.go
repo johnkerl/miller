@@ -130,14 +130,14 @@ func (tr *TransformerCountSimilar) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
 		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 		if !ok { // This particular record doesn't have the specified fields; ignore
-			return
+			return nil
 		}
 
 		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
@@ -164,4 +164,5 @@ func (tr *TransformerCountSimilar) Transform(
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // Emit the stream-terminating null record
 	}
+	return nil
 }

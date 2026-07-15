@@ -320,9 +320,9 @@ func (tr *TransformerSplit) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel,
+	return tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel,
 		outputDownstreamDoneChannel)
 }
 
@@ -331,7 +331,7 @@ func (tr *TransformerSplit) splitModUngrouped(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		remainder := 1 + (tr.ungroupedCounter % tr.n)
 		filename := tr.makeUngroupedOutputFileName(remainder)
@@ -345,8 +345,7 @@ func (tr *TransformerSplit) splitModUngrouped(
 		}
 		err := tr.outputHandlerManager.WriteRecordAndContext(recordAndContextForWriter, filename)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		if tr.emitDownstream {
@@ -359,12 +358,14 @@ func (tr *TransformerSplit) splitModUngrouped(
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 		errs := tr.outputHandlerManager.Close()
 		if len(errs) > 0 {
-			for _, err := range errs {
+			// Print any additional errors here; return the first one.
+			for _, err := range errs[1:] {
 				fmt.Fprintf(os.Stderr, "mlr: file-close error: %v\n", err)
 			}
-			os.Exit(1)
+			return fmt.Errorf("mlr: file-close error: %v", errs[0])
 		}
 	}
+	return nil
 }
 
 func (tr *TransformerSplit) splitSizeUngrouped(
@@ -372,7 +373,7 @@ func (tr *TransformerSplit) splitSizeUngrouped(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	var err error
 	if !inrecAndContext.EndOfStream {
 		quotient := 1 + (tr.ungroupedCounter / tr.n)
@@ -381,8 +382,7 @@ func (tr *TransformerSplit) splitSizeUngrouped(
 			if tr.outputHandler != nil {
 				err = tr.outputHandler.Close()
 				if err != nil {
-					fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-					os.Exit(1)
+					return err
 				}
 			}
 
@@ -393,8 +393,7 @@ func (tr *TransformerSplit) splitSizeUngrouped(
 				tr.doAppend,
 			)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-				os.Exit(1)
+				return err
 			}
 
 			tr.previousQuotient = quotient
@@ -409,8 +408,7 @@ func (tr *TransformerSplit) splitSizeUngrouped(
 		}
 		err = tr.outputHandler.WriteRecordAndContext(recordAndContextForWriter)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		if tr.emitDownstream {
@@ -425,11 +423,11 @@ func (tr *TransformerSplit) splitSizeUngrouped(
 		if tr.outputHandler != nil {
 			err := tr.outputHandler.Close()
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-				os.Exit(1)
+				return err
 			}
 		}
 	}
+	return nil
 }
 
 func (tr *TransformerSplit) splitGrouped(
@@ -437,7 +435,7 @@ func (tr *TransformerSplit) splitGrouped(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		var filename string
 		groupByFieldValues, ok := inrecAndContext.Record.GetSelectedValues(tr.groupByFieldNames)
@@ -460,8 +458,7 @@ func (tr *TransformerSplit) splitGrouped(
 		}
 		err := tr.outputHandlerManager.WriteRecordAndContext(recordAndContextForWriter, filename)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		if tr.emitDownstream {
@@ -473,12 +470,14 @@ func (tr *TransformerSplit) splitGrouped(
 
 		errs := tr.outputHandlerManager.Close()
 		if len(errs) > 0 {
-			for _, err := range errs {
+			// Print any additional errors here; return the first one.
+			for _, err := range errs[1:] {
 				fmt.Fprintf(os.Stderr, "mlr: file-close error: %v\n", err)
 			}
-			os.Exit(1)
+			return fmt.Errorf("mlr: file-close error: %v", errs[0])
 		}
 	}
+	return nil
 }
 
 // makeUngroupedOutputFileName example: "split_53.csv" or "folder/split_53.csv" with --folder

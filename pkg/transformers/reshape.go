@@ -300,9 +300,9 @@ func (tr *TransformerReshape) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	return tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 func (tr *TransformerReshape) wideToLongNoRegex(
@@ -310,7 +310,7 @@ func (tr *TransformerReshape) wideToLongNoRegex(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		pairs := mlrval.NewMlrmap()
@@ -341,6 +341,7 @@ func (tr *TransformerReshape) wideToLongNoRegex(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerReshape) wideToLongRegex(
@@ -348,7 +349,7 @@ func (tr *TransformerReshape) wideToLongRegex(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		pairs := mlrval.NewMlrmap()
@@ -382,6 +383,7 @@ func (tr *TransformerReshape) wideToLongRegex(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerReshape) longToWide(
@@ -389,7 +391,7 @@ func (tr *TransformerReshape) longToWide(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
@@ -397,7 +399,7 @@ func (tr *TransformerReshape) longToWide(
 		splitOutValueFieldValue := inrec.Get(tr.splitOutValueFieldName)
 		if splitOutKeyFieldValue == nil || splitOutValueFieldValue == nil {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
-			return
+			return nil
 		}
 
 		inrec.Remove(tr.splitOutKeyFieldName)
@@ -443,6 +445,7 @@ func (tr *TransformerReshape) longToWide(
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
 	}
+	return nil
 }
 
 type tReshapeBucket struct {
