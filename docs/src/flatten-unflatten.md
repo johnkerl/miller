@@ -16,20 +16,19 @@ Quick links:
 </div>
 # Flatten/unflatten: converting between JSON/YAML and tabular formats
 
-Miller has long supported reading and writing multiple [file
-formats](file-formats.md) including CSV, JSON, and YAML, as well as converting
-back and forth between them. Two things new in [Miller 6](new-in-miller-6-md),
-though, are that [arrays are now fully supported](reference-main-arrays.md),
-and that [record values are typed](new-in-miller-6.md#improved-numeric-conversion)
-throughout Miller's processing chain from input through [verbs](reference-verbs.md)
-to output -- which includes improved handling for [maps](reference-main-maps.md) and
-[arrays](reference-main-arrays.md) as record values.
+Miller has long supported reading and writing multiple [file formats](file-formats.md) including CSV
+and JSON, as well as converting back and forth between them. Two things new in [Miller
+6](new-in-miller-6-md), though, are that [arrays are now fully supported](reference-main-arrays.md),
+and that [record values are typed](new-in-miller-6.md#improved-numeric-conversion) throughout
+Miller's processing chain from input through [verbs](reference-verbs.md) to output -- which includes
+improved handling for [maps](reference-main-maps.md) and [arrays](reference-main-arrays.md) as
+record values.
 
-This raises the question, though, of how to handle maps and arrays as record values.
-For [JSON](file-formats.md#json) or [YAML](file-formats.md#yaml) files, this is easy --
-both are nested formats where values can be maps or arrays, which can contain other maps
-or arrays, and so on, with the nesting happily indicated by curly braces (JSON) or
-indentation (YAML):
+This raises the question, though, of how to handle maps and arrays as record values.  For
+[JSON](file-formats.md#json) or [YAML](file-formats.md#yaml) files (supported since
+[Miller 6.17.0](https://github.com/johnkerl/miller/releases#release-v6.17.0)), this is easy. both are
+nested formats where values can be maps or arrays, which can contain other maps or arrays, and so
+on, with the nesting happily indicated by curly braces (JSON) or indentation (YAML).
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/map-values.json</b>
@@ -67,9 +66,10 @@ see in this section, there are two main ways to **flatten** nested data
 structures down to individual CSV cells -- either by _key-spreading_ (which
 is the default), or by _JSON-stringifying_:
 
-* **Key-spreading** is when the single map-valued field
-`b={"x": 2, "y": 3}` spreads into multiple fields `b.x=2,b.y=3`;
-* **JSON-stringifying** is when the single map-valued field `"b": {"x": 2, "y": 3}` becomes the single string-valued field `b="{\"x\":2,\"y\":3}"`.
+- **Key-spreading** is when the single map-valued field `b={"x": 2, "y": 3}` spreads into multiple
+  fields `b.x=2,b.y=3`;
+- **JSON-stringifying** is when the single map-valued field `"b": {"x": 2, "y": 3}` becomes the
+  single string-valued field `b="{\"x\":2,\"y\":3}"`.
 
 Miller intends to provide intuitive default behavior for these conversions, while also
 providing you with more control when you need it.
@@ -153,7 +153,7 @@ a b.s.w b.s.x b.t.y b.t.z
 6 7     8     9     10
 </pre>
 
-**Unflattening** is simply the reverse -- from non-JSON/YAML back to JSON or YAML:
+**Unflattening** is simply the reverse -- from non-JSON/YAML back to JSON/YAML:
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/map-values.json</b>
@@ -258,7 +258,7 @@ In the nested-data examples shown here, nested map values are shown containing
 maps, and nested array values are shown containing arrays -- of course (even
 though not shown here) nested map values can contain arrays, and vice versa.
 
-**Unflattening** arrays is, again, simply the reverse -- from non-JSON/YAML back to JSON or YAML:
+**Unflattening** arrays is, again, simply the reverse -- from non-JSON/YAML back to JSON/YAML:
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/array-values.json</b>
@@ -353,7 +353,7 @@ a.1,a.3,a.5
 
 An additional heuristic is that if a field name starts with a `.`, ends with
 a `.`, or has two or more consecutive `.` characters, no attempt is made
-to unflatten it on conversion from non-JSON/YAML to JSON or YAML.
+to unflatten it on conversion from non-JSON/YAML to JSON/YAML.
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/flatten-dots.csv</b>
