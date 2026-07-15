@@ -173,7 +173,11 @@ func parseCommandLinePassOne(
 				argi += 1
 				flagSequences = append(flagSequences, args[oargi:argi])
 
-			} else if cli.FLAG_TABLE.Parse(args, argc, &argi, options) {
+			} else if handled, flagErr := cli.FLAG_TABLE.Parse(args, argc, &argi, options); flagErr != nil {
+				parseErr = flagErr
+				return
+
+			} else if handled {
 				flagSequences = append(flagSequences, args[oargi:argi])
 
 			} else if args[argi] == "--" {
@@ -357,7 +361,10 @@ func parseCommandLinePassTwo(
 		lib.InternalCodingErrorIf(argc == 0)
 
 		// Parse the main-flag into the options struct.
-		rc := cli.FLAG_TABLE.Parse(args, argc, &argi, options)
+		rc, flagErr := cli.FLAG_TABLE.Parse(args, argc, &argi, options)
+		if flagErr != nil {
+			return nil, nil, flagErr
+		}
 
 		// Should have been parsed OK in pass one.
 		lib.InternalCodingErrorIf(!rc)
