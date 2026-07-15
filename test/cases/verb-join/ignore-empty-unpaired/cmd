@@ -1,0 +1,1 @@
+mlr --icsv --ojson join --ignore-empty --ul --ur -j id -f test/input/join-1194-left.csv test/input/join-1194-right.csv
