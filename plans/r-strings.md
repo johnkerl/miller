@@ -4,7 +4,7 @@
 
 [Issue #297](https://github.com/johnkerl/miller/issues/297) ("Match regex
 metacharacters: remaining step now is r-strings") is otherwise resolved in
-Miller 6. The one remaining ask, per johnkerl's final comments on the issue,
+Miller 6. The one remaining ask, per @johnkerl's final comments on the issue,
 is **explicit r-strings**: `r"..."` as a DSL literal that behaves like
 Python's raw strings — no backslash-escape processing — usable both directly
 in regex position and, critically, **assigned to a variable that's later
@@ -15,8 +15,8 @@ rstar = r"\*";
 $y = gsub($x, rstar, "star");
 ```
 
-This is exactly the case torbiak raised in the issue thread and that
-johnkerl agreed doesn't work today. johnkerl's preferred design (Option 1 in
+This is exactly the case @torbiak raised in the issue thread and that
+@johnkerl agreed doesn't work today. @johnkerl's preferred design (Option 1 in
 the issue) is additive: keep today's *implicit* r-string behavior for plain
 string literals in regex position, and add *explicit* `r"..."` as a new,
 independently-usable literal type on top.
