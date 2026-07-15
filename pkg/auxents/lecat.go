@@ -7,14 +7,13 @@ import (
 	"os"
 )
 
-func lecatUsage(verbName string, o *os.File, exitCode int) {
+func lecatUsage(verbName string, o *os.File) {
 	fmt.Fprintf(o, "Usage: mlr %s [options] {zero or more file names}\n", verbName)
 	fmt.Fprintf(o, "Simply echoes input, but flags CR characters in red and LF characters in green.\n")
 	fmt.Fprintf(o, "If zero file names are supplied, standard input is read.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "--mono: don't try to colorize the output\n")
 	fmt.Fprintf(o, "-h or --help: print this message\n")
-	os.Exit(exitCode)
 }
 
 func lecatMain(args []string) int {
@@ -25,7 +24,8 @@ func lecatMain(args []string) int {
 	args = args[2:]
 	if len(args) >= 1 {
 		if args[0] == "-h" || args[0] == "--help" {
-			lecatUsage(verb, os.Stdout, 0)
+			lecatUsage(verb, os.Stdout)
+			return 0
 		}
 
 		if args[0][0] == '-' {
@@ -36,36 +36,45 @@ func lecatMain(args []string) int {
 				fmt.Fprintf(os.Stderr, "mlr %s: unrecognized option \"%s\".\n",
 					verb, args[0],
 				)
-				os.Exit(1)
+				return 1
 			}
 		}
 	}
 
 	if len(args) == 0 {
-		lecatFile(os.Stdin, doColor)
+		if err := lecatFile(os.Stdin, doColor); err != nil {
+			fmt.Fprintf(os.Stderr, "mlr lecat: %v\n", err)
+			return 1
+		}
 	} else {
 		for _, filename := range args {
 
 			istream, err := os.Open(filename)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "mlr lecat: %v\n", err)
-				os.Exit(1)
+				return 1
 			}
 
-			lecatFile(istream, doColor)
-
+			err = lecatFile(istream, doColor)
 			_ = istream.Close()
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "mlr lecat: %v\n", err)
+				return 1
+			}
 		}
 	}
 	return 0
 }
 
-func lecatFile(istream *os.File, doColor bool) {
+func lecatFile(istream *os.File, doColor bool) error {
 	reader := bufio.NewReader(istream)
 	for {
 		c, err := reader.ReadByte()
 		if err == io.EOF {
 			break
+		}
+		if err != nil {
+			return err
 		}
 		switch c {
 		case '\r':
@@ -88,4 +97,5 @@ func lecatFile(istream *os.File, doColor bool) {
 			fmt.Printf("%c", c)
 		}
 	}
+	return nil
 }

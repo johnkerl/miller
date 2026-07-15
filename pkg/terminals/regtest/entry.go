@@ -11,7 +11,7 @@ import (
 
 const defaultPath = "./test/cases"
 
-func regTestUsage(verbName string, o *os.File, exitCode int) {
+func regTestUsage(verbName string, o *os.File) {
 	fmt.Fprintf(o, "Usage: mlr %s [options] [one or more directories/files]\n", verbName)
 	fmt.Fprintf(o, "If no directories/files are specified, the directory %s is used by default.\n", defaultPath)
 	fmt.Fprintf(o, "Recursively walks the directory/ies looking for foo.cmd files having Miller command-lines,\n")
@@ -30,7 +30,6 @@ func regTestUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "-j       Just show the Miller command-line, put/filter script if any, and output.\n")
 	fmt.Fprintf(o, "-s {n}   After running tests, re-run first n failed .cmd files with verbosity level 3.\n")
 	fmt.Fprintf(o, "-S       After running tests, re-run all failed .cmd files with verbosity level 3.\n")
-	os.Exit(exitCode)
 }
 
 // Here the args are the full Miller command line: "mlr regtest --foo bar".
@@ -55,22 +54,26 @@ func RegTestMain(args []string) int {
 
 		switch arg {
 		case "-h", "--help":
-			regTestUsage(verbName, os.Stdout, 0)
+			regTestUsage(verbName, os.Stdout)
+			return 0
 
 		case "-m":
 			if argi >= argc {
-				regTestUsage(verbName, os.Stderr, 1)
+				regTestUsage(verbName, os.Stderr)
+				return 1
 			}
 			exeName = args[argi]
 			argi++
 
 		case "-s":
 			if argi >= argc {
-				regTestUsage(verbName, os.Stderr, 1)
+				regTestUsage(verbName, os.Stderr)
+				return 1
 			}
 			temp, err := strconv.Atoi(args[argi])
 			if err != nil {
-				regTestUsage(verbName, os.Stderr, 1)
+				regTestUsage(verbName, os.Stderr)
+				return 1
 			}
 			firstNFailsToShow = temp
 			argi++
@@ -88,7 +91,8 @@ func RegTestMain(args []string) int {
 			plainMode = true
 
 		default:
-			regTestUsage(verbName, os.Stderr, 1)
+			regTestUsage(verbName, os.Stderr)
+			return 1
 		}
 	}
 	casePaths := args[argi:]
@@ -104,7 +108,11 @@ func RegTestMain(args []string) int {
 		firstNFailsToShow,
 	)
 
-	ok := regtester.Execute(casePaths)
+	ok, err := regtester.Execute(casePaths)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "mlr %s: %v\n", verbName, err)
+		return 1
+	}
 
 	if !ok {
 		return 1

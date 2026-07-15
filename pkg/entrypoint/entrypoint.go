@@ -38,8 +38,10 @@ func Main() MainReturn {
 
 	// 'mlr repl' or 'mlr lecat' or any other non-miller-per-se toolery which
 	// is delivered (for convenience) within the mlr executable. If argv[1] is
-	// found then this function will not return.
-	auxents.Dispatch(os.Args)
+	// an auxent name, it's run here and its exit code is the process's.
+	if handled, exitCode := auxents.Dispatch(os.Args); handled {
+		os.Exit(exitCode)
+	}
 
 	if lib.IsTruthyEnvValue(os.Getenv("MLR_NO_SHELL")) {
 		lib.DisableShellOut()

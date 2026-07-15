@@ -65,7 +65,10 @@ func TestRegression(t *testing.T) {
 		firstNFailsToShow,
 	)
 
-	ok := regtester.Execute(casePaths)
+	ok, err := regtester.Execute(casePaths)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if !ok {
 		t.Fatal()
 	}
