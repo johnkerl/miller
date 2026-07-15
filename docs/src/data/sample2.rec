@@ -1,0 +1,11 @@
+# A record descriptor whose %doc field has no value of its own -- just a
+# bare colon -- with the actual text supplied entirely by the "+"
+# continuation line that follows.
+# Source: https://www.gnu.org/software/recutils/manual/html_node/A-Little-Example.html
+
+%rec: Book
+%doc:
++ A book in my personal collection.
+
+Title: GNU Emacs Manual
+Author: Richard M. Stallman

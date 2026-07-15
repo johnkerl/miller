@@ -149,21 +149,21 @@ func (reader *RecordReaderREC) getRecordBatch(
 }
 
 // recordFromRECLines converts one blank-line-delimited stanza's raw lines
-// into a Miller record. This happens in three passes, in this order:
+// into a Miller record. This happens in two passes, in this order:
 //
 //  1. Backslash-newline logical-line joining: a line ending in a literal "\"
 //     is joined directly (no separator inserted) with the next physical
 //     line.
-//  2. "+"-continuation folding: a line starting with "+" continues the
-//     immediately preceding field's value with an embedded "\n"; a single
-//     leading space after the "+" is stripped.
-//  3. Splitting each remaining logical line on the first occurrence of
-//     ": " into a field name and value.
+//  2. Field parsing with "+"-continuation folding: each remaining logical
+//     line is either a "+"-continuation, which is folded into the
+//     immediately preceding field's value with an embedded "\n" (a single
+//     leading space after the "+" is stripped), or a "Name:" / "Name: value"
+//     field line.
 //
 // Malformed input (a "+"-continuation with no preceding field, or a line
-// with no ": " separator) is a hard error -- recutils' own spec requires
-// exactly ": " as the field separator, and there is no leniency flag for
-// this format (unlike e.g. CSV's ragged-input handling).
+// with no ":" separator) is a hard error -- recutils' own spec requires a
+// colon as the field separator, and there is no leniency flag for this
+// format (unlike e.g. CSV's ragged-input handling).
 func (reader *RecordReaderREC) recordFromRECLines(
 	stanza []string,
 ) (*mlrval.Mlrmap, error) {
@@ -172,20 +172,13 @@ func (reader *RecordReaderREC) recordFromRECLines(
 
 	joinedLines := joinRECBackslashContinuations(stanza)
 
-	fieldLines, err := foldRECPlusContinuations(joinedLines)
+	fields, err := parseRECFields(joinedLines)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, line := range fieldLines {
-		key, value, found := strings.Cut(line, ": ")
-		if !found {
-			return nil, fmt.Errorf(
-				"mlr: recutils: missing \": \" field separator in line %q",
-				line,
-			)
-		}
-		reader.recordArena.PutDeferred(record, key, value, dedupeFieldNames)
+	for _, field := range fields {
+		reader.recordArena.PutDeferred(record, field.key, field.value, dedupeFieldNames)
 	}
 
 	return record, nil
@@ -224,28 +217,68 @@ func joinRECBackslashContinuations(lines []string) []string {
 	return joined
 }
 
-// foldRECPlusContinuations implements recutils' "+"-continuation: a line
-// starting with "+" continues the immediately preceding field's value with
-// an embedded "\n". A single leading space after the "+" is stripped (a
-// bare "+" folds in an empty continuation line).
-func foldRECPlusContinuations(lines []string) ([]string, error) {
-	folded := make([]string, 0, len(lines))
+// tRECField is one field's key/value pair, parsed out of a rec-format
+// stanza line, prior to being placed into a Miller record.
+type tRECField struct {
+	key   string
+	value string
+}
+
+// parseRECFields splits a stanza's backslash-joined lines into ordered
+// key/value fields, folding "+"-continuation lines into the value of the
+// immediately preceding field as it goes. Folding must happen at the
+// key/value level, not the raw-line level: a field's value may itself be
+// empty -- a bare "Name:" with nothing after the colon, its actual value
+// supplied entirely by the "+" lines that follow -- and folding raw lines
+// together would destroy the ":" separator needed to parse that field out.
+// A single leading space after the "+" is stripped (a bare "+" folds in an
+// empty continuation line). When the preceding value is empty, the
+// continuation becomes the value outright rather than being appended after
+// a spurious leading "\n".
+func parseRECFields(lines []string) ([]tRECField, error) {
+	fields := make([]tRECField, 0, len(lines))
 
 	for _, line := range lines {
-		if strings.HasPrefix(line, "+") {
-			if len(folded) == 0 {
+		if rest, ok := strings.CutPrefix(line, "+"); ok {
+			if len(fields) == 0 {
 				return nil, fmt.Errorf(
 					"mlr: recutils: continuation line %q has no preceding field in this record",
 					line,
 				)
 			}
-			continuation := strings.TrimPrefix(line, "+")
-			continuation = strings.TrimPrefix(continuation, " ")
-			folded[len(folded)-1] = folded[len(folded)-1] + "\n" + continuation
-		} else {
-			folded = append(folded, line)
+			continuation := strings.TrimPrefix(rest, " ")
+			last := &fields[len(fields)-1]
+			if last.value == "" {
+				last.value = continuation
+			} else {
+				last.value = last.value + "\n" + continuation
+			}
+			continue
 		}
+
+		key, rest, found := strings.Cut(line, ":")
+		if !found {
+			return nil, fmt.Errorf(
+				"mlr: recutils: missing \":\" field separator in line %q",
+				line,
+			)
+		}
+
+		var value string
+		switch {
+		case rest == "":
+			value = ""
+		case strings.HasPrefix(rest, " "):
+			value = rest[1:]
+		default:
+			return nil, fmt.Errorf(
+				"mlr: recutils: missing \": \" field separator in line %q",
+				line,
+			)
+		}
+
+		fields = append(fields, tRECField{key: key, value: value})
 	}
 
-	return folded, nil
+	return fields, nil
 }
