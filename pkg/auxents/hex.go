@@ -23,14 +23,13 @@ import (
 // 00000060: 60 61 62 63  64 65 66 67  68 69 6a 6b  6c 6d 6e 6f |`abcdefghijklmno|
 // 00000070: 70 71 72 73  74 75 76 77  78 79 7a 7b  7c 7d 7e 7f |pqrstuvwxyz{|}~.|
 
-func hexUsage(verbName string, o *os.File, exitCode int) {
+func hexUsage(verbName string, o *os.File) {
 	fmt.Fprintf(o, "Usage: mlr %s [options] {zero or more file names}\n", verbName)
 	fmt.Fprintf(o, "Simple hex-dump.\n")
 	fmt.Fprintf(o, "If zero file names are supplied, standard input is read.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-r: print only raw hex without leading offset indicators or trailing ASCII dump.\n")
 	fmt.Fprintf(o, "-h or --help: print this message\n")
-	os.Exit(exitCode)
 }
 
 func hexMain(args []string) int {
@@ -45,12 +44,16 @@ func hexMain(args []string) int {
 			doRaw = true
 			args = args[1:]
 		case "-h", "--help":
-			hexUsage(verb, os.Stdout, 0)
+			hexUsage(verb, os.Stdout)
+			return 0
 		}
 	}
 
 	if len(args) == 0 {
-		hexDumpFile(os.Stdin, doRaw)
+		if err := hexDumpFile(os.Stdin, doRaw); err != nil {
+			fmt.Fprintf(os.Stderr, "mlr hex: %v\n", err)
+			return 1
+		}
 	} else {
 		for _, filename := range args {
 			// Print filename if there is more than one file, unless raw output
@@ -61,14 +64,17 @@ func hexMain(args []string) int {
 
 			istream, err := os.Open(filename)
 			if err != nil {
-				// TODO: "mlr"
 				fmt.Fprintf(os.Stderr, "mlr hex: %v\n", err)
-				os.Exit(1)
+				return 1
 			}
 
-			hexDumpFile(istream, doRaw)
-
+			err = hexDumpFile(istream, doRaw)
 			_ = istream.Close()
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "mlr hex: %v\n", err)
+				return 1
+			}
+
 			if !doRaw && len(args) > 1 {
 				fmt.Println()
 			}
@@ -78,7 +84,7 @@ func hexMain(args []string) int {
 	return 0
 }
 
-func hexDumpFile(istream *os.File, doRaw bool) {
+func hexDumpFile(istream *os.File, doRaw bool) error {
 	const bytesPerClump = 4
 	const clumpsPerLine = 4
 	const bufferSize = bytesPerClump * clumpsPerLine
@@ -97,8 +103,7 @@ func hexDumpFile(istream *os.File, doRaw bool) {
 		// exact multiple of our buffer size. We'll break the loop after
 		// hex-dumping this last, partial fragment.
 		if err != nil && err != io.ErrUnexpectedEOF {
-			fmt.Fprintf(os.Stderr, "mlr hex: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		// Print offset "pre" part
@@ -148,4 +153,5 @@ func hexDumpFile(istream *os.File, doRaw bool) {
 
 		offset += numBytesRead
 	}
+	return nil
 }

@@ -32,22 +32,23 @@ func init() {
 	}
 }
 
-// Dispatch is called from Miller main. Here we indicate if argv[1] is handled
-// by us, or not. If so, we handle it and exit, not returning control to Miller
-// main.
-func Dispatch(args []string) {
+// Dispatch is called from Miller main. The boolean return says whether
+// argv[1] named an auxent handled here; if so, the int is the process exit
+// code for the entrypoint layer to exit with. Otherwise control returns to
+// main for the rest of Miller.
+func Dispatch(args []string) (bool, int) {
 	if len(args) < 2 {
-		return
+		return false, 0
 	}
 	verb := args[1]
 
 	for _, entry := range _AUX_LOOKUP_TABLE {
 		if verb == entry.name {
-			os.Exit(entry.main(args))
+			return true, entry.main(args)
 		}
 	}
 
-	// Else, return control to main for the rest of Miller.
+	return false, 0
 }
 
 // auxListMain is the handler for 'mlr aux-list'.

@@ -57,19 +57,24 @@ func Dispatchable(arg string) bool {
 	return false
 }
 
-func Dispatch(args []string) {
+// Dispatch runs the terminal named by args[0] and returns the process exit
+// code for the caller to propagate (via lib.ExitRequest) up to the entrypoint
+// layer.
+func Dispatch(args []string) int {
 	if len(args) < 1 {
-		return
+		// Can't happen: the climain caller passes a non-empty terminal sequence.
+		fmt.Fprintf(os.Stderr, "mlr: internal coding error: empty terminal sequence.\n")
+		return 1
 	}
 	terminal := args[0]
 
 	for _, entry := range _TERMINAL_LOOKUP_TABLE {
 		if terminal == entry.name {
-			os.Exit(entry.main(args))
+			return entry.main(args)
 		}
 	}
 	fmt.Fprintf(os.Stderr, "mlr: terminal \"%s\" not found.\n", terminal)
-	os.Exit(1)
+	return 1
 }
 
 // terminalListMain is the handler for 'mlr terminal-list'.

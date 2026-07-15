@@ -396,9 +396,9 @@ func parseCommandLinePassTwo(
 	}
 
 	if terminalSequence != nil {
-		terminals.Dispatch(terminalSequence)
-		// They are expected to exit the process
-		panic("mlr: internal coding error: terminal did not exit the process")
+		// The terminal (help, repl, regtest, ...) runs here; its exit code
+		// rides an ExitRequest up to the entrypoint layer.
+		return nil, nil, &lib.ExitRequest{Code: terminals.Dispatch(terminalSequence)}
 	}
 
 	// Now process the verb-sequences from pass one, with options-struct set up

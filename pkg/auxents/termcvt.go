@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func termcvtUsage(verbName string, o *os.File, exitCode int) {
+func termcvtUsage(verbName string, o *os.File) {
 	fmt.Fprintf(o, "Usage: mlr %s [option] {zero or more file names}\n", verbName)
 	fmt.Fprintf(o, "Option (exactly one is required):\n")
 	fmt.Fprintf(o, "--cr2crlf\n")
@@ -21,7 +21,6 @@ func termcvtUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "-h or --help: print this message\n")
 	fmt.Fprintf(o, "Zero file names means read from standard input.\n")
 	fmt.Fprintf(o, "Output is always to standard output; files are not written in-place.\n")
-	os.Exit(exitCode)
 }
 
 func termcvtMain(args []string) int {
@@ -33,7 +32,8 @@ func termcvtMain(args []string) int {
 	verb := args[1]
 	args = args[2:]
 	if len(args) < 1 {
-		termcvtUsage(verb, os.Stderr, 1)
+		termcvtUsage(verb, os.Stderr)
+		return 1
 	}
 
 	for len(args) >= 1 {
@@ -45,7 +45,8 @@ func termcvtMain(args []string) int {
 
 		switch opt {
 		case "-h", "--help":
-			termcvtUsage(verb, os.Stdout, 0)
+			termcvtUsage(verb, os.Stdout)
+			return 0
 		case "-I":
 			doInPlace = true
 		case "--cr2crlf":
@@ -67,12 +68,16 @@ func termcvtMain(args []string) int {
 			inputTerminator = "\r"
 			outputTerminator = "\n"
 		default:
-			termcvtUsage(verb, os.Stderr, 1)
+			termcvtUsage(verb, os.Stderr)
+			return 1
 		}
 	}
 
 	if len(args) == 0 {
-		termcvtFile(os.Stdin, os.Stdout, inputTerminator, outputTerminator)
+		if err := termcvtFile(os.Stdin, os.Stdout, inputTerminator, outputTerminator); err != nil {
+			fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
+			return 1
+		}
 
 	} else if doInPlace {
 		for _, filename := range args {
@@ -82,31 +87,31 @@ func termcvtMain(args []string) int {
 
 			istream, err := os.Open(filename)
 			if err != nil {
-				// TODO: "mlr"
 				fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
-				os.Exit(1)
+				return 1
 			}
 
 			ostream, err := os.Open(tempname)
 			if err != nil {
-				// TODO: "mlr"
 				fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
-				os.Exit(1)
+				return 1
 			}
 
-			termcvtFile(istream, ostream, inputTerminator, outputTerminator)
+			if err := termcvtFile(istream, ostream, inputTerminator, outputTerminator); err != nil {
+				fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
+				return 1
+			}
 
 			_ = istream.Close()
 			if err := ostream.Close(); err != nil {
 				fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
-				os.Exit(1)
+				return 1
 			}
 
 			err = os.Rename(tempname, filename)
 			if err != nil {
-				// TODO: "mlr"
 				fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
-				os.Exit(1)
+				return 1
 			}
 		}
 
@@ -115,20 +120,22 @@ func termcvtMain(args []string) int {
 
 			istream, err := os.Open(filename)
 			if err != nil {
-				// TODO: "mlr"
 				fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
-				os.Exit(1)
+				return 1
 			}
 
-			termcvtFile(istream, os.Stdout, inputTerminator, outputTerminator)
-
+			err = termcvtFile(istream, os.Stdout, inputTerminator, outputTerminator)
 			_ = istream.Close()
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
+				return 1
+			}
 		}
 	}
 	return 0
 }
 
-func termcvtFile(istream *os.File, ostream *os.File, inputTerminator string, outputTerminator string) {
+func termcvtFile(istream *os.File, ostream *os.File, inputTerminator string, outputTerminator string) error {
 	lineReader := bufio.NewReader(istream)
 	inputTerminatorBytes := []byte(inputTerminator[len(inputTerminator)-1:])[0] // bufio.Reader.ReadString takes char not string delimiter :(
 
@@ -139,16 +146,14 @@ func termcvtFile(istream *os.File, ostream *os.File, inputTerminator string, out
 		}
 
 		if err != nil {
-			// TODO: "mlr"
-			fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		// This is how to do a chomp:
 		line = strings.TrimRight(line, inputTerminator)
 		if _, err := ostream.Write([]byte(line + outputTerminator)); err != nil {
-			fmt.Fprintf(os.Stderr, "mlr termcvt: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 	}
+	return nil
 }

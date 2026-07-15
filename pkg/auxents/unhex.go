@@ -2,6 +2,7 @@ package auxents
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -9,13 +10,12 @@ import (
 	"strings"
 )
 
-func unhexUsage(verbName string, o *os.File, exitCode int) {
+func unhexUsage(verbName string, o *os.File) {
 	fmt.Fprintf(o, "Usage: mlr %s [option] {zero or more file names}\n", verbName)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h or --help: print this message\n")
 	fmt.Fprintf(o, "Zero file names means read from standard input.\n")
 	fmt.Fprintf(o, "Output is always to standard output; files are not written in-place.\n")
-	os.Exit(exitCode)
 }
 
 func unhexMain(args []string) int {
@@ -25,28 +25,36 @@ func unhexMain(args []string) int {
 
 	if len(args) >= 1 {
 		if args[0] == "-h" || args[0] == "--help" {
-			unhexUsage(verb, os.Stdout, 0)
+			unhexUsage(verb, os.Stdout)
+			return 0
 		}
 	}
 
 	if len(args) == 0 {
-		unhexFile(os.Stdin, os.Stdout)
+		if err := unhexFile(os.Stdin, os.Stdout); err != nil {
+			fmt.Fprintf(os.Stderr, "mlr unhex: %v\n", err)
+			return 1
+		}
 	} else {
 		for _, filename := range args {
 			istream, err := os.Open(filename)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "mlr unhex: %v\n", err)
-				os.Exit(1)
+				return 1
 			}
-			unhexFile(istream, os.Stdout)
+			err = unhexFile(istream, os.Stdout)
 			_ = istream.Close()
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "mlr unhex: %v\n", err)
+				return 1
+			}
 		}
 	}
 
 	return 0
 }
 
-func unhexFile(istream *os.File, ostream *os.File) {
+func unhexFile(istream *os.File, ostream *os.File) error {
 	// Key insight is os.File implements io.Reader
 	lineReader := bufio.NewReader(istream)
 
@@ -62,8 +70,7 @@ func unhexFile(istream *os.File, ostream *os.File) {
 			break
 		}
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr unhex: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		// This is how to do a chomp:
@@ -75,19 +82,17 @@ func unhexFile(istream *os.File, ostream *os.File) {
 			if field != "" {
 				n, err := fmt.Sscanf(field, "%x", &scanValue)
 				if err != nil {
-					fmt.Fprintf(os.Stderr, "mlr unhex: %v\n", err)
-					os.Exit(1)
+					return err
 				}
 				if n != 1 {
-					fmt.Fprintln(os.Stderr, "mlr unhex: internal coding error")
-					os.Exit(1)
+					return errors.New("internal coding error")
 				}
 				byteArray[0] = byte(scanValue)
 				if _, err := ostream.Write(byteArray); err != nil {
-					fmt.Fprintln(os.Stderr, "mlr unhex:", err)
-					os.Exit(1)
+					return err
 				}
 			}
 		}
 	}
+	return nil
 }
