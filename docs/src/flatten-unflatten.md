@@ -14,11 +14,11 @@ Quick links:
 <a class="quicklink" href="../release-docs/index.html">Release docs</a>
 </span>
 </div>
-# Flatten/unflatten: converting between JSON and tabular formats
+# Flatten/unflatten: converting between JSON/YAML and tabular formats
 
 Miller has long supported reading and writing multiple [file
-formats](file-formats.md) including CSV and JSON, as well as converting back
-and forth between them. Two things new in [Miller 6](new-in-miller-6-md),
+formats](file-formats.md) including CSV, JSON, and YAML, as well as converting
+back and forth between them. Two things new in [Miller 6](new-in-miller-6-md),
 though, are that [arrays are now fully supported](reference-main-arrays.md),
 and that [record values are typed](new-in-miller-6.md#improved-numeric-conversion)
 throughout Miller's processing chain from input through [verbs](reference-verbs.md)
@@ -26,9 +26,10 @@ to output -- which includes improved handling for [maps](reference-main-maps.md)
 [arrays](reference-main-arrays.md) as record values.
 
 This raises the question, though, of how to handle maps and arrays as record values.
-For [JSON files](file-formats.md#json), this is easy -- JSON is a nested format where values
-can be maps or arrays, which can contain other maps or arrays, and so on, with the nesting
-happily indicated by curly braces:
+For [JSON](file-formats.md#json) or [YAML](file-formats.md#yaml) files, this is easy --
+both are nested formats where values can be maps or arrays, which can contain other maps
+or arrays, and so on, with the nesting happily indicated by curly braces (JSON) or
+indentation (YAML):
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/map-values.json</b>
@@ -60,11 +61,11 @@ happily indicated by curly braces:
 
 How can we represent these in CSV files?
 
-Miller's [non-JSON formats](file-formats.md), such as CSV, are all non-nested -- a
-cell in a CSV row can't contain another entire row. As we'll see in this
-section, there are two main ways to **flatten** nested data structures down to
-individual CSV cells -- either by _key-spreading_ (which is the default), or by
-_JSON-stringifying_:
+Miller's non-JSON/YAML [file formats](file-formats.md), such as CSV, are all
+non-nested -- a cell in a CSV row can't contain another entire row. As we'll
+see in this section, there are two main ways to **flatten** nested data
+structures down to individual CSV cells -- either by _key-spreading_ (which
+is the default), or by _JSON-stringifying_:
 
 * **Key-spreading** is when the single map-valued field
 `b={"x": 2, "y": 3}` spreads into multiple fields `b.x=2,b.y=3`;
@@ -73,7 +74,7 @@ _JSON-stringifying_:
 Miller intends to provide intuitive default behavior for these conversions, while also
 providing you with more control when you need it.
 
-## Converting maps between JSON and non-JSON
+## Converting maps between JSON/YAML and non-JSON/YAML
 
 Let's first look at the default behavior with map-valued fields. Miller's
 default behavior is to spread the map values into multiple keys -- using
@@ -152,7 +153,7 @@ a b.s.w b.s.x b.t.y b.t.z
 6 7     8     9     10
 </pre>
 
-**Unflattening** is simply the reverse -- from non-JSON back to JSON:
+**Unflattening** is simply the reverse -- from non-JSON/YAML back to JSON or YAML:
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/map-values.json</b>
@@ -199,7 +200,7 @@ a,b.x,b.y
 ]
 </pre>
 
-## Converting arrays between JSON and non-JSON
+## Converting arrays between JSON/YAML and non-JSON/YAML
 
 If the input data contains arrays, these are also flattened similarly: the
 [1-up array indices](reference-main-arrays.md#1-up-indexing) `1,2,3,...` become string keys
@@ -257,7 +258,7 @@ In the nested-data examples shown here, nested map values are shown containing
 maps, and nested array values are shown containing arrays -- of course (even
 though not shown here) nested map values can contain arrays, and vice versa.
 
-**Unflattening** arrays is, again, simply the reverse -- from non-JSON back to JSON:
+**Unflattening** arrays is, again, simply the reverse -- from non-JSON/YAML back to JSON or YAML:
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/array-values.json</b>
@@ -352,7 +353,7 @@ a.1,a.3,a.5
 
 An additional heuristic is that if a field name starts with a `.`, ends with
 a `.`, or has two or more consecutive `.` characters, no attempt is made
-to unflatten it on conversion from non-JSON to JSON.
+to unflatten it on conversion from non-JSON/YAML to JSON or YAML.
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/flatten-dots.csv</b>
@@ -403,13 +404,13 @@ unflattening (if the defaults aren't working for us in a particular situation),
 let's first look a little into how they're implemented.
 
 * There are two [verbs](reference-verbs.md) called [flatten](reference-verbs.md#flatten) and [unflatten](reference-verbs.md#unflatten).
-* When the output format is not JSON, if you've specified `mlr ... cat then sort ...` (some [chain](reference-main-then-chaining.md) of verbs) then Miller appends, in effect, `then flatten` to the end of the chain.
+* When the output format is not JSON or YAML, if you've specified `mlr ... cat then sort ...` (some [chain](reference-main-then-chaining.md) of verbs) then Miller appends, in effect, `then flatten` to the end of the chain.
     * This behavior is on by default but it can be suppressed using the `--no-auto-flatten` [flag](reference-main-flag-list.md#flatten-unflatten-flags).
-* When the output format is JSON and the input format is not JSON, then (similarly) appends, in effect, `then unflatten`   to the end of the chain.
+* When the output format is JSON or YAML and the input format is neither, then (similarly) Miller appends, in effect, `then unflatten` to the end of the chain.
     * This behavior is on by default but it can be suppressed using the `--no-auto-unflatten` [flag](reference-main-flag-list.md#flatten-unflatten-flags).
 
 Note in particular that auto-flatten happens even when the input format and the
-output format are both non-JSON, e.g. even for CSV-to-CSV processing. This is
+output format are both non-JSON/non-YAML, e.g. even for CSV-to-CSV processing. This is
 because
 [map](reference-main-maps.md)-valued/[array](reference-main-arrays.md)-valued
 fields can be produced using [DSL statements](miller-programming-language.md):
