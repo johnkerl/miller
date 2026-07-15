@@ -1,0 +1,9 @@
+# Test fixture for recutils I/O
+Package: foo
+Version: 1.0
+Description: A test package
++ with a continued description.
+
+Package: bar
+Version: 2.0
+Description: Another package.

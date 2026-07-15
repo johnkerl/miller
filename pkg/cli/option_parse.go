@@ -894,6 +894,15 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name: "--irecutils",
+			help: "Use GNU recutils (.rec) format for input data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "recutils"
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--inidx",
 			help: "Use NIDX format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
@@ -1148,6 +1157,15 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name: "--orecutils",
+			help: "Use GNU recutils (.rec) format for output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "recutils"
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "--onidx",
 			help: "Use NIDX format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
@@ -1347,6 +1365,16 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name: "--recutils",
+			help: "Use GNU recutils (.rec) format for input and output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "recutils"
+				options.WriterOptions.OutputFileFormat = "recutils"
+				*pargi += 1
+			},
+		},
+
+		{
 			name:     "--nidx",
 			help:     "Use NIDX format for input and output data.",
 			altNames: []string{"--n2n"},
@@ -1398,6 +1426,7 @@ func FormatConversionKeystrokeSaverPrintInfo() {
 	fmt.Println(`As keystroke-savers for format-conversion you may use the following.
 The letters c, t, j, l, d, n, x, p, m, and y refer to formats CSV, TSV, JSON, JSON Lines,
 DKVP, NIDX, XTAB, PPRINT, markdown, and YAML, respectively. DCF is also supported (use --dcf for DCF in and out).
+GNU recutils is also supported (use --recutils for recutils in and out).
 
 | In\out   | CSV      | TSV      | JSON     | JSONL | DKVP  | NIDX  | XTAB  | PPRINT | Markdown | YAML   |
 +----------+----------+----------+----------+-------+-------+-------+-------+--------+----------+--------+

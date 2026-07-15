@@ -34,6 +34,8 @@ func Create(readerOptions *cli.TReaderOptions, recordsPerBatch int64) (IRecordRe
 		return NewRecordReaderXTAB(readerOptions, recordsPerBatch)
 	case "dcf":
 		return NewRecordReaderDCF(readerOptions, recordsPerBatch)
+	case "recutils":
+		return NewRecordReaderREC(readerOptions, recordsPerBatch)
 	case "gen":
 		return NewPseudoReaderGen(readerOptions, recordsPerBatch)
 	default:

@@ -1,0 +1,11 @@
+# A simple contacts database.
+
+Name: Mr. Foo
+Email: foo@example.com
+Phone: 555-1234
+Notes: Likes long walks
++ on the beach.
+
+Name: Mrs. Bar
+Email: bar@example.com
+Phone: 555-5678
