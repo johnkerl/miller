@@ -143,9 +143,9 @@ func (tr *TransformerJSONParse) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	return tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 func (tr *TransformerJSONParse) jsonParseAll(
@@ -153,7 +153,7 @@ func (tr *TransformerJSONParse) jsonParseAll(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
@@ -167,6 +167,7 @@ func (tr *TransformerJSONParse) jsonParseAll(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerJSONParse) jsonParseSome(
@@ -174,7 +175,7 @@ func (tr *TransformerJSONParse) jsonParseSome(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
@@ -190,4 +191,5 @@ func (tr *TransformerJSONParse) jsonParseSome(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
+	return nil
 }

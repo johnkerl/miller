@@ -170,13 +170,14 @@ func (tr *TransformerRank) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if tr.doSorted {
 		tr.transformSorted(inrecAndContext, outputRecordsAndContexts)
 	} else {
 		tr.transformUnsorted(inrecAndContext, outputRecordsAndContexts)
 	}
+	return nil
 }
 
 // transformSorted computes rank in a single pass, O(1) space, by comparing

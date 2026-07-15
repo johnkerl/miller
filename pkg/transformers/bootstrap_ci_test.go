@@ -57,14 +57,14 @@ func feedBootstrapCI(tr *TransformerBootstrapCI, xValues []int64) []*types.Recor
 		record := mlrval.NewMlrmapAsRecord()
 		record.PutCopy("g", mlrval.FromString("one"))
 		record.PutCopy("x", mlrval.FromInt(xValue))
-		tr.Transform(
+		_ = tr.Transform(
 			types.NewRecordAndContext(record, context),
 			&outputRecordsAndContexts,
 			inputDownstreamDoneChannel,
 			outputDownstreamDoneChannel,
 		)
 	}
-	tr.Transform(
+	_ = tr.Transform(
 		types.NewEndOfStreamMarker(context),
 		&outputRecordsAndContexts,
 		inputDownstreamDoneChannel,

@@ -166,11 +166,11 @@ func (tr *TransformerFormatValues) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if inrecAndContext.EndOfStream {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
-		return
+		return nil
 	}
 
 	for pe := inrecAndContext.Record.Head; pe != nil; pe = pe.Next {
@@ -195,4 +195,5 @@ func (tr *TransformerFormatValues) Transform(
 	}
 
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+	return nil
 }

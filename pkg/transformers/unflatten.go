@@ -140,9 +140,9 @@ func (tr *TransformerUnflatten) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	return tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 func (tr *TransformerUnflatten) unflattenAll(
@@ -150,7 +150,7 @@ func (tr *TransformerUnflatten) unflattenAll(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		oFlatSep := tr.oFlatSep
@@ -162,6 +162,7 @@ func (tr *TransformerUnflatten) unflattenAll(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerUnflatten) unflattenSome(
@@ -169,7 +170,7 @@ func (tr *TransformerUnflatten) unflattenSome(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		oFlatSep := tr.oFlatSep
@@ -181,4 +182,5 @@ func (tr *TransformerUnflatten) unflattenSome(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
+	return nil
 }

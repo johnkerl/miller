@@ -88,7 +88,7 @@ func (tr *TransformerLatin1ToUTF8) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -110,4 +110,5 @@ func (tr *TransformerLatin1ToUTF8) Transform(
 	} else { // end of record stream
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }

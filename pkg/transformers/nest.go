@@ -365,9 +365,9 @@ func (tr *TransformerNest) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	return tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 // getMatchingFieldNames returns field names matching tr.fieldRegex in record order.
@@ -393,14 +393,14 @@ func (tr *TransformerNest) explodeValuesAcrossFields(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 
 		inrec := inrecAndContext.Record
 		fieldNames := tr.getMatchingFieldNames(inrec)
 		if len(fieldNames) == 0 {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
-			return
+			return nil
 		}
 
 		for _, fieldName := range fieldNames {
@@ -430,6 +430,7 @@ func (tr *TransformerNest) explodeValuesAcrossFields(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerNest) explodeValuesAcrossRecords(
@@ -437,20 +438,20 @@ func (tr *TransformerNest) explodeValuesAcrossRecords(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		fieldNames := tr.getMatchingFieldNames(inrec)
 		if len(fieldNames) == 0 {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
-			return
+			return nil
 		}
 		fieldName := fieldNames[0]
 
 		mvalue := inrec.Get(fieldName)
 		if mvalue == nil {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
-			return
+			return nil
 		}
 		svalue := mvalue.String()
 
@@ -465,6 +466,7 @@ func (tr *TransformerNest) explodeValuesAcrossRecords(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerNest) explodePairsAcrossFields(
@@ -472,14 +474,14 @@ func (tr *TransformerNest) explodePairsAcrossFields(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 
 		inrec := inrecAndContext.Record
 		fieldNames := tr.getMatchingFieldNames(inrec)
 		if len(fieldNames) == 0 {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
-			return
+			return nil
 		}
 
 		for _, fieldName := range fieldNames {
@@ -517,6 +519,7 @@ func (tr *TransformerNest) explodePairsAcrossFields(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerNest) explodePairsAcrossRecords(
@@ -524,20 +527,20 @@ func (tr *TransformerNest) explodePairsAcrossRecords(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		fieldNames := tr.getMatchingFieldNames(inrec)
 		if len(fieldNames) == 0 {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
-			return
+			return nil
 		}
 		fieldName := fieldNames[0]
 
 		mvalue := inrec.Get(fieldName)
 		if mvalue == nil {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
-			return
+			return nil
 		}
 
 		svalue := mvalue.String()
@@ -563,6 +566,7 @@ func (tr *TransformerNest) explodePairsAcrossRecords(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerNest) implodeValuesAcrossFields(
@@ -570,7 +574,7 @@ func (tr *TransformerNest) implodeValuesAcrossFields(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
@@ -611,6 +615,7 @@ func (tr *TransformerNest) implodeValuesAcrossFields(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerNest) implodeValueAcrossRecords(
@@ -618,14 +623,14 @@ func (tr *TransformerNest) implodeValueAcrossRecords(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
 		originalEntry := inrec.GetEntry(tr.fieldName)
 		if originalEntry == nil {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
-			return
+			return nil
 		}
 
 		fieldValueCopy := originalEntry.Value.Copy()
@@ -679,6 +684,7 @@ func (tr *TransformerNest) implodeValueAcrossRecords(
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
 	}
+	return nil
 }
 
 type tNestBucket struct {

@@ -173,9 +173,9 @@ func (tr *TransformerRepeat) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	return tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 func (tr *TransformerRepeat) repeatByCount(
@@ -183,7 +183,7 @@ func (tr *TransformerRepeat) repeatByCount(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		for i := int64(0); i < tr.repeatCount; i++ {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(
@@ -194,6 +194,7 @@ func (tr *TransformerRepeat) repeatByCount(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }
 
 func (tr *TransformerRepeat) repeatByFieldName(
@@ -201,15 +202,15 @@ func (tr *TransformerRepeat) repeatByFieldName(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		fieldValue := inrecAndContext.Record.Get(tr.repeatCountFieldName)
 		if fieldValue == nil {
-			return
+			return nil
 		}
 		repeatCount, ok := fieldValue.GetIntValue()
 		if !ok {
-			return
+			return nil
 		}
 		for i := 0; i < int(repeatCount); i++ {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(
@@ -221,4 +222,5 @@ func (tr *TransformerRepeat) repeatByFieldName(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }

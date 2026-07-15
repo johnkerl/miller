@@ -185,10 +185,10 @@ func (tr *TransformerSeqgen) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		// Discard upstream records; generate output only when upstream is done.
-		return
+		return nil
 	}
 
 	counter := tr.start
@@ -231,4 +231,5 @@ func (tr *TransformerSeqgen) Transform(
 	}
 
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewEndOfStreamMarker(context))
+	return nil
 }

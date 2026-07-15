@@ -136,11 +136,11 @@ func (tr *TransformerSparsify) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 
 	if !inrecAndContext.EndOfStream {
-		tr.recordTransformerFunc(
+		return tr.recordTransformerFunc(
 			inrecAndContext,
 			outputRecordsAndContexts,
 			inputDownstreamDoneChannel,
@@ -149,6 +149,7 @@ func (tr *TransformerSparsify) Transform(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerSparsify) transformAll(
@@ -156,7 +157,7 @@ func (tr *TransformerSparsify) transformAll(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	inrec := inrecAndContext.Record
 	outrec := mlrval.NewMlrmapAsRecord()
 
@@ -169,6 +170,7 @@ func (tr *TransformerSparsify) transformAll(
 
 	outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, outrecAndContext)
+	return nil
 }
 
 func (tr *TransformerSparsify) transformSome(
@@ -176,7 +178,7 @@ func (tr *TransformerSparsify) transformSome(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	inrec := inrecAndContext.Record
 	outrec := mlrval.NewMlrmapAsRecord()
 
@@ -193,4 +195,5 @@ func (tr *TransformerSparsify) transformSome(
 
 	outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, outrecAndContext)
+	return nil
 }

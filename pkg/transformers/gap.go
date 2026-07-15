@@ -142,9 +142,9 @@ func (tr *TransformerGap) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	return tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 func (tr *TransformerGap) transformUnkeyed(
@@ -152,7 +152,7 @@ func (tr *TransformerGap) transformUnkeyed(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		if tr.recordCount > 0 && tr.recordCount%tr.gapCount == 0 {
 			newrec := mlrval.NewMlrmapAsRecord()
@@ -165,6 +165,7 @@ func (tr *TransformerGap) transformUnkeyed(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }
 
 func (tr *TransformerGap) transformKeyed(
@@ -172,7 +173,7 @@ func (tr *TransformerGap) transformKeyed(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
@@ -194,4 +195,5 @@ func (tr *TransformerGap) transformKeyed(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }

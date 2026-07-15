@@ -184,10 +184,10 @@ func (tr *TransformerCase) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
-		tr.recordTransformerFunc(
+		return tr.recordTransformerFunc(
 			inrecAndContext,
 			outputRecordsAndContexts,
 			inputDownstreamDoneChannel,
@@ -196,6 +196,7 @@ func (tr *TransformerCase) Transform(
 	} else { // end of record stream
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }
 
 func (tr *TransformerCase) transformKeysOnly(
@@ -203,7 +204,7 @@ func (tr *TransformerCase) transformKeysOnly(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	_ <-chan bool,
 	__ chan<- bool,
-) {
+) error {
 	inrec := inrecAndContext.Record
 	newrec := mlrval.NewMlrmapAsRecord()
 	for pe := inrec.Head; pe != nil; pe = pe.Next {
@@ -216,6 +217,7 @@ func (tr *TransformerCase) transformKeysOnly(
 		}
 	}
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+	return nil
 }
 
 func (tr *TransformerCase) transformValuesOnly(
@@ -223,7 +225,7 @@ func (tr *TransformerCase) transformValuesOnly(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	_ <-chan bool,
 	__ chan<- bool,
-) {
+) error {
 	inrec := inrecAndContext.Record
 	for pe := inrec.Head; pe != nil; pe = pe.Next {
 		if tr.fieldNameSet == nil || tr.fieldNameSet[pe.Key] {
@@ -234,6 +236,7 @@ func (tr *TransformerCase) transformValuesOnly(
 		}
 	}
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(inrec, &inrecAndContext.Context))
+	return nil
 }
 
 func (tr *TransformerCase) transformKeysAndValues(
@@ -241,7 +244,7 @@ func (tr *TransformerCase) transformKeysAndValues(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	_ <-chan bool,
 	__ chan<- bool,
-) {
+) error {
 	inrec := inrecAndContext.Record
 	newrec := mlrval.NewMlrmapAsRecord()
 	for pe := inrec.Head; pe != nil; pe = pe.Next {
@@ -259,4 +262,5 @@ func (tr *TransformerCase) transformKeysAndValues(
 		}
 	}
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(newrec, &inrecAndContext.Context))
+	return nil
 }

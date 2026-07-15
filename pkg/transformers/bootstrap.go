@@ -108,12 +108,12 @@ func (tr *TransformerBootstrap) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	// Not end of input stream: retain the record, and emit nothing until end of stream.
 	if !inrecAndContext.EndOfStream {
 		tr.recordsAndContexts = append(tr.recordsAndContexts, inrecAndContext)
-		return
+		return nil
 	}
 
 	// Else end of record stream
@@ -148,7 +148,7 @@ func (tr *TransformerBootstrap) Transform(
 	if nout == 0 {
 		// Emit the stream-terminating null record
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
-		return
+		return nil
 	}
 
 	// Make an array of pointers into the input list.
@@ -165,4 +165,5 @@ func (tr *TransformerBootstrap) Transform(
 
 	// Emit the stream-terminating null record
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+	return nil
 }

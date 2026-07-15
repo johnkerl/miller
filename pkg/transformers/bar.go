@@ -226,9 +226,9 @@ func (tr *TransformerBar) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	return tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 func (tr *TransformerBar) processNoAuto(
@@ -236,7 +236,7 @@ func (tr *TransformerBar) processNoAuto(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
@@ -257,6 +257,7 @@ func (tr *TransformerBar) processNoAuto(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // emit end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerBar) processAuto(
@@ -264,10 +265,10 @@ func (tr *TransformerBar) processAuto(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		tr.recordsForAutoMode = append(tr.recordsForAutoMode, inrecAndContext.Copy())
-		return
+		return nil
 	}
 
 	// Else, end of stream
@@ -336,4 +337,5 @@ func (tr *TransformerBar) processAuto(
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, tr.recordsForAutoMode...)
 
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // Emit the end-of-stream marker
+	return nil
 }

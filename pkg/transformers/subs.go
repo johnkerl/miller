@@ -323,7 +323,7 @@ func (tr *TransformerSubs) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 
 	if !inrecAndContext.EndOfStream {
@@ -337,6 +337,7 @@ func (tr *TransformerSubs) Transform(
 	}
 	// Including emit of end-of-stream marker
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
+	return nil
 }
 
 // fieldAcceptorByNames implements -f

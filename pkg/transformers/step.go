@@ -184,6 +184,11 @@ func transformerStepParseCLI(
 							verb, "stepper \"%s\": count must be a positive integer", stepperName,
 						)
 					}
+					if stepperNameHasNegativeSlwin(stepperName) {
+						return nil, cli.VerbErrorf(
+							verb, "stepper needed non-negative num-backward & num-forward in %s.", stepperName,
+						)
+					}
 					return nil, cli.VerbErrorf(verb, "stepper \"%s\" not found", stepperName)
 				}
 				stepperInputs = append(stepperInputs, stepperInput)
@@ -366,11 +371,13 @@ func (tr *TransformerStep) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 
 	if !inrecAndContext.EndOfStream {
-		tr.handleRecord(inrecAndContext, outputRecordsAndContexts)
+		if err := tr.handleRecord(inrecAndContext, outputRecordsAndContexts); err != nil {
+			return err
+		}
 
 	} else {
 		// As described in comments at the top of this file: process through all delayed-input
@@ -384,8 +391,9 @@ func (tr *TransformerStep) Transform(
 		}
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
-		return
+		return nil
 	}
+	return nil
 }
 
 // handleRecord processes records received before the end of the record stream is seen.
@@ -395,7 +403,7 @@ func (tr *TransformerStep) Transform(
 func (tr *TransformerStep) handleRecord(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
-) {
+) error {
 	inrec := inrecAndContext.Record
 
 	// Group-by field names are ["a", "b"]
@@ -404,7 +412,7 @@ func (tr *TransformerStep) handleRecord(
 	groupingKey, gok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 	if !gok { // current record doesn't have fields to be stepped; pass it along
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
-		return
+		return nil
 	}
 
 	// Create the data structure on first reference
@@ -459,15 +467,18 @@ func (tr *TransformerStep) handleRecord(
 		for _, stepperInput := range tr.stepperInputs {
 			stepper, present := accFieldToAccState[stepperInput.name]
 			if !present {
-				stepper = allocateStepper(
+				var err error
+				stepper, err = allocateStepper(
 					stepperInput,
 					valueFieldName,
 					tr.stringAlphas,
 					tr.ewmaSuffixes,
 				)
+				if err != nil {
+					return err
+				}
 				if stepper == nil {
-					fmt.Fprintf(os.Stderr, "mlr step: stepper allocation failed\n")
-					os.Exit(1)
+					return cli.VerbErrorf(verbNameStep, "stepper allocation failed")
 				}
 				accFieldToAccState[stepperInput.name] = stepper
 			}
@@ -481,6 +492,7 @@ func (tr *TransformerStep) handleRecord(
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, outrecAndContext)
 		tr.removeFromLog(outrecAndContext)
 	}
+	return nil
 }
 
 // handleDrainRecord processes records received after the end of the record stream is seen.  The
@@ -584,7 +596,7 @@ type tStepperAllocator func(
 	inputFieldName string,
 	stringAlphas []string,
 	ewmaSuffixes []string,
-) tStepper
+) (tStepper, error)
 
 type tStepperInput struct {
 	name               string
@@ -720,7 +732,7 @@ func allocateStepper(
 	inputFieldName string,
 	stringAlphas []string,
 	ewmaSuffixes []string,
-) tStepper {
+) (tStepper, error) {
 	for _, stepperLookup := range STEPPER_LOOKUP_TABLE {
 		if stepperLookup.nameIsVariable {
 			if stepperLookup.ownsPrefix(stepperInput.name) {
@@ -742,7 +754,7 @@ func allocateStepper(
 			}
 		}
 	}
-	return nil
+	return nil, nil
 }
 
 // parseStepperCount parses stepper names which accept an optional trailing
@@ -870,13 +882,13 @@ func stepperDeltaAlloc(
 	inputFieldName string,
 	_unused1 []string,
 	_unused2 []string,
-) tStepper {
+) (tStepper, error) {
 	count, _ := parseStepperCount(stepperInput.name, "delta")
 	return &tStepperDelta{
 		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_" + stepperInput.name,
 		prevValues:      newValueRing(count),
-	}
+	}, nil
 }
 
 func (stepper *tStepperDelta) process(
@@ -976,13 +988,13 @@ func stepperShiftAlloc(
 	inputFieldName string,
 	_unused1 []string,
 	_unused2 []string,
-) tStepper {
+) (tStepper, error) {
 	count, _ := parseStepperCount(stepperInput.name, "shift")
 	return &tStepperShiftLag{
 		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_" + stepperInput.name,
 		prevValues:      newValueRing(count),
-	}
+	}, nil
 }
 
 func stepperShiftLagAlloc(
@@ -990,13 +1002,13 @@ func stepperShiftLagAlloc(
 	inputFieldName string,
 	_unused1 []string,
 	_unused2 []string,
-) tStepper {
+) (tStepper, error) {
 	count, _ := parseStepperCount(stepperInput.name, "shift_lag")
 	return &tStepperShiftLag{
 		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_" + stepperInput.name,
 		prevValues:      newValueRing(count),
-	}
+	}, nil
 }
 
 func (stepper *tStepperShiftLag) process(
@@ -1062,12 +1074,12 @@ func stepperShiftLeadAlloc(
 	inputFieldName string,
 	_unused1 []string,
 	_unused2 []string,
-) tStepper {
+) (tStepper, error) {
 	return &tStepperShiftLead{
 		inputFieldName:    inputFieldName,
 		outputFieldName:   inputFieldName + "_" + stepperInput.name,
 		numRecordsForward: stepperInput.numRecordsForward,
-	}
+	}, nil
 }
 
 func (stepper *tStepperShiftLead) process(
@@ -1114,12 +1126,12 @@ func stepperFromFirstAlloc(
 	inputFieldName string,
 	_unused1 []string,
 	_unused2 []string,
-) tStepper {
+) (tStepper, error) {
 	return &tStepperFromFirst{
 		first:           nil,
 		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_from_first",
-	}
+	}, nil
 }
 
 func (stepper *tStepperFromFirst) process(
@@ -1185,13 +1197,13 @@ func stepperRatioAlloc(
 	inputFieldName string,
 	_unused1 []string,
 	_unused2 []string,
-) tStepper {
+) (tStepper, error) {
 	count, _ := parseStepperCount(stepperInput.name, "ratio")
 	return &tStepperRatio{
 		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_" + stepperInput.name,
 		prevValues:      newValueRing(count),
-	}
+	}, nil
 }
 
 func (stepper *tStepperRatio) process(
@@ -1252,12 +1264,12 @@ func stepperRprodAlloc(
 	inputFieldName string,
 	_unused1 []string,
 	_unused2 []string,
-) tStepper {
+) (tStepper, error) {
 	return &tStepperRprod{
 		rprod:           mlrval.FromInt(1),
 		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_rprod",
-	}
+	}, nil
 }
 
 func (stepper *tStepperRprod) process(
@@ -1307,12 +1319,12 @@ func stepperRsumAlloc(
 	inputFieldName string,
 	_unused1 []string,
 	_unused2 []string,
-) tStepper {
+) (tStepper, error) {
 	return &tStepperRsum{
 		rsum:            mlrval.FromInt(0),
 		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_rsum",
-	}
+	}, nil
 }
 
 func (stepper *tStepperRsum) process(
@@ -1362,12 +1374,12 @@ func stepperCounterAlloc(
 	inputFieldName string,
 	_unused1 []string,
 	_unused2 []string,
-) tStepper {
+) (tStepper, error) {
 	return &tStepperCounter{
 		counter:         mlrval.FromInt(0),
 		inputFieldName:  inputFieldName,
 		outputFieldName: inputFieldName + "_counter",
-	}
+	}, nil
 }
 
 func (stepper *tStepperCounter) process(
@@ -1422,7 +1434,7 @@ func stepperEWMAAlloc(
 	inputFieldName string,
 	stringAlphas []string,
 	ewmaSuffixes []string,
-) tStepper {
+) (tStepper, error) {
 
 	// We trust our caller has already checked len(stringAlphas) == len(ewmaSuffixes) in the CLI
 	// parser.
@@ -1443,12 +1455,8 @@ func stepperEWMAAlloc(
 
 		dalpha, ok := lib.TryFloatFromString(stringAlpha)
 		if !ok {
-			fmt.Fprintf(
-				os.Stderr,
-				"mlr step: could not parse \"%s\" as floating-point EWMA coefficient.\n",
-				stringAlpha,
-			)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verbNameStep,
+				"could not parse \"%s\" as floating-point EWMA coefficient.", stringAlpha)
 		}
 		alphas[i] = mlrval.FromFloat(dalpha)
 		oneMinusAlphas[i] = mlrval.FromFloat(1.0 - dalpha)
@@ -1463,7 +1471,7 @@ func stepperEWMAAlloc(
 		inputFieldName:   inputFieldName,
 		outputFieldNames: outputFieldNames,
 		havePrevs:        false,
-	}
+	}, nil
 }
 
 func (stepper *tStepperEWMA) process(
@@ -1516,6 +1524,15 @@ func stepperSlwintOwnsPrefix(
 	return strings.HasPrefix(stepperName, "slwin")
 }
 
+// stepperNameHasNegativeSlwin detects slwin stepper names whose
+// num-backward/num-forward parsed but were negative, so the CLI parser can
+// give a more specific error than "stepper not found".
+func stepperNameHasNegativeSlwin(stepperName string) bool {
+	var numRecordsBackward, numRecordsForward int
+	n, err := fmt.Sscanf(stepperName, "slwin_%d_%d", &numRecordsBackward, &numRecordsForward)
+	return n == 2 && err == nil && (numRecordsBackward < 0 || numRecordsForward < 0)
+}
+
 func stepperSlwinInputFromName(
 	stepperName string,
 ) *tStepperInput {
@@ -1523,13 +1540,9 @@ func stepperSlwinInputFromName(
 	n, err := fmt.Sscanf(stepperName, "slwin_%d_%d", &numRecordsBackward, &numRecordsForward)
 	if n == 2 && err == nil {
 		if numRecordsBackward < 0 || numRecordsForward < 0 {
-			fmt.Fprintf(
-				os.Stderr,
-				"mlr %s: stepper needed non-negative num-backward & num-forward in %s.\n",
-				verbNameStep,
-				stepperName,
-			)
-			os.Exit(1)
+			// The CLI parser reports the specific negative-parameter error;
+			// see stepperNameHasNegativeSlwin.
+			return nil
 		}
 		return &tStepperInput{
 			name:               stepperName,
@@ -1546,7 +1559,7 @@ func stepperSlwinAlloc(
 	inputFieldName string,
 	_unused1 []string,
 	_unused2 []string,
-) tStepper {
+) (tStepper, error) {
 	nb := stepperInput.numRecordsBackward
 	nf := stepperInput.numRecordsForward
 	return &tStepperSlwin{
@@ -1554,7 +1567,7 @@ func stepperSlwinAlloc(
 		outputFieldName:    fmt.Sprintf("%s_%d_%d", inputFieldName, nb, nf),
 		numRecordsBackward: nb,
 		numRecordsForward:  nf,
-	}
+	}, nil
 }
 
 func (stepper *tStepperSlwin) process(

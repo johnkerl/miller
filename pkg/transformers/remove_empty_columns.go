@@ -91,7 +91,7 @@ func (tr *TransformerRemoveEmptyColumns) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -123,4 +123,5 @@ func (tr *TransformerRemoveEmptyColumns) Transform(
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // Emit the stream-terminating null record
 	}
+	return nil
 }

@@ -112,20 +112,20 @@ func (tr *TransformerSurv) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext,
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		rec := inrecAndContext.Record
 		mvDur := rec.Get(tr.durationField)
 		if mvDur == nil {
 			// Skip records missing the duration field
-			return
+			return nil
 		}
 		duration := mvDur.GetNumericToFloatValueOrDie()
 		mvStat := rec.Get(tr.statusField)
 		if mvStat == nil {
 			// Skip records missing the status field
-			return
+			return nil
 		}
 		status := mvStat.GetNumericToFloatValueOrDie() != 0
 		tr.times = append(tr.times, duration)
@@ -135,7 +135,7 @@ func (tr *TransformerSurv) Transform(
 		n := len(tr.times)
 		if n == 0 {
 			*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
-			return
+			return nil
 		}
 		durations := tr.times
 		statuses := make([]float64, n)
@@ -151,8 +151,7 @@ func (tr *TransformerSurv) Transform(
 		ds := statmodel.NewDataset(dataCols, names)
 		sf, err := duration.NewSurvfuncRight(ds, tr.durationField, tr.statusField, &duration.SurvfuncRightConfig{})
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr surv: %v\n", err)
-			os.Exit(1)
+			return cli.VerbErrorf(verbNameSurv, "%v", err)
 		}
 		sf.Fit()
 		times := sf.Time()
@@ -165,4 +164,5 @@ func (tr *TransformerSurv) Transform(
 		}
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }

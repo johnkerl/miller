@@ -157,9 +157,9 @@ func (tr *TransformerCount) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	return tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 func (tr *TransformerCount) countUngrouped(
@@ -167,7 +167,7 @@ func (tr *TransformerCount) countUngrouped(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		tr.ungroupedCount++
 	} else {
@@ -177,6 +177,7 @@ func (tr *TransformerCount) countUngrouped(
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
+	return nil
 }
 
 func (tr *TransformerCount) countGrouped(
@@ -184,7 +185,7 @@ func (tr *TransformerCount) countGrouped(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
@@ -192,7 +193,7 @@ func (tr *TransformerCount) countGrouped(
 			tr.groupByFieldNames,
 		)
 		if !ok { // Current record does not have specified fields; ignore
-			return
+			return nil
 		}
 
 		if !tr.groupedCounts.Has(groupingKey) {
@@ -243,4 +244,5 @@ func (tr *TransformerCount) countGrouped(
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
+	return nil
 }

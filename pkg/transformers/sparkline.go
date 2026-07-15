@@ -119,7 +119,7 @@ func (tr *TransformerSparkline) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 
 	if !inrecAndContext.EndOfStream {
@@ -130,7 +130,7 @@ func (tr *TransformerSparkline) Transform(
 				tr.valuesByField[fieldName] = append(tr.valuesByField[fieldName], mvalue.Copy())
 			}
 		}
-		return
+		return nil
 	}
 
 	// Else, end of stream: emit one summary record per field.
@@ -155,6 +155,7 @@ func (tr *TransformerSparkline) Transform(
 	}
 
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // Emit the end-of-stream marker
+	return nil
 }
 
 // floatRangeOf returns the min and max of the numeric values, and whether

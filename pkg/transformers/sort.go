@@ -394,7 +394,7 @@ func (tr *TransformerSort) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -411,7 +411,7 @@ func (tr *TransformerSort) Transform(
 		)
 		if !ok {
 			tr.spillGroup = append(tr.spillGroup, inrecAndContext)
-			return
+			return nil
 		}
 
 		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
@@ -468,6 +468,7 @@ func (tr *TransformerSort) Transform(
 
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext) // end-of-stream marker
 	}
+	return nil
 }
 
 func groupHeadsToArray(groupHeads *lib.OrderedMap[[]*mlrval.Mlrval]) []GroupingKeysAndMlrvals {

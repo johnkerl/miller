@@ -130,9 +130,9 @@ func (tr *TransformerCleanWhitespace) Transform(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	return tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
@@ -140,7 +140,7 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		newrec := mlrval.NewMlrmapAsRecord()
 
@@ -156,6 +156,7 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }
 
 func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeys(
@@ -163,7 +164,7 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeys(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		newrec := mlrval.NewMlrmapAsRecord()
 
@@ -178,6 +179,7 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeys(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }
 
 func (tr *TransformerCleanWhitespace) cleanWhitespaceInValues(
@@ -185,7 +187,7 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInValues(
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-) {
+) error {
 	if !inrecAndContext.EndOfStream {
 		for pe := inrecAndContext.Record.Head; pe != nil; pe = pe.Next {
 			pe.Value = bifs.BIF_clean_whitespace(pe.Value)
@@ -194,4 +196,5 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInValues(
 	} else {
 		*outputRecordsAndContexts = append(*outputRecordsAndContexts, inrecAndContext)
 	}
+	return nil
 }
