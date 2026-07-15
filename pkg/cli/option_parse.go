@@ -59,7 +59,11 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) error {
 		// and spaces, that should now be the default for NIDX. But *only* for NIDX format,
 		// and if IFS wasn't specified.
 		if readerOptions.InputFileFormat == "nidx" && !readerOptions.ifsWasSpecified {
-			readerOptions.IFSRegex = lib.CompileMillerRegexOrDie(WHITESPACE_REGEX)
+			regex, err := lib.CompileMillerRegex(WHITESPACE_REGEX)
+			if err != nil {
+				return err
+			}
+			readerOptions.IFSRegex = regex
 		} else {
 			if allowRepeatIFS, ok := defaultAllowRepeatIFSes[readerOptions.InputFileFormat]; ok {
 				readerOptions.AllowRepeatIFS = allowRepeatIFS
@@ -285,7 +289,11 @@ var SeparatorFlagSection = FlagSection{
 				// LF vs CR/LF line endings is handled within Go libraries so
 				// we needn't do anything ourselves.
 				if args[*pargi+1] != "auto" {
-					options.ReaderOptions.IFSRegex = lib.CompileMillerRegexOrDie(SeparatorRegexFromArg(args[*pargi+1]))
+					regex, err := lib.CompileMillerRegex(SeparatorRegexFromArg(args[*pargi+1]))
+					if err != nil {
+						return err
+					}
+					options.ReaderOptions.IFSRegex = regex
 					options.ReaderOptions.ifsWasSpecified = true
 				}
 				*pargi += 2
@@ -316,7 +324,11 @@ var SeparatorFlagSection = FlagSection{
 				if err := CheckArgCount(args, *pargi, argc, 2); err != nil {
 					return err
 				}
-				options.ReaderOptions.IPSRegex = lib.CompileMillerRegexOrDie(SeparatorRegexFromArg(args[*pargi+1]))
+				regex, err := lib.CompileMillerRegex(SeparatorRegexFromArg(args[*pargi+1]))
+				if err != nil {
+					return err
+				}
+				options.ReaderOptions.IPSRegex = regex
 				options.ReaderOptions.ipsWasSpecified = true
 				*pargi += 2
 				return nil

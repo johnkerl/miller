@@ -140,6 +140,52 @@ asserts on both; see also recent exit-code fixes #2171, #2146). `--errors-json`
 categorization must keep working — and gains coverage, since stream-time errors that
 today bypass `EmitStructuredError` will now arrive at the entrypoint as errors.
 
+## Status (2026-07)
+
+- Phase 1: done — #2198.
+- Phase 2: done — #2202.
+- Phase 3: done — #2204. Additionally, the `RecordTransformerFunc` internal
+  dispatch methods were converted along with `Transform`, and the step verb's
+  `tStepperAllocator` table gained an error return.
+- Phase 4: done — #2205. Went one step further than planned: the
+  `auxents`/`terminals` dispatchers themselves now return exit codes instead
+  of calling `os.Exit`, so `entrypoint.Main` is the single exit point below
+  `main`. Also converted in the phase-5 wrap-up PR: `RootNode.ProcessEndOfStream`
+  (a phase-3 leftover on the put/filter Transform path) returns an error.
+- Phase 5: **deferred** — see below.
+
+### Phase 5 deferral rationale
+
+The sketch below (error-Mlrvals via `FromErrorString`) turns out to have costs
+not visible at planning time: 58 regression cases pin the current
+loud-failure behavior (exact stderr message plus exit 1 via `should-fail`),
+and error-Mlrvals display as bare `(error)` — so HOF/UDF misuse would fail
+*silently* with exit 0 unless `--fail-on-data-error` is set, a debugging-UX
+regression. An alternative mechanism (a typed panic recovered at the four
+`Execute*` boundaries, then riding the phase-3 error path) would preserve
+behavior exactly, but introduces panic/recover to a codebase that has none.
+Rather than pick under time pressure, the DSL cluster is deferred to the
+issue-440 strict-mode design, where the fatal-vs-data error taxonomy has to
+be decided anyway. The remaining sites are all in `pkg/dsl/cst`: `hofs.go`
+(14), `udf.go` (8), `evaluable.go` (1), plus `builtin_function_manager.go`'s
+init-time duplicate-name assertion.
+
+### Final keep-list (intentional, documented)
+
+- `pkg/entrypoint/entrypoint.go` `exitOnError` — the sanctioned exit point.
+- `pkg/lib/logger.go` `InternalCodingErrorIf` family — should-never-happen
+  assertions (`MLR_PANIC_ON_INTERNAL_ERROR` gives stack traces).
+- `pkg/bifs/types.go` `assertingCommon` — the `asserting_*` DSL builtins,
+  whose documented contract is abort-on-failure.
+- `pkg/mlrval/mlrval_get.go` (`GetNumericToFloatValueOrDie`,
+  `StrictModeCheck`) and `mlrval_output.go` (`String()` path) — inside
+  `fmt.Stringer` and hot-path value accessors; error returns don't fit the
+  signatures. Candidates for the 440 redesign.
+- `pkg/lib/mlrmath.go` (eigensolver non-convergence), `pkg/lib/regex.go`
+  `CompileMillerRegexOrDie` (remaining callers are `lib`-internal and `bifs`
+  hot paths, both on the `Evaluate`-shaped signatures deferred with phase 5;
+  the `option_parse` callers were converted in the wrap-up PR).
+
 ## Phases (one PR each, each green under `make dev` + `make lint`)
 
 ### Phase 1 — top level + all mechanical swaps (clusters 2, 3a, 5, 7 partial)
