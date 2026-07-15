@@ -124,8 +124,9 @@ type JoinBucketKeeper struct {
 	// TODO: merge with leof flag
 	recordReaderDone bool
 
-	leftJoinFieldNames   []string
-	leftKeepFieldNameSet map[string]bool
+	leftJoinFieldNames    []string
+	leftKeepFieldNameSet  map[string]bool
+	ignoreEmptyJoinFields bool
 
 	// Given a left-file of the following form (with left-join-field name "L"):
 	//   +-----+
@@ -157,6 +158,7 @@ func NewJoinBucketKeeper(
 	joinReaderOptions *cli.TReaderOptions,
 	leftJoinFieldNames []string,
 	leftKeepFieldNameSet map[string]bool,
+	ignoreEmptyJoinFields bool,
 ) (*JoinBucketKeeper, error) {
 
 	// Instantiate the record-reader
@@ -187,8 +189,9 @@ func NewJoinBucketKeeper(
 		errorChannel:     errorChannel,
 		recordReaderDone: false,
 
-		leftJoinFieldNames:   leftJoinFieldNames,
-		leftKeepFieldNameSet: leftKeepFieldNameSet,
+		leftJoinFieldNames:    leftJoinFieldNames,
+		leftKeepFieldNameSet:  leftKeepFieldNameSet,
+		ignoreEmptyJoinFields: ignoreEmptyJoinFields,
 
 		JoinBucket:           NewJoinBucket(nil),
 		peekRecordAndContext: nil,
@@ -337,7 +340,7 @@ func (keeper *JoinBucketKeeper) prepareForFirstJoinBucket() error {
 		if keeper.peekRecordAndContext == nil { // left EOF
 			break
 		}
-		if keeper.peekRecordAndContext.Record.HasSelectedKeys(keeper.leftJoinFieldNames) {
+		if recordHasJoinKeys(keeper.peekRecordAndContext.Record, keeper.leftJoinFieldNames, keeper.ignoreEmptyJoinFields) {
 			break
 		}
 		keeper.leftUnpaireds = append(keeper.leftUnpaireds, keeper.peekRecordAndContext)
@@ -412,7 +415,7 @@ func (keeper *JoinBucketKeeper) prepareForNewJoinBucket(
 			}
 			peekRec := keeper.peekRecordAndContext.Record
 
-			if peekRec.HasSelectedKeys(keeper.leftJoinFieldNames) {
+			if recordHasJoinKeys(peekRec, keeper.leftJoinFieldNames, keeper.ignoreEmptyJoinFields) {
 				break
 			}
 			keeper.leftUnpaireds = append(keeper.leftUnpaireds, keeper.peekRecordAndContext)
@@ -485,6 +488,9 @@ func (keeper *JoinBucketKeeper) fillNextJoinBucket() error {
 		peekFieldValues, hasAllJoinKeys := peekRec.ReferenceSelectedValues(
 			keeper.leftJoinFieldNames,
 		)
+		if hasAllJoinKeys && keeper.ignoreEmptyJoinFields && valuesContainVoid(peekFieldValues) {
+			hasAllJoinKeys = false
+		}
 
 		if hasAllJoinKeys {
 			cmp := compareLexically(
@@ -593,6 +599,37 @@ func moveRecordsAndContexts(
 ) {
 	*destination = append(*destination, (*source)...)
 	*source = (*source)[:0]
+}
+
+// recordHasJoinKeys reports whether rec has all of the given field names. If
+// ignoreEmptyJoinFields is set, a field holding an empty-string value counts
+// as absent, same as for --ignore-empty on the right-hand side of the join.
+func recordHasJoinKeys(
+	rec *mlrval.Mlrmap,
+	fieldNames []string,
+	ignoreEmptyJoinFields bool,
+) bool {
+	for _, fieldName := range fieldNames {
+		value := rec.Get(fieldName)
+		if value == nil {
+			return false
+		}
+		if ignoreEmptyJoinFields && value.IsVoid() {
+			return false
+		}
+	}
+	return true
+}
+
+// valuesContainVoid returns true if any of the given values is present but
+// empty-string (mlrval "void").
+func valuesContainVoid(values []*mlrval.Mlrval) bool {
+	for _, value := range values {
+		if value != nil && value.IsVoid() {
+			return true
+		}
+	}
+	return false
 }
 
 // Returns -1, 0, 1 as left <, ==, > right, using lexical comparison only (even
