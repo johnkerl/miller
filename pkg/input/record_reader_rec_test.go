@@ -127,8 +127,11 @@ func TestRecordFromRECLinesMissingColonSpaceIsError(t *testing.T) {
 func TestRecordFromRECLinesMissingColonSpaceBareColonIsError(t *testing.T) {
 	reader := newTestRECReader(t)
 
-	// Per the recutils spec, the separator is exactly ": " (colon-space) --
-	// a bare colon with no following space does not count.
+	// Per the recutils spec, a non-empty value must be separated from the
+	// field name by ": " (colon-space) -- a colon directly followed by
+	// value text with no separating space is malformed. (A colon followed
+	// by nothing at all is a different, valid case: an empty value -- see
+	// TestRecordFromRECLinesBareColonEmptyValue.)
 	record, err := reader.recordFromRECLines([]string{
 		"Foo:bar",
 	})
@@ -153,11 +156,46 @@ func TestJoinRECBackslashContinuations(t *testing.T) {
 	)
 }
 
-func TestFoldRECPlusContinuations(t *testing.T) {
-	folded, err := foldRECPlusContinuations([]string{"a: 1", "+ 2", "+3"})
+func TestParseRECFields(t *testing.T) {
+	fields, err := parseRECFields([]string{"a: 1", "+ 2", "+3"})
 	assert.Nil(t, err)
-	assert.Equal(t, []string{"a: 1\n2\n3"}, folded)
+	assert.Equal(t, []tRECField{{key: "a", value: "1\n2\n3"}}, fields)
 
-	_, err = foldRECPlusContinuations([]string{"+ orphan"})
+	_, err = parseRECFields([]string{"+ orphan"})
 	assert.NotNil(t, err)
+}
+
+func TestRecordFromRECLinesBareColonEmptyValue(t *testing.T) {
+	reader := newTestRECReader(t)
+
+	// Per the recutils spec, a field's value may be empty: a colon with
+	// nothing after it (not even a space) is valid, distinct from the
+	// "Foo:bar" case above which is missing the required separator space.
+	record, err := reader.recordFromRECLines([]string{
+		"notes:",
+	})
+	assert.Nil(t, err)
+	assert.NotNil(t, record)
+	assert.Equal(t, int64(1), record.FieldCount)
+	assert.Equal(t, "notes", record.Head.Key)
+	assert.Equal(t, "", record.Head.Value.String())
+}
+
+func TestRecordFromRECLinesBareColonPlusContinuation(t *testing.T) {
+	reader := newTestRECReader(t)
+
+	// This is the idiomatic recutils "%doc:" pattern from the official
+	// manual's tutorial example: an empty-valued field whose actual value
+	// is supplied entirely by the "+"-continuation lines that follow. The
+	// continuation becomes the value outright, with no spurious leading
+	// "\n" from folding onto an empty base value.
+	record, err := reader.recordFromRECLines([]string{
+		"%doc:",
+		"+ A book in my personal collection.",
+	})
+	assert.Nil(t, err)
+	assert.NotNil(t, record)
+	assert.Equal(t, int64(1), record.FieldCount)
+	assert.Equal(t, "%doc", record.Head.Key)
+	assert.Equal(t, "A book in my personal collection.", record.Head.Value.String())
 }

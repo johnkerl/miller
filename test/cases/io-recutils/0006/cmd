@@ -1,0 +1,1 @@
+mlr --skip-comments --irecutils --ojson cat test/input/books.rec

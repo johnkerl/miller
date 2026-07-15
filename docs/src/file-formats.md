@@ -994,6 +994,43 @@ Since `#`-prefixed lines are, like every other Miller format, treated as data un
 
 Miller has no notion of recutils' record-descriptor/schema records (lines starting with `%rec:` which declare field types, mandatory fields, keys, and so on) -- those are read and written as ordinary records, with no special interpretation, since Miller is a schema-less stream processor.
 
+A field can also be given an empty value of its own -- just `Name:` with nothing after the colon, not even a space -- with its real value supplied entirely by the `+` continuation line(s) that follow. This is how GNU recutils' own `%doc` record-descriptor field is commonly written:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/sample2.rec</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+# A record descriptor whose %doc field has no value of its own -- just a
+# bare colon -- with the actual text supplied entirely by the "+"
+# continuation line that follows.
+# Source: https://www.gnu.org/software/recutils/manual/html_node/A-Little-Example.html
+
+%rec: Book
+%doc:
++ A book in my personal collection.
+
+Title: GNU Emacs Manual
+Author: Richard M. Stallman
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --skip-comments -i recutils -o json cat data/sample2.rec</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "%rec": "Book",
+  "%doc": "A book in my personal collection."
+},
+{
+  "Title": "GNU Emacs Manual",
+  "Author": "Richard M. Stallman"
+}
+]
+</pre>
+
+Here the continuation becomes the field's value outright -- unlike the non-empty-value case above, there is no leading embedded newline.
+
 Use `--irecutils`/`--orecutils`/`--recutils` (or `-i recutils`/`-o recutils`) for recutils input/output/both, analogously to `--idcf`/`--odcf`/`--dcf`.
 
 Note: a field value whose last line ends in a literal `\` is ambiguous with an in-progress backslash-continuation on write/re-read, since recutils has no in-value backslash-escaping mechanism. This is a limitation of the recutils format itself, not specific to Miller.
