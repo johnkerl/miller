@@ -1,0 +1,4 @@
+- a: 1
+  req:
+    method: GET
+    path: api/check

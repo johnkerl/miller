@@ -479,7 +479,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                                 csv` is the same as `--ocsv`.
 
 1mFLATTEN-UNFLATTEN FLAGS0m
-       These flags control how Miller converts record values which are maps or arrays, when input is JSON and output is non-JSON (flattening) or input is non-JSON and output is JSON (unflattening).
+       These flags control how Miller converts record values which are maps or arrays, when input is JSON/YAML and output is not (flattening) or input is not JSON/YAML and output is JSON/YAML (unflattening).
 
        See the flatten/unflatten doc page https://miller.readthedocs.io/en/latest/flatten-unflatten for more information.
 
@@ -487,16 +487,17 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                                 Separator for flattening multi-level JSON keys, e.g.
                                 `{"a":{"b":3}}` becomes `a:b =&gt; 3` for non-JSON
                                 formats. Defaults to `.`.
-       --no-auto-flatten        When output is non-JSON, suppress the default
+       --no-auto-flatten        When output is not JSON or YAML, suppress the default
                                 auto-flatten behavior. Default: if `$y = [7,8,9]`
                                 then this flattens to `y.1=7,y.2=8,y.3=9`, and
                                 similarly for maps. With `--no-auto-flatten`, instead
                                 we get `$y=[1, 2, 3]`.
-       --no-auto-unflatten      When input is non-JSON and output is JSON, suppress
-                                the default auto-unflatten behavior. Default: if the
-                                input has `y.1=7,y.2=8,y.3=9` then this unflattens to
-                                `$y=[7,8,9]`. With `--no-auto-flatten`, instead we
-                                get `${y.1}=7,${y.2}=8,${y.3}=9`.
+       --no-auto-unflatten      When input is not JSON or YAML and output is JSON or
+                                YAML, suppress the default auto-unflatten behavior.
+                                Default: if the input has `y.1=7,y.2=8,y.3=9` then
+                                this unflattens to `$y=[7,8,9]`. With
+                                `--no-auto-flatten`, instead we get
+                                `${y.1}=7,${y.2}=8,${y.3}=9`.
 
 1mFORMAT-CONVERSION KEYSTROKE-SAVER FLAGS0m
        As keystroke-savers for format-conversion you may use the following.
@@ -4159,5 +4160,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-07-14                         4mMILLER24m(1)
+                                  2026-07-15                         4mMILLER24m(1)
 </pre>

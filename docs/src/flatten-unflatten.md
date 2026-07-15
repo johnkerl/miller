@@ -73,6 +73,12 @@ _JSON-stringifying_:
 Miller intends to provide intuitive default behavior for these conversions, while also
 providing you with more control when you need it.
 
+Everything below is written in terms of JSON, but it applies equally to
+[YAML](file-formats.md#yaml) -- another nested format where values can be
+maps or arrays. Auto-flattening happens whenever the output format is
+neither JSON nor YAML; auto-unflattening happens whenever the input format
+is neither JSON nor YAML but the output format is one or the other.
+
 ## Converting maps between JSON and non-JSON
 
 Let's first look at the default behavior with map-valued fields. Miller's
@@ -403,13 +409,13 @@ unflattening (if the defaults aren't working for us in a particular situation),
 let's first look a little into how they're implemented.
 
 * There are two [verbs](reference-verbs.md) called [flatten](reference-verbs.md#flatten) and [unflatten](reference-verbs.md#unflatten).
-* When the output format is not JSON, if you've specified `mlr ... cat then sort ...` (some [chain](reference-main-then-chaining.md) of verbs) then Miller appends, in effect, `then flatten` to the end of the chain.
+* When the output format is not JSON or YAML, if you've specified `mlr ... cat then sort ...` (some [chain](reference-main-then-chaining.md) of verbs) then Miller appends, in effect, `then flatten` to the end of the chain.
     * This behavior is on by default but it can be suppressed using the `--no-auto-flatten` [flag](reference-main-flag-list.md#flatten-unflatten-flags).
-* When the output format is JSON and the input format is not JSON, then (similarly) appends, in effect, `then unflatten`   to the end of the chain.
+* When the output format is JSON or YAML and the input format is neither, then (similarly) Miller appends, in effect, `then unflatten` to the end of the chain.
     * This behavior is on by default but it can be suppressed using the `--no-auto-unflatten` [flag](reference-main-flag-list.md#flatten-unflatten-flags).
 
 Note in particular that auto-flatten happens even when the input format and the
-output format are both non-JSON, e.g. even for CSV-to-CSV processing. This is
+output format are both non-JSON/non-YAML, e.g. even for CSV-to-CSV processing. This is
 because
 [map](reference-main-maps.md)-valued/[array](reference-main-arrays.md)-valued
 fields can be produced using [DSL statements](miller-programming-language.md):

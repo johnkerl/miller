@@ -5,7 +5,7 @@ package cli
 //
 // PROBLEM TO BE SOLVED:
 //
-// JSON has nested structures and CSV et al. do not. For example:
+// JSON and YAML have nested structures and CSV et al. do not. For example:
 // {
 //   "req" : {
 //     "method": "GET",
@@ -22,7 +22,9 @@ package cli
 //
 // APPROACH:
 //
-// Use the Principle of Least Surprise (POLS).
+// Use the Principle of Least Surprise (POLS). Below, "JSON" stands for any
+// format capable of representing nested structures natively -- currently
+// JSON, JSON Lines, and YAML.
 //
 // * If input is JSON and output is JSON:
 //   o Records can be nested from record-read
@@ -54,11 +56,17 @@ package cli
 //   flatten, don't undo that by putting an unflatten right after.
 //
 
+// isNestable returns true for formats which can represent nested/array
+// structures natively, and thus don't need auto-flatten/auto-unflatten.
+func isNestable(format string) bool {
+	return format == "json" || format == "jsonl" || format == "yaml"
+}
+
 func DecideFinalFlatten(writerOptions *TWriterOptions) bool {
 	ofmt := writerOptions.OutputFileFormat
 	if writerOptions.AutoFlatten {
 		// Preserve nested/array structure for formats that support it.
-		if ofmt != "json" && ofmt != "jsonl" && ofmt != "dcf" {
+		if !isNestable(ofmt) && ofmt != "dcf" {
 			return true
 		}
 	}
@@ -85,8 +93,8 @@ func DecideFinalUnflatten(
 	ofmt := options.WriterOptions.OutputFileFormat
 
 	if options.WriterOptions.AutoUnflatten {
-		if ifmt != "json" {
-			if ofmt == "json" {
+		if !isNestable(ifmt) {
+			if isNestable(ofmt) {
 				return true
 			}
 		}
