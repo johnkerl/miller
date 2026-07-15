@@ -1,0 +1,32 @@
+[
+{
+  "id": 4,
+  "code": "ff0000",
+  "color": "red"
+},
+{
+  "id": 2,
+  "code": "00ff00",
+  "color": "green"
+},
+{
+  "id": "",
+  "color": "white"
+},
+{
+  "id": "",
+  "color": "black"
+},
+{
+  "id": 3,
+  "code": "0000ff"
+},
+{
+  "id": "",
+  "code": "ffffff"
+},
+{
+  "id": "",
+  "code": "000000"
+}
+]

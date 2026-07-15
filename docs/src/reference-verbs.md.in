@@ -669,6 +669,26 @@ GENMD-RUN-COMMAND
 mlr --csvlite --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
 GENMD-EOF
 
+By default, records with an empty-string value in a join field are joined just like any other value -- so two records which are both missing an ID, say, will be paired with one another even though that's rarely what's wanted:
+
+GENMD-RUN-COMMAND
+mlr --csv cat data/join-ignore-empty-left.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv cat data/join-ignore-empty-right.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv join -j id -f data/join-ignore-empty-left.csv data/join-ignore-empty-right.csv
+GENMD-EOF
+
+Use `--ignore-empty` to instead treat an empty-string join-field value as if the field were absent, on both the left and right files. Such records are never paired -- not even with one another:
+
+GENMD-RUN-COMMAND
+mlr --csv join --ignore-empty -j id -f data/join-ignore-empty-left.csv data/join-ignore-empty-right.csv
+GENMD-EOF
+
 ## json-parse
 
 GENMD-RUN-COMMAND

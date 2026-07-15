@@ -213,24 +213,21 @@ func runSingleTransformer(
 			outputRecordChannel,
 			inputDownstreamDoneChannel,
 			outputDownstreamDoneChannel,
+			dataProcessingErrorChannel,
 			options,
 		)
 		if err != nil {
-			// Surface the error to stream.Stream's select loop. Non-blocking
-			// send: if another goroutine errored first, that error wins.
-			select {
-			case dataProcessingErrorChannel <- err:
-			default:
-			}
+			// runSingleTransformerBatch has already sent the error to
+			// dataProcessingErrorChannel and then forwarded an end-of-stream
+			// marker downstream, so the record-writer drains and finishes,
+			// upon which stream.Stream returns the error.
+			//
 			// Tell upstream (transformers and ultimately the record-reader,
 			// via the mlr-head mechanism) that we'll ignore further input.
 			select {
 			case outputDownstreamDoneChannel <- true:
 			default:
 			}
-			// runSingleTransformerBatch has already forwarded an end-of-stream
-			// marker downstream, so the record-writer drains and finishes,
-			// upon which stream.Stream returns the error we sent above.
 			return
 		}
 	}
@@ -238,10 +235,10 @@ func runSingleTransformer(
 
 // runSingleTransformerBatch passes one batch of records through the
 // transformer. The boolean return is true on end of record stream. A non-nil
-// error is a mid-stream transformer failure: any output produced before the
-// failure, plus an end-of-stream marker, has already been forwarded
-// downstream so the rest of the chain and the record-writer can drain and
-// finish cleanly.
+// error is a mid-stream transformer failure: the error has already been sent
+// to dataProcessingErrorChannel, and any output produced before the failure,
+// plus an end-of-stream marker, has already been forwarded downstream so the
+// rest of the chain and the record-writer can drain and finish cleanly.
 func runSingleTransformerBatch(
 	inputRecordsAndContexts []*types.RecordAndContext, // list of types.RecordAndContext
 	recordTransformer RecordTransformer,
@@ -249,6 +246,7 @@ func runSingleTransformerBatch(
 	outputRecordChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
+	dataProcessingErrorChannel chan<- error,
 	options *cli.TOptions,
 ) (bool, error) {
 	outputRecordsAndContexts := make([]*types.RecordAndContext, 0, len(inputRecordsAndContexts))
@@ -292,6 +290,17 @@ func runSingleTransformerBatch(
 				outputDownstreamDoneChannel,
 			)
 			if err != nil {
+				// Surface the error to stream.Stream's select loop.
+				// Non-blocking send: if another goroutine errored first, that
+				// error wins. This must happen before the end-of-stream
+				// marker is forwarded below: the marker lets the
+				// record-writer finish and signal done-writing, and the error
+				// must already be buffered by then or stream.Stream could
+				// return nil, losing the nonzero exit code.
+				select {
+				case dataProcessingErrorChannel <- err:
+				default:
+				}
 				// Forward what was produced before the failure, plus an
 				// end-of-stream marker so downstream drains and finishes.
 				outputRecordsAndContexts = append(outputRecordsAndContexts,

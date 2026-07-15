@@ -562,6 +562,13 @@ Options:
 --ul                                 Emit unpaired records from the left file.
 --ur                                 Emit unpaired records from the right
                                      file(s).
+--ignore-empty                       Treat records with empty-string values in
+                                     any join-field as if that join-field were
+                                     absent, on both the left and right files.
+                                     Such records are never paired -- not even
+                                     with one another -- and are treated as
+                                     unpaired, subject to --np/--ul/--ur as
+                                     usual.
 -s|--sorted-input                    Require sorted input: records must be
                                      sorted lexically by their join-field names,
                                      else not all records will be paired. The

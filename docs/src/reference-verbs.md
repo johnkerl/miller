@@ -1940,6 +1940,13 @@ Options:
 --ul                                 Emit unpaired records from the left file.
 --ur                                 Emit unpaired records from the right
                                      file(s).
+--ignore-empty                       Treat records with empty-string values in
+                                     any join-field as if that join-field were
+                                     absent, on both the left and right files.
+                                     Such records are never paired -- not even
+                                     with one another -- and are treated as
+                                     unpaired, subject to --np/--ul/--ur as
+                                     usual.
 -s|--sorted-input                    Require sorted input: records must be
                                      sorted lexically by their join-field names,
                                      else not all records will be paired. The
@@ -2133,6 +2140,55 @@ left_a left_b left_c right_a right_b right_c
 1      4      5      1       2       3
 1      2      3      1       4       5
 1      4      5      1       4       5
+</pre>
+
+By default, records with an empty-string value in a join field are joined just like any other value -- so two records which are both missing an ID, say, will be paired with one another even though that's rarely what's wanted:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv cat data/join-ignore-empty-left.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,code
+3,0000ff
+2,00ff00
+4,ff0000
+,ffffff
+,000000
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv cat data/join-ignore-empty-right.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,color
+4,red
+2,green
+,white
+,black
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv join -j id -f data/join-ignore-empty-left.csv data/join-ignore-empty-right.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,code,color
+4,ff0000,red
+2,00ff00,green
+,ffffff,white
+,000000,white
+,ffffff,black
+,000000,black
+</pre>
+
+Use `--ignore-empty` to instead treat an empty-string join-field value as if the field were absent, on both the left and right files. Such records are never paired -- not even with one another:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv join --ignore-empty -j id -f data/join-ignore-empty-left.csv data/join-ignore-empty-right.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+id,code,color
+4,ff0000,red
+2,00ff00,green
 </pre>
 
 ## json-parse

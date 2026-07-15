@@ -26,6 +26,7 @@ var joinOptions = []OptionSpec{
 	{Flag: "--np", Type: "bool", Desc: "Do not emit paired records."},
 	{Flag: "--ul", Type: "bool", Desc: "Emit unpaired records from the left file."},
 	{Flag: "--ur", Type: "bool", Desc: "Emit unpaired records from the right file(s)."},
+	{Flag: "--ignore-empty", Type: "bool", Desc: "Treat records with empty-string values in any join-field as if that join-field were absent, on both the left and right files. Such records are never paired -- not even with one another -- and are treated as unpaired, subject to --np/--ul/--ur as usual."},
 	{Flag: "-s", Aliases: []string{"--sorted-input"}, Type: "bool", Desc: "Require sorted input: records must be sorted lexically by their join-field names, else not all records will be paired. The only likely use case for this is with a left file which is too big to fit into system memory otherwise."},
 	{Flag: "-u", Type: "bool", Desc: "Enable unsorted input. (This is the default even without -u.) In this case, the entire left file will be loaded into memory."},
 	{Flag: "--prepipe", Arg: "{command}", Type: "string", Desc: "Shell command to prepipe the left-file input through. As in main input options; see mlr --help for details. If you wish to use a prepipe command for the main input as well as here, it must be specified there as well as here."},
@@ -54,10 +55,11 @@ type tJoinOptions struct {
 	leftJoinFieldNames   []string
 	rightJoinFieldNames  []string
 
-	allowUnsortedInput   bool
-	emitPairables        bool
-	emitLeftUnpairables  bool
-	emitRightUnpairables bool
+	allowUnsortedInput    bool
+	emitPairables         bool
+	emitLeftUnpairables   bool
+	emitRightUnpairables  bool
+	ignoreEmptyJoinFields bool
 
 	leftFileName string
 	prepipe      string
@@ -77,10 +79,11 @@ func newJoinOptions() *tJoinOptions {
 		leftJoinFieldNames:   nil,
 		rightJoinFieldNames:  nil,
 
-		allowUnsortedInput:   true,
-		emitPairables:        true,
-		emitLeftUnpairables:  false,
-		emitRightUnpairables: false,
+		allowUnsortedInput:    true,
+		emitPairables:         true,
+		emitLeftUnpairables:   false,
+		emitRightUnpairables:  false,
+		ignoreEmptyJoinFields: false,
 
 		leftFileName: "",
 		prepipe:      "",
@@ -222,6 +225,9 @@ func transformerJoinParseCLI(
 		case "--ur":
 			opts.emitRightUnpairables = true
 
+		case "--ignore-empty":
+			opts.ignoreEmptyJoinFields = true
+
 		case "-u":
 			opts.allowUnsortedInput = true
 
@@ -290,6 +296,18 @@ func transformerJoinParseCLI(
 	return transformer, nil
 }
 
+// anyValueIsEmpty returns true if any of the given values is present but
+// empty-string (mlrval "void"). Used for --ignore-empty, which treats such
+// join-field values as though the field were absent altogether.
+func anyValueIsEmpty(values []*mlrval.Mlrval) bool {
+	for _, value := range values {
+		if value != nil && value.IsVoid() {
+			return true
+		}
+	}
+	return false
+}
+
 type TransformerJoin struct {
 	opts *tJoinOptions
 
@@ -352,6 +370,7 @@ func NewTransformerJoin(
 			&opts.joinFlagOptions.ReaderOptions,
 			opts.leftJoinFieldNames,
 			tr.leftKeepFieldNameSet,
+			opts.ignoreEmptyJoinFields,
 		)
 		if err != nil {
 			return nil, err
@@ -400,6 +419,12 @@ func (tr *TransformerJoin) transformHalfStreaming(
 		groupingKey, hasAllJoinKeys := inrec.GetSelectedValuesJoined(
 			tr.opts.rightJoinFieldNames,
 		)
+		if hasAllJoinKeys && tr.opts.ignoreEmptyJoinFields {
+			rightFieldValues, _ := inrec.GetSelectedValues(tr.opts.rightJoinFieldNames)
+			if anyValueIsEmpty(rightFieldValues) {
+				hasAllJoinKeys = false
+			}
+		}
 		if hasAllJoinKeys {
 			leftBucket := tr.leftBucketsByJoinFieldValues.Get(groupingKey)
 			if leftBucket == nil {
@@ -447,6 +472,9 @@ func (tr *TransformerJoin) transformDoublyStreaming(
 		rightFieldValues, hasAllJoinKeys := rightRec.ReferenceSelectedValues(
 			tr.opts.rightJoinFieldNames,
 		)
+		if hasAllJoinKeys && tr.opts.ignoreEmptyJoinFields && anyValueIsEmpty(rightFieldValues) {
+			hasAllJoinKeys = false
+		}
 		if hasAllJoinKeys {
 			var err error
 			isPaired, err = keeper.FindJoinBucket(rightFieldValues)
@@ -569,6 +597,9 @@ func (tr *TransformerJoin) ingestLeftFile() error {
 			groupingKey, leftFieldValues, ok := leftrec.GetSelectedValuesAndJoined(
 				tr.opts.leftJoinFieldNames,
 			)
+			if ok && tr.opts.ignoreEmptyJoinFields && anyValueIsEmpty(leftFieldValues) {
+				ok = false
+			}
 			if ok {
 				bucket := tr.leftBucketsByJoinFieldValues.Get(groupingKey)
 				if bucket == nil { // New key-field-value: new bucket and hash-map entry
