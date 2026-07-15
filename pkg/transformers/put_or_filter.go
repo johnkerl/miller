@@ -459,7 +459,8 @@ func NewTransformerPut(
 	// --explain is a validate/dry-run: report whether the DSL parsed and
 	// type-checked, then exit without reading the input stream. A parse/build
 	// error is returned so it flows through the normal error path (including
-	// --errors-json); a valid expression prints a confirmation and exits 0.
+	// --errors-json); a valid expression prints a confirmation and requests
+	// exit 0 via the ExitRequest sentinel.
 	if doExplain {
 		if err != nil {
 			return nil, err
@@ -469,11 +470,10 @@ func NewTransformerPut(
 			verbName = "filter"
 		}
 		if warningsAreFatal && hadWarnings {
-			fmt.Fprintf(os.Stderr, "mlr %s: DSL expression has warnings treated as fatal.\n", verbName)
-			os.Exit(1)
+			return nil, cli.VerbErrorf(verbName, "DSL expression has warnings treated as fatal.")
 		}
 		fmt.Printf("mlr %s: DSL expression is valid.\n", verbName)
-		os.Exit(0)
+		return nil, lib.NewExitZeroRequest()
 	}
 
 	if warningsAreFatal && hadWarnings {
@@ -481,11 +481,11 @@ func NewTransformerPut(
 			"%s: Exiting due to warnings treated as fatal.\n",
 			"mlr",
 		)
-		os.Exit(1)
+		return nil, &lib.ExitRequest{Code: 1}
 	}
 
 	if exitAfterParse {
-		os.Exit(0)
+		return nil, lib.NewExitZeroRequest()
 	}
 
 	if err != nil {

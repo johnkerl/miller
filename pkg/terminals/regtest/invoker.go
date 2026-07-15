@@ -2,6 +2,7 @@ package regtest
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -70,9 +71,17 @@ func RunDiffCommandOnStrings(
 ) (
 	diffOutput string,
 ) {
-	actualOutputFileName := lib.WriteTempFileOrDie(actualOutput)
-	expectedOutputFileName := lib.WriteTempFileOrDie(expectedOutput)
+	// The diff output is best-effort debugging help (see below); if we can't
+	// write the temp files for it, say so in its place rather than aborting.
+	actualOutputFileName, err := lib.WriteTempFile(actualOutput)
+	if err != nil {
+		return fmt.Sprintf("(diff unavailable: %v)", err)
+	}
 	defer func() { _ = os.Remove(actualOutputFileName) }()
+	expectedOutputFileName, err := lib.WriteTempFile(expectedOutput)
+	if err != nil {
+		return fmt.Sprintf("(diff unavailable: %v)", err)
+	}
 	defer func() { _ = os.Remove(expectedOutputFileName) }()
 
 	// This is diff or fc

@@ -207,15 +207,7 @@ func NewTransformerHavingFields(
 		// Strip off the leading " and trailing " or "i.
 		regex, err := lib.CompileMillerRegex(regexString)
 		if err != nil {
-			fmt.Fprintf(
-				os.Stderr,
-				"%s %s: cannot compile regex \"%s\"\n",
-				"mlr",
-				verbNameHavingFields,
-				regexString,
-			)
-			os.Exit(1)
-			// return nil, err
+			return nil, cli.VerbErrorf(verbNameHavingFields, "cannot compile regex \"%s\"", regexString)
 		}
 		tr.regex = regex
 

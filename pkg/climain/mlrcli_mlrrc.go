@@ -11,19 +11,7 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/cli"
 )
 
-// loadMlrrcOrDie is a fatal-error wrapper around loadMlrrc.
-func loadMlrrcOrDie(
-	options *cli.TOptions,
-	profileName string,
-) {
-	err := loadMlrrc(options, profileName)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
-	}
-}
-
-// loadMlrrc rule: If $MLRRC is set, use it and only it.  Otherwise try first
+// loadMlrrcFiles rule: If $MLRRC is set, use it and only it.  Otherwise try first
 // $HOME/.mlrrc and then ./.mlrrc but let them stack: e.g. $HOME/.mlrrc is
 // lots of settings and maybe in one subdir you want to override just a
 // setting or two.
@@ -34,7 +22,7 @@ func loadMlrrcOrDie(
 // skipped. Non-empty means global lines are applied first, then the lines in
 // any [profileName] section. It's a fatal error if a profile was requested
 // but no matching section exists in any .mlrrc file processed.
-func loadMlrrc(
+func loadMlrrcFiles(
 	options *cli.TOptions,
 	profileName string,
 ) error {
@@ -85,7 +73,7 @@ func loadMlrrc(
 	return checkMlrrcProfileWasFound(profileName, foundProfile, loadedPaths)
 }
 
-// checkMlrrcProfileWasFound is a helper function for loadMlrrc: if a profile
+// checkMlrrcProfileWasFound is a helper function for loadMlrrcFiles: if a profile
 // was requested via --profile {name} / -P {name}, there must be a matching
 // [name] section in at least one processed .mlrrc file.
 func checkMlrrcProfileWasFound(
@@ -108,7 +96,7 @@ func checkMlrrcProfileWasFound(
 	)
 }
 
-// tryLoadMlrrc is a helper function for loadMlrrc. The first return value is
+// tryLoadMlrrc is a helper function for loadMlrrcFiles. The first return value is
 // whether the file could be opened at all: an unopenable file is not an error
 // (that's the normal case when no .mlrrc file exists). The second is any
 // parse error within an opened file.

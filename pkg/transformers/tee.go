@@ -95,7 +95,7 @@ func transformerTeeParseCLI(
 				// Nothing else to handle here.
 				argi = largi
 			} else {
-				os.Exit(1)
+				return nil, cli.VerbErrorf(verbNameTee, "option \"%s\" not recognized", opt)
 			}
 		}
 	}
@@ -123,8 +123,7 @@ func transformerTeeParseCLI(
 		&localOptions.WriterOptions,
 	)
 	if err != nil {
-		// Error message already printed out
-		os.Exit(1)
+		return nil, err
 	}
 
 	return transformer, nil

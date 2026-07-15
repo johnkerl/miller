@@ -2,8 +2,6 @@ package output
 
 import (
 	"bufio"
-	"fmt"
-	"os"
 
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
@@ -56,11 +54,9 @@ func (writer *RecordWriterJSON) Write(
 	}
 
 	if writer.writerOptions.WrapJSONOutputInOuterList {
-		writer.writeWithListWrap(outrec, context, bufferedOutputStream, outputIsStdout)
-	} else {
-		writer.writeWithoutListWrap(outrec, context, bufferedOutputStream, outputIsStdout)
+		return writer.writeWithListWrap(outrec, context, bufferedOutputStream, outputIsStdout)
 	}
-	return nil
+	return writer.writeWithoutListWrap(outrec, context, bufferedOutputStream, outputIsStdout)
 }
 
 func (writer *RecordWriterJSON) writeWithListWrap(
@@ -68,7 +64,7 @@ func (writer *RecordWriterJSON) writeWithListWrap(
 	context *types.Context,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
-) {
+) error {
 	if outrec != nil { // Not end of record stream
 		if !writer.wroteAnyRecords {
 			bufferedOutputStream.WriteString("[\n")
@@ -78,8 +74,7 @@ func (writer *RecordWriterJSON) writeWithListWrap(
 		// can place it neatly with commas here (if the user requested them).
 		s, err := outrec.FormatAsJSON(writer.jsonFormatting, outputIsStdout)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		if writer.wroteAnyRecords {
@@ -102,6 +97,7 @@ func (writer *RecordWriterJSON) writeWithListWrap(
 		}
 
 	}
+	return nil
 }
 
 func (writer *RecordWriterJSON) writeWithoutListWrap(
@@ -109,20 +105,20 @@ func (writer *RecordWriterJSON) writeWithoutListWrap(
 	_ *types.Context,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
-) {
+) error {
 	if outrec == nil {
 		// End of record stream
-		return
+		return nil
 	}
 
 	// The Mlrmap FormatAsJSON doesn't include the final newline, so that we
 	// can place it neatly with commas here (if the user requested them).
 	s, err := outrec.FormatAsJSON(writer.jsonFormatting, outputIsStdout)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
-		os.Exit(1)
+		return err
 	}
 
 	bufferedOutputStream.WriteString(s)
 	bufferedOutputStream.WriteString("\n")
+	return nil
 }

@@ -162,12 +162,7 @@ func NewTransformerCut(
 			// Handles "a.*b"i Miller case-insensitive-regex specification
 			regex, err := lib.CompileMillerRegex(regexString)
 			if err != nil {
-				fmt.Fprintf(
-					os.Stderr,
-					"%s %s: cannot compile regex [%s]\n",
-					"mlr", verbNameCut, regexString,
-				)
-				os.Exit(1)
+				return nil, cli.VerbErrorf(verbNameCut, "cannot compile regex [%s]", regexString)
 			}
 			tr.regexes[i] = regex
 		}
