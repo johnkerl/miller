@@ -50,8 +50,13 @@ behind an explicit per-verb opt-in.
   (`pkg/dsl/cst/builtin_functions.go:591-610`) does one-level `Get` per dot when the LHS is
   a map, else falls back to string concatenation. So `$x.y.z` is `(($x).y).z` — strictly
   leftmost, one key per segment, never "try `x.y` as a single key".
-- The bracket form `$x["y"]["z"]` and lvalue assignments collect `[]*Mlrval` index chains
-  and call `Get/Put/RemoveIndexed` (`pkg/dsl/cst/lvalues.go:115, 447, 532`).
+- Bracket-form reads (`$x["y"]["z"]`) evaluate level-by-level through
+  `ArrayOrMapIndexAccessNode` (`pkg/dsl/cst/collections.go:53`); lvalue assignments and
+  unsets collect `[]*Mlrval` index chains and call `PutIndexed`/`RemoveIndexed`
+  (`pkg/dsl/cst/lvalues.go:115, 447, 532`). Note there is no bulk `GetIndexed` — the
+  closest read-side primitive is `GetWithMlrvalIndex` with an array-valued index
+  (the `$x[["a","b"]]` form), which dispatches to the unexported
+  `getWithMlrvalArrayIndex` walker.
 - Crucially, the DSL already has a disambiguation *syntax*: `$x.y.z` means traversal,
   `${x.y.z}` means the literal flat name. The verbs have no equivalent syntax slot today —
   that's the heart of the design problem.
@@ -138,7 +143,8 @@ always wins when both exist in one record (sharp edge S3 below).
   architecture doesn't support today. Fine as a documented manual idiom; not recommended as
   the feature.
 - **Option B — native path accessors** at the Mlrmap level, adopted verb by verb, reusing
-  `Put/Remove/GetIndexed`. Pros: lossless, structure-preserving, precise per-verb
+  `PutIndexed`/`RemoveIndexed` and adding the missing bulk read (export/generalize
+  `getWithMlrvalArrayIndex`, or build `GetPath` directly on `[]*Mlrval` chains). Pros: lossless, structure-preserving, precise per-verb
   semantics, no shape changes for neighboring verbs. Cons: real API surface; each verb
   needs its own semantic decisions (inventory below); long tail of verbs.
 - **Option C — document-only.** What #1815 settled for. Zero risk, leaves the asymmetry.
@@ -356,3 +362,89 @@ Each phase independently mergeable, `make check` green throughout.
 - **Q6 — cut output shape.** Structure-preserving (recommended; JSON-native) vs
   flattened-key output (matches Option A's model). If anyone wants the latter they can
   say `flatten then cut`.
+
+## Appendix: verb inventory — field-name arguments
+
+Survey of all `pkg/transformers/*.go`. "Field-name args" means flags/positionals whose
+payload is record keys — not values, separators, formats, counts, filenames, or
+accumulator/stepper names (`-a` in stats1/step/merge-fields is an accumulator list, not
+fields). put/filter are excluded: their `-f` is a DSL *filename*, and their nested access
+is the DSL's own.
+
+### Verbs that take field names
+
+| Verb | Field-name args | Regex mode? | Record ops used | Derives output names from inputs? |
+|---|---|---|---|---|
+| bar | `-f`: value fields | no | Get, PutReference in place | no |
+| bootstrap-ci | `-f`: value fields; `-g`: group-by | no | Get, grouping | emits summary records |
+| case | `-f`: restrict to fields (`-k`/`-v` keys/values only) | no | set membership; rewrites key casing | yes — transforms key names |
+| cat | `-g`: group-by; `-N`: counter field to create | no | GetSelectedValuesJoined, PrependReference | yes — `-N` |
+| count | `-g`: group-by; `-o`: count field name | no | grouping | yes — `-o` |
+| count-distinct | `-f`: distinctness fields; `-o`: count field | no | GetSelectedValues | yes — `-o` |
+| count-similar | `-g`: group-by; `-o`: counter field | no | grouping | yes — `-o` |
+| cut | `-f`: keep (or drop with `-x`) | **`-r`** | Has, Remove; regex vs keys | no |
+| decimate | `-g`: group-by | no | grouping | no |
+| fill-down | `-f`: fields to fill (`--all`) | no | Get, Has, PutReference | no |
+| flatten | `-f`: fields to flatten (else all) | no | per-field flatten | creates dotted keys |
+| fraction | `-f`: value fields; `-g`: group-by | no | Get, grouping | **yes** — `x_fraction` etc. |
+| gap | `-g`: group-by | no | grouping | no |
+| group-by | positional: group-by keys | no | GetSelectedValuesJoined | no |
+| having-fields | `--at-least`/`--which-are`/`--at-most`: name lists | **yes** — `--all/any/none-matching` | key-set membership / regex vs keys | no |
+| head | `-g`: group-by | no | grouping | no |
+| histogram | `-f`: fields to bin; `-o`: output prefix | no | Get | **yes** — `PREFIX…` |
+| join | `-j`/`-l`/`-r`: join keys; `--lk`: left fields to emit (`-f` is a *file*) | no | join-key matching | prefixed names on collision (`--lp`/`--rp`) |
+| json-parse | `-f`: fields to parse (else all) | no | per-field in place | no |
+| json-stringify | `-f`: fields to stringify (else all) | no | per-field in place | no |
+| label | positional: new names by position | no | Label (bulk rename) | yes — renames keys |
+| merge-fields | `-f`: value fields; `-c`: name substrings to collapse; `-o`: output basename | **`-r`** | Get; key iteration | **yes** — `basename_sum` etc. |
+| most/least-frequent | `-f`: fields to count; `-o`: count field | no | grouping | yes — `-o` |
+| nest | `-f`: single field to explode/implode | **`-r`** | Get, Remove, PutReference | explode-across-fields makes `field_1,…` |
+| rank | `-f`: fields to rank; `-g`: group-by | no | Get, PutCopy | **yes** — `x_rank` |
+| rename | positional `old,new,…` pairs | **`-r`**, `-g` (gsub on key text) | Rename; regex key rewrite | yes — the new names |
+| reorder | `-f`: fields to move (`-e` tail); `-b`/`-a {center}`: pivot field | no | MoveToHead/Tail; Get + rebuild | no |
+| repeat | `-f`: field holding the repeat count | no | Get | no |
+| reshape | `-i`: input fields; `-o`: key,value output names; `-s`: key,value fields | **`-r`** (on `-i`) | reads/creates keys; pivots | **yes** — from `-o`, or from field *values* with `-s` |
+| sample | `-g`: group-by | no | grouping | no |
+| sec2gmt / sec2gmtdate | positional: fields to convert | no | Get, PutReference in place | no |
+| seqgen | `-f`: output field to generate (no input) | no | PutCopy | yes — sole output name |
+| sort | `-f`/`-r`/`-nf`/`-nr`/`-tf`/`-tr`/`-c`/`-cr`: sort keys (`-r` = reverse here, **not** regex) | no | GetSelectedValues | no |
+| sort-within-records | `-f`: restrict/order keys | **`-r`** (with `-f`; standalone `-r` = recurse) | reorders keys in record | no |
+| sparkline | `-f`: value fields | no | Get | emits per-field |
+| sparsify | `-f`: fields to consider (else all) | no | Remove empties | no |
+| split | `-g`: group-by | no | grouping | no (writes files) |
+| stats1 | `-f`: value fields; `-g`: group-by | **yes** — `--fr`/`--fx`, `--gr`/`--gx` | Get; GetSelectedValues(Joined) | **yes** — `x_sum`, … |
+| stats2 | `-f`: value-field pairs; `-g`: group-by | no | Get; grouping | **yes** — `x_y_corr`, … |
+| step | `-f`: value fields; `-g`: group-by | no | Get; grouping | **yes** — `x_delta`, `x_ewma_*`, … |
+| sub/gsub/ssub | `-f`: fields whose values to edit (`-a` = all) | **`-r`** | set/regex vs keys; edit values | no |
+| surv | `-d`: duration field; `-s`: status field | no | Get | emits new records |
+| tail | `-g`: group-by | no | grouping | no |
+| template | `-f`: exact ordered output key set | no | builds record with these keys | yes — output keys are `-f` |
+| top | `-f`: value fields; `-g`: group-by; `-o`: index field | no | Get; grouping | **yes** — `x_top`, `-o` |
+| uniq | `-g`/`-f`: uniqueness fields; `-x`: exclude fields; `-o`: count field | no | GetSelectedValuesJoined, GetKeysExcept | yes — `-o` |
+| unflatten | `-f`: fields to unflatten (else all) | no | splits keys on flatsep | rebuilds nested keys |
+| unsparsify | `-f`: names to guarantee present | no | Has, PutCopy | yes — `-f` become columns |
+
+### Verbs with no field-name args
+
+altkv, bootstrap, check, clean-whitespace, describe, fill-empty, format-values, grep
+(regex over serialized record text, not keys), group-like, latin1-to-utf8 /
+utf8-to-latin1, nothing, regularize, remove-empty-columns, shuffle,
+skip-trivial-records, summary (`-a`/`-x` are summarizer names), tac, tee, unspace.
+
+### Cross-cutting observations
+
+- **`-r` is overloaded across verbs**: field-name-regex in cut, having-fields
+  (`--*-matching`), rename, merge-fields, nest, reshape, sort-within-records (with `-f`),
+  sub/gsub/ssub, stats1 (`--fr/--gr` family); but *reverse* in sort, *right-join keys* in
+  join, *recurse* in sort-within-records (standalone). Any path-flag naming must dodge
+  these (Q2).
+- **Derived-name verbs** (S7) are the long pole: stats1/stats2/step/fraction/rank/top/
+  merge-fields/histogram/nest all synthesize new keys by suffixing input names — a path
+  spec `x.y` as input yields flat `x.y_sum`-style outputs whose downstream unflatten
+  behavior must be defined before those verbs adopt paths.
+- **Group-by extraction is centralized** on `GetSelectedValuesJoined`/`GetSelectedValues`
+  — one choke point covers `-g` for cat, count, count-similar, decimate, gap, group-by,
+  head, sample, split, stats1/2, step, tail, top, uniq, fraction, rank, bootstrap-ci.
+- Selection/removal concentrates on `Has`/`Get`/`Remove`; reordering on
+  `MoveToHead`/`MoveToTail`; bulk rename on `Rename`/`Label` — the Mlrmap path API in §2
+  maps one-to-one onto these.
