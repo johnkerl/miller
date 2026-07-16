@@ -1,0 +1,4 @@
+{
+  "shape": ["triangle", "square", "circle", "square", "triangle", "square", "triangle", "circle", "circle", "square"],
+  "rate": [9.8870, 0.0130, 2.9010, 7.4670, 8.5910, 9.5310, 5.8240, 4.2370, 8.3350, 8.2430]
+}

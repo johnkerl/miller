@@ -474,3 +474,94 @@ output -- as any full transpose must.
 
 Thanks to @Fravadona on [issue 321](https://github.com/johnkerl/miller/issues/321)
 for the original version of this recipe.
+
+## Columns as JSON arrays
+
+Some downstream tools -- for example the [Stan](https://mc-stan.org/) modeling
+language -- want their input as a JSON object whose values are arrays, one
+array per column, rather than the more usual array-of-records shape:
+
+<pre class="pre-non-highlight-non-pair">
+{
+  "shape": ["triangle", "square", "circle"],
+  "rate":  [9.8870, 0.0130, 2.9010]
+}
+</pre>
+
+rather than
+
+<pre class="pre-non-highlight-non-pair">
+[
+  {"shape": "triangle", "rate": 9.8870},
+  {"shape": "square",   "rate": 0.0130},
+  {"shape": "circle",   "rate": 2.9010}
+]
+</pre>
+
+There's no dedicated Miller file format for this -- it's just a particular
+shape of JSON, and the same [out-of-stream
+variable](reference-dsl-variables.md#out-of-stream-variables) technique from
+the transposing example above gets you there, keying by field name first and
+row number second (rather than the other way around). The
+[`arrayify`](reference-dsl-builtin-functions.md#arrayify) function turns the
+per-column maps (keyed `"1"`, `"2"`, ...) into real JSON arrays, and
+[`emit1`](reference-dsl-output-statements.md#emit1-and-emitemitpemitf) emits the
+whole thing as a single record rather than splitting it one-record-per-key
+the way plain `emit` would:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ojson cut -f shape,rate then put -q '</b>
+<b>  for (k, v in $*) {</b>
+<b>    @output_record[k][NR] = v;</b>
+<b>  }</b>
+<b>  end {</b>
+<b>    emit1 arrayify(@output_record);</b>
+<b>  }</b>
+<b>' example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "shape": ["triangle", "square", "circle", "square", "triangle", "square", "triangle", "circle", "circle", "square"],
+  "rate": [9.8870, 0.0130, 2.9010, 7.4670, 8.5910, 9.5310, 5.8240, 4.2370, 8.3350, 8.2430]
+}
+]
+</pre>
+
+To go the other way -- expanding column-arrays back into one record per row
+-- find the longest array in the record, then re-key by row index first and
+field name second:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --ocsv put -q '</b>
+<b>  n = 0;</b>
+<b>  for (k, v in $*) {</b>
+<b>    n = max(n, length(v));</b>
+<b>  }</b>
+<b>  keys = get_keys($*);</b>
+<b>  for (int i = 1; i <= n; i += 1) {</b>
+<b>    map row = {};</b>
+<b>    for (k in keys) {</b>
+<b>      row[k] = $[k][i];</b>
+<b>    }</b>
+<b>    emit row;</b>
+<b>  }</b>
+<b>' data/stan-example.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+shape,rate
+triangle,9.8870
+square,0.0130
+circle,2.9010
+square,7.4670
+triangle,8.5910
+square,9.5310
+triangle,5.8240
+circle,4.2370
+circle,8.3350
+square,8.2430
+</pre>
+
+Save either of these as a `.mlr` file and pull it in with `put -q -f
+mkstan.mlr` or `put -q -f unstan.mlr` to reuse them without retyping. See also
+[issue 392](https://github.com/johnkerl/miller/issues/392).
