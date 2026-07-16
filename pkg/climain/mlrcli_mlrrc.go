@@ -11,10 +11,11 @@ import (
 	"github.com/johnkerl/miller/v6/pkg/cli"
 )
 
-// loadMlrrcFiles rule: If $MLRRC is set, use it and only it.  Otherwise try first
-// $HOME/.mlrrc and then ./.mlrrc but let them stack: e.g. $HOME/.mlrrc is
-// lots of settings and maybe in one subdir you want to override just a
-// setting or two.
+// loadMlrrcFiles rule: If $MLRRC is set, use it and only it. Otherwise try, in
+// order, $HOME/.mlrrc, then $XDG_CONFIG_HOME/miller/mlrrc (defaulting to
+// $HOME/.config/miller/mlrrc if $XDG_CONFIG_HOME is unset), then ./.mlrrc --
+// but let them stack: e.g. $HOME/.mlrrc is lots of settings and maybe in one
+// subdir you want to override just a setting or two.
 //
 // The profileName argument comes from the --profile {name} / -P {name} main
 // flag. Empty string means no profile was requested: only global (pre-section)
@@ -53,6 +54,21 @@ func loadMlrrcFiles(
 	env_home := os.Getenv("HOME")
 	if env_home != "" {
 		path := env_home + "/.mlrrc"
+		loaded, err := tryLoadMlrrc(options, path, profileName, &foundProfile)
+		if err != nil {
+			return err
+		}
+		if loaded {
+			loadedPaths = append(loadedPaths, path)
+		}
+	}
+
+	xdgConfigHome := os.Getenv("XDG_CONFIG_HOME")
+	if xdgConfigHome == "" && env_home != "" {
+		xdgConfigHome = env_home + "/.config"
+	}
+	if xdgConfigHome != "" {
+		path := xdgConfigHome + "/miller/mlrrc"
 		loaded, err := tryLoadMlrrc(options, path, profileName, &foundProfile)
 		if err != nil {
 			return err
