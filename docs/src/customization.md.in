@@ -89,9 +89,10 @@ Semantics:
 * If the same section name appears more than once, the settings from all its blocks are applied,
   in the order they appear in the file.
 
-* If both `$HOME/.mlrrc` and `./.mlrrc` are processed, each file's global settings and matching
-  section settings are applied in that per-file order, `$HOME/.mlrrc` first. The selected profile
-  needs to exist in only one of them.
+* If more than one of `$HOME/.mlrrc`, `$XDG_CONFIG_HOME/miller/mlrrc` (or its default
+  `$HOME/.config/miller/mlrrc`), and `./.mlrrc` are processed, each file's global settings and
+  matching section settings are applied in that per-file order. The selected profile needs to
+  exist in only one of them.
 
 * Since `--profile` selects a section of your `.mlrrc`, it can't be combined with `--norc`, or
   with `MLRRC=__none__` in the environment -- that's a fatal error.
@@ -107,14 +108,18 @@ If the environment variable `MLRRC` is set:
 
 * Otherwise, its value (as a filename) is loaded and processed. If there are syntax errors, they abort `mlr` with a usage message (as if you had mistyped something on the command line). If the file can't be loaded at all, though, it is silently skipped.
 
-* Any `.mlrrc` in your home directory or current directory is ignored whenever `MLRRC` is set in the environment.
+* Any `.mlrrc` in your home directory, XDG config directory, or current directory is ignored whenever `MLRRC` is set in the environment.
 
 * Example line in your shell's rc file: `export MLRRC=/path/to/my/mlrrc`
 
-Otherwise:
+Otherwise, each of the following which exists is processed in turn, letting them stack: the idea
+is you can have all your settings in your `$HOME/.mlrrc`, then maybe more project-specific
+settings for your current directory if you like.
 
 * If `$HOME/.mlrrc` exists, it's processed as above.
 
-* If `./.mlrrc` exists, it's then also processed as above.
+* If `$XDG_CONFIG_HOME/miller/mlrrc` exists, it's then also processed as above, per the
+  [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html).
+  If `$XDG_CONFIG_HOME` isn't set, `$HOME/.config/miller/mlrrc` is used instead.
 
-* The idea is you can have all your settings in your `$HOME/.mlrrc`, then maybe more project-specific settings for your current directory if you like.
+* If `./.mlrrc` exists, it's then also processed as above.
