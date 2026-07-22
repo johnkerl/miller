@@ -243,9 +243,9 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        asserting_not_empty asserting_not_map asserting_not_null asserting_null
        asserting_numeric asserting_present asserting_string atan atan2 atanh
        base64_decode base64_encode bitcount boolean bytes capitalize cbrt ceil
-       clean_whitespace collapse_whitespace concat contains cos cosh count depth
-       dhms2fsec dhms2sec distinct_count erf erfc every exec exp expm1 flatten float
-       floor fmtifnum fmtnum fold format fsec2dhms fsec2hms get_keys get_values
+       clean_whitespace collapse_whitespace concat contains cos cosh count datediff
+       depth dhms2fsec dhms2sec distinct_count erf erfc every exec exp expm1 flatten
+       float floor fmtifnum fmtnum fold format fsec2dhms fsec2hms get_keys get_values
        gmt2localtime gmt2nsec gmt2sec gssub gsub haskey hasvalue hex_decode
        hex_encode hexfmt hms2fsec hms2sec hostname index int invqnorm is_absent
        is_array is_bool is_boolean is_bytes is_empty is_empty_map is_error is_float
@@ -2781,6 +2781,16 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        count([7,8,9]) is 3
        count({"a":7,"b":8,"c":9}) is 3
 
+   1mdatediff0m
+        (class=time #args=3) Computes the difference between two dates, like the spreadsheet DATEDIF function. The first two arguments are int/float seconds since the epoch (as from strptime); the third is one of "y", "m", or "d" for complete years, complete months, or days between the two dates, or "ym", "yd", or "md" for months ignoring years, days ignoring years, or days ignoring months and years, respectively (case-insensitive). Differences are computed on calendar dates in GMT, ignoring any time-of-day parts. The result is negative if the first date is after the second.
+       Examples:
+       datediff(strptime("2020-01-01", "%Y-%m-%d"), strptime("2023-05-15", "%Y-%m-%d"), "y")  = 3
+       datediff(strptime("2020-01-01", "%Y-%m-%d"), strptime("2023-05-15", "%Y-%m-%d"), "m")  = 40
+       datediff(strptime("2020-01-01", "%Y-%m-%d"), strptime("2023-05-15", "%Y-%m-%d"), "d")  = 1230
+       datediff(strptime("2020-01-01", "%Y-%m-%d"), strptime("2023-05-15", "%Y-%m-%d"), "ym") = 4
+       datediff(strptime("2020-01-01", "%Y-%m-%d"), strptime("2023-05-15", "%Y-%m-%d"), "yd") = 134
+       datediff(strptime("2020-01-01", "%Y-%m-%d"), strptime("2023-05-15", "%Y-%m-%d"), "md") = 14
+
    1mdepth0m
         (class=collections #args=1) Prints maximum depth of map/array. Scalars have depth 0.
 
@@ -4173,5 +4183,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-07-15                         4mMILLER24m(1)
+                                  2026-07-22                         4mMILLER24m(1)
 </pre>
