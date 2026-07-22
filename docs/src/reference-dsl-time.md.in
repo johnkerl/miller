@@ -370,6 +370,32 @@ GENMD-RUN-COMMAND
 mlr -F | grep hms
 GENMD-EOF
 
+## Calendar differences between dates
+
+The [datediff](reference-dsl-builtin-functions.md#datediff) function computes the difference
+between two dates in calendar units, in the manner of the `DATEDIF` function found in spreadsheet
+programs. Its first two arguments are seconds since the epoch, as produced by
+[strptime](reference-dsl-builtin-functions.md#strptime); the third is one of `"y"`, `"m"`, or `"d"`
+for complete years, complete months, or days between the two dates, or `"ym"`, `"yd"`, or `"md"`
+for months ignoring years, days ignoring years, or days ignoring months and years, respectively:
+
+GENMD-RUN-COMMAND
+mlr -n put 'end {
+  t1 = strptime("2001-06-01", "%Y-%m-%d");
+  t2 = strptime("2002-08-15", "%Y-%m-%d");
+  print datediff(t1, t2, "y");
+  print datediff(t1, t2, "m");
+  print datediff(t1, t2, "d");
+  print datediff(t1, t2, "ym");
+  print datediff(t1, t2, "yd");
+  print datediff(t1, t2, "md");
+}'
+GENMD-EOF
+
+Differences are computed on calendar dates in GMT, ignoring any time-of-day parts. Unlike the
+spreadsheet versions, which error when the first date is after the second, `datediff` negates the
+result in that case.
+
 ## Timezone troubleshooting
 
 Since Miller applies your `TZ` environment variable at startup, a timezone problem can make _any_

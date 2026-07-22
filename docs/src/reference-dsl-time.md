@@ -493,6 +493,40 @@ sec2dhms  (class=time #args=1) Formats integer seconds as in sec2dhms(500000) = 
 sec2hms  (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:23:20"
 </pre>
 
+## Calendar differences between dates
+
+The [datediff](reference-dsl-builtin-functions.md#datediff) function computes the difference
+between two dates in calendar units, in the manner of the `DATEDIF` function found in spreadsheet
+programs. Its first two arguments are seconds since the epoch, as produced by
+[strptime](reference-dsl-builtin-functions.md#strptime); the third is one of `"y"`, `"m"`, or `"d"`
+for complete years, complete months, or days between the two dates, or `"ym"`, `"yd"`, or `"md"`
+for months ignoring years, days ignoring years, or days ignoring months and years, respectively:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put 'end {</b>
+<b>  t1 = strptime("2001-06-01", "%Y-%m-%d");</b>
+<b>  t2 = strptime("2002-08-15", "%Y-%m-%d");</b>
+<b>  print datediff(t1, t2, "y");</b>
+<b>  print datediff(t1, t2, "m");</b>
+<b>  print datediff(t1, t2, "d");</b>
+<b>  print datediff(t1, t2, "ym");</b>
+<b>  print datediff(t1, t2, "yd");</b>
+<b>  print datediff(t1, t2, "md");</b>
+<b>}'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+1
+14
+440
+2
+75
+14
+</pre>
+
+Differences are computed on calendar dates in GMT, ignoring any time-of-day parts. Unlike the
+spreadsheet versions, which error when the first date is after the second, `datediff` negates the
+result in that case.
+
 ## Timezone troubleshooting
 
 Since Miller applies your `TZ` environment variable at startup, a timezone problem can make _any_

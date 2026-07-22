@@ -1350,6 +1350,26 @@ is normally distributed.`,
 		// FUNC_CLASS_TIME
 
 		{
+			name:  "datediff",
+			class: FUNC_CLASS_TIME,
+			help: `Computes the difference between two dates, like the spreadsheet DATEDIF function.
+The first two arguments are int/float seconds since the epoch (as from strptime); the third is
+one of "y", "m", or "d" for complete years, complete months, or days between the two dates,
+or "ym", "yd", or "md" for months ignoring years, days ignoring years, or days ignoring months
+and years, respectively (case-insensitive). Differences are computed on calendar dates in GMT,
+ignoring any time-of-day parts. The result is negative if the first date is after the second.`,
+			examples: []string{
+				`datediff(strptime("2020-01-01", "%Y-%m-%d"), strptime("2023-05-15", "%Y-%m-%d"), "y")  = 3`,
+				`datediff(strptime("2020-01-01", "%Y-%m-%d"), strptime("2023-05-15", "%Y-%m-%d"), "m")  = 40`,
+				`datediff(strptime("2020-01-01", "%Y-%m-%d"), strptime("2023-05-15", "%Y-%m-%d"), "d")  = 1230`,
+				`datediff(strptime("2020-01-01", "%Y-%m-%d"), strptime("2023-05-15", "%Y-%m-%d"), "ym") = 4`,
+				`datediff(strptime("2020-01-01", "%Y-%m-%d"), strptime("2023-05-15", "%Y-%m-%d"), "yd") = 134`,
+				`datediff(strptime("2020-01-01", "%Y-%m-%d"), strptime("2023-05-15", "%Y-%m-%d"), "md") = 14`,
+			},
+			ternaryFunc: bifs.BIF_datediff,
+		},
+
+		{
 			name:  "gmt2sec",
 			class: FUNC_CLASS_TIME,
 			help:  `Parses GMT timestamp as integer seconds since the epoch.`,
