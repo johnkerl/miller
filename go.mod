@@ -21,10 +21,10 @@ require (
 	github.com/johnkerl/lumin v1.0.0
 	github.com/johnkerl/pgpg/go v1.0.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
-	github.com/klauspost/compress v1.19.0
+	github.com/klauspost/compress v1.19.1
 	github.com/kshedden/statmodel v0.0.0-20210519035403-ee97d3e48df1
 	github.com/lestrrat-go/strftime v1.2.0
-	github.com/mattn/go-isatty v0.0.23
+	github.com/mattn/go-isatty v0.0.24
 	github.com/modelcontextprotocol/go-sdk v1.6.1
 	github.com/nine-lives-later/go-windows-terminal-sequences v1.0.4
 	github.com/pkg/profile v1.7.0
