@@ -25,7 +25,7 @@ require (
 	github.com/kshedden/statmodel v0.0.0-20210519035403-ee97d3e48df1
 	github.com/lestrrat-go/strftime v1.2.0
 	github.com/mattn/go-isatty v0.0.24
-	github.com/modelcontextprotocol/go-sdk v1.6.1
+	github.com/modelcontextprotocol/go-sdk v1.7.0
 	github.com/nine-lives-later/go-windows-terminal-sequences v1.0.4
 	github.com/pkg/profile v1.7.0
 	github.com/rivo/uniseg v0.4.7
@@ -52,6 +52,8 @@ require (
 	github.com/yosida95/uritemplate/v3 v3.0.2 // indirect
 	golang.org/x/crypto v0.52.0 // indirect
 	golang.org/x/oauth2 v0.35.0 // indirect
+	golang.org/x/sync v0.22.0 // indirect
+	golang.org/x/time v0.15.0 // indirect
 	golang.org/x/tools v0.47.0 // indirect
 	gonum.org/v1/gonum v0.16.0 // indirect
 	pault.ag/go/topsort v0.1.1 // indirect
