@@ -48,6 +48,8 @@ There's a good chance you can get Miller pre-built for your system:
 |Mac|`brew install miller`<br/>`port install miller`|
 |Windows|`choco install miller`<br/>`winget install Miller.Miller`<br/>`scoop install main/miller`|
 
+On Windows, after Chocolatey, WinGet, or Scoop, open a **new** terminal so `PATH` includes `mlr`.
+
 See also [README-versions.md](./README-versions.md) for a full list of package versions. Note that long-term-support (LtS) releases will likely be on older versions.
 
 See also [building from source](https://miller.readthedocs.io/en/latest/build.html).
