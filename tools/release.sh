@@ -3,7 +3,7 @@
 # tools/release.sh -- automate the bulk of docs/src/how-to-release.md.
 #
 # Usage:
-#   ./tools/release.sh <tag> pre-release [--notes-file FILE] [--branch NAME] [--yes] [--dry-run]
+#   ./tools/release.sh <tag> pre-release [--branch NAME] [--yes] [--dry-run]
 #   ./tools/release.sh <tag> docs        [--branch NAME] [--yes] [--dry-run]
 #   ./tools/release.sh <tag> afterwork   [--branch NAME] [--yes] [--dry-run]
 #
@@ -13,10 +13,10 @@
 #   pre-release
 #     Phase 0 preflight, phase 1 version bumps + `make dev` + commit + push,
 #     phase 2 release tarball + sha256, phase 3 SRPM build, phase 4 GitHub
-#     pre-release create + asset upload.  Stops after the pre-release is
-#     created.  The operator must then wait for CI/goreleaser, verify a
-#     downloaded binary, and flip the release from pre-release to public by
-#     hand before running `docs`.
+#     pre-release create (with GitHub's auto-generated release notes) + asset
+#     upload.  Stops after the pre-release is created.  The operator must
+#     then wait for CI/goreleaser, verify a downloaded binary, and flip the
+#     release from pre-release to public by hand before running `docs`.
 #
 #   docs
 #     Phase 5. Creates (or reuses) the `<VERSION>` docs branch, edits
@@ -54,7 +54,6 @@ SUBCOMMAND=""     # pre-release | docs | afterwork
 BRANCH="main"     # main branch to commit version bumps against
 YES="no"          # --yes skips confirmation prompts
 DRY_RUN="no"      # --dry-run echoes commands without executing
-NOTES_FILE=""     # --notes-file: release notes body (required for new releases)
 
 REPO_ROOT=""      # absolute path to the miller repo root (cwd at script start)
 
@@ -168,9 +167,6 @@ parse_args() {
       -h|--help) usage 0 ;;
       --yes) YES="yes"; shift ;;
       --dry-run) DRY_RUN="yes"; shift ;;
-      --notes-file)
-        [ $# -ge 2 ] || die "--notes-file requires an argument"
-        NOTES_FILE="$2"; shift 2 ;;
       --branch)
         [ $# -ge 2 ] || die "--branch requires an argument"
         BRANCH="$2"; shift 2 ;;
@@ -197,10 +193,6 @@ parse_args() {
     pre-release|docs|afterwork) ;;
     *) die "unknown subcommand '$SUBCOMMAND'; expected pre-release | docs | afterwork" ;;
   esac
-
-  if [ -n "$NOTES_FILE" ] && [ ! -f "$NOTES_FILE" ]; then
-    die "--notes-file '$NOTES_FILE' does not exist"
-  fi
 }
 
 # ============================================================================
@@ -573,23 +565,13 @@ phase_4_github_release() {
   [ -n "${SRPM_PATH:-}" ] || die "SRPM_PATH not set -- phase 3 did not run?"
 
   if gh release view "$TAG" >/dev/null 2>&1; then
-    note "gh release $TAG already exists"
-    if [ -n "$NOTES_FILE" ]; then
-      # Resuming with a (possibly edited) --notes-file should still take
-      # effect -- otherwise editing NOTES_FILE and re-running silently
-      # leaves the already-created release's notes frozen at first creation.
-      log "updating existing release notes from '$NOTES_FILE'"
-      run_cmd gh release edit "$TAG" --notes-file "$NOTES_FILE"
-    else
-      note "no --notes-file given; leaving existing release notes/title untouched"
-    fi
+    note "gh release $TAG already exists -- leaving existing release notes/title untouched"
   else
-    [ -n "$NOTES_FILE" ] || die "gh release $TAG does not exist and --notes-file was not provided"
-    confirm "create GitHub pre-release $TAG from notes file '$NOTES_FILE'?"
+    confirm "create GitHub pre-release $TAG with auto-generated release notes?"
     run_cmd gh release create "$TAG" \
       --prerelease \
       --title "Miller $VERSION" \
-      --notes-file "$NOTES_FILE"
+      --generate-notes
   fi
 
   verify_release_tag_commit "$TAG"
