@@ -202,6 +202,16 @@ func runSingleTransformer(
 	options *cli.TOptions,
 ) {
 
+	if streamingProducer, ok := recordTransformer.(StreamingProducer); ok {
+		// e.g. seqgen: drain the single upstream batch (the lone
+		// end-of-stream marker sent by the NoInput reader) so the reader
+		// goroutine isn't blocked, then let the producer generate and flush
+		// its own output directly. See StreamingProducer.
+		<-inputRecordChannel
+		streamingProducer.ProduceStream(outputRecordChannel, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+		return
+	}
+
 	done := false
 	for !done {
 		recordsAndContexts := <-inputRecordChannel
