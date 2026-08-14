@@ -128,9 +128,11 @@ func TestMlrrcProfileWithMlrrcNoneIsError(t *testing.T) {
 func TestMlrrcProfileWithNoMlrrcFileIsError(t *testing.T) {
 	// Point MLRRC at a nonexistent file: an unopenable file is silently
 	// skipped (the normal no-.mlrrc case), and HOME is remapped to an empty
-	// temp directory, so no .mlrrc file is processed at all.
+	// temp directory, so no .mlrrc file is processed at all. XDG_CONFIG_HOME
+	// is cleared so a developer's real config dir doesn't leak in.
 	t.Setenv("MLRRC", filepath.Join(t.TempDir(), "nonexistent"))
 	t.Setenv("HOME", t.TempDir())
+	t.Setenv("XDG_CONFIG_HOME", "")
 	options := cli.DefaultOptions()
 	err := loadMlrrcFiles(options, "j")
 	if err == nil {
@@ -194,6 +196,109 @@ func TestMlrrcPrepipeStillDisallowed(t *testing.T) {
 	options := cli.DefaultOptions()
 	if err := loadMlrrcFiles(options, "j"); err == nil {
 		t.Fatal("expected error for --prepipe within a profile, got nil")
+	}
+}
+
+func TestMlrrcXdgConfigHomeIsLoaded(t *testing.T) {
+	// No $HOME/.mlrrc, no ./.mlrrc, no $MLRRC: only
+	// $XDG_CONFIG_HOME/miller/mlrrc is processed.
+	xdgConfigHome := t.TempDir()
+	if err := os.MkdirAll(filepath.Join(xdgConfigHome, "miller"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(xdgConfigHome, "miller", "mlrrc")
+	if err := os.WriteFile(path, []byte("ojson\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("MLRRC", "")
+	t.Setenv("HOME", t.TempDir())
+	t.Setenv("XDG_CONFIG_HOME", xdgConfigHome)
+	oldwd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Chdir(t.TempDir()); err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = os.Chdir(oldwd) }()
+
+	options := cli.DefaultOptions()
+	if err := loadMlrrcFiles(options, ""); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if options.WriterOptions.OutputFileFormat != "json" {
+		t.Errorf("output format: got %s, want json", options.WriterOptions.OutputFileFormat)
+	}
+}
+
+func TestMlrrcXdgConfigHomeDefaultsToHomeConfig(t *testing.T) {
+	// When $XDG_CONFIG_HOME is unset, $HOME/.config/miller/mlrrc is used.
+	home := t.TempDir()
+	if err := os.MkdirAll(filepath.Join(home, ".config", "miller"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(home, ".config", "miller", "mlrrc")
+	if err := os.WriteFile(path, []byte("ojson\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("MLRRC", "")
+	t.Setenv("HOME", home)
+	t.Setenv("XDG_CONFIG_HOME", "")
+	oldwd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Chdir(t.TempDir()); err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = os.Chdir(oldwd) }()
+
+	options := cli.DefaultOptions()
+	if err := loadMlrrcFiles(options, ""); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if options.WriterOptions.OutputFileFormat != "json" {
+		t.Errorf("output format: got %s, want json", options.WriterOptions.OutputFileFormat)
+	}
+}
+
+func TestMlrrcXdgConfigHomeStacksAfterHomeMlrrc(t *testing.T) {
+	// Both $HOME/.mlrrc and $XDG_CONFIG_HOME/miller/mlrrc are processed, with
+	// $HOME/.mlrrc applied first: a setting in the XDG file overrides one
+	// from $HOME/.mlrrc.
+	home := t.TempDir()
+	if err := os.WriteFile(filepath.Join(home, ".mlrrc"), []byte("icsv\nojson\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	xdgConfigHome := t.TempDir()
+	if err := os.MkdirAll(filepath.Join(xdgConfigHome, "miller"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(xdgConfigHome, "miller", "mlrrc")
+	if err := os.WriteFile(path, []byte("otsv\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("MLRRC", "")
+	t.Setenv("HOME", home)
+	t.Setenv("XDG_CONFIG_HOME", xdgConfigHome)
+	oldwd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Chdir(t.TempDir()); err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = os.Chdir(oldwd) }()
+
+	options := cli.DefaultOptions()
+	if err := loadMlrrcFiles(options, ""); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if options.ReaderOptions.InputFileFormat != "csv" {
+		t.Errorf("input format: got %s, want csv", options.ReaderOptions.InputFileFormat)
+	}
+	if options.WriterOptions.OutputFileFormat != "tsv" {
+		t.Errorf("output format: got %s, want tsv (from XDG config, overriding json from $HOME/.mlrrc)", options.WriterOptions.OutputFileFormat)
 	}
 }
 
