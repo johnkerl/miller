@@ -84,6 +84,16 @@ staticcheck:
 lint:
 	golangci-lint run ./cmd/mlr ./pkg/...
 
+# Needs first: go install github.com/securego/gosec/v2/cmd/gosec@latest
+# Rules excluded below don't apply to a CLI data-processing tool and are pure
+# noise here; see plans/security.md for the reasoning behind each:
+#   G104 unhandled errors            -- already tuned via errcheck in .golangci.yml
+#   G115 int overflow conversions    -- inherent to Mlrval's numeric-type handling
+#   G301/G302/G306 file permissions  -- 0644/0755 is expected for output data files
+#   G602 slice index out of range    -- gosec can't prove loop bounds; high false-positive rate
+gosec:
+	gosec -exclude=G104,G115,G301,G302,G306,G602 ./pkg/... ./cmd/mlr/...
+
 # ----------------------------------------------------------------
 # For developers before pushing to GitHub.
 #

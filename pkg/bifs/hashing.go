@@ -1,8 +1,8 @@
 package bifs
 
 import (
-	"crypto/md5"
-	"crypto/sha1"
+	"crypto/md5"  // #nosec G501 -- used only for the DSL's md5() data-fingerprinting builtin, not security
+	"crypto/sha1" // #nosec G505 -- used only for the DSL's sha1() data-fingerprinting builtin, not security
 	"crypto/sha256"
 	"crypto/sha512"
 	"fmt"
@@ -27,7 +27,7 @@ func BIF_md5(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if errval != nil {
 		return errval
 	}
-	return mlrval.FromString(fmt.Sprintf("%x", md5.Sum(payload)))
+	return mlrval.FromString(fmt.Sprintf("%x", md5.Sum(payload))) // #nosec G401 -- data-fingerprinting, not security
 }
 
 func BIF_sha1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
@@ -35,7 +35,7 @@ func BIF_sha1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if errval != nil {
 		return errval
 	}
-	return mlrval.FromString(fmt.Sprintf("%x", sha1.Sum(payload)))
+	return mlrval.FromString(fmt.Sprintf("%x", sha1.Sum(payload))) // #nosec G401 -- data-fingerprinting, not security
 }
 
 func BIF_sha256(input1 *mlrval.Mlrval) *mlrval.Mlrval {

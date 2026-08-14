@@ -11,13 +11,13 @@ import (
 // By default, Miller random numbers are different on every run.
 var defaultSeed = time.Now().UnixNano() ^ int64(os.Getpid())
 var source = rand.NewSource(defaultSeed)
-var generator = rand.New(source)
+var generator = rand.New(source) // #nosec G404 -- must be seedable for --seed/reproducibility; not used for security
 
 // Users can request specific seeds if they want the same random-number
 // sequence on each run.
 func SeedRandom(seed int64) {
 	source = rand.NewSource(seed)
-	generator = rand.New(source)
+	generator = rand.New(source) // #nosec G404 -- must be seedable for --seed/reproducibility; not used for security
 }
 
 func RandFloat64() float64 {
