@@ -1,0 +1,20 @@
+func ymd(s) {
+  return strptime(s, "%Y-%m-%d");
+}
+end {
+  print datediff(ymd("2001-01-01"), ymd("2003-01-01"), "y");
+  print datediff(ymd("2001-06-01"), ymd("2002-08-15"), "d");
+  print datediff(ymd("2001-06-01"), ymd("2002-08-15"), "yd");
+  print datediff(ymd("2001-06-01"), ymd("2002-08-15"), "md");
+  print datediff(ymd("2001-06-01"), ymd("2002-08-15"), "m");
+  print datediff(ymd("2001-06-01"), ymd("2002-08-15"), "ym");
+  print datediff(ymd("2001-06-01"), ymd("2002-08-15"), "y");
+  print datediff(ymd("2001-06-01"), ymd("2002-08-15"), "Y");
+  print datediff(ymd("2002-08-15"), ymd("2001-06-01"), "d");
+  print datediff(ymd("2020-02-29"), ymd("2021-02-28"), "y");
+  print datediff(ymd("2020-02-29"), ymd("2021-03-01"), "y");
+  print datediff(ymd("2020-01-31"), ymd("2020-03-01"), "m");
+  print datediff(ymd("2020-01-31"), ymd("2020-03-01"), "md");
+  print datediff(86399, 86401, "d");
+  print datediff(ymd("2020-01-01"), ymd("2020-01-02"), "w");
+}

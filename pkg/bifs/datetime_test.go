@@ -88,6 +88,89 @@ func TestBIF_strptime_new_format_codes(t *testing.T) {
 	}
 }
 
+// TestBIF_datediff exercises the spreadsheet-DATEDIF-style datediff function
+// (https://github.com/johnkerl/miller/issues/708), including the examples from
+// the Excel DATEDIF documentation, leap-year and month-end edge cases, sign
+// behavior for reversed arguments, and case-insensitivity of the unit.
+func TestBIF_datediff(t *testing.T) {
+	ymd := func(dateString string) *mlrval.Mlrval {
+		return BIF_strptime(mlrval.FromString(dateString), mlrval.FromString("%Y-%m-%d"))
+	}
+
+	type testCase struct {
+		start string
+		end   string
+		unit  string
+		want  int64
+	}
+
+	cases := []testCase{
+		// Values as documented for Excel's DATEDIF.
+		{"2001-01-01", "2003-01-01", "y", 2},
+		{"2001-06-01", "2002-08-15", "d", 440},
+		{"2001-06-01", "2002-08-15", "yd", 75},
+		{"2001-06-01", "2002-08-15", "md", 14},
+		{"2001-06-01", "2002-08-15", "m", 14},
+		{"2001-06-01", "2002-08-15", "ym", 2},
+		{"2001-06-01", "2002-08-15", "y", 1},
+
+		// Case-insensitive unit.
+		{"2001-06-01", "2002-08-15", "YD", 75},
+		{"2001-06-01", "2002-08-15", "Y", 1},
+
+		// Same date and same month-and-day.
+		{"2020-05-15", "2020-05-15", "d", 0},
+		{"2020-05-15", "2020-05-15", "y", 0},
+		{"2019-05-15", "2020-05-15", "y", 1},
+		{"2019-05-15", "2020-05-15", "yd", 0},
+
+		// Reversed arguments negate.
+		{"2002-08-15", "2001-06-01", "d", -440},
+		{"2002-08-15", "2001-06-01", "m", -14},
+		{"2003-01-01", "2001-01-01", "y", -2},
+
+		// Leap-year edges: Feb 29 start, non-leap end year.
+		{"2020-02-29", "2021-02-28", "y", 0},
+		{"2020-02-29", "2021-03-01", "y", 1},
+		{"2020-02-29", "2021-02-28", "d", 365},
+
+		// Month-end borrow: complete months don't count until the day is
+		// reached; "md" can go negative as in the spreadsheet versions.
+		{"2020-01-31", "2020-03-01", "m", 1},
+		{"2020-01-31", "2020-03-01", "md", -1},
+		{"2019-01-31", "2019-03-01", "md", -2},
+		{"2020-01-31", "2020-02-29", "m", 0},
+
+		// Year boundary for "ym"/"yd" when end month-day precedes start
+		// month-day.
+		{"2020-11-15", "2021-02-10", "m", 2},
+		{"2020-11-15", "2021-02-10", "ym", 2},
+		{"2020-11-15", "2021-02-10", "yd", 87},
+	}
+
+	for _, c := range cases {
+		output := BIF_datediff(ymd(c.start), ymd(c.end), mlrval.FromString(c.unit))
+		value, isInt := output.GetIntValue()
+		assert.True(t, isInt, "datediff(%q, %q, %q) produced non-int %v", c.start, c.end, c.unit, output)
+		assert.Equal(t, c.want, value, "datediff(%q, %q, %q)", c.start, c.end, c.unit)
+	}
+
+	// Time-of-day parts are ignored: one second before midnight vs. one
+	// second after is still one calendar day.
+	output := BIF_datediff(
+		mlrval.FromInt(86399), // 1970-01-01T23:59:59Z
+		mlrval.FromInt(86401), // 1970-01-02T00:00:01Z
+		mlrval.FromString("d"),
+	)
+	value, isInt := output.GetIntValue()
+	assert.True(t, isInt)
+	assert.Equal(t, int64(1), value)
+
+	// Unknown unit and non-numeric inputs are errors.
+	assert.True(t, BIF_datediff(ymd("2020-01-01"), ymd("2020-01-02"), mlrval.FromString("w")).IsError())
+	assert.True(t, BIF_datediff(mlrval.FromString("not-a-date"), ymd("2020-01-02"), mlrval.FromString("d")).IsError())
+}
+
 // TestBIF_strptime_still_unsupported_format_code checks that a format code
 // which remains unsupported (%U, week-of-year) still errors, i.e. that adding
 // the new codes didn't accidentally cause unsupported codes to be silently

@@ -3,6 +3,7 @@ package bifs
 import (
 	"fmt"
 	"regexp"
+	"strings"
 	"time"
 
 	strptime "github.com/johnkerl/miller/v6/pkg/pbnjay-strptime"
@@ -462,6 +463,94 @@ func init() {
 	_ = ss.Set('s', appenderS)
 
 	strftimeExtensions = strftime.WithSpecificationSet(ss)
+}
+
+// civilDaysBetween counts the days between two calendar dates, both taken at
+// midnight UTC. Both Unix values are multiples of 86400 (Unix time has no leap
+// seconds) so the division is exact even for negative differences.
+func civilDaysBetween(y1 int, m1 time.Month, d1, y2 int, m2 time.Month, d2 int) int64 {
+	t1 := time.Date(y1, m1, d1, 0, 0, 0, 0, time.UTC)
+	t2 := time.Date(y2, m2, d2, 0, 0, 0, 0, time.UTC)
+	return (t2.Unix() - t1.Unix()) / 86400
+}
+
+// BIF_datediff implements datediff(start, end, unit) in the manner of the
+// DATEDIF function in spreadsheet programs. Arguments 1 and 2 are int/float
+// seconds since the epoch; argument 3 is one of the unit strings "y", "m",
+// "d", "ym", "yd", or "md" (case-insensitive). Differences are computed on
+// calendar dates in GMT, ignoring any time-of-day parts. Unlike the
+// spreadsheet versions, which error when start is after end, the result is
+// negated in that case.
+func BIF_datediff(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+	startSeconds, errValue := input1.GetNumericToFloatValueOrError("datediff")
+	if errValue != nil {
+		return errValue
+	}
+	endSeconds, errValue := input2.GetNumericToFloatValueOrError("datediff")
+	if errValue != nil {
+		return errValue
+	}
+	unit, errValue := input3.GetStringValueOrError("datediff")
+	if errValue != nil {
+		return errValue
+	}
+
+	startTime := lib.EpochSecondsToGMT(startSeconds)
+	endTime := lib.EpochSecondsToGMT(endSeconds)
+
+	sign := int64(1)
+	if startTime.After(endTime) {
+		startTime, endTime = endTime, startTime
+		sign = -1
+	}
+
+	y1, m1, d1 := startTime.Date()
+	y2, m2, d2 := endTime.Date()
+
+	completeMonths := int64((y2-y1)*12 + int(m2) - int(m1))
+	if d2 < d1 {
+		completeMonths--
+	}
+	completeYears := int64(y2 - y1)
+	if m2 < m1 || (m2 == m1 && d2 < d1) {
+		completeYears--
+	}
+
+	var result int64
+	switch strings.ToLower(unit) {
+	case "d":
+		result = civilDaysBetween(y1, m1, d1, y2, m2, d2)
+	case "m":
+		result = completeMonths
+	case "y":
+		result = completeYears
+	case "ym":
+		result = completeMonths - 12*completeYears
+	case "md":
+		if d2 >= d1 {
+			result = int64(d2 - d1)
+		} else {
+			// Borrow from the month preceding the end month; time.Date
+			// normalizes month zero to December of the prior year. As in the
+			// spreadsheet implementations, this can go negative when the
+			// start day-of-month exceeds the length of that preceding month.
+			result = civilDaysBetween(y2, m2-1, d1, y2, m2, d2)
+		}
+	case "yd":
+		// Advance the start date's year to put it within one year at or
+		// before the end date.
+		anchorYear := y2
+		if m1 > m2 || (m1 == m2 && d1 > d2) {
+			anchorYear--
+		}
+		result = civilDaysBetween(anchorYear, m1, d1, y2, m2, d2)
+	default:
+		return mlrval.FromErrorString(
+			`datediff: unit argument must be one of "y", "m", "d", "ym", "yd", "md"; got "` + unit + `"`,
+		)
+	}
+
+	return mlrval.FromInt(sign * result)
 }
 
 // Argument 1 is formatted date string like "2021-03-04 02:59:50".
