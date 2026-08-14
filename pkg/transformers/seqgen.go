@@ -180,6 +180,10 @@ func NewTransformerSeqgen(
 	}, nil
 }
 
+// Transform satisfies RecordTransformer. In normal operation seqgen is
+// driven via ProduceStream (see StreamingProducer) instead, since
+// ChainTransformer special-cases any transformer implementing that
+// interface. This is kept as a correct, if non-streaming, fallback.
 func (tr *TransformerSeqgen) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
@@ -195,22 +199,13 @@ func (tr *TransformerSeqgen) Transform(
 	context := types.NewNilContext()
 	context.UpdateForStartOfFile("seqgen")
 
-	keepGoing := true
 	for {
-
-		// See ChainTransformer. If a downstream transformer is discarding all
-		// further input -- e.g. head -n 10 -- and if no interverning
-		// transformer is interested either, then we should break out of our
-		// for loop.  This way 'mlr seqgen --stop 1000000000 then head -n 10'
-		// finishes quickly.
 		select {
 		case b := <-inputDownstreamDoneChannel:
 			outputDownstreamDoneChannel <- b
-			keepGoing = false
+			*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewEndOfStreamMarker(context))
+			return nil
 		default:
-		}
-		if !keepGoing {
-			break
 		}
 
 		tr.mdone = tr.doneComparator(counter, tr.stop)
@@ -232,4 +227,65 @@ func (tr *TransformerSeqgen) Transform(
 
 	*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewEndOfStreamMarker(context))
 	return nil
+}
+
+// ProduceStream implements StreamingProducer. Unlike Transform, which must
+// return its entire output in one shot -- unusable for a NoInput verb like
+// seqgen, since nothing downstream can run until that single return happens
+// -- this writes bounded batches directly to outputRecordChannel, checking
+// inputDownstreamDoneChannel between batches. This is what lets 'mlr seqgen
+// --stop 1000000000 then head -n 10' finish quickly instead of generating
+// (and OOMing on) the entire sequence before head ever sees a record.
+// Mirrors pkg/input/pseudo_reader_gen.go, which solves the same problem for
+// 'mlr --from gen'.
+func (tr *TransformerSeqgen) ProduceStream(
+	outputRecordChannel chan<- []*types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
+) {
+	counter := tr.start
+	context := types.NewNilContext()
+	context.UpdateForStartOfFile("seqgen")
+
+	recordsPerBatch := int64(cli.DEFAULT_RECORDS_PER_BATCH)
+	batch := make([]*types.RecordAndContext, 0, recordsPerBatch)
+
+	for {
+		tr.mdone = tr.doneComparator(counter, tr.stop)
+		done, _ := tr.mdone.GetBoolValue()
+		if done {
+			break
+		}
+
+		outrec := mlrval.NewMlrmapAsRecord()
+		outrec.PutCopy(tr.fieldName, counter)
+
+		context.UpdateForInputRecord()
+		batch = append(batch, types.NewRecordAndContext(outrec, context))
+
+		counter = bifs.BIF_plus_binary(counter, tr.step)
+
+		if int64(len(batch)) >= recordsPerBatch {
+			outputRecordChannel <- batch
+			batch = make([]*types.RecordAndContext, 0, recordsPerBatch)
+
+			// See if downstream transformers will be ignoring further data
+			// (e.g. mlr head -n 10). If so, stop generating. Checked only
+			// between batches to avoid goroutine-scheduler thrash. Even
+			// though downstream won't use any more real records, it still
+			// needs the end-of-stream marker to know to stop reading and
+			// drain cleanly -- so that's sent below rather than returning
+			// directly from here.
+			select {
+			case b := <-inputDownstreamDoneChannel:
+				outputDownstreamDoneChannel <- b
+				outputRecordChannel <- []*types.RecordAndContext{types.NewEndOfStreamMarker(context)}
+				return
+			default:
+			}
+		}
+	}
+
+	batch = append(batch, types.NewEndOfStreamMarker(context))
+	outputRecordChannel <- batch
 }

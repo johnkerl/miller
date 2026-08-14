@@ -8,7 +8,7 @@ In this example I am using version 6.2.0 to 6.3.0; of course that will change fo
 
 Much of the mechanical work below is automated by `tools/release.sh`, which has three subcommands mirroring the checklist:
 
-* `./tools/release.sh v6.3.0 pre-release --notes-file NOTES.md` -- version bumps, `make dev`, commit/push, release tarball, SRPM, and GitHub pre-release with assets uploaded.
+* `./tools/release.sh v6.3.0 pre-release` -- version bumps, `make dev`, commit/push, release tarball, SRPM, and GitHub pre-release (with GitHub's auto-generated release notes) with assets uploaded.
 * `./tools/release.sh v6.3.0 docs` -- creates the `6.3.0` docs branch and edits `docs/mkdocs.yml`. Refuses to run while the GitHub release is still marked pre-release.
 * `./tools/release.sh v6.3.0 afterwork` -- flips `pkg/version/version.go` back to `6.3.0-dev`, commits/pushes, and prints the brew/macports/ReadTheDocs reminders with a pre-filled `brew bump-formula-pr` command.
 
