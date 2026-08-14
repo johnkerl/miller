@@ -26,6 +26,25 @@ type RecordTransformer interface {
 	) error
 }
 
+// StreamingProducer is implemented by transformers that generate their own
+// output independent of (and potentially unbounded relative to) their input
+// -- currently only seqgen. Ordinary Transform implementations accumulate
+// output in memory and hand it back to the caller for a single channel-send;
+// that works because they're invoked once per input record, with the reader
+// interleaving sends across many batches. seqgen has no such interleaving --
+// with IgnoresInput it's invoked exactly once, with nothing to stop it from
+// building its entire output in memory before anything downstream (e.g. mlr
+// head) ever runs. ProduceStream instead writes directly and repeatedly to
+// outputRecordChannel in bounded batches, checking inputDownstreamDoneChannel
+// between batches, mirroring pseudo_reader_gen.go. See ChainTransformer.
+type StreamingProducer interface {
+	ProduceStream(
+		outputRecordChannel chan<- []*types.RecordAndContext,
+		inputDownstreamDoneChannel <-chan bool,
+		outputDownstreamDoneChannel chan<- bool,
+	)
+}
+
 type RecordTransformerFunc func(
 	inrecAndContext *types.RecordAndContext,
 	outputRecordsAndContexts *[]*types.RecordAndContext, // list of *types.RecordAndContext
