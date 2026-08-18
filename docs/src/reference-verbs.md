@@ -3139,6 +3139,16 @@ Options:
                                      wide-to-long reshape. Requires -i or -r.
 -s {key-field name,value-field name} Key-field and value-field names for
                                      long-to-wide reshape.
+-S                                   Sort the newly-created wide-field keys for
+                                     long-to-wide reshape (-s). Lexically
+                                     ascending by default; use -n for natural
+                                     ordering. Without -S, new fields appear in
+                                     order of first occurrence. Other
+                                     (non-pivoted) fields keep their input
+                                     order.
+-n                                   With -S, sort the new wide-field keys
+                                     naturally (e.g. 2 before 12) rather than
+                                     lexically.
 -h|--help                            Show this message.
 
 Examples:

@@ -1,0 +1,1 @@
+mlr --opprint reshape -s k,v -S -n test/input/reshape-long-sortkeys.dkvp
