@@ -30,8 +30,11 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"slices"
+	"sort"
 	"strings"
 
+	"github.com/facette/natsort"
 	"github.com/johnkerl/miller/v6/pkg/cli"
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
@@ -45,6 +48,8 @@ var reshapeOptions = []OptionSpec{
 	{Flag: "-r", Arg: "{input field regex}", Type: "regex", Desc: "Input field regex for wide-to-long reshape. May be repeated. Use with -o. If you have multiple regexes, please specify them using multiple -r, since regexes can contain commas within them.", Repeatable: true},
 	{Flag: "-o", Arg: "{key-field name,value-field name}", Type: "csv-list", Desc: "Output key-field and value-field names for wide-to-long reshape. Requires -i or -r."},
 	{Flag: "-s", Arg: "{key-field name,value-field name}", Type: "csv-list", Desc: "Key-field and value-field names for long-to-wide reshape."},
+	{Flag: "-S", Type: "bool", Desc: "Sort the newly-created wide-field keys for long-to-wide reshape (-s). Lexically ascending by default; use -n for natural ordering. Without -S, new fields appear in order of first occurrence. Other (non-pivoted) fields keep their input order."},
+	{Flag: "-n", Type: "bool", Desc: "With -S, sort the new wide-field keys naturally (e.g. 2 before 12) rather than lexically."},
 }
 
 var ReshapeSetup = TransformerSetup{
@@ -141,6 +146,8 @@ func transformerReshapeParseCLI(
 	var inputFieldRegexStrings []string = nil
 	var outputFieldNames []string = nil
 	var splitOutFieldNames []string = nil
+	sortWideKeys := false
+	naturalSort := false
 
 	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -183,6 +190,11 @@ func transformerReshapeParseCLI(
 				return nil, err
 			}
 
+		case "-S":
+			sortWideKeys = true
+		case "-n":
+			naturalSort = true
+
 		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
@@ -192,6 +204,10 @@ func transformerReshapeParseCLI(
 	outputValueFieldName := ""
 	splitOutKeyFieldName := ""
 	splitOutValueFieldName := ""
+
+	if naturalSort && !sortWideKeys {
+		return nil, cli.VerbErrorf(verb, "-n requires -S")
+	}
 
 	if splitOutFieldNames == nil {
 		// wide to long
@@ -204,6 +220,9 @@ func transformerReshapeParseCLI(
 		}
 		if len(outputFieldNames) != 2 {
 			return nil, cli.VerbErrorf(verb, "-o must have exactly 2 field names for wide-to-long")
+		}
+		if sortWideKeys {
+			return nil, cli.VerbErrorf(verb, "-S is only for long-to-wide reshape (-s)")
 		}
 		outputKeyFieldName = outputFieldNames[0]
 		outputValueFieldName = outputFieldNames[1]
@@ -228,6 +247,8 @@ func transformerReshapeParseCLI(
 		outputValueFieldName,
 		splitOutKeyFieldName,
 		splitOutValueFieldName,
+		sortWideKeys,
+		naturalSort,
 	)
 	if err != nil {
 		return nil, err
@@ -246,6 +267,8 @@ type TransformerReshape struct {
 	// for long-to-wide:
 	splitOutKeyFieldName            string
 	splitOutValueFieldName          string
+	sortWideKeys                    bool
+	naturalSort                     bool
 	otherKeysToOtherValuesToBuckets *lib.OrderedMap[*lib.OrderedMap[*tReshapeBucket]]
 
 	recordTransformerFunc RecordTransformerFunc
@@ -258,6 +281,8 @@ func NewTransformerReshape(
 	outputValueFieldName string,
 	splitOutKeyFieldName string,
 	splitOutValueFieldName string,
+	sortWideKeys bool,
+	naturalSort bool,
 ) (*TransformerReshape, error) {
 
 	tr := &TransformerReshape{
@@ -267,6 +292,8 @@ func NewTransformerReshape(
 
 		splitOutKeyFieldName:            splitOutKeyFieldName,
 		splitOutValueFieldName:          splitOutValueFieldName,
+		sortWideKeys:                    sortWideKeys,
+		naturalSort:                     naturalSort,
 		otherKeysToOtherValuesToBuckets: lib.NewOrderedMap[*lib.OrderedMap[*tReshapeBucket]](),
 	}
 
@@ -435,8 +462,22 @@ func (tr *TransformerReshape) longToWide(
 				outrec := bucket.representative
 				bucket.representative = nil // ownership transfer
 
-				for pg := bucket.pairs.Head; pg != nil; pg = pg.Next {
-					outrec.PutReference(pg.Key, pg.Value)
+				if tr.sortWideKeys {
+					keys := bucket.pairs.GetKeys()
+					if tr.naturalSort {
+						sort.SliceStable(keys, func(i, j int) bool {
+							return natsort.Compare(keys[i], keys[j])
+						})
+					} else {
+						slices.Sort(keys)
+					}
+					for _, key := range keys {
+						outrec.PutReference(key, bucket.pairs.Get(key))
+					}
+				} else {
+					for pg := bucket.pairs.Head; pg != nil; pg = pg.Next {
+						outrec.PutReference(pg.Key, pg.Value)
+					}
 				}
 
 				*outputRecordsAndContexts = append(*outputRecordsAndContexts, types.NewRecordAndContext(outrec, &inrecAndContext.Context))
