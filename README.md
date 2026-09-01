@@ -50,7 +50,7 @@ There's a good chance you can get Miller pre-built for your system:
 
 See also [README-versions.md](./README-versions.md) for a full list of package versions. Note that long-term-support (LtS) releases will likely be on older versions.
 
-See also [building from source](https://miller.readthedocs.io/en/latest/build.html).
+See also [building from source](https://miller.readthedocs.io/en/latest/build/).
 
 # Features
 
@@ -115,7 +115,7 @@ and expect it to work.
 * [Linux Magazine: Process structured text files with Miller](https://www.linux-magazine.com/Issues/2016/187/Miller)
 * [Miller: Command Line CSV File Processing](https://onepointzero.app/posts/miller-command-line-csv-file-processing/)
 * [Miller - A Swiss Army Chainsaw for CSV Data, Data Science and Data Munging](https://fuzzyblog.io/blog/data_science/2022/05/13/miller-a-swiss-army-chainsaw-for-csv-data-data-science-and-data-munging.html)
-* [Pandas Killer: mlr, the Scientist](https://xvzftube.xyz/posts/pandas_killers/#mlr%3A-the-scientist)
+* [Pandas Killer: mlr, the Scientist](https://web.archive.org/web/20221225083112/https://xvzftube.xyz/posts/pandas_killers/#mlr%3A-the-scientist)
 
 # More documentation links
 
@@ -127,7 +127,7 @@ and expect it to work.
 # Community
 
 [![GitHub stars](https://img.shields.io/github/stars/johnkerl/miller.svg?label=GitHub%20stars)](https://github.com/johnkerl/miller/stargazers)
-[![Homebrew downloads](https://badges.weareopensource.me:/homebrew/installs/dy/miller?label=Homebrew%20downloads)](https://formulae.brew.sh/formula/miller)
+[![Homebrew downloads](https://img.shields.io/homebrew/installs/dy/miller?label=Homebrew%20downloads)](https://formulae.brew.sh/formula/miller)
 [![Conda downloads](https://anaconda.org/conda-forge/miller/badges/downloads.svg?label=Conda%20downloads)](https://anaconda.org/conda-forge/miller)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-41-orange.svg?style=flat-square)](#contributors-)
@@ -194,7 +194,7 @@ and expect it to work.
 
 ## Contributors ✨
 
-Thanks to all the fine people who help make Miller better ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+Thanks to all the fine people who help make Miller better ([emoji key](https://allcontributors.org/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
@@ -221,10 +221,10 @@ Thanks to all the fine people who help make Miller better ([emoji key](https://a
   <tr>
     <td align="center"><a href="https://github.com/gromgit"><img src="https://avatars.githubusercontent.com/u/215702?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Adrian Ho</b></sub></a><br /><a href="#design-gromgit" title="Design">🎨</a></td>
     <td align="center"><a href="https://github.com/Zachp"><img src="https://avatars.githubusercontent.com/u/1316442?v=4?s=50" width="50px;" alt=""/><br /><sub><b>zachp</b></sub></a><br /><a href="#platform-Zachp" title="Packaging/porting to new platform">📦</a></td>
-    <td align="center"><a href="https://dsel.net/"><img src="https://avatars.githubusercontent.com/u/921669?v=4?s=50" width="50px;" alt=""/><br /><sub><b>David Selassie</b></sub></a><br /><a href="#ideas-davidselassie" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/davidselassie"><img src="https://avatars.githubusercontent.com/u/921669?v=4?s=50" width="50px;" alt=""/><br /><sub><b>David Selassie</b></sub></a><br /><a href="#ideas-davidselassie" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://www.joelparkerhenderson.com/"><img src="https://avatars.githubusercontent.com/u/27145?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Joel Parker Henderson</b></sub></a><br /><a href="#ideas-joelparkerhenderson" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/divtiply"><img src="https://avatars.githubusercontent.com/u/5359679?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Michel Ace</b></sub></a><br /><a href="#ideas-divtiply" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="http://fuco1.github.io/sitemap.html"><img src="https://avatars.githubusercontent.com/u/2664959?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Matus Goljer</b></sub></a><br /><a href="#ideas-Fuco1" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://fuco1.github.io/"><img src="https://avatars.githubusercontent.com/u/2664959?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Matus Goljer</b></sub></a><br /><a href="#ideas-Fuco1" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/terorie"><img src="https://avatars.githubusercontent.com/u/21371810?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Richard Patel</b></sub></a><br /><a href="#platform-terorie" title="Packaging/porting to new platform">📦</a></td>
   </tr>
   <tr>
