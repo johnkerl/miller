@@ -545,24 +545,30 @@ mlr :  time: invalid location name
 
 There are two distinct causes.
 
-**Cause 1: `TZ` is set to a file path.** The Go `time` library, which Miller uses, accepts only
+**Cause 1: an invalid timezone name or an unreadable timezone file.** `TZ` accepts
 [IANA timezone names](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) such as
-`America/New_York` (plus the special values `UTC` and `Local`). Unlike the C library, it does not
-accept file paths such as `/usr/share/zoneinfo/US/Eastern`, nor the POSIX form with a leading colon
-such as `:/etc/localtime` -- even though those work fine with other tools on your system (and worked
-with Miller 5, which used the C library):
+`America/New_York`, the special values `UTC` and `Local`, and absolute paths to TZif files such as
+`/usr/share/zoneinfo/US/Eastern`. An optional leading colon is accepted, as in `:UTC` or
+`:/etc/localtime`:
 
 <pre class="pre-highlight-in-pair">
-<b>export TZ=/usr/share/zoneinfo/US/Eastern</b>
-<b>mlr -n put 'end { print strftime_local(0, "%Y-%m-%d %H:%M:%S %Z") }'</b>
+<b>TZ=:UTC mlr -n put 'begin { print sec2localtime(0) }'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-mlr: TZ environment variable appears malformed: "/usr/share/zoneinfo/US/Eastern"
+1970-01-01 00:00:00
 </pre>
 
-The remedy is to set `TZ` to the zone's name rather than its file path -- here, `export
-TZ=US/Eastern` -- or to unset it (`unset TZ`, or `export TZ=""`), in which case Miller uses the
-system's local-time setting.
+These forms work at startup, with `--tz`, and when changing `ENV["TZ"]` in the DSL. File-backed
+timezones retain their transition rules; they are not reduced to the current numeric offset.
+The file must be readable, must contain valid TZif data, and must not exceed Go's timezone-file
+size limit of 10 MiB. Invalid names and invalid files still produce an error rather than silently
+falling back to UTC. Timezone arguments passed directly to functions such as `sec2localtime`
+continue to use timezone names, not file paths.
+
+For an invalid name, use a valid IANA name. For a file, check its path, permissions, and contents.
+Unsetting `TZ` uses the system's local-time setting at startup. Setting it to `""` also requires
+no database lookup; changing it to an empty value within the DSL leaves the current timezone
+unchanged.
 
 **Cause 2: the timezone database is missing.** Go programs such as Miller normally read timezone
 definitions from a database on the host system, and (unlike C programs) don't fall back to any
