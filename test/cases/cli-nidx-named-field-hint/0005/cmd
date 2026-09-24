@@ -1,0 +1,1 @@
+mlr -T label u,v,w,x,y then cut -f x test/input/simple.tsv

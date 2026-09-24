@@ -480,5 +480,11 @@ func parseCommandLinePassTwo(
 		lib.SeedRandom(int64(options.RandSeed))
 	}
 
+	// Issue #233: warn (to stderr only) if the input is numerically indexed
+	// (--nidx / -T / --implicit-csv-header etc.) but the first verb asks for
+	// fields by non-numeric names, e.g. 'mlr -T cut -f last_first' where
+	// 'mlr --tsv cut -f last_first' was intended.
+	maybeWarnOnNamedFieldsForPositionalInput(options, verbSequences)
+
 	return options, recordTransformers, nil
 }

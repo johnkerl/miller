@@ -1,0 +1,2 @@
+mlr: warning: cut was given field name(s) "a", but the input format is numerically indexed with positional field names 1,2,3,... -- so no fields will match.
+mlr: warning: if your data has a header line, use a header-aware format flag such as --csv or --tsv in place of --nidx/-T/--implicit-csv-header; or, refer to fields positionally, e.g. -f 1,2.
