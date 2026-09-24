@@ -84,3 +84,42 @@ x=0xffff,y=0xff,z=16711425
 <pre class="pre-non-highlight-in-pair">
 x=0xffff,y=0xff,z=0xfeff01
 </pre>
+
+## Thousands separators
+
+Some tools accept a `printf`-style apostrophe flag, e.g. `%'d`, to insert
+locale-dependent thousands separators, formatting `12345` as `12,345`. Since
+Miller's number formatting uses Go's [fmt](https://pkg.go.dev/fmt) package,
+which doesn't support that flag, formats like `--ofmt "%'d"`,
+`fmtnum($x, "%'d")`, and `format-values -i "%'d"` won't work. Likewise, the
+well-known `sed`/`perl` recipe for inserting separators relies on regular-expression
+lookaheads such as `(?=...)`, which [Go's regular-expression engine](reference-main-regular-expressions.md)
+doesn't support.
+
+You can, however, insert thousands separators with a small user-defined
+[DSL function](reference-dsl-user-defined-functions.md) which applies
+[`sub`](reference-dsl-builtin-functions.md#sub) until there's nothing left to
+do. Digits are grouped from the left, so the decimal part (if any) is
+untouched, and non-numeric values pass through unchanged:
+
+<pre class="pre-highlight-in-pair">
+<b>echo 'x=12345,y=1234567.8901,z=-987654321,s=hello' | mlr --opprint put '</b>
+<b>  func commify(n) {</b>
+<b>    s = string(n);</b>
+<b>    while (s =~ "^(-?[0-9]+)([0-9]{3})") {</b>
+<b>      s = sub(s, "^(-?[0-9]+)([0-9]{3})", "\1,\2");</b>
+<b>    }</b>
+<b>    return s;</b>
+<b>  }</b>
+<b>  for (k, v in $*) {</b>
+<b>    $[k] = commify(v);</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+x      y              z            s
+12,345 1,234,567.8901 -987,654,321 hello
+</pre>
+
+To use a separator other than comma -- say, a space or a period -- simply
+change the `,` in the `"\1,\2"` replacement string.

@@ -50,3 +50,38 @@ GENMD-EOF
 GENMD-RUN-COMMAND
 echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'
 GENMD-EOF
+
+## Thousands separators
+
+Some tools accept a `printf`-style apostrophe flag, e.g. `%'d`, to insert
+locale-dependent thousands separators, formatting `12345` as `12,345`. Since
+Miller's number formatting uses Go's [fmt](https://pkg.go.dev/fmt) package,
+which doesn't support that flag, formats like `--ofmt "%'d"`,
+`fmtnum($x, "%'d")`, and `format-values -i "%'d"` won't work. Likewise, the
+well-known `sed`/`perl` recipe for inserting separators relies on regular-expression
+lookaheads such as `(?=...)`, which [Go's regular-expression engine](reference-main-regular-expressions.md)
+doesn't support.
+
+You can, however, insert thousands separators with a small user-defined
+[DSL function](reference-dsl-user-defined-functions.md) which applies
+[`sub`](reference-dsl-builtin-functions.md#sub) until there's nothing left to
+do. Digits are grouped from the left, so the decimal part (if any) is
+untouched, and non-numeric values pass through unchanged:
+
+GENMD-RUN-COMMAND
+echo 'x=12345,y=1234567.8901,z=-987654321,s=hello' | mlr --opprint put '
+  func commify(n) {
+    s = string(n);
+    while (s =~ "^(-?[0-9]+)([0-9]{3})") {
+      s = sub(s, "^(-?[0-9]+)([0-9]{3})", "\1,\2");
+    }
+    return s;
+  }
+  for (k, v in $*) {
+    $[k] = commify(v);
+  }
+'
+GENMD-EOF
+
+To use a separator other than comma -- say, a space or a period -- simply
+change the `,` in the `"\1,\2"` replacement string.
