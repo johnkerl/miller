@@ -15,10 +15,11 @@ func NewRecordReaderMarkdown(
 	readerOptions.AllowRepeatIFS = false
 
 	reader := &RecordReaderPprintBarredOrMarkdown{
-		readerOptions:    readerOptions,
-		recordsPerBatch:  recordsPerBatch,
-		separatorMatcher: regexp.MustCompile(`^\|[-\| ]+\|$`),
-		fieldSplitter:    newFieldSplitter(readerOptions),
+		readerOptions:     readerOptions,
+		recordsPerBatch:   recordsPerBatch,
+		separatorMatcher:  regexp.MustCompile(`^\|[-\| ]+\|$`),
+		fieldSplitter:     newFieldSplitter(readerOptions),
+		formatDisplayName: "Markdown",
 	}
 	if reader.readerOptions.UseImplicitHeader {
 		reader.recordBatchGetter = getRecordBatchImplicitPprintHeader
