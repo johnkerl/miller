@@ -1,6 +1,6 @@
 Summary: Name-indexed data processing tool
 Name: miller
-Version: 6.21.0
+Version: 6.22.0
 Release: 1%{?dist}
 License: BSD
 Source: https://github.com/johnkerl/miller/releases/download/%{version}/miller-%{version}.tar.gz
@@ -36,6 +36,9 @@ make install
 %{_mandir}/man1/mlr.1*
 
 %changelog
+* Fri Sep 25 2026 John Kerl <kerl.john.r@gmail.com> - 6.22.0-1
+- 6.22.0 release
+
 * Mon Aug 10 2026 John Kerl <kerl.john.r@gmail.com> - 6.21.0-1
 - 6.21.0 release
 

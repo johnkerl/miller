@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2026-08-25
+.\"      Date: 2026-09-25
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2026-08-25" "\ \&" "\ \&"
+.TH "MILLER" "1" "2026-09-25" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -50,7 +50,7 @@ on integer-indexed fields: if the natural data structure for the latter is the
 array, then Miller's natural data structure is the insertion-ordered hash map.
 This encompasses a variety of data formats, including but not limited to the
 familiar CSV, TSV, and JSON.  (Miller can handle positionally-indexed data as
-a special case.) This manpage documents mlr 6.21.0-dev.
+a special case.) This manpage documents mlr 6.22.0.
 .SH "EXAMPLES"
 .sp
 
@@ -482,6 +482,8 @@ The latter sets up input and output flags for `format1`, not all of which
 are overridden in all cases by setting output format to `format2`.
 
 --asv or --asvlite       Use ASV format for input and output data.
+--box                    Use Unicode box-drawing tabular format for input and
+                         output data.
 --csv or -c or --c2c     Use CSV format for input and output data.
 --csvlite                Use CSV-lite format for input and output data.
 --dcf                    Use Debian control file (DCF) format for input and
@@ -493,6 +495,8 @@ are overridden in all cases by setting output format to `format2`.
 --gen-step               Specify step value for --igen. Defaults to 1.
 --gen-stop               Specify stop value for --igen. Defaults to 100.
 --iasv or --iasvlite     Use ASV format for input data.
+--ibox                   Use Unicode box-drawing tabular format for input
+                         data.
 --icsv                   Use CSV format for input data.
 --icsvlite               Use CSV-lite format for input data.
 --idcf                   Use Debian control file (DCF) format for input data.
@@ -520,6 +524,8 @@ are overridden in all cases by setting output format to `format2`.
                          data.
 --nidx or --n2n          Use NIDX format for input and output data.
 --oasv or --oasvlite     Use ASV format for output data.
+--obox                   Use Unicode box-drawing tabular format for output
+                         data.
 --ocsv                   Use CSV format for output data.
 --ocsvlite               Use CSV-lite format for output data.
 --odcf                   Use Debian control file (DCF) format for output data.
@@ -688,13 +694,20 @@ These are flags which are applicable to markdown-tabular format.
 --md-aligned or --markdown-aligned
                          Use markdown-tabular format for input and output
                          data, with left-justified and padded columns. Implies
-                         --md, so you do not need to also pass --md.
+                         --md, so you do not need to also pass --md. Since
+                         this sets both input and output format, it will
+                         refuse to run if an earlier flag already chose a
+                         different input or output format (e.g. --d2m); use
+                         --omd-aligned instead if you only want aligned
+                         markdown OUTPUT.
 --omd-aligned or --omarkdown-aligned
                          For markdown-tabular output, left-justify cells and
                          pad each column to a uniform width, making the raw
                          markdown source easier to read and maintain. (The
                          rendered table is unaffected.) Implies --omd, so you
-                         do not need to also pass --omd.
+                         do not need to also pass --omd. Unlike --md-aligned,
+                         this does not touch the input format, so it composes
+                         safely with e.g. --d2m regardless of flag order.
 .fi
 .if n \{\
 .RE
@@ -1070,6 +1083,7 @@ Notes about all other separators:
 * Default separators by format:
 
         Format   FS     PS     RS
+        box      " "    N/A    "\en"
         csv      ","    N/A    "\en"
         csvlite  ","    N/A    "\en"
         dcf      N/A    N/A    N/A

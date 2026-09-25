@@ -297,8 +297,8 @@ These are flags which are applicable to markdown-tabular format.
 
 **Flags:**
 
-* `--md-aligned or --markdown-aligned`: Use markdown-tabular format for input and output data, with left-justified and padded columns. Implies --md, so you do not need to also pass --md.
-* `--omd-aligned or --omarkdown-aligned`: For markdown-tabular output, left-justify cells and pad each column to a uniform width, making the raw markdown source easier to read and maintain. (The rendered table is unaffected.) Implies --omd, so you do not need to also pass --omd.
+* `--md-aligned or --markdown-aligned`: Use markdown-tabular format for input and output data, with left-justified and padded columns. Implies --md, so you do not need to also pass --md. Since this sets both input and output format, it will refuse to run if an earlier flag already chose a different input or output format (e.g. --d2m); use --omd-aligned instead if you only want aligned markdown OUTPUT.
+* `--omd-aligned or --omarkdown-aligned`: For markdown-tabular output, left-justify cells and pad each column to a uniform width, making the raw markdown source easier to read and maintain. (The rendered table is unaffected.) Implies --omd, so you do not need to also pass --omd. Unlike --md-aligned, this does not touch the input format, so it composes safely with e.g. --d2m regardless of flag order.
 
 ## Miscellaneous flags
 

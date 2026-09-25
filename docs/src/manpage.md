@@ -52,7 +52,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        insertion-ordered hash map.  This encompasses a variety of data
        formats, including but not limited to the familiar CSV, TSV, and JSON.
        (Miller can handle positionally-indexed data as a special case.) This
-       manpage documents mlr 6.21.0-dev.
+       manpage documents mlr 6.22.0.
 
 1mEXAMPLES0m
        mlr --icsv --opprint cat example.csv
@@ -415,6 +415,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        are overridden in all cases by setting output format to `format2`.
 
        --asv or --asvlite       Use ASV format for input and output data.
+       --box                    Use Unicode box-drawing tabular format for input and
+                                output data.
        --csv or -c or --c2c     Use CSV format for input and output data.
        --csvlite                Use CSV-lite format for input and output data.
        --dcf                    Use Debian control file (DCF) format for input and
@@ -426,6 +428,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        --gen-step               Specify step value for --igen. Defaults to 1.
        --gen-stop               Specify stop value for --igen. Defaults to 100.
        --iasv or --iasvlite     Use ASV format for input data.
+       --ibox                   Use Unicode box-drawing tabular format for input
+                                data.
        --icsv                   Use CSV format for input data.
        --icsvlite               Use CSV-lite format for input data.
        --idcf                   Use Debian control file (DCF) format for input data.
@@ -453,6 +457,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                                 data.
        --nidx or --n2n          Use NIDX format for input and output data.
        --oasv or --oasvlite     Use ASV format for output data.
+       --obox                   Use Unicode box-drawing tabular format for output
+                                data.
        --ocsv                   Use CSV format for output data.
        --ocsvlite               Use CSV-lite format for output data.
        --odcf                   Use Debian control file (DCF) format for output data.
@@ -581,13 +587,20 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        --md-aligned or --markdown-aligned
                                 Use markdown-tabular format for input and output
                                 data, with left-justified and padded columns. Implies
-                                --md, so you do not need to also pass --md.
+                                --md, so you do not need to also pass --md. Since
+                                this sets both input and output format, it will
+                                refuse to run if an earlier flag already chose a
+                                different input or output format (e.g. --d2m); use
+                                --omd-aligned instead if you only want aligned
+                                markdown OUTPUT.
        --omd-aligned or --omarkdown-aligned
                                 For markdown-tabular output, left-justify cells and
                                 pad each column to a uniform width, making the raw
                                 markdown source easier to read and maintain. (The
                                 rendered table is unaffected.) Implies --omd, so you
-                                do not need to also pass --omd.
+                                do not need to also pass --omd. Unlike --md-aligned,
+                                this does not touch the input format, so it composes
+                                safely with e.g. --d2m regardless of flag order.
 
 1mMISCELLANEOUS FLAGS0m
        These are flags which don't fit into any other category.
@@ -923,6 +936,7 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        * Default separators by format:
 
                Format   FS     PS     RS
+               box      " "    N/A    "\n"
                csv      ","    N/A    "\n"
                csvlite  ","    N/A    "\n"
                dcf      N/A    N/A    N/A
@@ -4193,5 +4207,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
        https://miller.readthedocs.io
 
-                                  2026-08-25                         4mMILLER24m(1)
+                                  2026-09-25                         4mMILLER24m(1)
 </pre>
