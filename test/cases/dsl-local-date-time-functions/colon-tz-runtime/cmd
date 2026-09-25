@@ -1,0 +1,1 @@
+mlr --tz UTC -n put 'begin { ENV["TZ"] = ":Etc/GMT+2"; print sec2localtime(0); ENV["TZ"] = ":UTC"; print sec2localtime(0) }'
