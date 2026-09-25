@@ -151,8 +151,40 @@ func (ft *FlagTable) Parse(
 				// arguments follow the flag. E.g. `--ifs pipe` will advance
 				// *pargi by 2; `-I` will advance it by 1.
 				oargi := *pargi
+
+				// To track which flag most recently *explicitly* set the
+				// input/output format (see TReaderOptions.inputFormatSetByFlag),
+				// we can't just compare before/after values: a flag that sets
+				// the format to the same value it already had (e.g. --d2m
+				// setting InputFileFormat to "dkvp", which is also the
+				// zero-flags default) would look like a no-op. Instead, poison
+				// both fields with "" (never a legitimate format name) before
+				// calling the parser: if the parser assigns to the field at
+				// all, it won't be "" afterward, regardless of the value
+				// chosen; if the parser never touches the field, it's
+				// restored to what it was. The pre-poison values are stashed
+				// in .inputFormatBeforeThisFlag/.outputFormatBeforeThisFlag so
+				// a parser that itself needs to inspect the pre-existing
+				// format (e.g. --md-aligned's conflict check) has something
+				// meaningful to read during its own call.
+				oInputFileFormat := options.ReaderOptions.InputFileFormat
+				oOutputFileFormat := options.WriterOptions.OutputFileFormat
+				options.ReaderOptions.inputFormatBeforeThisFlag = oInputFileFormat
+				options.WriterOptions.outputFormatBeforeThisFlag = oOutputFileFormat
+				options.ReaderOptions.InputFileFormat = ""
+				options.WriterOptions.OutputFileFormat = ""
 				if err := flag.parser(args, argc, pargi, options); err != nil {
 					return false, err
+				}
+				if options.ReaderOptions.InputFileFormat == "" {
+					options.ReaderOptions.InputFileFormat = oInputFileFormat
+				} else {
+					options.ReaderOptions.inputFormatSetByFlag = flag.name
+				}
+				if options.WriterOptions.OutputFileFormat == "" {
+					options.WriterOptions.OutputFileFormat = oOutputFileFormat
+				} else {
+					options.WriterOptions.outputFormatSetByFlag = flag.name
 				}
 				nargi := *pargi
 				return nargi > oargi, nil

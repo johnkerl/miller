@@ -1,0 +1,1 @@
+mlr --imd --ojson --md-aligned cat test/input/abixy.md

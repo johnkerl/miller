@@ -1,0 +1,1 @@
+mlr: --md-aligned would override the input format already set by --d2m ("dkvp"); use --omd-aligned for aligned markdown output only, or drop one of these flags
