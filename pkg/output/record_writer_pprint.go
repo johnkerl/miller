@@ -92,6 +92,8 @@ func (writer *RecordWriterPPRINT) writeHeterogenousList(
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) bool {
+	isBox := writer.writerOptions.OutputFileFormat == "box"
+
 	maxWidths := make(map[string]int)
 	var maxNR int64 = 0
 
@@ -101,7 +103,11 @@ func (writer *RecordWriterPPRINT) writeHeterogenousList(
 			maxNR = nr
 		}
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
-			width := lib.DisplayWidth(pe.Value.String())
+			s := pe.Value.String()
+			if isBox {
+				s = escapeBoxValue(s)
+			}
+			width := lib.DisplayWidth(s)
 			if width == 0 {
 				width = 1 // We'll rewrite "" to "-" below
 			}
@@ -123,7 +129,10 @@ func (writer *RecordWriterPPRINT) writeHeterogenousList(
 		}
 	}
 	rightAlignedHeaders := writer.computeRightAlignedHeaders(records)
-	if barred {
+	if writer.writerOptions.OutputFileFormat == "box" {
+		writer.writeHeterogenousListBoxed(records, maxWidths, rightAlignedHeaders,
+			bufferedOutputStream, outputIsStdout)
+	} else if barred {
 		writer.writeHeterogenousListBarred(records, maxWidths, rightAlignedHeaders,
 			bufferedOutputStream, outputIsStdout)
 	} else {
@@ -273,6 +282,44 @@ type barredChars struct {
 	lastRowHorizontalEnd     string
 }
 
+// newBarredChars returns the border-glyph set for barred/boxed PPRINT-family
+// output: ASCII (+/-/|) or Unicode (┌┬┐├┼┤└┴┘─│) box-drawing characters.
+func newBarredChars(ofs string, unicode bool) barredChars {
+	if unicode {
+		return barredChars{
+			horizontalStart:          "├─",
+			horizontalMiddle:         "─┼─",
+			horizontalEnd:            "─┤",
+			horizontalBar:            "─",
+			verticalStart:            "│" + ofs,
+			verticalMiddle:           ofs + "│" + ofs,
+			verticalEnd:              ofs + "│",
+			firstRowHorizontalStart:  "┌─",
+			firstRowHorizontalMiddle: "─┬─",
+			firstRowHorizontalEnd:    "─┐",
+			lastRowHorizontalStart:   "└─",
+			lastRowHorizontalMiddle:  "─┴─",
+			lastRowHorizontalEnd:     "─┘",
+		}
+	} else {
+		return barredChars{
+			horizontalStart:          "+-",
+			horizontalMiddle:         "-+-",
+			horizontalEnd:            "-+",
+			horizontalBar:            "-",
+			verticalStart:            "|" + ofs,
+			verticalMiddle:           ofs + "|" + ofs,
+			verticalEnd:              ofs + "|",
+			firstRowHorizontalStart:  "+-",
+			firstRowHorizontalMiddle: "-+-",
+			firstRowHorizontalEnd:    "-+",
+			lastRowHorizontalStart:   "+-",
+			lastRowHorizontalMiddle:  "-+-",
+			lastRowHorizontalEnd:     "-+",
+		}
+	}
+}
+
 func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 	records []*mlrval.Mlrmap,
 	maxWidths map[string]int,
@@ -281,42 +328,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 	outputIsStdout bool,
 ) {
 
-	bc := func() barredChars {
-		ofs := writer.writerOptions.OFS
-		if writer.writerOptions.BarredUseUnicode {
-			return barredChars{
-				horizontalStart:          "├─",
-				horizontalMiddle:         "─┼─",
-				horizontalEnd:            "─┤",
-				horizontalBar:            "─",
-				verticalStart:            "│" + ofs,
-				verticalMiddle:           ofs + "│" + ofs,
-				verticalEnd:              ofs + "│",
-				firstRowHorizontalStart:  "┌─",
-				firstRowHorizontalMiddle: "─┬─",
-				firstRowHorizontalEnd:    "─┐",
-				lastRowHorizontalStart:   "└─",
-				lastRowHorizontalMiddle:  "─┴─",
-				lastRowHorizontalEnd:     "─┘",
-			}
-		} else {
-			return barredChars{
-				horizontalStart:          "+-",
-				horizontalMiddle:         "-+-",
-				horizontalEnd:            "-+",
-				horizontalBar:            "-",
-				verticalStart:            "|" + ofs,
-				verticalMiddle:           ofs + "|" + ofs,
-				verticalEnd:              ofs + "|",
-				firstRowHorizontalStart:  "+-",
-				firstRowHorizontalMiddle: "-+-",
-				firstRowHorizontalEnd:    "-+",
-				lastRowHorizontalStart:   "+-",
-				lastRowHorizontalMiddle:  "-+-",
-				lastRowHorizontalEnd:     "-+",
-			}
-		}
-	}()
+	bc := newBarredChars(writer.writerOptions.OFS, writer.writerOptions.BarredUseUnicode)
 
 	horizontalBars := make(map[string]string)
 	for key, width := range maxWidths {

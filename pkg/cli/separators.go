@@ -96,6 +96,7 @@ var defaultFSes = map[string]string{
 	"nidx":     " ",
 	"markdown": " ",
 	"pprint":   " ",
+	"box":      " ",
 	"tsv":      "\t",
 	"xtab":     "\n", // todo: windows-dependent ...
 }
@@ -134,6 +135,7 @@ var defaultPSes = map[string]string{
 	"markdown": "N/A",
 	"nidx":     "N/A",
 	"pprint":   "N/A",
+	"box":      "N/A",
 	"tsv":      "N/A",
 	"xtab":     " ",
 }
@@ -151,6 +153,7 @@ var defaultRSes = map[string]string{
 	"markdown": "\n",
 	"nidx":     "\n",
 	"pprint":   "\n",
+	"box":      "\n",
 	"tsv":      "\n",
 	"xtab":     "\n\n", // todo: maybe jettison the idea of this being alterable
 }
@@ -168,6 +171,7 @@ var defaultAllowRepeatIFSes = map[string]bool{
 	"markdown": false,
 	"nidx":     false,
 	"pprint":   true,
+	"box":      false,
 	"tsv":      false,
 	"xtab":     false,
 }

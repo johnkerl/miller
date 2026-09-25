@@ -28,10 +28,11 @@ func NewRecordReaderPPRINT(
 		readerOptions.AllowRepeatIFS = false
 
 		reader := &RecordReaderPprintBarredOrMarkdown{
-			readerOptions:    readerOptions,
-			recordsPerBatch:  recordsPerBatch,
-			separatorMatcher: regexp.MustCompile(`^\+[-+]*\+$`),
-			fieldSplitter:    newFieldSplitter(readerOptions),
+			readerOptions:     readerOptions,
+			recordsPerBatch:   recordsPerBatch,
+			separatorMatcher:  regexp.MustCompile(`^\+[-+]*\+$`),
+			fieldSplitter:     newFieldSplitter(readerOptions),
+			formatDisplayName: "PPRINT-barred",
 		}
 		if reader.readerOptions.UseImplicitHeader {
 			reader.recordBatchGetter = getRecordBatchImplicitPprintHeader
@@ -289,6 +290,10 @@ type RecordReaderPprintBarredOrMarkdown struct {
 	fieldSplitter     iFieldSplitter
 	recordBatchGetter recordBatchGetterPprint
 
+	// formatDisplayName is used only in header/data length-mismatch error
+	// messages, e.g. "PPRINT-barred", "Markdown", "box".
+	formatDisplayName string
+
 	inputLineNumber int64
 	headerStrings   []string
 }
@@ -465,8 +470,8 @@ func getRecordBatchExplicitPprintHeader(
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
 				err := fmt.Errorf(
-					"PPRINT-barred header/data length mismatch %d != %d at filename %s line %d",
-					len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
+					"%s header/data length mismatch %d != %d at filename %s line %d",
+					reader.formatDisplayName, len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
 				)
 				errorChannel <- err
 				return
@@ -596,8 +601,8 @@ func getRecordBatchImplicitPprintHeader(
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
 				err := fmt.Errorf(
-					"CSV header/data length mismatch %d != %d at filename %s line %d",
-					len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
+					"%s header/data length mismatch %d != %d at filename %s line %d",
+					reader.formatDisplayName, len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
 				)
 				errorChannel <- err
 				return

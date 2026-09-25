@@ -30,6 +30,8 @@ func Create(writerOptions *cli.TWriterOptions) (IRecordWriter, error) {
 		return NewRecordWriterMarkdown(writerOptions)
 	case "markdown":
 		return NewRecordWriterMarkdown(writerOptions)
+	case "box":
+		return NewRecordWriterBox(writerOptions)
 	case "nidx":
 		return NewRecordWriterNIDX(writerOptions)
 	case "pprint":

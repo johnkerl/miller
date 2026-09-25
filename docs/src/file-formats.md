@@ -719,6 +719,184 @@ markdown as well:
 | purple | square   | false |   10 |    91 |  72.3735 | 8.2430 |
 </pre>
 
+## Box: Unicode box-drawing tabular
+
+Box format looks like this:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --obox cat example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+┌────────┬──────────┬───────┬────┬───────┬──────────┬────────┐
+│ color  │ shape    │ flag  │ k  │ index │ quantity │ rate   │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ yellow │ triangle │ true  │ 1  │ 11    │ 43.6498  │ 9.8870 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ red    │ square   │ true  │ 2  │ 15    │ 79.2778  │ 0.0130 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ red    │ circle   │ true  │ 3  │ 16    │ 13.8103  │ 2.9010 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ red    │ square   │ false │ 4  │ 48    │ 77.5542  │ 7.4670 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ purple │ triangle │ false │ 5  │ 51    │ 81.2290  │ 8.5910 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ red    │ square   │ false │ 6  │ 64    │ 77.1991  │ 9.5310 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ purple │ triangle │ false │ 7  │ 65    │ 80.1405  │ 5.8240 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ yellow │ circle   │ true  │ 8  │ 73    │ 63.9785  │ 4.2370 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ yellow │ circle   │ true  │ 9  │ 87    │ 63.5058  │ 8.3350 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ purple │ square   │ false │ 10 │ 91    │ 72.3735  │ 8.2430 │
+└────────┴──────────┴───────┴────┴───────┴──────────┴────────┘
+</pre>
+
+This is the same idea as PPRINT with `--barred-unicode`, except a divider is drawn between every
+row, not just after the header -- the same style produced by tools like SQLite's `.mode box`.
+As with PPRINT and Markdown-aligned output, Miller must accumulate a same-schema batch of records
+before it can compute column widths, so the same streaming caveats apply (see the PPRINT section
+above).
+
+Use `--ibox` for box-format input, `--obox` for box-format output, or `--box` for both:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --obox cat example.csv | mlr --ibox --ojson cat</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "color": "yellow",
+  "shape": "triangle",
+  "flag": "true",
+  "k": 1,
+  "index": 11,
+  "quantity": 43.6498,
+  "rate": 9.8870
+},
+{
+  "color": "red",
+  "shape": "square",
+  "flag": "true",
+  "k": 2,
+  "index": 15,
+  "quantity": 79.2778,
+  "rate": 0.0130
+},
+{
+  "color": "red",
+  "shape": "circle",
+  "flag": "true",
+  "k": 3,
+  "index": 16,
+  "quantity": 13.8103,
+  "rate": 2.9010
+},
+{
+  "color": "red",
+  "shape": "square",
+  "flag": "false",
+  "k": 4,
+  "index": 48,
+  "quantity": 77.5542,
+  "rate": 7.4670
+},
+{
+  "color": "purple",
+  "shape": "triangle",
+  "flag": "false",
+  "k": 5,
+  "index": 51,
+  "quantity": 81.2290,
+  "rate": 8.5910
+},
+{
+  "color": "red",
+  "shape": "square",
+  "flag": "false",
+  "k": 6,
+  "index": 64,
+  "quantity": 77.1991,
+  "rate": 9.5310
+},
+{
+  "color": "purple",
+  "shape": "triangle",
+  "flag": "false",
+  "k": 7,
+  "index": 65,
+  "quantity": 80.1405,
+  "rate": 5.8240
+},
+{
+  "color": "yellow",
+  "shape": "circle",
+  "flag": "true",
+  "k": 8,
+  "index": 73,
+  "quantity": 63.9785,
+  "rate": 4.2370
+},
+{
+  "color": "yellow",
+  "shape": "circle",
+  "flag": "true",
+  "k": 9,
+  "index": 87,
+  "quantity": 63.5058,
+  "rate": 8.3350
+},
+{
+  "color": "purple",
+  "shape": "square",
+  "flag": "false",
+  "k": 10,
+  "index": 91,
+  "quantity": 72.3735,
+  "rate": 8.2430
+}
+]
+</pre>
+
+`--right`, `--right-align-numeric`, and `--headerless-output` all work the same as for PPRINT:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --obox --right-align-numeric cat example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+┌────────┬──────────┬───────┬────┬───────┬──────────┬────────┐
+│ color  │ shape    │ flag  │  k │ index │ quantity │   rate │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ yellow │ triangle │ true  │  1 │    11 │  43.6498 │ 9.8870 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ red    │ square   │ true  │  2 │    15 │  79.2778 │ 0.0130 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ red    │ circle   │ true  │  3 │    16 │  13.8103 │ 2.9010 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ red    │ square   │ false │  4 │    48 │  77.5542 │ 7.4670 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ purple │ triangle │ false │  5 │    51 │  81.2290 │ 8.5910 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ red    │ square   │ false │  6 │    64 │  77.1991 │ 9.5310 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ purple │ triangle │ false │  7 │    65 │  80.1405 │ 5.8240 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ yellow │ circle   │ true  │  8 │    73 │  63.9785 │ 4.2370 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ yellow │ circle   │ true  │  9 │    87 │  63.5058 │ 8.3350 │
+├────────┼──────────┼───────┼────┼───────┼──────────┼────────┤
+│ purple │ square   │ false │ 10 │    91 │  72.3735 │ 8.2430 │
+└────────┴──────────┴───────┴────┴───────┴──────────┴────────┘
+</pre>
+
+A literal `│` (U+2502, the box-drawing vertical bar) in a data value is escaped as `\│` on output
+so it isn't mistaken for a column boundary; this escaping is not currently reversed on input, so a
+value containing a literal `│` will not round-trip byte-for-byte through box format. This mirrors
+Markdown format's handling of a literal `|` in cell values.
+
+Only the Unicode-drawn box style is supported for now; an ASCII-only variant (analogous to
+PPRINT's plain `--barred`) may be added in a future release.
+
 ## XTAB: Vertical tabular
 
 This is perhaps most useful for looking a very wide and/or multi-column data which causes line-wraps on the screen (but see also

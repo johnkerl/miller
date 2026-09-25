@@ -307,6 +307,40 @@ GENMD-RUN-COMMAND
 mlr --icsv --omd-aligned --right-align-numeric cat example.csv
 GENMD-EOF
 
+## Box: Unicode box-drawing tabular
+
+Box format looks like this:
+
+GENMD-RUN-COMMAND
+mlr --icsv --obox cat example.csv
+GENMD-EOF
+
+This is the same idea as PPRINT with `--barred-unicode`, except a divider is drawn between every
+row, not just after the header -- the same style produced by tools like SQLite's `.mode box`.
+As with PPRINT and Markdown-aligned output, Miller must accumulate a same-schema batch of records
+before it can compute column widths, so the same streaming caveats apply (see the PPRINT section
+above).
+
+Use `--ibox` for box-format input, `--obox` for box-format output, or `--box` for both:
+
+GENMD-RUN-COMMAND
+mlr --icsv --obox cat example.csv | mlr --ibox --ojson cat
+GENMD-EOF
+
+`--right`, `--right-align-numeric`, and `--headerless-output` all work the same as for PPRINT:
+
+GENMD-RUN-COMMAND
+mlr --icsv --obox --right-align-numeric cat example.csv
+GENMD-EOF
+
+A literal `│` (U+2502, the box-drawing vertical bar) in a data value is escaped as `\│` on output
+so it isn't mistaken for a column boundary; this escaping is not currently reversed on input, so a
+value containing a literal `│` will not round-trip byte-for-byte through box format. This mirrors
+Markdown format's handling of a literal `|` in cell values.
+
+Only the Unicode-drawn box style is supported for now; an ASCII-only variant (analogous to
+PPRINT's plain `--barred`) may be added in a future release.
+
 ## XTAB: Vertical tabular
 
 This is perhaps most useful for looking a very wide and/or multi-column data which causes line-wraps on the screen (but see also
