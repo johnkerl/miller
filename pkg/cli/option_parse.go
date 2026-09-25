@@ -678,7 +678,9 @@ var MarkdownOnlyFlagSection = FlagSection{
 			help: "For markdown-tabular output, left-justify cells and pad each " +
 				"column to a uniform width, making the raw markdown source easier " +
 				"to read and maintain. (The rendered table is unaffected.) Implies " +
-				"--omd, so you do not need to also pass --omd.",
+				"--omd, so you do not need to also pass --omd. Unlike --md-aligned, " +
+				"this does not touch the input format, so it composes safely with " +
+				"e.g. --d2m regardless of flag order.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.WriterOptions.OutputFileFormat = "markdown"
 				options.WriterOptions.MarkdownAlignedOutput = true
@@ -692,8 +694,29 @@ var MarkdownOnlyFlagSection = FlagSection{
 			altNames: []string{"--markdown-aligned"},
 			help: "Use markdown-tabular format for input and output data, with " +
 				"left-justified and padded columns. Implies --md, so you do not " +
-				"need to also pass --md.",
+				"need to also pass --md. Since this sets both input and output " +
+				"format, it will refuse to run if an earlier flag already chose a " +
+				"different input or output format (e.g. --d2m); use --omd-aligned " +
+				"instead if you only want aligned markdown OUTPUT.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				// Note: the live InputFileFormat/OutputFileFormat fields are
+				// poisoned to "" for the duration of this call (see
+				// FlagTable.Parse), so the pre-existing values must be read
+				// from the "BeforeThisFlag" fields instead.
+				if f := options.ReaderOptions.inputFormatSetByFlag; f != "" && options.ReaderOptions.inputFormatBeforeThisFlag != "markdown" {
+					return fmt.Errorf(
+						"--md-aligned would override the input format already set by %s (%q); "+
+							"use --omd-aligned for aligned markdown output only, or drop one of these flags",
+						f, options.ReaderOptions.inputFormatBeforeThisFlag,
+					)
+				}
+				if f := options.WriterOptions.outputFormatSetByFlag; f != "" && options.WriterOptions.outputFormatBeforeThisFlag != "markdown" {
+					return fmt.Errorf(
+						"--md-aligned would override the output format already set by %s (%q); "+
+							"use --imd for markdown input only, or drop one of these flags",
+						f, options.WriterOptions.outputFormatBeforeThisFlag,
+					)
+				}
 				options.ReaderOptions.InputFileFormat = "markdown"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				options.WriterOptions.MarkdownAlignedOutput = true

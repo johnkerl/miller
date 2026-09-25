@@ -1,0 +1,1 @@
+mlr: --md-aligned would override the output format already set by --ojson ("json"); use --imd for markdown input only, or drop one of these flags

@@ -43,6 +43,20 @@ type TReaderOptions struct {
 	IPSRegex         *regexp.Regexp
 	DedupeFieldNames bool
 
+	// Name of the most recent flag (e.g. "--icsv", "--d2m") which changed
+	// InputFileFormat, if any. Maintained centrally by FlagTable.Parse; used
+	// by flags like --md-aligned to detect -- and refuse -- silently
+	// overriding an input format an earlier flag already explicitly chose.
+	inputFormatSetByFlag string
+	// InputFileFormat as of just before the flag currently being parsed by
+	// FlagTable.Parse started running. FlagTable.Parse briefly poisons the
+	// live InputFileFormat field (to "") for the duration of each flag's
+	// parser call, to detect whether that parser assigns to it at all; a
+	// parser that itself needs to inspect the pre-existing format (as
+	// --md-aligned's conflict check does) must read this field instead of
+	// the live one, which is meaningless while poisoned.
+	inputFormatBeforeThisFlag string
+
 	// If unspecified on the command line, these take input-format-dependent
 	// defaults.  E.g. default FS is comma for DKVP but space for NIDX;
 	// default AllowRepeatIFS is false for CSV but true for PPRINT.
@@ -92,6 +106,15 @@ type TWriterOptions struct {
 	OFS              string
 	OPS              string
 	FLATSEP          string
+
+	// Name of the most recent flag (e.g. "--ojson", "--d2m") which changed
+	// OutputFileFormat, if any. Maintained centrally by FlagTable.Parse; used
+	// by flags like --md-aligned to detect -- and refuse -- silently
+	// overriding an output format an earlier flag already explicitly chose.
+	outputFormatSetByFlag string
+	// OutputFileFormat as of just before the flag currently being parsed by
+	// FlagTable.Parse started running. See TReaderOptions.inputFormatBeforeThisFlag.
+	outputFormatBeforeThisFlag string
 
 	FlushOnEveryRecord             bool
 	flushOnEveryRecordWasSpecified bool
