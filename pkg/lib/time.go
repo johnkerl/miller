@@ -2,7 +2,10 @@ package lib
 
 import (
 	"fmt"
+	"io"
 	"os"
+	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -19,12 +22,38 @@ func SetTZFromEnv() error {
 	if tzenv == "" {
 		return nil
 	}
-	location, err := time.LoadLocation(tzenv)
+	name := strings.TrimPrefix(tzenv, ":")
+	var location *time.Location
+	var err error
+	if filepath.IsAbs(name) {
+		location, err = loadLocationFromTimezoneFile(name)
+	} else {
+		location, err = time.LoadLocation(name)
+	}
 	if err != nil {
 		return fmt.Errorf("TZ environment variable appears malformed: \"%s\"", tzenv)
 	}
 	time.Local = location
 	return nil
+}
+
+func loadLocationFromTimezoneFile(name string) (*time.Location, error) {
+	file, err := os.Open(name)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = file.Close() }()
+
+	// Match the Go time package's limit instead of reading an unbounded file.
+	const maxTimezoneFileSize = 10 << 20
+	data, err := io.ReadAll(io.LimitReader(file, maxTimezoneFileSize+1))
+	if err != nil {
+		return nil, err
+	}
+	if len(data) > maxTimezoneFileSize {
+		return nil, fmt.Errorf("timezone file exceeds %d bytes", maxTimezoneFileSize)
+	}
+	return time.LoadLocationFromTZData(name, data)
 }
 
 func Sec2GMT(epochSeconds float64, numDecimalPlaces int) string {
