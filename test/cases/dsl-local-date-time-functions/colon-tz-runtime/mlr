@@ -1,1 +1,1 @@
-'begin { ENV["TZ"] = ":Etc/GMT+2"; print sec2localtime(0); ENV["TZ"] = ":UTC"; print sec2localtime(0) }'
+begin { ENV["TZ"] = ":Etc/GMT+2"; print sec2localtime(0); ENV["TZ"] = ":UTC"; print sec2localtime(0) }
