@@ -193,8 +193,9 @@ func getRecordBatchExplicitTSVHeader(
 					continue
 				}
 				err := fmt.Errorf(
-					"TSV header/data length mismatch %d != %d at filename %s line %d",
+					"TSV header/data length mismatch %d != %d at filename %s line %d%s",
 					len(reader.headerStrings), len(fields), filename, reader.inputLineNumber,
+					blankInputLineHint(fields),
 				)
 				errorChannel <- err
 				return
