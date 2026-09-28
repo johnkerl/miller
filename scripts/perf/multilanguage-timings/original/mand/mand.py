@@ -22,7 +22,7 @@ for ii in range(0, iheight+1):
 		iti = 0;
 		escaped = False;
 		for iti in range(0, maxits):
-			mag = zr*zr + zi+zi;
+			mag = zr*zr + zi*zi;
 			if mag > 4.0:
 					escaped = True;
 					break;
