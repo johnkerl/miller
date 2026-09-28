@@ -170,7 +170,7 @@ func get_point_plot(num pr, num pi, int maxits, bool do_julia, num jr, num ji): 
   bool escaped = false;
   num zt = 0;
   for (iti = 0; iti < maxits; iti += 1) {
-    num mag = zr*zr + zi+zi;
+    num mag = zr*zr + zi*zi;
     if (mag > 4.0) {
         escaped = true;
         break;

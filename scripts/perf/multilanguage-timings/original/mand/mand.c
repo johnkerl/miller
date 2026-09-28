@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
 			int iti = 0;
 			int escaped = 0;
 			for (iti = 0; iti < maxits; iti += 1) {
-				double mag = zr*zr + zi+zi;
+				double mag = zr*zr + zi*zi;
 				if (mag > 4.0) {
 						escaped = 1;
 						break;

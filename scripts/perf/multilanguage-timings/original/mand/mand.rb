@@ -19,7 +19,7 @@ for ii in 0..iheight
 		iti = 0
 		escaped = false
     for iti in 0..maxits
-			mag = zr*zr + zi+zi
+			mag = zr*zr + zi*zi
 			if mag > 4.0
 					escaped = true
 					break

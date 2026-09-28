@@ -39,7 +39,7 @@ func get_point_plot(cr float64, ci float64, maxits int) string {
 	zt := 0.0
 	iti := 0
 	for iti = 0; iti < maxits; iti++ {
-		mag := zr*zr + zi + zi
+		mag := zr*zr + zi*zi
 		if mag > 4.0 {
 			escaped = true
 			break
