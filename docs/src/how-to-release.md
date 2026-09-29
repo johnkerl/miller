@@ -24,11 +24,13 @@ In this example I am using version 6.2.0 to 6.3.0; of course that will change fo
 
 Much of the mechanical work below is automated by `tools/release.sh`, which has three subcommands mirroring the checklist:
 
-* `./tools/release.sh v6.3.0 pre-release` -- version bumps, `make dev`, commit/push, release tarball, SRPM, and GitHub pre-release (with GitHub's auto-generated release notes) with assets uploaded.
-* `./tools/release.sh v6.3.0 docs` -- creates the `6.3.0` docs branch and edits `docs/mkdocs.yml`. Refuses to run while the GitHub release is still marked pre-release.
+* `./tools/release.sh v6.3.0 pre-release` -- version bumps, `make dev`, commit/push, release tarball, SRPM, tag push, and GitHub draft release (with GitHub's auto-generated release notes) with assets uploaded.
+* `./tools/release.sh v6.3.0 docs` -- creates the `6.3.0` docs branch and edits `docs/mkdocs.yml`. Refuses to run while the GitHub release is still a draft.
 * `./tools/release.sh v6.3.0 afterwork` -- flips `pkg/version/version.go` back to `6.3.0-dev`, commits/pushes, and prints the brew/macports/ReadTheDocs reminders with a pre-filled `brew bump-formula-pr` command.
 
-`rpmbuild` is mandatory for `pre-release` (the SRPM is a required release artifact); `rpmlint` is optional and is run only if installed. The ReadTheDocs admin steps and the flip from pre-release to public remain manual. Each subcommand is idempotent, so a partial run can be re-invoked safely.
+`rpmbuild` is mandatory for `pre-release` (the SRPM is a required release artifact); `rpmlint` is optional and is run only if installed. The ReadTheDocs admin steps and publishing the release (flipping it from draft to public) remain manual. Each subcommand is idempotent, so a partial run can be re-invoked safely.
+
+Note that `pre-release` pushes the `vX.Y.Z` tag itself, separately from creating the GitHub release: a *draft* GitHub release does not materialize its underlying git tag until it is published, but `.github/workflows/release.yml` (and therefore goreleaser, which needs to attach binaries to the draft before we verify and publish it) only triggers on an actual tag push.
 
 **If you are running `pre-release`, do not also do the version-bump / tarball / SRPM / GitHub-release-and-tag steps below by hand first.** `pre-release` does all of that itself, in the order that makes the tag land correctly (version bump commit pushed *before* the tag is cut). Manually creating the GitHub release/tag before the version-bump commit is pushed reproduces the exact bug called out under "Create the GitHub release tag" below -- the tag gets pinned to whatever commit `main` was at that moment, forever, even though it looks like `--target main`. Worse, `pre-release`'s idempotency check only confirms *a* release exists for the tag; it does not verify the tagged commit actually contains the version bump, so a subsequent `pre-release` run will not notice or fix a bad tag -- it will just keep uploading assets to it. If this happens, the only fix is to delete the GitHub release and the tag (`git push --delete origin vX.Y.Z`, plus the local tag) and recreate it pointing at the correct commit.
 
@@ -60,13 +62,14 @@ These are the individual steps `pre-release`/`docs`/`afterwork` automate, kept h
 
     * If `pre-release` is handling this release, skip this step -- do not create the release/tag by hand first. See the warning above.
     * Don't forget the `v` in `v6.3.0`
-    * Write the release notes -- save as a pre-release until below
+    * Write the release notes -- save as a draft until below
         * Be sure the commit being used is the (non-`main`) PR commit containing the new version, or, `main` after that PR is merged back to `main`. (Otherwise, the release will be tagging the commit _before_ the changes, and `mlr version` will not show the new release number.)
+        * A draft release does not push its own git tag -- GitHub only materializes the tag ref when the release is published -- so push the `vX.Y.Z` tag yourself first; goreleaser is triggered by that tag push, not by the release itself.
     * Thanks to [PR 822](https://github.com/johnkerl/miller/pull/822) which introduces [goreleaser](https://github.com/johnkerl/miller/blob/main/.goreleaser.yml) there are versions for many platforms auto-built and auto-attached to the GitHub release.
     * Attach the release tarball and SRPM. Double-check assets were successfully uploaded.
-    * Publish the release in pre-release mode, until all CI jobs finish successfully. Note that gorelease will create and attach the rest of the binaries.
-    * Before marking the release as public, download an executable from among the generated binaries and make sure its `mlr version` prints what you expect -- else, restart this process. MacOS: `xattr -d com.apple.quarantine ./mlr` first.
-    * Then mark the release as public.
+    * Save the release as a draft, until all CI jobs finish successfully. (Not "pre-release" -- GitHub emails a release notification, subject-lined "Pre-release", as soon as a release is published in pre-release mode; saving as a draft instead defers that notification until the real, non-pre-release publish.) Note that goreleaser will create and attach the rest of the binaries.
+    * Before publishing the release, download an executable from among the generated binaries and make sure its `mlr version` prints what you expect -- else, restart this process. MacOS: `xattr -d com.apple.quarantine ./mlr` first.
+    * Then publish the release, which makes it public and sends the (correctly-labeled) release notification.
 
 * Build the release-specific docs:
 

@@ -13,16 +13,17 @@
 #   pre-release
 #     Phase 0 preflight, phase 1 version bumps + `make dev` + commit + push,
 #     phase 2 release tarball + sha256, phase 3 SRPM build, phase 4 GitHub
-#     pre-release create (with GitHub's auto-generated release notes) + asset
-#     upload.  Stops after the pre-release is created.  The operator must
-#     then wait for CI/goreleaser, verify a downloaded binary, and flip the
-#     release from pre-release to public by hand before running `docs`.
+#     draft release create (with GitHub's auto-generated release notes) +
+#     asset upload.  Stops after the draft release is created.  The operator
+#     must then wait for CI/goreleaser, verify a downloaded binary, and
+#     publish the release (flipping it from draft to public) by hand before
+#     running `docs`.
 #
 #   docs
 #     Phase 5. Creates (or reuses) the `<VERSION>` docs branch, edits
 #     `docs/mkdocs.yml`, commits and (prompted) pushes.  Refuses to run while
-#     the GitHub release is still marked pre-release.  ReadTheDocs admin steps
-#     remain manual -- the script prints the URLs to visit.
+#     the GitHub release is still a draft.  ReadTheDocs admin steps remain
+#     manual -- the script prints the URLs to visit.
 #
 #   afterwork
 #     Phases 6 and 7. Back on the main branch, flips
@@ -293,14 +294,14 @@ preflight_pre_release_extras() {
 }
 
 preflight_docs_extras() {
-  # The release must exist and must no longer be pre-release.
+  # The release must exist and must have been published (no longer a draft).
   if ! gh release view "$TAG" >/dev/null 2>&1; then
     die "gh release '$TAG' does not exist -- run 'pre-release' first"
   fi
-  local is_pre
-  is_pre="$(gh release view "$TAG" --json isPrerelease --jq .isPrerelease 2>/dev/null || echo "true")"
-  if [ "$is_pre" != "false" ]; then
-    die "release $TAG is still marked pre-release -- verify the CI artifacts, flip it to public on GitHub, then retry"
+  local is_draft
+  is_draft="$(gh release view "$TAG" --json isDraft --jq .isDraft 2>/dev/null || echo "true")"
+  if [ "$is_draft" != "false" ]; then
+    die "release $TAG is still a draft -- verify the CI artifacts, publish it on GitHub, then retry"
   fi
   log "preflight (docs) ok -- release $TAG is public"
 }
@@ -555,21 +556,36 @@ phase_3_srpm() {
 }
 
 # ============================================================================
-# Phase 4 -- GitHub pre-release create + upload assets
+# Phase 4 -- GitHub draft release create + upload assets
 # ============================================================================
 phase_4_github_release() {
-  banner "PHASE 4: create GitHub pre-release $TAG"
+  banner "PHASE 4: create GitHub draft release $TAG"
 
   local tgz="miller-${VERSION}.tar.gz"
   [ -f "$tgz" ] || [ "$DRY_RUN" = "yes" ] || die "$tgz missing"
   [ -n "${SRPM_PATH:-}" ] || die "SRPM_PATH not set -- phase 3 did not run?"
 
+  # A draft release does NOT create/push the underlying git tag -- GitHub
+  # only materializes the tag ref once the release is published (until then
+  # `gh release create --draft` links the release to an auto-generated
+  # "untagged-..." id instead). `.github/workflows/release.yml` (and hence
+  # goreleaser, which attaches the binaries we need to verify before
+  # publishing) triggers on `push: tags: v*`, so the tag must be created and
+  # pushed explicitly here, independent of the release's draft status.
+  if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+    note "tag $TAG already exists on origin (idempotent: skipping tag push)"
+  else
+    confirm "create and push tag $TAG (needed to trigger the goreleaser workflow even though the release itself will be a draft)?"
+    git rev-parse --verify --quiet "refs/tags/$TAG" >/dev/null || run_cmd git tag "$TAG"
+    run_cmd git push origin "$TAG"
+  fi
+
   if gh release view "$TAG" >/dev/null 2>&1; then
     note "gh release $TAG already exists -- leaving existing release notes/title untouched"
   else
-    confirm "create GitHub pre-release $TAG with auto-generated release notes?"
+    confirm "create GitHub draft release $TAG with auto-generated release notes?"
     run_cmd gh release create "$TAG" \
-      --prerelease \
+      --draft \
       --title "Miller $VERSION" \
       --generate-notes
   fi
@@ -585,15 +601,15 @@ phase_4_github_release() {
 
   banner "PHASE 4: follow-ups"
   cat <<EOF
-${C_YEL}Pre-release $TAG is created. Next, by hand:${C_OFF}
+${C_YEL}Draft release $TAG is created. Next, by hand:${C_OFF}
   1. Wait for the goreleaser workflow to finish attaching binaries.
      gh run list --limit 5
   2. Download one binary from the release page, then:
        # macOS only:
        xattr -d com.apple.quarantine ./mlr
        ./mlr version   # should print $VERSION
-  3. If that looks good, flip the release from pre-release to public on
-     the GitHub release page.
+  3. If that looks good, publish the release (flip it from draft to
+     public) on the GitHub release page.
   4. Then run:
        $0 $TAG docs
 EOF
