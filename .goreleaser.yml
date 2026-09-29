@@ -3,6 +3,8 @@ release:
   github:
     owner: johnkerl
     name: miller
+  draft: true
+  use_existing_draft: true
 
 snapshot:
   name_template: SNAPSHOT-{{ .Commit }}
