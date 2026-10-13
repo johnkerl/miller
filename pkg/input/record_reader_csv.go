@@ -269,8 +269,8 @@ func (reader *RecordReaderCSV) getRecordBatch(
 					continue
 				}
 				err := fmt.Errorf(
-					"CSV header/data length mismatch %d != %d at filename %s row %d",
-					nh, nd, reader.filename, reader.rowNumber,
+					"CSV header/data length mismatch %d != %d at filename %s row %d%s",
+					nh, nd, reader.filename, reader.rowNumber, blankInputLineHint(csvRecord),
 				)
 				errorChannel <- err
 				return
