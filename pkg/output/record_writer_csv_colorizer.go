@@ -69,6 +69,9 @@ func (writer *RecordWriterCSV) WriteCSVRecordMaybeColorized(
 	}
 
 	for i, field := range record {
+		// Sanitize before quoting/color prefix so untrusted field bytes cannot
+		// drive the terminal when writing to a TTY (#2255).
+		field = colorizer.SanitizePayloadForOutput(field, outputIsStdout)
 		if i > 0 {
 			if _, err := bufferedOutputStream.WriteRune(comma); err != nil {
 				return err
