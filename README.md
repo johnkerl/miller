@@ -24,6 +24,8 @@ including but not limited to the familiar **CSV**, **TSV**, and **JSON**/**JSON 
 In the above image you can see how Miller embraces the common themes of
 key-value-pair data in a variety of data formats.
 
+[![Live demo by Demoshell](https://build.demoshell.com/v1/embed/badge.svg)](https://build.demoshell.com/launch?snapshot=demoshell%2Ftui%3Amiller&utm_source=badge)
+
 # Installing
 There's a good chance you can get Miller pre-built for your system:
 [![Ubuntu](https://img.shields.io/badge/distros-ubuntu-db4923.svg)](https://launchpad.net/ubuntu/+source/miller)
