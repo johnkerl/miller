@@ -5,9 +5,6 @@ on:
       - v*
   workflow_dispatch:
 
-env:
-  GO_VERSION: 1.26
-
 jobs:
   release:
     name: Release
@@ -16,16 +13,16 @@ jobs:
         platform: [ubuntu-latest]
     runs-on: ${{ matrix.platform }}
     steps:
-      - name: Set up Go
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
-        with:
-          go-version: ${{ env.GO_VERSION }}
-        id: go
-
       - name: Check out code into the Go module directory
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
+        with:
+          go-version-file: go.mod
+        id: go
 
       # https://github.com/marketplace/actions/cache
       - name: Cache Go modules
