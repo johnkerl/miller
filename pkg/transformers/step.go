@@ -82,10 +82,18 @@ import (
 // For EWMA
 const DEFAULT_STRING_ALPHA = "0.5"
 
+func stepperOptionValues() []string {
+	values := make([]string, 0, len(STEPPER_LOOKUP_TABLE))
+	for _, stepper := range STEPPER_LOOKUP_TABLE {
+		values = append(values, stepper.name)
+	}
+	return values
+}
+
 const verbNameStep = "step"
 
 var stepOptions = []OptionSpec{
-	{Flag: "-a", Arg: "{delta,rsum,...}", Type: "enum", Desc: "Names of steppers: comma-separated, one or more of the listed values.", Values: []string{"counter", "delta", "ewma", "from-first", "ratio", "rprod", "rsum", "shift", "shift_lag", "shift_lead", "slwin"}},
+	{Flag: "-a", Arg: "{delta,rsum,...}", Type: "enum", Desc: "Names of steppers: comma-separated, one or more of the listed values.", Values: stepperOptionValues()},
 	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Value-field names on which to compute statistics."},
 	{Flag: "-g", Arg: "{d,e,f}", Type: "csv-list", Desc: "Optional group-by-field names."},
 	{Flag: "-F", Type: "bool", Desc: "Computes integerable things (e.g. counter) in floating point. As of Miller 6 this happens automatically, but the flag is accepted as a no-op for backward compatibility with Miller 5 and below."},
