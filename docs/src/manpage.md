@@ -314,8 +314,8 @@ This is simply a copy of what you should see on running `man mlr` at a command p
        Examples:
 
            mlr --prepipe gunzip
-           mlr --prepipe zcat -cf
-           mlr --prepipe xz -cd
+           mlr --prepipe 'zcat -cf'
+           mlr --prepipe 'xz -cd'
            mlr --prepipe cat
 
        Note that this feature is quite general and is not limited to decompression

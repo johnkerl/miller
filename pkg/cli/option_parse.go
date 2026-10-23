@@ -3519,8 +3519,8 @@ prepipex command must take a filename as argument; it will be invoked with
 Examples:
 
     mlr --prepipe gunzip
-    mlr --prepipe zcat -cf
-    mlr --prepipe xz -cd
+    mlr --prepipe 'zcat -cf'
+    mlr --prepipe 'xz -cd'
     mlr --prepipe cat
 
 Note that this feature is quite general and is not limited to decompression
