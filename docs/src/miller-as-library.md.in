@@ -13,7 +13,7 @@ I'm happy to discuss this new area further at the [discussions page](https://git
 ```
 $ mkdir use-mlr
 
-$ cd cd use-mlr
+$ cd use-mlr
 
 $ go mod init github.com/johnkerl/miller-library-example
 go: creating new go.mod: module github.com/johnkerl/miller-library-example
