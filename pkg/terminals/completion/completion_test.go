@@ -288,8 +288,7 @@ func TestPutArityOverride(t *testing.T) {
 }
 
 // TestFlagValueCompletion verifies enum-value completion for arg-taking main
-// flags: file formats for -i/-o/--io and separator aliases for --ifs etc.,
-// with a fallback to filename completion for non-enum flags.
+// and verb flags, with a fallback to filename completion for non-enum flags.
 func TestFlagValueCompletion(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -330,6 +329,36 @@ func TestFlagValueCompletion(t *testing.T) {
 			words:    []string{"mlr", "--ifs-regex", ""},
 			wantDir:  DirectiveCandidates,
 			mustHave: []string{"spaces", "tabs", "whitespace"},
+		},
+		{
+			name:     "stats1 accumulator flag offers fixed names and median",
+			words:    []string{"mlr", "stats1", "-a", "me"},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"mean", "meaneb", "median"},
+		},
+		{
+			name:     "merge-fields accumulator flag offers fixed names and median",
+			words:    []string{"mlr", "merge-fields", "-a", "me"},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"mean", "meaneb", "median"},
+		},
+		{
+			name:     "stats2 accumulator flag offers all registered names",
+			words:    []string{"mlr", "stats2", "-a", "co"},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"corr", "cov", "covx"},
+		},
+		{
+			name:     "step accumulator flag offers registered stepper names",
+			words:    []string{"mlr", "step", "-a", "sh"},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"shift", "shift_lag", "shift_lead"},
+		},
+		{
+			name:     "summary enum flag uses structured option values",
+			words:    []string{"mlr", "summary", "-a", "p"},
+			wantDir:  DirectiveCandidates,
+			mustHave: []string{"p25", "p75"},
 		},
 		{
 			name:    "non-enum flag --ofmt falls back to files",
