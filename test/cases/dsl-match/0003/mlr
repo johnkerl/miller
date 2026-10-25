@@ -1,0 +1,2 @@
+$z = strmatchx($x, $y);
+$w = substr1($x, $z["full_start"], $z["full_end"]);

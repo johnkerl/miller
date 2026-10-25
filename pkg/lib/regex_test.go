@@ -4,6 +4,7 @@
 package lib
 
 import (
+	"slices"
 	"testing"
 )
 
@@ -133,6 +134,24 @@ func TestRegexMatches(t *testing.T) {
 				i, entry.input, entry.sregex, entry.expectedCaptures, actualCaptures,
 			)
 		}
+	}
+}
+
+func TestRegexStringMatchWithMapResultsUTF8(t *testing.T) {
+	// Starts and ends are 1-up character positions, as with substr and index,
+	// not byte offsets.
+	matched, captures, starts, ends := RegexStringMatchWithMapResults("héllo:123", "([a-z]+):([0-9]+)")
+	if !matched {
+		t.Fatalf("expected a match")
+	}
+	if !compareCaptures(captures, []string{"llo:123", "llo", "123"}) {
+		t.Fatalf("captures: got %#v", captures)
+	}
+	if !slices.Equal(starts, []int{3, 3, 7}) {
+		t.Fatalf("starts: expected %v got %v", []int{3, 3, 7}, starts)
+	}
+	if !slices.Equal(ends, []int{9, 5, 9}) {
+		t.Fatalf("ends: expected %v got %v", []int{9, 5, 9}, ends)
 	}
 }
 

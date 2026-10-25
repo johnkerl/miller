@@ -1,0 +1,44 @@
+[
+{
+  "x": "héllo:123",
+  "y": "([a-z]+):([0-9]+)",
+  "z": {
+    "matched": true,
+    "full_capture": "llo:123",
+    "full_start": 3,
+    "full_end": 9,
+    "captures": ["llo", "123"],
+    "starts": [3, 7],
+    "ends": [5, 9]
+  },
+  "w": "llo:123"
+},
+{
+  "x": "日本語 abc",
+  "y": "([a-z]+)",
+  "z": {
+    "matched": true,
+    "full_capture": "abc",
+    "full_start": 5,
+    "full_end": 7,
+    "captures": ["abc"],
+    "starts": [5],
+    "ends": [7]
+  },
+  "w": "abc"
+},
+{
+  "x": "ÀÉÎ-ÕÜ",
+  "y": "(É+)(.)(.)",
+  "z": {
+    "matched": true,
+    "full_capture": "ÉÎ-",
+    "full_start": 2,
+    "full_end": 4,
+    "captures": ["É", "Î", "-"],
+    "starts": [2, 3, 4],
+    "ends": [2, 3, 4]
+  },
+  "w": "ÉÎ-"
+}
+]

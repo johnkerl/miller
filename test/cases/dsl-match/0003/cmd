@@ -1,0 +1,1 @@
+mlr --ojson --from ${CASEDIR}/input put -f ${CASEDIR}/mlr
