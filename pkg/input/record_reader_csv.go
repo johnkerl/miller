@@ -383,11 +383,8 @@ func (bsr *BOMStrippingReader) Read(p []byte) (n int, err error) {
 	}
 	bsr.pastBOM = true
 
-	// Return error conditions right away.
+	// Process any returned data before propagating the read error.
 	n, err = bsr.underlying.Read(p)
-	if err != nil {
-		return n, err
-	}
 
 	// Either this is a small file (maybe a zero-length file, which happens) or
 	// it's a big file but we were invoked with a tiny buffer size of 1 or 2.
@@ -402,7 +399,7 @@ func (bsr *BOMStrippingReader) Read(p []byte) (n int, err error) {
 		for i := 0; i < n-3; i++ {
 			p[i] = p[i+3]
 		}
-		return n - 3, nil
+		return n - 3, err
 	}
 
 	// No BOM found (normal case).
