@@ -1,0 +1,1 @@
+mlr --ipprint --implicit-csv-header --opprint cat test/input/bom.pprint

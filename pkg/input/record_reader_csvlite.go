@@ -143,7 +143,7 @@ func (reader *RecordReaderCSVLite) processHandle(
 	reader.headerStrings = nil
 
 	recordsPerBatch := reader.recordsPerBatch
-	lineReader := NewLineReader(handle, reader.readerOptions.IRS)
+	lineReader := NewLineReader(NewBOMStrippingReader(handle), reader.readerOptions.IRS)
 	linesChannel := make(chan []string, recordsPerBatch)
 	go channelizedLineReader(lineReader, linesChannel, downstreamDoneChannel, recordsPerBatch)
 
