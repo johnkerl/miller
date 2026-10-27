@@ -179,6 +179,15 @@ func ListStats1Accumulators(o *os.File) {
 	}
 }
 
+// Stats1AccumulatorNames returns the fixed accumulator names in usage order.
+func Stats1AccumulatorNames() []string {
+	names := make([]string, 0, len(stats1AccumulatorInfos))
+	for _, info := range stats1AccumulatorInfos {
+		names = append(names, info.name)
+	}
+	return names
+}
+
 func ValidateStats1AccumulatorName(
 	accumulatorName string,
 ) bool {
