@@ -36,8 +36,8 @@ github.com/kshedden/statmodel v0.0.0-20210519035403-ee97d3e48df1 h1:UyIQ1VTQq/0C
 github.com/kshedden/statmodel v0.0.0-20210519035403-ee97d3e48df1/go.mod h1:uvVFnikBpVz7S1pdsyUI+BBRlz64vmU6Q+kviiB+fpU=
 github.com/lestrrat-go/envload v0.0.0-20180220234015-a3eb8ddeffcc h1:RKf14vYWi2ttpEmkA4aQ3j4u9dStX2t4M8UM6qqNsG8=
 github.com/lestrrat-go/envload v0.0.0-20180220234015-a3eb8ddeffcc/go.mod h1:kopuH9ugFRkIXf3YoqHKyrJ9YfUFsckUU9S7B+XP+is=
-github.com/lestrrat-go/strftime v1.2.0 h1:8fAUYOeaJKCuLzNvUWBAo8t6I6hkFfodDTndEzJIun0=
-github.com/lestrrat-go/strftime v1.2.0/go.mod h1:GtsIA/7ddIGJjEdfadUafEb1sbutvlvpMdPCMglykYo=
+github.com/lestrrat-go/strftime v1.2.1 h1:LltxP/0ho+7sPY1qiwHQcKK/ksVllY9/8DY3EGFrOaI=
+github.com/lestrrat-go/strftime v1.2.1/go.mod h1:kI9g6UMJkvbykHIC2Nf7BbQ0tgYbZIoD2mOS0f0T+tg=
 github.com/mattn/go-isatty v0.0.24 h1:tGZZoVgT/KiqK1c8ocVLeDS8BSWMRd47J3Lbz7vsReI=
 github.com/mattn/go-isatty v0.0.24/go.mod h1:nMCL3Zebbrt45jsMDgnfIwz6ydEQApk5oEI3HqDio6A=
 github.com/modelcontextprotocol/go-sdk v1.8.0 h1:KIvahhYqwtbeniWVPs3TcXEA7b8jEtwfBpOTAI+Urx4=
