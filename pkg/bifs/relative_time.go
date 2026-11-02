@@ -237,8 +237,7 @@ func BIF_fsec2dhms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		sign = -1
 		fsec = -fsec
 	}
-	isec := int64(math.Trunc(fsec))
-	fractional := fsec - float64(isec)
+	isec, fractional := splitFractionalSeconds(fsec)
 
 	var d, h, m, s int64
 
@@ -287,8 +286,7 @@ func BIF_fsec2hms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		sign = "-"
 		fsec = -fsec
 	}
-	isec := int64(math.Trunc(fsec))
-	fractional := fsec - float64(isec)
+	isec, fractional := splitFractionalSeconds(fsec)
 
 	var d, h, m, s int64
 
@@ -305,6 +303,20 @@ func BIF_fsec2hms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 			fmt.Sprintf("%s%02d:%02d:%.6f", sign, h, m, float64(s)+fractional),
 		)
 	}
+}
+
+// splitFractionalSeconds splits non-negative fsec into whole seconds and a
+// fraction. A fraction that rounds up to 1 at the six decimal places printed by
+// fsec2hms and fsec2dhms is carried into the whole seconds, so that e.g.
+// 59.9999999 prints as one minute rather than as 60 seconds.
+func splitFractionalSeconds(fsec float64) (int64, float64) {
+	isec := int64(math.Trunc(fsec))
+	fractional := fsec - float64(isec)
+	if math.Round(fractional*1e6) >= 1e6 {
+		isec++
+		fractional = 0
+	}
+	return isec, fractional
 }
 
 // Helper function
