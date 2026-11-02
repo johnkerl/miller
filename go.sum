@@ -87,7 +87,7 @@ gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8
 gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
 gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
-pault.ag/go/debian v0.21.1 h1:PrEprHTDG81yDqtuMRsnXRGulW1RrHiZaOw8lHf15o8=
-pault.ag/go/debian v0.21.1/go.mod h1:Yz4ZaBXxm+pPnt4etjDAUqB9fMG66TK1SroPCFIyjsU=
+pault.ag/go/debian v0.21.3 h1:UeUSjK8WuhDqpgigEs7wLwFjt1tXuWdrfI9y+zigJF0=
+pault.ag/go/debian v0.21.3/go.mod h1:Yz4ZaBXxm+pPnt4etjDAUqB9fMG66TK1SroPCFIyjsU=
 pault.ag/go/topsort v0.1.1 h1:L0QnhUly6LmTv0e3DEzbN2q6/FGgAcQvaEw65S53Bg4=
 pault.ag/go/topsort v0.1.1/go.mod h1:r1kc/L0/FZ3HhjezBIPaNVhkqv8L0UJ9bxRuHRVZ0q4=
