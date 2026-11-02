@@ -179,3 +179,24 @@ func TestBIF_strptime_still_unsupported_format_code(t *testing.T) {
 	output := BIF_strptime(mlrval.FromString("2024-03-04 09"), mlrval.FromString("%Y-%m-%d %U"))
 	assert.True(t, output.IsError())
 }
+
+// TestBIF_fsec2hms_fsec2dhms_carry checks that a fraction which rounds up to a
+// whole second at the printed six decimal places carries into the seconds,
+// minutes and hours instead of printing "60" or "010" seconds.
+func TestBIF_fsec2hms_fsec2dhms_carry(t *testing.T) {
+	cases := []struct {
+		input float64
+		hms   string
+		dhms  string
+	}{
+		{1.25, "00:00:01.250000", "1.250000s"},
+		{9.9999999, "00:00:10.000000", "10.000000s"},
+		{59.9999999, "00:01:00.000000", "1m00.000000s"},
+		{3599.9999999, "01:00:00.000000", "1h00m00.000000s"},
+		{-59.9999999, "-00:01:00.000000", "-1m00.000000s"},
+	}
+	for _, c := range cases {
+		assert.Equal(t, c.hms, BIF_fsec2hms(mlrval.FromFloat(c.input)).String(), "fsec2hms(%v)", c.input)
+		assert.Equal(t, c.dhms, BIF_fsec2dhms(mlrval.FromFloat(c.input)).String(), "fsec2dhms(%v)", c.input)
+	}
+}
