@@ -17,8 +17,12 @@ import (
 
 const verbNameStats1 = "stats1"
 
+func stats1AccumulatorOptionValues() []string {
+	return append(utils.Stats1AccumulatorNames(), "median")
+}
+
 var stats1Options = []OptionSpec{
-	{Flag: "-a", Arg: "{sum,count,...}", Type: "enum", Desc: "Names of accumulators: one or more of the listed values. Also accepts median (same as p50) and percentiles p{n} for n in 0..100, e.g. p10 p25.2 p50 p98 p100.", Values: []string{"count", "null_count", "distinct_count", "mode", "antimode", "sum", "mean", "mad", "var", "stddev", "meaneb", "skewness", "kurtosis", "min", "max", "minlen", "maxlen"}},
+	{Flag: "-a", Arg: "{sum,count,...}", Type: "enum", Desc: "Names of accumulators: one or more of the listed values. Also accepts median (same as p50) and percentiles p{n} for n in 0..100, e.g. p10 p25.2 p50 p98 p100.", Values: stats1AccumulatorOptionValues()},
 	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Value-field names on which to compute statistics."},
 	{Flag: "--fr", Arg: "{regex}", Type: "regex", Desc: "Regex for value-field names on which to compute statistics (compute statistics on values in all field names matching the regex)."},
 	{Flag: "--fx", Arg: "{regex}", Type: "regex", Desc: "Inverted regex for value-field names on which to compute statistics (compute statistics on values in all field names not matching the regex)."},

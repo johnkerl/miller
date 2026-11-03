@@ -15,7 +15,7 @@ import (
 const verbNameMergeFields = "merge-fields"
 
 var mergeFieldsOptions = []OptionSpec{
-	{Flag: "-a", Arg: "{sum,count,...}", Type: "enum", Desc: "Names of accumulators: one or more of the accumulators listed below.", Values: []string{"count", "null_count", "distinct_count", "mode", "antimode", "sum", "mean", "mad", "var", "stddev", "meaneb", "skewness", "kurtosis", "min", "max", "minlen", "maxlen"}},
+	{Flag: "-a", Arg: "{sum,count,...}", Type: "enum", Desc: "Names of accumulators: one or more of the accumulators listed below.", Values: stats1AccumulatorOptionValues()},
 	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Value-field names on which to compute statistics. Requires -o."},
 	{Flag: "-r", Arg: "{a,b,c}", Type: "csv-list", Desc: "Regular expressions for value-field names on which to compute statistics. Requires -o."},
 	{Flag: "-c", Arg: "{a,b,c}", Type: "csv-list", Desc: "Substrings for collapse mode: all fields which have the same names after removing substrings will be accumulated together. Please see examples below."},

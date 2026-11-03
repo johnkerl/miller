@@ -130,15 +130,16 @@ func Complete(words []string, cword int) Result {
 		return Result{DirectiveDefault, filterByPrefix([]string{"then"}, cur)}
 
 	case ctxFlagValue:
-		// For a main flag whose argument is a known enumerated set (file
-		// formats, separator aliases), offer those values. Verb-flag values
-		// are not yet completed (issue #2097) -- and we must not apply the
-		// main-flag value sets to an identically-spelled verb flag (e.g.
-		// `mlr uniq -o` takes a field name, not a format).
+		// Offer known enum values from either the main-flag table or the
+		// current verb's structured option metadata. Do not apply main-flag
+		// values to an identically-spelled verb flag (e.g. `mlr uniq -o`
+		// takes a field name, not a format).
 		if ctx.verb == "" {
 			if values := cli.FlagValueCandidates(ctx.flag); values != nil {
 				return Result{DirectiveCandidates, filterByPrefix(values, cur)}
 			}
+		} else if values := verbFlagValueCandidates(ctx.verb, ctx.flag); len(values) > 0 {
+			return Result{DirectiveCandidates, filterByPrefix(values, cur)}
 		}
 		return Result{DirectiveFiles, nil}
 

@@ -148,6 +148,14 @@ mlr --ifs <b>TAB</b>
 comma   pipe   semicolon   space   tab   ...
 </pre>
 
+Verb flags with fixed enumerated values offer those choices too. For example,
+the accumulator names for `stats1` are available as you type:
+
+<pre class="pre-non-highlight-non-pair">
+mlr stats1 -a me<b>TAB</b>
+mean   meaneb   median
+</pre>
+
 ## Generating the scripts
 
 The `mlr completion` command prints the scripts, and `mlr completion --help`
@@ -189,10 +197,10 @@ verb names after 'then', and filenames where appropriate.
   This means completion stays in sync with Miller's flags and verbs
   automatically -- there is no separate list to maintain.
 
-* Value completion is offered for flags with a known set of values (file
-  formats for `-i`/`-o`/`--io`, separator aliases for `--ifs` and friends).
-  Other arg-taking flags fall back to filename completion; per-verb argument
-  values (such as field names) are not yet completed.
+* Value completion is offered for flags with a fixed set of values (file
+  formats, separator aliases, and enum values for verbs such as `stats1`,
+  `stats2`, and `step`). Other arg-taking flags fall back to filename
+  completion; data-dependent values such as field names are not yet completed.
 
 * The `mlr completion complete ...` subcommand is an internal interface used by
   the generated scripts; it is not intended to be run directly.
