@@ -180,6 +180,29 @@ func TestBIF_strptime_still_unsupported_format_code(t *testing.T) {
 	assert.True(t, output.IsError())
 }
 
+// TestBIF_strptime_outside_nanosecond_range checks that dates too far from the
+// epoch for int64 nanoseconds (before 1678 or after 2262) still parse to the
+// right number of seconds.
+func TestBIF_strptime_outside_nanosecond_range(t *testing.T) {
+	format := mlrval.FromString("%Y-%m-%d")
+	istanbul := mlrval.FromString("Asia/Istanbul")
+	cases := []struct {
+		name   string
+		output *mlrval.Mlrval
+		want   float64
+	}{
+		{"strptime 1500", BIF_strptime(mlrval.FromString("1500-01-01"), format), -14831769600},
+		{"strptime 2500", BIF_strptime(mlrval.FromString("2500-01-01"), format), 16725225600},
+		{"gmt2sec 1500", BIF_gmt2sec(mlrval.FromString("1500-01-01T00:00:00Z")), -14831769600},
+		{"strptime_local 2500", BIF_strptime_local_ternary(mlrval.FromString("2500-01-01"), format, istanbul), 16725214800},
+	}
+	for _, c := range cases {
+		seconds, isNumeric := c.output.GetNumericToFloatValue()
+		assert.True(t, isNumeric, c.name)
+		assert.Equal(t, c.want, seconds, c.name)
+	}
+}
+
 // TestBIF_fsec2hms_fsec2dhms_carry checks that a fraction which rounds up to a
 // whole second at the printed six decimal places carries into the seconds,
 // minutes and hours instead of printing "60" or "010" seconds.
