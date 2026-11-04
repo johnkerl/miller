@@ -203,7 +203,7 @@ Notes:
 * When there is a match with no captures, the result from `strmatchx` also has the `captures` array
   whose slots 1, 2, 3, ... are the same as would have been set by `=~` via `\1, \2, \3, ...`.
   However, `strmatchx` offers an arbitrary number of captures, not just `\1..\9`.
-  Additionally, the `starts` and `ends` arrays are indices into the input string.
+  Additionally, `full_start`, `full_end`, and the `starts` and `ends` arrays are 1-up character (not byte) positions into the input string, as with `substr1`.
 * Since you hold the return value from `strmatchx`, you can operate on it as you wish --- instead of
   relying on the (function-scoped) globals `\0..\9`.
 * The price paid is that using `strmatchx` does indeed tend to take more keystrokes than `=~`.
