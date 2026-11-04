@@ -40,6 +40,7 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+	"unicode/utf8"
 )
 
 // captureDetector is used to see if a string literal interpolates previous
@@ -349,14 +350,17 @@ func RegexCompiledMatchWithMapResults(
 	// * 3-9 is for the entire match "ab_cde"
 	// * 3-5 is for the first capture "ab"
 	// * 6-9 is for the second capture "cde"
+	//
+	// These are byte offsets. Miller string positions, as used by substr and
+	// index, count UTF-8 characters, so we convert them.
 
 	for si := 0; si < n; si += 2 {
 		start := row[si]
 		end := row[si+1]
 		if start >= 0 && end >= 0 {
 			captures = append(captures, input[start:end])
-			starts = append(starts, start+1)
-			ends = append(ends, end)
+			starts = append(starts, utf8.RuneCountInString(input[:start])+1)
+			ends = append(ends, utf8.RuneCountInString(input[:end]))
 		} else {
 			captures = append(captures, "")
 			starts = append(starts, -1)
