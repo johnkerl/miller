@@ -6,6 +6,7 @@ package platform
 
 import (
 	"os"
+	"os/exec"
 )
 
 // PowerShell or CMD?
@@ -37,7 +38,11 @@ import (
 func GetShellRunArray(command string) []string {
 	if os.Getenv("MSYSTEM") != "" {
 		// Running inside MSYS2; sufficiently Unix-like already.
-		return []string{"/bin/sh", "-c", command}
+		// But mlr.exe is a native Windows program, which can't resolve the
+		// MSYS path "/bin/sh", so look sh up on the PATH instead.
+		if sh, err := exec.LookPath("sh"); err == nil {
+			return []string{sh, "-c", command}
+		}
 	}
 	cmd := os.Getenv("COMSPEC")
 	if cmd == "" {
