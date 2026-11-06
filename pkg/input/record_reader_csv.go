@@ -25,6 +25,11 @@ type RecordReaderCSV struct {
 	rowNumber  int64
 	needHeader bool
 	header     []string
+	// headerIsUnique lets records skip the per-field duplicate-key lookup.
+	// The first record with a full set of fields sets it, so that a file with
+	// no such records does not pay for the check.
+	headerIsUnique bool
+	headerChecked  bool
 }
 
 func NewRecordReaderCSV(
@@ -229,6 +234,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 			}
 
 			reader.header = csvRecord
+			reader.headerChecked = false
 			reader.rowNumber++
 			reader.needHeader = false
 			continue
@@ -246,6 +252,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 			for i := range n {
 				reader.header[i] = strconv.Itoa(i + 1)
 			}
+			reader.headerChecked = false
 		}
 
 		record := arena.NewRecord()
@@ -254,9 +261,19 @@ func (reader *RecordReaderCSV) getRecordBatch(
 		nd := int64(len(csvRecord))
 
 		if nh == nd {
-			for i := range nh {
-				key := reader.header[i]
-				arena.PutDeferred(record, key, csvRecord[i], dedupeFieldNames)
+			if !reader.headerChecked {
+				reader.headerIsUnique = allUnique(reader.header)
+				reader.headerChecked = true
+			}
+			if reader.headerIsUnique {
+				for i := range nh {
+					arena.PutDeferredNew(record, reader.header[i], csvRecord[i])
+				}
+			} else {
+				for i := range nh {
+					key := reader.header[i]
+					arena.PutDeferred(record, key, csvRecord[i], dedupeFieldNames)
+				}
 			}
 
 		} else {
@@ -302,6 +319,18 @@ func (reader *RecordReaderCSV) getRecordBatch(
 	}
 
 	return recordsAndContexts, false
+}
+
+// allUnique returns true if no string appears twice in keys.
+func allUnique(keys []string) bool {
+	seen := make(map[string]struct{}, len(keys))
+	for _, key := range keys {
+		if _, ok := seen[key]; ok {
+			return false
+		}
+		seen[key] = struct{}{}
+	}
+	return true
 }
 
 // maybeConsumeComment returns true if the CSV record should be processed as
