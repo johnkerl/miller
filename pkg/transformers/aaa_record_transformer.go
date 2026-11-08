@@ -81,7 +81,8 @@ type TransformerParseCLIFunc func(
 // fall back to the prose UsageText in the JSON catalog.
 //
 // Type is one of: bool, string, int, float, csv-list, regex, filename,
-// format, enum.  For Type=="enum", Values contains every valid choice.
+// format, enum. For Type=="enum", Values contains fixed choices;
+// parameterized choices are described in Desc.
 // Arg is the placeholder shown in usage text, e.g. "{n}" or "{a,b,c}";
 // it is empty for bool flags.  Repeatable marks flags that may appear
 // multiple times on the command line.  Aliases lists alternate spellings
