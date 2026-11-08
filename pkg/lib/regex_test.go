@@ -156,8 +156,7 @@ func TestRegexStringMatchWithMapResultsUTF8(t *testing.T) {
 	}
 }
 
-// withEmptyRegexpCache empties the regex cache for the duration of a test,
-// restoring the package-level cache afterward so other tests are unaffected.
+// withEmptyRegexpCache gives the test an empty regex cache and restores the original afterward.
 func withEmptyRegexpCache(t *testing.T) {
 	cacheMutex.Lock()
 	saved := regexpCache
@@ -170,6 +169,7 @@ func withEmptyRegexpCache(t *testing.T) {
 	})
 }
 
+// regexpCacheLookup reports whether s is in the regex cache.
 func regexpCacheLookup(s string) bool {
 	cacheMutex.Lock()
 	defer cacheMutex.Unlock()
@@ -177,6 +177,7 @@ func regexpCacheLookup(s string) bool {
 	return ok
 }
 
+// regexpCacheSize returns the number of entries in the regex cache.
 func regexpCacheSize() int {
 	cacheMutex.Lock()
 	defer cacheMutex.Unlock()
@@ -204,9 +205,8 @@ func TestRegexpCompileCachedReusesCompiledRegex(t *testing.T) {
 func TestRegexpCompileCachedCaseInsensitive(t *testing.T) {
 	withEmptyRegexpCache(t)
 
-	// "..."i and /.../i are compiled as "(?i)...", so they share a cache entry
-	// with each other and with an explicit "(?i)..." but not with the
-	// case-sensitive form.
+	// "..."i, /.../i, and (?i)... compile to the same pattern, so they share one cache entry.
+	// The case-sensitive form has its own entry.
 	quoted, err := CompileMillerRegex("\"ab+c\"i")
 	if err != nil {
 		t.Fatalf("unexpected error %v", err)
@@ -236,7 +236,7 @@ func TestRegexpCompileCachedCaseInsensitive(t *testing.T) {
 		t.Fatalf("case-insensitive regex should match \"xABBCx\" and case-sensitive should not")
 	}
 
-	// Same outputs on a cold and a warm cache.
+	// Run twice. On the second pass, every regex comes from the cache.
 	for pass := 0; pass < 2; pass++ {
 		if output := RegexStringSub("ABBC-abc", "\"ab+c\"i", "X"); output != "X-abc" {
 			t.Fatalf("pass %d: sub expected \"X-abc\" got \"%s\"", pass, output)
@@ -291,14 +291,14 @@ func TestRegexpCompileCachedSizeLimit(t *testing.T) {
 		t.Fatalf("expected %d cached regexes, got %d", cacheMaxSize, n)
 	}
 
-	// Regexes cached before the limit was reached are still reused.
+	// ^k0$ was cached before the cache filled up, so it's reused.
 	first, _ := CompileMillerRegex("^k0$")
 	second, _ := CompileMillerRegex("^k0$")
 	if first != second {
 		t.Fatalf("expected the cached regex for ^k0$")
 	}
 
-	// Regexes past the limit are compiled each time and not cached.
+	// The cache is full, so a new regex is compiled on each call and isn't cached.
 	sregex := fmt.Sprintf("^k%d$", cacheMaxSize+5)
 	first, _ = CompileMillerRegex(sregex)
 	second, _ = CompileMillerRegex(sregex)
