@@ -21,10 +21,11 @@ type RecordReaderCSV struct {
 	csvLazyQuotes       bool  // Maps directly to Go's CSV library's LazyQuotes
 	csvTrimLeadingSpace bool  // Maps directly to Go's CSV library's TrimLeadingSpace
 
-	filename   string
-	rowNumber  int64
-	needHeader bool
-	header     []string
+	filename             string
+	rowNumber            int64
+	needHeader           bool
+	header               []string
+	duplicateHeaderNames map[string]bool
 }
 
 func NewRecordReaderCSV(
@@ -106,6 +107,7 @@ func (reader *RecordReaderCSV) processHandle(
 	reader.rowNumber = 0
 	reader.needHeader = !reader.readerOptions.UseImplicitHeader
 	reader.header = nil
+	reader.duplicateHeaderNames = nil
 
 	csvReader := csv.NewReader(NewBOMStrippingReader(handle))
 	csvReader.Comma = rune(reader.ifs0)
@@ -229,6 +231,9 @@ func (reader *RecordReaderCSV) getRecordBatch(
 			}
 
 			reader.header = csvRecord
+			if dedupeFieldNames {
+				reader.duplicateHeaderNames = getDuplicateFieldNames(reader.header)
+			}
 			reader.rowNumber++
 			reader.needHeader = false
 			continue
@@ -289,7 +294,21 @@ func (reader *RecordReaderCSV) getRecordBatch(
 					arena.PutDeferred(record, key, csvRecord[i], dedupeFieldNames)
 				}
 			}
-			// if nh > nd: leave it short. This is a job for unsparsify.
+			// Keep unique missing fields absent, as before. Missing duplicate
+			// header fields need an explicit VOID value so the deduped column
+			// remains part of the row schema.
+			if nh > nd && len(reader.duplicateHeaderNames) > 0 {
+				for i := nd; i < nh; i++ {
+					key := reader.header[i]
+					if !reader.duplicateHeaderNames[key] {
+						continue
+					}
+					if _, err := record.PutReferenceMaybeDedupe(key, mlrval.VOID.Copy(), true); err != nil {
+						errorChannel <- err
+						return
+					}
+				}
+			}
 		}
 
 		context.UpdateForInputRecord()
@@ -302,6 +321,22 @@ func (reader *RecordReaderCSV) getRecordBatch(
 	}
 
 	return recordsAndContexts, false
+}
+
+func getDuplicateFieldNames(fieldNames []string) map[string]bool {
+	seen := make(map[string]bool, len(fieldNames))
+	var duplicates map[string]bool
+	for _, fieldName := range fieldNames {
+		if seen[fieldName] {
+			if duplicates == nil {
+				duplicates = make(map[string]bool)
+			}
+			duplicates[fieldName] = true
+		} else {
+			seen[fieldName] = true
+		}
+	}
+	return duplicates
 }
 
 // maybeConsumeComment returns true if the CSV record should be processed as
