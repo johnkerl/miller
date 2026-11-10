@@ -70,16 +70,22 @@ var cacheMutex sync.Mutex
 // cached compiles, and for any extras that appear during record processing, we simply recompile
 // each time.
 func regexpCompileCached(s string) (*regexp.Regexp, error) {
-	if len(regexpCache) > cacheMaxSize {
-		return regexp.Compile(s)
+	cacheMutex.Lock()
+	r, ok := regexpCache[s]
+	cacheMutex.Unlock()
+	if ok {
+		return r, nil
 	}
+
 	r, err := regexp.Compile(s)
 	if err == nil {
 		cacheMutex.Lock()
 		if regexpCache == nil {
 			regexpCache = make(map[string]*regexp.Regexp)
 		}
-		regexpCache[s] = r
+		if len(regexpCache) < cacheMaxSize {
+			regexpCache[s] = r
+		}
 		cacheMutex.Unlock()
 	}
 	return r, err
