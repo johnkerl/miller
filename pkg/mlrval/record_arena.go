@@ -93,6 +93,12 @@ func (a *RecordArena) PutDeferred(mlrmap *Mlrmap, key string, input string, dedu
 	}
 }
 
+// PutDeferredNew is PutDeferred for a key the caller knows is not yet in mlrmap,
+// for example a key from a header with no duplicates. It skips the key lookup.
+func (a *RecordArena) PutDeferredNew(mlrmap *Mlrmap, key string, input string) {
+	mlrmap.linkNewEntry(a.newEntry(key, input))
+}
+
 func (a *RecordArena) newValue(input string) *Mlrval {
 	if a.vi >= len(a.values) {
 		a.values = make([]Mlrval, a.chunk)
