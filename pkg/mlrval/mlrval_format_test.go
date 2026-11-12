@@ -192,10 +192,33 @@ func TestFormatterVerbs(t *testing.T) {
 		{"%_d total", FromInt(1234567), "1,234,567 total"},
 		{"%d world", FromInt(5), "5 world"},
 		{"X%sX", FromString("hello"), "XhelloX"},
+		{"%lx", FromInt(255), "ff"},
+		{"%le", FromFloat(2.5), "2.500000e+00"},
+		{"%.6_f", FromFloat(1234567.891), "1,234,567.891000"},
+		{"%12_d", FromInt(1234567), "   1,234,567"},
 	}
 	for _, c := range cases {
 		formatter, err := GetFormatter(c.format)
 		assert.Nil(t, err)
 		assert.Equal(t, c.expected, formatter.Format(c.input).String(), c.format)
+	}
+}
+
+func TestFormatterFormatFloat(t *testing.T) {
+	// The --ofmt path goes through FormatFloat rather than Format
+	cases := []struct {
+		format   string
+		input    float64
+		expected string
+	}{
+		{"%.3E", 2.5, "2.500E+00"},
+		{"%.3lf", 3.14159, "3.142"},
+		{"[%.2f]", 3.14159, "[3.14]"},
+		{"%08X", 255.0, "000000FF"},
+	}
+	for _, c := range cases {
+		formatter, err := GetFormatter(c.format)
+		assert.Nil(t, err)
+		assert.Equal(t, c.expected, formatter.FormatFloat(c.input), c.format)
 	}
 }

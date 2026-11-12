@@ -534,7 +534,7 @@ $* = fmtifnum($*, "%.6f") formats numeric fields in the current record, leaving 
 
 ### fmtnum
 <pre class="pre-non-highlight-non-pair">
-fmtnum  (class=conversion #args=2) Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'. Miller-specific extension: "%_d" and "%_f" for comma-separated thousands. This function recurses on array and map values.
+fmtnum  (class=conversion #args=2) Convert int/float/bool to string using printf-style format string (https://pkg.go.dev/fmt), e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'. Miller-specific extension: "%_d" and "%_f" for comma-separated thousands. Text after the conversion verb is kept, e.g. 'fmtnum($n, "%d items")'. This function recurses on array and map values.
 Examples:
 $y = fmtnum($x, "%.6f")
 $o = fmtnum($n, "%d")
