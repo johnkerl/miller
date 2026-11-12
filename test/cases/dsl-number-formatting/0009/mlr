@@ -1,0 +1,11 @@
+end {
+  print fmtnum(17, "%i");
+  print fmtnum(17, "%05i");
+  print fmtnum(17, "%lli");
+  print fmtnum(17, "%u");
+  print fmtnum(17, "%lu items");
+  print fmtnum(17, "%D");
+  print fmtnum(17, "%U");
+  print fmtnum(1234567, "%_i");
+  print fmtnum(17.9, "%i");
+}
