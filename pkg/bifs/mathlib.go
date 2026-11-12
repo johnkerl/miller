@@ -4,6 +4,7 @@ package bifs
 
 import (
 	"math"
+	"math/bits"
 
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
@@ -162,7 +163,19 @@ func BIF_sgn(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 // https://johnkerl.org/miller6/reference-main-arithmetic.html
 
 func pow_f_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	foutput := math.Pow(float64(input1.AcquireIntValue()), float64(input2.AcquireIntValue()))
+	base := input1.AcquireIntValue()
+	exponent := input2.AcquireIntValue()
+	if exponent >= 0 {
+		// Use integer arithmetic here: a float64 has only 53 bits of mantissa,
+		// so e.g. 3**39 would come out as 4052555153018976256 rather than
+		// 4052555153018976267.
+		if ioutput, ok := int64Pow(base, exponent); ok {
+			return mlrval.FromInt(ioutput)
+		}
+		return mlrval.FromFloat(math.Pow(float64(base), float64(exponent)))
+	}
+
+	foutput := math.Pow(float64(base), float64(exponent))
 	ioutput := int64(foutput)
 	// Int raised to int power should be float if it can be (i.e. unless overflow)
 	if float64(ioutput) == foutput {
@@ -170,6 +183,45 @@ func pow_f_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 	return mlrval.FromFloat(foutput)
 }
+
+// int64Pow computes base**exponent for exponent >= 0. The second return value
+// is false if the result doesn't fit in a 64-bit signed integer.
+func int64Pow(base, exponent int64) (int64, bool) {
+	negative := base < 0 && exponent%2 == 1
+	b := uint64(base)
+	if base < 0 {
+		b = uint64(-base)
+	}
+	result := uint64(1)
+	for exponent > 0 {
+		if exponent&1 == 1 {
+			hi, lo := bits.Mul64(result, b)
+			if hi != 0 {
+				return 0, false
+			}
+			result = lo
+		}
+		exponent >>= 1
+		if exponent > 0 {
+			hi, lo := bits.Mul64(b, b)
+			if hi != 0 {
+				return 0, false
+			}
+			b = lo
+		}
+	}
+	if negative {
+		if result > 1<<63 {
+			return 0, false
+		}
+		return -int64(result), true
+	}
+	if result > math.MaxInt64 {
+		return 0, false
+	}
+	return int64(result), true
+}
+
 func pow_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromFloat(math.Pow(float64(input1.AcquireIntValue()), input2.AcquireFloatValue()))
 }
