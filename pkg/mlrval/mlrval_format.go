@@ -93,49 +93,57 @@ func newFormatter(
 		)
 	}
 
-	// TODO: perhaps a full format-string parser. At present, there's nothing to stop people
-	// from doing silly things like "%lllld".
-	goFormatString := userLevelFormatString
-	goFormatString = strings.ReplaceAll(goFormatString, "lld", "d")
-	goFormatString = strings.ReplaceAll(goFormatString, "llx", "x")
-	goFormatString = strings.ReplaceAll(goFormatString, "ld", "d")
-	goFormatString = strings.ReplaceAll(goFormatString, "lx", "x")
-	goFormatString = strings.ReplaceAll(goFormatString, "lf", "f")
-	goFormatString = strings.ReplaceAll(goFormatString, "le", "e")
-	goFormatString = strings.ReplaceAll(goFormatString, "lg", "g")
-
 	// Miller 5 and below required C format strings compatible with 64-bit ints
 	// and double-precision floats: e.g. "%08lld" and "%9.6lf". For Miller 6,
 	// we must still accept these for backward compatibility.
-	if strings.HasSuffix(goFormatString, "_d") {
-		// Special sub-case of "d"; must be checked first
-		n := len(goFormatString)
-		return newFormatterToSeparatedInt(goFormatString[:n-2] + "d"), nil
+	//
+	// The kind of formatter depends on the conversion verb after the '%', not
+	// on the end of the string: there may be text after the verb, as in
+	// "%d items" or "[%.3f]".
+	percentIndex := strings.Index(userLevelFormatString, "%")
+	prefix := userLevelFormatString[:percentIndex+1]
+	rest := userLevelFormatString[percentIndex+1:]
+
+	// Flags, width, and precision
+	n := 0
+	for n < len(rest) && strings.IndexByte("+-# 0123456789.", rest[n]) >= 0 {
+		n++
 	}
-	if strings.HasSuffix(goFormatString, "d") {
-		return newFormatterToInt(goFormatString), nil
-	}
-	if strings.HasSuffix(goFormatString, "x") {
-		return newFormatterToInt(goFormatString), nil
+	spec := rest[:n]
+	rest = rest[n:]
+
+	// Miller-specific "%_d" and "%_f" for thousands separators
+	separated := strings.HasPrefix(rest, "_")
+	if separated {
+		rest = rest[1:]
 	}
 
-	if strings.HasSuffix(goFormatString, "_f") {
-		// Special sub-case of "f"; must be checked first
-		n := len(goFormatString)
-		return newFormatterToSeparatedFloat(goFormatString[:n-2] + "f"), nil
-	}
-	if strings.HasSuffix(goFormatString, "f") {
-		return newFormatterToFloat(goFormatString), nil
-	}
-	if strings.HasSuffix(goFormatString, "e") {
-		return newFormatterToFloat(goFormatString), nil
-	}
-	if strings.HasSuffix(goFormatString, "g") {
-		return newFormatterToFloat(goFormatString), nil
+	// C length modifiers such as the "ll" in "%08lld" and the "l" in "%9.6lf"
+	modifiers := strings.TrimLeft(rest, "l")
+	if modifiers != rest && modifiers != "" && strings.IndexByte("dxXoObeEfFgG", modifiers[0]) >= 0 {
+		rest = modifiers
 	}
 
-	if strings.HasSuffix(goFormatString, "s") {
-		return newFormatterToString(goFormatString), nil
+	if rest == "" || (separated && rest[0] != 'd' && rest[0] != 'f') {
+		return newFormatterToString(userLevelFormatString), nil
+	}
+	goFormatString := prefix + spec + rest
+
+	switch rest[0] {
+	case 'd':
+		if separated {
+			return newFormatterToSeparatedInt(goFormatString), nil
+		}
+		return newFormatterToInt(goFormatString), nil
+	case 'x', 'X', 'o', 'O', 'b':
+		return newFormatterToInt(goFormatString), nil
+	case 'f':
+		if separated {
+			return newFormatterToSeparatedFloat(goFormatString), nil
+		}
+		return newFormatterToFloat(goFormatString), nil
+	case 'F', 'e', 'E', 'g', 'G':
+		return newFormatterToFloat(goFormatString), nil
 	}
 
 	// TODO:
