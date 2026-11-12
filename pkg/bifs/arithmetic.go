@@ -653,17 +653,13 @@ func imodmul(a, b, m int64) int64 {
 	return mlrmod(a*b, m)
 }
 func imodexp(a, e, m int64) int64 {
-	if e == 0 {
-		return 1
-	}
-	if e == 1 {
-		return a
-	}
-
 	// Repeated-squaring algorithm.
 	// We assume our caller has verified the exponent is not negative.
-	apower := a
-	c := int64(1)
+	// Both a and 1 are reduced first so that e == 0 and e == 1 give results
+	// in [0, m) like the other mod functions, e.g. mexp(10, 1, 7) is 3 and
+	// mexp(5, 0, 1) is 0.
+	apower := mlrmod(a, m)
+	c := mlrmod(1, m)
 	u := uint64(e)
 
 	for u != 0 {
