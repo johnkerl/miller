@@ -520,7 +520,15 @@ func BIF_dot_times(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
 func dotdivide_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromInt(input1.AcquireIntValue() / input2.AcquireIntValue())
+	a := input1.AcquireIntValue()
+	b := input2.AcquireIntValue()
+
+	if b == 0 {
+		// Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
+		return mlrval.FromFloat(float64(a) / float64(b))
+	}
+
+	return mlrval.FromInt(a / b)
 }
 func dotdivide_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromFloat(float64(input1.AcquireIntValue()) / input2.AcquireFloatValue())
@@ -680,6 +688,11 @@ func imodop(input1, input2, input3 *mlrval.Mlrval, iop i_iii_func, funcname stri
 	}
 	if !input1.IsInt() || !input2.IsInt() || !input3.IsInt() {
 		return mlrval.FromTypeErrorTernary(funcname, input1, input2, input3)
+	}
+	if input3.AcquireIntValue() == 0 {
+		return mlrval.FromError(
+			fmt.Errorf("%s: zero modulus", funcname),
+		)
 	}
 
 	return mlrval.FromInt(
