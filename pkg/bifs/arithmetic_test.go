@@ -1,6 +1,7 @@
 package bifs
 
 import (
+	"math"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -123,3 +124,30 @@ func TestBIF_pow_int_int(t *testing.T) {
 //func BIF_min_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval
 //func BIF_max_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval
 //func BIF_max_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval
+
+func TestBIF_dot_divide_int_by_zero(t *testing.T) {
+	output := BIF_dot_divide(mlrval.FromInt(5), mlrval.FromInt(0))
+	floatval, ok := output.GetFloatValue()
+	assert.True(t, ok)
+	assert.True(t, math.IsInf(floatval, 1))
+
+	output = BIF_dot_divide(mlrval.FromInt(-5), mlrval.FromInt(0))
+	floatval, ok = output.GetFloatValue()
+	assert.True(t, ok)
+	assert.True(t, math.IsInf(floatval, -1))
+
+	output = BIF_dot_divide(mlrval.FromInt(7), mlrval.FromInt(2))
+	intval, ok := output.GetIntValue()
+	assert.True(t, ok)
+	assert.Equal(t, int64(3), intval)
+}
+
+func TestBIF_mod_ops_zero_modulus(t *testing.T) {
+	a := mlrval.FromInt(5)
+	b := mlrval.FromInt(3)
+	m := mlrval.FromInt(0)
+	assert.True(t, BIF_mod_add(a, b, m).IsError())
+	assert.True(t, BIF_mod_sub(a, b, m).IsError())
+	assert.True(t, BIF_mod_mul(a, b, m).IsError())
+	assert.True(t, BIF_mod_exp(a, b, m).IsError())
+}
