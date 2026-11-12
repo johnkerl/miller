@@ -142,6 +142,26 @@ func TestBIF_dot_divide_int_by_zero(t *testing.T) {
 	assert.Equal(t, int64(3), intval)
 }
 
+func TestBIF_mod_exp_small_exponents(t *testing.T) {
+	cases := []struct {
+		a, e, m, want int64
+	}{
+		{10, 0, 7, 1},
+		{10, 1, 7, 3},
+		{-3, 1, 7, 4},
+		{5, 0, 1, 0},
+		{5, 1, 1, 0},
+		{10, 2, 7, 2},
+		{3, 5, 7, 5},
+	}
+	for _, c := range cases {
+		output := BIF_mod_exp(mlrval.FromInt(c.a), mlrval.FromInt(c.e), mlrval.FromInt(c.m))
+		intval, ok := output.GetIntValue()
+		assert.True(t, ok)
+		assert.Equal(t, c.want, intval, "mexp(%d, %d, %d)", c.a, c.e, c.m)
+	}
+}
+
 func TestBIF_mod_ops_zero_modulus(t *testing.T) {
 	a := mlrval.FromInt(5)
 	b := mlrval.FromInt(3)
