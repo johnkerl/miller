@@ -170,3 +170,32 @@ func TestFormatter(t *testing.T) {
 	assert.True(t, fmv.IsInt())
 	assert.Equal(t, "10", fmv.String())
 }
+
+func TestFormatterVerbs(t *testing.T) {
+	cases := []struct {
+		format   string
+		input    *Mlrval
+		expected string
+	}{
+		{"%X", FromInt(255), "FF"},
+		{"%08X", FromInt(255), "000000FF"},
+		{"%o", FromInt(8), "10"},
+		{"%b", FromInt(5), "101"},
+		{"%E", FromFloat(2.5), "2.500000E+00"},
+		{"%.3G", FromFloat(2.5), "2.5"},
+		{"%F", FromFloat(2.5), "2.500000"},
+		{"%d items", FromInt(17), "17 items"},
+		{"[[0x%x]]", FromInt(10), "[[0xa]]"},
+		{"[%.2f]", FromFloat(3.14159), "[3.14]"},
+		{"%.3lf units", FromFloat(3.14159), "3.142 units"},
+		{"%08lld", FromInt(17), "00000017"},
+		{"%_d total", FromInt(1234567), "1,234,567 total"},
+		{"%d world", FromInt(5), "5 world"},
+		{"X%sX", FromString("hello"), "XhelloX"},
+	}
+	for _, c := range cases {
+		formatter, err := GetFormatter(c.format)
+		assert.Nil(t, err)
+		assert.Equal(t, c.expected, formatter.Format(c.input).String(), c.format)
+	}
+}

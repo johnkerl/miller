@@ -1,0 +1,12 @@
+end {
+  print fmtnum(255, "%X");
+  print fmtnum(255, "%08X");
+  print fmtnum(255, "0x%04X");
+  print fmtnum(8, "%o");
+  print fmtnum(5, "%b");
+  print fmtnum(17, "%d items");
+  print fmtnum(3.14159, "[%.2f]");
+  print fmtnum(3.14159, "%.3lf units");
+  print fmtnum(1234567, "%_d total");
+  print fmtnum(5, "%d world");
+}

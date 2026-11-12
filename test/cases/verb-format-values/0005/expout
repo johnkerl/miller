@@ -1,0 +1,10 @@
+a=pan,b=pan,i=00000001,x=0.347_units,y=0.727_units
+a=eks,b=pan,i=00000002,x=0.759_units,y=0.522_units
+a=wye,b=wye,i=00000003,x=0.205_units,y=0.338_units
+a=eks,b=wye,i=00000004,x=0.381_units,y=0.134_units
+a=wye,b=pan,i=00000005,x=0.573_units,y=0.864_units
+a=zee,b=pan,i=00000006,x=0.527_units,y=0.493_units
+a=eks,b=zee,i=00000007,x=0.612_units,y=0.188_units
+a=zee,b=wye,i=00000008,x=0.599_units,y=0.976_units
+a=hat,b=wye,i=00000009,x=0.031_units,y=0.750_units
+a=pan,b=wye,i=0000000A,x=0.503_units,y=0.953_units
