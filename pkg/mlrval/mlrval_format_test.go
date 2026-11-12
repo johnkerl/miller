@@ -196,6 +196,16 @@ func TestFormatterVerbs(t *testing.T) {
 		{"%le", FromFloat(2.5), "2.500000e+00"},
 		{"%.6_f", FromFloat(1234567.891), "1,234,567.891000"},
 		{"%12_d", FromInt(1234567), "   1,234,567"},
+		{"%i", FromInt(17), "17"},
+		{"%05i", FromInt(17), "00017"},
+		{"%lli", FromInt(17), "17"},
+		{"%u", FromInt(17), "17"},
+		{"%lu", FromInt(17), "17"},
+		{"%llu items", FromInt(17), "17 items"},
+		{"%D", FromInt(17), "17"},
+		{"%U", FromInt(17), "17"},
+		{"%_i", FromInt(1234567), "1,234,567"},
+		{"%i", FromFloat(17.9), "17"},
 	}
 	for _, c := range cases {
 		formatter, err := GetFormatter(c.format)

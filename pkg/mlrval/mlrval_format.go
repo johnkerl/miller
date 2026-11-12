@@ -120,8 +120,15 @@ func newFormatter(
 
 	// C length modifiers such as the "ll" in "%08lld" and the "l" in "%9.6lf"
 	modifiers := strings.TrimLeft(rest, "l")
-	if modifiers != rest && modifiers != "" && strings.IndexByte("dxXoObeEfFgG", modifiers[0]) >= 0 {
+	if modifiers != rest && modifiers != "" && strings.IndexByte("diuUDxXoObeEfFgG", modifiers[0]) >= 0 {
 		rest = modifiers
+	}
+
+	// C's "%i" is a synonym for "%d", and "%D" and "%U" are obsolete synonyms for "%ld" and "%lu". Go has no
+	// "%i", "%u", "%D", or "%U". Miller ints are signed 64-bit, so "%u" and "%U" are treated as "%d", the same
+	// way "%x" already formats a negative int with a minus sign rather than as two's complement.
+	if rest != "" && strings.IndexByte("iuUD", rest[0]) >= 0 {
+		rest = "d" + rest[1:]
 	}
 
 	if rest == "" || (separated && rest[0] != 'd' && rest[0] != 'f') {
