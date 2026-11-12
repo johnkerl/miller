@@ -148,7 +148,7 @@ func newFormatter(
 
 	// TODO:
 	// return nil, errors.New(fmt.Sprintf("unhandled format string \"%s\"", userLevelFormatString))
-	return newFormatterToString(goFormatString), nil
+	return newFormatterToString(userLevelFormatString), nil
 }
 
 type formatterToFloat struct {
