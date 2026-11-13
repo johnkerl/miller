@@ -5127,10 +5127,21 @@ Options:
                             empty string.
 -f {a,b,c}                  Specify field names to be operated on; others are
                             not modified and operation is streaming.
+--from-header               Operate on the field names from the header line of
+                            the current input file; others are not modified and
+                            operation is streaming. Use this with --ragged to
+                            fill in the trailing fields of data lines which are
+                            shorter than the header line. Applies to CSV, TSV,
+                            CSV-lite, PPRINT, and markdown input, and does
+                            nothing for input formats without a header line. Can
+                            be used with -f.
 -h|--help                   Show this message.
 Example: if the input is two records, one being 'a=1,b=2' and the other
 being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 'a=,b=3,c=4'.
+Example: if the CSV input has header line 'a,b,c' and data lines '1,2' and
+'4,5,6', then 'mlr --csv --ragged unsparsify --from-header' gives 'a,b,c',
+'1,2,', and '4,5,6'.
 </pre>
 
 Examples:
@@ -5233,4 +5244,38 @@ a b v u w x
 - 2 - 1 - -
 1 - 2 - - 3
 - - 1 - 2 -
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/het/ragged.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c
+1,2,3
+4,5
+7,8,9,10
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ojson --allow-ragged-csv-input unsparsify --from-header data/het/ragged.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "a": 1,
+  "b": 2,
+  "c": 3
+},
+{
+  "a": 4,
+  "b": 5,
+  "c": ""
+},
+{
+  "a": 7,
+  "b": 8,
+  "c": 9,
+  "4": 10
+}
+]
 </pre>

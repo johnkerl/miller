@@ -72,10 +72,16 @@ GENMD-EOF
 
 There are two kinds of raggedness here. Since CSVs form records by zipping the keys from the header line, together with the values from each data line, the second record has a missing value for key `c` (which ought to be fillable), while the third record has a value `10` with no key for it.
 
-Using the [`--allow-ragged-csv-input` flag](reference-main-flag-list.md#csv-only-flags), we can fill values in too-short rows and provide a key (column number starting with 1) for too-long rows:
+Using the [`--allow-ragged-csv-input` flag](reference-main-flag-list.md#csv-only-flags), we can accept these lines rather than erroring. Too-short rows get only the keys for the values they have, and too-long rows get a key (column number starting with 1) for each extra value:
 
 GENMD-RUN-COMMAND-TOLERATING-ERROR
 mlr --icsv --ojson --allow-ragged-csv-input cat data/het/ragged.csv
+GENMD-EOF
+
+To fill in the missing keys of too-short rows, add [`unsparsify --from-header`](reference-verbs.md#unsparsify), which gives every record the keys from the header line of its input file:
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson --allow-ragged-csv-input unsparsify --from-header data/het/ragged.csv
 GENMD-EOF
 
 ### Irregular data
@@ -203,6 +209,16 @@ Miller handles explicit header changes as shown. If your CSV input contains ragg
 
 GENMD-RUN-COMMAND
 mlr --csv --allow-ragged-csv-input cat data/het/ragged.csv
+GENMD-EOF
+
+The CSV writer takes its header line from the first record it writes. So if that record comes from one of the too-short data lines, the output header is short too. Add `unsparsify --from-header` to keep all the columns of the input header:
+
+GENMD-RUN-COMMAND
+mlr --csv --allow-ragged-csv-input filter '$a == 4' data/het/ragged.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv --allow-ragged-csv-input filter '$a == 4' then unsparsify --from-header data/het/ragged.csv
 GENMD-EOF
 
 ### Combining multiple CSV files with different headers

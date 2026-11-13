@@ -98,6 +98,13 @@ type Context struct {
 	FNR int64
 
 	JSONHadBrackets bool
+
+	// HeaderFieldNames is the header line of the current input file, as the
+	// record keys it produces (after dedupe of repeated names), for readers of
+	// formats that have a header line: CSV, TSV, CSV-lite, PPRINT, and
+	// markdown. It is nil for other formats. The unsparsify verb uses it to
+	// fill in keys missing from ragged short rows. See issue #2286.
+	HeaderFieldNames []string
 }
 
 // TODO: comment: Remember command-line values to pass along to CST evaluators.

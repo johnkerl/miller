@@ -182,6 +182,7 @@ func getRecordBatchExplicitTSVHeader(
 
 		if reader.headerStrings == nil {
 			reader.headerStrings = fields
+			context.HeaderFieldNames = headerFieldNames(reader.headerStrings, dedupeFieldNames)
 			// Get data lines on subsequent loop iterations
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
@@ -300,6 +301,7 @@ func getRecordBatchImplicitTSVHeader(
 			for i := range n {
 				reader.headerStrings[i] = strconv.Itoa(i + 1)
 			}
+			context.HeaderFieldNames = headerFieldNames(reader.headerStrings, dedupeFieldNames)
 		} else {
 			if !reader.readerOptions.AllowRaggedCSVInput && len(reader.headerStrings) != len(fields) {
 				err := fmt.Errorf(
