@@ -33,8 +33,32 @@ func _math_unary_void1(input1 *mlrval.Mlrval, f mathLibUnaryFunc, fname string) 
 func math_unary_f_i(input1 *mlrval.Mlrval, f mathLibUnaryFunc, fname string) *mlrval.Mlrval {
 	return mlrval.FromFloat(f(float64(input1.AcquireIntValue())))
 }
+
+// Int-preserving unary functions. Ints above 2**53 don't survive a round trip
+// through float64, so these are computed in integer arithmetic.
 func math_unary_i_i(input1 *mlrval.Mlrval, f mathLibUnaryFunc, fname string) *mlrval.Mlrval {
-	return mlrval.FromInt(int64(f(float64(input1.AcquireIntValue()))))
+	i := input1.AcquireIntValue()
+	switch fname {
+	case "ceil", "floor", "round":
+		return input1
+	case "abs":
+		if i >= 0 {
+			return input1
+		}
+		if i == math.MinInt64 {
+			// -i does not fit in an int; auto-overflow to float.
+			return mlrval.FromFloat(-float64(i))
+		}
+		return mlrval.FromInt(-i)
+	case "sgn":
+		if i > 0 {
+			return mlrval.FromInt(1)
+		} else if i < 0 {
+			return mlrval.FromInt(-1)
+		}
+		return mlrval.FromInt(0)
+	}
+	return mlrval.FromInt(int64(f(float64(i))))
 }
 func math_unary_f_f(input1 *mlrval.Mlrval, f mathLibUnaryFunc, fname string) *mlrval.Mlrval {
 	return mlrval.FromFloat(f(input1.AcquireFloatValue()))
