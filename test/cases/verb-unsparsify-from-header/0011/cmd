@@ -1,0 +1,1 @@
+mlr --icsvlite --ojsonl cut -x -f c,y then unsparsify --from-header ${CASEDIR}/input

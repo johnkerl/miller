@@ -359,9 +359,11 @@ This is simply a copy of what you should see on running `man mlr` at a command p
 
      --allow-ragged-csv-input or --ragged or --allow-ragged-tsv-input
                               If a data line has fewer fields than the header line,
-                              fill remaining keys with empty string. If a data line
-                              has more fields than the header line, use integer
-                              field labels as in the implicit-header case.
+                              fill remaining keys with empty string -- except for
+                              CSV, where the remaining keys are left absent: use
+                              `mlr unsparsify --from-header` to fill them. If a
+                              data line has more fields than the header line, use
+                              integer field labels as in the implicit-header case.
      --csv-trim-leading-space Trims leading spaces in CSV data. Use this for data
                               like '"foo", "bar' which is non-RFC-4180 compliant,
                               but common.
@@ -2623,10 +2625,21 @@ This is simply a copy of what you should see on running `man mlr` at a command p
                                  empty string.
      -f {a,b,c}                  Specify field names to be operated on; others are
                                  not modified and operation is streaming.
+     --from-header               Operate on the field names from the header line of
+                                 the current input file; others are not modified and
+                                 operation is streaming. Use this with --ragged to
+                                 fill in the trailing fields of data lines which are
+                                 shorter than the header line. Applies to CSV, TSV,
+                                 CSV-lite, PPRINT, and markdown input, and does
+                                 nothing for input formats without a header line. Can
+                                 be used with -f.
      -h|--help                   Show this message.
      Example: if the input is two records, one being 'a=1,b=2' and the other
      being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
      'a=,b=3,c=4'.
+     Example: if the CSV input has header line 'a,b,c' and data lines '1,2' and
+     '4,5,6', then 'mlr --csv --ragged unsparsify --from-header' gives 'a,b,c',
+     '1,2,', and '4,5,6'.
 
 1mFUNCTIONS FOR FILTER/PUT0m
    1mabs0m
@@ -4206,5 +4219,5 @@ This is simply a copy of what you should see on running `man mlr` at a command p
      Type  for  Comma-Separated  Values  (CSV)   Files,   the   Miller   docsite
      https://miller.readthedocs.io
 
-                                   2026-11-12                          4mMILLER24m(1)
+                                   2026-11-13                          4mMILLER24m(1)
 </pre>

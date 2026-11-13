@@ -1,0 +1,1 @@
+mlr --icsv --ojsonl --ragged unsparsify --from-header ${CASEDIR}/input1 ${CASEDIR}/input2

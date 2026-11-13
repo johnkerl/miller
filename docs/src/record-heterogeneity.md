@@ -133,7 +133,7 @@ mlr: CSV header/data length mismatch 3 != 2 at filename data/het/ragged.csv row 
 
 There are two kinds of raggedness here. Since CSVs form records by zipping the keys from the header line, together with the values from each data line, the second record has a missing value for key `c` (which ought to be fillable), while the third record has a value `10` with no key for it.
 
-Using the [`--allow-ragged-csv-input` flag](reference-main-flag-list.md#csv-only-flags), we can fill values in too-short rows and provide a key (column number starting with 1) for too-long rows:
+Using the [`--allow-ragged-csv-input` flag](reference-main-flag-list.md#csv-only-flags), we can accept these lines rather than erroring. Too-short rows get only the keys for the values they have, and too-long rows get a key (column number starting with 1) for each extra value:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson --allow-ragged-csv-input cat data/het/ragged.csv</b>
@@ -148,6 +148,32 @@ Using the [`--allow-ragged-csv-input` flag](reference-main-flag-list.md#csv-only
 {
   "a": 4,
   "b": 5
+},
+{
+  "a": 7,
+  "b": 8,
+  "c": 9,
+  "4": 10
+}
+]
+</pre>
+
+To fill in the missing keys of too-short rows, add [`unsparsify --from-header`](reference-verbs.md#unsparsify), which gives every record the keys from the header line of its input file:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ojson --allow-ragged-csv-input unsparsify --from-header data/het/ragged.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "a": 1,
+  "b": 2,
+  "c": 3
+},
+{
+  "a": 4,
+  "b": 5,
+  "c": ""
 },
 {
   "a": 7,
@@ -472,6 +498,24 @@ a,b,c
 1,2,3
 4,5,
 7,8,9,10
+</pre>
+
+The CSV writer takes its header line from the first record it writes. So if that record comes from one of the too-short data lines, the output header is short too. Add `unsparsify --from-header` to keep all the columns of the input header:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv --allow-ragged-csv-input filter '$a == 4' data/het/ragged.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b
+4,5
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv --allow-ragged-csv-input filter '$a == 4' then unsparsify --from-header data/het/ragged.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c
+4,5,
 </pre>
 
 ### Combining multiple CSV files with different headers

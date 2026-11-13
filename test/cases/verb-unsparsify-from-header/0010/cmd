@@ -1,0 +1,1 @@
+mlr --itsv --ojsonl cut -x -f b then unsparsify --from-header ${CASEDIR}/input

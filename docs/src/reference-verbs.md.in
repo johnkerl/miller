@@ -1533,3 +1533,11 @@ GENMD-EOF
 GENMD-RUN-COMMAND
 mlr --ijson --opprint unsparsify -f a,b,u,v,w,x then regularize data/sparse.json
 GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat data/het/ragged.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson --allow-ragged-csv-input unsparsify --from-header data/het/ragged.csv
+GENMD-EOF
