@@ -84,7 +84,7 @@ Look at uncategorized stats (using [creach](https://github.com/johnkerl/scripts/
 Here it looks reasonable that `u` is unit-uniform; something's up with `v` but we can't yet see what:
 
 GENMD-RUN-COMMAND
-mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp | creach 3
+mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp
 GENMD-EOF
 
 The histogram shows the different distribution of 0/1 flags:

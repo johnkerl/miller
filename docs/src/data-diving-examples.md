@@ -248,21 +248,18 @@ Look at uncategorized stats (using [creach](https://github.com/johnkerl/scripts/
 Here it looks reasonable that `u` is unit-uniform; something's up with `v` but we can't yet see what:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp | creach 3</b>
+<b>mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 flag_min  0
 flag_mean 0.39888866838658465
 flag_max  1
-
 u_min     0.000044
 u_mean    0.49832634262750525
 u_max     0.999969
-
 v_min     -0.092709
 v_mean    0.49778696586624427
 v_max     1.0725
-
 </pre>
 
 The histogram shows the different distribution of 0/1 flags:
