@@ -321,7 +321,38 @@ func mlr_roundm(x, m float64) float64 {
 	return math.Round(x/m) * m
 }
 
+// Ints above 2**53 don't survive a round trip through float64, so int-by-int
+// rounding is done in integer arithmetic (halfway cases round away from zero,
+// like math.Round). Cases that overflow an int, or a zero multiple, use floats.
 func roundm_f_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	x := input1.AcquireIntValue()
+	m := input2.AcquireIntValue()
+	if m != 0 && m != math.MinInt64 && x != math.MinInt64 {
+		q := x / m
+		r := x % m
+		absr, absm := r, m
+		if absr < 0 {
+			absr = -absr
+		}
+		if absm < 0 {
+			absm = -absm
+		}
+		if absr >= absm-absr {
+			if (x < 0) != (m < 0) {
+				q--
+			} else {
+				q++
+			}
+		}
+		if q == 0 {
+			return mlrval.FromInt(0)
+		}
+		product := q * m
+		if product/q == m && !(q == -1 && m == math.MinInt64) {
+			return mlrval.FromInt(product)
+		}
+		return mlrval.FromFloat(float64(q) * float64(m))
+	}
 	return mlrval.FromInt(int64(mlr_roundm(float64(input1.AcquireIntValue()), float64(input2.AcquireIntValue()))))
 }
 func roundm_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
