@@ -348,7 +348,7 @@ func roundm_f_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 			return mlrval.FromInt(0)
 		}
 		product := q * m
-		if product/q == m && !(q == -1 && m == math.MinInt64) {
+		if product/q == m && (q != -1 || m != math.MinInt64) {
 			return mlrval.FromInt(product)
 		}
 		return mlrval.FromFloat(float64(q) * float64(m))
