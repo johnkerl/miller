@@ -40,7 +40,12 @@ func uneg_te(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func uneg_i_i(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromInt(-input1.AcquireIntValue())
+	i := input1.AcquireIntValue()
+	if i == math.MinInt64 {
+		// -i does not fit in an int; auto-overflow to float.
+		return mlrval.FromFloat(-float64(i))
+	}
+	return mlrval.FromInt(-i)
 }
 
 func uneg_f_f(input1 *mlrval.Mlrval) *mlrval.Mlrval {
