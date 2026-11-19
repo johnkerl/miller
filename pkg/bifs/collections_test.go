@@ -138,3 +138,61 @@ func TestBIF_hasvalue(t *testing.T) {
 // func BIF_json_parse(input1 *mlrval.Mlrval) *mlrval.Mlrval
 // func BIF_json_stringify_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval
 // func BIF_json_stringify_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval
+
+func jsonOf(t *testing.T, mv *mlrval.Mlrval) string {
+	t.Helper()
+	bytes, err := mv.FormatAsJSON(mlrval.JSON_SINGLE_LINE, false)
+	assert.NoError(t, err)
+	return string(bytes)
+}
+
+func TestBIF_arrayifyDoesNotMutateInput(t *testing.T) {
+	// Nested map with consecutive "1","2",... keys: arrayify should convert
+	// those nested maps in the return value, but leave the original intact.
+	// This is the shape used in the docs example `emit1 arrayify(@output_record)`.
+	inner := mlrval.NewMlrmap()
+	inner.PutReference("1", mlrval.FromString("a"))
+	inner.PutReference("2", mlrval.FromString("b"))
+	inner.PutReference("3", mlrval.FromString("c"))
+	outer := mlrval.NewMlrmap()
+	outer.PutReference("s", mlrval.FromMap(inner))
+	input := mlrval.FromMap(outer)
+
+	before := jsonOf(t, input)
+	output := BIF_arrayify(input)
+
+	assert.JSONEq(t, `{"s":["a","b","c"]}`, jsonOf(t, output))
+	assert.JSONEq(t, `{"s":{"1":"a","2":"b","3":"c"}}`, jsonOf(t, input),
+		"arrayify must not rewrite the input map")
+	assert.Equal(t, before, jsonOf(t, input))
+}
+
+func TestBIF_arrayifyDoesNotMutateConvertibleTopLevelMap(t *testing.T) {
+	// Even when the top-level map itself is converted to an array, nested
+	// convertible maps in the original must not be rewritten in place.
+	inner := mlrval.NewMlrmap()
+	inner.PutReference("1", mlrval.FromString("a"))
+	inner.PutReference("2", mlrval.FromString("b"))
+	outer := mlrval.NewMlrmap()
+	outer.PutReference("1", mlrval.FromMap(inner))
+	input := mlrval.FromMap(outer)
+
+	output := BIF_arrayify(input)
+
+	assert.JSONEq(t, `[["a","b"]]`, jsonOf(t, output))
+	assert.JSONEq(t, `{"1":{"1":"a","2":"b"}}`, jsonOf(t, input),
+		"arrayify must not rewrite the input map when converting it to an array")
+}
+
+func TestBIF_arrayifyDoesNotMutateArrayInput(t *testing.T) {
+	inner := mlrval.NewMlrmap()
+	inner.PutReference("1", mlrval.FromString("a"))
+	inner.PutReference("2", mlrval.FromString("b"))
+	input := mlrval.FromArray([]*mlrval.Mlrval{mlrval.FromMap(inner)})
+
+	output := BIF_arrayify(input)
+
+	assert.JSONEq(t, `[["a","b"]]`, jsonOf(t, output))
+	assert.JSONEq(t, `[{"1":"a","2":"b"}]`, jsonOf(t, input),
+		"arrayify must not rewrite the input array")
+}
