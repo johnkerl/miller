@@ -732,47 +732,53 @@ func BIF_unflatten(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // Converts maps with "1", "2", ... keys into arrays. Recurses nested data structures.
+// The input is not modified: work happens on a copy, matching flatten/unflatten/append.
 func BIF_arrayify(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.IsMap() {
-		if input1.AcquireMapValue().IsEmpty() {
-			return input1
+	if !input1.IsMap() && !input1.IsArray() {
+		return input1
+	}
+	return arrayifyCopy(input1.Copy())
+}
+
+// arrayifyCopy converts consecutive-key maps to arrays in place. The caller
+// must pass a value that is safe to mutate, typically a deep copy of the input.
+func arrayifyCopy(val *mlrval.Mlrval) *mlrval.Mlrval {
+	if val.IsMap() {
+		if val.AcquireMapValue().IsEmpty() {
+			return val
 		}
 
 		convertible := true
 		i := 0
-		for pe := input1.AcquireMapValue().Head; pe != nil; pe = pe.Next {
+		for pe := val.AcquireMapValue().Head; pe != nil; pe = pe.Next {
 			sval := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 			i++
 			if pe.Key != sval {
 				convertible = false
 			}
-			pe.Value = BIF_arrayify(pe.Value)
+			pe.Value = arrayifyCopy(pe.Value)
 		}
 
 		if convertible {
-			mapval := input1.AcquireMapValue()
-			arrayval := make([]*mlrval.Mlrval, input1.AcquireMapValue().FieldCount)
+			mapval := val.AcquireMapValue()
+			arrayval := make([]*mlrval.Mlrval, mapval.FieldCount)
 			i := 0
 			for pe := mapval.Head; pe != nil; pe = pe.Next {
-				arrayval[i] = pe.Value.Copy()
+				arrayval[i] = pe.Value
 				i++
 			}
 			return mlrval.FromArray(arrayval)
-
 		}
-		return input1
+		return val
 
-	} else if input1.IsArray() {
-		// TODO: comment (or rethink) that this modifies its inputs!!
-		output := input1.Copy()
-		arrayval := output.AcquireArrayValue()
-		for i := range input1.AcquireArrayValue() {
-			arrayval[i] = BIF_arrayify(arrayval[i])
+	} else if val.IsArray() {
+		arrayval := val.AcquireArrayValue()
+		for i := range arrayval {
+			arrayval[i] = arrayifyCopy(arrayval[i])
 		}
-		return output
-
+		return val
 	}
-	return input1
+	return val
 }
 
 func BIF_json_parse(input1 *mlrval.Mlrval) *mlrval.Mlrval {
