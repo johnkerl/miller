@@ -18,7 +18,7 @@ const bootstrapCIDefaultNumResamples = int64(1000)
 const bootstrapCIDefaultConfidenceLevel = 0.95
 
 var bootstrapCIOptions = []OptionSpec{
-	{Flag: "-a", Arg: "{mean,...}", Type: "enum", Desc: "Names of statistics to bootstrap: one or more of the listed values, as in mlr stats1 -a. Also accepts median (same as p50) and percentiles p{n} for n in 0..100. Defaults to mean.", Values: []string{"count", "null_count", "distinct_count", "mode", "antimode", "sum", "mean", "mad", "var", "stddev", "meaneb", "skewness", "kurtosis", "min", "max", "minlen", "maxlen"}},
+	{Flag: "-a", Arg: "{mean,...}", Type: "enum", Desc: "Names of statistics to bootstrap: one or more of the listed values, as in mlr stats1 -a. Also accepts median (same as p50) and percentiles p{n} for n in 0..100. Defaults to mean.", Values: stats1AccumulatorOptionValues()},
 	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Value-field names on which to compute statistics. Required."},
 	{Flag: "-g", Arg: "{d,e,f}", Type: "csv-list", Desc: "Optional group-by-field names."},
 	{Flag: "-n", Arg: "{n}", Type: "int", Desc: "Number of bootstrap resamples. Must be positive. Defaults to 1000."},

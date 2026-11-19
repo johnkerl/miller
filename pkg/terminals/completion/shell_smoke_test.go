@@ -211,6 +211,11 @@ func TestBashShim(t *testing.T) {
 		containsAll(t, got, []string{"csv", "json", "tsv"})
 	})
 
+	t.Run("enum value completion for verb flag", func(t *testing.T) {
+		got := runBashCompletion(t, scriptPath, mlrBin, "", []string{"mlr", "stats1", "-a", "me"}, 3)
+		containsAll(t, got, []string{"mean", "meaneb", "median"})
+	})
+
 	t.Run("then plus files inside verb", func(t *testing.T) {
 		dataDir := t.TempDir()
 		if err := os.WriteFile(filepath.Join(dataDir, "gamma.csv"), nil, 0o644); err != nil {
