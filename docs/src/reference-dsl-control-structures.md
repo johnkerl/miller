@@ -321,7 +321,7 @@ Important note: to avoid inconsistent looping behavior in case you're setting ne
 <b>  $sum2 = 0;</b>
 <b>  for (k,v in $*) {</b>
 <b>    if (is_numeric(v)) {</b>
-<b>      $sum1 +=v;</b>
+<b>      $sum1 += v;</b>
 <b>      $sum2 += $[k];</b>
 <b>    }</b>
 <b>  }</b>
