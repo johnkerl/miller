@@ -1,0 +1,1 @@
+mlr --ipprint --ojsonl cut -x -f b then unsparsify --from-header ${CASEDIR}/input

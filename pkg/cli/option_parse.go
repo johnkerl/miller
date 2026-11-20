@@ -3417,7 +3417,7 @@ var CSVTSVOnlyFlagSection = FlagSection{
 		{
 			name:     "--allow-ragged-csv-input",
 			altNames: []string{"--ragged", "--allow-ragged-tsv-input"},
-			help:     "If a data line has fewer fields than the header line, fill remaining keys with empty string. If a data line has more fields than the header line, use integer field labels as in the implicit-header case.",
+			help:     "If a data line has fewer fields than the header line, fill remaining keys with empty string -- except for CSV, where the remaining keys are left absent: use `mlr unsparsify --from-header` to fill them. If a data line has more fields than the header line, use integer field labels as in the implicit-header case.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
 				options.ReaderOptions.AllowRaggedCSVInput = true
 				*pargi += 1
