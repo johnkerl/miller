@@ -357,6 +357,10 @@ func (mv *Mlrval) marshalJSONBytes(outputIsStdout bool) (string, error) {
 // escapes, and then \u the rest.
 
 func millerJSONEncodeString(input string) string {
+	if !jsonStringNeedsEscape(input) {
+		return "\"" + input + "\""
+	}
+
 	var buffer bytes.Buffer
 	buffer.WriteByte('"')
 
@@ -395,6 +399,16 @@ func millerJSONEncodeString(input string) string {
 
 	buffer.WriteByte('"')
 	return buffer.String()
+}
+
+// jsonStringNeedsEscape reports whether millerJSONEncodeString must escape a byte of input.
+func jsonStringNeedsEscape(input string) bool {
+	for i := 0; i < len(input); i++ {
+		if b := input[i]; b < 0x20 || b == '"' || b == '\\' {
+			return true
+		}
+	}
+	return false
 }
 
 func (mv *Mlrval) marshalJSONInt(outputIsStdout bool) (string, error) {
