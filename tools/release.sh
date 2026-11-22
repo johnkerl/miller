@@ -584,6 +584,8 @@ phase_4_github_release() {
     note "gh release $TAG already exists -- leaving existing release notes/title untouched"
   else
     confirm "create GitHub draft release $TAG with auto-generated release notes?"
+    # NOTE: the title must match release.name_template in .goreleaser.yml:
+    # goreleaser finds the existing draft by title, not by tag.
     run_cmd gh release create "$TAG" \
       --draft \
       --title "Miller $VERSION" \

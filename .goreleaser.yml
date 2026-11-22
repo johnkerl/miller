@@ -5,6 +5,11 @@ release:
     name: miller
   draft: true
   use_existing_draft: true
+  # goreleaser matches an existing draft by *title*, not by tag. This must
+  # equal the --title that tools/release.sh passes to `gh release create`;
+  # otherwise goreleaser doesn't find the script's draft and creates a second
+  # one, leaving the assets split across two drafts.
+  name_template: "Miller {{ .Version }}"
 
 snapshot:
   name_template: SNAPSHOT-{{ .Commit }}
