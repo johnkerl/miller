@@ -24,6 +24,7 @@ import (
 	"bytes"
 	"io"
 	"os"
+	"slices"
 	"strings"
 
 	"github.com/johnkerl/miller/v6/pkg/transformers"
@@ -60,6 +61,23 @@ func verbFlagTakesArg(verb string, flag string) (found bool, takesArg bool) {
 	info := getVerbFlagInfo(verb)
 	ta, ok := info.takesArg[flag]
 	return ok, ta
+}
+
+// verbFlagValueCandidates returns fixed enum values declared by the verb's
+// structured option metadata. Other value types, including field names and
+// arbitrary strings, keep the normal filename fallback.
+func verbFlagValueCandidates(verb string, flag string) []string {
+	setup := transformers.LookUp(verb)
+	if setup == nil {
+		return nil
+	}
+	for _, option := range setup.Options {
+		if option.Type != "enum" || (option.Flag != flag && !slices.Contains(option.Aliases, flag)) {
+			continue
+		}
+		return option.Values
+	}
+	return nil
 }
 
 func getVerbFlagInfo(verb string) *verbFlagInfo {
