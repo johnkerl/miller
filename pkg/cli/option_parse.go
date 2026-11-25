@@ -3840,6 +3840,16 @@ var OutputColorizationFlagSection = FlagSection{
 		},
 
 		{
+			name: "--pass-terminal-escapes",
+			help: "Leave ESC/BEL and other C0 controls in record keys/values intact when writing to a TTY. By default Miller caret-escapes them (like `cat -v`) so untrusted field data cannot drive the terminal.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) error {
+				colorizer.SetPassThroughTerminalEscapes(true)
+				*pargi += 1
+				return nil
+			},
+		},
+
+		{
 			name:     "--always-color",
 			altNames: []string{"-C"},
 			help:     "Instructs Miller to colorize output even when it normally would not. Useful for piping output to `less -r`.",

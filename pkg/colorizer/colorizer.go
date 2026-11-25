@@ -68,11 +68,11 @@ func SetHelpColor(name string) bool {
 
 // For record-writer, regression-test, and online-help callsites
 func MaybeColorizeKey(key string, outputIsStdout bool) string {
-	return maybeColorize(key, keyColorString, outputIsStdout)
+	return maybeColorize(sanitizePayloadForOutput(key, outputIsStdout), keyColorString, outputIsStdout)
 }
 
 func MaybeColorizeValue(value string, outputIsStdout bool) string {
-	return maybeColorize(value, valueColorString, outputIsStdout)
+	return maybeColorize(sanitizePayloadForOutput(value, outputIsStdout), valueColorString, outputIsStdout)
 }
 
 func MaybeColorizePass(text string, outputIsStdout bool) string {
