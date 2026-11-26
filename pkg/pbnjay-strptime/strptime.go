@@ -170,10 +170,10 @@ func strptime_tz(
 			// Check for prefix text. It must be an exact match, e.g. with input "foo 2021" and
 			// format "foo %Y", "foo " == "foo ". Or, if the format starts with a "%", we're
 			// checking "" == "".
-			if strptimeInput[inputIdx:inputIdx+len(partBetweenPercentSigns)] != partBetweenPercentSigns {
+			if !strings.HasPrefix(strptimeInput[inputIdx:], partBetweenPercentSigns) {
 				if _debug {
-					fmt.Printf("\"%s\" != \"%s\"\n",
-						strptimeInput[inputIdx:inputIdx+len(partBetweenPercentSigns)], partBetweenPercentSigns,
+					fmt.Printf("\"%s\" does not start with \"%s\"\n",
+						strptimeInput[inputIdx:], partBetweenPercentSigns,
 					)
 				}
 				return time.Time{}, ErrFormatMismatch
@@ -188,7 +188,7 @@ func strptime_tz(
 			if _debug {
 				fmt.Printf("formatCode        '%c'\n", '%')
 			}
-			if strptimeInput[inputIdx:inputIdx+1] != "%" {
+			if !strings.HasPrefix(strptimeInput[inputIdx:], "%") {
 				if _debug {
 					fmt.Println("did not match %%")
 				}
@@ -236,8 +236,11 @@ func strptime_tz(
 				// %e's own optional leading pad space is indistinguishable from a
 				// literal separator space (e.g. "%b %e %T" matching "Mar  4 ..."), so a
 				// plain search for the next literal text would stop at %e's own padding.
-				// Determine the field width directly instead.
+				// Determine the field width directly instead, then verify the trailing literal.
 				sil = spacePaddedDayLen(strptimeInput[inputIdx:])
+				if sil != -1 && !strings.HasPrefix(strptimeInput[inputIdx+sil:], partBetweenPercentSigns[1:]) {
+					sil = -1
+				}
 			} else {
 				// Optional ".%f" (mixed modes): when format has ".%f" and next format code is 'f',
 				// the literal "." may be absent (e.g. "2022-04-03 17:38:20 UTC" vs "2022-04-03 17:38:20.123 UTC").

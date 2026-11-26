@@ -2,8 +2,10 @@ package strptime
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 type testDataType struct {
@@ -245,4 +247,57 @@ func TestStrptime(t *testing.T) {
 			assert.NotNil(t, err)
 		}
 	}
+}
+
+func TestTruncatedAndLiteralMismatchInputs(t *testing.T) {
+	mismatchCases := []struct {
+		name   string
+		input  string
+		format string
+	}{
+		{"empty_before_prefix", "", "prefix %Y"},
+		{"short_before_prefix", "x", "prefix %Y"},
+		{"partial_prefix", "prefi", "prefix %Y"},
+		{"missing_trailing_percent", "1970-01-01", "%F%%"},
+		{"empty_percent_literal", "", "%%"},
+		{"short_percent_literal", "a", "x%%"},
+		{"truncated_c_after_day", "Mon Mar 4", "%c"},
+		{"truncated_c_after_padded_day", "Mon Mar  4", "%c"},
+		{"truncated_c_after_month", "Mon Mar ", "%c"},
+		{"truncated_c_after_weekday", "Mon ", "%c"},
+		{"percent_e_missing_literal", "4", "%eabc"},
+		{"percent_e_partial_literal", " 4ab", "%eabc"},
+		{"percent_e_wrong_literal", "4xxx2024", "%eabc%Y"},
+	}
+
+	loc := time.FixedZone("TEST", 3600)
+	for _, tc := range mismatchCases {
+		t.Run(tc.name, func(t *testing.T) {
+			for _, call := range []struct {
+				fnName string
+				fn     func() (time.Time, error)
+			}{
+				{"Parse", func() (time.Time, error) { return Parse(tc.input, tc.format) }},
+				{"ParseLocal", func() (time.Time, error) { return ParseLocal(tc.input, tc.format) }},
+				{"ParseLocation", func() (time.Time, error) { return ParseLocation(tc.input, tc.format, loc) }},
+			} {
+				_, err := call.fn()
+				assert.ErrorIs(t, err, ErrFormatMismatch, "%s(%q, %q)", call.fnName, tc.input, tc.format)
+			}
+		})
+	}
+
+	t.Run("percent_e_with_matching_literal", func(t *testing.T) {
+		got, err := Parse("Mar 4abc2024", "%b %eabc%Y")
+		require.NoError(t, err)
+		assert.Equal(t, int64(1709510400), got.Unix())
+
+		gotPadded, err := Parse("Mar  4abc2024", "%b %eabc%Y")
+		require.NoError(t, err)
+		assert.Equal(t, int64(1709510400), gotPadded.Unix())
+
+		gotTrailing, err := Parse("2024-03-4abc", "%Y-%m-%eabc")
+		require.NoError(t, err)
+		assert.Equal(t, int64(1709510400), gotTrailing.Unix())
+	})
 }
