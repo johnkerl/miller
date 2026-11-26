@@ -1,1 +1,1 @@
-mlr: CSV header/data length mismatch 2 != 1 at filename test/cases/verb-skip-trivial-records/0005/input.csv row 3
+mlr: CSV header/data length mismatch 2 != 1 at filename test/cases/verb-skip-trivial-records/0005/input.csv row 3; this input line is blank -- use the skip-trivial-records verb to have blank input lines skipped
