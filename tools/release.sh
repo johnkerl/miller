@@ -153,6 +153,43 @@ verify_release_tag_commit() {
   note "verified tag '$tag' points at a commit with version.go == '$VERSION'"
 }
 
+# check_tag_not_already_released fails fast on the most common copy/paste
+# mistake: giving the script a version that has already been released (e.g.
+# v6.3.0 instead of v6.23.0), which would otherwise be caught only after
+# minutes of version bumps, `make dev`, and tarball/SRPM building.
+#
+# An existing tag alone is NOT an error: phase 4 pushes the tag before it
+# creates/uploads to the draft release, so a re-run after a partial failure
+# legitimately finds the tag already there. So this refuses only when
+#   (a) a non-draft (published) GitHub release exists for $TAG, or
+#   (b) $VERSION is not newer than the highest *other* release tag on origin.
+# Read-only, so it runs under --dry-run too.
+check_tag_not_already_released() {
+  local is_draft
+  if is_draft="$(gh release view "$TAG" --json isDraft --jq .isDraft 2>/dev/null)"; then
+    if [ "$is_draft" = "false" ]; then
+      die "release $TAG is already published on GitHub -- did you mistype the version? (https://github.com/johnkerl/miller/releases/tag/$TAG)"
+    fi
+    note "draft release $TAG already exists; treating this run as a resume"
+  fi
+
+  local highest
+  highest="$(git ls-remote --tags origin 'refs/tags/v*' 2>/dev/null \
+    | sed -n 's|.*refs/tags/v\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)$|\1|p' \
+    | grep -v -x -F "$VERSION" \
+    | sort -t. -k1,1n -k2,2n -k3,3n \
+    | tail -n 1)"
+  if [ -n "$highest" ]; then
+    local newest
+    newest="$(printf '%s\n%s\n' "$highest" "$VERSION" \
+      | sort -t. -k1,1n -k2,2n -k3,3n | tail -n 1)"
+    if [ "$newest" != "$VERSION" ]; then
+      die "version $VERSION is not newer than the latest released tag v$highest on origin -- did you mistype the version?"
+    fi
+    note "version $VERSION is newer than latest released tag v$highest"
+  fi
+}
+
 # ============================================================================
 # Argument parsing
 # ============================================================================
@@ -218,6 +255,12 @@ preflight_common() {
 
   if ! gh auth status >/dev/null 2>&1; then
     die "gh is not authenticated; run 'gh auth login' first"
+  fi
+
+  # Cheap, read-only sanity check on the version argument -- do it before any
+  # of the slow work below.
+  if [ "$SUBCOMMAND" = "pre-release" ]; then
+    check_tag_not_already_released
   fi
 
   # The three main files we touch must be where we expect them.
@@ -584,6 +627,8 @@ phase_4_github_release() {
     note "gh release $TAG already exists -- leaving existing release notes/title untouched"
   else
     confirm "create GitHub draft release $TAG with auto-generated release notes?"
+    # NOTE: the title must match release.name_template in .goreleaser.yml:
+    # goreleaser finds the existing draft by title, not by tag.
     run_cmd gh release create "$TAG" \
       --draft \
       --title "Miller $VERSION" \

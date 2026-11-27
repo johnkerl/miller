@@ -20,6 +20,10 @@ if [ ! -x ../../mlr ]; then
 fi
 export PATH=../..:$PATH
 
+# Likewise, the generated output must not depend on the user's ~/.mlrrc (for
+# example, a default of --ojsonl would change every example's output format).
+export MLRRC=__none__
+
 for name in $names; do
   echo Generating $name.md
   if [ -f $name.md ]; then # Won't exist yet on first run

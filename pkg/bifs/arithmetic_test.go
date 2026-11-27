@@ -171,3 +171,65 @@ func TestBIF_mod_ops_zero_modulus(t *testing.T) {
 	assert.True(t, BIF_mod_mul(a, b, m).IsError())
 	assert.True(t, BIF_mod_exp(a, b, m).IsError())
 }
+
+func TestBIF_int_preserving_unary_math_large_ints(t *testing.T) {
+	// 2**53 + 1 is not representable as a float64.
+	big := int64(9007199254740993)
+	for _, f := range []func(*mlrval.Mlrval) *mlrval.Mlrval{BIF_abs, BIF_ceil, BIF_floor, BIF_round} {
+		intval, ok := f(mlrval.FromInt(big)).GetIntValue()
+		assert.True(t, ok)
+		assert.Equal(t, big, intval)
+	}
+
+	intval, ok := BIF_abs(mlrval.FromInt(-big)).GetIntValue()
+	assert.True(t, ok)
+	assert.Equal(t, big, intval)
+
+	// -math.MinInt64 does not fit in an int, so it overflows to float.
+	floatval, ok := BIF_abs(mlrval.FromInt(math.MinInt64)).GetFloatValue()
+	assert.True(t, ok)
+	assert.Equal(t, 9223372036854775808.0, floatval)
+
+	intval, ok = BIF_sgn(mlrval.FromInt(-big)).GetIntValue()
+	assert.True(t, ok)
+	assert.Equal(t, int64(-1), intval)
+	intval, ok = BIF_sgn(mlrval.FromInt(0)).GetIntValue()
+	assert.True(t, ok)
+	assert.Equal(t, int64(0), intval)
+}
+
+func TestBIF_minus_unary_min_int(t *testing.T) {
+	// -math.MinInt64 does not fit in an int, so it overflows to float.
+	floatval, ok := BIF_minus_unary(mlrval.FromInt(math.MinInt64)).GetFloatValue()
+	assert.True(t, ok)
+	assert.Equal(t, 9223372036854775808.0, floatval)
+
+	intval, ok := BIF_minus_unary(mlrval.FromInt(math.MaxInt64)).GetIntValue()
+	assert.True(t, ok)
+	assert.Equal(t, int64(-math.MaxInt64), intval)
+}
+
+func TestBIF_roundm_large_ints(t *testing.T) {
+	cases := []struct{ x, m, want int64 }{
+		// 2**53 + 1 is not representable as a float64.
+		{9007199254740993, 2, 9007199254740994},
+		{9007199254740993, 1, 9007199254740993},
+		{-9007199254740993, 2, -9007199254740994},
+		{7, 2, 8},
+		{-7, 2, -8},
+		{7, -2, 8},
+		{5, 10, 10},
+		{4, 10, 0},
+		{-4, 10, 0},
+	}
+	for _, c := range cases {
+		intval, ok := BIF_roundm(mlrval.FromInt(c.x), mlrval.FromInt(c.m)).GetIntValue()
+		assert.True(t, ok)
+		assert.Equal(t, c.want, intval, "roundm(%d, %d)", c.x, c.m)
+	}
+
+	// The rounded value doesn't fit in an int, so it overflows to float.
+	floatval, ok := BIF_roundm(mlrval.FromInt(math.MaxInt64), mlrval.FromInt(10)).GetFloatValue()
+	assert.True(t, ok)
+	assert.Equal(t, 9223372036854775810.0, floatval)
+}

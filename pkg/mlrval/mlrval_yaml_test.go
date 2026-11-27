@@ -9,7 +9,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v3"
 )
 
 func TestMlrvalFromYAMLNativeScalars(t *testing.T) {
@@ -223,4 +223,62 @@ func TestMlrmapToYAMLNativeNested(t *testing.T) {
 	assert.NoError(t, err)
 	assert.True(t, strings.Contains(string(out), "nested:"))
 	assert.True(t, strings.Contains(string(out), "p: 1"))
+}
+
+func yamlDecodedKeys(t *testing.T, mv *Mlrval) []string {
+	t.Helper()
+	if !assert.True(t, mv.IsMap()) {
+		return nil
+	}
+	keys := []string{}
+	for pe := mv.GetMap().Head; pe != nil; pe = pe.Next {
+		keys = append(keys, pe.Key)
+	}
+	return keys
+}
+
+func TestMlrvalDecodeFromYAMLKeyOrder(t *testing.T) {
+	input := "b: 22\nc:\n  z: 1\n  y: 2\na: [{q: 1, p: 2}]\n"
+	decoder := yaml.NewDecoder(bytes.NewBufferString(input))
+	mv, eof, err := MlrvalDecodeFromYAML(decoder)
+	assert.NoError(t, err)
+	assert.False(t, eof)
+	assert.Equal(t, []string{"b", "c", "a"}, yamlDecodedKeys(t, mv))
+	assert.Equal(t, []string{"z", "y"}, yamlDecodedKeys(t, mv.GetMap().Get("c")))
+	arr := mv.GetMap().Get("a").GetArray()
+	if assert.Len(t, arr, 1) {
+		assert.Equal(t, []string{"q", "p"}, yamlDecodedKeys(t, arr[0]))
+	}
+}
+
+func TestMlrvalDecodeFromYAMLKeyOrderArrayOfMaps(t *testing.T) {
+	input := "- z: 1\n  a: 2\n- y: 3\n  b: 4\n"
+	decoder := yaml.NewDecoder(bytes.NewBufferString(input))
+	mv, _, err := MlrvalDecodeFromYAML(decoder)
+	assert.NoError(t, err)
+	arr := mv.GetArray()
+	if assert.Len(t, arr, 2) {
+		assert.Equal(t, []string{"z", "a"}, yamlDecodedKeys(t, arr[0]))
+		assert.Equal(t, []string{"y", "b"}, yamlDecodedKeys(t, arr[1]))
+	}
+}
+
+func TestMlrvalDecodeFromYAMLKeyOrderWithAliasAndMerge(t *testing.T) {
+	input := "base: &base\n  y: 1\n  x: 2\ncopy: *base\nmerged:\n  w: 0\n  <<: *base\n  x: 9\n"
+	decoder := yaml.NewDecoder(bytes.NewBufferString(input))
+	mv, _, err := MlrvalDecodeFromYAML(decoder)
+	assert.NoError(t, err)
+	rec := mv.GetMap()
+	assert.Equal(t, []string{"base", "copy", "merged"}, yamlDecodedKeys(t, mv))
+	assert.Equal(t, []string{"y", "x"}, yamlDecodedKeys(t, rec.Get("copy")))
+	merged := rec.Get("merged")
+	assert.Equal(t, []string{"w", "y", "x"}, yamlDecodedKeys(t, merged))
+	x, _ := merged.GetMap().Get("x").GetIntValue()
+	assert.Equal(t, int64(9), x)
+}
+
+func TestMlrvalDecodeFromYAMLDuplicateKeyIsError(t *testing.T) {
+	decoder := yaml.NewDecoder(bytes.NewBufferString("a: 1\na: 2\n"))
+	_, _, err := MlrvalDecodeFromYAML(decoder)
+	assert.Error(t, err)
 }

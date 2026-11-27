@@ -21,7 +21,7 @@ require (
 	github.com/johnkerl/lumin v1.0.0
 	github.com/johnkerl/pgpg/go v1.0.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
-	github.com/klauspost/compress v1.20.3
+	github.com/klauspost/compress v1.20.5
 	github.com/kshedden/statmodel v0.0.0-20210519035403-ee97d3e48df1
 	github.com/lestrrat-go/strftime v1.2.1
 	github.com/mattn/go-isatty v0.0.24
@@ -30,11 +30,11 @@ require (
 	github.com/pkg/profile v1.7.0
 	github.com/rivo/uniseg v0.4.7
 	github.com/stretchr/testify v1.12.1
+	go.yaml.in/yaml/v3 v3.0.6
 	golang.org/x/sys v0.50.0
-	golang.org/x/term v0.47.0
-	golang.org/x/text v0.43.0
-	gopkg.in/yaml.v3 v3.0.1
-	pault.ag/go/debian v0.21.3
+	golang.org/x/term v0.48.0
+	golang.org/x/text v0.44.0
+	pault.ag/go/debian v0.21.4
 )
 
 require (
@@ -48,12 +48,11 @@ require (
 	github.com/segmentio/asm v1.1.3 // indirect
 	github.com/segmentio/encoding v0.5.4 // indirect
 	github.com/yosida95/uritemplate/v3 v3.0.2 // indirect
-	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/crypto v0.58.0 // indirect
 	golang.org/x/oauth2 v0.35.0 // indirect
-	golang.org/x/sync v0.24.0 // indirect
+	golang.org/x/sync v0.25.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
-	golang.org/x/tools v0.51.0 // indirect
+	golang.org/x/tools v0.52.0 // indirect
 	gonum.org/v1/gonum v0.16.0 // indirect
 	pault.ag/go/topsort v0.1.1 // indirect
 )

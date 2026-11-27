@@ -595,47 +595,57 @@ func NewMlrvalForAutoDeepen(mvtype MVType) (*Mlrval, error) {
 	)
 }
 
+// Arrayify converts maps with "1", "2", ... keys into arrays, recursing into
+// nested data structures. The receiver is not modified: work happens on a
+// copy, matching the DSL arrayify built-in function (BIF_arrayify), which was
+// fixed to leave its input unchanged. Callers in the unflatten code assign
+// the return value, so they do not need the receiver to change in place.
 func (mv *Mlrval) Arrayify() *Mlrval {
-	if mv.IsMap() {
-		if mv.intf.(*Mlrmap).IsEmpty() {
-			return mv
+	if !mv.IsMap() && !mv.IsArray() {
+		return mv
+	}
+	return arrayifyCopy(mv.Copy())
+}
+
+// arrayifyCopy converts consecutive-key maps to arrays in place. The caller
+// must pass a value that is safe to mutate, typically a deep copy of the
+// original.
+func arrayifyCopy(val *Mlrval) *Mlrval {
+	if val.IsMap() {
+		if val.intf.(*Mlrmap).IsEmpty() {
+			return val
 		}
 
 		convertible := true
 		i := 0
-		for pe := mv.intf.(*Mlrmap).Head; pe != nil; pe = pe.Next {
+		for pe := val.intf.(*Mlrmap).Head; pe != nil; pe = pe.Next {
 			sval := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 			i++
 			if pe.Key != sval {
 				convertible = false
 			}
-			pe.Value = pe.Value.Arrayify()
+			pe.Value = arrayifyCopy(pe.Value)
 		}
 
 		if convertible {
-			arrayval := make([]*Mlrval, mv.intf.(*Mlrmap).FieldCount)
+			arrayval := make([]*Mlrval, val.intf.(*Mlrmap).FieldCount)
 			i := 0
-			for pe := mv.intf.(*Mlrmap).Head; pe != nil; pe = pe.Next {
-				arrayval[i] = pe.Value.Copy()
+			for pe := val.intf.(*Mlrmap).Head; pe != nil; pe = pe.Next {
+				arrayval[i] = pe.Value
 				i++
 			}
 			return FromArray(arrayval)
-
 		}
-		return mv
+		return val
 
-	} else if mv.IsArray() {
-		// TODO: comment (or rethink) that this modifies its inputs!!
-		output := mv.Copy()
-		arrayval := mv.intf.([]*Mlrval)
+	} else if val.IsArray() {
+		arrayval := val.intf.([]*Mlrval)
 		for i := range arrayval {
-			arrayval[i] = arrayval[i].Arrayify()
+			arrayval[i] = arrayifyCopy(arrayval[i])
 		}
-		mv.intf = arrayval
-		return output
-
+		return val
 	}
-	return mv
+	return val
 }
 
 func LengthenMlrvalArray(array *[]*Mlrval, newLength64 int) {

@@ -13,16 +13,9 @@ func (mlrmap *Mlrmap) FormatAsJSON(
 	jsonFormatting TJSONFormatting,
 	outputIsStdout bool,
 ) (string, error) {
-	var buffer bytes.Buffer
-	s, err := mlrmap.marshalJSONAux(jsonFormatting, 1, outputIsStdout)
-	if err != nil {
-		return "", err
-	}
-	buffer.WriteString(s)
 	// Do not write the final newline here, so the caller can write commas
 	// in the right place if desired.
-	// buffer.WriteString("\n")
-	return buffer.String(), nil
+	return mlrmap.marshalJSONAux(jsonFormatting, 1, outputIsStdout)
 }
 
 // For a map we only write from opening curly brace to closing curly brace.  In
