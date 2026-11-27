@@ -162,6 +162,71 @@ func TestBIF_mod_exp_small_exponents(t *testing.T) {
 	}
 }
 
+func TestBIF_mod_ops_full_range_and_negative_modulus(t *testing.T) {
+	// Expected values computed with arbitrary-precision arithmetic.
+	// The int64 intermediates a+b, a-b, and a*b overflow for several of
+	// these, and a negative modulus must follow the same Pythonic sign
+	// convention as the % operator (result has the sign of the modulus).
+	const maxInt64 = int64(9223372036854775807)
+	const minInt64 = -maxInt64 - 1
+
+	addCases := []struct{ a, b, m, want int64 }{
+		{maxInt64 - 1, maxInt64 - 1, 97, 57},
+		{maxInt64, 1, 7, 1},
+		{maxInt64, maxInt64, maxInt64, 0},
+		{5, 0, -3, -1},
+		{-5, 0, -3, -2},
+		{1, 2, minInt64, minInt64 + 3},
+	}
+	for _, c := range addCases {
+		output := BIF_mod_add(mlrval.FromInt(c.a), mlrval.FromInt(c.b), mlrval.FromInt(c.m))
+		intval, ok := output.GetIntValue()
+		assert.True(t, ok)
+		assert.Equal(t, c.want, intval, "madd(%d, %d, %d)", c.a, c.b, c.m)
+	}
+
+	subCases := []struct{ a, b, m, want int64 }{
+		{0, maxInt64 - 1, 97, 20},
+		{minInt64, 1, 97, 17},
+		{5, 0, -3, -1},
+		{-5, 0, -3, -2},
+	}
+	for _, c := range subCases {
+		output := BIF_mod_sub(mlrval.FromInt(c.a), mlrval.FromInt(c.b), mlrval.FromInt(c.m))
+		intval, ok := output.GetIntValue()
+		assert.True(t, ok)
+		assert.Equal(t, c.want, intval, "msub(%d, %d, %d)", c.a, c.b, c.m)
+	}
+
+	mulCases := []struct{ a, b, m, want int64 }{
+		{3037000500, 3037000500, maxInt64, 145474193},
+		{maxInt64, maxInt64, 97, 70},
+		{-3037000500, 3037000500, maxInt64, 9223372036709301614},
+		{123456789, 987654321, -1000000007, -740893148},
+	}
+	for _, c := range mulCases {
+		output := BIF_mod_mul(mlrval.FromInt(c.a), mlrval.FromInt(c.b), mlrval.FromInt(c.m))
+		intval, ok := output.GetIntValue()
+		assert.True(t, ok)
+		assert.Equal(t, c.want, intval, "mmul(%d, %d, %d)", c.a, c.b, c.m)
+	}
+
+	expCases := []struct{ a, e, m, want int64 }{
+		{123456789, 1000000, 9223372036854775783, 8657845696818080333},
+		{2, 63, maxInt64, 1},
+		{maxInt64, 2, 97, 70},
+		{5, 3, -7, -1},
+		{7, 0, minInt64, minInt64 + 1},
+		{-2, 3, 5, 2},
+	}
+	for _, c := range expCases {
+		output := BIF_mod_exp(mlrval.FromInt(c.a), mlrval.FromInt(c.e), mlrval.FromInt(c.m))
+		intval, ok := output.GetIntValue()
+		assert.True(t, ok)
+		assert.Equal(t, c.want, intval, "mexp(%d, %d, %d)", c.a, c.e, c.m)
+	}
+}
+
 func TestBIF_mod_ops_zero_modulus(t *testing.T) {
 	a := mlrval.FromInt(5)
 	b := mlrval.FromInt(3)

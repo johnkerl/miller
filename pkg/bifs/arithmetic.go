@@ -3,6 +3,7 @@ package bifs
 import (
 	"fmt"
 	"math"
+	"math/bits"
 
 	"github.com/johnkerl/miller/v6/pkg/lib"
 	"github.com/johnkerl/miller/v6/pkg/mlrval"
@@ -638,24 +639,98 @@ func BIF_modulus(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // Pythonic
-func mlrmod(a, m int64) int64 {
-	retval := a % m
-	if retval < 0 {
-		retval += m
+
+// The modular-arithmetic helpers below reduce operands in uint64 before
+// combining them, so the intermediate a+b, a-b, and a*b cannot overflow
+// int64 the way the direct computations did: madd, msub, mmul, and mexp
+// now give the mathematically correct residue for operands spanning the
+// full int64 range. Results follow the same Pythonic sign convention as
+// the % operator (see modulus_i_ii): the result has the sign of the
+// modulus, e.g. madd(5, 0, -3) is -1, not 2. Callers guarantee m != 0
+// (see imodop).
+
+// modmag returns |m| as a uint64, which also handles m == math.MinInt64,
+// whose absolute value is not representable as an int64.
+func modmag(m int64) uint64 {
+	if m < 0 {
+		return uint64(-(m + 1)) + 1
 	}
-	return retval
+	return uint64(m)
+}
+
+// modreduce returns a mod M as a value in [0, M), for M > 0.
+func modreduce(a int64, M uint64) uint64 {
+	if a >= 0 {
+		return uint64(a) % M
+	}
+	r := modmag(a) % M
+	if r == 0 {
+		return 0
+	}
+	return M - r
+}
+
+// modsign converts a residue in [0, M) back to an int64 following the
+// Pythonic sign convention for the original modulus m: non-negative for
+// m > 0, and in (m, 0] for m < 0.
+func modsign(r uint64, m int64, M uint64) int64 {
+	if m > 0 {
+		return int64(r)
+	}
+	if r == 0 {
+		return 0
+	}
+	// -(M - r), computed as r-M in uint64 so that M == 2**63
+	// (m == math.MinInt64) does not overflow.
+	return int64(r - M)
+}
+
+func mlrmod(a, m int64) int64 {
+	M := modmag(m)
+	return modsign(modreduce(a, M), m, M)
+}
+
+// modadd returns (x + y) mod M for x, y already in [0, M).
+// Since M <= 2**63, x + y < 2**64 and cannot overflow uint64.
+func modadd(x, y, M uint64) uint64 {
+	s := x + y
+	if s >= M {
+		s -= M
+	}
+	return s
+}
+
+// modsub returns (x - y) mod M for x, y already in [0, M).
+func modsub(x, y, M uint64) uint64 {
+	if x >= y {
+		return x - y
+	}
+	return M - (y - x)
+}
+
+// modmul returns (x * y) mod M for x, y already in [0, M), using a
+// 128-bit intermediate product.
+func modmul(x, y, M uint64) uint64 {
+	hi, lo := bits.Mul64(x, y)
+	// bits.Div64 requires hi < M, so reduce hi first.
+	hi %= M
+	_, r := bits.Div64(hi, lo, M)
+	return r
 }
 
 type i_iii_func func(a, b, m int64) int64
 
 func imodadd(a, b, m int64) int64 {
-	return mlrmod(a+b, m)
+	M := modmag(m)
+	return modsign(modadd(modreduce(a, M), modreduce(b, M), M), m, M)
 }
 func imodsub(a, b, m int64) int64 {
-	return mlrmod(a-b, m)
+	M := modmag(m)
+	return modsign(modsub(modreduce(a, M), modreduce(b, M), M), m, M)
 }
 func imodmul(a, b, m int64) int64 {
-	return mlrmod(a*b, m)
+	M := modmag(m)
+	return modsign(modmul(modreduce(a, M), modreduce(b, M), M), m, M)
 }
 func imodexp(a, e, m int64) int64 {
 	// Repeated-squaring algorithm.
@@ -663,18 +738,19 @@ func imodexp(a, e, m int64) int64 {
 	// Both a and 1 are reduced first so that e == 0 and e == 1 give results
 	// in [0, m) like the other mod functions, e.g. mexp(10, 1, 7) is 3 and
 	// mexp(5, 0, 1) is 0.
-	apower := mlrmod(a, m)
-	c := mlrmod(1, m)
+	M := modmag(m)
+	apower := modreduce(a, M)
+	c := modreduce(1, M)
 	u := uint64(e)
 
 	for u != 0 {
 		if (u & 1) == 1 {
-			c = mlrmod(c*apower, m)
+			c = modmul(c, apower, M)
 		}
 		u >>= 1
-		apower = mlrmod(apower*apower, m)
+		apower = modmul(apower, apower, M)
 	}
-	return c
+	return modsign(c, m, M)
 }
 
 func imodop(input1, input2, input3 *mlrval.Mlrval, iop i_iii_func, funcname string) *mlrval.Mlrval {
