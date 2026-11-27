@@ -16,6 +16,7 @@ const verbNameUnsparsify = "unsparsify"
 var unsparsifyOptions = []OptionSpec{
 	{Flag: "--fill-with", Arg: "{filler string}", Type: "string", Desc: "What to fill absent fields with. Defaults to the empty string."},
 	{Flag: "-f", Arg: "{a,b,c}", Type: "csv-list", Desc: "Specify field names to be operated on; others are not modified and operation is streaming."},
+	{Flag: "--from-header", Type: "bool", Desc: "Operate on the field names from the header line of the current input file; others are not modified and operation is streaming. Use this with --ragged to fill in the trailing fields of data lines which are shorter than the header line. Applies to CSV, TSV, CSV-lite, PPRINT, and markdown input, and does nothing for input formats without a header line. Can be used with -f."},
 }
 
 var UnsparsifySetup = TransformerSetup{
@@ -42,6 +43,9 @@ a value. This verb retains all input before producing any output.
 		`Example: if the input is two records, one being 'a=1,b=2' and the other
 being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 'a=,b=3,c=4'.
+Example: if the CSV input has header line 'a,b,c' and data lines '1,2' and
+'4,5,6', then 'mlr --csv --ragged unsparsify --from-header' gives 'a,b,c',
+'1,2,', and '4,5,6'.
 `)
 }
 
@@ -60,6 +64,7 @@ func transformerUnsparsifyParseCLI(
 
 	fillerString := ""
 	var specifiedFieldNames []string = nil
+	fromHeader := false
 
 	var err error
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -89,6 +94,9 @@ func transformerUnsparsifyParseCLI(
 				return nil, err
 			}
 
+		case "--from-header":
+			fromHeader = true
+
 		default:
 			return nil, cli.VerbErrorf(verb, "option \"%s\" not recognized", opt)
 		}
@@ -102,6 +110,7 @@ func transformerUnsparsifyParseCLI(
 	transformer, err := NewTransformerUnsparsify(
 		fillerString,
 		specifiedFieldNames,
+		fromHeader,
 	)
 	if err != nil {
 		return nil, err
@@ -114,12 +123,14 @@ type TransformerUnsparsify struct {
 	fillerMlrval          *mlrval.Mlrval
 	recordsAndContexts    []*types.RecordAndContext
 	fieldNamesSeen        *lib.OrderedMap[string]
+	fromHeader            bool
 	recordTransformerFunc RecordTransformerFunc
 }
 
 func NewTransformerUnsparsify(
 	fillerString string,
 	specifiedFieldNames []string,
+	fromHeader bool,
 ) (*TransformerUnsparsify, error) {
 
 	fieldNamesSeen := lib.NewOrderedMap[string]()
@@ -131,9 +142,10 @@ func NewTransformerUnsparsify(
 		fillerMlrval:       mlrval.FromString(fillerString),
 		recordsAndContexts: []*types.RecordAndContext{},
 		fieldNamesSeen:     fieldNamesSeen,
+		fromHeader:         fromHeader,
 	}
 
-	if specifiedFieldNames == nil {
+	if specifiedFieldNames == nil && !fromHeader {
 		tr.recordTransformerFunc = tr.transformNonStreaming
 	} else {
 		tr.recordTransformerFunc = tr.transformStreaming
@@ -197,6 +209,17 @@ func (tr *TransformerUnsparsify) transformStreaming(
 ) error {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
+
+		// With --ragged, a CSV data line shorter than the header line yields a
+		// record without the trailing keys. The reader puts the header in the
+		// context so we can fill them in here, without retaining records.
+		if tr.fromHeader {
+			for _, key := range inrecAndContext.Context.HeaderFieldNames {
+				if !inrec.Has(key) {
+					inrec.PutCopy(key, tr.fillerMlrval)
+				}
+			}
+		}
 
 		for pe := tr.fieldNamesSeen.Head; pe != nil; pe = pe.Next {
 			if !inrec.Has(pe.Key) {

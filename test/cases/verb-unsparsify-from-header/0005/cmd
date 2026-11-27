@@ -1,0 +1,1 @@
+mlr --icsv --ojsonl --implicit-csv-header --ragged unsparsify --from-header ${CASEDIR}/input

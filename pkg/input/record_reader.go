@@ -3,7 +3,11 @@
 
 package input
 
-import "github.com/johnkerl/miller/v6/pkg/types"
+import (
+	"strconv"
+
+	"github.com/johnkerl/miller/v6/pkg/types"
+)
 
 // Since Go is concurrent, the context struct (AWK-like variables such as
 // FILENAME, NF, NF, FNR, etc.) needs to be duplicated and passed through the
@@ -33,4 +37,31 @@ func hasNonEmptyField(fields []string) bool {
 		}
 	}
 	return false
+}
+
+// headerFieldNames returns the record keys which a header line produces: the
+// header fields themselves, with repeated names renamed to name_2, name_3, etc.
+// when dedupe is on, the same way as Mlrmap.PutReferenceMaybeDedupe does it.
+// The readers put this in the context so that verbs such as unsparsify can see
+// the full header even for ragged short rows. See issue #2286.
+func headerFieldNames(header []string, dedupe bool) []string {
+	fieldNames := make([]string, 0, len(header))
+	seen := make(map[string]bool, len(header))
+	for _, key := range header {
+		if seen[key] {
+			if !dedupe {
+				continue
+			}
+			for i := 2; ; i++ {
+				newKey := key + "_" + strconv.Itoa(i)
+				if !seen[newKey] {
+					key = newKey
+					break
+				}
+			}
+		}
+		seen[key] = true
+		fieldNames = append(fieldNames, key)
+	}
+	return fieldNames
 }

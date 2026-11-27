@@ -235,6 +235,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 
 			reader.header = csvRecord
 			reader.headerChecked = false
+			context.HeaderFieldNames = headerFieldNames(reader.header, dedupeFieldNames)
 			reader.rowNumber++
 			reader.needHeader = false
 			continue
@@ -253,6 +254,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 				reader.header[i] = strconv.Itoa(i + 1)
 			}
 			reader.headerChecked = false
+			context.HeaderFieldNames = headerFieldNames(reader.header, dedupeFieldNames)
 		}
 
 		record := arena.NewRecord()
