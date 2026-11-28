@@ -1,1 +1,1 @@
-printf 'a=lorem\n' | mlr --ojson gsub -a '[lm]' '\t'
+mlr --ojson gsub -a '[lm]' '\t' ${CASEDIR}/input

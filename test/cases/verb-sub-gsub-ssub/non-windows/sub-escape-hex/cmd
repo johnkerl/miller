@@ -1,1 +1,1 @@
-printf 'a=lorem\n' | mlr --ojson sub -a 'r' '\x41'
+mlr --ojson sub -a 'r' '\x41' ${CASEDIR}/input

@@ -1,1 +1,1 @@
-printf 'a=X\tY\n' | mlr --ojson ssub -a '\t' '-'
+mlr --ojson ssub -a '\t' '-' ${CASEDIR}/input
