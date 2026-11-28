@@ -86,8 +86,11 @@ func (reader *RecordReaderCSV) Read(
 				if err != nil {
 					errorChannel <- err
 				} else {
-					reader.processHandle(handle, filename, &context, readerChannel, errorChannel, downstreamDoneChannel)
+					done := reader.processHandle(handle, filename, &context, readerChannel, errorChannel, downstreamDoneChannel)
 					_ = handle.Close()
+					if done {
+						break
+					}
 				}
 			}
 		}
@@ -95,6 +98,9 @@ func (reader *RecordReaderCSV) Read(
 	readerChannel <- types.NewEndOfStreamMarkerList(&context)
 }
 
+// processHandle returns whether the scanner received a downstream-done signal.
+// Keep that state across files: the scanner consumes the signal, so the next
+// file must not wait for another one.
 func (reader *RecordReaderCSV) processHandle(
 	handle io.Reader,
 	filename string,
@@ -102,7 +108,7 @@ func (reader *RecordReaderCSV) processHandle(
 	readerChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
-) {
+) bool {
 	context.UpdateForStartOfFile(filename)
 	recordsPerBatch := reader.recordsPerBatch
 
@@ -125,8 +131,12 @@ func (reader *RecordReaderCSV) processHandle(
 	}
 
 	csvRecordsChannel := make(chan [][]string, recordsPerBatch)
-	go channelizedCSVRecordScanner(csvReader, csvRecordsChannel, downstreamDoneChannel, errorChannel,
-		recordsPerBatch)
+	scannerDone := make(chan bool, 1)
+	go func() {
+		scannerDone <- channelizedCSVRecordScanner(
+			csvReader, csvRecordsChannel, downstreamDoneChannel, errorChannel, recordsPerBatch,
+		)
+	}()
 
 	for {
 		recordsAndContexts, eof := reader.getRecordBatch(csvRecordsChannel, errorChannel, context)
@@ -137,6 +147,7 @@ func (reader *RecordReaderCSV) processHandle(
 			break
 		}
 	}
+	return <-scannerDone
 }
 
 // TODO: comment
@@ -146,7 +157,7 @@ func channelizedCSVRecordScanner(
 	downstreamDoneChannel <-chan bool, // for mlr head
 	errorChannel chan error,
 	recordsPerBatch int64,
-) {
+) bool {
 	i := int64(0)
 	done := false
 
@@ -192,6 +203,7 @@ func channelizedCSVRecordScanner(
 	}
 	csvRecordsChannel <- csvRecords
 	close(csvRecordsChannel) // end-of-stream marker
+	return done
 }
 
 // TODO: comment copiously we're trying to handle slow/fast/short/long reads: tail -f, smallfile, bigfile.
