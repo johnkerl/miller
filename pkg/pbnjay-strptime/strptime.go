@@ -97,20 +97,18 @@ func ParseLocation(value, format string, location *time.Location) (time.Time, er
 func Check(format string) error {
 	format = expandShorthands(format)
 
-	parts := strings.SplitSeq(format, "%")
-	for ps := range parts {
-		// Since we split on '%', this is the format code
-
-		// This is for "%%"
-		if ps == "" {
+	for i := 0; i < len(format); i++ {
+		if format[i] != '%' {
 			continue
 		}
-
-		c := int(ps[0])
-		if c == '%' {
+		i++
+		if i == len(format) {
+			return ErrFormatUnsupported
+		}
+		if format[i] == '%' {
 			continue
 		}
-		if _, found := formatMap[c]; !found {
+		if _, found := formatMap[int(format[i])]; !found {
 			return ErrFormatUnsupported
 		}
 	}
@@ -200,8 +198,16 @@ func strptime_tz(
 				fmt.Printf("inputComponent    \"%s\"\n", "%")
 			}
 
-			inputIdx += 1
-			partsIndex += 2 // TODO: TYPE ME UP
+			inputIdx++
+			// The next split part is literal text after the escaped percent, not a format code.
+			if partsIndex+1 < nparts {
+				literal := partsBetweenPercentSigns[partsIndex+1]
+				if !strings.HasPrefix(strptimeInput[inputIdx:], literal) {
+					return time.Time{}, ErrFormatMismatch
+				}
+				inputIdx += len(literal)
+			}
+			partsIndex += 2
 			continue
 		}
 
@@ -464,21 +470,21 @@ func spacePaddedDayLen(s string) int {
 	return 1
 }
 
-// expandShorthands handles some shorthands that the C library uses, which we can easily
-// replicate -- e.g. "%F" is "%Y-%m-%d".
+var shorthandReplacer = strings.NewReplacer(
+	"%%", "%%", // Keep escaped percent signs from starting shorthand expansions.
+	"%c", "%a %b %e %H:%M:%S %Y",
+	"%x", "%m/%d/%y",
+	"%X", "%H:%M:%S",
+	"%T", "%H:%M:%S",
+	"%D", "%m/%d/%y",
+	"%F", "%Y-%m-%d",
+	"%R", "%H:%M",
+	"%r", "%I:%M:%S %p",
+)
+
+// expandShorthands handles C-library shorthands while preserving escaped percent signs.
 func expandShorthands(format string) string {
-	// TODO: mem cache
-	format = strings.ReplaceAll(format, "%c", "%a %b %e %H:%M:%S %Y")
-	format = strings.ReplaceAll(format, "%x", "%m/%d/%y")
-	format = strings.ReplaceAll(format, "%X", "%H:%M:%S")
-	format = strings.ReplaceAll(format, "%T", "%H:%M:%S")
-	format = strings.ReplaceAll(format, "%D", "%m/%d/%y")
-	format = strings.ReplaceAll(format, "%F", "%Y-%m-%d")
-	format = strings.ReplaceAll(format, "%R", "%H:%M")
-	format = strings.ReplaceAll(format, "%r", "%I:%M:%S %p")
-	format = strings.ReplaceAll(format, "%T", "%H:%M:%S")
-	// format = strings.ReplaceAll(format, "%v", "%e-%b-%Y")
-	return format
+	return shorthandReplacer.Replace(format)
 }
 
 var (

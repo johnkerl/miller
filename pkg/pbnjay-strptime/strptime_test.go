@@ -1,6 +1,7 @@
 package strptime
 
 import (
+	"strings"
 	"testing"
 	"time"
 
@@ -300,4 +301,71 @@ func TestTruncatedAndLiteralMismatchInputs(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, int64(1709510400), gotTrailing.Unix())
 	})
+}
+
+func TestEscapedPercentLiterals(t *testing.T) {
+	loc := time.FixedZone("TEST", 3600)
+	for _, literal := range []string{"%F", "%T", "%c", "%x", "%X", "%D", "%R", "%r", "%Y", "%Q", "%", "%%", "%F suffix"} {
+		format := "%Y-%m-%d " + strings.ReplaceAll(literal, "%", "%%") + " %H:%M:%S"
+		input := "2024-03-04 " + literal + " 11:41:08"
+		t.Run(literal, func(t *testing.T) {
+			require.NoError(t, Check(format))
+			got, err := Parse(input, format)
+			require.NoError(t, err)
+			assert.Equal(t, int64(1709552468), got.Unix())
+			_, err = ParseLocal(input, format)
+			require.NoError(t, err)
+			gotLocal, err := ParseLocation(input, format, loc)
+			require.NoError(t, err)
+			assert.Equal(t, time.Date(2024, 3, 4, 11, 41, 8, 0, loc), gotLocal)
+			_, err = Parse(strings.Replace(input, literal, "wrong", 1), format)
+			assert.Error(t, err)
+		})
+	}
+	for _, literal := range []string{"%F", "%Y", "%Q", "%%", "%F suffix"} {
+		format := strings.ReplaceAll(literal, "%", "%%")
+		t.Run("literal-only-"+literal, func(t *testing.T) {
+			_, err := Parse(literal, format)
+			require.NoError(t, err)
+			_, err = Parse("%", format)
+			assert.Error(t, err)
+		})
+	}
+}
+
+func TestExpandEscapedShorthands(t *testing.T) {
+	for _, code := range []string{"c", "x", "X", "T", "D", "F", "R", "r"} {
+		assert.Equal(t, "%%"+code, expandShorthands("%%"+code))
+		assert.Equal(t, "%%"+expandShorthands("%"+code), expandShorthands("%%%"+code))
+	}
+}
+
+func TestEscapedPercentAdjacentToShorthand(t *testing.T) {
+	for _, tc := range []struct{ input, format string }{
+		{"%2024-03-04", "%%%F"},
+		{"2024-03-04%", "%F%%"},
+		{"%2024-03-04%", "%%%F%%"},
+		{"%%2024-03-04", "%%%%%F"},
+	} {
+		got, err := Parse(tc.input, tc.format)
+		require.NoError(t, err)
+		assert.Equal(t, time.Date(2024, 3, 4, 0, 0, 0, 0, time.UTC), got)
+	}
+	for _, format := range []string{"%", "%Q", "%%%Q", "%Y%"} {
+		assert.ErrorIs(t, Check(format), ErrFormatUnsupported)
+	}
+	for _, format := range []string{"plain text", "%%Q", "%%%%Q", "%Y %% suffix"} {
+		require.NoError(t, Check(format))
+	}
+}
+
+func TestEscapedPercentRoundTrip(t *testing.T) {
+	for _, literal := range []string{"%", "%F", "%Y", "%Q", "%c suffix", "%%"} {
+		format := "%Y-%m-%d " + strings.ReplaceAll(literal, "%", "%%") + " %H:%M:%S"
+		for _, input := range []string{"2024-03-04 " + literal + " 11:41:08", "%"} {
+			for i := 0; i <= len(input); i++ {
+				_, _ = Parse(input[:i], format)
+			}
+		}
+	}
 }
