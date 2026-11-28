@@ -174,7 +174,7 @@ func channelizedLineReader(
 	linesChannel chan<- []string,
 	downstreamDoneChannel <-chan bool, // for mlr head
 	recordsPerBatch int64,
-) {
+) bool {
 	i := int64(0)
 	done := false
 
@@ -218,4 +218,5 @@ func channelizedLineReader(
 	}
 	linesChannel <- lines
 	close(linesChannel) // end-of-stream marker
+	return done
 }
