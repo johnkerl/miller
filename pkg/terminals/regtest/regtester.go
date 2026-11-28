@@ -368,13 +368,11 @@ func (rt *RegTester) executeSingleCmdFile(
 	cmdFilePath string,
 	verbosityLevel int,
 ) bool {
-	if strings.Contains(cmdFilePath, "non-windows") {
+	if strings.Contains(cmdFilePath, "non-windows") && runtime.GOOS == "windows" {
 		// These are tests which cannot pass on Windows. Please see the README.md file
-		// within test/cases/... for details.
-		if runtime.GOOS == "windows" && os.Getenv("MSYSTEM") != "" {
-			if verbosityLevel >= 1 {
-				fmt.Printf("%s %s\n", colorizer.MaybeColorizePass("skip", true), cmdFilePath)
-			}
+		// within test/cases/non-windows for details. They run on all other platforms.
+		if verbosityLevel >= 1 {
+			fmt.Printf("%s %s\n", colorizer.MaybeColorizePass("skip", true), cmdFilePath)
 		}
 		return true
 	}
