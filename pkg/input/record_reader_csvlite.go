@@ -114,7 +114,7 @@ func (reader *RecordReaderCSVLite) Read(
 				if err != nil {
 					errorChannel <- err
 				} else {
-					reader.processHandle(
+					done := reader.processHandle(
 						handle,
 						filename,
 						&context,
@@ -123,6 +123,9 @@ func (reader *RecordReaderCSVLite) Read(
 						downstreamDoneChannel,
 					)
 					_ = handle.Close()
+					if done {
+						break
+					}
 				}
 			}
 		}
@@ -130,6 +133,9 @@ func (reader *RecordReaderCSVLite) Read(
 	readerChannel <- types.NewEndOfStreamMarkerList(&context)
 }
 
+// processHandle returns whether the scanner received a downstream-done signal.
+// Keep that state across files: the scanner consumes the signal, so the next
+// file must not wait for another one.
 func (reader *RecordReaderCSVLite) processHandle(
 	handle io.Reader,
 	filename string,
@@ -137,7 +143,7 @@ func (reader *RecordReaderCSVLite) processHandle(
 	readerChannel chan<- []*types.RecordAndContext, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
-) {
+) bool {
 	context.UpdateForStartOfFile(filename)
 	reader.inputLineNumber = 0
 	reader.headerStrings = nil
@@ -145,7 +151,10 @@ func (reader *RecordReaderCSVLite) processHandle(
 	recordsPerBatch := reader.recordsPerBatch
 	lineReader := NewLineReader(NewBOMStrippingReader(handle), reader.readerOptions.IRS)
 	linesChannel := make(chan []string, recordsPerBatch)
-	go channelizedLineReader(lineReader, linesChannel, downstreamDoneChannel, recordsPerBatch)
+	scannerDone := make(chan bool, 1)
+	go func() {
+		scannerDone <- channelizedLineReader(lineReader, linesChannel, downstreamDoneChannel, recordsPerBatch)
+	}()
 
 	for {
 		recordsAndContexts, eof := reader.recordBatchGetter(reader, linesChannel, filename, context, errorChannel)
@@ -156,6 +165,7 @@ func (reader *RecordReaderCSVLite) processHandle(
 			break
 		}
 	}
+	return <-scannerDone
 }
 
 func getRecordBatchExplicitCSVHeader(
