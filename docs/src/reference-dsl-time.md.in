@@ -176,18 +176,29 @@ Notes:
 * The names `strftime` and `strptime` far predate Miller; they were chosen for familiarity. The `f` is for _format_: from epoch-seconds to human-readable string. The `p` is for _parse_: for doing the reverse.
 * Even though Miller is written in Go as of Miller 6, it still largely preserves [C-like](https://en.wikipedia.org/wiki/C_date_and_time_functions#strftime) `strftime` and `strptime` semantics. As noted below, not all format strings used by the C library are recognized.
   * For `strftime`, this is thanks to [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime), with a Miller-specific modification for fractional seconds.
-  * For `strftime`, this is thanks to [https://github.com/pbnjay/strptime](https://github.com/pbnjay/strptime), with Miller-specific modifications.
+  * For `strptime`, this is thanks to [https://github.com/pbnjay/strptime](https://github.com/pbnjay/strptime), with Miller-specific modifications.
+* Miller uses English weekday and month names for both formatting and parsing, including `%a`, `%A`, `%b`, `%B`, and `%h`. `%p` uses `AM` and `PM`. The `LANG`, `LC_TIME`, and `LC_ALL` environment variables do not select another language or change the date/time formats below. This also applies to `strftime_local` and `strptime_local`: `local` selects a timezone, not a language or locale.
+
+For example, even with Russian locale settings, the names are English. Use numeric months when exchanging dates without language-specific names:
+
+GENMD-RUN-COMMAND
+LANG=ru_RU.UTF-8 LC_TIME=ru_RU.UTF-8 LC_ALL=ru_RU.UTF-8 mlr -n put 'begin {
+  print strftime(0, "%A, %d %B %Y, %H:%M");
+  print strptime("01 January 1970", "%d %B %Y");
+  print strftime(0, "%Y-%m-%d");
+}'
+GENMD-EOF
 
 Available format strings for `strftime`, taken directly from [https://github.com/lestrrat-go/strftime](https://github.com/lestrrat-go/strftime) except for `%1..%9`, `%s`, `%N`, and `%O` which are Miller-specific additions:
 
 | Pattern | Description |
 |---------|-------------|
-| `%A` | national representation of the full weekday name |
-| `%a` | national representation of the abbreviated weekday |
-| `%B` | national representation of the full month name |
-| `%b` | national representation of the abbreviated month name |
+| `%A` | full English weekday name |
+| `%a` | abbreviated English weekday name |
+| `%B` | full English month name |
+| `%b` | abbreviated English month name |
 | `%C` | (year / 100) as decimal number; single digits are preceded by a zero |
-| `%c` | national representation of time and date |
+| `%c` | equivalent to `%a %b %e %H:%M:%S %Y` |
 | `%D` | equivalent to `%m/%d/%y` |
 | `%d` | day of the month as a decimal number (01-31) |
 | `%e` | the day of the month as a decimal number (1-31); single digits are preceded by a blank |
@@ -203,7 +214,7 @@ Available format strings for `strftime`, taken directly from [https://github.com
 | `%n` | a newline |
 | `%N` | zero-padded nanoseconds |
 | `%O` | non-zero-padded nanoseconds |
-| `%p` | national representation of either "ante meridiem" (a.m.) or "post meridiem" (p.m.) as appropriate. |
+| `%p` | `AM` or `PM`, as appropriate |
 | `%R` | equivalent to `%H:%M` |
 | `%r` | equivalent to `%I:%M:%S %p` |
 | `%s` | integer seconds since the epoch |
@@ -217,8 +228,8 @@ Available format strings for `strftime`, taken directly from [https://github.com
 | `%v` | equivalent to `%e-%b-%Y` |
 | `%W` | the week number of the year (Monday as the first day of the week) as a decimal number (00-53) |
 | `%w` | the weekday (Sunday as the first day of the week) as a decimal number (0-6) |
-| `%X` | national representation of the time |
-| `%x` | national representation of the date |
+| `%X` | equivalent to `%H:%M:%S` |
+| `%x` | equivalent to `%m/%d/%y` |
 | `%Y` | the year with century as a decimal number |
 | `%y` | the year without century as a decimal number (00-99) |
 | `%Z` | the time zone name |
@@ -230,11 +241,11 @@ Available format strings for `strptime`:
 | Pattern | Description |
 |---------|-------------|
 | `%%` |  A literal '%' character. |
-| `%a` |  Weekday as locale’s abbreviated name. |
-| `%A` |  Weekday as locale’s full name. |
-| `%b` |  Month as locale’s abbreviated name. |
-| `%B` |  Month as locale’s full name. |
-| `%c` |  Locale’s date and time representation. Equivalent to `%a %b %e %H:%M:%S %Y`. |
+| `%a` |  Abbreviated English weekday name. |
+| `%A` |  Full English weekday name. |
+| `%b` |  Abbreviated English month name. |
+| `%B` |  Full English month name. |
+| `%c` |  Equivalent to `%a %b %e %H:%M:%S %Y`. |
 | `%d` |  Day of the month as a zero-padded decimal number. |
 | `%D` |  Equivalent to `%m/%d/%y`. |
 | `%e` |  Day of the month as a space-padded decimal number. |
@@ -246,13 +257,13 @@ Available format strings for `strptime`:
 | `%j` |  Three-digit day of year, like 004 or 363. |
 | `%m` |  Month as a zero-padded decimal number. |
 | `%M` |  Minute as a zero-padded decimal number. |
-| `%p` |  Locale’s equivalent of either AM or PM. |
+| `%p` |  `AM` or `PM`. |
 | `%r` |  Equivalent to `%I:%M:%S %p`. |
 | `%R` |  Equivalent to `%H:%M`. |
 | `%S` |  Second as a zero-padded decimal number. |
 | `%T` |  Equivalent to `%H:%M:%S`. |
-| `%x` |  Locale’s date representation. Equivalent to `%m/%d/%y`. |
-| `%X` |  Locale’s time representation. Equivalent to `%H:%M:%S`. |
+| `%x` |  Equivalent to `%m/%d/%y`. |
+| `%X` |  Equivalent to `%H:%M:%S`. |
 | `%y` |  Year without century as a zero-padded decimal number. |
 | `%Y` |  Year with century as a decimal number. |
 | `%z` |  UTC offset in the form +HHMM or -HHMM. |
@@ -279,10 +290,6 @@ mlr -n put 'end {
   print strftime(123456789, "%I:%M %p");
 }'
 GENMD-EOF
-
-Unfortunately, names from `%A` and `%B` are only available in English, as an artifact of a design
-choice in the Go `time` library which Miller (and its `strftime` / `strptime` supporting packages as
-noted above) rely on.
 
 ## A note on timezones
 
